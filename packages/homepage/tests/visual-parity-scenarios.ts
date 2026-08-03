@@ -47,6 +47,7 @@ export const parityComponents = [
   'navigation-menu',
   'number-field',
   'otp-field',
+  'pagination',
   'popover',
   'preview-card',
   'scroll-area',
@@ -55,21 +56,64 @@ export const parityComponents = [
   'toolbar',
   'tooltip',
   'tree-nav',
+  'table',
+  'window-frame',
 ] as const;
 export type ParityComponent = (typeof parityComponents)[number];
 
 export type VisualParityScenario = {
-  args: Record<string, boolean | string>;
+  args: Record<string, boolean | number | string>;
   component: ParityComponent;
   id: string;
   state?: ParityState;
 };
 
 export type MotionParityScenario = {
-  args: Record<string, boolean | string>;
-  component: 'button' | 'icon-button' | 'text-field';
+  args: Record<string, boolean | number | string>;
+  component:
+    | 'button'
+    | 'animated-number'
+    | 'alert-dialog'
+    | 'accordion'
+    | 'checkbox'
+    | 'collapsible'
+    | 'dialog'
+    | 'drawer'
+    | 'icon-button'
+    | 'link'
+    | 'meter'
+    | 'menu'
+    | 'pagination'
+    | 'popover'
+    | 'preview-card'
+    | 'navigation-menu'
+    | 'progress'
+    | 'radio'
+    | 'skeleton'
+    | 'scroll-area'
+    | 'spinner'
+    | 'switch'
+    | 'table'
+    | 'tabs'
+    | 'text-field'
+    | 'toggle'
+    | 'toast'
+    | 'tree-nav';
   id: string;
-  transition: 'hover-in' | 'hover-out' | 'press-in' | 'press-out';
+  nextArgs?: Record<string, boolean | number | string>;
+  sampleTimes?: readonly number[];
+  transition:
+    | 'hover-in'
+    | 'hover-out'
+    | 'press-in'
+    | 'press-out'
+    | 'close'
+    | 'continuous'
+    | 'open'
+    | 'state-off'
+    | 'state-on'
+    | 'value-decrease'
+    | 'value-increase';
 };
 
 const appShellScenarios: VisualParityScenario[] = [
@@ -158,10 +202,15 @@ const intents = ['neutral', 'primary', 'info', 'success', 'warning', 'danger'];
 const statusVariants = ['neutral', 'info', 'success', 'warning', 'danger'];
 const appearances = ['solid', 'outline', 'ghost'];
 const sizes = ['sm', 'md', 'lg'];
+export const motionSampleTimes = [0, 30, 60, 90, 120, 140] as const;
+export const normalMotionSampleTimes = [0, 40, 80, 120, 160, 180] as const;
+export const slowMotionSampleTimes = [0, 60, 120, 180, 240, 260] as const;
+export const loadingMotionSampleTimes = [0, 300, 600, 900, 1200, 1220] as const;
+export const numberMotionSampleTimes = [0, 120, 240, 360, 600, 620] as const;
 
 function product(
   component: ParityComponent,
-  axes: Record<string, readonly string[]>,
+  axes: Record<string, readonly (boolean | string)[]>,
 ): VisualParityScenario[] {
   return Object.entries(axes).reduce<VisualParityScenario[]>(
     (scenarios, [name, values]) =>
@@ -426,11 +475,11 @@ export const visualParityScenarios: VisualParityScenario[] = [
       'menubar',
       'number-field',
       'otp-field',
-      'scroll-area',
       'toolbar',
       'tree-nav',
     ] as const
   ).map((component) => ({ args: {}, component, id: component })),
+  ...product('scroll-area', { autoHide: [false, true] }),
   ...withStates(
     product('collapsible', {}).map((scenario) => ({
       ...scenario,
@@ -467,6 +516,21 @@ export const visualParityScenarios: VisualParityScenario[] = [
     })),
   ),
   ...product('code-block', {}),
+  ...product('pagination', {
+    boundaryCount: ['0', '1'],
+    siblingCount: ['0', '1'],
+  }).map((scenario) => ({
+    ...scenario,
+    args: { ...scenario.args, currentPage: '3', totalPages: '12' },
+  })),
+  ...product('table', {
+    density: ['compact', 'comfortable', 'spacious'],
+    striped: [false, true],
+  }),
+  ...product('window-frame', {
+    padding: ['none', 'sm', 'md', 'lg'],
+    variant: ['macos', 'browser'],
+  }),
   ...product('separator', { orientation: ['horizontal', 'vertical'] }),
   ...product('skeleton', {
     shape: ['text', 'rectangle', 'circle'],
@@ -550,6 +614,10 @@ export const parityContract = {
   },
   code: {},
   'code-block': {},
+  pagination: {
+    boundaryCount: ['0', '1'],
+    siblingCount: ['0', '1'],
+  },
   field: { helper: ['none', 'description'] },
   link: {
     underline: ['always', 'hover', 'none'],
@@ -596,12 +664,20 @@ export const parityContract = {
   'otp-field': {},
   popover: { open: [false, true] },
   'preview-card': { open: [false, true] },
-  'scroll-area': {},
+  'scroll-area': { autoHide: [false, true] },
   slider: { orientation: ['horizontal', 'vertical'] },
   toast: { open: [false, true] },
   toolbar: {},
   tooltip: { open: [false, true] },
   'tree-nav': {},
+  table: {
+    density: ['compact', 'comfortable', 'spacious'],
+    striped: [false, true],
+  },
+  'window-frame': {
+    padding: ['none', 'sm', 'md', 'lg'],
+    variant: ['macos', 'browser'],
+  },
   fieldset: { disabled: [false, true] },
   meter: { variant: statusVariants },
   progress: { uiSize: sizes, variant: statusVariants },
@@ -661,6 +737,31 @@ const buttonMotionScenarios = (['button', 'icon-button'] as const).flatMap(
 
 export const motionParityScenarios: MotionParityScenario[] = [
   ...buttonMotionScenarios,
+  ...(['radio', 'switch'] as const).flatMap((component) =>
+    (['state-on', 'state-off'] as const).map((transition) => ({
+      args: { checked: transition === 'state-off' },
+      component,
+      id: `${component}-motion-transition-${transition}`,
+      nextArgs: { checked: transition === 'state-on' },
+      ...(component === 'switch' ? { sampleTimes: normalMotionSampleTimes } : {}),
+      transition,
+    })),
+  ),
+  ...(['state-on', 'state-off'] as const).map((transition) => ({
+    args: { mark: transition === 'state-off' ? 'checked' : 'unchecked' },
+    component: 'checkbox' as const,
+    id: `checkbox-motion-transition-${transition}`,
+    nextArgs: { mark: transition === 'state-on' ? 'checked' : 'unchecked' },
+    transition,
+  })),
+  ...(['default', 'muted', 'danger'] as const).flatMap((variant) =>
+    (['hover-in', 'hover-out'] as const).map((transition) => ({
+      args: { underline: 'hover', variant },
+      component: 'link' as const,
+      id: `link-motion-variant-${variant}-transition-${transition}`,
+      transition,
+    })),
+  ),
   ...sizes.flatMap((uiSize) =>
     (['hover-in', 'hover-out'] as const).map((transition) => ({
       args: { uiSize },
@@ -669,10 +770,225 @@ export const motionParityScenarios: MotionParityScenario[] = [
       transition,
     })),
   ),
+  ...(['hover-in', 'hover-out'] as const).map((transition) => ({
+    args: { pressed: false },
+    component: 'toggle' as const,
+    id: `toggle-motion-transition-${transition}`,
+    transition,
+  })),
+  ...(['hover-in', 'hover-out'] as const).map((transition) => ({
+    args: { uiSize: 'md' },
+    component: 'tabs' as const,
+    id: `tabs-motion-transition-${transition}`,
+    transition,
+  })),
+  {
+    args: {
+      boundaryCount: '1',
+      currentPage: '3',
+      siblingCount: '1',
+      totalPages: '12',
+    },
+    component: 'pagination',
+    id: 'pagination-motion-transition-hover-out',
+    transition: 'hover-out',
+  },
+  ...(['hover-in', 'hover-out'] as const).map((transition) => ({
+    args: { density: 'comfortable', striped: false },
+    component: 'table' as const,
+    id: `table-motion-transition-${transition}`,
+    transition,
+  })),
+  ...(['hover-in', 'hover-out'] as const).map((transition) => ({
+    args: {},
+    component: 'tree-nav' as const,
+    id: `tree-nav-motion-transition-${transition}`,
+    transition,
+  })),
+  ...(['hover-in', 'hover-out'] as const).map((transition) => ({
+    args: { autoHide: true },
+    component: 'scroll-area' as const,
+    id: `scroll-area-motion-transition-${transition}`,
+    transition,
+  })),
+  ...(['state-on', 'state-off'] as const).map((transition) => ({
+    args: { pressed: transition === 'state-off' },
+    component: 'toggle' as const,
+    id: `toggle-motion-transition-${transition}`,
+    nextArgs: { pressed: transition === 'state-on' },
+    transition,
+  })),
+  ...(['meter', 'progress'] as const).flatMap((component) =>
+    (['value-increase', 'value-decrease'] as const).map((transition) => ({
+      args: { value: transition === 'value-increase' ? 25 : 75 },
+      component,
+      id: `${component}-motion-transition-${transition}`,
+      nextArgs: { value: transition === 'value-increase' ? 75 : 25 },
+      sampleTimes: normalMotionSampleTimes,
+      transition,
+    })),
+  ),
+  ...(['open', 'close'] as const).map((transition) => ({
+    args: { open: transition === 'close' },
+    component: 'collapsible' as const,
+    id: `collapsible-motion-transition-${transition}`,
+    nextArgs: { open: transition === 'open' },
+    sampleTimes: normalMotionSampleTimes,
+    transition,
+  })),
+  ...(['value-increase', 'value-decrease'] as const).map((transition) => ({
+    args: {
+      animation: 'roll',
+      duration: 600,
+      value: transition === 'value-increase' ? 12345 : 67890,
+    },
+    component: 'animated-number' as const,
+    id: `animated-number-motion-transition-${transition}`,
+    nextArgs: { value: transition === 'value-increase' ? 67890 : 12345 },
+    sampleTimes: numberMotionSampleTimes,
+    transition,
+  })),
+  ...(['value-increase', 'value-decrease'] as const).map((transition) => ({
+    args: {
+      animation: 'count',
+      duration: 600,
+      value: transition === 'value-increase' ? 12345 : 67890,
+    },
+    component: 'animated-number' as const,
+    id: `animated-number-motion-animation-count-transition-${transition}`,
+    nextArgs: { value: transition === 'value-increase' ? 67890 : 12345 },
+    sampleTimes: numberMotionSampleTimes,
+    transition,
+  })),
+  ...sizes.flatMap((uiSize) =>
+    (['current', 'muted', 'primary', 'danger'] as const).map((variant) => ({
+      args: { uiSize, variant },
+      component: 'spinner' as const,
+      id: `spinner-motion-uiSize-${uiSize}-variant-${variant}`,
+      sampleTimes: loadingMotionSampleTimes,
+      transition: 'continuous' as const,
+    })),
+  ),
+  ...(['text', 'rectangle', 'circle'] as const).map((shape) => ({
+    args: { animate: true, shape },
+    component: 'skeleton' as const,
+    id: `skeleton-motion-shape-${shape}`,
+    sampleTimes: loadingMotionSampleTimes,
+    transition: 'continuous' as const,
+  })),
+  ...sizes.flatMap((uiSize) =>
+    statusVariants.map((variant) => ({
+      args: { uiSize, value: 'indeterminate', variant },
+      component: 'progress' as const,
+      id: `progress-motion-indeterminate-uiSize-${uiSize}-variant-${variant}`,
+      sampleTimes: loadingMotionSampleTimes,
+      transition: 'continuous' as const,
+    })),
+  ),
+  {
+    args: { open: false },
+    component: 'popover',
+    id: 'popover-motion-transition-open',
+    nextArgs: { open: true },
+    sampleTimes: normalMotionSampleTimes,
+    transition: 'open',
+  },
+  {
+    args: { open: false },
+    component: 'preview-card',
+    id: 'preview-card-motion-transition-open',
+    nextArgs: { open: true },
+    sampleTimes: slowMotionSampleTimes,
+    transition: 'open',
+  },
+  {
+    args: { open: false },
+    component: 'navigation-menu',
+    id: 'navigation-menu-motion-transition-open',
+    nextArgs: { open: true },
+    sampleTimes: normalMotionSampleTimes,
+    transition: 'open',
+  },
+  {
+    args: { open: false },
+    component: 'alert-dialog',
+    id: 'alert-dialog-motion-transition-open',
+    nextArgs: { open: true },
+    sampleTimes: slowMotionSampleTimes,
+    transition: 'open',
+  },
+  {
+    args: { open: false },
+    component: 'dialog',
+    id: 'dialog-motion-transition-open',
+    nextArgs: { open: true },
+    sampleTimes: slowMotionSampleTimes,
+    transition: 'open',
+  },
+  {
+    args: { open: false },
+    component: 'accordion',
+    id: 'accordion-motion-transition-open',
+    nextArgs: { open: true },
+    sampleTimes: normalMotionSampleTimes,
+    transition: 'open',
+  },
+  {
+    args: { open: false },
+    component: 'toast',
+    id: 'toast-motion-transition-open',
+    nextArgs: { open: true },
+    transition: 'open',
+  },
+  ...(['down', 'up', 'left', 'right'] as const).map((swipeDirection) => ({
+    args: { open: false, swipeDirection },
+    component: 'drawer' as const,
+    id: `drawer-motion-swipeDirection-${swipeDirection}-transition-open`,
+    nextArgs: { open: true },
+    sampleTimes: slowMotionSampleTimes,
+    transition: 'open' as const,
+  })),
+  {
+    args: { open: false },
+    component: 'menu',
+    id: 'menu-motion-transition-open',
+    nextArgs: { open: true },
+    sampleTimes: normalMotionSampleTimes,
+    transition: 'open',
+  },
 ];
 
 export const defaultMotionParityScenarios = motionParityScenarios.filter((scenario) => {
-  if (scenario.component === 'text-field') return true;
+  if (
+    scenario.component === 'animated-number' ||
+    scenario.component === 'alert-dialog' ||
+    scenario.component === 'accordion' ||
+    scenario.component === 'dialog' ||
+    scenario.component === 'drawer' ||
+    scenario.component === 'link' ||
+    scenario.component === 'meter' ||
+    scenario.component === 'menu' ||
+    scenario.component === 'pagination' ||
+    scenario.component === 'progress' ||
+    scenario.component === 'popover' ||
+    scenario.component === 'preview-card' ||
+    scenario.component === 'navigation-menu' ||
+    scenario.component === 'checkbox' ||
+    scenario.component === 'collapsible' ||
+    scenario.component === 'radio' ||
+    scenario.component === 'scroll-area' ||
+    scenario.component === 'skeleton' ||
+    scenario.component === 'spinner' ||
+    scenario.component === 'switch' ||
+    scenario.component === 'table' ||
+    scenario.component === 'tabs' ||
+    scenario.component === 'text-field' ||
+    scenario.component === 'toggle' ||
+    scenario.component === 'toast' ||
+    scenario.component === 'tree-nav'
+  ) {
+    return true;
+  }
   if (scenario.args['uiSize'] !== 'md') return true;
   if (scenario.transition === 'hover-in' || scenario.transition === 'press-in') {
     return true;
@@ -680,4 +996,38 @@ export const defaultMotionParityScenarios = motionParityScenarios.filter((scenar
   return scenario.args['intent'] === 'primary';
 });
 
-export const motionSampleTimes = [0, 30, 60, 90, 120, 140] as const;
+// Every public React stylesheet that declares transition/animation motion must
+// resolve to a fixed-frame Flutter comparison. Field/Input/Textarea share the
+// Flutter TRTextField rendering contract, so those source names intentionally
+// point at the same scenario component.
+export const motionSourceCoverage = {
+  accordion: 'accordion',
+  'alert-dialog': 'alert-dialog',
+  'animated-number': 'animated-number',
+  button: 'button',
+  checkbox: 'checkbox',
+  collapsible: 'collapsible',
+  dialog: 'dialog',
+  drawer: 'drawer',
+  field: 'text-field',
+  input: 'text-field',
+  link: 'link',
+  menu: 'menu',
+  meter: 'meter',
+  'navigation-menu': 'navigation-menu',
+  pagination: 'pagination',
+  popover: 'popover',
+  'preview-card': 'preview-card',
+  progress: 'progress',
+  radio: 'radio',
+  'scroll-area': 'scroll-area',
+  skeleton: 'skeleton',
+  spinner: 'spinner',
+  switch: 'switch',
+  table: 'table',
+  tabs: 'tabs',
+  textarea: 'text-field',
+  toast: 'toast',
+  toggle: 'toggle',
+  'tree-nav': 'tree-nav',
+} as const satisfies Record<string, MotionParityScenario['component']>;

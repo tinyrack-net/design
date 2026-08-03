@@ -6,16 +6,17 @@ export function resolveVisualParityConcurrency(
 ) {
   if (!Number.isFinite(logicalProcessors) || logicalProcessors < 1) return 1;
   const available = Math.floor(logicalProcessors);
+  const stableSessionLimit = mode === 'motion' ? 4 : 12;
   const requested = Number(process.env['TINYRACK_VISUAL_PARITY_SESSIONS']);
   if (Number.isInteger(requested) && requested > 0) {
-    return Math.min(available, mode === 'motion' ? 8 : requested);
+    return Math.min(available, stableSessionLimit, requested);
   }
   // Motion jobs drive two virtual-clock pages per browser context. Beyond
-  // eight contexts, Chromium renderer contention makes sampled frames
+  // four contexts, Chromium/CanvasKit renderer contention makes sampled frames
   // nondeterministic even when more logical processors are available.
   return mode === 'motion'
-    ? Math.min(available, 8)
-    : Math.max(1, Math.floor(available * 0.75));
+    ? Math.min(available, 4)
+    : Math.max(1, Math.min(12, Math.floor(available * 0.75)));
 }
 
 export function resolveVisualParityComparisonWorkers(

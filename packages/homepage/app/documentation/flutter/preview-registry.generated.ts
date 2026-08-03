@@ -35,6 +35,7 @@ export const flutterPreviewComponents = [
   'navigation-menu',
   'number-field',
   'otp-field',
+  'pagination',
   'popover',
   'preview-card',
   'progress',
@@ -48,6 +49,7 @@ export const flutterPreviewComponents = [
   'spinner',
   'steps',
   'switch',
+  'table',
   'tabs',
   'text',
   'text-field',
@@ -58,5 +60,6 @@ export const flutterPreviewComponents = [
   'toolbar',
   'tooltip',
   'tree-nav',
+  'window-frame',
 ] as const;
 export type FlutterPreviewComponent = (typeof flutterPreviewComponents)[number];

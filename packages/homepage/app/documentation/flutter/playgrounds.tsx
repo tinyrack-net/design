@@ -263,7 +263,11 @@ export const numberFieldPlayground = flutterPlayground('number-field', {}, {});
 export const otpFieldPlayground = flutterPlayground('otp-field', {}, {});
 export const popoverPlayground = flutterPlayground('popover', {}, {});
 export const previewCardPlayground = flutterPlayground('preview-card', {}, {});
-export const scrollAreaPlayground = flutterPlayground('scroll-area', {}, {});
+export const scrollAreaPlayground = flutterPlayground(
+  'scroll-area',
+  { autoHide: false },
+  { autoHide: { control: 'boolean' } },
+);
 export const sliderPlayground = flutterPlayground('slider', {}, {});
 export const toastPlayground = flutterPlayground('toast', {}, {});
 export const toolbarPlayground = flutterPlayground('toolbar', {}, {});
@@ -530,6 +534,38 @@ export const toggleGroupPlayground = flutterPlayground(
   { multiple: { control: 'boolean' } },
 );
 
+export const paginationPlayground = flutterPlayground(
+  'pagination',
+  { boundaryCount: 1, currentPage: 3, siblingCount: 1, totalPages: 12 },
+  {
+    boundaryCount: { control: 'number' },
+    currentPage: { control: 'number' },
+    siblingCount: { control: 'number' },
+    totalPages: { control: 'number' },
+  },
+);
+
+export const tablePlayground = flutterPlayground(
+  'table',
+  { density: 'comfortable', striped: false },
+  {
+    density: {
+      control: 'select',
+      options: ['compact', 'comfortable', 'spacious'],
+    },
+    striped: { control: 'boolean' },
+  },
+);
+
+export const windowFramePlayground = flutterPlayground(
+  'window-frame',
+  { padding: 'md', variant: 'macos' },
+  {
+    padding: { control: 'select', options: ['none', 'sm', 'md', 'lg'] },
+    variant: { control: 'select', options: ['macos', 'browser'] },
+  },
+);
+
 export const flutterPlaygrounds = {
   accordion: accordionPlayground,
   alert: alertPlayground,
@@ -564,6 +600,7 @@ export const flutterPlaygrounds = {
   'navigation-menu': navigationMenuPlayground,
   'number-field': numberFieldPlayground,
   'otp-field': otpFieldPlayground,
+  pagination: paginationPlayground,
   popover: popoverPlayground,
   'preview-card': previewCardPlayground,
   progress: progressPlayground,
@@ -577,6 +614,7 @@ export const flutterPlaygrounds = {
   spinner: spinnerPlayground,
   steps: stepsPlayground,
   switch: switchPlayground,
+  table: tablePlayground,
   tabs: tabsPlayground,
   text: textPlayground,
   'text-field': textFieldPlayground,
@@ -587,4 +625,5 @@ export const flutterPlaygrounds = {
   toolbar: toolbarPlayground,
   tooltip: tooltipPlayground,
   'tree-nav': treeNavPlayground,
+  'window-frame': windowFramePlayground,
 } as const satisfies Record<FlutterPreviewComponent, DemoMeta>;

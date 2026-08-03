@@ -236,7 +236,6 @@ class _TRTextFieldInteractionFrame extends StatefulWidget {
 class _TRTextFieldInteractionFrameState
     extends State<_TRTextFieldInteractionFrame> {
   FocusNode? _internalFocusNode;
-  bool _hovered = false;
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_internalFocusNode ??= FocusNode());
@@ -274,41 +273,33 @@ class _TRTextFieldInteractionFrameState
   Widget build(BuildContext context) {
     final theme = context.tinyrackTheme;
     final focused = widget.enabled && _focusNode.hasFocus;
-    final borderColor = focused
-        ? widget.error
-              ? theme.dangerBorder
-              : theme.focus
-        : _hovered && widget.enabled
-        ? theme.borderStrong
-        : widget.error
+    final borderColor = widget.error
         ? theme.dangerBorder
+        : focused
+        ? theme.focus
         : theme.borderStrong;
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
 
-    return MouseRegion(
-      onEnter: widget.enabled ? (_) => setState(() => _hovered = true) : null,
-      onExit: widget.enabled ? (_) => setState(() => _hovered = false) : null,
-      child: AnimatedOpacity(
+    return AnimatedOpacity(
+      curve: TRMotion.standard,
+      duration: duration,
+      opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
+      child: AnimatedContainer(
         curve: TRMotion.standard,
         duration: duration,
-        opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
-        child: AnimatedContainer(
-          curve: TRMotion.standard,
-          duration: duration,
-          color: widget.fillColor,
-          foregroundDecoration: BoxDecoration(
-            border: Border.all(
-              color: borderColor,
-              width: focused
-                  ? TRGeneratedBorders.focusWidth
-                  : TRGeneratedBorders.defaultWidth,
-            ),
-            borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+        color: widget.fillColor,
+        foregroundDecoration: BoxDecoration(
+          border: Border.all(
+            color: borderColor,
+            width: focused
+                ? TRGeneratedBorders.focusWidth
+                : TRGeneratedBorders.defaultWidth,
           ),
-          child: widget.childBuilder(_focusNode),
+          borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
         ),
+        child: widget.childBuilder(_focusNode),
       ),
     );
   }

@@ -40,6 +40,10 @@ class TRCode extends StatelessWidget {
           style: TextStyle(
             color: colors.text,
             fontFamily: TRGeneratedFontFamilies.mono,
+            letterSpacing:
+                TRGeneratedBorders.defaultWidth /
+                (TRGeneratedSpacing.size3xs +
+                    TRGeneratedBorders.defaultWidth * 1.5),
             // Chromium sizes an inline code box from the font's normal
             // metrics; CanvasKit resolves them slightly taller.
             height: TRGeneratedFlutterRendering.codeInlineLineHeight,

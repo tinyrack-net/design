@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../types.dart';
+import '../../generated/tokens.g.dart';
 import '../button/button.dart';
 
 /// The disclosed state of a [TRCopyButton].
@@ -61,25 +62,40 @@ class _TRCopyButtonState extends State<TRCopyButton> {
   }
 
   @override
-  Widget build(BuildContext context) => TRButton(
-    appearance: widget.appearance,
-    intent: widget.intent,
-    onPressed: _handlePressed,
-    uiSize: widget.uiSize,
-    // Both labels stay laid out so the button keeps the wider footprint,
-    // matching the web label stack that prevents a width jump on copy.
-    child: Stack(
-      alignment: Alignment.center,
-      children: [
-        Opacity(
-          opacity: _status == TRCopyButtonStatus.copied ? 1 : 0,
-          child: Text(widget.copiedLabel),
-        ),
-        Opacity(
-          opacity: _status == TRCopyButtonStatus.copied ? 0 : 1,
-          child: Text(widget.idleLabel),
-        ),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final cjk = RegExp(r'[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]');
+    final japanese = Localizations.localeOf(context).languageCode == 'ja';
+    Text label(String value) => Text(
+      value,
+      style: cjk.hasMatch(value) && !japanese
+          ? const TextStyle(
+              letterSpacing:
+                  -TRGeneratedBorders.defaultWidth /
+                  (TRGeneratedSpacing.size3xs +
+                      TRGeneratedBorders.defaultWidth),
+            )
+          : null,
+    );
+    return TRButton(
+      appearance: widget.appearance,
+      intent: widget.intent,
+      onPressed: _handlePressed,
+      uiSize: widget.uiSize,
+      // Both labels stay laid out so the button keeps the wider footprint,
+      // matching the web label stack that prevents a width jump on copy.
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Opacity(
+            opacity: _status == TRCopyButtonStatus.copied ? 1 : 0,
+            child: label(widget.copiedLabel),
+          ),
+          Opacity(
+            opacity: _status == TRCopyButtonStatus.copied ? 0 : 1,
+            child: label(widget.idleLabel),
+          ),
+        ],
+      ),
+    );
+  }
 }

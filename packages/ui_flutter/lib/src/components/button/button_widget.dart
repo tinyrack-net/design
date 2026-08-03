@@ -226,6 +226,7 @@ class TRButton extends StatelessWidget {
           )
         : child;
     return _TRButtonInteractionFrame(
+      autofocus: autofocus,
       color: colors.focus,
       disabled: disabled,
       fill: fill,
@@ -233,37 +234,38 @@ class TRButton extends StatelessWidget {
       motionDuration: motionDuration,
       onActivate: onPressed,
       opacity: disabled ? TRGeneratedOpacity.disabled : 1,
-      builder: (effectiveFocusNode, statesController) => Semantics(
-        enabled: !disabled,
-        label: loading ? loadingLabel : _semanticLabel,
-        value: loading ? loadingLabel : null,
-        child: switch (appearance) {
-          TRAppearance.solid => FilledButton(
-            autofocus: autofocus,
-            focusNode: effectiveFocusNode,
-            onPressed: disabled ? null : onPressed,
-            statesController: statesController,
-            style: style,
-            child: content,
+      builder: (effectiveFocusNode, statesController, effectiveOnPressed) =>
+          Semantics(
+            enabled: !disabled,
+            label: loading ? loadingLabel : _semanticLabel,
+            value: loading ? loadingLabel : null,
+            child: switch (appearance) {
+              TRAppearance.solid => FilledButton(
+                autofocus: false,
+                focusNode: effectiveFocusNode,
+                onPressed: effectiveOnPressed,
+                statesController: statesController,
+                style: style,
+                child: content,
+              ),
+              TRAppearance.outline => OutlinedButton(
+                autofocus: false,
+                focusNode: effectiveFocusNode,
+                onPressed: effectiveOnPressed,
+                statesController: statesController,
+                style: style,
+                child: content,
+              ),
+              TRAppearance.ghost => TextButton(
+                autofocus: false,
+                focusNode: effectiveFocusNode,
+                onPressed: effectiveOnPressed,
+                statesController: statesController,
+                style: style,
+                child: content,
+              ),
+            },
           ),
-          TRAppearance.outline => OutlinedButton(
-            autofocus: autofocus,
-            focusNode: effectiveFocusNode,
-            onPressed: disabled ? null : onPressed,
-            statesController: statesController,
-            style: style,
-            child: content,
-          ),
-          TRAppearance.ghost => TextButton(
-            autofocus: autofocus,
-            focusNode: effectiveFocusNode,
-            onPressed: disabled ? null : onPressed,
-            statesController: statesController,
-            style: style,
-            child: content,
-          ),
-        },
-      ),
     );
   }
 }

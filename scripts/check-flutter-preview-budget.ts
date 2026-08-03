@@ -6,7 +6,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const clientRoot = resolve(root, 'packages/homepage/build/client');
 const previewRoot = resolve(clientRoot, 'flutter-preview');
 const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
-const maximumMainBytes = 3_250_000;
+// Pagination, Table, and WindowFrame complete the 58-component Flutter
+// preview catalog. Keep a narrow regression margin above that measured bundle.
+const maximumMainBytes = 3_350_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;
 const expectedFlutterFonts = [

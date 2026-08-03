@@ -104,6 +104,8 @@ void main() {
       TROtpFieldController,
       TROtpFieldFormField,
       TROtpSeparatorBuilder,
+      TRPagination,
+      TRPaginationRangeItem,
       TRPopover,
       TRPopoverController,
       TRPreviewCard,
@@ -126,6 +128,11 @@ void main() {
       TRStepsItem,
       TRStepsRoot,
       TRSwitch,
+      TRTable,
+      TRTableColumn,
+      TRTableDensity,
+      TRTableFooter,
+      TRTableRow,
       TRTabs,
       TRTabsTab,
       TRText,
@@ -150,8 +157,18 @@ void main() {
       TRTooltipProvider,
       TRTreeNav,
       TRTreeNavController,
+      TRWindowFrame,
+      TRWindowFrameAddressBar,
+      TRWindowFrameBody,
+      TRWindowFrameControl,
+      TRWindowFrameControls,
+      TRWindowFrameControlTone,
+      TRWindowFramePadding,
+      TRWindowFrameTitle,
+      TRWindowFrameTitleBar,
+      TRWindowFrameVariant,
     ];
 
-    expect(publicTypes, hasLength(146));
+    expect(publicTypes, hasLength(163));
   });
 }

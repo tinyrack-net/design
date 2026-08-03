@@ -134,6 +134,58 @@ test('allows the roll direction to be forced independently from the value trend'
     .toBe('up');
 });
 
+test('renders entering signs and settles a roll when its animation completes', async () => {
+  const view = await render(<TRAnimatedNumber duration={1_000} value={1} />);
+  await view.rerender(<TRAnimatedNumber duration={1_000} value={-1} />);
+
+  await expect
+    .poll(() => document.querySelector<HTMLElement>('.tr-animated-number-entering'))
+    .not.toBeNull();
+  expect(
+    document.querySelector<HTMLElement>('.tr-animated-number-entering')?.textContent,
+  ).toBe('-');
+  document
+    .querySelector<HTMLElement>('.tr-animated-number-roll')
+    ?.dispatchEvent(new AnimationEvent('animationend', { bubbles: true }));
+  await expect
+    .poll(() => document.querySelector('.tr-animated-number-presentation')?.textContent)
+    .toBe('-1');
+});
+
+test('retargets an active width animation and cancels an active count on unmount', async () => {
+  const rollView = await render(<TRAnimatedNumber duration={1_000} value={9} />);
+  await rollView.rerender(<TRAnimatedNumber duration={1_000} value={1_000} />);
+  await expect
+    .poll(
+      () =>
+        document
+          .querySelector<HTMLElement>('.tr-animated-number-presentation')
+          ?.getAnimations().length,
+    )
+    .toBeGreaterThan(0);
+  await rollView.rerender(<TRAnimatedNumber duration={1_000} value={10_000} />);
+  await expect
+    .poll(() => document.querySelector('.tr-animated-number-roll'))
+    .not.toBeNull();
+  await rollView.unmount();
+
+  const countView = await render(
+    <TRAnimatedNumber animation="count" duration={1_000} value={0} />,
+  );
+  await countView.rerender(
+    <TRAnimatedNumber animation="count" duration={1_000} value={100} />,
+  );
+  await expect
+    .poll(
+      () =>
+        document.querySelector<HTMLElement>('.tr-animated-number-visual')?.dataset[
+          'animating'
+        ],
+    )
+    .toBe('true');
+  await countView.unmount();
+});
+
 test.each([
   'auto',
   'up',

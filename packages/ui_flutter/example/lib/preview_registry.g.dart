@@ -35,6 +35,7 @@ const supportedPreviewComponents = <String>{
   'navigation-menu',
   'number-field',
   'otp-field',
+  'pagination',
   'popover',
   'preview-card',
   'progress',
@@ -48,6 +49,7 @@ const supportedPreviewComponents = <String>{
   'spinner',
   'steps',
   'switch',
+  'table',
   'tabs',
   'text',
   'text-field',
@@ -58,4 +60,5 @@ const supportedPreviewComponents = <String>{
   'toolbar',
   'tooltip',
   'tree-nav',
+  'window-frame',
 };

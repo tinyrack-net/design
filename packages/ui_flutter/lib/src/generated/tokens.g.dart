@@ -520,6 +520,41 @@ abstract final class TRGeneratedFlutterRendering {
   static const double normalLineMd = 20.0;
   static const double textFieldPaddingInlineCorrection = 4.0;
   static const double textFieldPaddingBlockCorrection = 3.0;
+  static const double textTrackingBodyRegularEn = 0.1784;
+  static const double textTrackingBodyStrongEn = 0.0392;
+  static const double textTrackingBodySmBoldEn = -0.1832;
+  static const double textTrackingBodySmNonStrongKo = -0.5893;
+  static const double textTrackingBodySmStrongEn = -0.1665;
+  static const double textTrackingBodySmStrongJa = 0.0001;
+  static const double textTrackingBodySmStrongKo = -0.442;
+  static const double textTrackingCaptionBoldEn = 0.1144;
+  static const double textTrackingCaptionNonStrongKo = 0.3519;
+  static const double textTrackingCaptionStrongEn = 0.1344;
+  static const double textTrackingCaptionStrongKo = 0.4186;
+  static const double textTrackingCodeNonStrongEn = -0.44;
+  static const double textTrackingCodeNonStrongKo = -0.6213;
+  static const double textTrackingCodeStrongEn = -0.42;
+  static const double textTrackingCodeStrongKo = -0.5546;
+  static const double textTrackingDisplayNonStrongKo = -0.3759;
+  static const double textTrackingDisplayMediumEn = 0.1181;
+  static const double textTrackingDisplayRegularEn = -0.2844;
+  static const double textTrackingDisplayStrongEn = 0.0729;
+  static const double textTrackingDisplayLgBoldEn = -0.1328;
+  static const double textTrackingHeadingLgRegularEn = 0.197;
+  static const double textTrackingHeadingLgStrongEn = -0.044;
+  static const double textTrackingHeadingLgStrongKo = 0.28;
+  static const double textTrackingHeadingMdRegularEn = 0.1176;
+  static const double textTrackingHeadingMdStrongEn = 0.0488;
+  static const double textTrackingHeadingSmStrongEn = -0.0583;
+  static const double textTrackingLabelBoldEn = 1.0746;
+  static const double textTrackingLabelNonStrongKo = 1.3132;
+  static const double textTrackingLabelStrongEn = 1.0642;
+  static const double textTrackingLabelStrongKo = 1.2249;
+  static const double windowFrameBodyLineHeight = 18.9;
+  static const double windowFrameBrowserTitleBarHeight = 41.59375;
+  static const Color windowFrameControlClose = Color(0xffff5f57);
+  static const Color windowFrameControlMinimize = Color(0xfffebc2e);
+  static const Color windowFrameControlMaximize = Color(0xff28c840);
 }
 
 abstract final class TRGeneratedMotion {

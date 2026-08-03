@@ -17,6 +17,7 @@ class TRSwitch extends StatefulWidget {
     this.invalid = false,
     this.focusNode,
     this.autofocus = false,
+    this.thumbKey,
     super.key,
   });
 
@@ -28,6 +29,9 @@ class TRSwitch extends StatefulWidget {
   final bool invalid;
   final FocusNode? focusNode;
   final bool autofocus;
+
+  /// Identifies the visual thumb for geometry measurement and composition.
+  final Key? thumbKey;
 
   @override
   State<TRSwitch> createState() => _TRSwitchState();
@@ -149,19 +153,36 @@ class _TRSwitchState extends State<TRSwitch> {
                   alignment: checked
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
-                  child: AnimatedOpacity(
-                    curve: TRMotion.standard,
-                    duration: motionDuration,
-                    opacity: disabled && !checked
-                        ? TRGeneratedOpacity.disabled
-                        : 1,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: thumbColor,
-                        shape: BoxShape.circle,
-                        boxShadow: const [TRGeneratedShadows.raised],
+                  child: SizedBox(
+                    width: _thumbSize,
+                    height:
+                        _height -
+                        (_padding * 2) -
+                        (TRGeneratedBorders.defaultWidth * 2),
+                    child: OverflowBox(
+                      minWidth: _thumbSize,
+                      maxWidth: _thumbSize,
+                      minHeight: _thumbSize,
+                      maxHeight: _thumbSize,
+                      child: AnimatedOpacity(
+                        curve: TRMotion.standard,
+                        duration: motionDuration,
+                        opacity: disabled && !checked
+                            ? TRGeneratedOpacity.disabled
+                            : 1,
+                        child: AnimatedContainer(
+                          key: widget.thumbKey,
+                          curve: TRMotion.standard,
+                          duration: motionDuration,
+                          decoration: BoxDecoration(
+                            color: thumbColor,
+                            shape: BoxShape.circle,
+                            boxShadow: const [TRGeneratedShadows.raised],
+                          ),
+                          width: _thumbSize,
+                          height: _thumbSize,
+                        ),
                       ),
-                      child: const SizedBox.square(dimension: _thumbSize),
                     ),
                   ),
                 ),

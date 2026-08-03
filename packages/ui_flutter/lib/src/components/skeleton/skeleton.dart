@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/motion_boundary.dart';
 import '../../tokens.dart';
 import '../../types.dart';
 
@@ -30,19 +31,29 @@ class _TRSkeletonState extends State<TRSkeleton>
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: TRMotion.loading);
-    if (widget.animate) _controller.repeat();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncAnimation();
   }
 
   @override
   void didUpdateWidget(covariant TRSkeleton oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.animate != oldWidget.animate) {
-      if (widget.animate) {
-        _controller.repeat();
-      } else {
-        _controller.stop();
-      }
+    if (widget.animate != oldWidget.animate) _syncAnimation();
+  }
+
+  void _syncAnimation() {
+    final shouldAnimate =
+        widget.animate && !MediaQuery.disableAnimationsOf(context);
+    if (shouldAnimate) {
+      if (!_controller.isAnimating) _controller.repeat();
+      return;
     }
+    _controller.stop();
+    if (_controller.value != 0) _controller.value = 0;
   }
 
   @override
@@ -83,21 +94,14 @@ class _TRSkeletonState extends State<TRSkeleton>
             child: widget.animate
                 ? AnimatedBuilder(
                     animation: _controller,
-                    builder: (context, child) => ShaderMask(
-                      blendMode: BlendMode.srcATop,
-                      shaderCallback: (bounds) {
-                        final t = _controller.value;
-                        return LinearGradient(
-                          begin: Alignment(-1.0 + t * 3, 0),
-                          end: Alignment(t * 3, 0),
-                          colors: [
-                            generated.skeletonFill,
-                            generated.skeletonHighlight,
-                            generated.skeletonFill,
-                          ],
-                        ).createShader(bounds);
-                      },
-                      child: ColoredBox(color: generated.skeletonFill),
+                    builder: (context, child) => TRMotionBoundary(
+                      progress: _controller.value,
+                      child: CustomPaint(
+                        painter: _TRSkeletonShimmerPainter(
+                          highlight: generated.skeletonHighlight,
+                          progress: _controller.value,
+                        ),
+                      ),
                     ),
                   )
                 : null,
@@ -106,4 +110,43 @@ class _TRSkeletonState extends State<TRSkeleton>
       ),
     );
   }
+}
+
+class _TRSkeletonShimmerPainter extends CustomPainter {
+  const _TRSkeletonShimmerPainter({
+    required this.highlight,
+    required this.progress,
+  });
+
+  final Color highlight;
+  final double progress;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // CSS uses a 200%-wide transparent/highlight/transparent background whose
+    // position travels from 200% to -100%. This is the equivalent canvas
+    // coordinate system: the highlight center moves from -1x to +2x width.
+    final center = size.width * (-1 + 3 * progress);
+    final rect = Rect.fromLTWH(
+      center - size.width,
+      0,
+      size.width * 2,
+      size.height,
+    );
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()
+        ..shader = LinearGradient(
+          colors: [
+            highlight.withValues(alpha: 0),
+            highlight,
+            highlight.withValues(alpha: 0),
+          ],
+        ).createShader(rect),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_TRSkeletonShimmerPainter oldDelegate) =>
+      oldDelegate.highlight != highlight || oldDelegate.progress != progress;
 }

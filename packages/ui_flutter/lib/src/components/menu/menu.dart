@@ -76,7 +76,6 @@ class _TRMenuState extends State<TRMenu> {
   Widget build(BuildContext context) {
     final controller = _controller;
     final colors = context.tinyrackTheme;
-    final animated = !MediaQuery.disableAnimationsOf(context);
     final triggerStyle = ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
@@ -136,17 +135,19 @@ class _TRMenuState extends State<TRMenu> {
       height: TRGeneratedControlMetrics.smHeight,
       child: MenuAnchor(
         alignmentOffset: widget.alignmentOffset,
-        animated: animated,
+        animated: false,
         childFocusNode: _focusNode,
         controller: controller,
         menuChildren: [
-          TRLayerSurface(
-            child: SingleChildScrollView(
-              primary: false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: widget.menuChildren,
+          _TRMenuEntryMotion(
+            child: TRLayerSurface(
+              child: SingleChildScrollView(
+                primary: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: widget.menuChildren,
+                ),
               ),
             ),
           ),
@@ -174,6 +175,58 @@ class _TRMenuState extends State<TRMenu> {
       ),
     );
   }
+}
+
+class _TRMenuEntryMotion extends StatefulWidget {
+  const _TRMenuEntryMotion({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_TRMenuEntryMotion> createState() => _TRMenuEntryMotionState();
+}
+
+class _TRMenuEntryMotionState extends State<_TRMenuEntryMotion>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: TRGeneratedMotion.normal,
+    vsync: this,
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1;
+    } else if (_controller.value == 0 && !_controller.isAnimating) {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _controller,
+    child: widget.child,
+    builder: (context, child) {
+      final value = TRGeneratedMotion.easeOut.transform(_controller.value);
+      return Opacity(
+        opacity: value,
+        child: Transform.scale(
+          alignment: Alignment.topCenter,
+          scale:
+              TRGeneratedMeasurements.overlayClosedScale +
+              (1 - TRGeneratedMeasurements.overlayClosedScale) * value,
+          child: child,
+        ),
+      );
+    },
+  );
 }
 
 /// A command in a [TRMenu].

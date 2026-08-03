@@ -137,10 +137,8 @@ class _TRCollapsibleState extends State<TRCollapsible> {
                                   TRGeneratedBorders.defaultWidth,
                               TRGeneratedSpacing.lg +
                                   TRGeneratedBorders.defaultWidth,
-                              open
-                                  ? TRGeneratedSpacing.md
-                                  : TRGeneratedSpacing.md +
-                                        TRGeneratedBorders.defaultWidth,
+                              TRGeneratedSpacing.md +
+                                  TRGeneratedBorders.defaultWidth,
                             ),
                             child: Row(
                               children: [
@@ -211,7 +209,7 @@ class _TRCollapsibleState extends State<TRCollapsible> {
                       // the insets they overlap.
                       padding: const EdgeInsets.fromLTRB(
                         TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
-                        TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
+                        TRGeneratedSpacing.lg,
                         TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
                         TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
                       ),

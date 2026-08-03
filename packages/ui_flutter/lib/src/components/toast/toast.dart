@@ -308,11 +308,38 @@ class _TRToastRegionState extends State<TRToastRegion> {
   }
 }
 
-class _TRToastCard extends StatelessWidget {
+class _TRToastCard extends StatefulWidget {
   const _TRToastCard({required this.data, required this.onDismiss});
 
   final TRToastData data;
   final VoidCallback onDismiss;
+
+  @override
+  State<_TRToastCard> createState() => _TRToastCardState();
+}
+
+class _TRToastCardState extends State<_TRToastCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: TRGeneratedMotion.fast,
+    vsync: this,
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.value = 1;
+    } else if (!_controller.isAnimating && _controller.value == 0) {
+      _controller.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +347,7 @@ class _TRToastCard extends StatelessWidget {
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
-    final accent = switch (data.variant) {
+    final accent = switch (widget.data.variant) {
       TRStatusVariant.neutral => colors.textMuted,
       TRStatusVariant.info => generated.infoBorder,
       TRStatusVariant.success => generated.successBorder,
@@ -374,10 +401,10 @@ class _TRToastCard extends StatelessWidget {
                             TRGeneratedFlutterRendering.normalLineMd /
                             TRGeneratedTypographySizes.sm,
                       ),
-                      child: data.title,
+                      child: widget.data.title,
                     ),
                   ),
-                  if (data.description case final description?)
+                  if (widget.data.description case final description?)
                     TRLayerPartBoundary(
                       name: 'description',
                       child: DefaultTextStyle.merge(
@@ -393,18 +420,18 @@ class _TRToastCard extends StatelessWidget {
                         child: description,
                       ),
                     ),
-                  ?data.action,
+                  ?widget.data.action,
                 ],
               ),
             ),
-            if (data.dismissible)
+            if (widget.data.dismissible)
               Transform.translate(
                 offset: const Offset(-TRGeneratedSpacing.sm, 0),
                 child: TRLayerPartBoundary(
                   name: 'dismissIcon',
                   child: IconButton(
                     icon: const Icon(Icons.close, size: 16),
-                    onPressed: onDismiss,
+                    onPressed: widget.onDismiss,
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints.tightFor(
                       width: TRGeneratedControlMetrics.smHeight,
@@ -420,11 +447,27 @@ class _TRToastCard extends StatelessWidget {
         ),
       ),
     );
-    if (!data.dismissible) return card;
-    return Dismissible(
-      key: ValueKey(data.id),
-      onDismissed: (_) => onDismiss(),
+    final animatedCard = AnimatedBuilder(
+      animation: _controller,
       child: card,
+      builder: (context, child) {
+        final progress = TRGeneratedMotion.standard.transform(
+          _controller.value,
+        );
+        return Opacity(
+          opacity: progress,
+          child: Transform.translate(
+            offset: Offset(0, TRGeneratedSpacing.sm * (1 - progress)),
+            child: child,
+          ),
+        );
+      },
+    );
+    if (!widget.data.dismissible) return animatedCard;
+    return Dismissible(
+      key: ValueKey(widget.data.id),
+      onDismissed: (_) => widget.onDismiss(),
+      child: animatedCard,
     );
   }
 }

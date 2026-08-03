@@ -68,6 +68,9 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'app-shell-navigation': _appShellNavigation,
   'app-shell-controls': _appShellControls,
   'app-shell-docs': _appShellDocs,
+  'pagination-controlled': _paginationControlled,
+  'table-dense-status': _tableDenseStatus,
+  'window-frame-browser': _windowFrameBrowser,
   'toast-track': _toastTrack,
 };
 
@@ -1891,6 +1894,41 @@ Widget _appShellDocs(BuildContext context, Locale locale) => SizedBox(
     ),
   ),
 );
+
+Widget _paginationControlled(BuildContext context, Locale locale) {
+  var page = 3;
+  return StatefulBuilder(
+    builder: (context, setState) => TRPagination(
+      currentPage: page,
+      totalPages: 24,
+      siblingCount: 2,
+      onPageChanged: (next) => setState(() => page = next),
+    ),
+  );
+}
+
+Widget _tableDenseStatus(BuildContext context, Locale locale) => const TRTable(
+  density: TRTableDensity.compact,
+  striped: true,
+  columns: [
+    TRTableColumn(label: Text('Rack')),
+    TRTableColumn(label: Text('Status')),
+  ],
+  rows: [
+    TRTableRow(cells: [Text('Rack A'), Text('Healthy')]),
+    TRTableRow(cells: [Text('Rack B'), Text('Degraded')]),
+  ],
+);
+
+Widget _windowFrameBrowser(BuildContext context, Locale locale) =>
+    const SizedBox(
+      width: 400,
+      child: TRWindowFrame(
+        variant: TRWindowFrameVariant.browser,
+        address: Text('https://tinyrack.net'),
+        body: Text('Ready'),
+      ),
+    );
 
 Widget _toastTrack(BuildContext context, Locale locale) =>
     _ToastTrackExample(locale: locale);

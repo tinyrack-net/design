@@ -226,6 +226,7 @@ class _TRNavigationMenuEntryState<T> extends State<_TRNavigationMenuEntry<T>> {
     open: widget.open,
     onOpenChange: (open) => widget.onChange(open ? widget.item.value : null),
     placement: widget.placement,
+    motionDuration: TRGeneratedMotion.normal,
     useRootOverlay: widget.useRootOverlay,
     triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
         Semantics(

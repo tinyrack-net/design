@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const componentsRoot = join(root, 'packages/ui_flutter/lib/src/components');
+const reactComponentsRoot = join(root, 'packages/ui_web/src/components');
 const packageEntrypoint = join(root, 'packages/ui_flutter/lib/tinyrack_ui.dart');
 
 function dartFiles(directory: string): string[] {
@@ -104,4 +105,29 @@ test('cross-component imports use facades and remain acyclic', () => {
   }
 
   for (const component of dependencies.keys()) visit(component, []);
+});
+
+test('every React component has an explicit Flutter functional counterpart', () => {
+  const aliases = new Map([
+    ['input', 'text_field'],
+    ['link-button', 'button'],
+    ['icon-button', 'button'],
+    ['checkbox-group', 'checkbox'],
+    ['radio-group', 'radio'],
+    ['toggle-group', 'toggle'],
+  ]);
+  const flutterComponents = new Set(
+    readdirSync(componentsRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name),
+  );
+  const missing = readdirSync(reactComponentsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .filter((component) => {
+      const counterpart = aliases.get(component) ?? component.replaceAll('-', '_');
+      return !flutterComponents.has(counterpart);
+    });
+
+  assert.deepEqual(missing, []);
 });

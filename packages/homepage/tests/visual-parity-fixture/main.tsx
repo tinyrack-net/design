@@ -87,10 +87,12 @@ import { TRMenubar } from '../../../ui_web/src/components/menubar/index.tsx';
 import { TRNavigationMenu } from '../../../ui_web/src/components/navigation-menu/index.tsx';
 import { TRNumberField } from '../../../ui_web/src/components/number-field/index.tsx';
 import { TROTPField } from '../../../ui_web/src/components/otp-field/index.tsx';
+import { TRPagination } from '../../../ui_web/src/components/pagination/index.tsx';
 import { TRPopover } from '../../../ui_web/src/components/popover/index.tsx';
 import { TRPreviewCard } from '../../../ui_web/src/components/preview-card/index.tsx';
 import { TRScrollArea } from '../../../ui_web/src/components/scroll-area/index.tsx';
 import { TRSlider } from '../../../ui_web/src/components/slider/index.tsx';
+import { TRTable } from '../../../ui_web/src/components/table/index.tsx';
 import {
   TRToast,
   useToastManager,
@@ -98,6 +100,7 @@ import {
 import { TRToolbar } from '../../../ui_web/src/components/toolbar/index.tsx';
 import { TRTooltip } from '../../../ui_web/src/components/tooltip/index.tsx';
 import { TRTreeNav } from '../../../ui_web/src/components/tree-nav/index.tsx';
+import { TRWindowFrame } from '../../../ui_web/src/components/window-frame/index.tsx';
 import '../../../ui_web/src/components/alert-dialog/alert-dialog.css';
 import '../../../ui_web/src/components/app-shell/app-shell.css';
 import '../../../ui_web/src/components/autocomplete/autocomplete.css';
@@ -118,6 +121,9 @@ import '../../../ui_web/src/components/toast/toast.css';
 import '../../../ui_web/src/components/toolbar/toolbar.css';
 import '../../../ui_web/src/components/tooltip/tooltip.css';
 import '../../../ui_web/src/components/tree-nav/tree-nav.css';
+import '../../../ui_web/src/components/pagination/pagination.css';
+import '../../../ui_web/src/components/table/table.css';
+import '../../../ui_web/src/components/window-frame/window-frame.css';
 import '../../../ui_web/src/core/core.css';
 import './fixture.css';
 
@@ -596,7 +602,7 @@ function Fixture() {
             onValueChange={() => {
               activations += 1;
             }}
-            value={['install']}
+            value={flag('open') ? ['install'] : []}
           >
             <TRAccordion.Item value="install">
               <TRAccordion.Header>
@@ -615,7 +621,13 @@ function Fixture() {
           </TRAccordion.Root>
         );
       case 'animated-number':
-        return <TRAnimatedNumber value={12345} />;
+        return (
+          <TRAnimatedNumber
+            animation={arg('animation', 'roll') as 'count' | 'roll'}
+            duration={Number(arg('duration', '600'))}
+            value={Number(arg('value', '12345'))}
+          />
+        );
       case 'code':
         return <TRCode>rack.deploy()</TRCode>;
       case 'collapsible':
@@ -628,7 +640,12 @@ function Fixture() {
             open={flag('open')}
           >
             <TRCollapsible.Trigger>{copy.collapsibleTrigger}</TRCollapsible.Trigger>
-            <TRCollapsible.Panel>{copy.description}</TRCollapsible.Panel>
+            <TRCollapsible.Panel
+              keepMounted
+              style={{ '--collapsible-panel-height': '21px' } as React.CSSProperties}
+            >
+              {copy.description}
+            </TRCollapsible.Panel>
           </TRCollapsible.Root>
         );
       case 'copy-button':
@@ -1121,7 +1138,7 @@ function Fixture() {
               Rack details
             </TRPopover.Trigger>
             <TRPopover.Portal>
-              <TRPopover.Positioner sideOffset={4}>
+              <TRPopover.Positioner align="start" side="bottom" sideOffset={4}>
                 <TRPopover.Popup
                   style={{
                     display: 'grid',
@@ -1177,7 +1194,10 @@ function Fixture() {
         );
       case 'scroll-area':
         return (
-          <TRScrollArea.Root style={{ height: 160, width: 320 }}>
+          <TRScrollArea.Root
+            autoHide={flag('autoHide')}
+            style={{ height: 160, width: 320 }}
+          >
             <TRScrollArea.Viewport>
               <TRScrollArea.Content>
                 {Array.from(
@@ -1351,9 +1371,10 @@ function Fixture() {
             <TRText variant="bodySm">{copy.status}</TRText>
           </TRFieldset.Root>
         );
-      case 'meter':
+      case 'meter': {
+        const value = Number(arg('value', '75'));
         return (
-          <TRMeter.Root value={75} variant={statusVariant}>
+          <TRMeter.Root value={value} variant={statusVariant}>
             <TRMeter.Label>{copy.meterLabel}</TRMeter.Label>
             <TRMeter.Value />
             <TRMeter.Track>
@@ -1361,14 +1382,21 @@ function Fixture() {
             </TRMeter.Track>
           </TRMeter.Root>
         );
-      case 'progress':
+      }
+      case 'progress': {
+        const progressValue = arg('value', '60');
         return (
-          <TRProgress.Root uiSize={uiSize} value={60} variant={statusVariant}>
+          <TRProgress.Root
+            uiSize={uiSize}
+            value={progressValue === 'indeterminate' ? null : Number(progressValue)}
+            variant={statusVariant}
+          >
             <TRProgress.Track>
               <TRProgress.Indicator />
             </TRProgress.Track>
           </TRProgress.Root>
         );
+      }
       case 'steps':
         return (
           <TRSteps.Root>
@@ -1576,6 +1604,66 @@ function Fixture() {
             ) : null}
           </TRField.Root>
         );
+      case 'pagination':
+        return (
+          <TRPagination
+            boundaryCount={Number(arg('boundaryCount', '1'))}
+            currentPage={Number(arg('currentPage', '3'))}
+            hrefFor={(page) => `?page=${page}`}
+            siblingCount={Number(arg('siblingCount', '1'))}
+            totalPages={Number(arg('totalPages', '12'))}
+          />
+        );
+      case 'table':
+        return (
+          <TRTable.Root
+            density={
+              arg('density', 'comfortable') as 'compact' | 'comfortable' | 'spacious'
+            }
+            striped={flag('striped')}
+          >
+            <TRTable.Caption>{copy.status}</TRTable.Caption>
+            <TRTable.Header>
+              <TRTable.Row>
+                <TRTable.Head>Rack</TRTable.Head>
+                <TRTable.Head>Status</TRTable.Head>
+              </TRTable.Row>
+            </TRTable.Header>
+            <TRTable.Body>
+              <TRTable.Row>
+                <TRTable.Cell>Rack A</TRTable.Cell>
+                <TRTable.Cell>Healthy</TRTable.Cell>
+              </TRTable.Row>
+              <TRTable.Row>
+                <TRTable.Cell>Rack B</TRTable.Cell>
+                <TRTable.Cell>Degraded</TRTable.Cell>
+              </TRTable.Row>
+            </TRTable.Body>
+          </TRTable.Root>
+        );
+      case 'window-frame':
+        return (
+          <TRWindowFrame.Root
+            style={{ width: 400 }}
+            variant={arg('variant', 'macos') as 'macos' | 'browser'}
+          >
+            <TRWindowFrame.TitleBar>
+              <TRWindowFrame.Controls />
+              {arg('variant', 'macos') === 'browser' ? (
+                <TRWindowFrame.AddressBar>
+                  https://tinyrack.net
+                </TRWindowFrame.AddressBar>
+              ) : (
+                <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
+              )}
+            </TRWindowFrame.TitleBar>
+            <TRWindowFrame.Body
+              padding={arg('padding', 'md') as 'none' | 'sm' | 'md' | 'lg'}
+            >
+              <span style={{ whiteSpace: 'pre' }}>{'❯ tinyrack status\n✓ Ready'}</span>
+            </TRWindowFrame.Body>
+          </TRWindowFrame.Root>
+        );
       default:
         return (
           <TRButton
@@ -1606,6 +1694,10 @@ function Fixture() {
 const rootElement = document.getElementById('root');
 if (rootElement === null) throw new Error('Missing visual parity fixture root.');
 const root = createRoot(rootElement);
+const fixtureKey = () =>
+  query.get('motion') === 'true'
+    ? `${component}:${locale}:${query.get('theme') ?? 'light'}:motion`
+    : query.toString();
 (
   window as Window & {
     __parityActivations?: () => number;
@@ -1631,6 +1723,6 @@ const root = createRoot(rootElement);
     query.get('motion') === 'true',
   );
   document.documentElement.lang = locale;
-  flushSync(() => root.render(<Fixture key={search} />));
+  flushSync(() => root.render(<Fixture key={fixtureKey()} />));
 };
-root.render(<Fixture key={query.toString()} />);
+root.render(<Fixture key={fixtureKey()} />);

@@ -622,11 +622,11 @@ const componentData: Record<
   'scroll-area': {
     title: 'ScrollArea',
     description: {
-      en: 'Scroll bounded content with themed, keyboard-accessible Flutter scrollbars.',
-      ko: '테마가 적용된 키보드 접근 가능 Flutter 스크롤바로 제한된 콘텐츠를 스크롤해요.',
-      ja: 'テーマ付きでキーボード操作可能な Flutter スクロールバーを使い、領域内のコンテンツをスクロールします。',
+      en: 'Scroll bounded content with themed, keyboard-accessible Flutter scrollbars that can remain visible or fade on hover.',
+      ko: '항상 표시하거나 hover에서 페이드할 수 있는, 테마가 적용된 키보드 접근 가능 Flutter 스크롤바로 제한된 콘텐츠를 스크롤해요.',
+      ja: '常時表示またはホバー時にフェード表示できる、テーマ付きでキーボード操作可能な Flutter スクロールバーで領域内のコンテンツをスクロールします。',
     },
-    usage: 'const TRScrollArea(\n  child: activityList,\n)',
+    usage: 'const TRScrollArea(\n  autoHide: true,\n  child: activityList,\n)',
   },
   slider: {
     title: 'Slider',
@@ -1362,6 +1362,231 @@ class _BackupChoiceState extends State<BackupChoice> {
     },
     usage:
       "TRTextField(\n  label: 'Rack name',\n  controller: controller,\n  validator: (value) =>\n      value == null || value.isEmpty ? 'Required' : null,\n  onSaved: save,\n)",
+  },
+  pagination: {
+    title: 'Pagination',
+    description: {
+      en: 'Navigate static result pages with a compact, derived number range.',
+      ko: '계산된 번호 범위로 정적 결과 페이지를 간결하게 이동해요.',
+      ja: '算出された番号範囲で、静的な結果ページをコンパクトに移動します。',
+    },
+    usage:
+      'TRPagination(\n  currentPage: page,\n  totalPages: 12,\n  onPageChanged: setPage,\n)',
+    contractRows: [
+      {
+        axis: { en: 'Range', ko: '범위', ja: '範囲' },
+        choices: {
+          en: '`boundaryCount`, `siblingCount`',
+          ko: '`boundaryCount`, `siblingCount`',
+          ja: '`boundaryCount`, `siblingCount`',
+        },
+      },
+      {
+        axis: { en: 'Current page', ko: '현재 페이지', ja: '現在のページ' },
+        choices: {
+          en: 'Clamped to `1...totalPages`',
+          ko: '`1...totalPages` 범위로 제한해요',
+          ja: '`1...totalPages` の範囲に制限します',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRPagination properties',
+          ko: 'TRPagination 속성',
+          ja: 'TRPagination のプロパティ',
+        },
+        rows: [
+          {
+            name: 'currentPage',
+            type: 'int · required',
+            purpose: {
+              en: 'Selects the current page.',
+              ko: '현재 페이지를 선택해요.',
+              ja: '現在のページを選択します。',
+            },
+          },
+          {
+            name: 'totalPages',
+            type: 'int · required',
+            purpose: {
+              en: 'Sets the available page count.',
+              ko: '전체 페이지 수를 정해요.',
+              ja: 'ページの総数を設定します。',
+            },
+          },
+          {
+            name: 'onPageChanged',
+            type: 'ValueChanged<int> · required',
+            purpose: {
+              en: 'Receives page activations.',
+              ko: '페이지 선택 결과를 받아요.',
+              ja: 'ページ選択を受け取ります。',
+            },
+          },
+          {
+            name: 'boundaryCount / siblingCount',
+            type: 'int · 1',
+            purpose: {
+              en: 'Controls pinned and adjacent pages.',
+              ko: '고정 페이지와 인접 페이지 수를 조절해요.',
+              ja: '固定ページと隣接ページの数を調整します。',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  table: {
+    title: 'Table',
+    description: {
+      en: 'Present semantic row-and-column data with density, striping, and horizontal overflow.',
+      ko: '밀도, 줄무늬, 가로 스크롤을 지원하는 시맨틱 행과 열 데이터를 표시해요.',
+      ja: '密度、ストライプ、横スクロールに対応したセマンティックな行列データを表示します。',
+    },
+    usage:
+      "const TRTable(\n  columns: [TRTableColumn(label: Text('Rack'))],\n  rows: [TRTableRow(cells: [Text('Rack A')])],\n)",
+    contractRows: [
+      {
+        axis: { en: 'Density', ko: '밀도', ja: '密度' },
+        choices: {
+          en: '`compact`, `comfortable`, `spacious`',
+          ko: '`compact`, `comfortable`, `spacious`',
+          ja: '`compact`, `comfortable`, `spacious`',
+        },
+      },
+      {
+        axis: { en: 'Rows', ko: '행', ja: '行' },
+        choices: {
+          en: 'Optional striping and footer',
+          ko: '선택적 줄무늬와 footer',
+          ja: '任意のストライプと footer',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRTable properties',
+          ko: 'TRTable 속성',
+          ja: 'TRTable のプロパティ',
+        },
+        rows: [
+          {
+            name: 'columns / rows',
+            type: 'List · required',
+            purpose: {
+              en: 'Defines headers and ordered cells.',
+              ko: 'header와 순서가 있는 cell을 정의해요.',
+              ja: 'ヘッダーと順序付きセルを定義します。',
+            },
+          },
+          {
+            name: 'density',
+            type: 'TRTableDensity · comfortable',
+            purpose: {
+              en: 'Sets row spacing.',
+              ko: '행 간격을 정해요.',
+              ja: '行間隔を設定します。',
+            },
+          },
+          {
+            name: 'striped',
+            type: 'bool · false',
+            purpose: {
+              en: 'Alternates body row surfaces.',
+              ko: '본문 행의 배경을 번갈아 표시해요.',
+              ja: '本文行の背景を交互に表示します。',
+            },
+          },
+          {
+            name: 'caption / footer',
+            type: 'Widget? / TRTableFooter?',
+            purpose: {
+              en: 'Adds a caption and summary row.',
+              ko: 'caption과 요약 행을 추가해요.',
+              ja: 'キャプションと集計行を追加します。',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  'window-frame': {
+    title: 'WindowFrame',
+    description: {
+      en: 'Frame application content with macOS or browser-style decorative chrome.',
+      ko: '앱 콘텐츠를 macOS 또는 브라우저 스타일의 장식 프레임으로 감싸요.',
+      ja: 'アプリの内容を macOS またはブラウザ風の装飾フレームで囲みます。',
+    },
+    usage:
+      "const TRWindowFrame(\n  title: Text('Terminal'),\n  body: Text('Ready'),\n)",
+    contractRows: [
+      {
+        axis: { en: 'Variant', ko: '형태', ja: 'バリアント' },
+        choices: {
+          en: '`macos`, `browser`',
+          ko: '`macos`, `browser`',
+          ja: '`macos`, `browser`',
+        },
+      },
+      {
+        axis: { en: 'Body padding', ko: '본문 여백', ja: '本文余白' },
+        choices: {
+          en: '`none`, `sm`, `md`, `lg`',
+          ko: '`none`, `sm`, `md`, `lg`',
+          ja: '`none`, `sm`, `md`, `lg`',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRWindowFrame properties',
+          ko: 'TRWindowFrame 속성',
+          ja: 'TRWindowFrame のプロパティ',
+        },
+        rows: [
+          {
+            name: 'body',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Provides framed content.',
+              ko: '프레임 안의 콘텐츠를 제공해요.',
+              ja: 'フレーム内の内容を指定します。',
+            },
+          },
+          {
+            name: 'variant',
+            type: 'TRWindowFrameVariant · macos',
+            purpose: {
+              en: 'Chooses app or browser chrome.',
+              ko: '앱 또는 브라우저 프레임을 선택해요.',
+              ja: 'アプリまたはブラウザのフレームを選択します。',
+            },
+          },
+          {
+            name: 'padding',
+            type: 'TRWindowFramePadding · md',
+            purpose: {
+              en: 'Sets the body inset.',
+              ko: '본문 안쪽 여백을 정해요.',
+              ja: '本文の内側余白を設定します。',
+            },
+          },
+          {
+            name: 'title / address',
+            type: 'Widget?',
+            purpose: {
+              en: 'Labels the selected title bar.',
+              ko: '선택한 title bar에 레이블을 표시해요.',
+              ja: '選択したタイトルバーにラベルを表示します。',
+            },
+          },
+        ],
+      },
+    ],
   },
 };
 

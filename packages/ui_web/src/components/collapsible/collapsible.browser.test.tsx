@@ -108,11 +108,18 @@ test('animates the panel open and closed with design-system motion tokens', asyn
   expect(panelStyle.transitionDuration).toContain('0.18s');
 
   await expect.poll(() => panel?.hasAttribute('data-starting-style')).toBe(false);
+  let sawEndingStyle = panel?.hasAttribute('data-ending-style') === true;
+  const endingStyleObserver = new MutationObserver(() => {
+    sawEndingStyle ||= panel?.hasAttribute('data-ending-style') === true;
+  });
+  endingStyleObserver.observe(panel as HTMLElement, {
+    attributeFilter: ['data-ending-style'],
+    attributes: true,
+  });
   trigger?.click();
-  await expect
-    .poll(() => panel?.isConnected === true && panel.hasAttribute('data-ending-style'))
-    .toBe(true);
-  await expect.poll(() => panel?.isConnected).toBe(false);
+  await expect.poll(() => sawEndingStyle).toBe(true);
+  endingStyleObserver.disconnect();
+  await expect.poll(() => document.querySelector('.tr-collapsible-content')).toBeNull();
 });
 
 test('blocks disabled interaction and preserves part refs and native props', async () => {

@@ -1576,6 +1576,71 @@ class _RegionAutocompleteState extends State<RegionAutocomplete> {
 )`,
     },
   ],
+  pagination: [
+    {
+      id: 'pagination-controlled',
+      title: {
+        en: 'Control the current page',
+        ko: '현재 페이지 제어',
+        ja: '現在のページを制御',
+      },
+      description: {
+        en: 'Keep page state in the parent and tune the derived range without rebuilding pagination items.',
+        ko: '페이지 상태는 부모가 관리하고 항목을 직접 만들지 않고 계산 범위를 조절해요.',
+        ja: 'ページ状態を親で管理し、項目を組み直さずに算出範囲を調整します。',
+      },
+      dart: String.raw`TRPagination(
+  currentPage: page,
+  totalPages: 24,
+  boundaryCount: 1,
+  siblingCount: 2,
+  onPageChanged: (next) => setState(() => page = next),
+)`,
+    },
+  ],
+  table: [
+    {
+      id: 'table-dense-status',
+      title: {
+        en: 'Compact status data',
+        ko: '간결한 상태 데이터',
+        ja: 'コンパクトな状態データ',
+      },
+      description: {
+        en: 'Use compact density and striping for scan-heavy operational data.',
+        ko: '빠르게 훑어보는 운영 데이터에는 compact 밀도와 줄무늬를 사용해요.',
+        ja: '一覧性が必要な運用データには compact 密度とストライプを使います。',
+      },
+      dart: String.raw`TRTable(
+  density: TRTableDensity.compact,
+  striped: true,
+  columns: const [
+    TRTableColumn(label: Text('Rack')),
+    TRTableColumn(label: Text('Status')),
+  ],
+  rows: const [
+    TRTableRow(cells: [Text('Rack A'), Text('Healthy')]),
+    TRTableRow(cells: [Text('Rack B'), Text('Degraded')]),
+  ],
+)`,
+    },
+  ],
+  'window-frame': [
+    {
+      id: 'window-frame-browser',
+      title: { en: 'Browser chrome', ko: '브라우저 프레임', ja: 'ブラウザクローム' },
+      description: {
+        en: 'Use the browser variant and address bar for web-content previews.',
+        ko: '웹 콘텐츠 미리보기에는 browser 형태와 주소 표시줄을 사용해요.',
+        ja: 'Web コンテンツのプレビューには browser バリアントとアドレスバーを使います。',
+      },
+      dart: String.raw`const TRWindowFrame(
+  variant: TRWindowFrameVariant.browser,
+  address: Text('https://tinyrack.net'),
+  body: Text('Ready'),
+)`,
+    },
+  ],
   toast: [
     {
       id: 'toast-track',

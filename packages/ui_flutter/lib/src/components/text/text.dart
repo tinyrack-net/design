@@ -61,6 +61,85 @@ class TRText extends StatelessWidget {
       TRTextWeight.bold => TRGeneratedFontWeights.bold,
       TRTextWeight.strong => TRGeneratedFontWeights.strong,
     };
+    final locale = Localizations.localeOf(context).languageCode;
+    final resolvedTracking = switch ((variant, weight, locale)) {
+      (TRTextVariant.body, TRTextWeight.regular, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingBodyRegularEn,
+      (TRTextVariant.body, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingBodyStrongEn,
+      (TRTextVariant.bodySm, TRTextWeight.bold || TRTextWeight.heading, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingBodySmBoldEn,
+      (TRTextVariant.bodySm, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingBodySmStrongEn,
+      (TRTextVariant.bodySm, TRTextWeight.strong, 'ja') =>
+        TRGeneratedFlutterRendering.textTrackingBodySmStrongJa,
+      (TRTextVariant.bodySm, TRTextWeight.strong, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingBodySmStrongKo,
+      (TRTextVariant.bodySm, _, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingBodySmNonStrongKo,
+      (
+        TRTextVariant.caption,
+        TRTextWeight.bold || TRTextWeight.heading,
+        'en',
+      ) =>
+        TRGeneratedFlutterRendering.textTrackingCaptionBoldEn,
+      (TRTextVariant.caption, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingCaptionStrongEn,
+      (TRTextVariant.caption, TRTextWeight.strong, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingCaptionStrongKo,
+      (TRTextVariant.caption, _, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingCaptionNonStrongKo,
+      (TRTextVariant.code, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingCodeStrongEn,
+      (TRTextVariant.code, TRTextWeight.strong, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingCodeStrongKo,
+      (TRTextVariant.code, _, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingCodeNonStrongEn,
+      (TRTextVariant.code, _, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingCodeNonStrongKo,
+      (TRTextVariant.display, TRTextWeight.regular, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingDisplayRegularEn,
+      (TRTextVariant.display, TRTextWeight.medium, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingDisplayMediumEn,
+      (TRTextVariant.display, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingDisplayStrongEn,
+      (TRTextVariant.display, TRTextWeight.strong, 'ko') =>
+        -TRGeneratedBorders.defaultWidth /
+            (TRGeneratedSpacing.xs + TRGeneratedBorders.defaultWidth),
+      (TRTextVariant.display, _, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingDisplayNonStrongKo,
+      (
+        TRTextVariant.displayLg,
+        TRTextWeight.bold || TRTextWeight.heading,
+        'en',
+      ) =>
+        TRGeneratedFlutterRendering.textTrackingDisplayLgBoldEn,
+      (TRTextVariant.headingLg, TRTextWeight.regular, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingHeadingLgRegularEn,
+      (TRTextVariant.headingLg, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingHeadingLgStrongEn,
+      (TRTextVariant.headingLg, TRTextWeight.strong, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingHeadingLgStrongKo,
+      (TRTextVariant.headingMd, TRTextWeight.regular, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingHeadingMdRegularEn,
+      (TRTextVariant.headingMd, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingHeadingMdStrongEn,
+      (TRTextVariant.headingSm, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingHeadingSmStrongEn,
+      (TRTextVariant.label, TRTextWeight.bold || TRTextWeight.heading, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingLabelBoldEn,
+      (TRTextVariant.label, TRTextWeight.strong, 'en') =>
+        TRGeneratedFlutterRendering.textTrackingLabelStrongEn,
+      (TRTextVariant.label, TRTextWeight.strong, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingLabelStrongKo,
+      (TRTextVariant.label, _, 'ko') =>
+        TRGeneratedFlutterRendering.textTrackingLabelNonStrongKo,
+      _ =>
+        weight == TRTextWeight.strong && locale != 'ja'
+            ? -TRGeneratedBorders.defaultWidth /
+                  (TRGeneratedSpacing.xs + TRGeneratedBorders.defaultWidth)
+            : style.letterSpacing,
+    };
     return Text(
       data,
       maxLines: truncate ? 1 : maxLines,
@@ -69,7 +148,7 @@ class TRText extends StatelessWidget {
       style: style.copyWith(
         color: resolvedColor,
         fontWeight: resolvedWeight,
-        letterSpacing: style.letterSpacing,
+        letterSpacing: resolvedTracking,
       ),
       strutStyle: StrutStyle(
         fontFamily: style.fontFamily,

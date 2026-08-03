@@ -46,6 +46,14 @@ type DesignTokens = {
       paddingBlockCorrection: string;
       paddingInlineCorrection: string;
     };
+    textTracking: Record<string, number>;
+    windowFrame: {
+      bodyLineHeight: string;
+      browserTitleBarHeight: string;
+      controlClose: string;
+      controlMaximize: string;
+      controlMinimize: string;
+    };
     layerComponents: TokenRecord;
   };
   layers: TokenRecord;
@@ -572,6 +580,33 @@ function dartOutput() {
     `  static const double textFieldPaddingBlockCorrection = ${dartNumber(
       flutterMetrics.textField.paddingBlockCorrection,
       'flutterRenderingMetrics.textField.paddingBlockCorrection',
+    )};`,
+    ...Object.entries(flutterMetrics.textTracking).map(
+      ([key, value]) =>
+        `  static const double textTracking${key[0]?.toUpperCase()}${key.slice(1)} = ${dartScalar(
+          value,
+          `flutterRenderingMetrics.textTracking.${key}`,
+        )};`,
+    ),
+    `  static const double windowFrameBodyLineHeight = ${dartNumber(
+      flutterMetrics.windowFrame.bodyLineHeight,
+      'flutterRenderingMetrics.windowFrame.bodyLineHeight',
+    )};`,
+    `  static const double windowFrameBrowserTitleBarHeight = ${dartNumber(
+      flutterMetrics.windowFrame.browserTitleBarHeight,
+      'flutterRenderingMetrics.windowFrame.browserTitleBarHeight',
+    )};`,
+    `  static const Color windowFrameControlClose = ${dartColor(
+      flutterMetrics.windowFrame.controlClose,
+      'flutterRenderingMetrics.windowFrame.controlClose',
+    )};`,
+    `  static const Color windowFrameControlMinimize = ${dartColor(
+      flutterMetrics.windowFrame.controlMinimize,
+      'flutterRenderingMetrics.windowFrame.controlMinimize',
+    )};`,
+    `  static const Color windowFrameControlMaximize = ${dartColor(
+      flutterMetrics.windowFrame.controlMaximize,
+      'flutterRenderingMetrics.windowFrame.controlMaximize',
     )};`,
     '}',
     '',

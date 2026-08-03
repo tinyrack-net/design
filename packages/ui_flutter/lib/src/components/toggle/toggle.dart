@@ -127,6 +127,14 @@ class _TRToggleState extends State<TRToggle> {
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
+    final childText = widget.child is Text ? (widget.child as Text).data : null;
+    final usesCjkFallback =
+        childText != null &&
+        RegExp(
+          r'[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]',
+        ).hasMatch(childText);
+    final japanese = Localizations.localeOf(context).languageCode == 'ja';
+    final english = Localizations.localeOf(context).languageCode == 'en';
 
     return CallbackShortcuts(
       bindings: disabled
@@ -181,6 +189,14 @@ class _TRToggleState extends State<TRToggle> {
                           fontSize: fontSize,
                           fontWeight: TRGeneratedFontWeights.medium,
                           height: lineHeight / fontSize,
+                          letterSpacing: usesCjkFallback && !japanese
+                              ? -TRGeneratedBorders.defaultWidth /
+                                    (TRGeneratedSpacing.size3xs +
+                                        TRGeneratedBorders.defaultWidth)
+                              : english
+                              ? -TRGeneratedBorders.defaultWidth /
+                                    TRGeneratedSpacing.xl
+                              : null,
                         ),
                         child: widget.child,
                       ),

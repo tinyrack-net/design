@@ -9,14 +9,17 @@ class _TRButtonInteractionFrame extends StatefulWidget {
     required this.motionDuration,
     required this.onActivate,
     required this.opacity,
+    this.autofocus = false,
     this.focusNode,
   });
 
   final Widget Function(
     FocusNode focusNode,
     WidgetStatesController statesController,
+    VoidCallback? onPressed,
   )
   builder;
+  final bool autofocus;
   final Color color;
   final bool disabled;
   final Color Function({required bool hovered, required bool pressed}) fill;
@@ -32,9 +35,11 @@ class _TRButtonInteractionFrame extends StatefulWidget {
 
 class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
   FocusNode? _internalFocusNode;
+  late final FocusNode _materialFocusNode;
   late final WidgetStatesController _statesController;
+  bool _keyboardVisualPressed = false;
   bool _pointerDown = false;
-  bool _spaceDown = false;
+  bool _pointerFocused = false;
   bool _syncingDisabled = false;
 
   FocusNode get _focusNode =>
@@ -42,6 +47,7 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
 
   bool get _showRing =>
       _focusNode.hasFocus &&
+      !_pointerFocused &&
       FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
 
   @override
@@ -50,9 +56,9 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
     _statesController = WidgetStatesController({
       if (widget.disabled) WidgetState.disabled,
     });
+    _materialFocusNode = FocusNode(canRequestFocus: false, skipTraversal: true);
     _focusNode.addListener(_handleFocusChange);
     _statesController.addListener(_handleStatesChange);
-    HardwareKeyboard.instance.addHandler(_handleKeyEvent);
     FocusManager.instance.addHighlightModeListener(_handleHighlightModeChange);
   }
 
@@ -60,15 +66,16 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
   void didUpdateWidget(_TRButtonInteractionFrame oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.disabled != widget.disabled) {
-      if (widget.disabled) _spaceDown = false;
+      _pointerDown = false;
+      _keyboardVisualPressed = false;
       _syncingDisabled = true;
+      _statesController.update(WidgetState.pressed, false);
       _statesController.update(WidgetState.disabled, widget.disabled);
       _syncingDisabled = false;
     }
     if (oldWidget.focusNode == widget.focusNode) return;
-    (oldWidget.focusNode ?? _internalFocusNode)?.removeListener(
-      _handleFocusChange,
-    );
+    final oldFocusNode = oldWidget.focusNode ?? _internalFocusNode;
+    oldFocusNode?.removeListener(_handleFocusChange);
     _internalFocusNode?.dispose();
     _internalFocusNode = null;
     _focusNode.addListener(_handleFocusChange);
@@ -80,7 +87,7 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
     _statesController
       ..removeListener(_handleStatesChange)
       ..dispose();
-    HardwareKeyboard.instance.removeHandler(_handleKeyEvent);
+    _materialFocusNode.dispose();
     FocusManager.instance.removeHighlightModeListener(
       _handleHighlightModeChange,
     );
@@ -89,7 +96,7 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
   }
 
   void _handleFocusChange() {
-    if (!_focusNode.hasFocus) _spaceDown = false;
+    if (!_focusNode.hasFocus) _pointerFocused = false;
     if (mounted) setState(() {});
   }
 
@@ -101,71 +108,88 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
     _handleFocusChange();
   }
 
-  bool _handleKeyEvent(KeyEvent event) {
-    if (event.logicalKey != LogicalKeyboardKey.space ||
-        widget.disabled ||
-        !_focusNode.hasFocus) {
-      return false;
+  void _handleNativeActivate() {
+    widget.onActivate?.call();
+  }
+
+  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    if (widget.disabled) return KeyEventResult.ignored;
+    if (event.logicalKey == LogicalKeyboardKey.enter && event is KeyDownEvent) {
+      widget.onActivate?.call();
+      return KeyEventResult.handled;
     }
-    if (event is KeyDownEvent) {
-      if (!_spaceDown) setState(() => _spaceDown = true);
-      return true;
+    if (event.logicalKey != LogicalKeyboardKey.space) {
+      return KeyEventResult.ignored;
     }
-    if (event is KeyUpEvent) {
-      final shouldActivate = _spaceDown && _focusNode.hasFocus;
-      setState(() => _spaceDown = false);
-      if (shouldActivate) widget.onActivate?.call();
-      return true;
+    final pressed = event is! KeyUpEvent;
+    if (_keyboardVisualPressed != pressed && mounted) {
+      setState(() => _keyboardVisualPressed = pressed);
     }
-    return true;
+    if (event is KeyUpEvent) widget.onActivate?.call();
+    return KeyEventResult.handled;
   }
 
   @override
   Widget build(BuildContext context) {
-    final pressed =
+    final statePressed =
         !widget.disabled &&
-        (_spaceDown ||
-            (_pointerDown &&
-                _statesController.value.contains(WidgetState.pressed)));
+        _statesController.value.contains(WidgetState.pressed);
+    final pointerPressed = statePressed && _pointerDown;
+    final keyboardPressed = _keyboardVisualPressed;
+    final pressed = keyboardPressed || pointerPressed;
     final hovered =
         !widget.disabled &&
         _statesController.value.contains(WidgetState.hovered);
     final background = widget.fill(hovered: hovered, pressed: pressed);
-    return Shortcuts(
-      shortcuts: const {
-        SingleActivator(LogicalKeyboardKey.space): DoNothingIntent(),
-      },
+    return Focus(
+      autofocus: widget.autofocus,
+      focusNode: _focusNode,
+      onKeyEvent: _handleKeyEvent,
       child: Listener(
         onPointerCancel: (_) => setState(() => _pointerDown = false),
         onPointerDown: widget.disabled
             ? null
-            : (_) => setState(() => _pointerDown = true),
+            : (_) {
+                _pointerFocused = true;
+                _focusNode.requestFocus();
+                setState(() => _pointerDown = true);
+              },
         onPointerUp: (_) => setState(() => _pointerDown = false),
-        child: AnimatedContainer(
-          curve: TRMotion.standard,
-          duration: widget.motionDuration,
-          transform: Matrix4.translationValues(
+        child: Transform.translate(
+          offset: Offset(
             0,
-            pressed ? TRGeneratedMeasurements.controlPressDistance : 0,
-            0,
+            keyboardPressed ? TRGeneratedMeasurements.controlPressDistance : 0,
           ),
-          child: AnimatedOpacity(
+          child: AnimatedContainer(
             curve: TRMotion.standard,
             duration: widget.motionDuration,
-            opacity: widget.opacity,
-            child: AnimatedContainer(
+            transform: Matrix4.translationValues(
+              0,
+              pointerPressed ? TRGeneratedMeasurements.controlPressDistance : 0,
+              0,
+            ),
+            child: AnimatedOpacity(
               curve: TRMotion.standard,
               duration: widget.motionDuration,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-                color: background,
-              ),
-              child: CustomPaint(
-                foregroundPainter: _TRFocusRingPainter(
-                  color: widget.color,
-                  visible: _showRing,
+              opacity: widget.opacity,
+              child: AnimatedContainer(
+                curve: TRMotion.standard,
+                duration: widget.motionDuration,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                  color: background,
                 ),
-                child: widget.builder(_focusNode, _statesController),
+                child: CustomPaint(
+                  foregroundPainter: _TRFocusRingPainter(
+                    color: widget.color,
+                    visible: _showRing,
+                  ),
+                  child: widget.builder(
+                    _materialFocusNode,
+                    _statesController,
+                    widget.disabled ? null : _handleNativeActivate,
+                  ),
+                ),
               ),
             ),
           ),

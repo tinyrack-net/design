@@ -62,6 +62,7 @@ class TRAnimatedNumber extends StatefulWidget {
 class _TRAnimatedNumberState extends State<TRAnimatedNumber>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  double _animationProgress = 1;
   late double _fromValue;
   late double _visualValue;
   late String _previousText;
@@ -125,6 +126,7 @@ class _TRAnimatedNumberState extends State<TRAnimatedNumber>
     _fromValue = _visualValue;
     _previousText = _format(_fromValue);
     _targetText = nextText;
+    _animationProgress = 0;
     _controller
       ..duration = widget.duration
       ..forward(from: 0);
@@ -133,8 +135,11 @@ class _TRAnimatedNumberState extends State<TRAnimatedNumber>
   void _handleTick() {
     final progress = CurvedAnimation(
       parent: _controller,
-      curve: TRMotion.standard,
+      curve: widget.animation == TRAnimatedNumberAnimation.count
+          ? Curves.easeOutCubic
+          : TRMotion.easeOut,
     ).value;
+    _animationProgress = progress;
     _visualValue = _fromValue + (widget.value - _fromValue) * progress;
     if (mounted) setState(() {});
   }
@@ -153,6 +158,7 @@ class _TRAnimatedNumberState extends State<TRAnimatedNumber>
     _targetText = _format(widget.value);
     _previousText = _targetText;
     _controller.value = 1;
+    _animationProgress = 1;
     if (mounted) setState(() {});
   }
 
@@ -182,6 +188,7 @@ class _TRAnimatedNumberState extends State<TRAnimatedNumber>
     final textStyle = const TextStyle(
       fontFamily: TRGeneratedFontFamilies.body,
       fontFeatures: [FontFeature.tabularFigures()],
+      letterSpacing: TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.xs,
       height:
           TRGeneratedFlutterRendering.normalLineMd /
           TRGeneratedTypographySizes.md,
@@ -198,7 +205,7 @@ class _TRAnimatedNumberState extends State<TRAnimatedNumber>
         : _RollNumber(
             direction: _resolvedDirection(),
             previous: animating ? _previousText : _targetText,
-            progress: _controller.value,
+            progress: _animationProgress,
             style: textStyle,
             target: _targetText,
           );

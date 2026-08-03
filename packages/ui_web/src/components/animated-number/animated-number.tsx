@@ -81,7 +81,13 @@ function resolvedRollDirection(
   return to < from ? 'down' : 'up';
 }
 
-function RollVisual({ presentation }: { presentation: RollPresentation }) {
+function RollVisual({
+  onComplete,
+  presentation,
+}: {
+  onComplete: () => void;
+  presentation: RollPresentation;
+}) {
   const previousTokens = new Map(
     presentation.previous.tokens.map((token) => [token.key, token]),
   );
@@ -96,6 +102,7 @@ function RollVisual({ presentation }: { presentation: RollPresentation }) {
       data-animating="true"
       data-direction={presentation.direction}
       key={presentation.id}
+      onAnimationEnd={onComplete}
     >
       {hasRemovedTokens ? (
         <span className="tr-animated-number-removed">
@@ -187,14 +194,26 @@ export function TRAnimatedNumber({
 
   useLayoutEffect(() => {
     const element = presentationRef.current;
-    const visual = element?.querySelector<HTMLElement>('.tr-animated-number-visual');
-    if (element === null || visual === null || visual === undefined) return;
+    if (element === null) return;
+    // Both nodes are structural invariants of the rendered presentation.
+    const visual = element.firstElementChild as HTMLElement;
     const targetWidth = visual.getBoundingClientRect().width;
+    const stableWidth = (element.parentElement as HTMLElement).getBoundingClientRect()
+      .width;
     if (
       presentation.kind !== 'roll' ||
       prefersReducedMotion ||
       normalizedDuration === 0
     ) {
+      layoutAnimationRef.current?.cancel();
+      layoutAnimationRef.current = null;
+      // The inline-grid root includes the rendered tracking geometry that the
+      // nested visual span omits. Capture the public box so a same-width roll
+      // does not snap inward at its 0ms frame.
+      previousWidthRef.current = stableWidth;
+      return;
+    }
+    if (presentation.previous.text.length === presentation.next.text.length) {
       layoutAnimationRef.current?.cancel();
       layoutAnimationRef.current = null;
       previousWidthRef.current = targetWidth;
@@ -272,20 +291,24 @@ export function TRAnimatedNumber({
         next,
         previous,
       });
+      return;
     }
 
-    const update = (timestamp: number) => {
-      const elapsed = timestamp - startedAt;
+    const update = () => {
+      // Keep the elapsed clock in the same time domain as `startedAt`.
+      // Browser automation and background throttling may virtualize rAF's
+      // callback timestamp independently from `performance.now()`.
+      const elapsed = performance.now() - startedAt;
       const progress = Math.min(1, elapsed / normalizedDuration);
       const interpolated = interpolateAnimatedNumber(from, value, progress);
       currentVisualValueRef.current = interpolated;
 
-      if (animation === 'count') {
-        setPresentation({
-          kind: 'count',
-          text: transitionFormatter.format(interpolated),
-        });
-      }
+      // Roll mode returns before scheduling this callback, so this path is
+      // exclusively the count animation.
+      setPresentation({
+        kind: 'count',
+        text: transitionFormatter.format(interpolated),
+      });
 
       if (progress < 1) {
         animationFrameRef.current = requestAnimationFrame(update);
@@ -329,7 +352,13 @@ export function TRAnimatedNumber({
         ref={presentationRef}
       >
         {presentation.kind === 'roll' ? (
-          <RollVisual presentation={presentation} />
+          <RollVisual
+            onComplete={() => {
+              currentVisualValueRef.current = value;
+              setPresentation({ kind: 'static', text: targetText });
+            }}
+            presentation={presentation}
+          />
         ) : (
           <span
             className="tr-animated-number-visual"

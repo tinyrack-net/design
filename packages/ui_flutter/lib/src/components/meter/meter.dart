@@ -7,7 +7,7 @@ import '../../types.dart';
 
 // @tinyrack-preview meter
 /// A labeled measurement against a known range.
-class TRMeter extends StatelessWidget {
+class TRMeter extends StatefulWidget {
   const TRMeter({
     required this.value,
     this.min = 0,
@@ -26,19 +26,35 @@ class TRMeter extends StatelessWidget {
   final TRStatusVariant variant;
 
   @override
+  State<TRMeter> createState() => _TRMeterState();
+}
+
+class _TRMeterState extends State<TRMeter> {
+  static double _fractionOf(TRMeter widget) {
+    if (widget.max == widget.min) return 0;
+    return ((widget.value - widget.min) / (widget.max - widget.min)).clamp(
+      0.0,
+      1.0,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
-    final fill = switch (variant) {
+    final fill = switch (widget.variant) {
       TRStatusVariant.neutral => colors.text,
       TRStatusVariant.info => colors.info,
       TRStatusVariant.success => colors.success,
       TRStatusVariant.warning => colors.warning,
       TRStatusVariant.danger => colors.danger,
     };
-    final fraction = ((value - min) / (max - min)).clamp(0.0, 1.0);
+    final fraction = _fractionOf(widget);
+    final motionDuration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : TRGeneratedMotion.normal;
 
     return Semantics(
       value: '${(fraction * 100).round()}%',
@@ -47,10 +63,10 @@ class TRMeter extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         spacing: TRGeneratedSpacing.sm,
         children: [
-          if (label != null || valueText != null)
+          if (widget.label != null || widget.valueText != null)
             Row(
               children: [
-                if (label case final label?)
+                if (widget.label case final label?)
                   Expanded(
                     child: Text(
                       label,
@@ -68,7 +84,7 @@ class TRMeter extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (valueText case final valueText?)
+                if (widget.valueText case final valueText?)
                   Text(
                     valueText,
                     style: TextStyle(
@@ -88,10 +104,15 @@ class TRMeter extends StatelessWidget {
             borderRadius: BorderRadius.circular(TRGeneratedRadii.full),
             child: SizedBox(
               height: TRGeneratedSpacing.sm,
-              child: LinearProgressIndicator(
-                backgroundColor: generated.controlTrack,
-                color: fill,
-                value: fraction,
+              child: TweenAnimationBuilder<double>(
+                curve: TRGeneratedMotion.easeOut,
+                duration: motionDuration,
+                tween: Tween<double>(begin: fraction, end: fraction),
+                builder: (context, value, child) => LinearProgressIndicator(
+                  backgroundColor: generated.controlTrack,
+                  color: fill,
+                  value: value,
+                ),
               ),
             ),
           ),

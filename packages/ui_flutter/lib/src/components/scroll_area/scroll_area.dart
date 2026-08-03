@@ -9,6 +9,7 @@ class TRScrollArea extends StatefulWidget {
   const TRScrollArea({
     required this.child,
     this.axis = Axis.vertical,
+    this.autoHide = false,
     this.horizontalController,
     this.padding = EdgeInsets.zero,
     this.primary,
@@ -21,6 +22,7 @@ class TRScrollArea extends StatefulWidget {
 
   final Widget child;
   final Axis axis;
+  final bool autoHide;
   final ScrollController? horizontalController;
   final EdgeInsetsGeometry padding;
   final bool? primary;
@@ -36,6 +38,7 @@ class TRScrollArea extends StatefulWidget {
 class _TRScrollAreaState extends State<TRScrollArea> {
   ScrollController? _internalHorizontalController;
   ScrollController? _internalVerticalController;
+  bool _hovered = false;
 
   ScrollController get _horizontalController =>
       widget.horizontalController ??
@@ -67,7 +70,7 @@ class _TRScrollAreaState extends State<TRScrollArea> {
     );
     Widget viewport;
     if (widget.axis == Axis.horizontal) {
-      viewport = Scrollbar(
+      viewport = _scrollbar(
         controller: _horizontalController,
         notificationPredicate: (notification) => notification.depth == 0,
         thumbVisibility: widget.thumbVisibility,
@@ -80,7 +83,7 @@ class _TRScrollAreaState extends State<TRScrollArea> {
         ),
       );
     } else {
-      viewport = Scrollbar(
+      viewport = _scrollbar(
         controller: _verticalController,
         notificationPredicate: (notification) => notification.depth == 0,
         thumbVisibility: widget.thumbVisibility,
@@ -93,10 +96,48 @@ class _TRScrollAreaState extends State<TRScrollArea> {
         ),
       );
     }
-    return Semantics(
-      container: true,
-      label: widget.semanticLabel,
-      child: ScrollbarTheme(data: scrollbarTheme, child: viewport),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: Semantics(
+        container: true,
+        label: widget.semanticLabel,
+        child: ScrollbarTheme(data: scrollbarTheme, child: viewport),
+      ),
+    );
+  }
+
+  Widget _scrollbar({
+    required ScrollController controller,
+    required Widget child,
+    required ScrollNotificationPredicate notificationPredicate,
+    required bool thumbVisibility,
+    required bool trackVisibility,
+  }) {
+    if (!widget.autoHide) {
+      return Scrollbar(
+        controller: controller,
+        notificationPredicate: notificationPredicate,
+        thumbVisibility: thumbVisibility,
+        trackVisibility: trackVisibility,
+        child: child,
+      );
+    }
+    final colors = context.tinyrackTheme;
+    return RawScrollbar(
+      controller: controller,
+      notificationPredicate: notificationPredicate,
+      thumbVisibility: _hovered,
+      trackVisibility: _hovered,
+      fadeDuration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : TRGeneratedMotion.fast,
+      timeToFade: Duration.zero,
+      thickness: TRGeneratedSpacing.xs,
+      radius: const Radius.circular(TRGeneratedRadii.full),
+      thumbColor: colors.border,
+      trackColor: colors.surfaceMuted,
+      child: child,
     );
   }
 }

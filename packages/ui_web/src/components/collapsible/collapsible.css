@@ -56,9 +56,11 @@
   }
 
   .tr-collapsible-content {
-    border-block-start: var(--tinyrack-border-width-default) solid
+    border-block-start: 0;
+    box-shadow: inset 0 var(--tinyrack-border-width-default) 0
       var(--tinyrack-control-border);
-    box-sizing: border-box;
+    /* Base UI reports content height; padding and divider stay outside it. */
+    box-sizing: content-box;
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-sm);
     height: var(--collapsible-panel-height);
@@ -66,6 +68,10 @@
     opacity: 1;
     overflow: hidden;
     padding: var(--tinyrack-space-lg);
+    padding-block-end: calc(
+      var(--tinyrack-space-lg) +
+      var(--tinyrack-border-width-default)
+    );
     transition:
       height var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
       var(--tinyrack-ease-standard),
@@ -74,23 +80,20 @@
       var(--tinyrack-ease-standard),
       padding-block-end var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
       var(--tinyrack-ease-standard),
-      border-block-start-width
-      var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
-      var(--tinyrack-ease-standard),
       opacity var(--tr-collapsible-duration, var(--tinyrack-duration-normal))
       var(--tinyrack-ease-standard);
   }
 
-  .tr-collapsible-content:is([data-starting-style], [data-ending-style]) {
+  .tr-collapsible-content:is(
+    [data-closed],
+    [data-starting-style],
+    [data-ending-style]
+  ) {
     border-block-start-width: 0;
     height: 0;
     opacity: 0;
     padding-block-end: 0;
     padding-block-start: 0;
-  }
-
-  .tr-collapsible-content[data-closed] {
-    border-block-start-color: transparent;
   }
 
   @media (prefers-reduced-motion: reduce) {
