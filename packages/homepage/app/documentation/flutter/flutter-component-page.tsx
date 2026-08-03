@@ -2669,7 +2669,171 @@ class _InstallCommandState extends State<InstallCommand> {
       ko: '상호 배타적인 라디오 그룹 안에서 옵션 하나를 제공해요.',
       ja: '相互排他的なラジオグループ内で 1 つの選択肢を提供します。',
     },
-    usage: "const TRRadio(value: 'start')",
+    contractIntro: {
+      en: 'A radio only means something inside `TRRadioGroup`, which owns the selected value. Give every option a `value` that is unique within its group and a `label` a reader can act on. For a standalone on or off control use `TRCheckbox` or `TRSwitch` instead.',
+      ko: '라디오는 선택 값을 소유하는 `TRRadioGroup` 안에서만 의미가 있어요. 각 옵션에는 그룹 안에서 고유한 `value`와 읽고 누를 수 있는 `label`을 지정하세요. 켜고 끄는 단독 컨트롤이 필요하면 `TRCheckbox`나 `TRSwitch`를 사용해요.',
+      ja: 'ラジオは選択値を保持する `TRRadioGroup` の中でのみ意味を持ちます。各選択肢には、グループ内で一意な `value` と操作できる `label` を指定してください。単独のオン・オフ操作には `TRCheckbox` か `TRSwitch` を使います。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Selection', ko: '선택', ja: '選択' },
+        choices: {
+          en: 'Selected while the group value equals this `value`. A radio never sets its own state; the group does.',
+          ko: '그룹의 값이 이 `value`와 같을 때 선택돼요. 라디오가 스스로 상태를 바꾸지 않고 그룹이 바꿔요.',
+          ja: 'グループの値がこの `value` と一致する間だけ選択されます。ラジオが自分で状態を変えることはなく、グループが変更します。',
+        },
+      },
+      {
+        axis: { en: 'Label', ko: '레이블', ja: 'ラベル' },
+        choices: {
+          en: '`label` renders beside the glyph as one tappable target and one semantic node. Style it with `TRText`; the radio applies no text style of its own.',
+          ko: '`label`은 글리프 옆에 그려지고, 탭 영역과 시맨틱 노드를 하나로 묶어요. 텍스트 스타일은 `TRText`로 지정하세요. 라디오는 자체 텍스트 스타일을 적용하지 않아요.',
+          ja: '`label` はグリフの隣に描画され、タップ領域とセマンティックノードを 1 つにまとめます。文字スタイルは `TRText` で指定してください。ラジオ自体は文字スタイルを適用しません。',
+        },
+      },
+      {
+        axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
+        choices: {
+          en: '`uiSize` takes `TRUiSize.sm`, `TRUiSize.md`, or `TRUiSize.lg`; the default is `md`. Match it to the controls around the option.',
+          ko: '`uiSize`는 `TRUiSize.sm`, `TRUiSize.md`, `TRUiSize.lg`를 받고 기본값은 `md`예요. 주변 컨트롤의 밀도에 맞추세요.',
+          ja: '`uiSize` は `TRUiSize.sm`・`TRUiSize.md`・`TRUiSize.lg` を受け取り、既定値は `md` です。周囲のコントロールの密度に合わせてください。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: '`disabled` and `readOnly` combine with the values the group sets. `readOnly` keeps the option focusable and its value intact; `disabled` blocks interaction and dims the option.',
+          ko: '`disabled`와 `readOnly`는 그룹이 정한 값과 함께 적용돼요. `readOnly`는 포커스와 값을 유지하고, `disabled`는 조작을 막고 옵션을 흐리게 만들어요.',
+          ja: '`disabled` と `readOnly` はグループが設定した値と合わせて適用されます。`readOnly` はフォーカスと値を保ち、`disabled` は操作を止めて選択肢を淡く表示します。',
+        },
+      },
+      {
+        axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
+        choices: {
+          en: 'Space selects the focused option on key release, matching a native radio. Moving between options belongs to `TRRadioGroup`.',
+          ko: '네이티브 라디오처럼 Space를 뗄 때 포커스된 옵션이 선택돼요. 옵션 사이 이동은 `TRRadioGroup`이 담당해요.',
+          ja: 'ネイティブのラジオと同じく、Space はキーを離したときに、フォーカス中の選択肢を選びます。選択肢間の移動は `TRRadioGroup` が担当します。',
+        },
+      },
+    ],
+    usage: {
+      en: String.raw`TRRadioGroup(
+  defaultValue: 'weekly',
+  onValueChange: setSchedule,
+  children: const [
+    TRRadio(
+      value: 'weekly',
+      label: TRText('Weekly', variant: TRTextVariant.bodySm),
+    ),
+    TRRadio(
+      value: 'monthly',
+      label: TRText('Monthly', variant: TRTextVariant.bodySm),
+    ),
+  ],
+)`,
+      ko: String.raw`TRRadioGroup(
+  defaultValue: 'weekly',
+  onValueChange: setSchedule,
+  children: const [
+    TRRadio(
+      value: 'weekly',
+      label: TRText('매주', variant: TRTextVariant.bodySm),
+    ),
+    TRRadio(
+      value: 'monthly',
+      label: TRText('매월', variant: TRTextVariant.bodySm),
+    ),
+  ],
+)`,
+      ja: String.raw`TRRadioGroup(
+  defaultValue: 'weekly',
+  onValueChange: setSchedule,
+  children: const [
+    TRRadio(
+      value: 'weekly',
+      label: TRText('毎週', variant: TRTextVariant.bodySm),
+    ),
+    TRRadio(
+      value: 'monthly',
+      label: TRText('毎月', variant: TRTextVariant.bodySm),
+    ),
+  ],
+)`,
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRRadio properties',
+          ko: 'TRRadio 속성',
+          ja: 'TRRadio のプロパティ',
+        },
+        rows: [
+          {
+            name: 'value',
+            type: 'String · required',
+            purpose: {
+              en: 'Identifies the option inside its group. Keep it unique and stable.',
+              ko: '그룹 안에서 옵션을 구분해요. 고유하고 변하지 않는 값을 쓰세요.',
+              ja: 'グループ内で選択肢を識別します。一意で変化しない値にしてください。',
+            },
+          },
+          {
+            name: 'label',
+            type: 'Widget? · null',
+            purpose: {
+              en: 'Renders beside the glyph and joins it as one tap target and one semantic node. Without it the option shows only the glyph.',
+              ko: '글리프 옆에 그려지고 탭 대상과 시맨틱 노드를 하나로 합쳐요. 지정하지 않으면 글리프만 보여요.',
+              ja: 'グリフの隣に描画され、タップ対象とセマンティックノードを 1 つに統合します。指定しない場合はグリフだけが表示されます。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Sets the glyph and indicator size.',
+              ko: '글리프와 표시점의 크기를 정해요.',
+              ja: 'グリフとインジケーターのサイズを決めます。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool · false',
+            purpose: {
+              en: 'Blocks interaction for this option, on top of the group value. Disabled options are skipped by the arrow keys.',
+              ko: '그룹 값에 더해 이 옵션의 조작을 막아요. 비활성 옵션은 화살표 키가 건너뛰어요.',
+              ja: 'グループの値に加えて、この選択肢の操作を止めます。無効な選択肢は矢印キーで飛ばされます。',
+            },
+          },
+          {
+            name: 'readOnly',
+            type: 'bool · false',
+            purpose: {
+              en: 'Keeps the option focusable and its value visible while refusing changes.',
+              ko: '포커스와 값을 그대로 유지하면서 변경만 막아요.',
+              ja: 'フォーカスと表示中の値を保ったまま、変更だけを拒否します。',
+            },
+          },
+          {
+            name: 'invalid',
+            type: 'bool · false',
+            purpose: {
+              en: 'Paints the danger border. Drive it from your own validation; the widget never sets it.',
+              ko: '위험 상태 테두리를 그려요. 직접 검증 결과로 넘기세요. 위젯이 스스로 설정하지 않아요.',
+              ja: '危険状態の枠線を描きます。検証結果から渡してください。ウィジェットが自動で設定することはありません。',
+            },
+          },
+          {
+            name: 'focusNode, autofocus',
+            type: 'FocusNode? · null, bool · false',
+            purpose: {
+              en: 'An explicit `focusNode` replaces the one the group manages for this option.',
+              ko: '`focusNode`를 직접 넘기면 그룹이 이 옵션에 배정한 노드를 대신해요.',
+              ja: '`focusNode` を明示すると、グループがこの選択肢に割り当てたノードの代わりに使われます。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'radio-group': {
     title: 'RadioGroup',
@@ -2678,8 +2842,225 @@ class _InstallCommandState extends State<InstallCommand> {
       ko: '라디오 사이의 상호 배타적 선택을 관리해요.',
       ja: 'ラジオ間の相互排他的な選択を管理します。',
     },
-    usage:
-      "TRRadioGroup(\n  onValueChange: setValue,\n  children: const [\n    TRRadio(value: 'start'),\n    TRRadio(value: 'end'),\n  ],\n)",
+    contractIntro: {
+      en: 'The group holds the selected value and its children are public `TRRadio` widgets, so each option needs a unique `value`. Unlike the web component it has no `required` prop, no `form` association, and no built-in validation: wrap it in `TRField` to add a visible label, and compute the error message from your own state.',
+      ko: '그룹이 선택 값을 들고 있고 자식은 공개 위젯인 `TRRadio`이므로, 각 옵션에는 고유한 `value`가 필요해요. 웹 컴포넌트와 달리 `required` 속성, 바깥 폼 연결, 내장 검증이 없어요. `TRField`로 감싸 보이는 레이블을 붙이고, 오류 메시지는 직접 상태에서 계산하세요.',
+      ja: 'グループが選択値を保持し、子は公開ウィジェットの `TRRadio` なので、各選択肢には一意な `value` が必要です。Web コンポーネントと違い `required` プロパティ、外部フォームとの関連付け、組み込みの検証はありません。`TRField` で包んで表示ラベルを付け、エラーメッセージは自分の状態から組み立ててください。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'State ownership', ko: '상태 관리', ja: '状態管理' },
+        choices: {
+          en: 'Use `defaultValue` when the group owns the selection, or pair `value` with `onValueChange` for controlled state. Both are `String?`, and no option starts selected when both are null.',
+          ko: '그룹이 선택을 관리하면 `defaultValue`를, controlled 상태에는 `value`와 `onValueChange`를 함께 사용해요. 둘 다 `String?`이고 모두 null이면 처음에는 아무것도 선택되지 않아요.',
+          ja: 'グループが選択を管理する場合は `defaultValue`、controlled 状態では `value` と `onValueChange` を組み合わせます。どちらも `String?` で、両方 null のときは何も選択されていない状態から始まります。',
+        },
+      },
+      {
+        axis: { en: 'Label', ko: '레이블', ja: 'ラベル' },
+        choices: {
+          en: 'The group renders no label of its own. Wrap it in `TRField` to name the choice and show an error message below it.',
+          ko: '그룹은 자체 레이블을 그리지 않아요. `TRField`로 감싸서 선택 항목의 이름을 붙이고 아래에 오류 메시지를 보여 주세요.',
+          ja: 'グループ自体はラベルを描画しません。`TRField` で包んで選択項目に名前を付け、その下にエラーメッセージを表示してください。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: 'Group `disabled` blocks every option and omits a named group from `TRFormValues`. Group `readOnly` keeps the selected value and focus while refusing changes.',
+          ko: '그룹 `disabled`는 모든 옵션을 막고, 이름 있는 그룹을 `TRFormValues`에서 제외해요. 그룹 `readOnly`는 선택 값과 포커스를 유지하면서 변경만 막아요.',
+          ja: 'グループの `disabled` はすべての選択肢を操作不可にし、名前付きグループを `TRFormValues` から除外します。グループの `readOnly` は選択値とフォーカスを保ったまま変更を拒否します。',
+        },
+      },
+      {
+        axis: { en: 'Forms', ko: '폼', ja: 'フォーム' },
+        choices: {
+          en: 'Set `name` to register the selected string with the nearest `TRForm`, which reports it from `save()`. The group is not a `FormField`, so `TRForm.reset()` leaves its value alone; restore the starting value from your own state.',
+          ko: '`name`을 지정하면 선택된 문자열을 가장 가까운 `TRForm`에 등록하고 `save()`가 그 값을 알려줘요. 그룹은 `FormField`가 아니라서 `TRForm.reset()`이 값을 되돌리지 않아요. 처음 값은 직접 상태에서 복원하세요.',
+          ja: '`name` を設定すると選択済み文字列を最も近い `TRForm` に登録し、`save()` がその値を返します。グループは `FormField` ではないため `TRForm.reset()` では値が戻りません。初期値は自分の状態から復元してください。',
+        },
+      },
+      {
+        axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
+        choices: {
+          en: 'Tab reaches the group once, landing on the selected option. The arrow keys on either axis, plus Home and End, then move focus and selection together, skip disabled options, and wrap at the ends. A read-only group moves focus without changing its value.',
+          ko: 'Tab으로 그룹에 한 번 들어가면 선택된 옵션에 포커스가 놓여요. 이후에는 양쪽 축의 화살표 키와 Home, End가 포커스와 선택을 함께 옮기고, 비활성 옵션을 건너뛰며, 양 끝에서 순환해요. `readOnly` 그룹은 값을 바꾸지 않고 포커스만 옮겨요.',
+          ja: 'Tab でグループに入ると、選択中の選択肢にフォーカスが移ります。その後は両軸の矢印キーと Home・End がフォーカスと選択を一緒に移動させ、無効な選択肢を飛ばし、端で循環します。`readOnly` のグループは値を変えずにフォーカスだけを移します。',
+        },
+      },
+    ],
+    usage: {
+      en: String.raw`class DeploymentRack extends StatefulWidget {
+  const DeploymentRack({super.key});
+
+  @override
+  State<DeploymentRack> createState() => _DeploymentRackState();
+}
+
+class _DeploymentRackState extends State<DeploymentRack> {
+  String rack = 'alpha';
+
+  @override
+  Widget build(BuildContext context) {
+    return TRField(
+      label: 'Deployment rack',
+      control: TRRadioGroup(
+        name: 'rack',
+        value: rack,
+        onValueChange: (next) => setState(() => rack = next),
+        children: const [
+          TRRadio(
+            value: 'alpha',
+            label: TRText('Rack alpha', variant: TRTextVariant.bodySm),
+          ),
+          TRRadio(
+            value: 'beta',
+            label: TRText('Rack beta', variant: TRTextVariant.bodySm),
+          ),
+        ],
+      ),
+    );
+  }
+}`,
+      ko: String.raw`class DeploymentRack extends StatefulWidget {
+  const DeploymentRack({super.key});
+
+  @override
+  State<DeploymentRack> createState() => _DeploymentRackState();
+}
+
+class _DeploymentRackState extends State<DeploymentRack> {
+  String rack = 'alpha';
+
+  @override
+  Widget build(BuildContext context) {
+    return TRField(
+      label: '배포 랙',
+      control: TRRadioGroup(
+        name: 'rack',
+        value: rack,
+        onValueChange: (next) => setState(() => rack = next),
+        children: const [
+          TRRadio(
+            value: 'alpha',
+            label: TRText('알파 랙', variant: TRTextVariant.bodySm),
+          ),
+          TRRadio(
+            value: 'beta',
+            label: TRText('베타 랙', variant: TRTextVariant.bodySm),
+          ),
+        ],
+      ),
+    );
+  }
+}`,
+      ja: String.raw`class DeploymentRack extends StatefulWidget {
+  const DeploymentRack({super.key});
+
+  @override
+  State<DeploymentRack> createState() => _DeploymentRackState();
+}
+
+class _DeploymentRackState extends State<DeploymentRack> {
+  String rack = 'alpha';
+
+  @override
+  Widget build(BuildContext context) {
+    return TRField(
+      label: 'デプロイ先ラック',
+      control: TRRadioGroup(
+        name: 'rack',
+        value: rack,
+        onValueChange: (next) => setState(() => rack = next),
+        children: const [
+          TRRadio(
+            value: 'alpha',
+            label: TRText('ラック alpha', variant: TRTextVariant.bodySm),
+          ),
+          TRRadio(
+            value: 'beta',
+            label: TRText('ラック beta', variant: TRTextVariant.bodySm),
+          ),
+        ],
+      ),
+    );
+  }
+}`,
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRRadioGroup properties',
+          ko: 'TRRadioGroup 속성',
+          ja: 'TRRadioGroup のプロパティ',
+        },
+        rows: [
+          {
+            name: 'children',
+            type: 'List<TRRadio> · required',
+            purpose: {
+              en: 'Lists the options in visual and focus order. The type is `TRRadio`, so the group can read each option `value` and `disabled`.',
+              ko: '옵션을 화면 순서이자 포커스 순서로 나열해요. 타입이 `TRRadio`라 그룹이 각 옵션의 `value`와 `disabled`를 읽을 수 있어요.',
+              ja: '選択肢を表示順かつフォーカス順に並べます。型が `TRRadio` なので、グループは各選択肢の `value` と `disabled` を読み取れます。',
+            },
+          },
+          {
+            name: 'value',
+            type: 'String? · null',
+            purpose: {
+              en: 'Controls the selected option. While it is non-null the group never changes the selection on its own.',
+              ko: '선택된 옵션을 제어해요. 값이 있으면 그룹이 스스로 선택을 바꾸지 않아요.',
+              ja: '選択中の選択肢を制御します。値がある間、グループは自分で選択を変えません。',
+            },
+          },
+          {
+            name: 'defaultValue',
+            type: 'String? · null',
+            purpose: {
+              en: 'Sets the initial selection of an uncontrolled group. It is read once, so a later change does not move the selection, and it is ignored when `value` is provided.',
+              ko: '제어하지 않는 그룹의 처음 선택을 정해요. 한 번만 읽으므로 나중에 바꿔도 선택이 옮겨지지 않고, `value`를 넘기면 쓰이지 않아요.',
+              ja: '制御しないグループの初期選択を設定します。一度だけ読まれるため後から変更しても選択は移らず、`value` を渡した場合は使われません。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<String>? · null',
+            purpose: {
+              en: 'Reports the next selected value after a tap or an arrow key. There is no way to veto the change.',
+              ko: '탭이나 화살표 키 뒤의 다음 선택 값을 알려줘요. 변경을 취소할 수단은 없어요.',
+              ja: 'タップや矢印キーの後の次の選択値を通知します。変更を取り消す手段はありません。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool · false',
+            purpose: {
+              en: 'Disables every option and omits a named group from `TRFormValues`.',
+              ko: '모든 옵션을 비활성화하고 이름 있는 그룹을 `TRFormValues`에서 제외해요.',
+              ja: 'すべての選択肢を無効にし、名前付きグループを `TRFormValues` から除外します。',
+            },
+          },
+          {
+            name: 'readOnly',
+            type: 'bool · false',
+            purpose: {
+              en: 'Keeps the selected value and keyboard focus while refusing every change.',
+              ko: '선택 값과 키보드 포커스를 유지하면서 모든 변경을 막아요.',
+              ja: '選択値とキーボードフォーカスを保ったまま、すべての変更を拒否します。',
+            },
+          },
+          {
+            name: 'name',
+            type: 'String? · null',
+            purpose: {
+              en: 'Registers the selected value with the nearest `TRForm`.',
+              ko: '선택 값을 가장 가까운 `TRForm`에 등록해요.',
+              ja: '選択値を最も近い `TRForm` に登録します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   separator: {
     title: 'Separator',

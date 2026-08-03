@@ -180,6 +180,8 @@ describe('Flutter documentation examples', () => {
       'textarea',
       'combobox',
       'slider',
+      'radio',
+      'radio-group',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
@@ -384,6 +386,26 @@ describe('Flutter documentation examples', () => {
       'checkbox-group-validation',
       'checkbox-group-parent',
       'checkbox-group-form',
+    ]);
+  });
+
+  it('lets Radio and RadioGroup previews report their own selection', () => {
+    expect(previewHostSource).toContain("'radio' when parityMode");
+    expect(previewHostSource).toContain("'args': {'checked': next == 'on'}");
+    expect(previewHostSource).toContain("'radio-group' when parityMode");
+    expect(previewHostSource).toContain("'args': {'selectedValue': next}");
+  });
+
+  it('keeps the Radio examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.radio?.map((entry) => entry.id)).toEqual([
+      'radio-states',
+      'radio-sizes',
+      'radio-availability',
+    ]);
+    expect(flutterExamples['radio-group']?.map((entry) => entry.id)).toEqual([
+      'radio-group-states',
+      'radio-group-validation',
+      'radio-group-form',
     ]);
   });
 });

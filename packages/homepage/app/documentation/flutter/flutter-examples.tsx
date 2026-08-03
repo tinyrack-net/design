@@ -1182,6 +1182,189 @@ const sliderSources = (sourceEn: string) => ({
   ko: localizeExampleSource(sourceEn, sliderKoLabels),
 });
 
+const radioPlanHelper = String.raw`TRRadio planOption(String value, String label) {
+  return TRRadio(
+    value: value,
+    label: TRText(label, variant: TRTextVariant.bodySm),
+  );
+}`;
+
+const radioStatesSourceEn = String.raw`${radioPlanHelper}
+
+TRRadioGroup(
+  defaultValue: 'growth',
+  children: [
+    planOption('starter', 'Starter'),
+    planOption('growth', 'Growth'),
+  ],
+)`;
+
+const radioSizesSourceEn = String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.large,
+  children: [
+    for (final size in TRUiSize.values)
+      TRRadioGroup(
+        defaultValue: 'on',
+        children: [
+          TRRadio(
+            value: 'on',
+            uiSize: size,
+            label: TRText(size.name, variant: TRTextVariant.bodySm),
+          ),
+        ],
+      ),
+  ],
+)`;
+
+const radioAvailabilitySourceEn = String.raw`TRRadioGroup(
+  defaultValue: 'editable',
+  children: const [
+    TRRadio(
+      value: 'editable',
+      label: TRText('Editable', variant: TRTextVariant.bodySm),
+    ),
+    TRRadio(
+      value: 'read-only',
+      readOnly: true,
+      label: TRText('Read only', variant: TRTextVariant.bodySm),
+    ),
+    TRRadio(
+      value: 'disabled',
+      disabled: true,
+      label: TRText('Disabled', variant: TRTextVariant.bodySm),
+    ),
+  ],
+)`;
+
+const radioGroupStatesSourceEn = String.raw`${radioPlanHelper}
+
+Widget planGroup(String label, {bool disabled = false, bool readOnly = false}) {
+  return TRField(
+    label: label,
+    disabled: disabled,
+    control: TRRadioGroup(
+      defaultValue: 'starter',
+      disabled: disabled,
+      readOnly: readOnly,
+      children: [
+        planOption('starter', 'Starter'),
+        planOption('growth', 'Growth'),
+      ],
+    ),
+  );
+}
+
+Wrap(
+  spacing: TRSpacing.large,
+  runSpacing: TRSpacing.large,
+  children: [
+    planGroup('Editable'),
+    planGroup('Read only', readOnly: true),
+    planGroup('Disabled', disabled: true),
+  ],
+)`;
+
+const radioGroupValidationSourceEn = String.raw`${radioPlanHelper}
+
+Builder(
+  builder: (context) {
+    var attempted = false;
+    String? plan;
+    return StatefulBuilder(
+      builder: (context, setState) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRField(
+            label: 'Support plan',
+            errorText: attempted && plan == null
+                ? 'Choose a support plan to continue.'
+                : null,
+            control: TRRadioGroup(
+              value: plan,
+              onValueChange: (next) => setState(() => plan = next),
+              children: [
+                planOption('starter', 'Starter'),
+                planOption('growth', 'Growth'),
+                planOption('enterprise', 'Enterprise'),
+              ],
+            ),
+          ),
+          TRButton(
+            onPressed: () => setState(() => attempted = true),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  },
+)`;
+
+const radioGroupFormSourceEn = String.raw`${radioPlanHelper}
+
+final formKey = GlobalKey<TRFormState>();
+var submitted = '';
+
+TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRRadioGroup(
+        name: 'plan',
+        defaultValue: 'starter',
+        children: [
+          planOption('starter', 'Starter'),
+          planOption('growth', 'Growth'),
+        ],
+      ),
+      TRButton(
+        onPressed: () {
+          final value = formKey.currentState?.save()['plan'];
+          setState(() => submitted = value is String ? value : '');
+        },
+        child: const Text('Collect form values'),
+      ),
+    ],
+  ),
+)`;
+
+const radioKoLabels = [
+  ['Choose a support plan to continue.', '계속하려면 지원 플랜을 선택하세요.'],
+  ['Collect form values', '폼 값 모으기'],
+  ['Support plan', '지원 플랜'],
+  ['Enterprise', '엔터프라이즈'],
+  ['Read only', '읽기 전용'],
+  ['Editable', '편집 가능'],
+  ['Disabled', '비활성'],
+  ['Continue', '계속'],
+  ['Starter', '스타터'],
+  ['Growth', '그로스'],
+] as const;
+
+const radioJaLabels = [
+  ['Choose a support plan to continue.', 'サポートプランを選択してください。'],
+  ['Collect form values', 'フォーム値を取得'],
+  ['Support plan', 'サポートプラン'],
+  ['Enterprise', 'エンタープライズ'],
+  ['Read only', '読み取り専用'],
+  ['Editable', '編集可能'],
+  ['Disabled', '無効'],
+  ['Continue', '続ける'],
+  ['Starter', 'スターター'],
+  ['Growth', 'グロース'],
+] as const;
+
+const radioSources = (sourceEn: string) => ({
+  en: sourceEn,
+  ja: localizeExampleSource(sourceEn, radioJaLabels),
+  ko: localizeExampleSource(sourceEn, radioKoLabels),
+});
+
 export const flutterExamples: Partial<
   Record<FlutterPreviewComponent, readonly FlutterExampleEntry[]>
 > = {
@@ -2866,6 +3049,94 @@ class _MonitoringFormState extends State<MonitoringForm> {
     ],
   ),
 )`,
+    },
+  ],
+  radio: [
+    {
+      id: 'radio-states',
+      title: {
+        en: 'Unselected and selected',
+        ja: '未選択と選択済み',
+        ko: '선택 안 함과 선택함',
+      },
+      description: {
+        en: 'Selection is meaningful only against the value the group holds, so compare both options inside one group.',
+        ja: '選択はグループが保持する値との関係でのみ意味を持つため、1 つのグループ内で両方の状態を比べます。',
+        ko: '선택은 그룹이 가진 값과의 관계에서만 의미가 있으니, 한 그룹 안에서 두 상태를 함께 비교해요.',
+      },
+      dart: radioSources(radioStatesSourceEn),
+    },
+    {
+      id: 'radio-sizes',
+      title: {
+        en: 'Small, medium, and large',
+        ja: '小、中、大',
+        ko: '작게, 보통으로, 크게',
+      },
+      description: {
+        en: 'Match sm, md, or lg to the density of the controls around the option.',
+        ja: 'sm・md・lg を、選択肢の周囲にあるコントロールの密度に合わせます。',
+        ko: '옵션 주변 컨트롤의 밀도에 맞춰 sm, md, lg 중에서 고르세요.',
+      },
+      dart: radioSources(radioSizesSourceEn),
+    },
+    {
+      id: 'radio-availability',
+      title: {
+        en: 'Editable, read only, and disabled',
+        ja: '編集可能、読み取り専用、無効',
+        ko: '편집 가능, 읽기 전용, 비활성',
+      },
+      description: {
+        en: 'Set availability on one option when it differs from the rest; otherwise set it once on the group.',
+        ja: '他と状態が異なる選択肢にだけ利用可否を設定します。全体が同じならグループにまとめて設定してください。',
+        ko: '나머지와 상태가 다른 옵션에만 사용 가능 여부를 지정하세요. 전부 같다면 그룹에 한 번만 지정해요.',
+      },
+      dart: radioSources(radioAvailabilitySourceEn),
+    },
+  ],
+  'radio-group': [
+    {
+      id: 'radio-group-states',
+      title: {
+        en: 'Editable, read only, and disabled groups',
+        ja: '編集可能、読み取り専用、無効のグループ',
+        ko: '편집 가능, 읽기 전용, 비활성 그룹',
+      },
+      description: {
+        en: 'A read-only group keeps its value and keyboard focus; a disabled group blocks both and drops out of TRFormValues.',
+        ja: '読み取り専用のグループは値とキーボードフォーカスを保ち、無効なグループは両方を止めて TRFormValues から外れます。',
+        ko: '읽기 전용 그룹은 값과 키보드 포커스를 유지하고, 비활성 그룹은 둘 다 막으면서 TRFormValues에서도 빠져요.',
+      },
+      dart: radioSources(radioGroupStatesSourceEn),
+    },
+    {
+      id: 'radio-group-validation',
+      title: {
+        en: 'Require one value',
+        ja: '値を 1 つ必須にする',
+        ko: '값 하나를 필수로 받기',
+      },
+      description: {
+        en: 'The group has no required prop, so control the value and pass your own message to TRField.errorText.',
+        ja: 'グループに required プロパティはないため、値を制御して独自のメッセージを TRField.errorText に渡します。',
+        ko: '그룹에는 required 속성이 없으니 값을 직접 제어하고 메시지를 TRField.errorText로 넘기세요.',
+      },
+      dart: radioSources(radioGroupValidationSourceEn),
+    },
+    {
+      id: 'radio-group-form',
+      title: {
+        en: 'Collect the value from a form',
+        ja: 'フォームから値を取得する',
+        ko: '폼에서 값 모으기',
+      },
+      description: {
+        en: 'name registers the selected string with the nearest TRForm, which reports it from save().',
+        ja: 'name を設定すると選択済み文字列が最も近い TRForm に登録され、save() で取得できます。',
+        ko: 'name을 지정하면 선택된 문자열이 가장 가까운 TRForm에 등록되고 save()로 가져올 수 있어요.',
+      },
+      dart: radioSources(radioGroupFormSourceEn),
     },
   ],
   form: [

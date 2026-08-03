@@ -18,6 +18,18 @@ Widget _wrapNarrow(Widget child, {double width = 240}) => MaterialApp(
   ),
 );
 
+/// The [Focus] a [TRRadio] owns, which is a descendant rather than the
+/// ancestor [Focus] the group installs for its arrow keys.
+Focus _radioFocus(WidgetTester tester, int index) => tester.widget<Focus>(
+  find.descendant(
+    of: find.byType(TRRadio).at(index),
+    matching: find.byType(Focus),
+  ),
+);
+
+FocusNode _radioFocusNode(WidgetTester tester, int index) =>
+    _radioFocus(tester, index).focusNode!;
+
 void main() {
   test('light and dark themes expose semantic extensions', () {
     final light = TinyrackTheme.light().extension<TinyrackThemeData>()!;
@@ -939,6 +951,147 @@ void main() {
     await tester.tap(find.byType(TRRadio).last);
     await tester.pump();
     expect(calls, 0);
+  });
+
+  testWidgets('radio label is part of the tappable option', (tester) async {
+    String? lastValue;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRRadioGroup(
+          defaultValue: 'start',
+          onValueChange: (value) => lastValue = value,
+          children: const [
+            TRRadio(value: 'start', label: Text('Start')),
+            TRRadio(value: 'end', label: Text('End')),
+          ],
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('End'));
+    await tester.pump();
+    expect(lastValue, 'end');
+  });
+
+  testWidgets(
+    'radio group moves selection with arrow keys and skips disabled',
+    (tester) async {
+      String? lastValue;
+      await tester.pumpWidget(
+        _wrapNarrow(
+          TRRadioGroup(
+            defaultValue: 'start',
+            onValueChange: (value) => lastValue = value,
+            children: const [
+              TRRadio(value: 'start'),
+              TRRadio(disabled: true, value: 'center'),
+              TRRadio(value: 'end'),
+            ],
+          ),
+        ),
+      );
+
+      _radioFocusNode(tester, 0).requestFocus();
+      await tester.pump();
+      expect(_radioFocusNode(tester, 0).hasFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pump();
+      expect(_radioFocusNode(tester, 2).hasFocus, isTrue);
+      expect(lastValue, 'end');
+
+      // A vertical group answers the horizontal axis too, and focus wraps.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(_radioFocusNode(tester, 0).hasFocus, isTrue);
+      expect(lastValue, 'start');
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.end);
+      await tester.pump();
+      expect(_radioFocusNode(tester, 2).hasFocus, isTrue);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.home);
+      await tester.pump();
+      expect(_radioFocusNode(tester, 0).hasFocus, isTrue);
+    },
+  );
+
+  testWidgets('read-only radio group moves focus but keeps its value', (
+    tester,
+  ) async {
+    var calls = 0;
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRRadioGroup(
+          defaultValue: 'start',
+          readOnly: true,
+          onValueChange: (_) => calls += 1,
+          children: const [
+            TRRadio(value: 'start'),
+            TRRadio(value: 'end'),
+          ],
+        ),
+      ),
+    );
+
+    _radioFocusNode(tester, 0).requestFocus();
+    await tester.pump();
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pump();
+    expect(_radioFocusNode(tester, 1).hasFocus, isTrue);
+    expect(calls, 0);
+  });
+
+  testWidgets('grouped radios share one tab stop on the selected option', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRRadioGroup(
+          defaultValue: 'end',
+          children: [
+            TRRadio(value: 'start'),
+            TRRadio(disabled: true, value: 'center'),
+            TRRadio(value: 'end'),
+          ],
+        ),
+      ),
+    );
+
+    expect(_radioFocus(tester, 0).skipTraversal, isTrue);
+    expect(_radioFocus(tester, 1).skipTraversal, isTrue);
+    expect(_radioFocus(tester, 1).canRequestFocus, isFalse);
+    expect(_radioFocus(tester, 2).skipTraversal, isFalse);
+  });
+
+  testWidgets('grouped radio keeps an explicit focus node', (tester) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _wrapNarrow(
+        TRRadioGroup(
+          defaultValue: 'start',
+          children: [
+            TRRadio(focusNode: focusNode, value: 'start'),
+            const TRRadio(value: 'end'),
+          ],
+        ),
+      ),
+    );
+
+    focusNode.requestFocus();
+    await tester.pump();
+    expect(focusNode.hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.pump();
+    expect(focusNode.hasFocus, isFalse);
+    expect(_radioFocusNode(tester, 1).hasFocus, isTrue);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+    await tester.pump();
+    expect(focusNode.hasFocus, isTrue);
   });
 
   testWidgets('code renders text with the monospace font family', (

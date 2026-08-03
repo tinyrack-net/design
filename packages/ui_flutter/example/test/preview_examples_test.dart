@@ -320,4 +320,112 @@ void main() {
 
     expect(find.text('Turn on monitoring to save this rack.'), findsNothing);
   });
+
+  testWidgets('radio playground reports the next checked value', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    final otpController = TROtpFieldController();
+    addTearDown(otpController.dispose);
+    Map<String, Object?>? reported;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: preview.PreviewComponent(
+            args: const {
+              'checked': false,
+              'disabled': false,
+              'readOnly': false,
+              'uiSize': 'md',
+            },
+            component: 'radio',
+            locale: 'en',
+            measureKey: GlobalKey(),
+            partKeys: {},
+            textFieldController: controller,
+            otpFieldController: otpController,
+            onStateChanged: (value) => reported = value,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(TRRadio));
+    await tester.pumpAndSettle();
+
+    expect(reported, {
+      'pressed': true,
+      'args': {'checked': true},
+    });
+  });
+
+  testWidgets('radio group playground reports the next selected value', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    final otpController = TROtpFieldController();
+    addTearDown(otpController.dispose);
+    Map<String, Object?>? reported;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: preview.PreviewComponent(
+            args: const {
+              'disabled': false,
+              'readOnly': false,
+              'selectedValue': 'start',
+            },
+            component: 'radio-group',
+            locale: 'en',
+            measureKey: GlobalKey(),
+            partKeys: {},
+            textFieldController: controller,
+            otpFieldController: otpController,
+            onStateChanged: (value) => reported = value,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('End'), findsOneWidget);
+    await tester.tap(find.text('End'));
+    await tester.pumpAndSettle();
+
+    expect(reported, {
+      'pressed': true,
+      'args': {'selectedValue': 'end'},
+    });
+  });
+
+  testWidgets('radio group validation example reports a missing choice', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_preview('radio-group-validation'));
+
+    expect(find.text('Choose a support plan to continue.'), findsNothing);
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+    expect(find.text('Choose a support plan to continue.'), findsOneWidget);
+
+    await tester.tap(find.text('Growth'));
+    await tester.pumpAndSettle();
+    expect(find.text('Choose a support plan to continue.'), findsNothing);
+  });
+
+  testWidgets('radio group form example collects the selected value', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_preview('radio-group-form'));
+
+    await tester.tap(find.text('Growth'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Collect form values'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Submitted: growth'), findsOneWidget);
+  });
 }

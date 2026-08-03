@@ -72,6 +72,12 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'switch-controlled': _switchControlled,
   'switch-availability': _switchAvailability,
   'switch-validation': _switchValidation,
+  'radio-states': _radioStates,
+  'radio-sizes': _radioSizes,
+  'radio-availability': _radioAvailability,
+  'radio-group-states': _radioGroupStates,
+  'radio-group-validation': _radioGroupValidation,
+  'radio-group-form': _radioGroupForm,
   'toggle-controlled': _toggleControlled,
   'toggle-states': _toggleStates,
   'toggle-sizes': _toggleSizes,
@@ -2285,6 +2291,191 @@ Widget _checkboxGroupForm(BuildContext context, Locale locale) {
                     ? values.whereType<String>().join(', ')
                     : '',
               );
+            },
+            child: Text(
+              _pick(locale, 'Collect form values', '폼 값 모으기', 'フォーム値を取得'),
+            ),
+          ),
+          if (result.isNotEmpty)
+            TRText(
+              '${_pick(locale, 'Submitted', '제출한 값', '送信値')}: $result',
+              variant: TRTextVariant.bodySm,
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+List<(String, String)> _radioPlans(Locale locale) => [
+  ('starter', _pick(locale, 'Starter', '스타터', 'スターター')),
+  ('growth', _pick(locale, 'Growth', '그로스', 'グロース')),
+  ('enterprise', _pick(locale, 'Enterprise', '엔터프라이즈', 'エンタープライズ')),
+];
+
+TRRadio _radioOption(
+  String value,
+  String label, {
+  bool disabled = false,
+  bool readOnly = false,
+  TRUiSize uiSize = TRUiSize.md,
+}) {
+  return TRRadio(
+    value: value,
+    disabled: disabled,
+    readOnly: readOnly,
+    uiSize: uiSize,
+    label: TRText(label, variant: TRTextVariant.bodySm),
+  );
+}
+
+Widget _radioStates(BuildContext context, Locale locale) {
+  return TRRadioGroup(
+    defaultValue: 'growth',
+    children: [
+      for (final (value, label) in _radioPlans(locale).take(2))
+        _radioOption(value, label),
+    ],
+  );
+}
+
+Widget _radioSizes(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.medium,
+    children: [
+      for (final size in TRUiSize.values)
+        TRRadioGroup(
+          defaultValue: 'on',
+          children: [_radioOption('on', size.name, uiSize: size)],
+        ),
+    ],
+  );
+}
+
+Widget _radioAvailability(BuildContext context, Locale locale) {
+  return TRRadioGroup(
+    defaultValue: 'editable',
+    children: [
+      _radioOption('editable', _pick(locale, 'Editable', '편집 가능', '編集可能')),
+      _radioOption(
+        'read-only',
+        _pick(locale, 'Read only', '읽기 전용', '読み取り専用'),
+        readOnly: true,
+      ),
+      _radioOption(
+        'disabled',
+        _pick(locale, 'Disabled', '비활성', '無効'),
+        disabled: true,
+      ),
+    ],
+  );
+}
+
+Widget _radioGroupStates(BuildContext context, Locale locale) {
+  final plans = _radioPlans(locale).take(2).toList();
+  return Wrap(
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      for (final (label, disabled, readOnly) in [
+        (_pick(locale, 'Editable', '편집 가능', '編集可能'), false, false),
+        (_pick(locale, 'Read only', '읽기 전용', '読み取り専用'), false, true),
+        (_pick(locale, 'Disabled', '비활성', '無効'), true, false),
+      ])
+        TRField(
+          label: label,
+          disabled: disabled,
+          control: TRRadioGroup(
+            defaultValue: 'starter',
+            disabled: disabled,
+            readOnly: readOnly,
+            children: [
+              for (final (value, optionLabel) in plans)
+                _radioOption(value, optionLabel),
+            ],
+          ),
+        ),
+    ],
+  );
+}
+
+Widget _radioGroupValidation(BuildContext context, Locale locale) {
+  var attempted = false;
+  String? plan;
+  var saved = '';
+  return StatefulBuilder(
+    builder: (context, setState) => SizedBox(
+      width: 320,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRField(
+            label: _pick(locale, 'Support plan', '지원 플랜', 'サポートプラン'),
+            errorText: attempted && plan == null
+                ? _pick(
+                    locale,
+                    'Choose a support plan to continue.',
+                    '계속하려면 지원 플랜을 선택하세요.',
+                    'サポートプランを選択してください。',
+                  )
+                : null,
+            control: TRRadioGroup(
+              value: plan,
+              onValueChange: (next) => setState(() {
+                plan = next;
+                saved = '';
+              }),
+              children: [
+                for (final (value, label) in _radioPlans(locale))
+                  _radioOption(value, label),
+              ],
+            ),
+          ),
+          TRButton(
+            onPressed: () => setState(() {
+              attempted = true;
+              saved = plan ?? '';
+            }),
+            child: Text(_pick(locale, 'Continue', '계속', '続ける')),
+          ),
+          if (saved.isNotEmpty)
+            TRText(
+              '${_pick(locale, 'Selected', '선택한 값', '選択値')}: $saved',
+              variant: TRTextVariant.bodySm,
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _radioGroupForm(BuildContext context, Locale locale) {
+  final formKey = GlobalKey<TRFormState>();
+  var result = '';
+  return StatefulBuilder(
+    builder: (context, setState) => TRForm(
+      key: formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRRadioGroup(
+            name: 'plan',
+            defaultValue: 'starter',
+            children: [
+              for (final (value, label) in _radioPlans(locale).take(2))
+                _radioOption(value, label),
+            ],
+          ),
+          TRButton(
+            onPressed: () {
+              final value = formKey.currentState?.save()['plan'];
+              setState(() => result = value is String ? value : '');
             },
             child: Text(
               _pick(locale, 'Collect form values', '폼 값 모으기', 'フォーム値を取得'),
