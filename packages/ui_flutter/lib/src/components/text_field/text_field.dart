@@ -30,6 +30,7 @@ class TRTextField extends StatelessWidget {
     this.placeholder,
     this.readOnly = false,
     this.restorationId,
+    this.suffix,
     this.textInputAction,
     this.uiSize = TRUiSize.md,
     this.validator,
@@ -59,6 +60,10 @@ class TRTextField extends StatelessWidget {
   final String? placeholder;
   final bool readOnly;
   final String? restorationId;
+
+  /// Trailing affordance rendered inside the field frame, such as a clear
+  /// button. The decoration is unchanged when this is null.
+  final Widget? suffix;
   final TextInputAction? textInputAction;
   final TRUiSize uiSize;
   final FormFieldValidator<String>? validator;
@@ -116,6 +121,17 @@ class TRTextField extends StatelessWidget {
           hintText: placeholder,
           hoverColor: Colors.transparent,
           isCollapsed: true,
+          // The default 48x48 minimum would inflate the control past its
+          // token height, so the suffix keeps its intrinsic size.
+          suffixIcon: suffix == null
+              ? null
+              : Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    end: TRGeneratedSpacing.xs,
+                  ),
+                  child: suffix,
+                ),
+          suffixIconConstraints: const BoxConstraints(),
         ),
         enabled: enabled,
         focusNode: resolvedFocusNode,

@@ -1,14 +1,29 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../types.dart';
+import '../button/button.dart';
 import '../text_field/text_field.dart';
 
 /// Layout used by a combobox options popup.
 enum TRComboboxLayout { list, grid }
+
+/// How a combobox narrows its option source against the current query.
+///
+/// [TRComboboxFilterMode.none] leaves narrowing entirely to the option source,
+/// which is what an asynchronous or remote `optionsBuilder` usually wants.
+enum TRComboboxFilterMode { contains, startsWith, none }
+
+/// Decides whether an option survives the current query.
+///
+/// A filter passed to a combobox takes precedence over its
+/// [TRComboboxFilterMode]. The query is already trimmed and lower-cased.
+typedef TRComboboxFilter<T extends Object> =
+    bool Function(TRComboboxItem<T> item, String query);
 
 /// A typed option displayed by a Tinyrack combobox.
 @immutable
@@ -114,10 +129,15 @@ class TRCombobox<T extends Object> extends StatefulWidget {
   const TRCombobox({
     this.items = const [],
     this.optionsBuilder,
+    this.autoHighlight = true,
+    this.clearable = false,
+    this.clearSemanticLabel = 'Clear',
     this.controller,
     this.defaultValue,
     this.enabled = true,
     this.errorText,
+    this.filter,
+    this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
     this.layout = TRComboboxLayout.list,
@@ -136,9 +156,14 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     required this.value,
     this.items = const [],
     this.optionsBuilder,
+    this.autoHighlight = true,
+    this.clearable = false,
+    this.clearSemanticLabel = 'Clear',
     this.controller,
     this.enabled = true,
     this.errorText,
+    this.filter,
+    this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
     this.layout = TRComboboxLayout.list,
@@ -155,11 +180,24 @@ class TRCombobox<T extends Object> extends StatefulWidget {
 
   final List<TRComboboxItem<T>> items;
   final TRComboboxOptionsBuilder<T>? optionsBuilder;
+
+  /// Arms the first option so Enter commits it without an arrow key first.
+  final bool autoHighlight;
+
+  /// Renders a clear button once the field holds a query or a selection.
+  final bool clearable;
+
+  /// Accessible name of the clear button.
+  final String clearSemanticLabel;
   final TRComboboxController<T>? controller;
   final T? defaultValue;
   final T? value;
   final bool enabled;
   final String? errorText;
+
+  /// Overrides [filterMode] with a custom predicate.
+  final TRComboboxFilter<T>? filter;
+  final TRComboboxFilterMode filterMode;
   final String? helperText;
   final String? label;
   final TRComboboxLayout layout;
@@ -241,16 +279,33 @@ class _TRComboboxState<T extends Object> extends State<TRCombobox<T>> {
     widget.onValueChange?.call(value);
   }
 
+  void _clear() {
+    // The controlled variant owns its value, so only the query is reset here
+    // and the owner decides what happens to the selection.
+    widget._controlled
+        ? _controller.textEditingController.clear()
+        : _controller.clear();
+    widget.onValueChange?.call(null);
+    widget.onQueryChange?.call('');
+    _controller.focusNode.requestFocus();
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) => _TRComboboxInput<T>(
     controller: _controller.textEditingController,
     focusNode: _controller.focusNode,
+    autoHighlight: widget.autoHighlight,
+    clearSemanticLabel: widget.clearSemanticLabel,
     enabled: widget.enabled,
     errorText: widget.errorText,
+    filter: widget.filter,
+    filterMode: widget.filterMode,
     helperText: widget.helperText,
     items: widget.items,
     label: widget.label,
     layout: widget.layout,
+    onClear: widget.clearable ? _clear : null,
     onQueryChange: widget.onQueryChange,
     onSelected: _select,
     optionsBuilder: widget.optionsBuilder,
@@ -267,10 +322,15 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
   const TRMultiCombobox({
     this.items = const [],
     this.optionsBuilder,
+    this.autoHighlight = true,
+    this.clearable = false,
+    this.clearSemanticLabel = 'Clear',
     this.controller,
     this.defaultValue = const [],
     this.enabled = true,
     this.errorText,
+    this.filter,
+    this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
     this.layout = TRComboboxLayout.list,
@@ -288,9 +348,14 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     required this.value,
     this.items = const [],
     this.optionsBuilder,
+    this.autoHighlight = true,
+    this.clearable = false,
+    this.clearSemanticLabel = 'Clear',
     this.controller,
     this.enabled = true,
     this.errorText,
+    this.filter,
+    this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
     this.layout = TRComboboxLayout.list,
@@ -306,11 +371,24 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
 
   final List<TRComboboxItem<T>> items;
   final TRComboboxOptionsBuilder<T>? optionsBuilder;
+
+  /// Arms the first option so Enter commits it without an arrow key first.
+  final bool autoHighlight;
+
+  /// Renders a clear button once the field holds a query or any selection.
+  final bool clearable;
+
+  /// Accessible name of the clear button.
+  final String clearSemanticLabel;
   final TRMultiComboboxController<T>? controller;
   final List<T> defaultValue;
   final List<T>? value;
   final bool enabled;
   final String? errorText;
+
+  /// Overrides [filterMode] with a custom predicate.
+  final TRComboboxFilter<T>? filter;
+  final TRComboboxFilterMode filterMode;
   final String? helperText;
   final String? label;
   final TRComboboxLayout layout;
@@ -380,6 +458,17 @@ class _TRMultiComboboxState<T extends Object>
     });
   }
 
+  void _clear() {
+    // TRMultiComboboxController.clear only resets the values, so the query is
+    // cleared here instead of changing that controller contract.
+    if (widget.value == null) _controller.clear();
+    _controller.textEditingController.clear();
+    widget.onValueChange?.call(const []);
+    widget.onQueryChange?.call('');
+    _controller.focusNode.requestFocus();
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -403,12 +492,17 @@ class _TRMultiComboboxState<T extends Object>
       _TRComboboxInput<T>(
         controller: _controller.textEditingController,
         focusNode: _controller.focusNode,
+        autoHighlight: widget.autoHighlight,
+        clearSemanticLabel: widget.clearSemanticLabel,
         enabled: widget.enabled,
         errorText: widget.errorText,
+        filter: widget.filter,
+        filterMode: widget.filterMode,
         helperText: widget.helperText,
         items: widget.items,
         label: widget.label,
         layout: widget.layout,
+        onClear: widget.clearable ? _clear : null,
         onQueryChange: widget.onQueryChange,
         onSelected: _toggle,
         optionsBuilder: widget.optionsBuilder,
@@ -429,16 +523,21 @@ class _TRMultiComboboxState<T extends Object>
   }
 }
 
-class _TRComboboxInput<T extends Object> extends StatelessWidget {
+class _TRComboboxInput<T extends Object> extends StatefulWidget {
   const _TRComboboxInput({
     required this.controller,
     required this.focusNode,
+    required this.autoHighlight,
+    required this.clearSemanticLabel,
     required this.enabled,
     required this.errorText,
+    required this.filter,
+    required this.filterMode,
     required this.helperText,
     required this.items,
     required this.label,
     required this.layout,
+    required this.onClear,
     required this.onQueryChange,
     required this.onSelected,
     required this.optionsBuilder,
@@ -451,12 +550,17 @@ class _TRComboboxInput<T extends Object> extends StatelessWidget {
 
   final TextEditingController controller;
   final FocusNode focusNode;
+  final bool autoHighlight;
+  final String clearSemanticLabel;
   final bool enabled;
   final String? errorText;
+  final TRComboboxFilter<T>? filter;
+  final TRComboboxFilterMode filterMode;
   final String? helperText;
   final List<TRComboboxItem<T>> items;
   final String? label;
   final TRComboboxLayout layout;
+  final VoidCallback? onClear;
   final ValueChanged<String>? onQueryChange;
   final ValueChanged<T> onSelected;
   final TRComboboxOptionsBuilder<T>? optionsBuilder;
@@ -466,105 +570,261 @@ class _TRComboboxInput<T extends Object> extends StatelessWidget {
   final TRUiSize uiSize;
   final double? width;
 
+  @override
+  State<_TRComboboxInput<T>> createState() => _TRComboboxInputState<T>();
+}
+
+class _TRComboboxInputState<T extends Object>
+    extends State<_TRComboboxInput<T>> {
+  static final _navigationKeys = {
+    LogicalKeyboardKey.arrowDown,
+    LogicalKeyboardKey.arrowUp,
+    LogicalKeyboardKey.pageDown,
+    LogicalKeyboardKey.pageUp,
+    LogicalKeyboardKey.home,
+    LogicalKeyboardKey.end,
+  };
+  static final _forwardKeys = {
+    LogicalKeyboardKey.arrowDown,
+    LogicalKeyboardKey.pageDown,
+    LogicalKeyboardKey.end,
+  };
+
+  late bool _highlightArmed = widget.autoHighlight;
+  List<TRComboboxItem<T>> _lastOptions = const [];
+  int _highlightIndex = 0;
+  bool _movingForward = true;
+  int _skipBudget = 0;
+  BuildContext? _fieldContext;
+
+  @override
+  void didUpdateWidget(_TRComboboxInput<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.autoHighlight != widget.autoHighlight) {
+      _highlightArmed = widget.autoHighlight;
+    }
+  }
+
+  bool _matches(TRComboboxItem<T> item, String query) {
+    if (query.isEmpty) return true;
+    if (widget.filter case final filter?) return filter(item, query);
+    final label = item.label.toLowerCase();
+    return switch (widget.filterMode) {
+      TRComboboxFilterMode.contains => label.contains(query),
+      TRComboboxFilterMode.startsWith => label.startsWith(query),
+      TRComboboxFilterMode.none => true,
+    };
+  }
+
   FutureOr<Iterable<TRComboboxItem<T>>> _options(
     TextEditingValue editing,
   ) async {
     final query = editing.text.trim();
-    final source = optionsBuilder == null
-        ? items
-        : await optionsBuilder!(query);
-    final selectedLabel = selected.length == 1
-        ? items
-              .where((item) => item.value == selected.single)
+    final source = widget.optionsBuilder == null
+        ? widget.items
+        : await widget.optionsBuilder!(query);
+    // Committing a selection writes its label into the field, and that label
+    // must not read as a query that hides every other option.
+    final selectedLabel = widget.selected.length == 1
+        ? widget.items
+              .where((item) => item.value == widget.selected.single)
               .map((item) => item.label.trim().toLowerCase())
               .firstOrNull
         : null;
     final normalized = query.toLowerCase() == selectedLabel
         ? ''
         : query.toLowerCase();
-    return source.where(
-      (item) =>
-          item.enabled &&
-          (normalized.isEmpty || item.label.toLowerCase().contains(normalized)),
+    final options = source
+        .where((item) => _matches(item, normalized))
+        .toList(growable: false);
+    _lastOptions = options;
+    return options;
+  }
+
+  KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
+    if (event is KeyUpEvent) return KeyEventResult.ignored;
+    if (!_navigationKeys.contains(event.logicalKey)) {
+      return KeyEventResult.ignored;
+    }
+    // RawAutocomplete owns the shortcuts that actually move the highlight, so
+    // this only records that the highlight is now armed by the user.
+    final wasArmed = _highlightArmed;
+    _movingForward = _forwardKeys.contains(event.logicalKey);
+    _skipBudget = _lastOptions.length;
+    if (wasArmed) {
+      _highlightArmed = true;
+      return KeyEventResult.ignored;
+    }
+    setState(() => _highlightArmed = true);
+    // RawAutocomplete always keeps index 0 highlighted, so the first Down press
+    // reveals that option instead of stepping past it.
+    return event.logicalKey == LogicalKeyboardKey.arrowDown
+        ? KeyEventResult.handled
+        : KeyEventResult.ignored;
+  }
+
+  void _publishHighlight(int index) {
+    if (_highlightIndex == index) return;
+    _highlightIndex = index;
+    final item = _lastOptions.elementAtOrNull(index);
+    if (item == null || item.enabled || _skipBudget <= 0) return;
+    // Step past a disabled row in the direction the user was already moving.
+    _skipBudget -= 1;
+    final fieldContext = _fieldContext;
+    if (fieldContext == null) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !fieldContext.mounted) return;
+      Actions.invoke(
+        fieldContext,
+        _movingForward
+            ? const AutocompleteNextOptionIntent()
+            : const AutocompletePreviousOptionIntent(),
+      );
+    });
+  }
+
+  void _handleQueryChange(String query) {
+    _skipBudget = 0;
+    if (_highlightArmed != widget.autoHighlight && mounted) {
+      setState(() => _highlightArmed = widget.autoHighlight);
+    }
+    widget.onQueryChange?.call(query);
+  }
+
+  Widget? _clearButton() {
+    final onClear = widget.onClear;
+    if (onClear == null || !widget.enabled || widget.readOnly) return null;
+    final empty = widget.controller.text.isEmpty && widget.selected.isEmpty;
+    if (empty) return null;
+    return TRIconButton(
+      icon: const Icon(Icons.close),
+      label: widget.clearSemanticLabel,
+      onPressed: onClear,
+      appearance: TRAppearance.ghost,
+      uiSize: TRUiSize.sm,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final popupWidth = width ?? TRGeneratedMeasurements.overlayWidthSm;
+    final popupWidth = widget.width ?? TRGeneratedMeasurements.overlayWidthSm;
     return SizedBox(
-      width: width,
+      width: widget.width,
       child: RawAutocomplete<TRComboboxItem<T>>(
         displayStringForOption: (item) => item.label,
-        focusNode: focusNode,
-        textEditingController: controller,
+        focusNode: widget.focusNode,
+        textEditingController: widget.controller,
         optionsBuilder: _options,
-        onSelected: (item) => onSelected(item.value),
-        fieldViewBuilder: (context, controller, focusNode, onSubmitted) =>
-            TRTextField(
-              controller: controller,
-              enabled: enabled,
-              errorText: errorText,
-              focusNode: focusNode,
-              helperText: helperText,
-              label: label,
-              onChanged: onQueryChange,
-              onSubmitted: (_) => onSubmitted(),
-              placeholder: placeholder,
-              readOnly: readOnly,
-              uiSize: uiSize,
-            ),
-        optionsViewBuilder: (context, select, options) => Align(
-          alignment: AlignmentDirectional.topStart,
-          child: Transform.translate(
-            offset: const Offset(0, TRGeneratedSpacing.sm),
-            child: TRLayerSurface(
-              kind: TRLayerBoundaryKind.combobox,
-              minWidth: popupWidth,
-              maxWidth: popupWidth,
-              padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: TRGeneratedMeasurements.measureXl,
-                ),
-                child: layout == TRComboboxLayout.grid
-                    ? GridView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisExtent:
-                                  TRGeneratedLayerMetrics.menuItemHeight,
-                              crossAxisSpacing: TRGeneratedSpacing.xs,
-                              mainAxisSpacing: TRGeneratedSpacing.xs,
-                            ),
-                        itemCount: options.length,
-                        itemBuilder: (context, index) => _option(
-                          context,
-                          options.elementAt(index),
-                          index,
-                          select,
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        itemCount: options.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: TRGeneratedSpacing.xs),
-                        itemBuilder: (context, index) => _option(
-                          context,
-                          options.elementAt(index),
-                          index,
-                          select,
-                        ),
-                      ),
-              ),
-            ),
+        onSelected: (item) {
+          if (!item.enabled) return;
+          widget.onSelected(item.value);
+        },
+        fieldViewBuilder: (context, controller, focusNode, onSubmitted) => Focus(
+          canRequestFocus: false,
+          skipTraversal: true,
+          onKeyEvent: _handleKey,
+          // The builder context handed to fieldViewBuilder sits above the
+          // Actions that own the highlight intents, so a descendant context is
+          // captured here instead.
+          child: Builder(
+            builder: (context) {
+              _fieldContext = context;
+              return _buildField(controller, focusNode, onSubmitted);
+            },
           ),
         ),
+        optionsViewBuilder: (context, select, options) {
+          _publishHighlight(AutocompleteHighlightedOption.of(context));
+          return Align(
+            alignment: AlignmentDirectional.topStart,
+            child: Transform.translate(
+              offset: const Offset(0, TRGeneratedSpacing.sm),
+              child: TRLayerSurface(
+                kind: TRLayerBoundaryKind.combobox,
+                minWidth: popupWidth,
+                maxWidth: popupWidth,
+                padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
+                // Keyboard focus stays on the query field so arrow keys reach
+                // the highlight shortcuts instead of the option buttons.
+                child: ExcludeFocus(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: TRGeneratedMeasurements.measureXl,
+                    ),
+                    child: widget.layout == TRComboboxLayout.grid
+                        ? GridView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisExtent:
+                                      TRGeneratedLayerMetrics.menuItemHeight,
+                                  crossAxisSpacing: TRGeneratedSpacing.xs,
+                                  mainAxisSpacing: TRGeneratedSpacing.xs,
+                                ),
+                            itemCount: options.length,
+                            itemBuilder: (context, index) => _option(
+                              context,
+                              options.elementAt(index),
+                              index,
+                              select,
+                            ),
+                          )
+                        : ListView.separated(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: options.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: TRGeneratedSpacing.xs),
+                            itemBuilder: (context, index) => _option(
+                              context,
+                              options.elementAt(index),
+                              index,
+                              select,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
+    );
+  }
+
+  Widget _buildField(
+    TextEditingController controller,
+    FocusNode focusNode,
+    VoidCallback onSubmitted,
+  ) {
+    TRTextField field(Widget? suffix) => TRTextField(
+      controller: controller,
+      enabled: widget.enabled,
+      errorText: widget.errorText,
+      focusNode: focusNode,
+      helperText: widget.helperText,
+      label: widget.label,
+      onChanged: _handleQueryChange,
+      onSubmitted: (_) {
+        // Enter must not commit an option the user never highlighted, and it
+        // must never commit a disabled one.
+        if (!_highlightArmed) return;
+        final item = _lastOptions.elementAtOrNull(_highlightIndex);
+        if (item == null || !item.enabled) return;
+        onSubmitted();
+      },
+      placeholder: widget.placeholder,
+      readOnly: widget.readOnly,
+      suffix: suffix,
+      uiSize: widget.uiSize,
+    );
+
+    if (widget.onClear == null) return field(null);
+    return ValueListenableBuilder<TextEditingValue>(
+      valueListenable: controller,
+      builder: (context, _, _) => field(_clearButton()),
     );
   }
 
@@ -577,12 +837,15 @@ class _TRComboboxInput<T extends Object> extends StatelessWidget {
     width: double.infinity,
     child: MenuItemButton(
       leadingIcon: item.leading,
-      onPressed: () => select(item),
+      onPressed: item.enabled ? () => select(item) : null,
+      requestFocusOnHover: false,
       style: TRLayerStyles.option(
         context,
-        selected:
-            selected.contains(item.value) ||
+        highlighted:
+            item.enabled &&
+            _highlightArmed &&
             AutocompleteHighlightedOption.of(context) == index,
+        selected: widget.selected.contains(item.value),
       ),
       trailingIcon: item.trailing,
       child: TRLayerPartBoundary(name: 'option$index', child: Text(item.label)),
@@ -595,11 +858,17 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
   TRComboboxFormField({
     required List<TRComboboxItem<T>> items,
     TRComboboxOptionsBuilder<T>? optionsBuilder,
+    bool autoHighlight = true,
+    bool clearable = false,
+    String clearSemanticLabel = 'Clear',
     super.initialValue,
     super.autovalidateMode,
     super.enabled = true,
+    TRComboboxFilter<T>? filter,
+    TRComboboxFilterMode filterMode = TRComboboxFilterMode.contains,
     String? helperText,
     String? label,
+    TRComboboxLayout layout = TRComboboxLayout.list,
     ValueChanged<T?>? onValueChange,
     super.onSaved,
     super.validator,
@@ -611,10 +880,16 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
            value: field.value,
            items: items,
            optionsBuilder: optionsBuilder,
+           autoHighlight: autoHighlight,
+           clearable: clearable,
+           clearSemanticLabel: clearSemanticLabel,
            enabled: enabled,
            errorText: field.errorText,
+           filter: filter,
+           filterMode: filterMode,
            helperText: helperText,
            label: label,
+           layout: layout,
            onValueChange: (value) {
              field.didChange(value);
              onValueChange?.call(value);
@@ -630,15 +905,22 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
   TRMultiComboboxFormField({
     required List<TRComboboxItem<T>> items,
     TRComboboxOptionsBuilder<T>? optionsBuilder,
+    bool autoHighlight = true,
+    bool clearable = false,
+    String clearSemanticLabel = 'Clear',
     List<T> initialValue = const [],
     super.autovalidateMode,
     super.enabled = true,
+    TRComboboxFilter<T>? filter,
+    TRComboboxFilterMode filterMode = TRComboboxFilterMode.contains,
     String? helperText,
     String? label,
+    TRComboboxLayout layout = TRComboboxLayout.list,
     ValueChanged<List<T>>? onValueChange,
     super.onSaved,
     super.validator,
     String? placeholder,
+    TRUiSize uiSize = TRUiSize.md,
     super.key,
   }) : super(
          initialValue: initialValue,
@@ -646,15 +928,22 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
            value: field.value ?? const [],
            items: items,
            optionsBuilder: optionsBuilder,
+           autoHighlight: autoHighlight,
+           clearable: clearable,
+           clearSemanticLabel: clearSemanticLabel,
            enabled: enabled,
            errorText: field.errorText,
+           filter: filter,
+           filterMode: filterMode,
            helperText: helperText,
            label: label,
+           layout: layout,
            onValueChange: (value) {
              field.didChange(value);
              onValueChange?.call(value);
            },
            placeholder: placeholder,
+           uiSize: uiSize,
          ),
        );
 }

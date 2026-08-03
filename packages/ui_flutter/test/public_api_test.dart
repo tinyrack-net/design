@@ -60,6 +60,8 @@ void main() {
       TRCollapsible,
       TRCombobox,
       TRComboboxController,
+      TRComboboxFilter,
+      TRComboboxFilterMode,
       TRComboboxFormField,
       TRComboboxItem,
       TRComboboxLayout,
@@ -169,6 +171,6 @@ void main() {
       TRWindowFrameVariant,
     ];
 
-    expect(publicTypes, hasLength(163));
+    expect(publicTypes, hasLength(165));
   });
 }
