@@ -6,9 +6,12 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const clientRoot = resolve(root, 'packages/homepage/build/client');
 const previewRoot = resolve(clientRoot, 'flutter-preview');
 const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
-// Pagination, Table, and WindowFrame complete the 58-component Flutter
-// preview catalog. Keep a narrow regression margin above that measured bundle.
-const maximumMainBytes = 3_350_000;
+// The 58-component Flutter preview catalog is complete; the bundle now grows
+// with the docs example builders each component page adds, at roughly 8 KB per
+// documented component. The previous 3_350_000 ceiling left 7 KB of headroom,
+// so a single parity pass overran it. Keep a regression margin wide enough for
+// the remaining pages and tighten it once the pages stop landing.
+const maximumMainBytes = 3_450_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;
 const expectedFlutterFonts = [
