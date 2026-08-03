@@ -743,7 +743,8 @@ describe('React Router documentation contract', () => {
       components: 60,
       docs: 1,
       foundations: 11,
-      flutter: 63,
+      'flutter-components': 59,
+      'flutter-start': 4,
       home: 1,
       integrations: 4,
       'web-start': 1,
@@ -1007,6 +1008,78 @@ describe('React Router documentation contract', () => {
       }
       expect(pageCounts).toEqual([6, 8, 8, 10, 7, 6, 6, 7, 2]);
       expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(60);
+    }
+  });
+
+  it('mirrors the web component categories in the flutter navigation', () => {
+    const flutterSection = config.sections.find(
+      (section) => section.id === 'flutter-components',
+    );
+    const groups = flutterSection?.groups ?? [];
+    const webGroups =
+      config.sections.find((section) => section.id === 'components')?.groups ?? [];
+    expect(groups).toEqual(webGroups);
+
+    const flutterRoutes = staticDocumentRoutes.filter(
+      (route) => route.locale === 'en' && route.section === 'flutter-components',
+    );
+    expect(flutterRoutes).toHaveLength(59);
+    const webRoutes = staticDocumentRoutes.filter(
+      (route) => route.locale === 'en' && route.section === 'components',
+    );
+    for (const route of flutterRoutes) {
+      expect(route.order, route.sourceFile).toBeUndefined();
+      expect(
+        groups.some((group) => group.id === route.group),
+        route.sourceFile,
+      ).toBe(true);
+      const slug = route.contentKey.split('/').at(-1);
+      const twin = webRoutes.find((entry) => entry.contentKey.endsWith(`/${slug}`));
+      if (!twin) continue;
+      expect(route.group, route.sourceFile).toBe(twin.group);
+      expect(route.sidebarLabel, route.sourceFile).toBe(twin.sidebarLabel);
+    }
+    for (const group of groups) {
+      expect(
+        flutterRoutes.some((route) => route.group === group.id),
+        `unused group ${group.id}`,
+      ).toBe(true);
+    }
+
+    const startRoutes = staticDocumentRoutes.filter(
+      (route) => route.locale === 'en' && route.section === 'flutter-start',
+    );
+    expect(startRoutes.map((route) => route.order)).toEqual([1, 2, 3, 4]);
+    for (const route of startRoutes) {
+      expect(route.group, route.sourceFile).toBeUndefined();
+    }
+
+    for (const locale of ['en', 'ko', 'ja'] as const) {
+      const sectionNav = docsManifest.navigation[locale]?.[6];
+      if (sectionNav?.type !== 'group') {
+        throw new Error('flutter components nav missing');
+      }
+      expect(sectionNav.label).toBe(
+        { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' }[locale],
+      );
+      expect(sectionNav.children.map((child) => child.type)).toEqual(
+        Array.from({ length: 9 }, () => 'group'),
+      );
+      const collator = new Intl.Collator(locale, {
+        numeric: true,
+        sensitivity: 'base',
+      });
+      const pageCounts: number[] = [];
+      for (const child of sectionNav.children) {
+        if (child.type !== 'group') continue;
+        const labels = child.children.map((item) =>
+          item.type === 'page' ? item.label : '',
+        );
+        pageCounts.push(labels.length);
+        expect([...labels].sort(collator.compare), child.label).toEqual(labels);
+      }
+      expect(pageCounts).toEqual([5, 8, 8, 10, 7, 6, 6, 7, 2]);
+      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(59);
     }
   });
 
