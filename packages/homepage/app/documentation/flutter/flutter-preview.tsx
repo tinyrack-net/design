@@ -203,9 +203,9 @@ function FlutterFrame({
     ko: 'Flutter 미리보기를 불러오는 중이에요',
   }[locale];
   const errorLabel = {
-    en: 'The Flutter preview reported an error. Retry the preview.',
-    ja: 'Flutter プレビューでエラーが発生しました。再試行してください。',
-    ko: 'Flutter 미리보기에서 오류가 발생했어요. 다시 시도해 주세요.',
+    en: 'The Flutter preview reported an error. Reload the page to try again.',
+    ja: 'Flutter プレビューでエラーが発生しました。ページを再読み込みしてください。',
+    ko: 'Flutter 미리보기에서 오류가 발생했어요. 페이지를 새로고침해 주세요.',
   }[locale];
 
   return (
