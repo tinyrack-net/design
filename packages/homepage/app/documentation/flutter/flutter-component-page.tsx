@@ -1566,7 +1566,263 @@ class _RackFormState extends State<RackForm> {
       ko: '가로 또는 세로 트랙에서 단일 값이나 범위를 선택해요.',
       ja: '横または縦のトラックで、単一値または範囲を選択します。',
     },
-    usage: 'TRSlider.controlled(\n  value: traffic,\n  onValueChange: setTraffic,\n)',
+    usage:
+      "TRSlider.controlled(\n  label: 'Traffic',\n  value: traffic,\n  onValueChange: (value) => setState(() => traffic = value),\n)",
+    contractIntro: {
+      en: 'Reach for `TRSlider` when the reader picks an approximate value along a known scale, such as a volume or a traffic share. Use `TRTextField` or `TRNumberField` when the exact number matters more than the position.',
+      ko: '볼륨이나 트래픽 비중처럼 알려진 범위에서 대략적인 값을 고를 때 `TRSlider`를 쓰세요. 위치보다 정확한 숫자가 중요하다면 `TRTextField`나 `TRNumberField`를 쓰세요.',
+      ja: '音量やトラフィックの割合のように、既知の範囲からおおよその値を選ぶ場合に `TRSlider` を使ってください。位置よりも正確な数値が重要な場合は `TRTextField` や `TRNumberField` を使ってください。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Value', ko: '값', ja: '値' },
+        choices: {
+          en: '`TRSlider` carries a single `double`. Ranges are a separate widget, `TRRangeSlider`, which carries a `RangeValues`. Each widget has an uncontrolled constructor taking `defaultValue` and a `.controlled` constructor taking `value`.',
+          ko: '`TRSlider`는 `double` 하나를 다뤄요. 범위는 `RangeValues`를 다루는 별도 위젯인 `TRRangeSlider`예요. 두 위젯 모두 `defaultValue`를 받는 비제어 생성자와 `value`를 받는 `.controlled` 생성자가 있어요.',
+          ja: '`TRSlider` は単一の `double` を扱います。範囲は `RangeValues` を扱う別のウィジェット `TRRangeSlider` です。どちらのウィジェットにも、`defaultValue` を受け取る非制御コンストラクタと `value` を受け取る `.controlled` コンストラクタがあります。',
+        },
+      },
+      {
+        axis: { en: 'Range', ko: '범위', ja: '範囲' },
+        choices: {
+          en: '`min`, `max`, and `step` bound and snap every pointer and keyboard change. On `TRRangeSlider`, `minGap` is a distance in value units, not a step count, and the thumb being driven absorbs it. Thumbs stop at each other instead of pushing or swapping.',
+          ko: '`min`, `max`, `step`이 포인터와 키보드 변경을 모두 제한하고 눈금에 맞춰요. `TRRangeSlider`의 `minGap`은 스텝 개수가 아니라 값 단위의 거리이고, 움직이는 쪽 썸이 그 간격을 흡수해요. 두 썸은 서로를 밀거나 교차하지 않고 맞닿는 지점에서 멈춰요.',
+          ja: '`min`、`max`、`step` がポインターとキーボードによる変更を制限し、目盛りに合わせます。`TRRangeSlider` の `minGap` はステップ数ではなく値の距離で、動かしている側のつまみがその間隔を吸収します。2 つのつまみは互いを押したり入れ替わったりせず、接する位置で止まります。',
+        },
+      },
+      {
+        axis: { en: 'Form', ko: '폼', ja: 'フォーム' },
+        choices: {
+          en: 'There is no `name` and no hidden input. Put `TRSliderFormField` or `TRRangeSliderFormField` inside a Flutter `Form` and read the value through `validator`, `onSaved`, and `FormState`.',
+          ko: '`name`이나 숨은 입력 요소는 없어요. Flutter `Form` 안에 `TRSliderFormField`나 `TRRangeSliderFormField`를 두고 `validator`, `onSaved`, `FormState`로 값을 다루세요.',
+          ja: '`name` や隠し入力はありません。Flutter の `Form` の中に `TRSliderFormField` または `TRRangeSliderFormField` を置き、`validator`、`onSaved`、`FormState` を通して値を扱ってください。',
+        },
+      },
+      {
+        axis: { en: 'Validation', ko: '검증', ja: '検証' },
+        choices: {
+          en: 'Validation rules live on the form field. It passes its message down as `errorText`, which prints below the track and tints the filled part of it. Set `autovalidateMode` to decide whether the message appears before the first submit. Outside a `Form`, pass `errorText` yourself.',
+          ko: '검증 규칙은 폼 필드가 가져요. 폼 필드는 메시지를 `errorText`로 내려보내고, 그 문구가 트랙 아래에 표시되면서 채워진 부분에 오류 색이 입혀져요. 첫 제출 전에 메시지를 보일지는 `autovalidateMode`로 정하세요. `Form` 밖에서는 `errorText`를 직접 넘기세요.',
+          ja: '検証ルールはフォームフィールドが持ちます。フォームフィールドはメッセージを `errorText` として渡し、その文言がトラックの下に表示され、トラックの塗りつぶし部分にエラー色が付きます。最初の送信前にメッセージを出すかどうかは `autovalidateMode` で決めてください。`Form` の外では `errorText` を自分で渡してください。',
+        },
+      },
+      {
+        axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
+        choices: {
+          en: 'A focused track moves by one `step` on Right and Up, and back on Left and Down. There is no large step, and Page Up, Page Down, Home, and End are not handled. On `TRRangeSlider` the arrow keys drive the thumb the last pointer press selected, which starts as the lower one.',
+          ko: '포커스된 트랙은 Right·Up에서 `step`만큼 올라가고 Left·Down에서 같은 만큼 내려가요. 큰 단위 이동은 없고 Page Up, Page Down, Home, End는 처리하지 않아요. `TRRangeSlider`에서는 마지막 포인터 입력이 고른 썸을 방향키가 움직이고, 처음에는 아래쪽 썸이에요.',
+          ja: 'フォーカスされたトラックは Right・Up で `step` 分進み、Left・Down で同じだけ戻ります。大きい単位の移動はなく、Page Up、Page Down、Home、End は処理されません。`TRRangeSlider` では、直前のポインター操作で選ばれたつまみを矢印キーが動かします。初期状態では下側のつまみです。',
+        },
+      },
+      {
+        axis: { en: 'Labeling', ko: '레이블', ja: 'ラベル' },
+        choices: {
+          en: '`label` draws a heading row above the track with the current value beside it, and `labelBuilder` formats that value for both the visible text and the semantics. Set `semanticLabel` when the accessible name should differ from the visible one, or when there is no visible label.',
+          ko: '`label`은 트랙 위에 현재 값을 함께 보여주는 제목 줄을 그리고, `labelBuilder`는 보이는 텍스트와 시맨틱 값 모두를 포맷해요. 접근성 이름을 보이는 레이블과 다르게 하거나 보이는 레이블이 없을 때는 `semanticLabel`을 설정하세요.',
+          ja: '`label` はトラックの上に現在値を添えた見出し行を描画し、`labelBuilder` は表示テキストとセマンティクスの両方の値を整形します。アクセシブルネームを表示ラベルと変えたい場合や表示ラベルがない場合は、`semanticLabel` を設定してください。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRSlider properties',
+          ko: 'TRSlider 속성',
+          ja: 'TRSlider のプロパティ',
+        },
+        rows: [
+          {
+            name: 'defaultValue',
+            type: 'double · 0',
+            purpose: {
+              en: 'Sets the starting value of the uncontrolled constructor. The widget then owns the value and reports each change through `onValueChange`.',
+              ko: '비제어 생성자의 시작 값을 정해요. 이후에는 위젯이 값을 소유하고 변경될 때마다 `onValueChange`로 알려요.',
+              ja: '非制御コンストラクタの初期値を指定します。以降はウィジェットが値を保持し、変更のたびに `onValueChange` で通知します。',
+            },
+          },
+          {
+            name: 'value',
+            type: 'double? · required on .controlled',
+            purpose: {
+              en: 'Drives the thumb from your own state. The widget never moves on its own, so update the state inside `onValueChange`.',
+              ko: '직접 관리하는 상태로 썸을 움직여요. 위젯이 스스로 값을 바꾸지 않으니 `onValueChange` 안에서 상태를 갱신하세요.',
+              ja: '自分で管理する状態からつまみを動かします。ウィジェットが自ら値を変えることはないため、`onValueChange` の中で状態を更新してください。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<double>? · null',
+            purpose: {
+              en: 'Fires on every pointer and keyboard change while the interaction is still in progress. There is no separate commit callback, so debounce the work yourself when a drag would be expensive.',
+              ko: '조작이 진행되는 동안 포인터와 키보드 변경마다 호출돼요. 별도의 커밋 콜백은 없으니 드래그 비용이 큰 작업은 직접 디바운스하세요.',
+              ja: '操作中のポインターとキーボードによる変更のたびに呼ばれます。別途のコミットコールバックはないため、ドラッグのコストが大きい処理は自分でデバウンスしてください。',
+            },
+          },
+          {
+            name: 'min, max, step',
+            type: 'double · 0, 100, 1',
+            purpose: {
+              en: 'Define the scale. Values are clamped to the bounds and snapped to the nearest step. The constructors assert `min < max` and `step > 0`.',
+              ko: '범위를 정해요. 값은 경계 안으로 잘리고 가장 가까운 스텝에 맞춰져요. 생성자는 `min < max`와 `step > 0`을 단언해요.',
+              ja: 'スケールを定義します。値は境界内に収められ、最も近いステップに揃えられます。コンストラクタは `min < max` と `step > 0` をアサートします。',
+            },
+          },
+          {
+            name: 'label',
+            type: 'String? · null',
+            purpose: {
+              en: 'Adds a heading row above the track showing the label and the current value. Leave it `null` for a bare track, and give the control a `semanticLabel` instead.',
+              ko: '트랙 위에 레이블과 현재 값을 보여주는 제목 줄을 더해요. `null`로 두면 트랙만 남으니 대신 `semanticLabel`을 주세요.',
+              ja: 'トラックの上にラベルと現在値を表示する見出し行を追加します。`null` にするとトラックだけになるため、代わりに `semanticLabel` を指定してください。',
+            },
+          },
+          {
+            name: 'labelBuilder',
+            type: 'TRSliderLabelBuilder? · null',
+            purpose: {
+              en: 'Formats the value for the heading row and the semantics value. Use it for units and percentages; whole numbers otherwise print without a decimal part.',
+              ko: '제목 줄과 시맨틱 값에 쓰일 값을 포맷해요. 단위나 백분율에 사용하세요. 지정하지 않으면 정수는 소수점 없이 표시돼요.',
+              ja: '見出し行とセマンティクスの値を整形します。単位や百分率に使ってください。指定しない場合、整数は小数部なしで表示されます。',
+            },
+          },
+          {
+            name: 'semanticLabel',
+            type: 'String? · null',
+            purpose: {
+              en: 'Names the control for assistive technology. It falls back to `label`, so set it when the visible label is missing or too terse to stand alone.',
+              ko: '보조 기술에 컨트롤 이름을 알려줘요. 지정하지 않으면 `label`을 따르니, 보이는 레이블이 없거나 그것만으로 뜻이 불분명할 때 설정하세요.',
+              ja: '支援技術に対してコントロールの名前を伝えます。未指定の場合は `label` にフォールバックするため、表示ラベルがない場合や、それだけでは意味が伝わらない場合に設定してください。',
+            },
+          },
+          {
+            name: 'errorText',
+            type: 'String? · null',
+            purpose: {
+              en: 'Prints a danger-toned message below the track and tints the filled part of it. `TRSliderFormField` supplies this from its validator, so set it directly only outside a `Form`.',
+              ko: '트랙 아래에 오류 색 메시지를 표시하고 채워진 부분에도 그 색을 입혀요. `TRSliderFormField`가 검증기에서 이 값을 넘겨주므로, 직접 설정하는 건 `Form` 밖일 때만 하세요.',
+              ja: 'トラックの下にエラー色のメッセージを表示し、トラックの塗りつぶし部分にも同じ色を適用します。`TRSliderFormField` がバリデータからこの値を渡すため、直接指定するのは `Form` の外の場合だけにしてください。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Scales the thumb and the space reserved around the track. The track thickness stays the same at every size. Use `TRUiSize.sm` on dense surfaces.',
+              ko: '썸과 트랙 주변에 확보되는 공간의 크기를 조절해요. 트랙 두께는 모든 크기에서 같아요. 밀도가 높은 화면에는 `TRUiSize.sm`을 쓰세요.',
+              ja: 'つまみとトラック周辺に確保される領域の大きさを調整します。トラックの太さはどのサイズでも同じです。密度の高い画面では `TRUiSize.sm` を使ってください。',
+            },
+          },
+          {
+            name: 'vertical',
+            type: 'bool · false',
+            purpose: {
+              en: 'Turns the track upright, with the maximum at the top. A vertical slider takes a fixed width and fills the height its parent gives it, so constrain that height.',
+              ko: '트랙을 세로로 세우고 최댓값을 위쪽에 둬요. 세로 슬라이더는 고정 너비를 쓰고 부모가 주는 높이를 채우니 그 높이를 제약하세요.',
+              ja: 'トラックを縦向きにし、最大値を上端に配置します。縦スライダーは固定幅を取り、親から与えられた高さいっぱいに広がるため、その高さを制約してください。',
+            },
+          },
+          {
+            name: 'enabled',
+            type: 'bool · true',
+            purpose: {
+              en: 'Blocks pointer and keyboard changes and drops the increase and decrease actions from the semantics node. The value stays visible. Flutter uses `enabled`, not the `disabled` prop the React page documents.',
+              ko: '포인터와 키보드 변경을 막고 시맨틱 노드에서 증가·감소 동작을 없애요. 값은 계속 보여요. Flutter는 React 문서의 `disabled` 대신 `enabled`를 써요.',
+              ja: 'ポインターとキーボードによる変更を止め、セマンティクスノードから増減アクションを取り除きます。値は表示されたままです。Flutter では React ページの `disabled` ではなく `enabled` を使います。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRRangeSlider properties',
+          ko: 'TRRangeSlider 속성',
+          ja: 'TRRangeSlider のプロパティ',
+        },
+        rows: [
+          {
+            name: 'defaultValue',
+            type: 'RangeValues · RangeValues(25, 75)',
+            purpose: {
+              en: 'Sets the starting pair for the uncontrolled constructor. The `.controlled` constructor takes `value` instead and requires it.',
+              ko: '비제어 생성자의 시작 쌍을 정해요. `.controlled` 생성자는 대신 `value`를 받고 이 값은 필수예요.',
+              ja: '非制御コンストラクタの初期値の組を指定します。`.controlled` コンストラクタは代わりに `value` を受け取り、これは必須です。',
+            },
+          },
+          {
+            name: 'minGap',
+            type: 'double · 0',
+            purpose: {
+              en: 'Keeps the thumbs at least this far apart in value units. The thumb being driven stops at the gap; the other one stays where the reader put it.',
+              ko: '두 썸 사이를 값 단위로 최소 이만큼 벌려요. 움직이는 썸이 그 간격에서 멈추고, 나머지 썸은 원래 자리에 남아요.',
+              ja: '2 つのつまみを値の単位で少なくともこの分だけ離します。動かしているつまみが間隔の位置で止まり、もう一方は読み手が置いた位置に留まります。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<RangeValues>? · null',
+            purpose: {
+              en: 'Reports the whole pair on every change, after clamping and the minimum gap are applied.',
+              ko: '경계와 최소 간격이 적용된 뒤의 값 쌍 전체를 변경마다 알려요.',
+              ja: '境界と最小間隔が適用されたあとの値の組全体を、変更のたびに通知します。',
+            },
+          },
+          {
+            name: 'labelBuilder',
+            type: 'TRSliderLabelBuilder? · null',
+            purpose: {
+              en: 'Formats each end separately. The heading row then joins the two results with an en dash, as in `20%–80%`.',
+              ko: '양쪽 끝을 각각 포맷해요. 제목 줄은 두 결과를 `20%–80%`처럼 en 대시로 이어요.',
+              ja: '両端をそれぞれ整形します。見出し行は 2 つの結果を `20%–80%` のように en ダッシュでつなぎます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRSliderFormField and TRRangeSliderFormField',
+          ko: 'TRSliderFormField와 TRRangeSliderFormField',
+          ja: 'TRSliderFormField と TRRangeSliderFormField',
+        },
+        rows: [
+          {
+            name: 'initialValue',
+            type: 'double · 0 / RangeValues · RangeValues(25, 75)',
+            purpose: {
+              en: 'Seeds the field. `FormState.reset` returns the slider to this value.',
+              ko: '필드의 초기값이에요. `FormState.reset`은 슬라이더를 이 값으로 되돌려요.',
+              ja: 'フィールドの初期値です。`FormState.reset` はスライダーをこの値に戻します。',
+            },
+          },
+          {
+            name: 'validator',
+            type: 'FormFieldValidator? · null',
+            purpose: {
+              en: 'Returns an error message to block `FormState.validate`, or `null` to accept the value. The field forwards the message to the slider as `errorText`.',
+              ko: '오류 메시지를 반환해 `FormState.validate`를 막고, `null`을 반환하면 값을 받아들여요. 폼 필드는 그 메시지를 `errorText`로 슬라이더에 전달해요.',
+              ja: 'エラーメッセージを返すと `FormState.validate` を通さず、`null` を返すと値を受け入れます。フォームフィールドはそのメッセージを `errorText` としてスライダーに渡します。',
+            },
+          },
+          {
+            name: 'autovalidateMode',
+            type: 'AutovalidateMode? · null',
+            purpose: {
+              en: 'Decides when the validator runs. `AutovalidateMode.onUserInteraction` keeps the field quiet until the reader moves the thumb, then clears the error as soon as the value becomes acceptable.',
+              ko: '검증을 언제 실행할지 정해요. `AutovalidateMode.onUserInteraction`은 썸을 움직이기 전까지 조용히 있다가, 값이 조건을 만족하면 바로 오류를 지워요.',
+              ja: 'バリデータを実行するタイミングを決めます。`AutovalidateMode.onUserInteraction` はつまみが動かされるまで何も表示せず、値が条件を満たした時点でエラーを消します。',
+            },
+          },
+          {
+            name: 'onSaved',
+            type: 'FormFieldSetter? · null',
+            purpose: {
+              en: 'Receives the value when `FormState.save` runs. Use it to collect the submitted result after a successful `validate`.',
+              ko: '`FormState.save`가 실행될 때 값을 받아요. `validate`를 통과한 뒤 제출 결과를 모을 때 쓰세요.',
+              ja: '`FormState.save` の実行時に値を受け取ります。`validate` を通過したあと、送信結果をまとめるのに使ってください。',
+            },
+          },
+        ],
+      },
+    ],
   },
   toast: {
     title: 'Toast',

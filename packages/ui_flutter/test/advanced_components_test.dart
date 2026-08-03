@@ -467,6 +467,149 @@ void main() {
       expect(verticalSize.height, greaterThan(verticalSize.width));
       semanticsHandle.dispose();
     });
+
+    testWidgets('range slider adjusts the driven thumb from the keyboard', (
+      tester,
+    ) async {
+      RangeValues? range;
+      final semanticsHandle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _app(
+          SizedBox(
+            width: 320,
+            child: TRRangeSlider(
+              defaultValue: const RangeValues(20, 80),
+              minGap: 20,
+              onValueChange: (value) => range = value,
+              semanticLabel: 'Maintenance window',
+              step: 5,
+            ),
+          ),
+        ),
+      );
+      final control = find.descendant(
+        of: find.byType(TRRangeSlider),
+        matching: find.byType(GestureDetector),
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pump();
+
+      final semantics = tester.getSemantics(find.byType(TRRangeSlider));
+      expect(semantics.value, '20–80');
+      expect(semantics.increasedValue, '25–80');
+      expect(semantics.decreasedValue, '15–80');
+      expect(
+        semantics.getSemanticsData().hasAction(SemanticsAction.increase),
+        isTrue,
+      );
+
+      // Arrow keys drive the start thumb until a pan hands over to the end one.
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(range, const RangeValues(25, 80));
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pump();
+      expect(range, const RangeValues(20, 80));
+
+      final rect = tester.getRect(control);
+      final gesture = await tester.startGesture(
+        Offset(rect.left + rect.width * 0.8, rect.center.dy),
+      );
+      await gesture.up();
+      await tester.pump();
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+      await tester.pump();
+      expect(range, const RangeValues(20, 85));
+
+      // The driven thumb absorbs the minimum gap instead of pushing the other.
+      for (var press = 0; press < 20; press += 1) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+        await tester.pump();
+      }
+      expect(range, const RangeValues(20, 40));
+
+      semanticsHandle.dispose();
+    });
+
+    testWidgets('slider form field shows and clears its validation error', (
+      tester,
+    ) async {
+      final formKey = GlobalKey<FormState>();
+      double? saved;
+      await tester.pumpWidget(
+        _app(
+          SizedBox(
+            width: 320,
+            child: Form(
+              key: formKey,
+              child: TRSliderFormField(
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                initialValue: 30,
+                label: 'Reserved capacity',
+                onSaved: (value) => saved = value,
+                validator: (value) =>
+                    (value ?? 0) < 60 ? 'Reserve at least 60%.' : null,
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Reserve at least 60%.'), findsNothing);
+
+      expect(formKey.currentState?.validate(), isFalse);
+      await tester.pump();
+      expect(find.text('Reserve at least 60%.'), findsOneWidget);
+
+      // Dragging past the threshold clears the message and lets save() run.
+      final control = find.descendant(
+        of: find.byType(TRSlider),
+        matching: find.byType(GestureDetector),
+      );
+      final rect = tester.getRect(control);
+      final gesture = await tester.startGesture(
+        Offset(rect.left + rect.width * 0.8, rect.center.dy),
+      );
+      await gesture.up();
+      await tester.pump();
+      expect(find.text('Reserve at least 60%.'), findsNothing);
+
+      expect(formKey.currentState?.validate(), isTrue);
+      formKey.currentState?.save();
+      expect(saved, 80);
+    });
+
+    testWidgets('slider sizes scale the control without moving md', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          Column(
+            children: [
+              for (final uiSize in TRUiSize.values)
+                SizedBox(
+                  key: ValueKey(uiSize),
+                  width: 320,
+                  child: TRSlider(defaultValue: 40, uiSize: uiSize),
+                ),
+            ],
+          ),
+        ),
+      );
+      double controlHeight(TRUiSize uiSize) => tester
+          .getSize(
+            find.descendant(
+              of: find.byKey(ValueKey(uiSize)),
+              matching: find.byType(GestureDetector),
+            ),
+          )
+          .height;
+
+      expect(controlHeight(TRUiSize.md), TRGeneratedSpacing.xl);
+      expect(controlHeight(TRUiSize.sm), TRGeneratedControlMetrics.smHeight);
+      expect(controlHeight(TRUiSize.lg), TRGeneratedControlMetrics.lgHeight);
+    });
   });
 
   group('forms and navigation', () {

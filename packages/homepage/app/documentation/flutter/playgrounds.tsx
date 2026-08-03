@@ -337,7 +337,22 @@ export const scrollAreaPlayground = flutterPlayground(
   { autoHide: false },
   { autoHide: { control: 'boolean' } },
 );
-export const sliderPlayground = flutterPlayground('slider', {}, {});
+export const sliderPlayground = flutterPlayground(
+  'slider',
+  {
+    disabled: false,
+    label: 'Traffic',
+    orientation: 'horizontal',
+    uiSize: 'md',
+  },
+  {
+    disabled: { control: 'boolean' },
+    label: { control: 'text' },
+    orientation: { control: 'radio', options: ['horizontal', 'vertical'] },
+    uiSize: { control: 'select', options: sizes },
+  },
+  { ja: { label: 'トラフィック' }, ko: { label: '트래픽' } },
+);
 export const toastPlayground = flutterPlayground('toast', {}, {});
 export const toolbarPlayground = flutterPlayground('toolbar', {}, {});
 export const tooltipPlayground = flutterPlayground('tooltip', {}, {});

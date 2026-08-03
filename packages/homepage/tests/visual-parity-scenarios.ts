@@ -467,6 +467,7 @@ export const visualParityScenarios: VisualParityScenario[] = [
   ),
   ...product('slider', {
     orientation: ['horizontal', 'vertical'],
+    uiSize: sizes,
   }),
   ...(
     [
@@ -665,7 +666,7 @@ export const parityContract = {
   popover: { open: [false, true] },
   'preview-card': { open: [false, true] },
   'scroll-area': { autoHide: [false, true] },
-  slider: { orientation: ['horizontal', 'vertical'] },
+  slider: { orientation: ['horizontal', 'vertical'], uiSize: sizes },
   toast: { open: [false, true] },
   toolbar: {},
   tooltip: { open: [false, true] },
