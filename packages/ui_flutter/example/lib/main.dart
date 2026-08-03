@@ -804,6 +804,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'avatar' => ['shape', 'uiSize'],
   'fieldset' => ['disabled'],
   'field' => ['disabled', 'errorText', 'helper'],
+  'form' => ['label', 'required', 'submitLabel'],
   'meter' => ['value', 'variant'],
   'progress' => ['uiSize', 'value', 'variant'],
   'link' => ['disabled', 'underline', 'variant'],
@@ -881,6 +882,8 @@ Map<String, Object?>? _validateArgs(
       'striped' => value is bool,
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
+      'required' when component == 'form' => value is bool,
+      'submitLabel' when component == 'form' => value is String,
       'copiedLabel' when component == 'copy-button' => value is String,
       'idleLabel' when component == 'copy-button' => value is String,
       'resetDelay' when component == 'copy-button' =>
@@ -1343,19 +1346,7 @@ class PreviewComponent extends StatelessWidget {
           ],
         ),
       ),
-      'form' => SizedBox(
-        key: measureKey,
-        width: 320,
-        child: const TRForm(
-          child: Column(
-            spacing: 12,
-            children: [
-              TRTextField(name: 'rack', label: 'Rack name'),
-              TRTextField(name: 'region', label: 'Region'),
-            ],
-          ),
-        ),
-      ),
+      'form' => _PreviewForm(args: args, key: measureKey, locale: locale),
       'menubar' => TRMenubar(
         key: measureKey,
         semanticLabel: 'Application',
@@ -3245,6 +3236,79 @@ class _PreviewDrawerState extends State<_PreviewDrawer> {
     width: 128,
     child: TRButton(onPressed: _show, child: const Text('Open drawer')),
   );
+}
+
+class _PreviewForm extends StatefulWidget {
+  const _PreviewForm({required this.args, required this.locale, super.key});
+
+  final Map<String, Object?> args;
+  final String locale;
+
+  @override
+  State<_PreviewForm> createState() => _PreviewFormState();
+}
+
+class _PreviewFormState extends State<_PreviewForm> {
+  final GlobalKey<TRFormState> _formKey = GlobalKey<TRFormState>();
+  String _submitted = '';
+
+  String _pick(String en, String ko, String ja) => switch (widget.locale) {
+    'ko' => ko,
+    'ja' => ja,
+    _ => en,
+  };
+
+  String? _validateRack(String? value) {
+    if ((value ?? '').trim().isEmpty) {
+      return _pick('Enter a rack name.', '랙 이름을 입력하세요.', 'ラック名を入力してください。');
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final required = widget.args['required'] != false;
+    final label = widget.args['label'] is String
+        ? widget.args['label']! as String
+        : _pick('Rack name', '랙 이름', 'ラック名');
+    final submitLabel = widget.args['submitLabel'] is String
+        ? widget.args['submitLabel']! as String
+        : _pick('Save', '저장', '保存');
+    return SizedBox(
+      width: 320,
+      child: TRForm(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.medium,
+          children: [
+            TRTextField(
+              name: 'rack',
+              label: label,
+              validator: required ? _validateRack : null,
+            ),
+            TRButton(
+              onPressed: () {
+                final state = _formKey.currentState;
+                if (state == null || !state.validate()) {
+                  setState(() => _submitted = '');
+                  return;
+                }
+                setState(() => _submitted = '${state.save()['rack'] ?? ''}');
+              },
+              child: Text(submitLabel),
+            ),
+            if (_submitted.isNotEmpty)
+              TRText(
+                '${_pick('Submitted', '제출한 값', '送信値')}: $_submitted',
+                variant: TRTextVariant.bodySm,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _PreviewNavigationMenu extends StatelessWidget {
