@@ -1333,6 +1333,128 @@ class _BackupChoiceState extends State<BackupChoice> {
     },
     usage:
       "TRIconButton(\n  label: 'Add rack',\n  icon: const Icon(Icons.add),\n  onPressed: addRack,\n)",
+    contractRows: [
+      {
+        axis: { en: 'Intent', ko: '의도', ja: '意図' },
+        choices: {
+          en: '`intent` accepts `neutral`, `primary`, `info`, `success`, `warning`, and `danger`; the default is `neutral`.',
+          ko: '`intent`는 `neutral`, `primary`, `info`, `success`, `warning`, `danger`를 받고 기본값은 `neutral`이에요.',
+          ja: '`intent` は `neutral`、`primary`、`info`、`success`、`warning`、`danger` を受け取り、既定値は `neutral` です。',
+        },
+      },
+      {
+        axis: { en: 'Emphasis', ko: '강조', ja: '強調' },
+        choices: {
+          en: '`appearance` accepts `solid`, `outline`, and `ghost`; the default is `solid`. Emphasis changes without changing intent.',
+          ko: '`appearance`는 `solid`, `outline`, `ghost`를 받고 기본값은 `solid`예요. 의도는 그대로 두고 강조만 바꿔요.',
+          ja: '`appearance` は `solid`、`outline`、`ghost` を受け取り、既定値は `solid` です。意図を変えずに強調だけを調整します。',
+        },
+      },
+      {
+        axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
+        choices: {
+          en: '`uiSize` accepts `sm`, `md`, and `lg`; the default is `md`. Each size sets a square target and its icon size from the shared control metrics.',
+          ko: '`uiSize`는 `sm`, `md`, `lg`를 받고 기본값은 `md`예요. 각 크기는 공통 컨트롤 지표에서 정사각형 터치 영역과 아이콘 크기를 함께 정해요.',
+          ja: '`uiSize` は `sm`、`md`、`lg` を受け取り、既定値は `md` です。各サイズは共通のコントロール指標から正方形のタップ領域とアイコンサイズを決めます。',
+        },
+      },
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: 'A `null` `onPressed` disables the button. `loading` also blocks activation, replaces the icon with a spinner, and keeps the square footprint.',
+          ko: '`onPressed`가 `null`이면 버튼이 비활성이에요. `loading`도 활성화를 막고 아이콘을 스피너로 바꾸며 정사각형 크기를 유지해요.',
+          ja: '`onPressed` が `null` の場合はボタンが無効になります。`loading` も操作を無効にし、アイコンをスピナーに置き換えたまま正方形のサイズを保ちます。',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'An icon alone carries no accessible name, so `label` is required. Name the action the button performs, such as `Add rack`, rather than the icon it shows.',
+      ko: '아이콘만으로는 접근 가능한 이름이 생기지 않아서 `label`이 필수예요. 아이콘 모양이 아니라 `Add rack`처럼 버튼이 수행하는 동작을 이름으로 쓰세요.',
+      ja: 'アイコンだけではアクセシブルな名前にならないため、`label` は必須です。アイコンの見た目ではなく、`Add rack` のようにボタンが実行する操作を名前にしてください。',
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRIconButton properties',
+          ko: 'TRIconButton 속성',
+          ja: 'TRIconButton のプロパティ',
+        },
+        rows: [
+          {
+            name: 'icon',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Renders the single icon child. Its size comes from `uiSize`, so an explicit `size` is unnecessary.',
+              ko: '단일 아이콘 자식을 렌더링해요. 크기는 `uiSize`에서 오므로 `size`를 따로 지정하지 않아도 돼요.',
+              ja: '単一のアイコンを描画します。サイズは `uiSize` から決まるため、`size` の明示は不要です。',
+            },
+          },
+          {
+            name: 'label',
+            type: 'String · required',
+            purpose: {
+              en: 'Sets the accessible name exposed through `Semantics`, and acts as the fallback for `loadingLabel`.',
+              ko: '`Semantics`로 노출되는 접근 가능한 이름을 정하고, `loadingLabel`의 기본값으로도 쓰여요.',
+              ja: '`Semantics` で公開されるアクセシブルな名前を設定し、`loadingLabel` の代替値にもなります。',
+            },
+          },
+          {
+            name: 'onPressed',
+            type: 'VoidCallback? · required',
+            purpose: {
+              en: 'Receives taps. Passing `null` disables the button and applies the disabled opacity token.',
+              ko: '탭을 받아요. `null`을 넘기면 버튼이 비활성이 되고 비활성 불투명도 토큰이 적용돼요.',
+              ja: 'タップを受け取ります。`null` を渡すとボタンが無効になり、無効時の不透明度トークンが適用されます。',
+            },
+          },
+          {
+            name: 'appearance',
+            type: 'TRAppearance · TRAppearance.solid',
+            purpose: {
+              en: 'Selects `solid`, `outline`, or `ghost` emphasis.',
+              ko: '`solid`, `outline`, `ghost` 중 강조 방식을 선택해요.',
+              ja: '`solid`、`outline`、`ghost` のいずれかの強調を選びます。',
+            },
+          },
+          {
+            name: 'intent',
+            type: 'TRIntent · TRIntent.neutral',
+            purpose: {
+              en: 'Selects the semantic color role shared with the web system.',
+              ko: '웹 시스템과 공유하는 시맨틱 색상 역할을 선택해요.',
+              ja: 'Web システムと共有するセマンティックな色の役割を選びます。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Sets the square dimension and icon size together. Match it to the controls beside the button.',
+              ko: '정사각형 크기와 아이콘 크기를 함께 정해요. 옆에 놓인 컨트롤과 크기를 맞추세요.',
+              ja: '正方形のサイズとアイコンサイズをまとめて設定します。隣接するコントロールに合わせてください。',
+            },
+          },
+          {
+            name: 'loading',
+            type: 'bool · false',
+            purpose: {
+              en: 'Blocks activation and replaces the icon with a small `TRSpinner` while work is in progress.',
+              ko: '작업이 진행되는 동안 활성화를 막고 아이콘을 작은 `TRSpinner`로 바꿔요.',
+              ja: '処理中は操作を無効にし、アイコンを小さな `TRSpinner` に置き換えます。',
+            },
+          },
+          {
+            name: 'loadingLabel',
+            type: 'String? · null',
+            purpose: {
+              en: 'Replaces the accessible name while `loading` is true. When omitted, `label` stays in place.',
+              ko: '`loading`이 true인 동안 접근 가능한 이름을 대신해요. 생략하면 `label`이 그대로 유지돼요.',
+              ja: '`loading` が true の間、アクセシブルな名前を置き換えます。省略した場合は `label` がそのまま使われます。',
+            },
+          },
+        ],
+      },
+    ],
   },
   spinner: {
     title: 'Spinner',

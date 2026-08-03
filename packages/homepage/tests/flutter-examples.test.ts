@@ -33,6 +33,7 @@ describe('Flutter documentation examples', () => {
     for (const component of [
       'accordion',
       'button',
+      'icon-button',
       'alert',
       'badge',
       'code',
@@ -73,6 +74,15 @@ describe('Flutter documentation examples', () => {
       'checkbox-availability',
       'checkbox-validation',
       'checkbox-form-values',
+    ]);
+  });
+
+  it('keeps the IconButton examples aligned with the React documentation depth', () => {
+    expect(flutterExamples['icon-button']?.map((entry) => entry.id)).toEqual([
+      'icon-button-states',
+      'icon-button-appearances',
+      'icon-button-intents',
+      'icon-button-sizes',
     ]);
   });
 

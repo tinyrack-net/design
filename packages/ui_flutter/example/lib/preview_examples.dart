@@ -21,6 +21,10 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'button-intents': _buttonIntents,
   'button-sizes': _buttonSizes,
   'button-states': _buttonStates,
+  'icon-button-states': _iconButtonStates,
+  'icon-button-appearances': _iconButtonAppearances,
+  'icon-button-intents': _iconButtonIntents,
+  'icon-button-sizes': _iconButtonSizes,
   'alert-variants': _alertVariants,
   'alert-actions': _alertActions,
   'badge-variants': _badgeVariants,
@@ -339,6 +343,121 @@ Widget _buttonStates(BuildContext context, Locale locale) {
         onPressed: null,
         child: Text('Disabled'),
       ),
+    ],
+  );
+}
+
+Widget _iconButtonStates(BuildContext context, Locale locale) {
+  final label = _pick(locale, 'Add rack', '랙 추가', 'ラックを追加');
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.small,
+    runSpacing: TRSpacing.small,
+    children: [
+      TRIconButton(
+        label: label,
+        icon: const Icon(Icons.add),
+        onPressed: () {},
+      ),
+      TRIconButton(
+        label: label,
+        loading: true,
+        loadingLabel: _pick(locale, 'Adding rack', '랙 추가 중', 'ラックを追加中'),
+        icon: const Icon(Icons.add),
+        onPressed: () {},
+      ),
+      TRIconButton(
+        label: label,
+        icon: const Icon(Icons.add),
+        onPressed: null,
+      ),
+    ],
+  );
+}
+
+Widget _iconButtonAppearances(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.small,
+    runSpacing: TRSpacing.small,
+    children: [
+      for (final (appearance, label) in [
+        (
+          TRAppearance.solid,
+          _pick(locale, 'Solid settings', 'Solid 설정', 'Solid の設定'),
+        ),
+        (
+          TRAppearance.outline,
+          _pick(locale, 'Outline settings', 'Outline 설정', 'Outline の設定'),
+        ),
+        (
+          TRAppearance.ghost,
+          _pick(locale, 'Ghost settings', 'Ghost 설정', 'Ghost の設定'),
+        ),
+      ])
+        TRIconButton(
+          appearance: appearance,
+          label: label,
+          icon: const Icon(Icons.settings),
+          onPressed: () {},
+        ),
+    ],
+  );
+}
+
+Widget _iconButtonIntents(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.small,
+    runSpacing: TRSpacing.small,
+    children: [
+      TRIconButton(
+        label: _pick(locale, 'Open settings', '설정 열기', '設定を開く'),
+        icon: const Icon(Icons.settings),
+        onPressed: () {},
+      ),
+      TRIconButton(
+        intent: TRIntent.primary,
+        label: _pick(locale, 'Add rack', '랙 추가', 'ラックを追加'),
+        icon: const Icon(Icons.add),
+        onPressed: () {},
+      ),
+      TRIconButton(
+        intent: TRIntent.danger,
+        label: _pick(locale, 'Delete rack', '랙 삭제', 'ラックを削除'),
+        icon: const Icon(Icons.delete_outline),
+        onPressed: () {},
+      ),
+    ],
+  );
+}
+
+Widget _iconButtonSizes(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.small,
+    runSpacing: TRSpacing.small,
+    children: [
+      for (final (size, label) in [
+        (
+          TRUiSize.sm,
+          _pick(locale, 'Small settings', '작은 크기 설정', '小サイズの設定'),
+        ),
+        (
+          TRUiSize.md,
+          _pick(locale, 'Medium settings', '중간 크기 설정', '中サイズの設定'),
+        ),
+        (
+          TRUiSize.lg,
+          _pick(locale, 'Large settings', '큰 크기 설정', '大サイズの設定'),
+        ),
+      ])
+        TRIconButton(
+          uiSize: size,
+          label: label,
+          icon: const Icon(Icons.settings),
+          onPressed: () {},
+        ),
     ],
   );
 }
