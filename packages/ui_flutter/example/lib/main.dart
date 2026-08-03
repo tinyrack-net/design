@@ -802,7 +802,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'separator' => ['orientation'],
   'skeleton' => ['animate', 'shape'],
   'avatar' => ['shape', 'uiSize'],
-  'fieldset' => ['disabled'],
+  'fieldset' => ['disabled', 'legend'],
   'field' => ['disabled', 'errorText', 'helper'],
   'form' => ['label', 'required', 'submitLabel'],
   'meter' => ['value', 'variant'],
@@ -1771,11 +1771,13 @@ class PreviewComponent extends StatelessWidget {
         width: 320,
         child: TRFieldset(
           disabled: args['disabled'] == true,
-          legend: switch (locale) {
-            'ko' => '연락처',
-            'ja' => '連絡先',
-            _ => 'Contact',
-          },
+          legend: args['legend'] is String
+              ? args['legend']! as String
+              : switch (locale) {
+                  'ko' => '연락처',
+                  'ja' => '連絡先',
+                  _ => 'Contact',
+                },
           children: [
             TRText(switch (locale) {
               'ko' => '랙 상태',

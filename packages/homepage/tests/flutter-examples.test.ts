@@ -144,6 +144,7 @@ describe('Flutter documentation examples', () => {
       'tabs',
       'checkbox',
       'checkbox-group',
+      'fieldset',
       'menu',
       'select',
       'dialog',
@@ -215,6 +216,14 @@ describe('Flutter documentation examples', () => {
       'form-states',
       'form-server-errors',
       'form-actions',
+    ]);
+  });
+
+  it('keeps the Fieldset examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.fieldset?.map((entry) => entry.id)).toEqual([
+      'fieldset-basic',
+      'fieldset-states',
+      'fieldset-composition',
     ]);
   });
 

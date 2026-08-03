@@ -1691,7 +1691,85 @@ class _InstallCommandState extends State<InstallCommand> {
       ko: '관련 폼 컨트롤을 테두리가 있는 영역으로 묶어요.',
       ja: '関連するフォームコントロールを枠付きの領域にまとめます。',
     },
-    usage: "const TRFieldset(\n  legend: 'Contact',\n  children: [/* controls */],\n)",
+    usage:
+      "TRFieldset(\n  legend: 'Notifications',\n  children: [\n    Row(\n      mainAxisSize: MainAxisSize.min,\n      spacing: TRSpacing.small,\n      children: const [\n        TRCheckbox(defaultChecked: true, semanticLabel: 'Email alerts'),\n        TRText('Email alerts', variant: TRTextVariant.bodySm),\n      ],\n    ),\n  ],\n)",
+    contractRows: [
+      {
+        axis: { en: 'Legend', ko: '레전드', ja: 'レジェンド' },
+        choices: {
+          en: '`legend` is a plain `String` drawn on the top border, not a widget slot. Leave it `null` for a bordered group with no caption.',
+          ko: '`legend`는 위젯 슬롯이 아니라 위쪽 테두리에 겹쳐 그려지는 `String`이에요. `null`로 두면 캡션 없이 테두리만 있는 그룹이 돼요.',
+          ja: '`legend` はウィジェットスロットではなく、上端の枠線に重ねて描画される `String` です。`null` のままにすると、キャプションのない枠だけのグループになります。',
+        },
+      },
+      {
+        axis: { en: 'Grouping', ko: '그룹 구성', ja: 'グループ構成' },
+        choices: {
+          en: '`children` are stacked in a stretched `Column` with a medium gap, inside token-driven padding, border, and radius. The fieldset takes the width its parent gives it, so constrain that parent when a narrower group is needed.',
+          ko: '`children`은 가로로 늘어난 `Column`에 medium 간격으로 쌓이고, 토큰 기반 패딩·테두리·모서리 반경 안에 들어가요. 너비는 부모가 주는 만큼 차지하므로 더 좁은 그룹이 필요하면 부모를 제약하세요.',
+          ja: '`children` は横方向に広がる `Column` に medium の間隔で積まれ、トークンで決まる余白・枠線・角丸の内側に配置されます。幅は親から与えられた分だけ広がるため、狭いグループが必要な場合は親側で制約してください。',
+        },
+      },
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: '`disabled` dims the group with the disabled opacity token and marks it as disabled for `Semantics`. It does not disable the controls inside, so pass `disabled` to each control as well.',
+          ko: '`disabled`는 비활성 불투명도 토큰으로 그룹을 흐리게 하고 `Semantics`에 비활성 상태로 표시해요. 내부 컨트롤까지 비활성으로 만들지는 않으니 각 컨트롤에도 `disabled`를 함께 넘기세요.',
+          ja: '`disabled` は無効時の不透明度トークンでグループを淡くし、`Semantics` 上でも無効として扱います。内部のコントロールは無効にならないため、各コントロールにも `disabled` を渡してください。',
+        },
+      },
+      {
+        axis: { en: 'Labeling', ko: '레이블', ja: 'ラベル' },
+        choices: {
+          en: 'The legend names the group, not the individual controls. Give each control its own visible label with `TRField` or a text widget beside it, and set `semanticLabel` on controls such as `TRCheckbox`.',
+          ko: '레전드는 개별 컨트롤이 아니라 그룹의 이름이에요. 각 컨트롤에는 `TRField`나 옆에 둔 텍스트 위젯으로 눈에 보이는 레이블을 주고, `TRCheckbox` 같은 컨트롤에는 `semanticLabel`을 설정하세요.',
+          ja: 'レジェンドは個々のコントロールではなくグループの名前です。各コントロールには `TRField` や隣接するテキストウィジェットで見えるラベルを与え、`TRCheckbox` などには `semanticLabel` を設定してください。',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'Reach for `TRFieldset` when several controls answer one question together, such as choosing notification channels. A plain `Column` is enough when controls only share vertical space.',
+      ko: '알림 채널 선택처럼 여러 컨트롤이 하나의 질문에 함께 답할 때 `TRFieldset`을 쓰세요. 컨트롤이 세로 공간만 공유한다면 일반 `Column`으로 충분해요.',
+      ja: '通知チャネルの選択のように、複数のコントロールが 1 つの問いにまとめて答える場合に `TRFieldset` を使ってください。縦方向の空間を共有するだけであれば、通常の `Column` で十分です。',
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRFieldset properties',
+          ko: 'TRFieldset 속성',
+          ja: 'TRFieldset のプロパティ',
+        },
+        rows: [
+          {
+            name: 'children',
+            type: 'List<Widget> · required',
+            purpose: {
+              en: 'Holds the grouped controls. They are laid out in a stretched `Column` with a medium gap between entries.',
+              ko: '묶을 컨트롤을 담아요. 항목 사이에 medium 간격을 둔, 가로로 늘어난 `Column`으로 배치돼요.',
+              ja: 'グループ化するコントロールを保持します。項目間に medium の間隔を持つ、横方向に広がる `Column` で配置されます。',
+            },
+          },
+          {
+            name: 'legend',
+            type: 'String? · null',
+            purpose: {
+              en: 'Names the group on the top border. The text measures against the current text scale, so the border keeps its gap when the reader enlarges text.',
+              ko: '위쪽 테두리에 그룹 이름을 표시해요. 현재 텍스트 배율을 기준으로 크기를 재기 때문에 텍스트를 키워도 테두리 사이 여백이 유지돼요.',
+              ja: '上端の枠線にグループ名を表示します。現在のテキストスケールに合わせて計測されるため、文字を拡大しても枠線との間隔が保たれます。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool · false',
+            purpose: {
+              en: 'Applies the disabled opacity token and exposes the group as disabled through `Semantics`. Descendant controls keep their own enabled state.',
+              ko: '비활성 불투명도 토큰을 적용하고 `Semantics`로 그룹을 비활성 상태로 노출해요. 하위 컨트롤은 각자의 활성 상태를 그대로 유지해요.',
+              ja: '無効時の不透明度トークンを適用し、`Semantics` でグループを無効として公開します。子孫のコントロールは自身の有効状態を保ちます。',
+            },
+          },
+        ],
+      },
+    ],
   },
   link: {
     title: 'Link',
