@@ -45,6 +45,9 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'accordion-expansion-states': _accordionExpansionStates,
   'tabs-sizes': _tabsSizes,
   'tabs-recipe': _tabsRecipe,
+  'fieldset-basic': _fieldsetBasic,
+  'fieldset-states': _fieldsetStates,
+  'fieldset-composition': _fieldsetComposition,
   'checkbox-states': _checkboxStates,
   'checkbox-sizes': _checkboxSizes,
   'checkbox-availability': _checkboxAvailability,
@@ -944,6 +947,116 @@ Widget _tabsRecipe(BuildContext context, Locale locale) {
       defaultValue: 'metrics',
       tabs: _settingsTabs(locale),
       panelBuilder: (value) => _settingsPanel(locale, value),
+    ),
+  );
+}
+
+Widget _fieldsetOption({
+  required String label,
+  bool checked = false,
+  bool disabled = false,
+}) {
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      TRCheckbox(
+        defaultChecked: checked,
+        disabled: disabled,
+        semanticLabel: label,
+      ),
+      TRText(label, variant: TRTextVariant.bodySm),
+    ],
+  );
+}
+
+Widget _fieldsetBasic(BuildContext context, Locale locale) {
+  return SizedBox(
+    width: 320,
+    child: TRFieldset(
+      legend: _pick(locale, 'Notifications', '알림', '通知'),
+      children: [
+        _fieldsetOption(
+          checked: true,
+          label: _pick(locale, 'Email alerts', '이메일 알림', 'メール通知'),
+        ),
+        _fieldsetOption(
+          checked: true,
+          label: _pick(locale, 'Incident summaries', '장애 요약', 'インシデント要約'),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _fieldsetStates(BuildContext context, Locale locale) {
+  final emailAlerts = _pick(locale, 'Email alerts', '이메일 알림', 'メール通知');
+  final incidentSummaries = _pick(
+    locale,
+    'Incident summaries',
+    '장애 요약',
+    'インシデント要約',
+  );
+
+  return Wrap(
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      SizedBox(
+        width: 260,
+        child: TRFieldset(
+          legend: _pick(locale, 'Editable settings', '편집 가능한 설정', '編集可能な設定'),
+          children: [
+            _fieldsetOption(checked: true, label: emailAlerts),
+            _fieldsetOption(checked: true, label: incidentSummaries),
+          ],
+        ),
+      ),
+      SizedBox(
+        width: 260,
+        child: TRFieldset(
+          disabled: true,
+          legend: _pick(locale, 'Managed settings', '관리되는 설정', '管理された設定'),
+          children: [
+            _fieldsetOption(checked: true, disabled: true, label: emailAlerts),
+            _fieldsetOption(
+              checked: true,
+              disabled: true,
+              label: incidentSummaries,
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _fieldsetComposition(BuildContext context, Locale locale) {
+  return SizedBox(
+    width: 340,
+    child: TRFieldset(
+      legend: _pick(locale, 'Incident notifications', '장애 알림', 'インシデント通知'),
+      children: [
+        _fieldsetOption(
+          checked: true,
+          label: _pick(
+            locale,
+            'Enable incident notifications',
+            '장애 알림 켜기',
+            'インシデント通知を有効にする',
+          ),
+        ),
+        TRFieldset(
+          legend: _pick(locale, 'Delivery channels', '전달 채널', '配信チャネル'),
+          children: [
+            _fieldsetOption(
+              checked: true,
+              label: _pick(locale, 'Email', '이메일', 'メール'),
+            ),
+            _fieldsetOption(label: _pick(locale, 'SMS', 'SMS', 'SMS')),
+          ],
+        ),
+      ],
     ),
   );
 }

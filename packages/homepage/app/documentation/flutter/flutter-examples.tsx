@@ -119,6 +119,112 @@ const alertDialogStatesSources = {
     .replaceAll('Cancel', 'キャンセル'),
 };
 
+const fieldsetOptionHelper = String.raw`Widget option(String label, {bool checked = false, bool disabled = false}) {
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.small,
+    children: [
+      TRCheckbox(
+        defaultChecked: checked,
+        disabled: disabled,
+        semanticLabel: label,
+      ),
+      TRText(label, variant: TRTextVariant.bodySm),
+    ],
+  );
+}`;
+
+const fieldsetBasicSourceEn = String.raw`${fieldsetOptionHelper}
+
+TRFieldset(
+  legend: 'Notifications',
+  children: [
+    option('Email alerts', checked: true),
+    option('Incident summaries', checked: true),
+  ],
+)`;
+
+const fieldsetStatesSourceEn = String.raw`${fieldsetOptionHelper}
+
+Wrap(
+  spacing: TRSpacing.large,
+  runSpacing: TRSpacing.large,
+  children: [
+    SizedBox(
+      width: 260,
+      child: TRFieldset(
+        legend: 'Editable settings',
+        children: [
+          option('Email alerts', checked: true),
+          option('Incident summaries', checked: true),
+        ],
+      ),
+    ),
+    SizedBox(
+      width: 260,
+      child: TRFieldset(
+        disabled: true,
+        legend: 'Managed settings',
+        children: [
+          option('Email alerts', checked: true, disabled: true),
+          option('Incident summaries', checked: true, disabled: true),
+        ],
+      ),
+    ),
+  ],
+)`;
+
+const fieldsetCompositionSourceEn = String.raw`${fieldsetOptionHelper}
+
+TRFieldset(
+  legend: 'Incident notifications',
+  children: [
+    option('Enable incident notifications', checked: true),
+    TRFieldset(
+      legend: 'Delivery channels',
+      children: [
+        option('Email', checked: true),
+        option('SMS'),
+      ],
+    ),
+  ],
+)`;
+
+const localizeFieldsetSource = (
+  source: string,
+  replacements: readonly (readonly [string, string])[],
+) => replacements.reduce((result, [from, to]) => result.replaceAll(from, to), source);
+
+const fieldsetKoLabels = [
+  ['Enable incident notifications', '장애 알림 켜기'],
+  ['Incident notifications', '장애 알림'],
+  ['Incident summaries', '장애 요약'],
+  ['Editable settings', '편집 가능한 설정'],
+  ['Managed settings', '관리되는 설정'],
+  ['Delivery channels', '전달 채널'],
+  ['Notifications', '알림'],
+  ['Email alerts', '이메일 알림'],
+  ['Email', '이메일'],
+] as const;
+
+const fieldsetJaLabels = [
+  ['Enable incident notifications', 'インシデント通知を有効にする'],
+  ['Incident notifications', 'インシデント通知'],
+  ['Incident summaries', 'インシデント要約'],
+  ['Editable settings', '編集可能な設定'],
+  ['Managed settings', '管理された設定'],
+  ['Delivery channels', '配信チャネル'],
+  ['Notifications', '通知'],
+  ['Email alerts', 'メール通知'],
+  ['Email', 'メール'],
+] as const;
+
+const fieldsetSources = (sourceEn: string) => ({
+  en: sourceEn,
+  ja: localizeFieldsetSource(sourceEn, fieldsetJaLabels),
+  ko: localizeFieldsetSource(sourceEn, fieldsetKoLabels),
+});
+
 export const flutterExamples: Partial<
   Record<FlutterPreviewComponent, readonly FlutterExampleEntry[]>
 > = {
@@ -1436,6 +1542,46 @@ class _MonitoringFormState extends State<MonitoringForm> {
     ],
   );
 }`,
+    },
+  ],
+  fieldset: [
+    {
+      id: 'fieldset-basic',
+      title: {
+        en: 'Notification channels',
+        ja: '通知チャネル',
+        ko: '알림 채널',
+      },
+      description: {
+        en: 'Name the group with `legend`, then give every control its own visible label beside the checkbox and a matching `semanticLabel`.',
+        ja: '`legend` でグループに名前を付け、各コントロールにはチェックボックスの隣に見えるラベルと、対応する `semanticLabel` を与えてください。',
+        ko: '`legend`로 그룹 이름을 정하고, 각 컨트롤에는 체크박스 옆에 보이는 레이블과 그에 맞는 `semanticLabel`을 함께 주세요.',
+      },
+      dart: fieldsetSources(fieldsetBasicSourceEn),
+    },
+    {
+      id: 'fieldset-states',
+      title: {
+        en: 'Enabled and disabled groups',
+        ja: '有効なグループと無効なグループ',
+        ko: '활성 그룹과 비활성 그룹',
+      },
+      description: {
+        en: '`disabled` dims the group and marks it disabled for assistive technology, but it does not block the controls inside. Pass `disabled` to each control so the group cannot be edited.',
+        ja: '`disabled` はグループを淡くし、支援技術にも無効として伝えますが、内部のコントロールの操作までは止めません。編集できないようにするには、各コントロールにも `disabled` を渡してください。',
+        ko: '`disabled`는 그룹을 흐리게 하고 보조 기술에도 비활성으로 알리지만, 내부 컨트롤의 조작까지 막지는 않아요. 편집을 막으려면 각 컨트롤에도 `disabled`를 넘기세요.',
+      },
+      dart: fieldsetSources(fieldsetStatesSourceEn),
+    },
+    {
+      id: 'fieldset-composition',
+      title: { en: 'Nested groups', ja: '入れ子のグループ', ko: '중첩 그룹' },
+      description: {
+        en: 'Nest a fieldset inside another one when a subset of options belongs to a narrower question. Each level keeps its own legend, so the relationship stays readable.',
+        ja: '一部の選択肢がより狭い問いに属する場合は、フィールドセットを入れ子にしてください。各階層が自分のレジェンドを持つため、関係が読み取りやすくなります。',
+        ko: '일부 선택지가 더 좁은 질문에 속한다면 필드셋을 중첩하세요. 각 단계가 자기 레전드를 유지하므로 관계를 읽기 쉬워요.',
+      },
+      dart: fieldsetSources(fieldsetCompositionSourceEn),
     },
   ],
   'checkbox-group': [

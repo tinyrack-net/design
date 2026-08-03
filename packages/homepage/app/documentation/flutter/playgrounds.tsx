@@ -456,8 +456,12 @@ export const fieldPlayground = flutterPlayground(
 
 export const fieldsetPlayground = flutterPlayground(
   'fieldset',
-  { disabled: false },
-  { disabled: { control: 'boolean' } },
+  { disabled: false, legend: 'Contact' },
+  { disabled: { control: 'boolean' }, legend: { control: 'text' } },
+  {
+    ja: { legend: '連絡先' },
+    ko: { legend: '연락처' },
+  },
 );
 
 export const linkPlayground = flutterPlayground(

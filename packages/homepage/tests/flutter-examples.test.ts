@@ -131,6 +131,26 @@ function parseSupportedArgs(source: string): Map<string, string[]> {
   return supported;
 }
 
+/**
+ * Collects every arg key `_validateArgs` gives a value check.
+ *
+ * The switch ends in `_ => false`, so a key missing here is rejected even when
+ * `_supportedArgs` lists it, and the frame renders a schema error instead of
+ * the component. Value sets, `when component == '...'` guards, and other
+ * braced literals are stripped so only case patterns remain.
+ */
+function parseValidatedArgKeys(source: string): Set<string> {
+  const body = source.match(
+    /final valid = switch \(key\) \{([\s\S]*?)\n\s*_ => false,/,
+  )?.[1];
+  if (body === undefined) throw new Error('_validateArgs switch not found');
+  const patterns = body
+    .replaceAll(/const\s*\{[^{}]*\}/g, '')
+    .replaceAll(/\{[^{}]*\}/g, '')
+    .replaceAll(/when[\s\S]*?(?==>)/g, '');
+  return new Set([...patterns.matchAll(/'([\w-]+)'/g)].map(([, key]) => key ?? ''));
+}
+
 describe('Flutter documentation examples', () => {
   it('registers pilot components with at least one example', () => {
     for (const component of [
@@ -144,6 +164,7 @@ describe('Flutter documentation examples', () => {
       'tabs',
       'checkbox',
       'checkbox-group',
+      'fieldset',
       'menu',
       'select',
       'dialog',
@@ -168,6 +189,18 @@ describe('Flutter documentation examples', () => {
       expect(
         [...new Set(keys)].filter((key) => !declared.has(key)),
         `${component} sends args the preview host rejects`,
+      ).toEqual([]);
+    }
+  });
+
+  it('gives every playground arg a value check in the preview host', () => {
+    const validated = parseValidatedArgKeys(previewHostSource);
+    const playgroundArgs = parsePlaygroundArgs(playgroundsSource);
+    expect(playgroundArgs.size).toBeGreaterThan(0);
+    for (const [component, keys] of playgroundArgs) {
+      expect(
+        [...new Set(keys)].filter((key) => !validated.has(key)),
+        `${component} sends args _validateArgs falls through to '_ => false'`,
       ).toEqual([]);
     }
   });
@@ -237,6 +270,14 @@ describe('Flutter documentation examples', () => {
       'form-states',
       'form-server-errors',
       'form-actions',
+    ]);
+  });
+
+  it('keeps the Fieldset examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.fieldset?.map((entry) => entry.id)).toEqual([
+      'fieldset-basic',
+      'fieldset-states',
+      'fieldset-composition',
     ]);
   });
 
