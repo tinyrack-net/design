@@ -178,6 +178,7 @@ describe('Flutter documentation examples', () => {
       'toggle-group',
       'form',
       'textarea',
+      'combobox',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
@@ -306,6 +307,21 @@ describe('Flutter documentation examples', () => {
       'textarea-sizes',
       'textarea-form',
       'textarea-validation',
+    ]);
+  });
+
+  it('keeps the Combobox examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.combobox?.map((entry) => entry.id)).toEqual([
+      'combobox-basic',
+      'combobox-sizes',
+      'combobox-option-states',
+      'combobox-filter-modes',
+      'combobox-multiple-anatomy',
+      'combobox-validation',
+      'combobox-controlled-filter-hooks',
+      'combobox-overlay',
+      'combobox-keyboard',
+      'combobox-form',
     ]);
   });
 

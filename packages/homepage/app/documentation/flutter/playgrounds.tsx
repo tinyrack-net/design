@@ -252,7 +252,38 @@ export const autocompletePlayground = flutterPlayground(
     ko: { placeholder: '지역 검색' },
   },
 );
-export const comboboxPlayground = flutterPlayground('combobox', {}, {});
+export const comboboxPlayground = flutterPlayground(
+  'combobox',
+  {
+    autoHighlight: true,
+    clearable: false,
+    disabled: false,
+    disabledOption: false,
+    filterMode: 'contains',
+    layout: 'list',
+    placeholder: 'Choose a channel',
+    readOnly: false,
+    uiSize: 'md',
+  },
+  {
+    autoHighlight: { control: 'boolean' },
+    clearable: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    disabledOption: { control: 'boolean' },
+    filterMode: {
+      control: 'select',
+      options: ['contains', 'startsWith', 'none'],
+    },
+    layout: { control: 'select', options: ['list', 'grid'] },
+    placeholder: { control: 'text' },
+    readOnly: { control: 'boolean' },
+    uiSize: { control: 'select', options: sizes },
+  },
+  {
+    ja: { placeholder: 'チャンネルを選択' },
+    ko: { placeholder: '채널 선택' },
+  },
+);
 export const contextMenuPlayground = flutterPlayground('context-menu', {}, {});
 export const drawerPlayground = flutterPlayground('drawer', {}, {});
 export const fileTreePlayground = flutterPlayground('file-tree', {}, {});

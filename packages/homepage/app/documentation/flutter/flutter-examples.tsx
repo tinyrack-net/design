@@ -704,6 +704,276 @@ const otpSources = (sourceEn: string) => ({
   ko: localizeExampleSource(sourceEn, otpKoLabels),
 });
 
+const comboboxRacksHelper = String.raw`const racks = [
+  TRComboboxItem(value: 'rack-a', label: 'Rack A'),
+  TRComboboxItem(value: 'rack-b', label: 'Rack B'),
+  TRComboboxItem(value: 'rack-c', label: 'Rack C'),
+];`;
+
+const comboboxBasicSourceEn = String.raw`${comboboxRacksHelper}
+
+TRCombobox<String>(
+  label: 'Deployment rack',
+  placeholder: 'Choose a rack',
+  helperText: 'Type to filter, then commit one rack',
+  items: racks,
+  onValueChange: selectRack,
+)`;
+
+const comboboxSizesSourceEn = String.raw`${comboboxRacksHelper}
+
+Column(
+  spacing: TRSpacing.medium,
+  children: [
+    for (final uiSize in TRUiSize.values)
+      TRCombobox<String>(
+        label: 'Deployment rack',
+        placeholder: 'Choose a rack',
+        items: racks,
+        uiSize: uiSize,
+        width: 320,
+      ),
+  ],
+)`;
+
+const comboboxOptionStatesSourceEn = String.raw`TRCombobox<String>(
+  label: 'Deployment rack',
+  placeholder: 'Choose a rack',
+  helperText: 'Racks under maintenance stay visible but cannot be picked',
+  defaultValue: 'rack-a',
+  items: const [
+    TRComboboxItem(value: 'rack-a', label: 'Rack A'),
+    TRComboboxItem(value: 'rack-b', label: 'Rack B', enabled: false),
+    TRComboboxItem(value: 'rack-c', label: 'Rack C'),
+  ],
+)`;
+
+const comboboxFilterModesSourceEn = String.raw`${comboboxRacksHelper}
+
+Column(
+  spacing: TRSpacing.medium,
+  children: [
+    TRCombobox<String>(
+      label: 'Contains',
+      placeholder: 'Choose a rack',
+      items: racks,
+    ),
+    TRCombobox<String>(
+      label: 'Starts with',
+      placeholder: 'Choose a rack',
+      items: racks,
+      filterMode: TRComboboxFilterMode.startsWith,
+    ),
+    // The builder already returns the matches, so no second pass is applied.
+    TRCombobox<String>(
+      label: 'Server side',
+      placeholder: 'Choose a rack',
+      filterMode: TRComboboxFilterMode.none,
+      optionsBuilder: searchRacks,
+    ),
+  ],
+)`;
+
+const comboboxMultipleAnatomySourceEn = String.raw`TRMultiCombobox<String>(
+  label: 'Deployment racks',
+  placeholder: 'Choose racks',
+  helperText: 'Committed racks appear as chips above the field',
+  layout: TRComboboxLayout.grid,
+  defaultValue: const ['rack-a'],
+  items: const [
+    TRComboboxItem(
+      value: 'rack-a',
+      label: 'Rack A',
+      leading: Icon(Icons.dns_outlined),
+    ),
+    TRComboboxItem(
+      value: 'rack-b',
+      label: 'Rack B',
+      leading: Icon(Icons.dns_outlined),
+    ),
+    TRComboboxItem(
+      value: 'rack-c',
+      label: 'Rack C',
+      leading: Icon(Icons.dns_outlined),
+    ),
+  ],
+  onValueChange: selectRacks,
+)`;
+
+const comboboxValidationSourceEn = String.raw`${comboboxRacksHelper}
+
+Form(
+  key: formKey,
+  child: Column(
+    spacing: TRSpacing.medium,
+    children: [
+      TRComboboxFormField<String>(
+        label: 'Deployment rack',
+        placeholder: 'Choose a rack',
+        items: racks,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (value) => value == null ? 'Choose a rack' : null,
+      ),
+      TRButton(
+        onPressed: () => formKey.currentState?.validate(),
+        child: const Text('Deploy'),
+      ),
+    ],
+  ),
+)`;
+
+const comboboxControlledFilterHooksSourceEn = String.raw`${comboboxRacksHelper}
+
+final controller = TRComboboxController<String>(value: 'rack-a');
+
+TRCombobox<String>.controlled(
+  value: rack,
+  controller: controller,
+  label: 'Deployment rack',
+  placeholder: 'Choose a rack',
+  helperText: 'Query: $query',
+  items: racks,
+  filter: (item, query) => item.label.toLowerCase().endsWith(query),
+  onQueryChange: (value) => setState(() => query = value),
+  onValueChange: (value) => setState(() => rack = value),
+)`;
+
+const comboboxOverlaySourceEn = String.raw`${comboboxRacksHelper}
+
+// The popup matches width when it is set, and falls back to the small overlay
+// width token otherwise.
+Column(
+  spacing: TRSpacing.medium,
+  children: [
+    TRCombobox<String>(
+      label: 'Popup follows the field',
+      placeholder: 'Choose a rack',
+      items: racks,
+      width: 360,
+    ),
+    TRCombobox<String>(
+      label: 'Popup uses the overlay token',
+      placeholder: 'Choose a rack',
+      items: racks,
+    ),
+  ],
+)`;
+
+const comboboxKeyboardSourceEn = String.raw`TRCombobox<String>(
+  label: 'Deployment rack',
+  placeholder: 'Choose a rack',
+  helperText: 'Arrow keys move, Enter commits, Escape closes',
+  autoHighlight: false,
+  clearable: true,
+  clearSemanticLabel: 'Clear rack',
+  items: const [
+    TRComboboxItem(value: 'rack-a', label: 'Rack A'),
+    TRComboboxItem(value: 'rack-b', label: 'Rack B', enabled: false),
+    TRComboboxItem(value: 'rack-c', label: 'Rack C'),
+  ],
+)`;
+
+const comboboxFormSourceEn = String.raw`Form(
+  child: Column(
+    spacing: TRSpacing.medium,
+    children: [
+      TRComboboxFormField<String>(
+        label: 'Release channel',
+        items: channels,
+        validator: (value) => value == null ? 'Choose a channel' : null,
+      ),
+      TRMultiComboboxFormField<String>(
+        label: 'Regions',
+        items: regions,
+      ),
+    ],
+  ),
+)`;
+
+const comboboxKoLabels = [
+  [
+    '// The popup matches width when it is set, and falls back to the small overlay\n// width token otherwise.',
+    '// width를 주면 팝업이 그 너비를 따르고, 없으면 small 오버레이 너비 토큰을\n// 사용해요.',
+  ],
+  [
+    '// The builder already returns the matches, so no second pass is applied.',
+    '// 빌더가 이미 일치 결과를 돌려주므로 한 번 더 좁히지 않아요.',
+  ],
+  [
+    'Racks under maintenance stay visible but cannot be picked',
+    '점검 중인 랙도 계속 보이지만 선택할 수는 없어요',
+  ],
+  [
+    'Committed racks appear as chips above the field',
+    '확정한 랙은 필드 위에 칩으로 나타나요',
+  ],
+  [
+    'Arrow keys move, Enter commits, Escape closes',
+    '방향키로 이동, Enter로 확정, Escape로 닫기',
+  ],
+  ['Type to filter, then commit one rack', '입력해서 좁힌 뒤 랙 하나를 확정하세요'],
+  ['Popup uses the overlay token', '팝업이 오버레이 토큰을 사용'],
+  ['Popup follows the field', '팝업이 필드 너비를 따름'],
+  ['Deployment racks', '배포 랙'],
+  ['Deployment rack', '배포 랙'],
+  ['Release channel', '릴리스 채널'],
+  ['Choose a channel', '채널을 선택하세요'],
+  ['Choose a rack', '랙을 선택하세요'],
+  ['Choose racks', '랙을 선택하세요'],
+  ['Clear rack', '랙 지우기'],
+  ['Starts with', '접두사 일치'],
+  ['Server side', '서버 측'],
+  ['Contains', '부분 일치'],
+  ['Regions', '리전'],
+  ['Deploy', '배포'],
+  ['Query: ', '검색어: '],
+] as const;
+
+const comboboxJaLabels = [
+  [
+    '// The popup matches width when it is set, and falls back to the small overlay\n// width token otherwise.',
+    '// width を指定するとポップアップはその幅に合わせ、未指定の場合は small の\n// オーバーレイ幅トークンを使います。',
+  ],
+  [
+    '// The builder already returns the matches, so no second pass is applied.',
+    '// ビルダーが既に一致結果を返すため、二段目の絞り込みは行いません。',
+  ],
+  [
+    'Racks under maintenance stay visible but cannot be picked',
+    'メンテナンス中のラックも表示されますが選択できません',
+  ],
+  [
+    'Committed racks appear as chips above the field',
+    '確定したラックはフィールドの上にチップとして表示されます',
+  ],
+  [
+    'Arrow keys move, Enter commits, Escape closes',
+    '矢印キーで移動、Enter で確定、Escape で閉じます',
+  ],
+  ['Type to filter, then commit one rack', '入力して絞り込み、ラックを 1 つ確定します'],
+  ['Popup uses the overlay token', 'ポップアップはオーバーレイトークンを使用'],
+  ['Popup follows the field', 'ポップアップはフィールド幅に追従'],
+  ['Deployment racks', 'デプロイ先ラック'],
+  ['Deployment rack', 'デプロイ先ラック'],
+  ['Release channel', 'リリースチャンネル'],
+  ['Choose a channel', 'チャンネルを選択'],
+  ['Choose a rack', 'ラックを選択'],
+  ['Choose racks', 'ラックを選択'],
+  ['Clear rack', 'ラックをクリア'],
+  ['Starts with', '前方一致'],
+  ['Server side', 'サーバー側'],
+  ['Contains', '部分一致'],
+  ['Regions', 'リージョン'],
+  ['Deploy', 'デプロイ'],
+  ['Query: ', '検索語: '],
+] as const;
+
+const comboboxSources = (sourceEn: string) => ({
+  en: sourceEn,
+  ja: localizeExampleSource(sourceEn, comboboxJaLabels),
+  ko: localizeExampleSource(sourceEn, comboboxKoLabels),
+});
+
 export const flutterExamples: Partial<
   Record<FlutterPreviewComponent, readonly FlutterExampleEntry[]>
 > = {
@@ -3201,6 +3471,128 @@ class _RegionAutocompleteState extends State<RegionAutocomplete> {
   ],
   combobox: [
     {
+      id: 'combobox-basic',
+      title: {
+        en: 'Filter and commit one rack',
+        ja: '絞り込んでラックを 1 つ確定する',
+        ko: '좁혀서 랙 하나 확정하기',
+      },
+      description: {
+        en: 'Typing narrows the popup while the committed value stays separate from the query. Selecting a rack writes its label back into the field.',
+        ja: '入力でポップアップを絞り込みつつ、確定した値は検索語とは別に保たれます。ラックを選ぶと、そのラベルがフィールドへ書き戻されます。',
+        ko: '입력하면 팝업이 좁혀지고, 확정된 값은 검색어와 별개로 유지돼요. 랙을 고르면 그 레이블이 필드에 다시 쓰여요.',
+      },
+      dart: comboboxSources(comboboxBasicSourceEn),
+    },
+    {
+      id: 'combobox-sizes',
+      title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
+      description: {
+        en: 'Pass uiSize to align the combobox with neighboring TRTextField, TRSelect, or TRButton heights.',
+        ja: 'uiSize を渡して、隣接する TRTextField、TRSelect、TRButton と高さを揃えます。',
+        ko: 'uiSize를 넘겨 옆에 놓인 TRTextField, TRSelect, TRButton과 높이를 맞추세요.',
+      },
+      dart: comboboxSources(comboboxSizesSourceEn),
+    },
+    {
+      id: 'combobox-option-states',
+      title: {
+        en: 'Selected and disabled options',
+        ja: '選択済みと無効な候補',
+        ko: '선택된 옵션과 비활성 옵션',
+      },
+      description: {
+        en: 'An option with enabled set to false stays in the popup so the reason it is unavailable remains visible. It renders muted and both Enter and arrow navigation skip it.',
+        ja: 'enabled を false にした候補はポップアップに残るため、利用できない理由が見えたままになります。淡く描画され、Enter と矢印移動の双方でスキップされます。',
+        ko: 'enabled를 false로 둔 옵션은 팝업에 남아서 왜 쓸 수 없는지가 계속 보여요. 흐리게 그려지고 Enter와 화살표 이동 모두에서 건너뛰어요.',
+      },
+      dart: comboboxSources(comboboxOptionStatesSourceEn),
+    },
+    {
+      id: 'combobox-filter-modes',
+      title: {
+        en: 'Filter semantics',
+        ja: 'フィルタの意味',
+        ko: '필터 의미',
+      },
+      description: {
+        en: 'Compare contains, startsWith, and no built-in narrowing. Use none when an asynchronous optionsBuilder already returns the matches it wants shown.',
+        ja: 'contains、startsWith、組み込みの絞り込みなしを比べます。非同期の optionsBuilder が表示したい候補を既に返している場合は none を使ってください。',
+        ko: 'contains, startsWith, 기본 좁히기 없음을 비교해요. 비동기 `optionsBuilder`가 이미 보여줄 결과를 돌려준다면 none을 쓰세요.',
+      },
+      dart: comboboxSources(comboboxFilterModesSourceEn),
+    },
+    {
+      id: 'combobox-multiple-anatomy',
+      title: {
+        en: 'Multiple chips and grid popup',
+        ja: '複数選択のチップとグリッドのポップアップ',
+        ko: '다중 선택 칩과 격자 팝업',
+      },
+      description: {
+        en: 'TRMultiCombobox renders committed values as removable chips and clears the query after each pick. The grid layout fits short labels into two columns.',
+        ja: 'TRMultiCombobox は確定した値を削除可能なチップとして表示し、選択のたびに検索語を消去します。グリッドレイアウトは短いラベルを 2 列に収めます。',
+        ko: 'TRMultiCombobox는 확정된 값을 삭제 가능한 칩으로 그리고, 하나 고를 때마다 검색어를 비워요. 격자 레이아웃은 짧은 레이블을 2열에 담아요.',
+      },
+      dart: comboboxSources(comboboxMultipleAnatomySourceEn),
+    },
+    {
+      id: 'combobox-validation',
+      title: {
+        en: 'Required option and recovery',
+        ja: '必須の選択とエラー解消',
+        ko: '필수 선택과 복구',
+      },
+      description: {
+        en: 'TRComboboxFormField reports its error through errorText and clears it as soon as a value is committed, so the reader can recover without submitting again.',
+        ja: 'TRComboboxFormField はエラーを errorText で伝え、値が確定した時点で解消します。そのため、再送信しなくても状態を回復できます。',
+        ko: 'TRComboboxFormField는 오류를 errorText로 알리고 값이 확정되면 바로 지워요. 그래서 다시 제출하지 않아도 상태를 되돌릴 수 있어요.',
+      },
+      dart: comboboxSources(comboboxValidationSourceEn),
+    },
+    {
+      id: 'combobox-controlled-filter-hooks',
+      title: {
+        en: 'Controlled state and a custom filter',
+        ja: '制御された状態とカスタムフィルタ',
+        ko: '제어 상태와 사용자 정의 필터',
+      },
+      description: {
+        en: 'The controlled constructor hands the value back to the caller while the controller keeps the query. A filter callback replaces filterMode when the built-in rules are not enough.',
+        ja: '制御コンストラクタは値を呼び出し側に返し、controller が検索語を保持します。組み込みの規則で足りない場合は、filter コールバックが filterMode を置き換えます。',
+        ko: '제어 생성자는 값을 호출하는 쪽에 넘기고 controller가 검색어를 들고 있어요. 기본 규칙으로 부족하면 filter 콜백이 filterMode를 대신해요.',
+      },
+      dart: comboboxSources(comboboxControlledFilterHooksSourceEn),
+    },
+    {
+      id: 'combobox-overlay',
+      title: {
+        en: 'Popup width and layering',
+        ja: 'ポップアップの幅とレイヤー',
+        ko: '팝업 너비와 레이어',
+      },
+      description: {
+        en: 'Flutter has no portal or positioner parts. The popup opens on the combobox layer and takes its width from the field, or from the small overlay width token when width is left unset.',
+        ja: 'Flutter には portal や positioner に相当するパーツはありません。ポップアップは combobox レイヤーで開き、幅はフィールドから、width が未指定の場合は small のオーバーレイ幅トークンから取得します。',
+        ko: 'Flutter에는 portal이나 positioner 같은 파트가 없어요. 팝업은 combobox 레이어에서 열리고 너비는 필드에서, `width`를 두지 않으면 small 오버레이 너비 토큰에서 가져와요.',
+      },
+      dart: comboboxSources(comboboxOverlaySourceEn),
+    },
+    {
+      id: 'combobox-keyboard',
+      title: {
+        en: 'Keyboard selection',
+        ja: 'キーボードでの選択',
+        ko: '키보드 선택',
+      },
+      description: {
+        en: 'With autoHighlight off, Enter commits nothing until an arrow key highlights a row. The clear button returns focus to the field so the popup stays open.',
+        ja: 'autoHighlight を無効にすると、矢印キーで行をハイライトするまで Enter では何も確定しません。クリアボタンはフィールドにフォーカスを戻すため、ポップアップは開いたままです。',
+        ko: 'autoHighlight를 끄면 화살표 키로 행을 강조하기 전까지 Enter가 아무것도 확정하지 않아요. 지우기 버튼은 필드로 포커스를 돌려주므로 팝업이 열린 채로 남아요.',
+      },
+      dart: comboboxSources(comboboxKeyboardSourceEn),
+    },
+    {
       id: 'combobox-form',
       title: {
         en: 'Single and multiple fields',
@@ -3212,21 +3604,7 @@ class _RegionAutocompleteState extends State<RegionAutocomplete> {
         ja: 'FormField 版は検索文字列と型付きの選択値を分けたまま、検証、保存、リセットに参加します。',
         ko: 'FormField 변형은 검색어와 타입이 있는 선택 값을 분리한 채 검증, 저장, 초기화에 참여해요.',
       },
-      dart: String.raw`Form(
-  child: Column(
-    children: [
-      TRComboboxFormField<String>(
-        label: 'Release channel',
-        items: channels,
-        validator: (value) => value == null ? 'Choose a channel' : null,
-      ),
-      TRMultiComboboxFormField<String>(
-        label: 'Regions',
-        items: regions,
-      ),
-    ],
-  ),
-)`,
+      dart: comboboxSources(comboboxFormSourceEn),
     },
   ],
   'app-shell': [

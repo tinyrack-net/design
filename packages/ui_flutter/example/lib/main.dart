@@ -785,7 +785,18 @@ List<String> _supportedArgs(String component) => switch (component) {
     'uiSize',
   ],
   'alert-dialog' => ['disabled', 'label', 'open'],
-  'combobox' ||
+  'combobox' => [
+    'autoHighlight',
+    'clearable',
+    'disabled',
+    'disabledOption',
+    'filterMode',
+    'layout',
+    'open',
+    'placeholder',
+    'readOnly',
+    'uiSize',
+  ],
   'context-menu' ||
   'navigation-menu' ||
   'popover' ||
@@ -914,6 +925,11 @@ Map<String, Object?>? _validateArgs(
       'striped' => value is bool,
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
+      'filterMode' when component == 'combobox' =>
+        value is String &&
+            const {'contains', 'startsWith', 'none'}.contains(value),
+      'layout' when component == 'combobox' =>
+        value is String && const {'list', 'grid'}.contains(value),
       'required' when component == 'form' => value is bool,
       'submitLabel' when component == 'form' => value is String,
       'copiedLabel' when component == 'copy-button' => value is String,
@@ -957,9 +973,12 @@ Map<String, Object?>? _validateArgs(
       'value' => value is String,
       'animate' ||
       'autoHide' ||
+      'autoHighlight' ||
       'checked' ||
+      'clearable' ||
       'disabled' ||
       'disabledItem' ||
+      'disabledOption' ||
       'indeterminate' ||
       'invalid' ||
       'open' ||
@@ -1391,6 +1410,14 @@ class PreviewComponent extends StatelessWidget {
         args: args,
         key: measureKey,
         locale: locale,
+      ),
+      // The parity fixture pairs one 320px labelled field against the React
+      // page, so the playground composition must not replace it.
+      'combobox' when parityMode => _PreviewCombobox(
+        args: args,
+        key: measureKey,
+        locale: locale,
+        parity: true,
       ),
       'combobox' => _PreviewCombobox(
         args: args,
@@ -3204,10 +3231,18 @@ class _PreviewAutocompleteState extends State<_PreviewAutocomplete> {
 }
 
 class _PreviewCombobox extends StatefulWidget {
-  const _PreviewCombobox({required this.args, required this.locale, super.key});
+  const _PreviewCombobox({
+    required this.args,
+    required this.locale,
+    this.parity = false,
+    super.key,
+  });
 
   final Map<String, Object?> args;
   final String locale;
+
+  /// Pins the composition the visual parity fixture measures against React.
+  final bool parity;
 
   @override
   State<_PreviewCombobox> createState() => _PreviewComboboxState();
@@ -3245,26 +3280,49 @@ class _PreviewComboboxState extends State<_PreviewCombobox> {
   }
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    width: 320,
-    child: TRCombobox<String>(
-      controller: _controller,
-      label: switch (widget.locale) {
-        'ko' => '채널',
-        'ja' => 'チャンネル',
-        _ => 'Channel',
-      },
-      placeholder: switch (widget.locale) {
-        'ko' => '채널 선택',
-        'ja' => 'チャンネルを選択',
-        _ => 'Choose a channel',
-      },
-      items: const [
-        TRComboboxItem(value: 'stable', label: 'Stable'),
-        TRComboboxItem(value: 'beta', label: 'Beta'),
-      ],
-    ),
-  );
+  Widget build(BuildContext context) {
+    final args = widget.parity ? const <String, Object?>{} : widget.args;
+    final disabledOption = args['disabledOption'] == true;
+    return SizedBox(
+      width: 320,
+      child: TRCombobox<String>(
+        controller: _controller,
+        autoHighlight: args['autoHighlight'] != false,
+        clearable: args['clearable'] == true,
+        enabled: args['disabled'] != true,
+        filterMode: args['filterMode'] is String
+            ? TRComboboxFilterMode.values.byName(args['filterMode']! as String)
+            : TRComboboxFilterMode.contains,
+        label: switch (widget.locale) {
+          'ko' => '채널',
+          'ja' => 'チャンネル',
+          _ => 'Channel',
+        },
+        layout: args['layout'] is String
+            ? TRComboboxLayout.values.byName(args['layout']! as String)
+            : TRComboboxLayout.list,
+        placeholder: args['placeholder'] is String
+            ? args['placeholder']! as String
+            : switch (widget.locale) {
+                'ko' => '채널 선택',
+                'ja' => 'チャンネルを選択',
+                _ => 'Choose a channel',
+              },
+        readOnly: args['readOnly'] == true,
+        uiSize: args['uiSize'] is String
+            ? TRUiSize.values.byName(args['uiSize']! as String)
+            : TRUiSize.md,
+        items: [
+          const TRComboboxItem(value: 'stable', label: 'Stable'),
+          TRComboboxItem(
+            value: 'beta',
+            label: 'Beta',
+            enabled: !disabledOption,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _PreviewContextMenu extends StatefulWidget {

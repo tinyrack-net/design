@@ -520,7 +520,316 @@ const componentData: Record<
       ja: '検索語と選択状態を分け、型付きの候補を 1 つまたは複数選択します。',
     },
     usage:
-      "TRCombobox<String>(\n  items: const [\n    TRComboboxItem(value: 'stable', label: 'Stable'),\n  ],\n)",
+      "TRCombobox<String>(\n  label: 'Channel',\n  placeholder: 'Choose a channel',\n  items: const [\n    TRComboboxItem(value: 'stable', label: 'Stable'),\n    TRComboboxItem(value: 'beta', label: 'Beta'),\n  ],\n  onValueChange: selectChannel,\n)",
+    contractRows: [
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: 'The query and the selected value are separate axes. `TRComboboxController` owns the value plus the `TextEditingController` and `FocusNode`; `TRCombobox.controlled` hands the value back to you while the controller keeps the query.',
+          ko: '검색어와 선택 값은 서로 다른 축이에요. `TRComboboxController`가 값과 함께 `TextEditingController`, `FocusNode`를 소유하고, `TRCombobox.controlled`는 값만 호출하는 쪽에 넘기고 검색어는 controller가 계속 들고 있어요.',
+          ja: '検索語と選択値は別々の軸です。`TRComboboxController` が値に加えて `TextEditingController` と `FocusNode` を保持し、`TRCombobox.controlled` は値のみを呼び出し側に渡して検索語は controller が保持し続けます。',
+        },
+      },
+      {
+        axis: { en: 'Field', ko: '필드', ja: 'フィールド' },
+        choices: {
+          en: 'The field is a `TRTextField`, so `label`, `placeholder`, `helperText`, `errorText`, `uiSize`, and `width` behave exactly as they do there. `clearable` adds a clear button in the trailing slot once the field holds a query or a selection.',
+          ko: '필드는 `TRTextField`라서 `label`, `placeholder`, `helperText`, `errorText`, `uiSize`, `width`가 그곳과 똑같이 동작해요. `clearable`을 켜면 검색어나 선택 값이 있을 때 뒤쪽 슬롯에 지우기 버튼이 나타나요.',
+          ja: 'フィールドは `TRTextField` のため、`label`、`placeholder`、`helperText`、`errorText`、`uiSize`、`width` はそちらと同じ挙動です。`clearable` を有効にすると、検索語または選択値があるときに末尾スロットへクリアボタンが表示されます。',
+        },
+      },
+      {
+        axis: { en: 'Filtering', ko: '필터링', ja: 'フィルタリング' },
+        choices: {
+          en: '`optionsBuilder` decides the candidates and `filterMode` narrows them: `contains`, `startsWith`, or `none`. A `filter` callback overrides `filterMode`. Use `none` when a remote or asynchronous `optionsBuilder` is already authoritative.',
+          ko: '`optionsBuilder`가 후보를 정하고 `filterMode`가 `contains`·`startsWith`·`none` 중 하나로 좁혀요. `filter` 콜백을 주면 `filterMode`보다 우선해요. 원격이나 비동기 `optionsBuilder`가 이미 결과를 확정한다면 `none`을 쓰세요.',
+          ja: '`optionsBuilder` が候補を決め、`filterMode` が `contains`・`startsWith`・`none` のいずれかで絞り込みます。`filter` コールバックを渡すと `filterMode` より優先されます。リモートや非同期の `optionsBuilder` が既に結果を確定している場合は `none` を使ってください。',
+        },
+      },
+      {
+        axis: { en: 'Multiple', ko: '다중 선택', ja: '複数選択' },
+        choices: {
+          en: '`TRMultiCombobox` renders committed values as removable chips above the field and clears the query after each pick. `layout: TRComboboxLayout.grid` lays the popup out in two columns instead of a list.',
+          ko: '`TRMultiCombobox`는 확정된 값을 필드 위에 삭제 가능한 칩으로 그리고, 하나 고를 때마다 검색어를 비워요. `layout: TRComboboxLayout.grid`를 주면 팝업이 목록 대신 2열 격자로 배치돼요.',
+          ja: '`TRMultiCombobox` は確定した値をフィールドの上に削除可能なチップとして表示し、選択のたびに検索語を消去します。`layout: TRComboboxLayout.grid` を指定すると、ポップアップがリストではなく 2 列のグリッドになります。',
+        },
+      },
+      {
+        axis: { en: 'Interaction', ko: '상호작용', ja: '操作' },
+        choices: {
+          en: 'Arrow keys move the highlight, Enter commits it, and Escape closes the popup. `autoHighlight` decides whether Enter can commit the first match before any arrow key. Options with `enabled: false` stay visible, render muted, and are skipped by both Enter and arrow navigation.',
+          ko: '화살표 키로 하이라이트를 옮기고 Enter로 확정하며 Escape로 팝업을 닫아요. `autoHighlight`는 화살표 키 없이도 Enter가 첫 일치 항목을 확정할지 정해요. `enabled: false` 옵션은 계속 보이되 흐리게 그려지고, Enter와 화살표 이동 모두에서 건너뛰어요.',
+          ja: '矢印キーでハイライトを移動し、Enter で確定し、Escape でポップアップを閉じます。`autoHighlight` は、矢印キーを押す前に Enter が最初の一致を確定できるかどうかを決めます。`enabled: false` の候補は表示されたまま淡く描画され、Enter と矢印移動の双方でスキップされます。',
+        },
+      },
+      {
+        axis: { en: 'Forms', ko: '폼', ja: 'フォーム' },
+        choices: {
+          en: '`TRComboboxFormField` and `TRMultiComboboxFormField` are `FormField` subclasses, so `validator`, `onSaved`, `autovalidateMode`, and `Form.reset` work as usual and `errorText` is supplied by the field state.',
+          ko: '`TRComboboxFormField`와 `TRMultiComboboxFormField`는 `FormField` 하위 클래스라서 `validator`, `onSaved`, `autovalidateMode`, `Form.reset`이 평소대로 동작하고 `errorText`는 필드 상태가 채워줘요.',
+          ja: '`TRComboboxFormField` と `TRMultiComboboxFormField` は `FormField` のサブクラスなので、`validator`、`onSaved`、`autovalidateMode`、`Form.reset` は通常どおり動作し、`errorText` はフィールドの状態から供給されます。',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'Reach for a combobox when the option list is long enough that typing beats scrolling but the committed value must still come from that list. Use `TRSelect` for a short fixed list, and `TRAutocomplete` when free text the user typed is itself a valid answer.',
+      ko: '선택지가 스크롤보다 입력이 빠를 만큼 길지만 확정되는 값은 반드시 그 목록에서 나와야 할 때 combobox를 쓰세요. 짧은 고정 목록에는 `TRSelect`를, 사용자가 입력한 자유 텍스트 자체가 답이 될 수 있다면 `TRAutocomplete`를 쓰세요.',
+      ja: '入力のほうがスクロールより速いほど候補が多く、それでも確定値はその一覧から選ばれる必要がある場合に combobox を使ってください。短い固定リストには `TRSelect` を、利用者が入力した自由テキスト自体が有効な答えになる場合は `TRAutocomplete` を使ってください。',
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRCombobox properties',
+          ko: 'TRCombobox 속성',
+          ja: 'TRCombobox のプロパティ',
+        },
+        rows: [
+          {
+            name: 'items',
+            type: 'List<TRComboboxItem<T>> · const []',
+            purpose: {
+              en: 'Supplies the option source. Either `items` or `optionsBuilder` must be non-empty.',
+              ko: '옵션 원본을 제공해요. `items`나 `optionsBuilder` 중 하나는 반드시 채워야 해요.',
+              ja: '候補の元データを提供します。`items` と `optionsBuilder` のいずれかは必ず指定してください。',
+            },
+          },
+          {
+            name: 'optionsBuilder',
+            type: 'TRComboboxOptionsBuilder<T>? · null',
+            purpose: {
+              en: 'Returns candidates for a query, synchronously or as a `Future`. Its result is still narrowed by `filterMode` unless that is `none`.',
+              ko: '검색어에 대한 후보를 동기 또는 `Future`로 돌려줘요. `filterMode`가 `none`이 아니면 그 결과도 한 번 더 좁혀져요.',
+              ja: '検索語に対する候補を同期または `Future` で返します。`filterMode` が `none` でない限り、その結果もさらに絞り込まれます。',
+            },
+          },
+          {
+            name: 'filterMode',
+            type: 'TRComboboxFilterMode · contains',
+            purpose: {
+              en: 'Matches option labels case-insensitively with `contains` or `startsWith`, or skips narrowing with `none`. Comparison uses `toLowerCase`, so it is not accent-insensitive the way the React `useFilter` collator is.',
+              ko: '`contains`나 `startsWith`로 옵션 레이블을 대소문자 구분 없이 비교하고, `none`이면 좁히지 않아요. 비교에 `toLowerCase`를 쓰기 때문에 React `useFilter`의 collator와 달리 악센트까지 무시하지는 않아요.',
+              ja: '`contains` または `startsWith` で候補ラベルを大文字小文字を区別せずに照合し、`none` では絞り込みません。比較には `toLowerCase` を使うため、React の `useFilter` の collator と異なりアクセントの違いは無視されません。',
+            },
+          },
+          {
+            name: 'filter',
+            type: 'TRComboboxFilter<T>? · null',
+            purpose: {
+              en: 'Replaces `filterMode` with a custom predicate. The query it receives is already trimmed and lower-cased.',
+              ko: '`filterMode` 대신 직접 만든 판정 함수를 써요. 전달되는 검색어는 이미 공백이 제거되고 소문자로 바뀐 상태예요.',
+              ja: '`filterMode` の代わりに独自の判定関数を使います。渡される検索語は既に前後の空白が除去され、小文字化されています。',
+            },
+          },
+          {
+            name: 'autoHighlight',
+            type: 'bool · true',
+            purpose: {
+              en: 'Keeps the first match armed so Enter commits it immediately. Set it to `false` to require an arrow key first. It defaults to `true` here because the underlying `RawAutocomplete` always keeps a valid highlight index, unlike the React default.',
+              ko: '첫 일치 항목을 준비 상태로 둬서 Enter가 바로 확정하게 해요. `false`로 두면 화살표 키를 먼저 눌러야 해요. 바탕이 되는 `RawAutocomplete`가 항상 유효한 하이라이트 인덱스를 유지하기 때문에 React 기본값과 달리 여기서는 `true`가 기본이에요.',
+              ja: '最初の一致を待機状態にして、Enter で即座に確定できるようにします。`false` にすると先に矢印キーが必要になります。基盤の `RawAutocomplete` が常に有効なハイライト位置を保つため、React の既定値とは異なり、ここでは `true` が既定です。',
+            },
+          },
+          {
+            name: 'clearable, clearSemanticLabel',
+            type: "bool · false, String · 'Clear'",
+            purpose: {
+              en: 'Shows a clear button while the field holds a query or a selection. Clearing empties the query, reports `null` through `onValueChange`, and returns focus to the field.',
+              ko: '검색어나 선택 값이 있을 때 지우기 버튼을 보여줘요. 지우면 검색어를 비우고 `onValueChange`로 `null`을 알린 뒤 필드로 포커스를 돌려줘요.',
+              ja: '検索語または選択値があるときにクリアボタンを表示します。クリアすると検索語を空にし、`onValueChange` で `null` を通知したうえで、フィールドにフォーカスを戻します。',
+            },
+          },
+          {
+            name: 'controller, defaultValue, value',
+            type: 'TRComboboxController<T>?, T?, T?',
+            purpose: {
+              en: 'Chooses the state model. `defaultValue` seeds the uncontrolled constructor, `value` is required by `TRCombobox.controlled`, and a controller can be shared with either.',
+              ko: '상태 모델을 정해요. `defaultValue`는 비제어 생성자의 초기값이고, `value`는 `TRCombobox.controlled`에 필수이며, controller는 둘 중 어느 쪽과도 함께 쓸 수 있어요.',
+              ja: '状態モデルを選びます。`defaultValue` は非制御コンストラクタの初期値、`value` は `TRCombobox.controlled` で必須で、controller はどちらとも併用できます。',
+            },
+          },
+          {
+            name: 'onQueryChange, onValueChange',
+            type: 'ValueChanged<String>?, ValueChanged<T?>?',
+            purpose: {
+              en: 'Report query edits and committed selections separately. `onValueChange` also fires with `null` when the clear button is used.',
+              ko: '검색어 편집과 확정된 선택을 따로 알려줘요. 지우기 버튼을 누르면 `onValueChange`가 `null`로도 호출돼요.',
+              ja: '検索語の編集と確定した選択を別々に通知します。クリアボタンを押した場合、`onValueChange` は `null` でも呼び出されます。',
+            },
+          },
+          {
+            name: 'layout',
+            type: 'TRComboboxLayout · list',
+            purpose: {
+              en: 'Draws the popup as a single-column list or a two-column grid.',
+              ko: '팝업을 1열 목록이나 2열 격자로 그려요.',
+              ja: 'ポップアップを 1 列のリストまたは 2 列のグリッドとして描画します。',
+            },
+          },
+          {
+            name: 'enabled, readOnly',
+            type: 'bool · true, bool · false',
+            purpose: {
+              en: 'Disable interaction, or keep a focusable field whose query cannot be edited. Both hide the clear button.',
+              ko: '상호작용을 막거나, 포커스는 되지만 검색어를 편집할 수 없는 필드로 유지해요. 둘 다 지우기 버튼을 감춰요.',
+              ja: '操作を無効にするか、フォーカスは可能でも検索語を編集できないフィールドにします。どちらの場合もクリアボタンは表示されません。',
+            },
+          },
+          {
+            name: 'label, placeholder, helperText, errorText',
+            type: 'String? · null',
+            purpose: {
+              en: 'Describe the field and its validation state through the underlying `TRTextField`.',
+              ko: '바탕이 되는 `TRTextField`를 통해 필드와 검증 상태를 설명해요.',
+              ja: '基盤の `TRTextField` を通じて、フィールドと検証状態を説明します。',
+            },
+          },
+          {
+            name: 'uiSize, width',
+            type: 'TRUiSize · TRUiSize.md, double? · null',
+            purpose: {
+              en: 'Set the control size and a fixed field width. The popup matches `width`, or falls back to the small overlay width token.',
+              ko: '컨트롤 크기와 고정 필드 너비를 정해요. 팝업은 `width`를 따르고, 없으면 small 오버레이 너비 토큰을 써요.',
+              ja: 'コントロールサイズと固定のフィールド幅を指定します。ポップアップは `width` に合わせ、未指定の場合は small のオーバーレイ幅トークンを使います。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRMultiCombobox properties',
+          ko: 'TRMultiCombobox 속성',
+          ja: 'TRMultiCombobox のプロパティ',
+        },
+        rows: [
+          {
+            name: 'defaultValue, value',
+            type: 'List<T> · const [], List<T>?',
+            purpose: {
+              en: 'Hold the committed values. `value` is required by `TRMultiCombobox.controlled` and makes the widget fully controlled.',
+              ko: '확정된 값들을 담아요. `value`는 `TRMultiCombobox.controlled`에 필수이고, 이를 주면 위젯이 완전한 제어 모드가 돼요.',
+              ja: '確定した値を保持します。`value` は `TRMultiCombobox.controlled` で必須であり、指定するとウィジェットは完全な制御モードになります。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<List<T>>? · null',
+            purpose: {
+              en: 'Reports the full selection after every pick, chip removal, or clear. Selecting an already selected value removes it.',
+              ko: '선택, 칩 삭제, 지우기 뒤마다 전체 선택 목록을 알려줘요. 이미 선택된 값을 다시 고르면 해제돼요.',
+              ja: '選択、チップの削除、クリアのたびに選択内容の全体を通知します。既に選択済みの値をもう一度選ぶと解除されます。',
+            },
+          },
+          {
+            name: 'controller',
+            type: 'TRMultiComboboxController<T>? · null',
+            purpose: {
+              en: 'Owns the values and the shared query field. Its `clear` resets the values only, so clear the `textEditingController` too when driving it directly.',
+              ko: '값들과 공유 검색어 필드를 소유해요. `clear`는 값만 비우므로 직접 제어할 때는 `textEditingController`도 함께 비우세요.',
+              ja: '値と共有の検索フィールドを保持します。`clear` は値のみを消去するため、直接操作する場合は `textEditingController` も併せて消去してください。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'Items and enums',
+          ko: '항목과 열거형',
+          ja: '項目と列挙型',
+        },
+        rows: [
+          {
+            name: 'TRComboboxItem.value, label',
+            type: 'T · required, String · required',
+            purpose: {
+              en: 'Carry the typed value and the text shown in the popup and written back into the field on commit.',
+              ko: '타입이 있는 값과, 팝업에 표시되고 확정 시 필드에 다시 써지는 텍스트를 담아요.',
+              ja: '型付きの値と、ポップアップに表示され確定時にフィールドへ書き戻されるテキストを保持します。',
+            },
+          },
+          {
+            name: 'TRComboboxItem.enabled',
+            type: 'bool · true',
+            purpose: {
+              en: 'Marks an option as unselectable. It stays in the popup, renders with the muted text color, and is skipped by keyboard navigation.',
+              ko: '옵션을 선택할 수 없게 표시해요. 팝업에는 그대로 남고 muted 텍스트 색으로 그려지며 키보드 이동에서 건너뛰어요.',
+              ja: '候補を選択不可にします。ポップアップには残り、muted のテキスト色で描画され、キーボード移動ではスキップされます。',
+            },
+          },
+          {
+            name: 'TRComboboxItem.leading, trailing',
+            type: 'Widget? · null',
+            purpose: {
+              en: 'Place icons on either side of the option label.',
+              ko: '옵션 레이블 양옆에 아이콘을 배치해요.',
+              ja: '候補ラベルの両側にアイコンを配置します。',
+            },
+          },
+          {
+            name: 'TRComboboxLayout',
+            type: 'list, grid',
+            purpose: {
+              en: 'Selects the popup arrangement. `grid` uses two columns of fixed-height rows.',
+              ko: '팝업 배치를 고르는 열거형이에요. `grid`는 높이가 고정된 행을 2열로 배치해요.',
+              ja: 'ポップアップの配置を選ぶ列挙型です。`grid` は高さが固定された行を 2 列で配置します。',
+            },
+          },
+          {
+            name: 'TRComboboxFilterMode',
+            type: 'contains, startsWith, none',
+            purpose: {
+              en: 'Selects the built-in narrowing rule applied to the option source.',
+              ko: '옵션 원본에 적용할 기본 좁히기 규칙을 고르는 열거형이에요.',
+              ja: '候補の元データに適用する組み込みの絞り込みルールを選ぶ列挙型です。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'Controllers and form fields',
+          ko: 'Controller와 폼 필드',
+          ja: 'Controller とフォームフィールド',
+        },
+        rows: [
+          {
+            name: 'TRComboboxController',
+            type: 'ChangeNotifier',
+            purpose: {
+              en: 'Exposes `value`, `select`, and `clear` alongside the owned `textEditingController` and `focusNode`. Dispose it with the widget that created it.',
+              ko: '`value`, `select`, `clear`와 함께 소유한 `textEditingController`, `focusNode`를 노출해요. 만든 위젯에서 dispose하세요.',
+              ja: '`value`、`select`、`clear` に加えて、保持する `textEditingController` と `focusNode` を公開します。生成したウィジェット側で dispose してください。',
+            },
+          },
+          {
+            name: 'TRMultiComboboxController',
+            type: 'ChangeNotifier',
+            purpose: {
+              en: 'Exposes `values`, `replace`, `toggle`, and `clear`. `values` is an unmodifiable view, so replace the list instead of mutating it.',
+              ko: '`values`, `replace`, `toggle`, `clear`를 노출해요. `values`는 수정할 수 없는 뷰라서 직접 바꾸지 말고 목록을 교체하세요.',
+              ja: '`values`、`replace`、`toggle`、`clear` を公開します。`values` は変更不可のビューのため、直接変更せずリストを差し替えてください。',
+            },
+          },
+          {
+            name: 'TRComboboxFormField',
+            type: 'FormField<T>',
+            purpose: {
+              en: 'Participates in validation and save callbacks with a typed selected value, and feeds `errorText` back into the field.',
+              ko: '타입이 있는 선택 값으로 검증과 저장 콜백에 참여하고 `errorText`를 필드로 다시 전달해요.',
+              ja: '型付きの選択値で検証と保存コールバックに参加し、`errorText` をフィールドへ戻します。',
+            },
+          },
+          {
+            name: 'TRMultiComboboxFormField',
+            type: 'FormField<List<T>>',
+            purpose: {
+              en: 'Does the same for a list of values, so a validator can require at least one selection.',
+              ko: '값 목록에 대해 같은 일을 해요. validator로 최소 한 개 선택을 요구할 수 있어요.',
+              ja: '値のリストに対して同じ役割を果たします。validator で 1 つ以上の選択を必須にできます。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'context-menu': {
     title: 'ContextMenu',

@@ -95,6 +95,15 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'autocomplete-controller': _autocompleteController,
   'autocomplete-form': _autocompleteForm,
   'autocomplete-keyboard': _autocompleteKeyboard,
+  'combobox-basic': _comboboxBasic,
+  'combobox-sizes': _comboboxSizes,
+  'combobox-option-states': _comboboxOptionStates,
+  'combobox-filter-modes': _comboboxFilterModes,
+  'combobox-multiple-anatomy': _comboboxMultipleAnatomy,
+  'combobox-validation': _comboboxValidation,
+  'combobox-controlled-filter-hooks': _comboboxControlledFilterHooks,
+  'combobox-overlay': _comboboxOverlay,
+  'combobox-keyboard': _comboboxKeyboard,
   'combobox-form': _comboboxForm,
   'app-shell-navigation': _appShellNavigation,
   'app-shell-controls': _appShellControls,
@@ -3145,6 +3154,263 @@ Widget _autocompleteKeyboard(BuildContext context, Locale locale) => SizedBox(
     items: _autocompleteItems,
     label: _pick(locale, 'Region', '지역', '地域'),
     placeholder: _pick(locale, 'Search regions', '지역 검색', '地域を検索'),
+  ),
+);
+
+List<TRComboboxItem<String>> _comboboxRacks({bool disabledSecond = false}) => [
+  const TRComboboxItem(value: 'rack-a', label: 'Rack A'),
+  TRComboboxItem(value: 'rack-b', label: 'Rack B', enabled: !disabledSecond),
+  const TRComboboxItem(value: 'rack-c', label: 'Rack C'),
+];
+
+String _comboboxRackLabel(Locale locale) =>
+    _pick(locale, 'Deployment rack', '배포 랙', 'デプロイ先ラック');
+
+String _comboboxRackPlaceholder(Locale locale) =>
+    _pick(locale, 'Choose a rack', '랙을 선택하세요', 'ラックを選択');
+
+Widget _comboboxBasic(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: TRCombobox<String>(
+    label: _comboboxRackLabel(locale),
+    placeholder: _comboboxRackPlaceholder(locale),
+    helperText: _pick(
+      locale,
+      'Type to filter, then commit one rack',
+      '입력해서 좁힌 뒤 랙 하나를 확정하세요',
+      '入力して絞り込み、ラックを 1 つ確定します',
+    ),
+    items: _comboboxRacks(),
+  ),
+);
+
+Widget _comboboxSizes(BuildContext context, Locale locale) => Column(
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: [
+    for (final uiSize in TRUiSize.values)
+      TRCombobox<String>(
+        label: _comboboxRackLabel(locale),
+        placeholder: _comboboxRackPlaceholder(locale),
+        items: _comboboxRacks(),
+        uiSize: uiSize,
+        width: 320,
+      ),
+  ],
+);
+
+Widget _comboboxOptionStates(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: TRCombobox<String>(
+    label: _comboboxRackLabel(locale),
+    placeholder: _comboboxRackPlaceholder(locale),
+    helperText: _pick(
+      locale,
+      'Racks under maintenance stay visible but cannot be picked',
+      '점검 중인 랙도 계속 보이지만 선택할 수는 없어요',
+      'メンテナンス中のラックも表示されますが選択できません',
+    ),
+    defaultValue: 'rack-a',
+    items: _comboboxRacks(disabledSecond: true),
+  ),
+);
+
+Widget _comboboxFilterModes(BuildContext context, Locale locale) => Column(
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: [
+    TRCombobox<String>(
+      label: _pick(locale, 'Contains', '부분 일치', '部分一致'),
+      placeholder: _comboboxRackPlaceholder(locale),
+      items: _comboboxRacks(),
+      width: 320,
+    ),
+    TRCombobox<String>(
+      label: _pick(locale, 'Starts with', '접두사 일치', '前方一致'),
+      placeholder: _comboboxRackPlaceholder(locale),
+      items: _comboboxRacks(),
+      filterMode: TRComboboxFilterMode.startsWith,
+      width: 320,
+    ),
+    TRCombobox<String>(
+      label: _pick(locale, 'Server side', '서버 측', 'サーバー側'),
+      placeholder: _comboboxRackPlaceholder(locale),
+      filterMode: TRComboboxFilterMode.none,
+      optionsBuilder: (query) => _comboboxRacks()
+          .where(
+            (item) =>
+                query.isEmpty ||
+                item.label.toLowerCase().contains(query.toLowerCase()),
+          )
+          .toList(),
+      width: 320,
+    ),
+  ],
+);
+
+Widget _comboboxMultipleAnatomy(BuildContext context, Locale locale) =>
+    SizedBox(
+      width: 320,
+      child: TRMultiCombobox<String>(
+        label: _pick(locale, 'Deployment racks', '배포 랙', 'デプロイ先ラック'),
+        placeholder: _pick(locale, 'Choose racks', '랙을 선택하세요', 'ラックを選択'),
+        helperText: _pick(
+          locale,
+          'Committed racks appear as chips above the field',
+          '확정한 랙은 필드 위에 칩으로 나타나요',
+          '確定したラックはフィールドの上にチップとして表示されます',
+        ),
+        layout: TRComboboxLayout.grid,
+        defaultValue: const ['rack-a'],
+        items: [
+          for (final item in _comboboxRacks())
+            TRComboboxItem(
+              value: item.value,
+              label: item.label,
+              leading: const Icon(Icons.dns_outlined),
+            ),
+        ],
+      ),
+    );
+
+Widget _comboboxValidation(BuildContext context, Locale locale) =>
+    _ComboboxValidationExample(locale: locale);
+
+class _ComboboxValidationExample extends StatefulWidget {
+  const _ComboboxValidationExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_ComboboxValidationExample> createState() =>
+      _ComboboxValidationExampleState();
+}
+
+class _ComboboxValidationExampleState
+    extends State<_ComboboxValidationExample> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 320,
+    child: Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRComboboxFormField<String>(
+            label: _comboboxRackLabel(widget.locale),
+            placeholder: _comboboxRackPlaceholder(widget.locale),
+            items: _comboboxRacks(),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            validator: (value) => value == null
+                ? _pick(
+                    widget.locale,
+                    'Choose a rack',
+                    '랙을 선택하세요',
+                    'ラックを選択してください',
+                  )
+                : null,
+          ),
+          TRButton(
+            onPressed: () => _formKey.currentState?.validate(),
+            child: Text(_pick(widget.locale, 'Deploy', '배포', 'デプロイ')),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _comboboxControlledFilterHooks(BuildContext context, Locale locale) =>
+    _ComboboxControlledExample(locale: locale);
+
+class _ComboboxControlledExample extends StatefulWidget {
+  const _ComboboxControlledExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_ComboboxControlledExample> createState() =>
+      _ComboboxControlledExampleState();
+}
+
+class _ComboboxControlledExampleState
+    extends State<_ComboboxControlledExample> {
+  final _controller = TRComboboxController<String>(value: 'rack-a');
+  String? _rack = 'rack-a';
+  String _query = '';
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
+    width: 320,
+    child: TRCombobox<String>.controlled(
+      value: _rack,
+      controller: _controller,
+      label: _comboboxRackLabel(widget.locale),
+      placeholder: _comboboxRackPlaceholder(widget.locale),
+      helperText: '${_pick(widget.locale, 'Query: ', '검색어: ', '検索語: ')}$_query',
+      items: _comboboxRacks(),
+      filter: (item, query) => item.label.toLowerCase().endsWith(query),
+      onQueryChange: (value) => setState(() => _query = value),
+      onValueChange: (value) => setState(() => _rack = value),
+    ),
+  );
+}
+
+Widget _comboboxOverlay(BuildContext context, Locale locale) => Column(
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: [
+    TRCombobox<String>(
+      label: _pick(
+        locale,
+        'Popup follows the field',
+        '팝업이 필드 너비를 따름',
+        'ポップアップはフィールド幅に追従',
+      ),
+      placeholder: _comboboxRackPlaceholder(locale),
+      items: _comboboxRacks(),
+      width: 360,
+    ),
+    SizedBox(
+      width: 360,
+      child: TRCombobox<String>(
+        label: _pick(
+          locale,
+          'Popup uses the overlay token',
+          '팝업이 오버레이 토큰을 사용',
+          'ポップアップはオーバーレイトークンを使用',
+        ),
+        placeholder: _comboboxRackPlaceholder(locale),
+        items: _comboboxRacks(),
+      ),
+    ),
+  ],
+);
+
+Widget _comboboxKeyboard(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: TRCombobox<String>(
+    label: _comboboxRackLabel(locale),
+    placeholder: _comboboxRackPlaceholder(locale),
+    helperText: _pick(
+      locale,
+      'Arrow keys move, Enter commits, Escape closes',
+      '방향키로 이동, Enter로 확정, Escape로 닫기',
+      '矢印キーで移動、Enter で確定、Escape で閉じます',
+    ),
+    autoHighlight: false,
+    clearable: true,
+    clearSemanticLabel: _pick(locale, 'Clear rack', '랙 지우기', 'ラックをクリア'),
+    items: _comboboxRacks(disabledSecond: true),
   ),
 );
 
