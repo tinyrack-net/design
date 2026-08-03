@@ -193,9 +193,9 @@ export function TRAnimatedNumber({
   }, []);
 
   useLayoutEffect(() => {
-    const element = presentationRef.current;
-    if (element === null) return;
-    // Both nodes are structural invariants of the rendered presentation.
+    // These nodes and the initial static width are structural invariants of the
+    // rendered presentation before a roll transition can begin.
+    const element = presentationRef.current as HTMLSpanElement;
     const visual = element.firstElementChild as HTMLElement;
     const targetWidth = visual.getBoundingClientRect().width;
     const stableWidth = (element.parentElement as HTMLElement).getBoundingClientRect()
@@ -222,7 +222,7 @@ export function TRAnimatedNumber({
 
     const currentWidth =
       layoutAnimationRef.current === null
-        ? (previousWidthRef.current ?? targetWidth)
+        ? (previousWidthRef.current as number)
         : element.getBoundingClientRect().width;
     layoutAnimationRef.current?.cancel();
     previousWidthRef.current = targetWidth;

@@ -302,6 +302,15 @@ test('interpolates count mode and retargets an active animation', async () => {
       { timeout: 1_000 },
     )
     .toBe('200');
+  await expect
+    .poll(
+      () =>
+        document.querySelector<HTMLElement>('.tr-animated-number-visual')?.dataset[
+          'animating'
+        ],
+      { timeout: 1_000 },
+    )
+    .toBeUndefined();
 });
 
 test('settles immediately for zero duration, format changes, and non-finite values', async () => {
