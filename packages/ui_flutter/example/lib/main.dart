@@ -1346,6 +1346,21 @@ class PreviewComponent extends StatelessWidget {
           ],
         ),
       ),
+      // The parity fixture pairs two labelled fields against the React page, so
+      // the playground composition must not replace it.
+      'form' when parityMode => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: const TRForm(
+          child: Column(
+            spacing: 12,
+            children: [
+              TRTextField(name: 'rack', label: 'Rack name'),
+              TRTextField(name: 'region', label: 'Region'),
+            ],
+          ),
+        ),
+      ),
       'form' => _PreviewForm(args: args, key: measureKey, locale: locale),
       'menubar' => TRMenubar(
         key: measureKey,
