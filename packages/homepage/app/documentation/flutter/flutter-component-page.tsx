@@ -559,7 +559,340 @@ const componentData: Record<
       ko: 'Flutter 폼 필드를 검증하고 활성화된 Tinyrack 이름 값을 한 번에 모아요.',
       ja: 'Flutter のフォームフィールドを検証し、有効な Tinyrack の名前付き値をまとめて取得します。',
     },
-    usage: "TRForm(\n  key: formKey,\n  child: const TRTextField(name: 'rack'),\n)",
+    contractIntro: {
+      en: 'Reach `TRFormState` through a `GlobalKey<TRFormState>` you hold, or through `TRForm.maybeOf(context)` from a descendant. Only fields that declare a `name` appear in `TRFormValues`.',
+      ko: '`TRFormState`에는 직접 보관한 `GlobalKey<TRFormState>`로 접근하거나, 하위 위젯에서 `TRForm.maybeOf(context)`로 접근하세요. `name`을 선언한 필드만 `TRFormValues`에 담겨요.',
+      ja: '`TRFormState` には、保持している `GlobalKey<TRFormState>` か、子孫ウィジェットからの `TRForm.maybeOf(context)` でアクセスしてください。`TRFormValues` に含まれるのは `name` を宣言したフィールドだけです。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Value collection', ko: '값 수집', ja: '値の収集' },
+        choices: {
+          en: '`values` returns an immutable `TRFormValues` snapshot of the named fields; `save()` runs the native `FormState.save()` first and then returns the same snapshot.',
+          ko: '`values`는 이름이 있는 필드의 불변 `TRFormValues` 스냅샷을 반환하고, `save()`는 네이티브 `FormState.save()`를 먼저 실행한 뒤 같은 스냅샷을 반환해요.',
+          ja: '`values` は名前付きフィールドの不変な `TRFormValues` スナップショットを返し、`save()` はネイティブの `FormState.save()` を実行してから同じスナップショットを返します。',
+        },
+      },
+      {
+        axis: {
+          en: 'Disabled and read-only fields',
+          ko: '비활성 필드와 읽기 전용 필드',
+          ja: '無効フィールドと読み取り専用フィールド',
+        },
+        choices: {
+          en: 'A field with `enabled: false` is left out of `TRFormValues`. A field with `readOnly: true` still contributes its value.',
+          ko: '`enabled: false`인 필드는 `TRFormValues`에서 빠져요. `readOnly: true`인 필드는 값을 그대로 담아요.',
+          ja: '`enabled: false` のフィールドは `TRFormValues` から除外されます。`readOnly: true` のフィールドは値をそのまま含みます。',
+        },
+      },
+      {
+        axis: { en: 'Validation', ko: '검증', ja: '検証' },
+        choices: {
+          en: '`validate()` returns whether every field validator passed. `validateGranularly()` runs the native granular validation and returns true when the error set is empty; the set itself is not exposed. Both report true when the form has no `FormState` yet.',
+          ko: '`validate()`는 모든 필드 검증기가 통과했는지 반환해요. `validateGranularly()`는 네이티브 세부 검증을 실행하고 오류 집합이 비었을 때 true를 반환하며, 집합 자체는 노출하지 않아요. 폼에 아직 `FormState`가 없으면 둘 다 true를 반환해요.',
+          ja: '`validate()` はすべてのフィールド検証が通ったかどうかを返します。`validateGranularly()` はネイティブの詳細な検証を実行し、エラー集合が空のとき true を返します。集合そのものは公開されません。フォームにまだ `FormState` がない場合、どちらも true を返します。',
+        },
+      },
+      {
+        axis: { en: 'Validation timing', ko: '검증 시점', ja: '検証のタイミング' },
+        choices: {
+          en: '`autovalidateMode` defaults to null, so errors appear only when validation runs. Pass `AutovalidateMode.onUserInteraction` to validate while the reader types.',
+          ko: '`autovalidateMode`의 기본값은 null이라 검증을 실행할 때만 오류가 나타나요. 입력하는 동안 검증하려면 `AutovalidateMode.onUserInteraction`을 넘기세요.',
+          ja: '`autovalidateMode` の既定値は null のため、検証を実行したときにだけエラーが表示されます。入力中に検証するには `AutovalidateMode.onUserInteraction` を渡してください。',
+        },
+      },
+      {
+        axis: { en: 'Change and reset', ko: '변경과 초기화', ja: '変更とリセット' },
+        choices: {
+          en: '`onChanged` fires with a fresh snapshot whenever a field changes. `reset()` restores the native field values and then fires `onChanged` again; application state such as a submitted result must be cleared separately.',
+          ko: '필드가 바뀔 때마다 `onChanged`가 새 스냅샷과 함께 호출돼요. `reset()`은 네이티브 필드 값을 되돌린 뒤 `onChanged`를 다시 호출하고, 제출 결과 같은 애플리케이션 상태는 따로 지워야 해요.',
+          ja: 'フィールドが変わるたびに `onChanged` が新しいスナップショットとともに呼ばれます。`reset()` はネイティブのフィールド値を戻してから `onChanged` を再び呼びます。送信結果などのアプリケーション状態は別途クリアしてください。',
+        },
+      },
+    ],
+    usage: {
+      en: String.raw`class RackForm extends StatefulWidget {
+  const RackForm({super.key});
+
+  @override
+  State<RackForm> createState() => _RackFormState();
+}
+
+class _RackFormState extends State<RackForm> {
+  final GlobalKey<TRFormState> formKey = GlobalKey<TRFormState>();
+  String submitted = '';
+
+  @override
+  Widget build(BuildContext context) => TRForm(
+    key: formKey,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRTextField(
+          name: 'rack',
+          label: 'Rack name',
+          validator: (value) =>
+              (value ?? '').trim().isEmpty ? 'Enter a rack name.' : null,
+        ),
+        TRButton(
+          onPressed: () {
+            final state = formKey.currentState!;
+            if (!state.validate()) return;
+            final values = state.save();
+            setState(() => submitted = values['rack']?.toString() ?? '');
+          },
+          child: const Text('Save'),
+        ),
+        if (submitted.isNotEmpty)
+          TRText(submitted, variant: TRTextVariant.bodySm),
+      ],
+    ),
+  );
+}`,
+      ko: String.raw`class RackForm extends StatefulWidget {
+  const RackForm({super.key});
+
+  @override
+  State<RackForm> createState() => _RackFormState();
+}
+
+class _RackFormState extends State<RackForm> {
+  final GlobalKey<TRFormState> formKey = GlobalKey<TRFormState>();
+  String submitted = '';
+
+  @override
+  Widget build(BuildContext context) => TRForm(
+    key: formKey,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRTextField(
+          name: 'rack',
+          label: '랙 이름',
+          validator: (value) =>
+              (value ?? '').trim().isEmpty ? '랙 이름을 입력하세요.' : null,
+        ),
+        TRButton(
+          onPressed: () {
+            final state = formKey.currentState!;
+            if (!state.validate()) return;
+            final values = state.save();
+            setState(() => submitted = values['rack']?.toString() ?? '');
+          },
+          child: const Text('저장'),
+        ),
+        if (submitted.isNotEmpty)
+          TRText(submitted, variant: TRTextVariant.bodySm),
+      ],
+    ),
+  );
+}`,
+      ja: String.raw`class RackForm extends StatefulWidget {
+  const RackForm({super.key});
+
+  @override
+  State<RackForm> createState() => _RackFormState();
+}
+
+class _RackFormState extends State<RackForm> {
+  final GlobalKey<TRFormState> formKey = GlobalKey<TRFormState>();
+  String submitted = '';
+
+  @override
+  Widget build(BuildContext context) => TRForm(
+    key: formKey,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRTextField(
+          name: 'rack',
+          label: 'ラック名',
+          validator: (value) =>
+              (value ?? '').trim().isEmpty ? 'ラック名を入力してください。' : null,
+        ),
+        TRButton(
+          onPressed: () {
+            final state = formKey.currentState!;
+            if (!state.validate()) return;
+            final values = state.save();
+            setState(() => submitted = values['rack']?.toString() ?? '');
+          },
+          child: const Text('保存'),
+        ),
+        if (submitted.isNotEmpty)
+          TRText(submitted, variant: TRTextVariant.bodySm),
+      ],
+    ),
+  );
+}`,
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRForm properties',
+          ko: 'TRForm 속성',
+          ja: 'TRForm のプロパティ',
+        },
+        rows: [
+          {
+            name: 'child',
+            type: 'Widget (required)',
+            purpose: {
+              en: 'The subtree that holds the form fields.',
+              ko: '폼 필드를 담는 하위 트리예요.',
+              ja: 'フォームフィールドを含むサブツリーです。',
+            },
+          },
+          {
+            name: 'autovalidateMode',
+            type: 'AutovalidateMode?',
+            purpose: {
+              en: 'Chooses when the native form revalidates. Null validates only on an explicit call.',
+              ko: '네이티브 폼이 다시 검증하는 시점을 정해요. null이면 명시적으로 호출할 때만 검증해요.',
+              ja: 'ネイティブフォームが再検証するタイミングを決めます。null の場合は明示的に呼んだときだけ検証します。',
+            },
+          },
+          {
+            name: 'onChanged',
+            type: 'ValueChanged<TRFormValues>?',
+            purpose: {
+              en: 'Called with a fresh snapshot after any field change and after `reset()`.',
+              ko: '필드가 바뀐 뒤와 `reset()` 뒤에 새 스냅샷과 함께 호출돼요.',
+              ja: 'フィールドの変更後と `reset()` の後に、新しいスナップショットとともに呼ばれます。',
+            },
+          },
+          {
+            name: 'canPop',
+            type: 'bool?',
+            purpose: {
+              en: 'Forwarded to the native `Form` to guard route pops while the form holds unsaved input.',
+              ko: '저장하지 않은 입력이 있을 때 라우트 팝을 막도록 네이티브 `Form`에 전달돼요.',
+              ja: '未保存の入力があるときのルート pop を制御するため、ネイティブの `Form` に渡されます。',
+            },
+          },
+          {
+            name: 'onPopInvokedWithResult',
+            type: 'PopInvokedWithResultCallback<Object?>?',
+            purpose: {
+              en: 'Forwarded to the native `Form` and called after a pop attempt.',
+              ko: '네이티브 `Form`에 전달되어 팝 시도 뒤에 호출돼요.',
+              ja: 'ネイティブの `Form` に渡され、pop の試行後に呼ばれます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRFormState members',
+          ko: 'TRFormState 멤버',
+          ja: 'TRFormState のメンバー',
+        },
+        rows: [
+          {
+            name: 'values',
+            type: 'TRFormValues',
+            purpose: {
+              en: 'A snapshot of the enabled named fields, taken without running `save()`.',
+              ko: '`save()`를 실행하지 않고 가져오는, 활성화된 이름 있는 필드의 스냅샷이에요.',
+              ja: '`save()` を実行せずに取得する、有効な名前付きフィールドのスナップショットです。',
+            },
+          },
+          {
+            name: 'save()',
+            type: 'TRFormValues',
+            purpose: {
+              en: 'Runs `FormState.save()` and returns the resulting snapshot.',
+              ko: '`FormState.save()`를 실행하고 그 결과 스냅샷을 반환해요.',
+              ja: '`FormState.save()` を実行し、その結果のスナップショットを返します。',
+            },
+          },
+          {
+            name: 'validate()',
+            type: 'bool',
+            purpose: {
+              en: 'Runs every field validator and returns whether all of them passed.',
+              ko: '모든 필드 검증기를 실행하고 전부 통과했는지 반환해요.',
+              ja: 'すべてのフィールド検証を実行し、すべて通ったかどうかを返します。',
+            },
+          },
+          {
+            name: 'validateGranularly()',
+            type: 'bool',
+            purpose: {
+              en: 'Validates through the native granular API and returns true when no field reports an error.',
+              ko: '네이티브 세부 검증 API로 검증하고, 오류를 보고한 필드가 없으면 true를 반환해요.',
+              ja: 'ネイティブの詳細な検証 API で検証し、エラーを報告したフィールドがなければ true を返します。',
+            },
+          },
+          {
+            name: 'reset()',
+            type: 'void',
+            purpose: {
+              en: 'Restores the native field values and fires `onChanged` with the new snapshot.',
+              ko: '네이티브 필드 값을 되돌리고 새 스냅샷으로 `onChanged`를 호출해요.',
+              ja: 'ネイティブのフィールド値を戻し、新しいスナップショットで `onChanged` を呼びます。',
+            },
+          },
+          {
+            name: 'TRForm.maybeOf',
+            type: 'TRFormState? Function(BuildContext)',
+            purpose: {
+              en: 'Finds the enclosing form state from a descendant, or returns null outside a `TRForm`.',
+              ko: '하위 위젯에서 감싸는 폼 상태를 찾고, `TRForm` 밖에서는 null을 반환해요.',
+              ja: '子孫ウィジェットから外側のフォーム状態を探し、`TRForm` の外では null を返します。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRFormValues members',
+          ko: 'TRFormValues 멤버',
+          ja: 'TRFormValues のメンバー',
+        },
+        rows: [
+          {
+            name: 'operator []',
+            type: 'Object? Function(String name)',
+            purpose: {
+              en: 'Reads one field value by name, or null when the name is absent.',
+              ko: '이름으로 필드 값 하나를 읽고, 이름이 없으면 null을 반환해요.',
+              ja: '名前でフィールド値を 1 つ読み取り、その名前がなければ null を返します。',
+            },
+          },
+          {
+            name: 'contains',
+            type: 'bool Function(String name)',
+            purpose: {
+              en: 'Reports whether the snapshot holds the name. A disabled field is absent even when it is mounted.',
+              ko: '스냅샷이 그 이름을 담고 있는지 알려줘요. 비활성 필드는 화면에 있어도 빠져 있어요.',
+              ja: 'スナップショットがその名前を持つかどうかを示します。無効なフィールドは表示されていても含まれません。',
+            },
+          },
+          {
+            name: 'entries',
+            type: 'Iterable<MapEntry<String, Object?>>',
+            purpose: {
+              en: 'Iterates the collected name and value pairs.',
+              ko: '수집한 이름과 값 쌍을 순회해요.',
+              ja: '収集した名前と値の組を反復します。',
+            },
+          },
+          {
+            name: 'toMap()',
+            type: 'Map<String, Object?>',
+            purpose: {
+              en: 'Copies the snapshot into a plain map for encoding or transport.',
+              ko: '인코딩이나 전송을 위해 스냅샷을 일반 맵으로 복사해요.',
+              ja: 'エンコードや送信のために、スナップショットを通常のマップへコピーします。',
+            },
+          },
+        ],
+      },
+    ],
   },
   menubar: {
     title: 'Menubar',

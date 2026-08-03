@@ -61,6 +61,10 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'toggle-group-controlled': _toggleGroupControlled,
   'toggle-group-multiple': _toggleGroupMultiple,
   'toggle-group-orientation': _toggleGroupOrientation,
+  'form-basic': _formBasic,
+  'form-states': _formStates,
+  'form-server-errors': _formServerErrors,
+  'form-actions': _formActions,
   'menu-settings': _menuSettings,
   'menu-submenu': _menuSubmenu,
   'select-controlled': _selectControlled,
@@ -1612,6 +1616,297 @@ Widget _checkboxGroupForm(BuildContext context, Locale locale) {
       ),
     ),
   );
+}
+
+Widget _formBasic(BuildContext context, Locale locale) =>
+    _FormBasicExample(locale: locale);
+
+class _FormBasicExample extends StatefulWidget {
+  const _FormBasicExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_FormBasicExample> createState() => _FormBasicExampleState();
+}
+
+class _FormBasicExampleState extends State<_FormBasicExample> {
+  final _formKey = GlobalKey<TRFormState>();
+  String _submitted = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return TRForm(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRTextField(
+            name: 'rack',
+            label: _pick(locale, 'Rack name', '랙 이름', 'ラック名'),
+            initialValue: 'rack-alpha',
+          ),
+          Wrap(
+            spacing: TRSpacing.small,
+            runSpacing: TRSpacing.small,
+            children: [
+              TRButton(
+                onPressed: () {
+                  final values = _formKey.currentState!.save();
+                  setState(() => _submitted = values['rack']?.toString() ?? '');
+                },
+                child: Text(_pick(locale, 'Submit rack', '랙 제출', 'ラックを送信')),
+              ),
+              TRButton(
+                appearance: TRAppearance.outline,
+                onPressed: () {
+                  _formKey.currentState!.reset();
+                  setState(() => _submitted = '');
+                },
+                child: Text(_pick(locale, 'Reset form', '폼 초기화', 'フォームをリセット')),
+              ),
+            ],
+          ),
+          if (_submitted.isNotEmpty)
+            TRText(
+              '${_pick(locale, 'Submitted', '제출한 값', '送信値')}: $_submitted',
+              variant: TRTextVariant.bodySm,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _formStates(BuildContext context, Locale locale) =>
+    _FormStatesExample(locale: locale);
+
+class _FormStatesExample extends StatefulWidget {
+  const _FormStatesExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_FormStatesExample> createState() => _FormStatesExampleState();
+}
+
+class _FormStatesExampleState extends State<_FormStatesExample> {
+  final _formKey = GlobalKey<TRFormState>();
+  String _saved = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return TRForm(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRTextField(
+            name: 'rack',
+            label: _pick(locale, 'Rack name', '랙 이름', 'ラック名'),
+            validator: (value) => (value ?? '').trim().isEmpty
+                ? _pick(
+                    locale,
+                    'Enter a rack name before saving.',
+                    '저장하기 전에 랙 이름을 입력하세요.',
+                    '保存する前にラック名を入力してください。',
+                  )
+                : null,
+          ),
+          TRButton(
+            onPressed: () {
+              final state = _formKey.currentState!;
+              if (!state.validate()) {
+                setState(() => _saved = '');
+                return;
+              }
+              setState(() => _saved = state.save()['rack']?.toString() ?? '');
+            },
+            child: Text(_pick(locale, 'Save rack', '랙 저장', 'ラックを保存')),
+          ),
+          if (_saved.isNotEmpty)
+            TRText(
+              '${_pick(locale, 'Saved', '저장한 값', '保存値')}: $_saved',
+              variant: TRTextVariant.bodySm,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _formServerErrors(BuildContext context, Locale locale) =>
+    _FormServerErrorsExample(locale: locale);
+
+class _FormServerErrorsExample extends StatefulWidget {
+  const _FormServerErrorsExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_FormServerErrorsExample> createState() =>
+      _FormServerErrorsExampleState();
+}
+
+class _FormServerErrorsExampleState extends State<_FormServerErrorsExample> {
+  final _formKey = GlobalKey<TRFormState>();
+  String? _serverError;
+  String _result = '';
+
+  void _clearServerError() {
+    if (_serverError == null) return;
+    setState(() => _serverError = null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return TRForm(
+      key: _formKey,
+      onChanged: (_) => _clearServerError(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRTextField(
+            name: 'rack',
+            label: _pick(locale, 'Rack name', '랙 이름', 'ラック名'),
+            initialValue: 'rack-alpha',
+            helperText: _pick(
+              locale,
+              'Use a name that is not already registered.',
+              '아직 등록되지 않은 이름을 사용하세요.',
+              'まだ登録されていない名前を使ってください。',
+            ),
+            errorText: _serverError,
+          ),
+          Wrap(
+            spacing: TRSpacing.small,
+            runSpacing: TRSpacing.small,
+            children: [
+              TRButton(
+                onPressed: () {
+                  final rack =
+                      _formKey.currentState!.save()['rack']?.toString() ?? '';
+                  if (rack.toLowerCase() == 'rack-alpha') {
+                    setState(() {
+                      _serverError = _pick(
+                        locale,
+                        'Rack Alpha already exists.',
+                        'Rack Alpha는 이미 있어요.',
+                        'Rack Alpha はすでに存在します。',
+                      );
+                      _result = '';
+                    });
+                    return;
+                  }
+                  setState(() {
+                    _serverError = null;
+                    _result = rack;
+                  });
+                },
+                child: Text(_pick(locale, 'Create rack', '랙 만들기', 'ラックを作成')),
+              ),
+              TRButton(
+                appearance: TRAppearance.outline,
+                onPressed: () {
+                  _formKey.currentState!.reset();
+                  setState(() {
+                    _serverError = null;
+                    _result = '';
+                  });
+                },
+                child: Text(_pick(locale, 'Reset form', '폼 초기화', 'フォームをリセット')),
+              ),
+            ],
+          ),
+          if (_result.isNotEmpty)
+            TRText(
+              '${_pick(locale, 'Created', '만든 랙', '作成したラック')}: $_result',
+              variant: TRTextVariant.bodySm,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _formActions(BuildContext context, Locale locale) =>
+    _FormActionsExample(locale: locale);
+
+class _FormActionsExample extends StatefulWidget {
+  const _FormActionsExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_FormActionsExample> createState() => _FormActionsExampleState();
+}
+
+class _FormActionsExampleState extends State<_FormActionsExample> {
+  final _formKey = GlobalKey<TRFormState>();
+  String _snapshot = '';
+  String _valid = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return TRForm(
+      key: _formKey,
+      onChanged: (values) {
+        final snapshot = values.entries
+            .map((entry) => '${entry.key}=${entry.value}')
+            .join(', ');
+        setState(() => _snapshot = snapshot);
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRSpacing.medium,
+        children: [
+          TRTextField(
+            name: 'rack',
+            label: _pick(locale, 'Rack name', '랙 이름', 'ラック名'),
+            validator: (value) => (value ?? '').trim().isEmpty
+                ? _pick(
+                    locale,
+                    'Enter a rack name.',
+                    '랙 이름을 입력하세요.',
+                    'ラック名を入力してください。',
+                  )
+                : null,
+          ),
+          TRTextField(
+            name: 'region',
+            label: _pick(locale, 'Region', '리전', 'リージョン'),
+            initialValue: 'ap-northeast-2',
+            enabled: false,
+          ),
+          TRButton(
+            onPressed: () => setState(() {
+              _valid = _formKey.currentState!.validateGranularly()
+                  ? _pick(locale, 'Valid', '통과', '有効')
+                  : _pick(locale, 'Invalid', '실패', '無効');
+            }),
+            child: Text(_pick(locale, 'Validate all', '모두 검증', 'すべて検証')),
+          ),
+          if (_snapshot.isNotEmpty)
+            TRText(
+              '${_pick(locale, 'Snapshot', '스냅샷', 'スナップショット')}: $_snapshot',
+              variant: TRTextVariant.bodySm,
+            ),
+          if (_valid.isNotEmpty) TRText(_valid, variant: TRTextVariant.bodySm),
+        ],
+      ),
+    );
+  }
 }
 
 Widget _menuSettings(BuildContext context, Locale locale) {

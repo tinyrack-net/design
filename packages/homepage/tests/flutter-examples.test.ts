@@ -153,6 +153,7 @@ describe('Flutter documentation examples', () => {
       'alert-dialog',
       'toggle',
       'toggle-group',
+      'form',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
@@ -227,6 +228,15 @@ describe('Flutter documentation examples', () => {
       'icon-button-appearances',
       'icon-button-intents',
       'icon-button-sizes',
+    ]);
+  });
+
+  it('keeps the Form examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.form?.map((entry) => entry.id)).toEqual([
+      'form-basic',
+      'form-states',
+      'form-server-errors',
+      'form-actions',
     ]);
   });
 

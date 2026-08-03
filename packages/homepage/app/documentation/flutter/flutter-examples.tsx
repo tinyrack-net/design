@@ -1591,6 +1591,467 @@ class _MonitoringFormState extends State<MonitoringForm> {
 )`,
     },
   ],
+  form: [
+    {
+      id: 'form-basic',
+      title: {
+        en: 'Collect values and reset',
+        ja: '値の収集とリセット',
+        ko: '값 수집과 초기화',
+      },
+      description: {
+        en: 'Submit reads the named field through `save()`. Reset restores the initial value, and the application clears its own submitted result.',
+        ja: '送信では `save()` を通じて名前付きフィールドを読み取ります。リセットは初期値を戻し、送信結果はアプリケーション側でクリアします。',
+        ko: '제출하면 `save()`로 이름 있는 필드를 읽어요. 초기화는 초기값을 되돌리고, 제출 결과는 애플리케이션이 직접 지워요.',
+      },
+      dart: {
+        en: String.raw`TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      const TRTextField(
+        name: 'rack',
+        label: 'Rack name',
+        initialValue: 'rack-alpha',
+      ),
+      Wrap(
+        spacing: TRSpacing.small,
+        runSpacing: TRSpacing.small,
+        children: [
+          TRButton(
+            onPressed: () {
+              final values = formKey.currentState!.save();
+              submit(values['rack']?.toString() ?? '');
+            },
+            child: const Text('Submit rack'),
+          ),
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () {
+              formKey.currentState!.reset();
+              submit('');
+            },
+            child: const Text('Reset form'),
+          ),
+        ],
+      ),
+    ],
+  ),
+)`,
+        ja: String.raw`TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      const TRTextField(
+        name: 'rack',
+        label: 'ラック名',
+        initialValue: 'rack-alpha',
+      ),
+      Wrap(
+        spacing: TRSpacing.small,
+        runSpacing: TRSpacing.small,
+        children: [
+          TRButton(
+            onPressed: () {
+              final values = formKey.currentState!.save();
+              submit(values['rack']?.toString() ?? '');
+            },
+            child: const Text('ラックを送信'),
+          ),
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () {
+              formKey.currentState!.reset();
+              submit('');
+            },
+            child: const Text('フォームをリセット'),
+          ),
+        ],
+      ),
+    ],
+  ),
+)`,
+        ko: String.raw`TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      const TRTextField(
+        name: 'rack',
+        label: '랙 이름',
+        initialValue: 'rack-alpha',
+      ),
+      Wrap(
+        spacing: TRSpacing.small,
+        runSpacing: TRSpacing.small,
+        children: [
+          TRButton(
+            onPressed: () {
+              final values = formKey.currentState!.save();
+              submit(values['rack']?.toString() ?? '');
+            },
+            child: const Text('랙 제출'),
+          ),
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () {
+              formKey.currentState!.reset();
+              submit('');
+            },
+            child: const Text('폼 초기화'),
+          ),
+        ],
+      ),
+    ],
+  ),
+)`,
+      },
+    },
+    {
+      id: 'form-states',
+      title: {
+        en: 'Required submission and recovery',
+        ja: '必須送信と復旧',
+        ko: '필수 제출과 복구',
+      },
+      description: {
+        en: 'Submit while the field is empty to see the validator message, then enter a rack name and submit again. `validate()` gates the read of `save()`.',
+        ja: '空のまま送信すると検証メッセージが表示されます。ラック名を入力して再送信してください。`validate()` が `save()` の読み取りを制御します。',
+        ko: '비운 채로 제출하면 검증 메시지가 보이고, 랙 이름을 입력한 뒤 다시 제출하면 통과해요. `validate()`가 `save()` 읽기를 막아 줘요.',
+      },
+      dart: {
+        en: String.raw`TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: 'Rack name',
+        validator: (value) => (value ?? '').trim().isEmpty
+            ? 'Enter a rack name before saving.'
+            : null,
+      ),
+      TRButton(
+        onPressed: () {
+          final state = formKey.currentState!;
+          if (!state.validate()) return;
+          submit(state.save()['rack']?.toString() ?? '');
+        },
+        child: const Text('Save rack'),
+      ),
+    ],
+  ),
+)`,
+        ja: String.raw`TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: 'ラック名',
+        validator: (value) => (value ?? '').trim().isEmpty
+            ? '保存する前にラック名を入力してください。'
+            : null,
+      ),
+      TRButton(
+        onPressed: () {
+          final state = formKey.currentState!;
+          if (!state.validate()) return;
+          submit(state.save()['rack']?.toString() ?? '');
+        },
+        child: const Text('ラックを保存'),
+      ),
+    ],
+  ),
+)`,
+        ko: String.raw`TRForm(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: '랙 이름',
+        validator: (value) => (value ?? '').trim().isEmpty
+            ? '저장하기 전에 랙 이름을 입력하세요.'
+            : null,
+      ),
+      TRButton(
+        onPressed: () {
+          final state = formKey.currentState!;
+          if (!state.validate()) return;
+          submit(state.save()['rack']?.toString() ?? '');
+        },
+        child: const Text('랙 저장'),
+      ),
+    ],
+  ),
+)`,
+      },
+    },
+    {
+      id: 'form-server-errors',
+      title: {
+        en: 'Server error and recovery',
+        ja: 'サーバーエラーと復旧',
+        ko: '서버 오류와 복구',
+      },
+      description: {
+        en: 'A rejected name arrives back as `errorText` instead of a validator. `onChanged` clears the error while the reader edits, and `reset()` restores the field while the application clears its own result.',
+        ja: '拒否された名前は検証関数ではなく `errorText` として戻ります。編集中は `onChanged` がエラーを消し、`reset()` はフィールドを戻します。結果はアプリケーション側でクリアします。',
+        ko: '거절된 이름은 검증기 대신 `errorText`로 돌아와요. 입력하는 동안 `onChanged`가 오류를 지우고, `reset()`은 필드를 되돌리며 결과는 애플리케이션이 직접 지워요.',
+      },
+      dart: {
+        en: String.raw`TRForm(
+  key: formKey,
+  onChanged: (_) => clearServerError(),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: 'Rack name',
+        initialValue: 'rack-alpha',
+        helperText: 'Use a name that is not already registered.',
+        errorText: serverError,
+      ),
+      Wrap(
+        spacing: TRSpacing.small,
+        runSpacing: TRSpacing.small,
+        children: [
+          TRButton(
+            onPressed: () {
+              final rack =
+                  formKey.currentState!.save()['rack']?.toString() ?? '';
+              if (rack.toLowerCase() == 'rack-alpha') {
+                rejectRack('Rack Alpha already exists.');
+                return;
+              }
+              createRack(rack);
+            },
+            child: const Text('Create rack'),
+          ),
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () {
+              formKey.currentState!.reset();
+              clearServerError();
+            },
+            child: const Text('Reset form'),
+          ),
+        ],
+      ),
+    ],
+  ),
+)`,
+        ja: String.raw`TRForm(
+  key: formKey,
+  onChanged: (_) => clearServerError(),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: 'ラック名',
+        initialValue: 'rack-alpha',
+        helperText: 'まだ登録されていない名前を使ってください。',
+        errorText: serverError,
+      ),
+      Wrap(
+        spacing: TRSpacing.small,
+        runSpacing: TRSpacing.small,
+        children: [
+          TRButton(
+            onPressed: () {
+              final rack =
+                  formKey.currentState!.save()['rack']?.toString() ?? '';
+              if (rack.toLowerCase() == 'rack-alpha') {
+                rejectRack('Rack Alpha はすでに存在します。');
+                return;
+              }
+              createRack(rack);
+            },
+            child: const Text('ラックを作成'),
+          ),
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () {
+              formKey.currentState!.reset();
+              clearServerError();
+            },
+            child: const Text('フォームをリセット'),
+          ),
+        ],
+      ),
+    ],
+  ),
+)`,
+        ko: String.raw`TRForm(
+  key: formKey,
+  onChanged: (_) => clearServerError(),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: '랙 이름',
+        initialValue: 'rack-alpha',
+        helperText: '아직 등록되지 않은 이름을 사용하세요.',
+        errorText: serverError,
+      ),
+      Wrap(
+        spacing: TRSpacing.small,
+        runSpacing: TRSpacing.small,
+        children: [
+          TRButton(
+            onPressed: () {
+              final rack =
+                  formKey.currentState!.save()['rack']?.toString() ?? '';
+              if (rack.toLowerCase() == 'rack-alpha') {
+                rejectRack('Rack Alpha는 이미 있어요.');
+                return;
+              }
+              createRack(rack);
+            },
+            child: const Text('랙 만들기'),
+          ),
+          TRButton(
+            appearance: TRAppearance.outline,
+            onPressed: () {
+              formKey.currentState!.reset();
+              clearServerError();
+            },
+            child: const Text('폼 초기화'),
+          ),
+        ],
+      ),
+    ],
+  ),
+)`,
+      },
+    },
+    {
+      id: 'form-actions',
+      title: {
+        en: 'Live snapshot and granular validation',
+        ja: 'ライブスナップショットと詳細な検証',
+        ko: '실시간 스냅샷과 세부 검증',
+      },
+      description: {
+        en: 'Type to watch `onChanged` report the snapshot. The disabled region field stays out of `TRFormValues`, and `validateGranularly()` validates without synthesizing a submit.',
+        ja: '入力すると `onChanged` がスナップショットを報告します。無効なリージョンフィールドは `TRFormValues` に含まれず、`validateGranularly()` は送信を発生させずに検証します。',
+        ko: '입력하면 `onChanged`가 스냅샷을 알려줘요. 비활성 리전 필드는 `TRFormValues`에서 빠지고, `validateGranularly()`는 제출을 만들지 않고 검증해요.',
+      },
+      dart: {
+        en: String.raw`TRForm(
+  key: formKey,
+  onChanged: (values) => showSnapshot(values.toMap()),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: 'Rack name',
+        validator: (value) =>
+            (value ?? '').trim().isEmpty ? 'Enter a rack name.' : null,
+      ),
+      const TRTextField(
+        name: 'region',
+        label: 'Region',
+        initialValue: 'ap-northeast-2',
+        enabled: false,
+      ),
+      TRButton(
+        onPressed: () =>
+            showValid(formKey.currentState!.validateGranularly()),
+        child: const Text('Validate all'),
+      ),
+    ],
+  ),
+)`,
+        ja: String.raw`TRForm(
+  key: formKey,
+  onChanged: (values) => showSnapshot(values.toMap()),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: 'ラック名',
+        validator: (value) =>
+            (value ?? '').trim().isEmpty ? 'ラック名を入力してください。' : null,
+      ),
+      const TRTextField(
+        name: 'region',
+        label: 'リージョン',
+        initialValue: 'ap-northeast-2',
+        enabled: false,
+      ),
+      TRButton(
+        onPressed: () =>
+            showValid(formKey.currentState!.validateGranularly()),
+        child: const Text('すべて検証'),
+      ),
+    ],
+  ),
+)`,
+        ko: String.raw`TRForm(
+  key: formKey,
+  onChanged: (values) => showSnapshot(values.toMap()),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TRTextField(
+        name: 'rack',
+        label: '랙 이름',
+        validator: (value) =>
+            (value ?? '').trim().isEmpty ? '랙 이름을 입력하세요.' : null,
+      ),
+      const TRTextField(
+        name: 'region',
+        label: '리전',
+        initialValue: 'ap-northeast-2',
+        enabled: false,
+      ),
+      TRButton(
+        onPressed: () =>
+            showValid(formKey.currentState!.validateGranularly()),
+        child: const Text('모두 검증'),
+      ),
+    ],
+  ),
+)`,
+      },
+    },
+  ],
   menu: [
     {
       id: 'menu-settings',

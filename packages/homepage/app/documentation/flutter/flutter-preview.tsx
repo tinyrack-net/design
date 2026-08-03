@@ -1,15 +1,6 @@
 'use client';
 
-import { TRButton } from '@tinyrack/ui/components/button';
-import { ExternalLinkIcon, RefreshCwIcon } from 'lucide-react';
-import {
-  createElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type DemoArgs, usePlaygroundArgs } from '../../playground/demo.js';
 import { demoCopy, useDemoLocale } from '../shared/demo-locale.js';
 
@@ -121,8 +112,6 @@ function FlutterFrame({
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const requestIdRef = useRef(0);
-  const [attempt, setAttempt] = useState(0);
-  const [loaded, setLoaded] = useState(false);
   const [ready, setReady] = useState(false);
   const [runtimeError, setRuntimeError] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -221,92 +210,49 @@ function FlutterFrame({
     ja: 'Flutter プレビューを読み込んでいます',
     ko: 'Flutter 미리보기를 불러오는 중이에요',
   }[locale];
-  const openLabel = {
-    en: 'Open preview in a new window',
-    ja: 'プレビューを新しいウィンドウで開く',
-    ko: '새 창에서 미리보기 열기',
-  }[locale];
   const errorLabel = {
-    en: 'The Flutter preview reported an error. Retry the preview.',
-    ja: 'Flutter プレビューでエラーが発生しました。再試行してください。',
-    ko: 'Flutter 미리보기에서 오류가 발생했어요. 다시 시도해 주세요.',
+    en: 'The Flutter preview reported an error. Reload the page to try again.',
+    ja: 'Flutter プレビューでエラーが発生しました。ページを再読み込みしてください。',
+    ko: 'Flutter 미리보기에서 오류가 발생했어요. 페이지를 새로고침해 주세요.',
   }[locale];
 
   return (
     <div
-      className={`grid h-full w-full min-w-0 grid-rows-[1fr_auto] bg-tinyrack-surface ${
+      className={`relative h-full w-full min-w-0 bg-tinyrack-surface ${
         component === 'app-shell' ? 'min-h-[22.5rem]' : 'min-h-64'
       }`}
       ref={containerRef}
       {...{ [containerAttr]: component }}
     >
-      <div
-        className={
-          component === 'app-shell' ? 'relative min-h-[22.5rem]' : 'relative min-h-64'
-        }
-      >
-        {!ready ? (
-          <div
-            aria-live="polite"
-            className="absolute inset-0 grid place-items-center text-tinyrack-sm text-tinyrack-text-muted"
-          >
-            {loadingLabel}
-          </div>
-        ) : null}
-        {runtimeError ? (
-          <div
-            className="absolute inset-0 grid place-items-center bg-tinyrack-surface px-6 text-center text-tinyrack-sm text-tinyrack-danger"
-            role="alert"
-          >
-            {errorLabel}
-          </div>
-        ) : null}
-        {visible ? (
-          <iframe
-            className={`block h-full w-full border-0 bg-transparent ${
-              component === 'app-shell' ? 'min-h-[22.5rem]' : 'min-h-64'
-            }`}
-            key={attempt}
-            loading="lazy"
-            onLoad={() => setLoaded(true)}
-            ref={iframeRef}
-            sandbox="allow-same-origin allow-scripts"
-            src={src}
-            title={`${component} Flutter ${copy.preview}`}
-            {...{ [frameAttr]: '' }}
-          />
-        ) : null}
-      </div>
-      <div className="flex items-center justify-end gap-2 border-t border-tinyrack-border p-2">
-        {loaded && (!ready || runtimeError) ? (
-          <TRButton
-            appearance="ghost"
-            aria-label={copy.reset}
-            onClick={() => {
-              setAttempt((value) => value + 1);
-              setLoaded(false);
-              setReady(false);
-              setRuntimeError(false);
-            }}
-            uiSize="sm"
-          >
-            <RefreshCwIcon aria-hidden="true" className="h-4 w-4" />
-          </TRButton>
-        ) : null}
-        <TRButton
-          appearance="ghost"
-          aria-label={openLabel}
-          nativeButton={false}
-          render={createElement('a', {
-            href: src,
-            rel: 'noreferrer',
-            target: '_blank',
-          })}
-          uiSize="sm"
+      {!ready ? (
+        <div
+          aria-live="polite"
+          className="absolute inset-0 grid place-items-center text-tinyrack-sm text-tinyrack-text-muted"
         >
-          <ExternalLinkIcon aria-hidden="true" className="h-4 w-4" />
-        </TRButton>
-      </div>
+          {loadingLabel}
+        </div>
+      ) : null}
+      {runtimeError ? (
+        <div
+          className="absolute inset-0 grid place-items-center bg-tinyrack-surface px-6 text-center text-tinyrack-sm text-tinyrack-danger"
+          role="alert"
+        >
+          {errorLabel}
+        </div>
+      ) : null}
+      {visible ? (
+        <iframe
+          className={`block h-full w-full border-0 bg-transparent ${
+            component === 'app-shell' ? 'min-h-[22.5rem]' : 'min-h-64'
+          }`}
+          loading="lazy"
+          ref={iframeRef}
+          sandbox="allow-same-origin allow-scripts"
+          src={src}
+          title={`${component} Flutter ${copy.preview}`}
+          {...{ [frameAttr]: '' }}
+        />
+      ) : null}
     </div>
   );
 }
