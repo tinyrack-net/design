@@ -918,6 +918,7 @@ Map<String, Object?>? _validateArgs(
       'data' ||
       'errorText' ||
       'label' ||
+      'legend' ||
       'loadingLabel' ||
       'placeholder' ||
       'value' => value is String,
