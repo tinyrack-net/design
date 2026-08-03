@@ -327,6 +327,124 @@ class AccordionStates extends StatelessWidget {
 )`,
     },
   ],
+  'icon-button': [
+    {
+      id: 'icon-button-states',
+      title: { en: 'Action states', ja: '操作の状態', ko: '동작 상태' },
+      description: {
+        en: 'Loading replaces the icon with a spinner and uses loadingLabel as the temporary accessible name. A null onPressed keeps the button visible but inactive.',
+        ja: 'loading 中はアイコンをスピナーに置き換え、loadingLabel を一時的なアクセシブルな名前として使います。onPressed が null のボタンは表示されたまま無効になります。',
+        ko: 'loading 상태에서는 아이콘이 스피너로 바뀌고 loadingLabel이 임시 접근 가능한 이름이 돼요. onPressed가 null이면 버튼은 보이되 동작하지 않아요.',
+      },
+      dart: String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.small,
+  children: [
+    TRIconButton(
+      label: 'Add rack',
+      icon: const Icon(Icons.add),
+      onPressed: () {},
+    ),
+    TRIconButton(
+      label: 'Add rack',
+      loading: true,
+      loadingLabel: 'Adding rack',
+      icon: const Icon(Icons.add),
+      onPressed: () {},
+    ),
+    const TRIconButton(
+      label: 'Add rack',
+      icon: Icon(Icons.add),
+      onPressed: null,
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'icon-button-appearances',
+      title: { en: 'Appearance', ja: '外観', ko: '표현 방식' },
+      description: {
+        en: 'Choose solid for the strongest emphasis, outline for a visible boundary, and ghost for low-emphasis toolbar actions.',
+        ja: '最も強い強調には solid、境界を見せたい場合は outline、控えめなツールバー操作には ghost を選びます。',
+        ko: '가장 강한 강조에는 solid, 경계를 드러내야 할 때는 outline, 강조가 낮은 툴바 동작에는 ghost를 선택하세요.',
+      },
+      dart: String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.small,
+  children: [
+    for (final (appearance, label) in const [
+      (TRAppearance.solid, 'Solid settings'),
+      (TRAppearance.outline, 'Outline settings'),
+      (TRAppearance.ghost, 'Ghost settings'),
+    ])
+      TRIconButton(
+        appearance: appearance,
+        label: label,
+        icon: const Icon(Icons.settings),
+        onPressed: () {},
+      ),
+  ],
+)`,
+    },
+    {
+      id: 'icon-button-intents',
+      title: { en: 'Action intent', ja: '操作の意図', ko: '동작 의도' },
+      description: {
+        en: 'Use primary for the main action and danger only for destructive actions. Neutral is the default for ordinary toolbar controls.',
+        ja: '主要な操作には primary を、取り消せない操作にのみ danger を使います。通常のツールバー操作の既定値は neutral です。',
+        ko: '주요 동작에는 primary를, 되돌릴 수 없는 동작에만 danger를 사용하세요. 일반 툴바 컨트롤의 기본값은 neutral이에요.',
+      },
+      dart: String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.small,
+  children: [
+    TRIconButton(
+      label: 'Open settings',
+      icon: const Icon(Icons.settings),
+      onPressed: () {},
+    ),
+    TRIconButton(
+      intent: TRIntent.primary,
+      label: 'Add rack',
+      icon: const Icon(Icons.add),
+      onPressed: () {},
+    ),
+    TRIconButton(
+      intent: TRIntent.danger,
+      label: 'Delete rack',
+      icon: const Icon(Icons.delete_outline),
+      onPressed: () {},
+    ),
+  ],
+)`,
+    },
+    {
+      id: 'icon-button-sizes',
+      title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
+      description: {
+        en: 'Each size sets a square target and its icon size together. Match the size to the controls beside the button and keep an adequate target for touch input.',
+        ja: '各サイズが正方形のタップ領域とアイコンサイズをまとめて決めます。隣接するコントロールに合わせつつ、タッチ操作に十分な領域を確保してください。',
+        ko: '각 크기가 정사각형 터치 영역과 아이콘 크기를 함께 정해요. 옆에 놓인 컨트롤과 크기를 맞추되 터치 입력에 충분한 영역을 남기세요.',
+      },
+      dart: String.raw`Wrap(
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: TRSpacing.small,
+  children: [
+    for (final (size, label) in const [
+      (TRUiSize.sm, 'Small settings'),
+      (TRUiSize.md, 'Medium settings'),
+      (TRUiSize.lg, 'Large settings'),
+    ])
+      TRIconButton(
+        uiSize: size,
+        label: label,
+        icon: const Icon(Icons.settings),
+        onPressed: () {},
+      ),
+  ],
+)`,
+    },
+  ],
   alert: [
     {
       id: 'alert-variants',
