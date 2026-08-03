@@ -52,6 +52,13 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'otp-field-states': _otpStates,
   'otp-field-validation': _otpValidation,
   'otp-field-masked': _otpMasked,
+  'slider-basic': _sliderBasic,
+  'slider-sizes': _sliderSizes,
+  'slider-states': _sliderStates,
+  'slider-disabled': _sliderDisabled,
+  'slider-range': _sliderRange,
+  'slider-form': _sliderForm,
+  'slider-validation': _sliderValidation,
   'checkbox-states': _checkboxStates,
   'checkbox-sizes': _checkboxSizes,
   'checkbox-availability': _checkboxAvailability,
@@ -1279,6 +1286,215 @@ class _OtpMaskedExampleState extends State<_OtpMaskedExample> {
           child: Text(_pick(locale, 'Clear', '지우기', 'クリア')),
         ),
       ],
+    );
+  }
+}
+
+Widget _sliderBasic(BuildContext context, Locale locale) {
+  return SizedBox(
+    width: 320,
+    child: TRSlider(
+      defaultValue: 48,
+      label: _pick(locale, 'Volume', '볼륨', '音量'),
+    ),
+  );
+}
+
+Widget _sliderSizes(BuildContext context, Locale locale) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.large,
+    children: [
+      for (final uiSize in TRUiSize.values)
+        SizedBox(
+          width: 320,
+          child: TRSlider(
+            defaultValue: 48,
+            label:
+                '${uiSize.name.toUpperCase()} '
+                '${_pick(locale, 'volume', '볼륨', 'の音量')}',
+            uiSize: uiSize,
+          ),
+        ),
+    ],
+  );
+}
+
+Widget _sliderStates(BuildContext context, Locale locale) {
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.extraLarge,
+    children: [
+      SizedBox(
+        width: 240,
+        child: TRSlider(
+          defaultValue: 48,
+          label: _pick(locale, 'Horizontal volume', '가로 볼륨', '横向きの音量'),
+        ),
+      ),
+      SizedBox(
+        height: 220,
+        child: TRSlider(
+          defaultValue: 36,
+          label: _pick(locale, 'Vertical volume', '세로 볼륨', '縦向きの音量'),
+          vertical: true,
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _sliderDisabled(BuildContext context, Locale locale) {
+  return SizedBox(
+    width: 320,
+    child: TRSlider(
+      defaultValue: 82,
+      enabled: false,
+      label: _pick(locale, 'Disabled volume', '비활성 볼륨', '無効な音量'),
+    ),
+  );
+}
+
+Widget _sliderRange(BuildContext context, Locale locale) {
+  final label = _pick(locale, 'Maintenance window', '점검 시간대', 'メンテナンス時間帯');
+  return SizedBox(
+    width: 320,
+    child: TRRangeSlider(
+      defaultValue: const RangeValues(20, 80),
+      label: label,
+      labelBuilder: (value) => '${value.round()}%',
+      minGap: 10,
+      semanticLabel: _pick(
+        locale,
+        'Maintenance window, percent of the day',
+        '점검 시간대, 하루 중 비율',
+        'メンテナンス時間帯、1 日に占める割合',
+      ),
+    ),
+  );
+}
+
+Widget _sliderForm(BuildContext context, Locale locale) =>
+    _SliderFormExample(locale: locale);
+
+Widget _sliderValidation(BuildContext context, Locale locale) =>
+    _SliderValidationExample(locale: locale);
+
+class _SliderFormExample extends StatefulWidget {
+  const _SliderFormExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_SliderFormExample> createState() => _SliderFormExampleState();
+}
+
+class _SliderFormExampleState extends State<_SliderFormExample> {
+  final _formKey = GlobalKey<FormState>();
+  double? _saved;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return SizedBox(
+      width: 320,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.large,
+          children: [
+            TRSliderFormField(
+              initialValue: 48,
+              label: _pick(locale, 'Volume', '볼륨', '音量'),
+              onSaved: (value) => _saved = value,
+              onValueChange: (_) => setState(() => _saved = null),
+            ),
+            TRButton(
+              onPressed: () => setState(() => _formKey.currentState?.save()),
+              child: Text(_pick(locale, 'Save volume', '볼륨 저장', '音量を保存')),
+            ),
+            if (_saved != null)
+              TRText(
+                _pick(
+                  locale,
+                  'Saved volume ${_saved!.round()}.',
+                  '볼륨 ${_saved!.round()}(으)로 저장했어요.',
+                  '音量 ${_saved!.round()} を保存しました。',
+                ),
+                variant: TRTextVariant.bodySm,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SliderValidationExample extends StatefulWidget {
+  const _SliderValidationExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_SliderValidationExample> createState() =>
+      _SliderValidationExampleState();
+}
+
+class _SliderValidationExampleState extends State<_SliderValidationExample> {
+  final _formKey = GlobalKey<FormState>();
+  double? _reserved;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return SizedBox(
+      width: 320,
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.large,
+          children: [
+            TRSliderFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              initialValue: 30,
+              label: _pick(locale, 'Reserved capacity', '예약 용량', '予約容量'),
+              onSaved: (value) => _reserved = value,
+              onValueChange: (_) => setState(() => _reserved = null),
+              validator: (value) => (value ?? 0) < 60
+                  ? _pick(
+                      locale,
+                      'Increase reserved capacity to 60% or more.',
+                      '예약 용량을 60% 이상으로 올리세요.',
+                      '予約容量を 60% 以上に上げてください。',
+                    )
+                  : null,
+            ),
+            TRButton(
+              onPressed: () => setState(() {
+                if (_formKey.currentState?.validate() ?? false) {
+                  _formKey.currentState?.save();
+                }
+              }),
+              child: Text(_pick(locale, 'Reserve capacity', '용량 예약', '容量を予約')),
+            ),
+            if (_reserved != null)
+              TRText(
+                _pick(
+                  locale,
+                  'Reserved ${_reserved!.round()}% capacity.',
+                  '용량 ${_reserved!.round()}%를 예약했어요.',
+                  '容量 ${_reserved!.round()}% を予約しました。',
+                ),
+                variant: TRTextVariant.bodySm,
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

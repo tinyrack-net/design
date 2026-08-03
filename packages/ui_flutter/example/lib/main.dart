@@ -812,7 +812,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'sidebarMode',
   ],
   'drawer' => ['open', 'swipeDirection'],
-  'slider' => ['orientation'],
+  'slider' => ['disabled', 'label', 'orientation', 'uiSize'],
   'menu' => ['disabled', 'open'],
   'select' => ['disabled', 'errorText', 'open', 'readOnly', 'uiSize', 'value'],
   'icon-button' => [
@@ -1581,22 +1581,24 @@ class PreviewComponent extends StatelessWidget {
           ),
         ),
       ),
-      'slider' =>
-        args['orientation'] == 'vertical'
-            ? SizedBox(
-                key: measureKey,
-                height: 240,
-                child: const TRSlider(
-                  defaultValue: 40,
-                  label: 'Traffic',
-                  vertical: true,
-                ),
-              )
-            : SizedBox(
-                key: measureKey,
-                width: 320,
-                child: const TRSlider(defaultValue: 40, label: 'Traffic'),
-              ),
+      'slider' => SizedBox(
+        key: measureKey,
+        height: args['orientation'] == 'vertical' ? 240 : null,
+        width: args['orientation'] == 'vertical' ? null : 320,
+        child: TRSlider(
+          defaultValue: 40,
+          enabled: args['disabled'] != true,
+          label: args['label'] is String
+              ? args['label']! as String
+              : switch (locale) {
+                  'ko' => '트래픽',
+                  'ja' => 'トラフィック',
+                  _ => 'Traffic',
+                },
+          uiSize: size,
+          vertical: args['orientation'] == 'vertical',
+        ),
+      ),
       'toast' => SizedBox(
         width: 416,
         height: 220,

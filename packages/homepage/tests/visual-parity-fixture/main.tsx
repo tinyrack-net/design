@@ -1223,6 +1223,7 @@ function Fixture() {
                 ? { height: 240 }
                 : { width: 320 }
             }
+            uiSize={arg('uiSize', 'md') as 'sm' | 'md' | 'lg'}
           >
             <TRSlider.Label>Traffic</TRSlider.Label>
             <TRSlider.Value />

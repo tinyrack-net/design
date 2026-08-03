@@ -5,9 +5,24 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
+import '../../types.dart';
 
 /// Converts a slider value to its visible and semantic label.
 typedef TRSliderLabelBuilder = String Function(double value);
+
+/// The thumb diameter for each size on the shared control scale.
+double _sliderThumbSize(TRUiSize uiSize) => switch (uiSize) {
+  TRUiSize.sm => TRGeneratedSpacing.md,
+  TRUiSize.md => TRGeneratedSpacing.lg,
+  TRUiSize.lg => TRGeneratedSpacing.xl,
+};
+
+/// The cross-axis extent reserved for the track and thumb at each size.
+double _sliderControlExtent(TRUiSize uiSize) => switch (uiSize) {
+  TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
+  TRUiSize.md => TRGeneratedSpacing.xl,
+  TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+};
 
 // @tinyrack-preview slider
 /// A scalar horizontal or vertical slider with controlled and uncontrolled APIs.
@@ -15,6 +30,7 @@ class TRSlider extends StatefulWidget {
   const TRSlider({
     this.defaultValue = 0,
     this.enabled = true,
+    this.errorText,
     this.label,
     this.labelBuilder,
     this.max = 100,
@@ -22,6 +38,7 @@ class TRSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
+    this.uiSize = TRUiSize.md,
     this.vertical = false,
     super.key,
   }) : value = null,
@@ -31,6 +48,7 @@ class TRSlider extends StatefulWidget {
   const TRSlider.controlled({
     required this.value,
     this.enabled = true,
+    this.errorText,
     this.label,
     this.labelBuilder,
     this.max = 100,
@@ -38,6 +56,7 @@ class TRSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
+    this.uiSize = TRUiSize.md,
     this.vertical = false,
     super.key,
   }) : defaultValue = 0,
@@ -47,6 +66,7 @@ class TRSlider extends StatefulWidget {
   final double defaultValue;
   final double? value;
   final bool enabled;
+  final String? errorText;
   final String? label;
   final TRSliderLabelBuilder? labelBuilder;
   final double max;
@@ -54,6 +74,7 @@ class TRSlider extends StatefulWidget {
   final ValueChanged<double>? onValueChange;
   final String? semanticLabel;
   final double step;
+  final TRUiSize uiSize;
   final bool vertical;
   final bool _controlled;
 
@@ -79,12 +100,15 @@ class _TRSliderState extends State<TRSlider> {
       enabled: widget.enabled,
       max: widget.max,
       min: widget.min,
+      invalid: widget.errorText != null,
       onChanged: _change,
       step: widget.step,
+      uiSize: widget.uiSize,
       value: _effectiveValue,
       vertical: widget.vertical,
     );
     return _TRSliderFrame(
+      errorText: widget.errorText,
       label: widget.label,
       semanticLabel: widget.semanticLabel,
       valueLabel:
@@ -101,6 +125,7 @@ class TRRangeSlider extends StatefulWidget {
   const TRRangeSlider({
     this.defaultValue = const RangeValues(25, 75),
     this.enabled = true,
+    this.errorText,
     this.label,
     this.labelBuilder,
     this.max = 100,
@@ -109,6 +134,7 @@ class TRRangeSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
+    this.uiSize = TRUiSize.md,
     this.vertical = false,
     super.key,
   }) : value = null,
@@ -118,6 +144,7 @@ class TRRangeSlider extends StatefulWidget {
   const TRRangeSlider.controlled({
     required this.value,
     this.enabled = true,
+    this.errorText,
     this.label,
     this.labelBuilder,
     this.max = 100,
@@ -126,6 +153,7 @@ class TRRangeSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
+    this.uiSize = TRUiSize.md,
     this.vertical = false,
     super.key,
   }) : defaultValue = const RangeValues(25, 75),
@@ -135,6 +163,7 @@ class TRRangeSlider extends StatefulWidget {
   final RangeValues defaultValue;
   final RangeValues? value;
   final bool enabled;
+  final String? errorText;
   final String? label;
   final TRSliderLabelBuilder? labelBuilder;
   final double max;
@@ -143,6 +172,7 @@ class TRRangeSlider extends StatefulWidget {
   final ValueChanged<RangeValues>? onValueChange;
   final String? semanticLabel;
   final double step;
+  final TRUiSize uiSize;
   final bool vertical;
   final bool _controlled;
 
@@ -185,12 +215,16 @@ class _TRRangeSliderState extends State<TRRangeSlider> {
       enabled: widget.enabled,
       max: widget.max,
       min: widget.min,
+      invalid: widget.errorText != null,
+      minGap: widget.minGap,
       onChanged: _change,
       step: widget.step,
+      uiSize: widget.uiSize,
       values: value,
       vertical: widget.vertical,
     );
     return _TRSliderFrame(
+      errorText: widget.errorText,
       label: widget.label,
       semanticLabel: widget.semanticLabel,
       valueLabel: widget.labelBuilder == null
@@ -205,6 +239,7 @@ class _TRRangeSliderState extends State<TRRangeSlider> {
 class _TRSliderFrame extends StatelessWidget {
   const _TRSliderFrame({
     required this.child,
+    required this.errorText,
     required this.label,
     required this.semanticLabel,
     required this.valueLabel,
@@ -212,16 +247,48 @@ class _TRSliderFrame extends StatelessWidget {
   });
 
   final Widget child;
+  final String? errorText;
   final String? label;
   final String? semanticLabel;
   final String valueLabel;
   final bool vertical;
 
+  /// The danger-toned message rendered under the track, following the
+  /// supporting-text treatment `TRTextField` uses.
+  Widget _error(BuildContext context, String message) => Text(
+    message,
+    strutStyle: const StrutStyle(
+      fontFamily: TRGeneratedFontFamilies.body,
+      fontSize: TRGeneratedTypographySizes.xs,
+      forceStrutHeight: true,
+      height: TRGeneratedTypographyLineHeights.md,
+    ),
+    style: TextStyle(
+      color: context.tinyrackTheme.danger,
+      fontFamily: TRGeneratedFontFamilies.body,
+      fontSize: TRGeneratedTypographySizes.xs,
+      height: TRGeneratedTypographyLineHeights.md,
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
-    Widget result = Semantics(label: semanticLabel ?? label, child: child);
-    if (label == null) return result;
+    final accessibleName = semanticLabel ?? label;
+    // An empty wrapper would add a bare node above the control's own semantics,
+    // which hides the value and its increase/decrease actions from readers.
+    Widget result = accessibleName == null
+        ? child
+        : Semantics(label: accessibleName, child: child);
+    if (label == null) {
+      if (errorText == null) return result;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRGeneratedControlMetrics.smGap,
+        children: [result, _error(context, errorText!)],
+      );
+    }
     final heading = DefaultTextStyle(
       style: TextStyle(
         color: colors.text,
@@ -248,7 +315,7 @@ class _TRSliderFrame extends StatelessWidget {
       ),
     );
     if (vertical) {
-      return SizedBox(
+      final track = SizedBox(
         width: TRGeneratedLayerMetrics.sliderVerticalWidth,
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -272,12 +339,26 @@ class _TRSliderFrame extends StatelessWidget {
           },
         ),
       );
+      if (errorText == null) return track;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: TRGeneratedControlMetrics.smGap,
+        children: [
+          Flexible(child: track),
+          _error(context, errorText!),
+        ],
+      );
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       spacing: TRGeneratedSpacing.sm,
-      children: [heading, result],
+      children: [
+        heading,
+        result,
+        if (errorText case final errorText?) _error(context, errorText),
+      ],
     );
   }
 }
@@ -285,19 +366,23 @@ class _TRSliderFrame extends StatelessWidget {
 class _TRScalarSliderControl extends StatefulWidget {
   const _TRScalarSliderControl({
     required this.enabled,
+    required this.invalid,
     required this.max,
     required this.min,
     required this.onChanged,
     required this.step,
+    required this.uiSize,
     required this.value,
     required this.vertical,
   });
 
   final bool enabled;
+  final bool invalid;
   final double max;
   final double min;
   final ValueChanged<double> onChanged;
   final double step;
+  final TRUiSize uiSize;
   final double value;
   final bool vertical;
 
@@ -348,11 +433,10 @@ class _TRScalarSliderControlState extends State<_TRScalarSliderControl> {
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
     final ratio = (widget.value - widget.min) / (widget.max - widget.min);
+    final extent = _sliderControlExtent(widget.uiSize);
     return SizedBox(
-      height: widget.vertical
-          ? TRGeneratedMeasurements.measureMd
-          : TRGeneratedSpacing.xl,
-      width: widget.vertical ? TRGeneratedSpacing.xl : null,
+      height: widget.vertical ? TRGeneratedMeasurements.measureMd : extent,
+      width: widget.vertical ? extent : null,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final size = Size(constraints.maxWidth, constraints.maxHeight);
@@ -412,12 +496,13 @@ class _TRScalarSliderControlState extends State<_TRScalarSliderControl> {
                     : null,
                 child: CustomPaint(
                   painter: _TRSliderPainter(
-                    active: colors.primary,
+                    active: widget.invalid ? colors.danger : colors.primary,
                     inactive: colors.surfaceMuted,
                     focused: _focused,
                     focus: colors.focus,
                     ratios: [ratio],
                     surface: colors.surface,
+                    thumbSize: _sliderThumbSize(widget.uiSize),
                     vertical: widget.vertical,
                   ),
                 ),
@@ -433,19 +518,25 @@ class _TRScalarSliderControlState extends State<_TRScalarSliderControl> {
 class _TRRangeSliderControl extends StatefulWidget {
   const _TRRangeSliderControl({
     required this.enabled,
+    required this.invalid,
     required this.max,
     required this.min,
+    required this.minGap,
     required this.onChanged,
     required this.step,
+    required this.uiSize,
     required this.values,
     required this.vertical,
   });
 
   final bool enabled;
+  final bool invalid;
   final double max;
   final double min;
+  final double minGap;
   final ValueChanged<RangeValues> onChanged;
   final double step;
+  final TRUiSize uiSize;
   final RangeValues values;
   final bool vertical;
 
@@ -479,37 +570,78 @@ class _TRRangeSliderControlState extends State<_TRRangeSliderControl> {
 
   void _update(Offset position, Size size) {
     if (!widget.enabled) return;
-    final value = _valueFor(position, size);
-    widget.onChanged(
-      _movingStart
-          ? RangeValues(math.min(value, widget.values.end), widget.values.end)
-          : RangeValues(
-              widget.values.start,
-              math.max(value, widget.values.start),
-            ),
+    widget.onChanged(_valuesFor(_valueFor(position, size)));
+  }
+
+  /// Places [value] on the thumb the reader is currently driving. The driven
+  /// thumb absorbs the minimum gap so the other one stays where it was put.
+  RangeValues _valuesFor(double value) => _movingStart
+      ? RangeValues(
+          math.min(value, widget.values.end - widget.minGap),
+          widget.values.end,
+        )
+      : RangeValues(
+          widget.values.start,
+          math.max(value, widget.values.start + widget.minGap),
+        );
+
+  /// The active thumb moved by [direction] steps, snapped to the scale.
+  RangeValues _nudged(int direction) {
+    final current = _movingStart ? widget.values.start : widget.values.end;
+    return _valuesFor(
+      _snapSliderValue(
+        current + direction * widget.step,
+        widget.min,
+        widget.max,
+        widget.step,
+      ),
     );
   }
+
+  void _nudge(int direction) => widget.onChanged(_nudged(direction));
+
+  KeyEventResult _handleKey(FocusNode node, KeyEvent event) {
+    if (!widget.enabled || event is! KeyDownEvent) {
+      return KeyEventResult.ignored;
+    }
+    final direction = switch (event.logicalKey) {
+      LogicalKeyboardKey.arrowRight || LogicalKeyboardKey.arrowUp => 1,
+      LogicalKeyboardKey.arrowLeft || LogicalKeyboardKey.arrowDown => -1,
+      _ => 0,
+    };
+    if (direction == 0) return KeyEventResult.ignored;
+    _nudge(direction);
+    return KeyEventResult.handled;
+  }
+
+  String _label(RangeValues values) =>
+      '${_formatSliderValue(values.start)}–${_formatSliderValue(values.end)}';
 
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
     final extent = widget.max - widget.min;
+    final controlExtent = _sliderControlExtent(widget.uiSize);
     return SizedBox(
       height: widget.vertical
           ? TRGeneratedMeasurements.measureMd
-          : TRGeneratedSpacing.xl,
-      width: widget.vertical ? TRGeneratedSpacing.xl : null,
+          : controlExtent,
+      width: widget.vertical ? controlExtent : null,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final size = Size(constraints.maxWidth, constraints.maxHeight);
           return Semantics(
+            decreasedValue: widget.enabled ? _label(_nudged(-1)) : null,
             enabled: widget.enabled,
             focusable: true,
             focused: _focused,
-            value:
-                '${_formatSliderValue(widget.values.start)}–${_formatSliderValue(widget.values.end)}',
+            increasedValue: widget.enabled ? _label(_nudged(1)) : null,
+            onDecrease: widget.enabled ? () => _nudge(-1) : null,
+            onIncrease: widget.enabled ? () => _nudge(1) : null,
+            value: _label(widget.values),
             child: Focus(
               onFocusChange: (focused) => setState(() => _focused = focused),
+              onKeyEvent: _handleKey,
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onPanDown: widget.enabled
@@ -520,7 +652,7 @@ class _TRRangeSliderControlState extends State<_TRRangeSliderControl> {
                     : null,
                 child: CustomPaint(
                   painter: _TRSliderPainter(
-                    active: colors.primary,
+                    active: widget.invalid ? colors.danger : colors.primary,
                     inactive: colors.surfaceMuted,
                     focused: _focused,
                     focus: colors.focus,
@@ -529,6 +661,7 @@ class _TRRangeSliderControlState extends State<_TRRangeSliderControl> {
                       (widget.values.end - widget.min) / extent,
                     ],
                     surface: colors.surface,
+                    thumbSize: _sliderThumbSize(widget.uiSize),
                     vertical: widget.vertical,
                   ),
                 ),
@@ -549,6 +682,7 @@ class _TRSliderPainter extends CustomPainter {
     required this.focus,
     required this.ratios,
     required this.surface,
+    required this.thumbSize,
     required this.vertical,
   });
 
@@ -558,12 +692,13 @@ class _TRSliderPainter extends CustomPainter {
   final Color focus;
   final List<double> ratios;
   final Color surface;
+  final double thumbSize;
   final bool vertical;
 
   @override
   void paint(Canvas canvas, Size size) {
     const track = TRGeneratedLayerMetrics.sliderTrackThickness;
-    const thumb = TRGeneratedLayerMetrics.sliderThumbSize / 2 + 2;
+    final thumb = thumbSize / 2 + 2;
     final trackRect = vertical
         ? Rect.fromCenter(
             center: Offset(size.width / 2, size.height / 2),
@@ -628,6 +763,7 @@ class _TRSliderPainter extends CustomPainter {
       focused != oldDelegate.focused ||
       focus != oldDelegate.focus ||
       surface != oldDelegate.surface ||
+      thumbSize != oldDelegate.thumbSize ||
       vertical != oldDelegate.vertical ||
       !_listEquals(ratios, oldDelegate.ratios);
 }
@@ -657,25 +793,34 @@ class TRSliderFormField extends FormField<double> {
     super.autovalidateMode,
     super.enabled = true,
     String? label,
+    TRSliderLabelBuilder? labelBuilder,
     double max = 100,
     double min = 0,
     ValueChanged<double>? onValueChange,
     super.onSaved,
+    String? semanticLabel,
     double step = 1,
+    TRUiSize uiSize = TRUiSize.md,
     super.validator,
+    bool vertical = false,
     super.key,
   }) : super(
          builder: (field) => TRSlider.controlled(
            value: field.value ?? initialValue,
            enabled: enabled,
+           errorText: field.errorText,
            label: label,
+           labelBuilder: labelBuilder,
            max: max,
            min: min,
            onValueChange: (value) {
              field.didChange(value);
              onValueChange?.call(value);
            },
+           semanticLabel: semanticLabel,
            step: step,
+           uiSize: uiSize,
+           vertical: vertical,
          ),
        );
 }
@@ -687,19 +832,25 @@ class TRRangeSliderFormField extends FormField<RangeValues> {
     super.autovalidateMode,
     super.enabled = true,
     String? label,
+    TRSliderLabelBuilder? labelBuilder,
     double max = 100,
     double min = 0,
     double minGap = 0,
     ValueChanged<RangeValues>? onValueChange,
     super.onSaved,
+    String? semanticLabel,
     double step = 1,
+    TRUiSize uiSize = TRUiSize.md,
     super.validator,
+    bool vertical = false,
     super.key,
   }) : super(
          builder: (field) => TRRangeSlider.controlled(
            value: field.value ?? initialValue,
            enabled: enabled,
+           errorText: field.errorText,
            label: label,
+           labelBuilder: labelBuilder,
            max: max,
            min: min,
            minGap: minGap,
@@ -707,7 +858,10 @@ class TRRangeSliderFormField extends FormField<RangeValues> {
              field.didChange(value);
              onValueChange?.call(value);
            },
+           semanticLabel: semanticLabel,
            step: step,
+           uiSize: uiSize,
+           vertical: vertical,
          ),
        );
 }

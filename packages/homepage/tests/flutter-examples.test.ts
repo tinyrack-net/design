@@ -179,6 +179,7 @@ describe('Flutter documentation examples', () => {
       'form',
       'textarea',
       'combobox',
+      'slider',
     ] as const) {
       expect(flutterExamples[component]?.length ?? 0, component).toBeGreaterThan(0);
     }
@@ -322,6 +323,18 @@ describe('Flutter documentation examples', () => {
       'combobox-overlay',
       'combobox-keyboard',
       'combobox-form',
+    ]);
+  });
+
+  it('keeps the Slider examples aligned with the React documentation depth', () => {
+    expect(flutterExamples.slider?.map((entry) => entry.id)).toEqual([
+      'slider-basic',
+      'slider-sizes',
+      'slider-states',
+      'slider-disabled',
+      'slider-range',
+      'slider-form',
+      'slider-validation',
     ]);
   });
 

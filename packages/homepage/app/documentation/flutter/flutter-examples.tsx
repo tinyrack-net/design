@@ -974,6 +974,214 @@ const comboboxSources = (sourceEn: string) => ({
   ko: localizeExampleSource(sourceEn, comboboxKoLabels),
 });
 
+const sliderBasicSourceEn = String.raw`SizedBox(
+  width: 320,
+  child: TRSlider(defaultValue: 48, label: 'Volume'),
+)`;
+
+const sliderSizesSourceEn = String.raw`Column(
+  spacing: TRSpacing.large,
+  children: [
+    for (final uiSize in TRUiSize.values)
+      SizedBox(
+        width: 320,
+        child: TRSlider(
+          defaultValue: 48,
+          label: '${'$'}{uiSize.name.toUpperCase()} volume',
+          uiSize: uiSize,
+        ),
+      ),
+  ],
+)`;
+
+const sliderStatesSourceEn = String.raw`Row(
+  spacing: TRSpacing.extraLarge,
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    const SizedBox(
+      width: 240,
+      child: TRSlider(defaultValue: 48, label: 'Horizontal volume'),
+    ),
+    const SizedBox(
+      height: 220,
+      child: TRSlider(
+        defaultValue: 36,
+        label: 'Vertical volume',
+        vertical: true,
+      ),
+    ),
+  ],
+)`;
+
+const sliderDisabledSourceEn = String.raw`SizedBox(
+  width: 320,
+  child: TRSlider(
+    defaultValue: 82,
+    enabled: false,
+    label: 'Disabled volume',
+  ),
+)`;
+
+const sliderRangeSourceEn = String.raw`SizedBox(
+  width: 320,
+  child: TRRangeSlider(
+    defaultValue: const RangeValues(20, 80),
+    label: 'Maintenance window',
+    labelBuilder: (value) => '${'$'}{value.round()}%',
+    minGap: 10,
+    semanticLabel: 'Maintenance window, percent of the day',
+  ),
+)`;
+
+const sliderFormSourceEn = String.raw`class SliderForm extends StatefulWidget {
+  const SliderForm({super.key});
+
+  @override
+  State<SliderForm> createState() => _SliderFormState();
+}
+
+class _SliderFormState extends State<SliderForm> {
+  final _formKey = GlobalKey<FormState>();
+  double? _saved;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: TRSpacing.large,
+        children: [
+          SizedBox(
+            width: 320,
+            child: TRSliderFormField(
+              initialValue: 48,
+              label: 'Volume',
+              onSaved: (value) => _saved = value,
+              onValueChange: (_) => setState(() => _saved = null),
+            ),
+          ),
+          TRButton(
+            onPressed: () => setState(() => _formKey.currentState?.save()),
+            child: const Text('Save volume'),
+          ),
+          if (_saved != null)
+            TRText('Saved volume ${'$'}{_saved!.round()}.',
+                variant: TRTextVariant.bodySm),
+        ],
+      ),
+    );
+  }
+}`;
+
+const sliderValidationSourceEn = String.raw`class CapacityForm extends StatefulWidget {
+  const CapacityForm({super.key});
+
+  @override
+  State<CapacityForm> createState() => _CapacityFormState();
+}
+
+class _CapacityFormState extends State<CapacityForm> {
+  final _formKey = GlobalKey<FormState>();
+  double? _reserved;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: TRSpacing.large,
+        children: [
+          SizedBox(
+            width: 320,
+            child: TRSliderFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              initialValue: 30,
+              label: 'Reserved capacity',
+              onSaved: (value) => _reserved = value,
+              onValueChange: (_) => setState(() => _reserved = null),
+              validator: (value) => (value ?? 0) < 60
+                  ? 'Increase reserved capacity to 60% or more.'
+                  : null,
+            ),
+          ),
+          TRButton(
+            onPressed: () => setState(() {
+              if (_formKey.currentState?.validate() ?? false) {
+                _formKey.currentState?.save();
+              }
+            }),
+            child: const Text('Reserve capacity'),
+          ),
+          if (_reserved != null)
+            TRText('Reserved ${'$'}{_reserved!.round()}% capacity.',
+                variant: TRTextVariant.bodySm),
+        ],
+      ),
+    );
+  }
+}`;
+
+const sliderKoLabels = [
+  ['Increase reserved capacity to 60% or more.', '예약 용량을 60% 이상으로 올리세요.'],
+  ['Maintenance window, percent of the day', '점검 시간대, 하루 중 비율'],
+  [
+    `Reserved ${'$'}{_reserved!.round()}% capacity.`,
+    `용량 ${'$'}{_reserved!.round()}%를 예약했어요.`,
+  ],
+  [
+    `Saved volume ${'$'}{_saved!.round()}.`,
+    `볼륨 ${'$'}{_saved!.round()}(으)로 저장했어요.`,
+  ],
+  [
+    `${'$'}{uiSize.name.toUpperCase()} volume`,
+    `${'$'}{uiSize.name.toUpperCase()} 볼륨`,
+  ],
+  ['Reserved capacity', '예약 용량'],
+  ['Reserve capacity', '용량 예약'],
+  ['Maintenance window', '점검 시간대'],
+  ['Horizontal volume', '가로 볼륨'],
+  ['Disabled volume', '비활성 볼륨'],
+  ['Vertical volume', '세로 볼륨'],
+  ['Save volume', '볼륨 저장'],
+  ['Volume', '볼륨'],
+] as const;
+
+const sliderJaLabels = [
+  [
+    'Increase reserved capacity to 60% or more.',
+    '予約容量を 60% 以上に上げてください。',
+  ],
+  ['Maintenance window, percent of the day', 'メンテナンス時間帯、1 日に占める割合'],
+  [
+    `Reserved ${'$'}{_reserved!.round()}% capacity.`,
+    `容量 ${'$'}{_reserved!.round()}% を予約しました。`,
+  ],
+  [
+    `Saved volume ${'$'}{_saved!.round()}.`,
+    `音量 ${'$'}{_saved!.round()} を保存しました。`,
+  ],
+  [
+    `${'$'}{uiSize.name.toUpperCase()} volume`,
+    `${'$'}{uiSize.name.toUpperCase()} の音量`,
+  ],
+  ['Reserved capacity', '予約容量'],
+  ['Reserve capacity', '容量を予約'],
+  ['Maintenance window', 'メンテナンス時間帯'],
+  ['Horizontal volume', '横向きの音量'],
+  ['Disabled volume', '無効な音量'],
+  ['Vertical volume', '縦向きの音量'],
+  ['Save volume', '音量を保存'],
+  ['Volume', '音量'],
+] as const;
+
+const sliderSources = (sourceEn: string) => ({
+  en: sourceEn,
+  ja: localizeExampleSource(sourceEn, sliderJaLabels),
+  ko: localizeExampleSource(sourceEn, sliderKoLabels),
+});
+
 export const flutterExamples: Partial<
   Record<FlutterPreviewComponent, readonly FlutterExampleEntry[]>
 > = {
@@ -2429,6 +2637,82 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '`obscureText`는 각 자리를 점으로 바꾸고 값이 `Semantics`에 전달되지 않게 하므로, 입력 후에도 비밀로 남아야 하는 코드에만 쓰세요. `TROtpFieldController`는 다시 시도 동작에서 입력을 비우고, `separatorBuilder`는 `index` 슬롯 뒤의 간격을 대체해요. 비워 둘 자리에는 일반 `SizedBox`를 반환하세요.',
       },
       dart: otpSources(otpMaskedSourceEn),
+    },
+  ],
+  slider: [
+    {
+      id: 'slider-basic',
+      title: { en: 'Volume', ja: '音量', ko: '볼륨' },
+      description: {
+        en: 'The uncontrolled constructor owns the value. Give the slider a bounded width, since it fills the space its parent offers.',
+        ja: '非制御コンストラクタが値を保持します。スライダーは親から与えられた幅いっぱいに広がるため、幅を制約してください。',
+        ko: '비제어 생성자가 값을 소유해요. 슬라이더는 부모가 주는 너비를 채우므로 너비를 제약하세요.',
+      },
+      dart: sliderSources(sliderBasicSourceEn),
+    },
+    {
+      id: 'slider-sizes',
+      title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
+      description: {
+        en: '`uiSize` scales the thumb and the space around the track while the track thickness stays the same. Use `TRUiSize.sm` when the slider sits in a dense control surface.',
+        ja: '`uiSize` はトラックの太さを保ったまま、つまみとトラック周辺の領域を拡大縮小します。密度の高いコントロール面に置く場合は `TRUiSize.sm` を使ってください。',
+        ko: '`uiSize`는 트랙 두께는 그대로 두고 썸과 트랙 주변 공간의 크기를 조절해요. 밀도가 높은 컨트롤 영역에 놓을 때는 `TRUiSize.sm`을 쓰세요.',
+      },
+      dart: sliderSources(sliderSizesSourceEn),
+    },
+    {
+      id: 'slider-states',
+      title: { en: 'Orientations', ja: '向き', ko: '방향' },
+      description: {
+        en: 'A vertical slider puts the maximum at the top, takes a fixed width, and fills the height it is given. Constrain that height so the track has room.',
+        ja: '縦向きのスライダーは最大値を上端に置き、固定幅を取り、与えられた高さいっぱいに広がります。トラックの領域を確保するため、その高さを制約してください。',
+        ko: '세로 슬라이더는 최댓값을 위에 두고 고정 너비를 쓰며 주어진 높이를 채워요. 트랙이 들어갈 자리가 생기도록 높이를 제약하세요.',
+      },
+      dart: sliderSources(sliderStatesSourceEn),
+    },
+    {
+      id: 'slider-disabled',
+      title: { en: 'Disabled slider', ja: '無効なスライダー', ko: '비활성 슬라이더' },
+      description: {
+        en: 'Set `enabled: false` when the value should stay readable but cannot be changed. The increase and decrease actions leave the semantics node, so assistive technology no longer offers them.',
+        ja: '値は読めるままで変更はさせたくない場合は `enabled: false` を設定してください。セマンティクスノードから増減アクションが外れるため、支援技術もそれらを提示しなくなります。',
+        ko: '값은 계속 보이되 바꿀 수 없어야 한다면 `enabled: false`를 설정하세요. 시맨틱 노드에서 증가·감소 동작이 빠지므로 보조 기술도 더 이상 제공하지 않아요.',
+      },
+      dart: sliderSources(sliderDisabledSourceEn),
+    },
+    {
+      id: 'slider-range',
+      title: { en: 'Two-thumb range', ja: '2 つのつまみによる範囲', ko: '두 썸 범위' },
+      description: {
+        en: '`TRRangeSlider` carries a `RangeValues` and keeps the thumbs `minGap` apart in value units. `labelBuilder` formats each end for both the heading row and the semantics value, and the arrow keys drive whichever thumb the last pointer press selected.',
+        ja: '`TRRangeSlider` は `RangeValues` を扱い、2 つのつまみを値の単位で `minGap` 分だけ離して保ちます。`labelBuilder` は見出し行とセマンティクスの値の両方について各端を整形し、矢印キーは直前のポインター操作で選ばれたつまみを動かします。',
+        ko: '`TRRangeSlider`는 `RangeValues`를 다루고 두 썸을 값 단위로 `minGap`만큼 떨어뜨려 유지해요. `labelBuilder`는 제목 줄과 시맨틱 값 양쪽에서 각 끝을 포맷하고, 방향키는 마지막 포인터 입력이 고른 썸을 움직여요.',
+      },
+      dart: sliderSources(sliderRangeSourceEn),
+    },
+    {
+      id: 'slider-form',
+      title: { en: 'Form submission', ja: 'フォーム送信', ko: '폼 제출' },
+      description: {
+        en: '`TRSliderFormField` joins the surrounding `Form`, so `FormState.save` collects the value through `onSaved`. There is no `name` and no hidden input to serialize.',
+        ja: '`TRSliderFormField` は周囲の `Form` に参加するため、`FormState.save` が `onSaved` を通じて値を集めます。シリアライズ用の `name` や隠し入力はありません。',
+        ko: '`TRSliderFormField`는 감싸는 `Form`에 참여하므로 `FormState.save`가 `onSaved`로 값을 모아요. 직렬화를 위한 `name`이나 숨은 입력은 없어요.',
+      },
+      dart: sliderSources(sliderFormSourceEn),
+    },
+    {
+      id: 'slider-validation',
+      title: {
+        en: 'Field-owned validation',
+        ja: 'フィールドが持つ検証',
+        ko: '필드가 담당하는 검증',
+      },
+      description: {
+        en: 'Move the thumb below 60% to reveal the error, then raise it to clear the message. `AutovalidateMode.onUserInteraction` keeps the field quiet until the reader touches it, and `validate` guards `save` on submit.',
+        ja: 'つまみを 60% 未満に動かすとエラーが表示され、値を上げるとメッセージが消えます。`AutovalidateMode.onUserInteraction` は読み手が操作するまで何も表示せず、送信時は `validate` が `save` を守ります。',
+        ko: '썸을 60% 아래로 옮기면 오류가 나타나고, 값을 올리면 메시지가 사라져요. `AutovalidateMode.onUserInteraction`은 조작 전까지 조용히 있고, 제출할 때는 `validate`가 `save`를 막아줘요.',
+      },
+      dart: sliderSources(sliderValidationSourceEn),
     },
   ],
   'checkbox-group': [

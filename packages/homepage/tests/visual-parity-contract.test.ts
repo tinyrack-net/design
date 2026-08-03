@@ -19,7 +19,7 @@ describe('React and Flutter visual parity catalog', () => {
   it('preserves the full endpoint and motion execution counts', () => {
     expect(
       visualParityScenarios.length * parityLocales.length * parityThemes.length,
-    ).toBe(12_528);
+    ).toBe(12_552);
     expect(defaultMotionParityScenarios.length * parityThemes.length).toBe(430);
     expect(
       defaultMotionParityScenarios.length *
