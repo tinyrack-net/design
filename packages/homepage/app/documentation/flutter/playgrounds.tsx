@@ -256,7 +256,19 @@ export const comboboxPlayground = flutterPlayground('combobox', {}, {});
 export const contextMenuPlayground = flutterPlayground('context-menu', {}, {});
 export const drawerPlayground = flutterPlayground('drawer', {}, {});
 export const fileTreePlayground = flutterPlayground('file-tree', {}, {});
-export const formPlayground = flutterPlayground('form', {}, {});
+export const formPlayground = flutterPlayground(
+  'form',
+  { label: 'Rack name', required: true, submitLabel: 'Save' },
+  {
+    label: { control: 'text' },
+    required: { control: 'boolean' },
+    submitLabel: { control: 'text' },
+  },
+  {
+    ja: { label: 'ラック名', submitLabel: '保存' },
+    ko: { label: '랙 이름', submitLabel: '저장' },
+  },
+);
 export const menubarPlayground = flutterPlayground('menubar', {}, {});
 export const navigationMenuPlayground = flutterPlayground('navigation-menu', {}, {});
 export const numberFieldPlayground = flutterPlayground('number-field', {}, {});
