@@ -558,8 +558,21 @@ export const togglePlayground = flutterPlayground(
 
 export const toggleGroupPlayground = flutterPlayground(
   'toggle-group',
-  { multiple: false },
-  { multiple: { control: 'boolean' } },
+  {
+    disabled: false,
+    disabledItem: false,
+    loopFocus: true,
+    multiple: false,
+    orientation: 'horizontal',
+    selectedValues: ['start'],
+  },
+  {
+    disabled: { control: 'boolean' },
+    disabledItem: { control: 'boolean' },
+    loopFocus: { control: 'boolean' },
+    multiple: { control: 'boolean' },
+    orientation: { control: 'select', options: ['horizontal', 'vertical'] },
+  },
 );
 
 export const paginationPlayground = flutterPlayground(

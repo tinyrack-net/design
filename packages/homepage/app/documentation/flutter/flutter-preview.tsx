@@ -62,7 +62,15 @@ function matchingInteractionArgs(
     return matchingArgs(current, candidate);
   }
   if (
-    component === 'checkbox-group' &&
+    component === 'toggle' &&
+    entries.length === 1 &&
+    entries[0]?.[0] === 'pressed' &&
+    typeof entries[0][1] === 'boolean'
+  ) {
+    return { pressed: entries[0][1] };
+  }
+  if (
+    (component === 'checkbox-group' || component === 'toggle-group') &&
     entries.length === 1 &&
     entries[0]?.[0] === 'selectedValues' &&
     Array.isArray(entries[0][1]) &&

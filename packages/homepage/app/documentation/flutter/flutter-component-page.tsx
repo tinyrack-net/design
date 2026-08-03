@@ -1822,7 +1822,204 @@ class _InstallCommandState extends State<InstallCommand> {
       ko: '해제할 때까지 눌린 상태를 유지하는 2상태 컨트롤이에요.',
       ja: '解除するまで押下状態を保つ 2 状態のコントロールです。',
     },
-    usage: "TRToggle(\n  onPressedChange: setBold,\n  child: const Text('Bold'),\n)",
+    usage: {
+      en: String.raw`class FormattingBar extends StatefulWidget {
+  const FormattingBar({super.key});
+
+  @override
+  State<FormattingBar> createState() => _FormattingBarState();
+}
+
+class _FormattingBarState extends State<FormattingBar> {
+  bool bold = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return TRToggle(
+      pressed: bold,
+      onPressedChange: (next) => setState(() => bold = next),
+      child: const Text('Bold'),
+    );
+  }
+}`,
+      ko: String.raw`class FormattingBar extends StatefulWidget {
+  const FormattingBar({super.key});
+
+  @override
+  State<FormattingBar> createState() => _FormattingBarState();
+}
+
+class _FormattingBarState extends State<FormattingBar> {
+  bool bold = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return TRToggle(
+      pressed: bold,
+      onPressedChange: (next) => setState(() => bold = next),
+      child: const Text('굵게'),
+    );
+  }
+}`,
+      ja: String.raw`class FormattingBar extends StatefulWidget {
+  const FormattingBar({super.key});
+
+  @override
+  State<FormattingBar> createState() => _FormattingBarState();
+}
+
+class _FormattingBarState extends State<FormattingBar> {
+  bool bold = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return TRToggle(
+      pressed: bold,
+      onPressedChange: (next) => setState(() => bold = next),
+      child: const Text('太字'),
+    );
+  }
+}`,
+    },
+    contractRows: [
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: 'Pass `pressed` to control the state, or leave it `null` and start from `defaultPressed`, which is `false`. `onPressedChange` reports the next value in both cases.',
+          ko: '`pressed`를 넘기면 상태를 직접 제어하고, 넘기지 않으면 `false`인 `defaultPressed`에서 시작해 스스로 관리해요. 두 방식 모두 `onPressedChange`로 다음 값을 알려줘요.',
+          ja: '`pressed` を渡すと状態を制御でき、渡さない場合は `false` の `defaultPressed` から自身で管理します。どちらでも `onPressedChange` が次の値を通知します。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: '`disabled` blocks taps and keyboard activation and applies the disabled opacity token. The pressed appearance stays visible.',
+          ko: '`disabled`는 탭과 키보드 조작을 막고 비활성 불투명도 토큰을 적용해요. 눌린 모습은 그대로 보여요.',
+          ja: '`disabled` はタップとキーボード操作を無効にし、無効時の不透明度トークンを適用します。押下時の見た目は保たれます。',
+        },
+      },
+      {
+        axis: { en: 'Label', ko: '레이블', ja: 'ラベル' },
+        choices: {
+          en: '`child` is required and provides the visible, accessible name. Keep it short enough to read at every size.',
+          ko: '`child`는 필수이고 눈에 보이면서 접근 가능한 이름이 돼요. 어떤 크기에서도 읽히도록 짧게 쓰세요.',
+          ja: '`child` は必須で、表示されるアクセシブルな名前になります。どのサイズでも読めるよう短くしてください。',
+        },
+      },
+      {
+        axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
+        choices: {
+          en: '`uiSize` accepts `sm`, `md`, and `lg`; the default is `md`. Each size sets height, inline padding, and text size from the shared control metrics.',
+          ko: '`uiSize`는 `sm`, `md`, `lg`를 받고 기본값은 `md`예요. 각 크기는 공통 컨트롤 지표에서 높이와 좌우 여백, 글자 크기를 함께 정해요.',
+          ja: '`uiSize` は `sm`、`md`、`lg` を受け取り、既定値は `md` です。各サイズは共通のコントロール指標から高さ・左右の余白・文字サイズを決めます。',
+        },
+      },
+      {
+        axis: { en: 'Grouping', ko: '그룹', ja: 'グループ' },
+        choices: {
+          en: 'Inside a `TRToggleGroup`, a toggle with a `value` takes its pressed state from the group. `pressed` and `onPressedChange` are then ignored, and the group `disabled` adds to the item one.',
+          ko: '`TRToggleGroup` 안에서 `value`가 있는 토글은 눌림 상태를 그룹에서 가져와요. 이때 `pressed`와 `onPressedChange`는 쓰이지 않고, 그룹의 `disabled`가 항목의 `disabled`에 더해져요.',
+          ja: '`TRToggleGroup` の内側では、`value` を持つトグルは押下状態をグループから受け取ります。その場合 `pressed` と `onPressedChange` は使われず、グループの `disabled` が項目の `disabled` に加わります。',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'A toggle is a button that stays pressed, not a form field: it exposes `Semantics(button: true, toggled: pressed)` and submits no value. Enter activates on key down and Space on key up, matching native buttons. Use `TRCheckbox` or `TRSwitch` when the value has to travel with a form.',
+      ko: '토글은 눌린 상태를 유지하는 버튼이지 폼 필드가 아니에요. `Semantics(button: true, toggled: pressed)`를 노출하고 값을 제출하지 않아요. 네이티브 버튼처럼 Enter는 누를 때, Space는 뗄 때 동작해요. 값이 폼과 함께 전송돼야 한다면 `TRCheckbox`나 `TRSwitch`를 쓰세요.',
+      ja: 'トグルは押下状態を保つボタンであり、フォームフィールドではありません。`Semantics(button: true, toggled: pressed)` を公開し、値は送信しません。ネイティブのボタンと同じく Enter は押下時、Space は離した時に作動します。値をフォームで送る必要がある場合は `TRCheckbox` か `TRSwitch` を使ってください。',
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRToggle properties',
+          ko: 'TRToggle 속성',
+          ja: 'TRToggle のプロパティ',
+        },
+        rows: [
+          {
+            name: 'child',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Renders the label. Text styling comes from `uiSize` and the theme, so an explicit `TextStyle` is unnecessary.',
+              ko: '레이블을 렌더링해요. 글자 스타일은 `uiSize`와 테마에서 오므로 `TextStyle`을 따로 지정하지 않아도 돼요.',
+              ja: 'ラベルを描画します。文字のスタイルは `uiSize` とテーマから決まるため、`TextStyle` の明示は不要です。',
+            },
+          },
+          {
+            name: 'pressed',
+            type: 'bool? · null',
+            purpose: {
+              en: 'Controls the pressed state. While it is non-null the widget never changes state on its own.',
+              ko: '눌림 상태를 제어해요. 값이 있으면 위젯이 스스로 상태를 바꾸지 않아요.',
+              ja: '押下状態を制御します。値がある間、ウィジェットは自分で状態を変えません。',
+            },
+          },
+          {
+            name: 'defaultPressed',
+            type: 'bool · false',
+            purpose: {
+              en: 'Sets the initial state of an uncontrolled toggle. It is ignored once `pressed` is provided.',
+              ko: '제어하지 않는 토글의 처음 상태를 정해요. `pressed`를 넘기면 쓰이지 않아요.',
+              ja: '制御しないトグルの初期状態を設定します。`pressed` を渡した場合は使われません。',
+            },
+          },
+          {
+            name: 'onPressedChange',
+            type: 'ValueChanged<bool>? · null',
+            purpose: {
+              en: 'Reports the next pressed value after a tap, Enter, or Space. There is no way to veto the change.',
+              ko: '탭이나 Enter, Space 이후의 다음 눌림 값을 알려줘요. 변경을 취소할 수단은 없어요.',
+              ja: 'タップや Enter、Space の後の次の押下値を通知します。変更を取り消す手段はありません。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool · false',
+            purpose: {
+              en: 'Removes pointer and keyboard activation and marks the toggle as disabled for assistive technology.',
+              ko: '포인터와 키보드 조작을 막고 보조 기술에 비활성 상태로 알려요.',
+              ja: 'ポインターとキーボードの操作を無効にし、支援技術に無効状態として伝えます。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Selects the `sm`, `md`, or `lg` control metrics.',
+              ko: '`sm`, `md`, `lg` 중 컨트롤 지표를 선택해요.',
+              ja: '`sm`、`md`、`lg` のコントロール指標を選びます。',
+            },
+          },
+          {
+            name: 'value',
+            type: 'String? · null',
+            purpose: {
+              en: 'Identifies the toggle inside a `TRToggleGroup`. Keep it stable and unique within the group.',
+              ko: '`TRToggleGroup` 안에서 토글을 식별해요. 그룹 안에서 고유하고 변하지 않는 값을 쓰세요.',
+              ja: '`TRToggleGroup` 内でトグルを識別します。グループ内で一意かつ変化しない値にしてください。',
+            },
+          },
+          {
+            name: 'focusNode',
+            type: 'FocusNode? · null',
+            purpose: {
+              en: 'Takes over focus handling. Without one the toggle creates and disposes its own node, or borrows the node its group manages.',
+              ko: '포커스 처리를 넘겨받아요. 넘기지 않으면 토글이 직접 노드를 만들고 정리하거나, 그룹이 관리하는 노드를 빌려 써요.',
+              ja: 'フォーカス処理を引き受けます。渡さない場合はトグルが自身のノードを生成・破棄するか、グループが管理するノードを利用します。',
+            },
+          },
+          {
+            name: 'autofocus',
+            type: 'bool · false',
+            purpose: {
+              en: 'Requests focus when the toggle first appears. Use it at most once per screen.',
+              ko: '토글이 처음 나타날 때 포커스를 요청해요. 한 화면에서 한 번만 쓰세요.',
+              ja: 'トグルが最初に表示された時にフォーカスを要求します。1 画面につき 1 か所までにしてください。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'toggle-group': {
     title: 'ToggleGroup',
@@ -1831,8 +2028,207 @@ class _InstallCommandState extends State<InstallCommand> {
       ko: '값 기준으로 단일 또는 다중 눌림 토글을 관리해요.',
       ja: '値に基づいて単一または複数の押下トグルを管理します。',
     },
-    usage:
-      "TRToggleGroup(\n  onValueChange: setAlignment,\n  children: const [\n    TRToggle(value: 'start', child: Text('Start')),\n    TRToggle(value: 'end', child: Text('End')),\n  ],\n)",
+    usage: {
+      en: String.raw`class AlignmentBar extends StatefulWidget {
+  const AlignmentBar({super.key});
+
+  @override
+  State<AlignmentBar> createState() => _AlignmentBarState();
+}
+
+class _AlignmentBarState extends State<AlignmentBar> {
+  List<String> alignment = const ['start'];
+
+  @override
+  Widget build(BuildContext context) {
+    return TRToggleGroup(
+      value: alignment,
+      onValueChange: (next) => setState(() => alignment = next),
+      children: const [
+        TRToggle(value: 'start', child: Text('Start')),
+        TRToggle(value: 'center', child: Text('Center')),
+        TRToggle(value: 'end', child: Text('End')),
+      ],
+    );
+  }
+}`,
+      ko: String.raw`class AlignmentBar extends StatefulWidget {
+  const AlignmentBar({super.key});
+
+  @override
+  State<AlignmentBar> createState() => _AlignmentBarState();
+}
+
+class _AlignmentBarState extends State<AlignmentBar> {
+  List<String> alignment = const ['start'];
+
+  @override
+  Widget build(BuildContext context) {
+    return TRToggleGroup(
+      value: alignment,
+      onValueChange: (next) => setState(() => alignment = next),
+      children: const [
+        TRToggle(value: 'start', child: Text('시작')),
+        TRToggle(value: 'center', child: Text('가운데')),
+        TRToggle(value: 'end', child: Text('끝')),
+      ],
+    );
+  }
+}`,
+      ja: String.raw`class AlignmentBar extends StatefulWidget {
+  const AlignmentBar({super.key});
+
+  @override
+  State<AlignmentBar> createState() => _AlignmentBarState();
+}
+
+class _AlignmentBarState extends State<AlignmentBar> {
+  List<String> alignment = const ['start'];
+
+  @override
+  Widget build(BuildContext context) {
+    return TRToggleGroup(
+      value: alignment,
+      onValueChange: (next) => setState(() => alignment = next),
+      children: const [
+        TRToggle(value: 'start', child: Text('先頭')),
+        TRToggle(value: 'center', child: Text('中央')),
+        TRToggle(value: 'end', child: Text('末尾')),
+      ],
+    );
+  }
+}`,
+    },
+    contractRows: [
+      {
+        axis: { en: 'Selection', ko: '선택', ja: '選択' },
+        choices: {
+          en: 'One value at most by default, and tapping the selected item clears the group. `multiple` lets every item toggle independently.',
+          ko: '기본값은 최대 한 개이고, 선택된 항목을 다시 누르면 선택이 비워져요. `multiple`을 켜면 각 항목을 따로 켜고 끌 수 있어요.',
+          ja: '既定では最大 1 つで、選択中の項目をもう一度押すと選択が解除されます。`multiple` を有効にすると各項目を個別に切り替えられます。',
+        },
+      },
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: 'Pass `value` to control the selection, or leave it `null` and start from `defaultValue`. Both are `List<String>`, and the default is empty.',
+          ko: '`value`를 넘기면 선택을 직접 제어하고, 넘기지 않으면 `defaultValue`에서 시작해요. 둘 다 `List<String>`이고 기본값은 비어 있어요.',
+          ja: '`value` を渡すと選択を制御でき、渡さない場合は `defaultValue` から始まります。どちらも `List<String>` で、既定は空です。',
+        },
+      },
+      {
+        axis: { en: 'Orientation', ko: '방향', ja: '方向' },
+        choices: {
+          en: '`orientation` takes a Flutter `Axis`; the default is `Axis.horizontal`. It sets both the layout direction and the arrow-key axis.',
+          ko: '`orientation`은 Flutter의 `Axis`를 받고 기본값은 `Axis.horizontal`이에요. 배치 방향과 방향키 축을 함께 정해요.',
+          ja: '`orientation` は Flutter の `Axis` を受け取り、既定値は `Axis.horizontal` です。レイアウトの向きと方向キーの軸をまとめて決めます。',
+        },
+      },
+      {
+        axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
+        choices: {
+          en: 'Tab reaches the group once and then the arrow keys along the orientation axis, plus Home and End, move between items. Focus wraps at the ends unless `loopFocus` is `false`, and disabled items are skipped.',
+          ko: 'Tab으로 그룹에 한 번 들어간 뒤에는 방향 축의 화살표 키와 Home, End로 항목 사이를 이동해요. `loopFocus`가 `false`가 아니면 양 끝에서 포커스가 순환하고, 비활성 항목은 건너뛰어요.',
+          ja: 'Tab でグループに入った後は、方向軸の矢印キーと Home・End で項目間を移動します。`loopFocus` が `false` でなければ端でフォーカスが循環し、無効な項目は飛ばされます。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: 'The group `disabled` turns off every item, and a single `TRToggle` can be disabled on its own.',
+          ko: '그룹의 `disabled`는 모든 항목을 끄고, 개별 `TRToggle`만 따로 끌 수도 있어요.',
+          ja: 'グループの `disabled` はすべての項目を無効にし、個々の `TRToggle` を単独で無効にすることもできます。',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'The group holds the selection and its children are public `TRToggle` widgets, so each item needs a stable, unique `value`. Like a single toggle the group submits no form value; use `TRCheckboxGroup` or `TRRadioGroup` when the selection has to travel with a form.',
+      ko: '그룹이 선택을 들고 있고 자식은 공개 위젯인 `TRToggle`이므로, 각 항목에는 고유하고 변하지 않는 `value`가 필요해요. 단일 토글과 마찬가지로 그룹도 폼 값을 제출하지 않으니, 선택이 폼과 함께 전송돼야 한다면 `TRCheckboxGroup`이나 `TRRadioGroup`을 쓰세요.',
+      ja: 'グループが選択を保持し、子は公開ウィジェットの `TRToggle` なので、各項目には一意で変化しない `value` が必要です。単一のトグルと同じくグループもフォーム値を送信しないため、選択をフォームで送る必要がある場合は `TRCheckboxGroup` か `TRRadioGroup` を使ってください。',
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRToggleGroup properties',
+          ko: 'TRToggleGroup 속성',
+          ja: 'TRToggleGroup のプロパティ',
+        },
+        rows: [
+          {
+            name: 'children',
+            type: 'List<TRToggle> · required',
+            purpose: {
+              en: 'Lists the items in visual and focus order. The type is `TRToggle`, so the group can read each item `value` and `disabled`.',
+              ko: '항목을 화면 순서이자 포커스 순서로 나열해요. 타입이 `TRToggle`이라 그룹이 각 항목의 `value`와 `disabled`를 읽을 수 있어요.',
+              ja: '項目を表示順かつフォーカス順に並べます。型が `TRToggle` なので、グループは各項目の `value` と `disabled` を読み取れます。',
+            },
+          },
+          {
+            name: 'value',
+            type: 'List<String>? · null',
+            purpose: {
+              en: 'Controls the selected values. While it is non-null the group never changes the selection on its own.',
+              ko: '선택된 값을 제어해요. 값이 있으면 그룹이 스스로 선택을 바꾸지 않아요.',
+              ja: '選択中の値を制御します。値がある間、グループは自分で選択を変えません。',
+            },
+          },
+          {
+            name: 'defaultValue',
+            type: 'List<String> · const []',
+            purpose: {
+              en: 'Sets the initial selection of an uncontrolled group. It is ignored once `value` is provided.',
+              ko: '제어하지 않는 그룹의 처음 선택을 정해요. `value`를 넘기면 쓰이지 않아요.',
+              ja: '制御しないグループの初期選択を設定します。`value` を渡した場合は使われません。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<List<String>>? · null',
+            purpose: {
+              en: 'Reports the next list after an item changes. There is no way to veto the change.',
+              ko: '항목이 바뀐 뒤의 다음 목록을 알려줘요. 변경을 취소할 수단은 없어요.',
+              ja: '項目が変わった後の次のリストを通知します。変更を取り消す手段はありません。',
+            },
+          },
+          {
+            name: 'multiple',
+            type: 'bool · false',
+            purpose: {
+              en: 'Allows each item to be toggled independently instead of keeping at most one value.',
+              ko: '값을 최대 하나만 두는 대신 각 항목을 독립적으로 켜고 끌 수 있게 해요.',
+              ja: '値を 1 つに保つ代わりに、各項目を独立して切り替えられるようにします。',
+            },
+          },
+          {
+            name: 'orientation',
+            type: 'Axis · Axis.horizontal',
+            purpose: {
+              en: 'Lays the items out along this axis and selects the arrow keys that move focus.',
+              ko: '이 축을 따라 항목을 배치하고, 포커스를 옮기는 화살표 키를 정해요.',
+              ja: 'この軸に沿って項目を並べ、フォーカスを移動する矢印キーを決めます。',
+            },
+          },
+          {
+            name: 'loopFocus',
+            type: 'bool · true',
+            purpose: {
+              en: 'Wraps arrow-key focus at the first and last enabled item. Set it to `false` to stop at the ends.',
+              ko: '처음과 마지막 사용 가능 항목에서 방향키 포커스를 순환시켜요. `false`로 두면 양 끝에서 멈춰요.',
+              ja: '最初と最後の有効な項目で矢印キーのフォーカスを循環させます。`false` にすると端で止まります。',
+            },
+          },
+          {
+            name: 'disabled',
+            type: 'bool · false',
+            purpose: {
+              en: 'Disables every item in the group, on top of any item that is disabled on its own.',
+              ko: '개별로 비활성인 항목과 더해, 그룹의 모든 항목을 비활성으로 만들어요.',
+              ja: '個別に無効な項目に加えて、グループのすべての項目を無効にします。',
+            },
+          },
+        ],
+      },
+    ],
   },
   alert: {
     title: 'Alert',

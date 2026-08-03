@@ -55,6 +55,12 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'checkbox-group-validation': _checkboxGroupValidation,
   'checkbox-group-parent': _checkboxGroupParent,
   'checkbox-group-form': _checkboxGroupForm,
+  'toggle-controlled': _toggleControlled,
+  'toggle-states': _toggleStates,
+  'toggle-sizes': _toggleSizes,
+  'toggle-group-controlled': _toggleGroupControlled,
+  'toggle-group-multiple': _toggleGroupMultiple,
+  'toggle-group-orientation': _toggleGroupOrientation,
   'form-basic': _formBasic,
   'form-states': _formStates,
   'form-server-errors': _formServerErrors,
@@ -962,6 +968,240 @@ Widget _checkboxSample({
         readOnly: readOnly,
         semanticLabel: label,
         uiSize: uiSize,
+      ),
+    ],
+  );
+}
+
+Widget _toggleControlled(BuildContext context, Locale locale) {
+  var pressed = false;
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRToggle(
+          pressed: pressed,
+          onPressedChange: (next) => setState(() => pressed = next),
+          child: Text(_pick(locale, 'Bold', '굵게', '太字')),
+        ),
+        TRText(
+          pressed
+              ? _pick(locale, 'Bold: on', '굵게: 켬', '太字: オン')
+              : _pick(locale, 'Bold: off', '굵게: 끔', '太字: オフ'),
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _toggleSample({
+  required String caption,
+  required String label,
+  bool defaultPressed = false,
+  bool disabled = false,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.extraSmall,
+    children: [
+      TRText(caption, variant: TRTextVariant.label),
+      TRToggle(
+        defaultPressed: defaultPressed,
+        disabled: disabled,
+        child: Text(label),
+      ),
+    ],
+  );
+}
+
+Widget _toggleStates(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.start,
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      _toggleSample(
+        caption: _pick(locale, 'Enabled · Off', '사용 가능 · 끔', '有効 · オフ'),
+        label: _pick(locale, 'Bold', '굵게', '太字'),
+      ),
+      _toggleSample(
+        caption: _pick(locale, 'Enabled · On', '사용 가능 · 켬', '有効 · オン'),
+        defaultPressed: true,
+        label: _pick(locale, 'Italic', '기울임', '斜体'),
+      ),
+      _toggleSample(
+        caption: _pick(locale, 'Disabled · Off', '사용 불가 · 끔', '無効 · オフ'),
+        disabled: true,
+        label: _pick(locale, 'Underline', '밑줄', '下線'),
+      ),
+      _toggleSample(
+        caption: _pick(locale, 'Disabled · On', '사용 불가 · 켬', '無効 · オン'),
+        defaultPressed: true,
+        disabled: true,
+        label: _pick(locale, 'Strikethrough', '취소선', '取り消し線'),
+      ),
+    ],
+  );
+}
+
+Widget _toggleSizes(BuildContext context, Locale locale) {
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.center,
+    spacing: TRSpacing.small,
+    runSpacing: TRSpacing.small,
+    children: [
+      for (final (size, label) in [
+        (TRUiSize.sm, _pick(locale, 'Small', '작게', '小')),
+        (TRUiSize.md, _pick(locale, 'Medium', '보통', '中')),
+        (TRUiSize.lg, _pick(locale, 'Large', '크게', '大')),
+      ])
+        TRToggle(uiSize: size, child: Text(label)),
+    ],
+  );
+}
+
+Widget _toggleGroupControlled(BuildContext context, Locale locale) {
+  var value = const ['start'];
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRToggleGroup(
+          value: value,
+          onValueChange: (next) => setState(() => value = next),
+          children: [
+            TRToggle(
+              value: 'start',
+              child: Text(_pick(locale, 'Start', '시작', '先頭')),
+            ),
+            TRToggle(
+              value: 'center',
+              child: Text(_pick(locale, 'Center', '가운데', '中央')),
+            ),
+            TRToggle(
+              value: 'end',
+              child: Text(_pick(locale, 'End', '끝', '末尾')),
+            ),
+          ],
+        ),
+        TRText(
+          value.isEmpty
+              ? _pick(locale, 'Alignment: none', '정렬: 없음', '配置: なし')
+              : _pick(
+                  locale,
+                  'Alignment: ${value.join(', ')}',
+                  '정렬: ${value.join(', ')}',
+                  '配置: ${value.join(', ')}',
+                ),
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _toggleGroupMultiple(BuildContext context, Locale locale) {
+  var value = const ['bold', 'underline'];
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRToggleGroup(
+          multiple: true,
+          value: value,
+          onValueChange: (next) => setState(() => value = next),
+          children: [
+            TRToggle(
+              value: 'bold',
+              child: Text(_pick(locale, 'Bold', '굵게', '太字')),
+            ),
+            TRToggle(
+              value: 'italic',
+              child: Text(_pick(locale, 'Italic', '기울임', '斜体')),
+            ),
+            TRToggle(
+              value: 'underline',
+              child: Text(_pick(locale, 'Underline', '밑줄', '下線')),
+            ),
+          ],
+        ),
+        TRText(
+          value.isEmpty
+              ? _pick(locale, 'Formatting: none', '서식: 없음', '書式: なし')
+              : _pick(
+                  locale,
+                  'Formatting: ${value.join(', ')}',
+                  '서식: ${value.join(', ')}',
+                  '書式: ${value.join(', ')}',
+                ),
+          variant: TRTextVariant.bodySm,
+          color: TRTextColor.muted,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _toggleGroupOrientation(BuildContext context, Locale locale) {
+  Widget group({required String caption, bool disabled = false}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.small,
+      children: [
+        TRText(caption, variant: TRTextVariant.label),
+        TRToggleGroup(
+          defaultValue: const ['top'],
+          disabled: disabled,
+          loopFocus: false,
+          orientation: Axis.vertical,
+          children: [
+            TRToggle(value: 'top', child: Text(_pick(locale, 'Top', '위', '上'))),
+            TRToggle(
+              value: 'middle',
+              child: Text(_pick(locale, 'Middle', '가운데', '中央')),
+            ),
+            TRToggle(
+              disabled: !disabled,
+              value: 'bottom',
+              child: Text(
+                disabled
+                    ? _pick(locale, 'Bottom', '아래', '下')
+                    : _pick(
+                        locale,
+                        'Bottom unavailable',
+                        '아래 사용 불가',
+                        '下は選択できません',
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  return Wrap(
+    crossAxisAlignment: WrapCrossAlignment.start,
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      group(
+        caption: _pick(locale, 'Group disabled', '그룹 비활성화', 'グループを無効化'),
+        disabled: true,
+      ),
+      group(
+        caption: _pick(locale, 'One item disabled', '항목 하나 비활성화', '項目を 1 つ無効化'),
       ),
     ],
   );
