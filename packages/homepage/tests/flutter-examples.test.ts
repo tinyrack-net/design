@@ -165,6 +165,7 @@ describe('Flutter documentation examples', () => {
       'checkbox',
       'checkbox-group',
       'fieldset',
+      'otp-field',
       'menu',
       'select',
       'dialog',

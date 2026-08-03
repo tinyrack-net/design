@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
+import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 void main() {
@@ -354,6 +355,43 @@ void main() {
       expect(completed, '1234');
       expect(find.text('1'), findsOneWidget);
       expect(find.text('4'), findsOneWidget);
+    });
+
+    testWidgets('OTP uiSize scales slots along the control height scale', (
+      tester,
+    ) async {
+      for (final (size, expected) in const [
+        (TRUiSize.sm, TRGeneratedControlMetrics.smHeight),
+        (TRUiSize.md, TRGeneratedLayerMetrics.otpSlotSize),
+        (TRUiSize.lg, TRGeneratedControlMetrics.lgHeight),
+      ]) {
+        // AnimatedContainer tweens its box, so settle before measuring.
+        await tester.pumpWidget(_app(TROtpField(length: 4, uiSize: size)));
+        await tester.pumpAndSettle();
+        final slot = tester.getSize(find.byType(AnimatedContainer).first);
+        expect(slot.width, expected);
+        expect(slot.height, expected);
+      }
+    });
+
+    testWidgets('OTP md sizing and gap stay at the pre-uiSize defaults', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_app(const TROtpField(length: 4)));
+      await tester.pump();
+      expect(
+        tester.getSize(find.byType(AnimatedContainer).first).width,
+        TRGeneratedLayerMetrics.otpSlotSize,
+      );
+      final gaps = tester
+          .widgetList<SizedBox>(
+            find.descendant(
+              of: find.byType(TROtpField),
+              matching: find.byType(SizedBox),
+            ),
+          )
+          .where((box) => box.width == TRGeneratedControlMetrics.mdGap);
+      expect(gaps.length, 3);
     });
 
     testWidgets('scalar and range sliders enforce values and minimum gap', (

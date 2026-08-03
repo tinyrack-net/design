@@ -88,7 +88,7 @@ function matchingInteractionArgs(
     return { selectedValues: entries[0][1] };
   }
   if (
-    component !== 'text-field' ||
+    (component !== 'text-field' && component !== 'otp-field') ||
     entries.length !== 1 ||
     entries[0]?.[0] !== 'value' ||
     typeof entries[0][1] !== 'string'

@@ -76,6 +76,7 @@ class PreviewApp extends StatefulWidget {
 class _PreviewAppState extends State<PreviewApp> {
   late final PreviewBridge _bridge;
   late final TextEditingController _textFieldController;
+  late final TROtpFieldController _otpFieldController;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   late GlobalKey _previewKey;
   final Map<String, GlobalKey> _partKeys = {};
@@ -99,6 +100,7 @@ class _PreviewAppState extends State<PreviewApp> {
     _previewKey = GlobalKey();
     _themeMode = widget.initialTheme;
     _textFieldController = TextEditingController();
+    _otpFieldController = TROtpFieldController();
     _bridge = PreviewBridge(_handleMessage);
     HardwareKeyboard.instance.addHandler(_handleHardwareKey);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -432,6 +434,7 @@ class _PreviewAppState extends State<PreviewApp> {
     if (type == 'reset') {
       FocusManager.instance.primaryFocus?.unfocus();
       _textFieldController.clear();
+      _otpFieldController.clear();
       setState(() {
         _activations = 0;
         _args = const {};
@@ -464,6 +467,10 @@ class _PreviewAppState extends State<PreviewApp> {
             selection: TextSelection.collapsed(offset: value.length),
           );
         }
+      }
+      if (_component == 'otp-field') {
+        final value = nextArgs['value'];
+        if (value is String) _otpFieldController.value = value;
       }
       setState(() {
         _args = {..._args, ...nextArgs};
@@ -516,6 +523,7 @@ class _PreviewAppState extends State<PreviewApp> {
     FocusManager.instance.primaryFocus?.unfocus();
     _navigatorKey.currentState?.popUntil((route) => route.isFirst);
     _textFieldController.clear();
+    _otpFieldController.clear();
     setState(() {
       _component = component;
       _locale = Locale(locale);
@@ -592,6 +600,7 @@ class _PreviewAppState extends State<PreviewApp> {
     }
     FocusManager.instance.primaryFocus?.unfocus();
     _textFieldController.clear();
+    _otpFieldController.clear();
     if (_component == 'text-field') {
       final value = nextArgs['value'];
       if (value is String) {
@@ -600,6 +609,10 @@ class _PreviewAppState extends State<PreviewApp> {
           selection: TextSelection.collapsed(offset: value.length),
         );
       }
+    }
+    if (_component == 'otp-field') {
+      final value = nextArgs['value'];
+      if (value is String) _otpFieldController.value = value;
     }
     setState(() {
       _activations = 0;
@@ -683,6 +696,7 @@ class _PreviewAppState extends State<PreviewApp> {
             parityMode: widget.parityMode,
             partKeys: _partKeys,
             textFieldController: _textFieldController,
+            otpFieldController: _otpFieldController,
             onStateChanged: (payload) {
               if (payload['pressed'] == true) _activations += 1;
               _bridge.send('stateChanged', _component, {
@@ -704,6 +718,7 @@ class _PreviewAppState extends State<PreviewApp> {
     HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
     _bridge.dispose();
     _textFieldController.dispose();
+    _otpFieldController.dispose();
     super.dispose();
   }
 
@@ -869,6 +884,16 @@ List<String> _supportedArgs(String component) => switch (component) {
     'uiSize',
     'value',
   ],
+  'otp-field' => [
+    'disabled',
+    'errorText',
+    'helperText',
+    'length',
+    'obscureText',
+    'readOnly',
+    'uiSize',
+    'value',
+  ],
   _ => const <String>[],
 };
 
@@ -924,6 +949,7 @@ Map<String, Object?>? _validateArgs(
       'code' ||
       'data' ||
       'errorText' ||
+      'helperText' ||
       'label' ||
       'legend' ||
       'loadingLabel' ||
@@ -940,6 +966,7 @@ Map<String, Object?>? _validateArgs(
       'loading' ||
       'loopFocus' ||
       'multiple' ||
+      'obscureText' ||
       'parity' ||
       'pressed' ||
       'readOnly' ||
@@ -1049,6 +1076,8 @@ Map<String, Object?>? _validateArgs(
               'strong',
             }.contains(value),
       'uiSize' => value is String && const {'sm', 'md', 'lg'}.contains(value),
+      'length' when component == 'otp-field' =>
+        value is num && value >= 3 && value <= 8,
       _ => false,
     };
     if (!valid) return null;
@@ -1108,6 +1137,7 @@ class PreviewComponent extends StatelessWidget {
     this.parityMode = false,
     required this.partKeys,
     required this.textFieldController,
+    required this.otpFieldController,
     required this.onStateChanged,
     super.key,
   });
@@ -1120,6 +1150,7 @@ class PreviewComponent extends StatelessWidget {
   final bool parityMode;
   final Map<String, GlobalKey> partKeys;
   final TextEditingController textFieldController;
+  final TROtpFieldController otpFieldController;
   final ValueChanged<Map<String, Object?>> onStateChanged;
 
   String get _label => switch (locale) {
@@ -1127,6 +1158,40 @@ class PreviewComponent extends StatelessWidget {
     'ja' => 'デプロイ',
     _ => 'Deploy',
   };
+
+  String get _otpLabel => switch (locale) {
+    'ko' => '인증 코드',
+    'ja' => '認証コード',
+    _ => 'Verification code',
+  };
+
+  /// Splits the slot row in half with a rule, and keeps the plain gaps on the
+  /// remaining seams aligned with the resolved [TRUiSize].
+  TROtpSeparatorBuilder _otpSeparatorBuilder(TRUiSize uiSize, int length) {
+    final slotHeight = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
+      TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+    };
+    final gap = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smGap,
+      TRUiSize.md => TRGeneratedControlMetrics.mdGap,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
+    };
+    final middle = length ~/ 2 - 1;
+    return (context, index) => index == middle
+        ? SizedBox(
+            width: gap * 2,
+            child: Center(
+              child: Container(
+                width: TRGeneratedBorders.defaultWidth,
+                height: slotHeight,
+                color: context.tinyrackTheme.border,
+              ),
+            ),
+          )
+        : SizedBox(width: gap);
+  }
 
   GlobalKey _partKey(String name) => partKeys.putIfAbsent(name, GlobalKey.new);
 
@@ -1408,15 +1473,13 @@ class PreviewComponent extends StatelessWidget {
           max: 100,
         ),
       ),
-      'otp-field' => TROtpField(
+      // Parity screenshots need a fixed, already-filled code; the docs
+      // playground needs an empty field the reader can actually type into.
+      'otp-field' when parityMode => TROtpField(
         key: measureKey,
         defaultValue: '2048',
         length: 4,
-        label: switch (locale) {
-          'ko' => '인증 코드',
-          'ja' => '認証コード',
-          _ => 'Verification code',
-        },
+        label: _otpLabel,
         separatorBuilder: (context, index) => index == 1
             ? SizedBox(
                 width: 13,
@@ -1429,6 +1492,26 @@ class PreviewComponent extends StatelessWidget {
                 ),
               )
             : const SizedBox(width: TRGeneratedControlMetrics.smGap),
+      ),
+      'otp-field' => TROtpField(
+        key: measureKey,
+        controller: otpFieldController,
+        enabled: args['disabled'] != true,
+        errorText: args['errorText'] is String && args['errorText'] != ''
+            ? args['errorText']! as String
+            : null,
+        helperText: args['helperText'] is String && args['helperText'] != ''
+            ? args['helperText']! as String
+            : null,
+        label: _otpLabel,
+        length: _intArg('length', 6),
+        obscureText: args['obscureText'] == true,
+        readOnly: args['readOnly'] == true,
+        uiSize: size,
+        onValueChange: (next) => onStateChanged({
+          'args': {'value': next},
+        }),
+        separatorBuilder: _otpSeparatorBuilder(size, _intArg('length', 6)),
       ),
       'pagination' => TRPagination(
         key: measureKey,

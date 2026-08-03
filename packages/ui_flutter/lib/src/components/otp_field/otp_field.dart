@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
+import '../../types.dart';
 
 typedef TROtpSeparatorBuilder =
     Widget Function(BuildContext context, int index);
@@ -48,6 +49,7 @@ class TROtpField extends StatefulWidget {
     this.readOnly = false,
     this.semanticLabel,
     this.separatorBuilder,
+    this.uiSize = TRUiSize.md,
     super.key,
   }) : value = null,
        assert(length > 0);
@@ -68,6 +70,7 @@ class TROtpField extends StatefulWidget {
     this.readOnly = false,
     this.semanticLabel,
     this.separatorBuilder,
+    this.uiSize = TRUiSize.md,
     super.key,
   }) : defaultValue = '',
        assert(length > 0);
@@ -90,6 +93,7 @@ class TROtpField extends StatefulWidget {
   final bool readOnly;
   final String? semanticLabel;
   final TROtpSeparatorBuilder? separatorBuilder;
+  final TRUiSize uiSize;
 
   @override
   State<TROtpField> createState() => _TROtpFieldState();
@@ -172,6 +176,18 @@ class _TROtpFieldState extends State<TROtpField> {
     final colors = context.tinyrackTheme;
     final characters = _value.characters.toList(growable: false);
     final activeIndex = math.min(characters.length, widget.length - 1);
+    // Square slots track the shared control height scale, so an OTP field lines
+    // up with a neighboring TRTextField or TRButton of the same uiSize.
+    final slotSize = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
+      TRUiSize.md => TRGeneratedLayerMetrics.otpSlotSize,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+    };
+    final slotGap = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smGap,
+      TRUiSize.md => TRGeneratedControlMetrics.mdGap,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
+    };
     final slots = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: widget.enabled
@@ -183,7 +199,7 @@ class _TROtpFieldState extends State<TROtpField> {
             }
           : null,
       child: SizedBox(
-        height: TRGeneratedLayerMetrics.otpSlotSize,
+        height: slotSize,
         child: Stack(
           children: [
             ExcludeSemantics(
@@ -193,13 +209,13 @@ class _TROtpFieldState extends State<TROtpField> {
                   for (var index = 0; index < widget.length; index += 1) ...[
                     if (index > 0)
                       widget.separatorBuilder?.call(context, index - 1) ??
-                          const SizedBox(width: TRGeneratedSpacing.sm),
+                          SizedBox(width: slotGap),
                     AnimatedContainer(
                       duration: MediaQuery.disableAnimationsOf(context)
                           ? Duration.zero
                           : TRGeneratedMotion.fast,
-                      width: TRGeneratedLayerMetrics.otpSlotSize,
-                      height: TRGeneratedLayerMetrics.otpSlotSize,
+                      width: slotSize,
+                      height: slotSize,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         color: widget.enabled
@@ -311,6 +327,7 @@ class TROtpFieldFormField extends FormField<String> {
     super.onSaved,
     super.validator,
     super.restorationId,
+    TRUiSize uiSize = TRUiSize.md,
     super.key,
   }) : super(
          builder: (field) => TROtpField.controlled(
@@ -320,6 +337,7 @@ class TROtpFieldFormField extends FormField<String> {
            helperText: helperText,
            label: label,
            length: length,
+           uiSize: uiSize,
            onCompleted: onCompleted,
            onValueChange: (value) {
              field.didChange(value);
