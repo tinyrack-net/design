@@ -408,6 +408,177 @@ const textareaSources = (sourceEn: string) => ({
   ko: localizeExampleSource(sourceEn, textareaKoLabels),
 });
 
+const otpSizesSourceEn = String.raw`Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.large,
+  children: const [
+    TROtpField(
+      defaultValue: '2048',
+      label: 'SM',
+      length: 4,
+      semanticLabel: 'SM verification code',
+      uiSize: TRUiSize.sm,
+    ),
+    TROtpField(
+      defaultValue: '2048',
+      label: 'MD',
+      length: 4,
+      semanticLabel: 'MD verification code',
+    ),
+    TROtpField(
+      defaultValue: '2048',
+      label: 'LG',
+      length: 4,
+      semanticLabel: 'LG verification code',
+      uiSize: TRUiSize.lg,
+    ),
+  ],
+)`;
+
+const otpStatesSourceEn = String.raw`Wrap(
+  spacing: TRSpacing.extraLarge,
+  runSpacing: TRSpacing.large,
+  children: const [
+    TROtpField(
+      defaultValue: '2048',
+      helperText: 'Four digits, numbers only.',
+      label: 'Editable code',
+      length: 4,
+    ),
+    TROtpField(
+      defaultValue: '481592',
+      helperText: 'Copy this recovery code.',
+      label: 'Recovery code',
+      length: 6,
+      readOnly: true,
+    ),
+    TROtpField(
+      defaultValue: '2048',
+      enabled: false,
+      helperText: 'Request a new code first.',
+      label: 'Expired code',
+      length: 4,
+    ),
+  ],
+)`;
+
+const otpValidationSourceEn = String.raw`final formKey = GlobalKey<FormState>();
+var status = '';
+
+Form(
+  key: formKey,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.medium,
+    children: [
+      TROtpFieldFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        helperText: 'Enter all six digits.',
+        label: 'Verification code',
+        length: 6,
+        validator: (value) => (value ?? '').length == 6
+            ? null
+            : 'A six-digit code is required.',
+      ),
+      TRButton(
+        onPressed: () => setState(() {
+          status = formKey.currentState?.validate() ?? false
+              ? 'Code accepted.'
+              : 'Fix the code and try again.';
+        }),
+        child: const Text('Verify'),
+      ),
+      TRText(
+        status.isEmpty ? 'Waiting for a code.' : status,
+        variant: TRTextVariant.bodySm,
+        color: TRTextColor.muted,
+      ),
+    ],
+  ),
+)`;
+
+const otpMaskedSourceEn = String.raw`late final controller = TROtpFieldController(value: '4821');
+
+Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  mainAxisSize: MainAxisSize.min,
+  spacing: TRSpacing.medium,
+  children: [
+    TROtpField(
+      controller: controller,
+      helperText: 'Digits stay hidden while you type.',
+      label: 'Backup PIN',
+      length: 4,
+      obscureText: true,
+      separatorBuilder: (context, index) => index == 1
+          ? const SizedBox(
+              width: TRSpacing.large,
+              child: Center(
+                child: TRText('-', variant: TRTextVariant.bodySm),
+              ),
+            )
+          : const SizedBox(width: TRSpacing.small),
+    ),
+    TRButton(
+      appearance: TRAppearance.outline,
+      onPressed: controller.clear,
+      child: const Text('Clear'),
+    ),
+  ],
+)`;
+
+const otpKoLabels = [
+  ['SM verification code', 'SM 인증 코드'],
+  ['MD verification code', 'MD 인증 코드'],
+  ['LG verification code', 'LG 인증 코드'],
+  ['Four digits, numbers only.', '숫자 네 자리만 입력해요.'],
+  ['Copy this recovery code.', '이 복구 코드를 복사하세요.'],
+  ['Request a new code first.', '새 코드를 먼저 요청하세요.'],
+  ['Editable code', '편집 가능한 코드'],
+  ['Recovery code', '복구 코드'],
+  ['Expired code', '만료된 코드'],
+  ['Enter all six digits.', '여섯 자리를 모두 입력하세요.'],
+  ['A six-digit code is required.', '여섯 자리 코드가 필요해요.'],
+  ['Verification code', '인증 코드'],
+  ['Digits stay hidden while you type.', '입력하는 동안 숫자가 가려져요.'],
+  ['Backup PIN', '백업 PIN'],
+  ['Fix the code and try again.', '코드를 고친 뒤 다시 시도하세요.'],
+  ['Waiting for a code.', '코드를 기다리고 있어요.'],
+  ['Code accepted.', '코드를 확인했어요.'],
+  ['Verify', '확인'],
+  ['Clear', '지우기'],
+] as const;
+
+const otpJaLabels = [
+  ['SM verification code', 'SM 確認コード'],
+  ['MD verification code', 'MD 確認コード'],
+  ['LG verification code', 'LG 確認コード'],
+  ['Four digits, numbers only.', '数字 4 桁のみです。'],
+  ['Copy this recovery code.', 'この復旧コードをコピーしてください。'],
+  ['Request a new code first.', '先に新しいコードをリクエストしてください。'],
+  ['Editable code', '編集できるコード'],
+  ['Recovery code', '復旧コード'],
+  ['Expired code', '期限切れのコード'],
+  ['Enter all six digits.', '6 桁すべてを入力してください。'],
+  ['A six-digit code is required.', '6 桁のコードが必要です。'],
+  ['Verification code', '確認コード'],
+  ['Digits stay hidden while you type.', '入力中は数字が隠れたままになります。'],
+  ['Backup PIN', 'バックアップ PIN'],
+  ['Fix the code and try again.', 'コードを修正して再試行してください。'],
+  ['Waiting for a code.', 'コードを待っています。'],
+  ['Code accepted.', 'コードを受け付けました。'],
+  ['Verify', '確認'],
+  ['Clear', 'クリア'],
+] as const;
+
+const otpSources = (sourceEn: string) => ({
+  en: sourceEn,
+  ja: localizeExampleSource(sourceEn, otpJaLabels),
+  ko: localizeExampleSource(sourceEn, otpKoLabels),
+});
+
 export const flutterExamples: Partial<
   Record<FlutterPreviewComponent, readonly FlutterExampleEntry[]>
 > = {
@@ -1765,6 +1936,60 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '일부 선택지가 더 좁은 질문에 속한다면 필드셋을 중첩하세요. 각 단계가 자기 레전드를 유지하므로 관계를 읽기 쉬워요.',
       },
       dart: fieldsetSources(fieldsetCompositionSourceEn),
+    },
+  ],
+  'otp-field': [
+    {
+      id: 'otp-field-sizes',
+      title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
+      description: {
+        en: 'Choose `uiSize` so the slots line up with the `TRTextField`, `TRButton`, or `TRNumberField` beside them. The digit style stays the same at every size; only the square slots and the default gap change.',
+        ja: '隣に並ぶ `TRTextField`・`TRButton`・`TRNumberField` と揃うように `uiSize` を選んでください。数字のスタイルはどのサイズでも変わらず、正方形のスロットと既定の間隔だけが変化します。',
+        ko: '옆에 놓인 `TRTextField`, `TRButton`, `TRNumberField`와 나란히 맞도록 `uiSize`를 고르세요. 숫자 스타일은 어떤 크기에서도 그대로이고, 정사각형 슬롯과 기본 간격만 달라져요.',
+      },
+      dart: otpSources(otpSizesSourceEn),
+    },
+    {
+      id: 'otp-field-states',
+      title: {
+        en: 'Length and availability',
+        ja: '長さと利用可否',
+        ko: '길이와 사용 가능 여부',
+      },
+      description: {
+        en: '`length` sets the slot count and decides when `onCompleted` fires. `readOnly` keeps a code visible and focusable but rejects edits, while `enabled: false` mutes the whole field and blocks focus.',
+        ja: '`length` はスロット数を決め、`onCompleted` が呼ばれるタイミングを左右します。`readOnly` はコードを表示したままフォーカスもできますが編集は拒否し、`enabled: false` はフィールド全体を淡くしてフォーカスも止めます。',
+        ko: '`length`는 슬롯 개수를 정하고 `onCompleted` 호출 시점을 결정해요. `readOnly`는 코드를 보여 주고 포커스도 유지하면서 편집만 막고, `enabled: false`는 필드 전체를 흐리게 하며 포커스까지 막아요.',
+      },
+      dart: otpSources(otpStatesSourceEn),
+    },
+    {
+      id: 'otp-field-validation',
+      title: {
+        en: 'Required code and recovery',
+        ja: '必須コードとリカバリー',
+        ko: '필수 코드와 복구',
+      },
+      description: {
+        en: '`TROtpFieldFormField` joins the surrounding `Form`, so `validator` output lands in `errorText` and turns the slot borders red. `AutovalidateMode.onUserInteraction` reports a short code while the reader is still typing rather than only on submit.',
+        ja: '`TROtpFieldFormField` は外側の `Form` に参加するため、`validator` の戻り値が `errorText` になり、スロットの枠線が赤に変わります。`AutovalidateMode.onUserInteraction` を使うと、送信時だけでなく入力中にも桁数不足を知らせます。',
+        ko: '`TROtpFieldFormField`는 상위 `Form`에 참여하므로 `validator`가 반환한 문구가 `errorText`가 되고 슬롯 테두리가 빨갛게 바뀌어요. `AutovalidateMode.onUserInteraction`을 쓰면 제출할 때뿐 아니라 입력하는 중에도 자릿수가 모자란 것을 알려 줘요.',
+      },
+      dart: otpSources(otpValidationSourceEn),
+    },
+    {
+      id: 'otp-field-masked',
+      title: {
+        en: 'Masked entry and reset',
+        ja: 'マスク入力とリセット',
+        ko: '가려진 입력과 초기화',
+      },
+      description: {
+        en: '`obscureText` replaces each digit with a bullet and stops the value from reaching `Semantics`, so use it only for a code that stays secret after entry. A `TROtpFieldController` clears the field from a Retry action, and `separatorBuilder` replaces the gap after the slot at `index` — return a plain `SizedBox` for the seams that should stay empty.',
+        ja: '`obscureText` は各桁を丸印に置き換え、値が `Semantics` に渡らないようにします。入力後も秘密であり続けるコードにのみ使ってください。`TROtpFieldController` は再試行操作からフィールドを空にし、`separatorBuilder` は `index` 番目のスロットの後ろの間隔を置き換えます。空けたい箇所では通常の `SizedBox` を返してください。',
+        ko: '`obscureText`는 각 자리를 점으로 바꾸고 값이 `Semantics`에 전달되지 않게 하므로, 입력 후에도 비밀로 남아야 하는 코드에만 쓰세요. `TROtpFieldController`는 다시 시도 동작에서 입력을 비우고, `separatorBuilder`는 `index` 슬롯 뒤의 간격을 대체해요. 비워 둘 자리에는 일반 `SizedBox`를 반환하세요.',
+      },
+      dart: otpSources(otpMaskedSourceEn),
     },
   ],
   'checkbox-group': [

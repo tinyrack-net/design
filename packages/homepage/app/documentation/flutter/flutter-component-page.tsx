@@ -930,7 +930,296 @@ class _RackFormState extends State<RackForm> {
       ko: '하나의 접근 가능한 입력을 개별 슬롯으로 표시해 인증 코드를 받아요.',
       ja: '1 つのアクセシブルな入力を個別スロットとして表示し、認証コードを受け取ります。',
     },
-    usage: 'TROtpField(\n  length: 6,\n  onCompleted: verifyCode,\n)',
+    usage:
+      "TROtpField(\n  label: 'Verification code',\n  length: 6,\n  helperText: 'Enter the code we sent to your device.',\n  onCompleted: verifyCode,\n)",
+    contractIntro: {
+      en: 'Reach for `TROtpField` when the reader transcribes a short fixed-length code from another device. Use `TRTextField` for anything longer or free-form.',
+      ko: '다른 기기에 온 짧은 고정 길이 코드를 옮겨 적을 때 `TROtpField`를 쓰세요. 더 길거나 자유로운 입력에는 `TRTextField`를 쓰세요.',
+      ja: '別のデバイスに届いた短い固定長のコードを書き写す場面では `TROtpField` を使ってください。より長い入力や自由入力には `TRTextField` を使います。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Value', ko: '값', ja: '値' },
+        choices: {
+          en: 'The default constructor is uncontrolled: seed it with `defaultValue`, or pass a `TROtpFieldController` to read and clear the code from outside. `TROtpField.controlled` takes `value` instead and expects you to store the next code from `onValueChange`.',
+          ko: '기본 생성자는 비제어 방식이에요. `defaultValue`로 초기값을 주거나, `TROtpFieldController`를 넘겨 바깥에서 코드를 읽고 지우세요. `TROtpField.controlled`는 대신 `value`를 받고, `onValueChange`로 전달된 다음 코드를 직접 보관해야 해요.',
+          ja: 'デフォルトのコンストラクタは非制御です。`defaultValue` で初期値を与えるか、`TROtpFieldController` を渡して外部からコードを読み取ったり消去したりしてください。`TROtpField.controlled` は代わりに `value` を受け取り、`onValueChange` で渡された次のコードを自分で保持する必要があります。',
+        },
+      },
+      {
+        axis: { en: 'Input', ko: '입력', ja: '入力' },
+        choices: {
+          en: 'One hidden `TextField` sits under the slots, so typing, pasting a whole code, deleting, and platform autofill through `AutofillHints.oneTimeCode` all act on the full value. Entry always appends at the end; there is no per-slot caret to move between.',
+          ko: '슬롯 아래에 숨겨진 `TextField` 하나가 있어서 입력, 코드 전체 붙여넣기, 삭제, `AutofillHints.oneTimeCode`를 통한 플랫폼 자동 완성이 모두 값 전체에 적용돼요. 입력은 항상 끝에 덧붙고, 슬롯마다 옮겨 다니는 커서는 없어요.',
+          ja: 'スロットの下に隠れた `TextField` が 1 つあり、入力、コード全体の貼り付け、削除、`AutofillHints.oneTimeCode` によるプラットフォームの自動入力は、いずれも値全体に作用します。入力は常に末尾へ追加され、スロットごとに移動するキャレットはありません。',
+        },
+      },
+      {
+        axis: {
+          en: 'Accepted characters',
+          ko: '허용 문자',
+          ja: '受け付ける文字',
+        },
+        choices: {
+          en: '`allowedPattern` defaults to `RegExp("[0-9]")` and is enforced by a `FilteringTextInputFormatter`, so anything else is dropped as it arrives. Rejection is silent: there is no invalid-input callback, so state the expected format in `helperText`.',
+          ko: '`allowedPattern`은 기본값이 `RegExp("[0-9]")`이고 `FilteringTextInputFormatter`로 강제되므로 그 밖의 문자는 들어오는 즉시 버려져요. 거부는 조용히 일어나고 별도의 콜백이 없으니, 기대하는 형식을 `helperText`로 알려 주세요.',
+          ja: '`allowedPattern` の既定値は `RegExp("[0-9]")` で、`FilteringTextInputFormatter` によって適用されるため、それ以外の文字は入力時に破棄されます。拒否は通知されず専用のコールバックもないため、期待する形式は `helperText` で示してください。',
+        },
+      },
+      {
+        axis: { en: 'Length and size', ko: '길이와 크기', ja: '長さとサイズ' },
+        choices: {
+          en: '`length` clamps the value and decides when `onCompleted` fires. `uiSize` scales the square slots along the shared control height scale, so `sm`, `md`, and `lg` line up with a neighboring `TRTextField` or `TRButton` of the same size.',
+          ko: '`length`는 값을 잘라내고 `onCompleted`가 호출되는 시점을 결정해요. `uiSize`는 공용 컨트롤 높이 스케일에 맞춰 정사각형 슬롯 크기를 조절하므로, `sm`·`md`·`lg`가 같은 크기의 `TRTextField`나 `TRButton`과 나란히 맞아요.',
+          ja: '`length` は値を切り詰め、`onCompleted` が呼ばれるタイミングを決めます。`uiSize` は共通のコントロール高さスケールに沿って正方形スロットを拡縮するため、`sm`・`md`・`lg` が同じサイズの `TRTextField` や `TRButton` と揃います。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TROtpField properties',
+          ko: 'TROtpField 속성',
+          ja: 'TROtpField のプロパティ',
+        },
+        rows: [
+          {
+            name: 'length',
+            type: 'int · 6',
+            purpose: {
+              en: 'Sets the slot count, clamps the value to that many characters, and gates `onCompleted`. Must be greater than zero.',
+              ko: '슬롯 개수를 정하고 값을 그 길이로 잘라내며 `onCompleted` 호출 조건이 돼요. 0보다 커야 해요.',
+              ja: 'スロット数を決め、値をその長さに切り詰め、`onCompleted` の発火条件になります。0 より大きい必要があります。',
+            },
+          },
+          {
+            name: 'defaultValue',
+            type: "String · ''",
+            purpose: {
+              en: 'Seeds the uncontrolled default constructor. Ignored by `TROtpField.controlled`.',
+              ko: '비제어 기본 생성자의 초기값이에요. `TROtpField.controlled`에서는 무시돼요.',
+              ja: '非制御のデフォルトコンストラクタの初期値です。`TROtpField.controlled` では無視されます。',
+            },
+          },
+          {
+            name: 'value',
+            type: 'String · required on .controlled',
+            purpose: {
+              en: 'Drives the rendered code in the controlled constructor. Pair it with `onValueChange` and store the next code yourself.',
+              ko: '제어 생성자에서 표시할 코드를 결정해요. `onValueChange`와 함께 쓰면서 다음 코드를 직접 보관하세요.',
+              ja: '制御コンストラクタで表示するコードを決めます。`onValueChange` と組み合わせ、次のコードは自分で保持してください。',
+            },
+          },
+          {
+            name: 'controller',
+            type: 'TROtpFieldController? · null',
+            purpose: {
+              en: 'Reads, replaces, or clears the code from outside the widget without switching to the controlled constructor.',
+              ko: '제어 생성자로 바꾸지 않고도 위젯 바깥에서 코드를 읽거나 교체하거나 지울 수 있어요.',
+              ja: '制御コンストラクタに切り替えることなく、ウィジェットの外からコードの読み取り・置き換え・消去ができます。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<String>? · null',
+            purpose: {
+              en: 'Fires on every accepted edit with the clamped value. Filtered-out characters never reach it.',
+              ko: '허용된 편집마다 잘린 값과 함께 호출돼요. 걸러진 문자는 전달되지 않아요.',
+              ja: '受け付けた編集ごとに、切り詰めた値とともに呼ばれます。除外された文字は渡りません。',
+            },
+          },
+          {
+            name: 'onCompleted',
+            type: 'ValueChanged<String>? · null',
+            purpose: {
+              en: 'Fires when the value reaches `length`, including when a paste fills the field in one step. It runs on every edit that leaves the field full, so make the callback safe to repeat.',
+              ko: '값이 `length`에 도달할 때 호출되고, 붙여넣기로 한 번에 채워질 때도 호출돼요. 값이 가득 찬 채로 이뤄지는 모든 편집에서 실행되므로 반복 호출에 안전하게 작성하세요.',
+              ja: '値が `length` に達したときに呼ばれ、貼り付けで一度に埋まった場合も同様です。フィールドが満たされたままの編集ごとに実行されるため、繰り返し呼ばれても安全な処理にしてください。',
+            },
+          },
+          {
+            name: 'allowedPattern',
+            type: 'Pattern? · RegExp("[0-9]")',
+            purpose: {
+              en: 'Restricts accepted characters. Widen it for alphanumeric codes, for example `RegExp("[A-Z0-9]")`.',
+              ko: '허용 문자를 제한해요. 영숫자 코드라면 `RegExp("[A-Z0-9]")`처럼 범위를 넓히세요.',
+              ja: '受け付ける文字を制限します。英数字のコードには `RegExp("[A-Z0-9]")` のように範囲を広げてください。',
+            },
+          },
+          {
+            name: 'obscureText',
+            type: 'bool · false',
+            purpose: {
+              en: 'Replaces each filled slot with a bullet and stops the value from being exposed through `Semantics`.',
+              ko: '채워진 슬롯을 점으로 대체하고, `Semantics`로 값이 노출되지 않게 해요.',
+              ja: '入力済みのスロットを丸印に置き換え、`Semantics` から値が公開されないようにします。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Scales the square slots and the default gap to the `sm`, `md`, or `lg` control height. A `separatorBuilder` replaces the gap entirely, so size it yourself there.',
+              ko: '정사각형 슬롯과 기본 간격을 `sm`·`md`·`lg` 컨트롤 높이에 맞춰 조절해요. `separatorBuilder`는 간격을 완전히 대체하므로, 그 안에서 직접 크기를 정하세요.',
+              ja: '正方形スロットと既定の間隔を `sm`・`md`・`lg` のコントロール高さに合わせて拡縮します。`separatorBuilder` は間隔をすべて置き換えるため、その中で自分でサイズを決めてください。',
+            },
+          },
+          {
+            name: 'label',
+            type: 'String? · null',
+            purpose: {
+              en: 'Renders an uppercased caption above the slots and names the field for assistive technology unless `semanticLabel` overrides it.',
+              ko: '슬롯 위에 대문자 캡션을 표시하고, `semanticLabel`이 없으면 보조 기술에도 이 이름을 전달해요.',
+              ja: 'スロットの上に大文字のキャプションを表示し、`semanticLabel` がなければ支援技術にもこの名前を伝えます。',
+            },
+          },
+          {
+            name: 'semanticLabel',
+            type: 'String? · null',
+            purpose: {
+              en: 'Takes precedence over `label` for assistive technology. Use it when the visible caption is too terse to stand alone.',
+              ko: '보조 기술에서는 `label`보다 우선해요. 눈에 보이는 캡션만으로는 설명이 부족할 때 쓰세요.',
+              ja: '支援技術では `label` より優先されます。見えているキャプションだけでは説明が足りない場合に使ってください。',
+            },
+          },
+          {
+            name: 'helperText',
+            type: 'String? · null',
+            purpose: {
+              en: 'Shows muted supporting text below the slots. `errorText` replaces it while an error is present.',
+              ko: '슬롯 아래에 흐린 보조 텍스트를 표시해요. 오류가 있는 동안에는 `errorText`가 대신 표시돼요.',
+              ja: 'スロットの下に控えめな補足テキストを表示します。エラーがある間は `errorText` に置き換わります。',
+            },
+          },
+          {
+            name: 'errorText',
+            type: 'String? · null',
+            purpose: {
+              en: 'Switches the slot borders to the danger color and replaces the supporting line. A non-null value marks the field invalid on its own; validation stays yours to run.',
+              ko: '슬롯 테두리를 위험 색으로 바꾸고 보조 문구를 대체해요. null이 아니면 그 자체로 오류 상태가 되며, 검증은 직접 수행해야 해요.',
+              ja: 'スロットの枠線をデンジャー色に変え、補足行を置き換えます。null でなければそれだけでエラー状態になり、検証自体は自分で行います。',
+            },
+          },
+          {
+            name: 'enabled',
+            type: 'bool · true',
+            purpose: {
+              en: 'When false, mutes the slots, blocks tap-to-focus and editing, and dims the label.',
+              ko: 'false이면 슬롯을 흐리게 하고 탭 포커스와 편집을 막으며 레이블도 흐려져요.',
+              ja: 'false のとき、スロットを淡くし、タップによるフォーカスと編集を止め、ラベルも淡くします。',
+            },
+          },
+          {
+            name: 'readOnly',
+            type: 'bool · false',
+            purpose: {
+              en: 'Keeps the field focusable and its value visible while rejecting edits. Use it for a code the reader should see but not change.',
+              ko: '값을 보여 주고 포커스도 유지하면서 편집만 막아요. 읽기만 하고 바꾸면 안 되는 코드에 쓰세요.',
+              ja: '値を表示しフォーカスも保ったまま、編集だけを拒否します。読むだけで変更させないコードに使ってください。',
+            },
+          },
+          {
+            name: 'autofocus',
+            type: 'bool · false',
+            purpose: {
+              en: 'Focuses the field on first build. Use it only when the code entry is the sole purpose of the screen.',
+              ko: '첫 빌드에서 포커스를 잡아요. 코드 입력이 화면의 유일한 목적일 때만 쓰세요.',
+              ja: '最初のビルドでフォーカスします。コード入力が画面の唯一の目的である場合にのみ使ってください。',
+            },
+          },
+          {
+            name: 'separatorBuilder',
+            type: 'TROtpSeparatorBuilder? · null',
+            purpose: {
+              en: 'Replaces the gap after slot `index`. Return a plain `SizedBox` for the seams that should stay empty; returning nothing is not an option.',
+              ko: '`index` 슬롯 뒤의 간격을 대체해요. 비워 둘 자리에는 일반 `SizedBox`를 반환하세요. 아무것도 반환하지 않을 수는 없어요.',
+              ja: '`index` 番目のスロットの後ろの間隔を置き換えます。空けたい箇所では通常の `SizedBox` を返してください。何も返さないことはできません。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TROtpFieldController',
+          ko: 'TROtpFieldController',
+          ja: 'TROtpFieldController',
+        },
+        rows: [
+          {
+            name: 'value',
+            type: 'String',
+            purpose: {
+              en: 'Reads or replaces the current code. Assigning notifies listeners and re-renders the slots; assigning the same string is a no-op.',
+              ko: '현재 코드를 읽거나 교체해요. 값을 넣으면 리스너에 알리고 슬롯을 다시 그리며, 같은 문자열을 넣으면 아무 일도 일어나지 않아요.',
+              ja: '現在のコードを読み取り、または置き換えます。代入するとリスナーへ通知してスロットを再描画しますが、同じ文字列の代入は何もしません。',
+            },
+          },
+          {
+            name: 'clear()',
+            type: 'void',
+            purpose: {
+              en: 'Empties the field. Pair it with a Retry action after a rejected code.',
+              ko: '입력을 비워요. 코드가 거부된 뒤의 다시 시도 동작과 함께 쓰세요.',
+              ja: '入力を空にします。コードが拒否された後の再試行操作と組み合わせて使ってください。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TROtpFieldFormField',
+          ko: 'TROtpFieldFormField',
+          ja: 'TROtpFieldFormField',
+        },
+        rows: [
+          {
+            name: 'initialValue',
+            type: "String · ''",
+            purpose: {
+              en: 'Seeds the `FormField` state, which owns the value from then on.',
+              ko: '`FormField` 상태의 초기값이에요. 이후 값은 `FormField`가 관리해요.',
+              ja: '`FormField` の状態の初期値です。以後の値は `FormField` が保持します。',
+            },
+          },
+          {
+            name: 'validator',
+            type: 'FormFieldValidator<String>? · null',
+            purpose: {
+              en: 'Returns the message to show as `errorText`. Return `null` once the code is acceptable.',
+              ko: '`errorText`로 표시할 메시지를 반환해요. 코드가 올바르면 `null`을 반환하세요.',
+              ja: '`errorText` として表示するメッセージを返します。コードが正しければ `null` を返してください。',
+            },
+          },
+          {
+            name: 'autovalidateMode',
+            type: 'AutovalidateMode? · null',
+            purpose: {
+              en: 'Chooses when the validator runs. `onUserInteraction` reports a short code as soon as the reader edits it.',
+              ko: '검증 시점을 정해요. `onUserInteraction`은 사용자가 편집하는 즉시 짧은 코드를 알려 줘요.',
+              ja: '検証を実行するタイミングを決めます。`onUserInteraction` は編集した時点で短いコードを知らせます。',
+            },
+          },
+          {
+            name: 'onSaved',
+            type: 'FormFieldSetter<String>? · null',
+            purpose: {
+              en: 'Receives the code when the surrounding `Form` is saved.',
+              ko: '상위 `Form`이 저장될 때 코드를 전달받아요.',
+              ja: '外側の `Form` が保存されたときにコードを受け取ります。',
+            },
+          },
+          {
+            name: 'restorationId',
+            type: 'String? · null',
+            purpose: {
+              en: 'Restores the entered code after the platform recreates the route.',
+              ko: '플랫폼이 라우트를 다시 만든 뒤 입력한 코드를 복원해요.',
+              ja: 'プラットフォームがルートを再生成した後、入力済みのコードを復元します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   popover: {
     title: 'Popover',

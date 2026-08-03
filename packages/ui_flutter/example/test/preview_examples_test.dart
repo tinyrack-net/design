@@ -15,11 +15,83 @@ Widget _preview(String id) => MaterialApp(
 );
 
 void main() {
+  testWidgets('otp field examples build every registered scenario', (
+    tester,
+  ) async {
+    for (final id in const [
+      'otp-field-sizes',
+      'otp-field-states',
+      'otp-field-validation',
+      'otp-field-masked',
+    ]) {
+      await tester.pumpWidget(_preview(id));
+      await tester.pumpAndSettle();
+      expect(find.byType(TROtpField), findsWidgets, reason: id);
+    }
+  });
+
+  testWidgets('otp validation example reports a short code on submit', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_preview('otp-field-validation'));
+    await tester.enterText(find.byType(TextField), '123');
+    await tester.pump();
+    await tester.tap(find.text('Verify'));
+    await tester.pumpAndSettle();
+    expect(find.text('A six-digit code is required.'), findsOneWidget);
+    expect(find.text('Fix the code and try again.'), findsOneWidget);
+  });
+
+  testWidgets('otp masked example hides digits and clears on demand', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_preview('otp-field-masked'));
+    await tester.pumpAndSettle();
+    expect(find.text('•'), findsNWidgets(4));
+    expect(find.text('4'), findsNothing);
+    await tester.tap(find.text('Clear'));
+    await tester.pumpAndSettle();
+    expect(find.text('•'), findsNothing);
+  });
+
+  testWidgets('otp field playground echoes the typed value back', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    final otpController = TROtpFieldController();
+    addTearDown(otpController.dispose);
+    Map<String, Object?>? reported;
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: preview.PreviewComponent(
+            args: const {'length': 4, 'uiSize': 'md', 'value': ''},
+            component: 'otp-field',
+            locale: 'en',
+            measureKey: GlobalKey(),
+            partKeys: {},
+            textFieldController: controller,
+            otpFieldController: otpController,
+            onStateChanged: (value) => reported = value,
+          ),
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), '20');
+    await tester.pump();
+    expect(reported?['args'], {'value': '20'});
+    expect(find.text('2'), findsOneWidget);
+  });
+
   testWidgets('checkbox group playground reports the next selected values', (
     tester,
   ) async {
     final controller = TextEditingController();
     addTearDown(controller.dispose);
+    final otpController = TROtpFieldController();
+    addTearDown(otpController.dispose);
     Map<String, Object?>? reported;
     await tester.pumpWidget(
       MaterialApp(
@@ -37,6 +109,7 @@ void main() {
             measureKey: GlobalKey(),
             partKeys: {},
             textFieldController: controller,
+            otpFieldController: otpController,
             onStateChanged: (value) => reported = value,
           ),
         ),
@@ -89,6 +162,8 @@ void main() {
   ) async {
     final controller = TextEditingController();
     addTearDown(controller.dispose);
+    final otpController = TROtpFieldController();
+    addTearDown(otpController.dispose);
     Map<String, Object?>? reported;
     await tester.pumpWidget(
       MaterialApp(
@@ -101,6 +176,7 @@ void main() {
             measureKey: GlobalKey(),
             partKeys: {},
             textFieldController: controller,
+            otpFieldController: otpController,
             onStateChanged: (value) => reported = value,
           ),
         ),
@@ -121,6 +197,8 @@ void main() {
   ) async {
     final controller = TextEditingController();
     addTearDown(controller.dispose);
+    final otpController = TROtpFieldController();
+    addTearDown(otpController.dispose);
     Map<String, Object?>? reported;
     await tester.pumpWidget(
       MaterialApp(
@@ -140,6 +218,7 @@ void main() {
             measureKey: GlobalKey(),
             partKeys: {},
             textFieldController: controller,
+            otpFieldController: otpController,
             onStateChanged: (value) => reported = value,
           ),
         ),

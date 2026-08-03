@@ -48,6 +48,10 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'fieldset-basic': _fieldsetBasic,
   'fieldset-states': _fieldsetStates,
   'fieldset-composition': _fieldsetComposition,
+  'otp-field-sizes': _otpSizes,
+  'otp-field-states': _otpStates,
+  'otp-field-validation': _otpValidation,
+  'otp-field-masked': _otpMasked,
   'checkbox-states': _checkboxStates,
   'checkbox-sizes': _checkboxSizes,
   'checkbox-availability': _checkboxAvailability,
@@ -1064,6 +1068,207 @@ Widget _fieldsetComposition(BuildContext context, Locale locale) {
       ],
     ),
   );
+}
+
+Widget _otpSizes(BuildContext context, Locale locale) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    spacing: TRSpacing.large,
+    children: [
+      for (final (uiSize, label) in <(TRUiSize, String)>[
+        (TRUiSize.sm, 'SM'),
+        (TRUiSize.md, 'MD'),
+        (TRUiSize.lg, 'LG'),
+      ])
+        TROtpField(
+          defaultValue: '2048',
+          label: label,
+          length: 4,
+          semanticLabel: _pick(
+            locale,
+            '$label verification code',
+            '$label 인증 코드',
+            '$label 確認コード',
+          ),
+          uiSize: uiSize,
+        ),
+    ],
+  );
+}
+
+Widget _otpStates(BuildContext context, Locale locale) {
+  return Wrap(
+    spacing: TRSpacing.extraLarge,
+    runSpacing: TRSpacing.large,
+    children: [
+      TROtpField(
+        defaultValue: '2048',
+        helperText: _pick(
+          locale,
+          'Four digits, numbers only.',
+          '숫자 네 자리만 입력해요.',
+          '数字 4 桁のみです。',
+        ),
+        label: _pick(locale, 'Editable code', '편집 가능한 코드', '編集できるコード'),
+        length: 4,
+      ),
+      TROtpField(
+        defaultValue: '481592',
+        helperText: _pick(
+          locale,
+          'Copy this recovery code.',
+          '이 복구 코드를 복사하세요.',
+          'この復旧コードをコピーしてください。',
+        ),
+        label: _pick(locale, 'Recovery code', '복구 코드', '復旧コード'),
+        length: 6,
+        readOnly: true,
+      ),
+      TROtpField(
+        defaultValue: '2048',
+        enabled: false,
+        helperText: _pick(
+          locale,
+          'Request a new code first.',
+          '새 코드를 먼저 요청하세요.',
+          '先に新しいコードをリクエストしてください。',
+        ),
+        label: _pick(locale, 'Expired code', '만료된 코드', '期限切れのコード'),
+        length: 4,
+      ),
+    ],
+  );
+}
+
+Widget _otpValidation(BuildContext context, Locale locale) {
+  final formKey = GlobalKey<FormState>();
+  var status = '';
+  return StatefulBuilder(
+    builder: (context, setState) => SizedBox(
+      width: 320,
+      child: Form(
+        key: formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.medium,
+          children: [
+            TROtpFieldFormField(
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              helperText: _pick(
+                locale,
+                'Enter all six digits.',
+                '여섯 자리를 모두 입력하세요.',
+                '6 桁すべてを入力してください。',
+              ),
+              label: _pick(locale, 'Verification code', '인증 코드', '確認コード'),
+              length: 6,
+              validator: (value) => (value ?? '').length == 6
+                  ? null
+                  : _pick(
+                      locale,
+                      'A six-digit code is required.',
+                      '여섯 자리 코드가 필요해요.',
+                      '6 桁のコードが必要です。',
+                    ),
+            ),
+            TRButton(
+              onPressed: () => setState(() {
+                status = formKey.currentState?.validate() ?? false
+                    ? _pick(
+                        locale,
+                        'Code accepted.',
+                        '코드를 확인했어요.',
+                        'コードを受け付けました。',
+                      )
+                    : _pick(
+                        locale,
+                        'Fix the code and try again.',
+                        '코드를 고친 뒤 다시 시도하세요.',
+                        'コードを修正して再試行してください。',
+                      );
+              }),
+              child: Text(_pick(locale, 'Verify', '확인', '確認')),
+            ),
+            TRText(
+              status.isEmpty
+                  ? _pick(
+                      locale,
+                      'Waiting for a code.',
+                      '코드를 기다리고 있어요.',
+                      'コードを待っています。',
+                    )
+                  : status,
+              variant: TRTextVariant.bodySm,
+              color: TRTextColor.muted,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _otpMasked(BuildContext context, Locale locale) =>
+    _OtpMaskedExample(locale: locale);
+
+class _OtpMaskedExample extends StatefulWidget {
+  const _OtpMaskedExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_OtpMaskedExample> createState() => _OtpMaskedExampleState();
+}
+
+class _OtpMaskedExampleState extends State<_OtpMaskedExample> {
+  late final TROtpFieldController _controller = TROtpFieldController(
+    value: '4821',
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TROtpField(
+          controller: _controller,
+          helperText: _pick(
+            locale,
+            'Digits stay hidden while you type.',
+            '입력하는 동안 숫자가 가려져요.',
+            '入力中は数字が隠れたままになります。',
+          ),
+          label: _pick(locale, 'Backup PIN', '백업 PIN', 'バックアップ PIN'),
+          length: 4,
+          obscureText: true,
+          separatorBuilder: (context, index) => index == 1
+              ? const SizedBox(
+                  width: TRSpacing.large,
+                  child: Center(
+                    child: TRText('-', variant: TRTextVariant.bodySm),
+                  ),
+                )
+              : const SizedBox(width: TRSpacing.small),
+        ),
+        TRButton(
+          appearance: TRAppearance.outline,
+          onPressed: _controller.clear,
+          child: Text(_pick(locale, 'Clear', '지우기', 'クリア')),
+        ),
+      ],
+    );
+  }
 }
 
 Widget _checkboxSample({

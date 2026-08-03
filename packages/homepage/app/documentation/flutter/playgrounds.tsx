@@ -272,7 +272,33 @@ export const formPlayground = flutterPlayground(
 export const menubarPlayground = flutterPlayground('menubar', {}, {});
 export const navigationMenuPlayground = flutterPlayground('navigation-menu', {}, {});
 export const numberFieldPlayground = flutterPlayground('number-field', {}, {});
-export const otpFieldPlayground = flutterPlayground('otp-field', {}, {});
+export const otpFieldPlayground = flutterPlayground(
+  'otp-field',
+  {
+    disabled: false,
+    errorText: '',
+    helperText: 'Enter the code we sent to your device.',
+    length: 6,
+    obscureText: false,
+    readOnly: false,
+    uiSize: 'md',
+    value: '',
+  },
+  {
+    disabled: { control: 'boolean' },
+    errorText: { control: 'text' },
+    helperText: { control: 'text' },
+    length: { control: { max: 8, min: 3, step: 1, type: 'range' } },
+    obscureText: { control: 'boolean' },
+    readOnly: { control: 'boolean' },
+    uiSize: { control: 'select', options: sizes },
+    value: { control: 'text' },
+  },
+  {
+    ja: { helperText: 'お使いのデバイスに送信したコードを入力してください。' },
+    ko: { helperText: '기기로 보낸 코드를 입력하세요.' },
+  },
+);
 export const popoverPlayground = flutterPlayground('popover', {}, {});
 export const previewCardPlayground = flutterPlayground('preview-card', {}, {});
 export const scrollAreaPlayground = flutterPlayground(
