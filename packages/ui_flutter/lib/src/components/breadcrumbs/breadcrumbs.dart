@@ -43,8 +43,17 @@ class TRBreadcrumbs extends StatelessWidget {
           TRGeneratedFlutterRendering.normalLineMd /
           TRGeneratedTypographySizes.md,
     );
+    final cjk = RegExp(r'[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]');
+    final japanese = Localizations.localeOf(context).languageCode == 'ja';
     TextStyle itemStyle(String label) => TextStyle(
       fontSize: TRGeneratedTypographySizes.sm,
+      letterSpacing: cjk.hasMatch(label)
+          ? japanese
+                ? null
+                : -TRGeneratedBorders.defaultWidth /
+                      (TRGeneratedSpacing.size3xs +
+                          TRGeneratedBorders.defaultWidth)
+          : -TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.md,
       height: normalLineHeightFor(
         label,
         TRGeneratedTypographySizes.sm,

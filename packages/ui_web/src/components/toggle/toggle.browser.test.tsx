@@ -189,6 +189,10 @@ test('uses control tokens and exposes pointer visual states', async () => {
   const idle = page.getByRole('button', { name: 'Idle' });
   const pressed = page.getByRole('button', { name: 'Pressed' });
   const disabled = page.getByRole('button', { name: 'Disabled' });
+  await userEvent.unhover(idle.element());
+  await expect
+    .poll(() => getComputedStyle(idle.element()).backgroundColor)
+    .toBe('rgb(250, 250, 250)');
   const idleStyle = getComputedStyle(idle.element());
 
   expect(idleStyle.backgroundColor).toBe('rgb(250, 250, 250)');

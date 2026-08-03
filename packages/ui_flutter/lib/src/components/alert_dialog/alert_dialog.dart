@@ -36,6 +36,7 @@ class TRAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
+    final locale = Localizations.localeOf(context).languageCode;
     final dialogWidth = math.max(
       0.0,
       math.min(
@@ -78,7 +79,9 @@ class TRAlertDialog extends StatelessWidget {
                 label: semanticLabel,
                 role: SemanticsRole.dialog,
                 child: Padding(
-                  padding: const EdgeInsets.all(TRGeneratedSpacing.xl),
+                  padding: const EdgeInsets.all(
+                    TRGeneratedSpacing.xl + TRGeneratedBorders.defaultWidth,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -94,32 +97,72 @@ class TRAlertDialog extends StatelessWidget {
                                 TRGeneratedFontFamilies.fallback,
                             fontSize: TRGeneratedTypographySizes.lg,
                             fontWeight: TRGeneratedFontWeights.medium,
+                            height: switch (locale) {
+                              'ko' =>
+                                (TRGeneratedTypographySizes.lg +
+                                        TRGeneratedSpacing.sm -
+                                        TRGeneratedBorders.defaultWidth) /
+                                    TRGeneratedTypographySizes.lg,
+                              'ja' =>
+                                (TRGeneratedTypographySizes.lg +
+                                        TRGeneratedSpacing.lg) /
+                                    TRGeneratedTypographySizes.lg,
+                              _ =>
+                                (TRGeneratedTypographySizes.lg +
+                                        TRGeneratedSpacing.xs +
+                                        TRGeneratedBorders.defaultWidth / 2) /
+                                    TRGeneratedTypographySizes.lg,
+                            },
                           ),
                           child: title,
                         ),
                       ),
                       if (description case final description?)
-                        TRLayerPartBoundary(
-                          name: 'description',
-                          child: DefaultTextStyle.merge(
-                            style: TRGeneratedTextStyles.bodySm.copyWith(
-                              color: colors.textMuted,
-                              fontFamilyFallback:
-                                  TRGeneratedFontFamilies.fallback,
+                        Transform.translate(
+                          offset: locale == 'ja' || locale == 'ko'
+                              ? const Offset(
+                                  0,
+                                  TRGeneratedBorders.defaultWidth / 2,
+                                )
+                              : Offset.zero,
+                          child: TRLayerPartBoundary(
+                            name: 'description',
+                            child: DefaultTextStyle.merge(
+                              style: TRGeneratedTextStyles.bodySm.copyWith(
+                                color: colors.textMuted,
+                                fontFamilyFallback:
+                                    TRGeneratedFontFamilies.fallback,
+                              ),
+                              child: description,
                             ),
-                            child: description,
                           ),
                         ),
                       ?content,
                       if (actions.isNotEmpty)
-                        Align(
-                          alignment: AlignmentDirectional.centerEnd,
-                          child: Wrap(
-                            alignment: WrapAlignment.end,
-                            runAlignment: WrapAlignment.end,
-                            spacing: TRGeneratedSpacing.sm,
-                            runSpacing: TRGeneratedSpacing.sm,
-                            children: actions,
+                        Transform.translate(
+                          offset: switch (locale) {
+                            'ko' => const Offset(
+                              TRGeneratedBorders.defaultWidth * 2,
+                              -TRGeneratedBorders.defaultWidth,
+                            ),
+                            'ja' => const Offset(
+                              0,
+                              -TRGeneratedBorders.defaultWidth,
+                            ),
+                            _ => const Offset(
+                              -TRGeneratedBorders.defaultWidth / 2,
+                              -TRGeneratedBorders.defaultWidth * 1.5,
+                            ),
+                          },
+                          child: Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: Wrap(
+                              alignment: WrapAlignment.end,
+                              runAlignment: WrapAlignment.end,
+                              spacing: TRGeneratedSpacing.sm,
+                              runSpacing: TRGeneratedSpacing.sm,
+                              children: actions,
+                            ),
                           ),
                         ),
                     ],
@@ -189,16 +232,7 @@ Future<T?> showTRAlertDialog<T>({
           curve: TRMotion.easeOut,
           reverseCurve: TRMotion.standard,
         );
-        return FadeTransition(
-          opacity: curved,
-          child: ScaleTransition(
-            scale: Tween<double>(
-              begin: TRGeneratedMeasurements.overlayClosedScale,
-              end: 1,
-            ).animate(curved),
-            child: child,
-          ),
-        );
+        return FadeTransition(opacity: curved, child: child);
       },
       transitionDuration: disableAnimations ? Duration.zero : TRMotion.slow,
       traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,

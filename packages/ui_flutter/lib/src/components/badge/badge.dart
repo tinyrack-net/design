@@ -37,6 +37,19 @@ class TRBadge extends StatelessWidget {
       TRUiSize.md => TRGeneratedTypographySizes.sm,
       TRUiSize.lg => TRGeneratedTypographySizes.md,
     };
+    final locale = Localizations.localeOf(context).languageCode;
+    final letterSpacing = switch ((uiSize, locale)) {
+      (TRUiSize.sm, 'en') =>
+        TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.xs,
+      (TRUiSize.md, 'en') =>
+        -TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.xs,
+      (TRUiSize.md, 'ko') =>
+        -TRGeneratedBorders.defaultWidth +
+            TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.md,
+      _ =>
+        TRGeneratedBorders.defaultWidth /
+            (TRGeneratedSpacing.sm - TRGeneratedBorders.defaultWidth),
+    };
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surfaceForStatus(variant),
@@ -59,7 +72,7 @@ class TRBadge extends StatelessWidget {
             fontSize: fontSize,
             fontWeight: TRGeneratedFontWeights.strong,
             height: TRGeneratedTypographyLineHeights.xs,
-            letterSpacing: TRGeneratedTypographyTracking.none * fontSize,
+            letterSpacing: letterSpacing,
           ),
           child: child,
         ),

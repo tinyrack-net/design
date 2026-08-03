@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/motion_boundary.dart';
 import '../../theme.dart';
 import '../../types.dart';
 
@@ -77,10 +78,17 @@ class _TRSpinnerState extends State<TRSpinner>
     };
     final spinner = SizedBox.square(
       dimension: size,
-      child: RotationTransition(
-        turns: _rotation,
+      child: AnimatedBuilder(
+        animation: _rotation,
         child: CustomPaint(
           painter: _TRSpinnerPainter(color: color, value: widget.value),
+        ),
+        builder: (context, child) => TRMotionBoundary(
+          progress: _rotation.value,
+          child: Transform.rotate(
+            angle: _rotation.value * 2 * pi,
+            child: child,
+          ),
         ),
       ),
     );

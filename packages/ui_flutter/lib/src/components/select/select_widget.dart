@@ -338,6 +338,7 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
       maximumSize: const WidgetStatePropertyAll(
         Size(double.infinity, TRGeneratedControlMetrics.smHeight),
       ),
+      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       padding: const WidgetStatePropertyAll(
         EdgeInsets.symmetric(
           horizontal: TRGeneratedControlMetrics.smPaddingInline,

@@ -162,34 +162,32 @@ describe('built Flutter Web component preview', () => {
             const messages = (
               window as Window & { __flutterPreviewMessages?: unknown[] }
             ).__flutterPreviewMessages;
-            for (const message of [...(messages ?? [])].reverse()) {
-              if (
-                typeof message === 'object' &&
-                message !== null &&
-                (message as { component?: string }).component === 'accordion' &&
-                (message as { type?: string }).type === 'metrics'
-              ) {
-                const bounds = (
-                  message as {
-                    payload?: {
-                      parts?: Record<
-                        string,
-                        {
-                          bounds?: {
-                            height: number;
-                            width: number;
-                            x: number;
-                            y: number;
-                          };
-                        }
-                      >;
-                    };
-                  }
-                ).payload?.parts?.[partName]?.bounds;
-                if (bounds !== undefined) return bounds;
-              }
-            }
-            return null;
+            const latestMetrics = [...(messages ?? [])]
+              .reverse()
+              .find(
+                (message) =>
+                  typeof message === 'object' &&
+                  message !== null &&
+                  (message as { component?: string }).component === 'accordion' &&
+                  (message as { type?: string }).type === 'metrics',
+              ) as
+              | {
+                  payload?: {
+                    parts?: Record<
+                      string,
+                      {
+                        bounds?: {
+                          height: number;
+                          width: number;
+                          x: number;
+                          y: number;
+                        };
+                      }
+                    >;
+                  };
+                }
+              | undefined;
+            return latestMetrics?.payload?.parts?.[partName]?.bounds ?? null;
           }, part);
         await expect.poll(readBounds, { timeout: 60_000 }).not.toBeNull();
         const bounds = await readBounds();

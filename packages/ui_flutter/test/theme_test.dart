@@ -180,15 +180,16 @@ void main() {
     await tester.sendKeyDownEvent(LogicalKeyboardKey.space);
     await tester.pump();
     expect(presses, 0);
-    final interactionFrame = tester.widget<AnimatedContainer>(
-      find
-          .descendant(
-            of: find.byType(TRButton),
-            matching: find.byType(AnimatedContainer),
-          )
-          .first,
+    final interactionTransforms = tester.widgetList<Transform>(
+      find.descendant(
+        of: find.byType(TRButton),
+        matching: find.byType(Transform),
+      ),
     );
-    expect(interactionFrame.transform?.storage[13], 1);
+    expect(
+      interactionTransforms.any((widget) => widget.transform.storage[13] == 1),
+      isTrue,
+    );
 
     await tester.sendKeyUpEvent(LogicalKeyboardKey.space);
     await tester.pump();
@@ -437,6 +438,29 @@ void main() {
     await tester.pumpWidget(_wrapNarrow(const TRSkeleton(animate: false)));
     await tester.pump(const Duration(seconds: 1));
     expect(find.byType(TRSkeleton), findsOneWidget);
+  });
+
+  testWidgets('skeleton honors reduced motion and keeps a stable frame', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const MediaQuery(
+          data: MediaQueryData(disableAnimations: true),
+          child: TRSkeleton(),
+        ),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(tester.binding.hasScheduledFrame, isFalse);
+    expect(
+      find.descendant(
+        of: find.byType(TRSkeleton),
+        matching: find.byType(CustomPaint),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('link invokes onTap when enabled', (tester) async {
@@ -1083,10 +1107,15 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(_wrapNarrow(const TRProgress()));
-    final indicator = tester.widget<LinearProgressIndicator>(
-      find.byType(LinearProgressIndicator),
+    expect(
+      find.descendant(
+        of: find.byType(TRProgress),
+        matching: find.byType(CustomPaint),
+      ),
+      findsOneWidget,
     );
-    expect(indicator.value, isNull);
+    expect(find.byType(LinearProgressIndicator), findsNothing);
+    expect(tester.getSemantics(find.byType(TRProgress)).value, isEmpty);
   });
 
   testWidgets('meter reports its rounded percentage value', (tester) async {

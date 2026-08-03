@@ -36,7 +36,14 @@
     color: var(--tinyrack-text-placeholder);
   }
 
-  .tr-input:hover:not(:disabled, [data-disabled], [readonly]) {
+  .tr-input:hover:not(
+    :disabled,
+    [data-disabled],
+    [readonly],
+    [aria-invalid="true"],
+    [data-invalid],
+    :invalid
+  ) {
     border-color: var(--tinyrack-border-strong);
   }
 

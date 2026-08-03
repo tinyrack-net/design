@@ -8,15 +8,15 @@ import { VisualParityPool } from '../scripts/visual-parity-pool.ts';
 import { VisualParityImagePool } from './visual-parity-image-pool.ts';
 
 describe('visual parity concurrency', () => {
-  it('reserves one quarter of the processors for image comparison', () => {
-    expect(resolveVisualParityConcurrency(32, 'full')).toBe(24);
-    expect(resolveVisualParityComparisonWorkers(32, 'full')).toBe(8);
+  it('caps endpoint sessions before browser raster contention', () => {
+    expect(resolveVisualParityConcurrency(32, 'full')).toBe(12);
+    expect(resolveVisualParityComparisonWorkers(32, 'full')).toBe(12);
   });
 
-  it('bounds virtual-clock motion work to eight concurrent contexts', () => {
-    expect(resolveVisualParityConcurrency(32, 'motion')).toBe(8);
+  it('bounds virtual-clock motion work to four concurrent contexts', () => {
+    expect(resolveVisualParityConcurrency(32, 'motion')).toBe(4);
     expect(resolveVisualParityConcurrency(4, 'motion')).toBe(4);
-    expect(resolveVisualParityComparisonWorkers(32, 'motion')).toBe(8);
+    expect(resolveVisualParityComparisonWorkers(32, 'motion')).toBe(4);
   });
 
   it('keeps at least one worker for invalid platform reports', () => {

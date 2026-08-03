@@ -137,8 +137,12 @@ test('preserves required, invalid, disabled, readonly, focus, and consumer style
 
   expect(required.required).toBe(true);
   expect(required.checkValidity()).toBe(false);
-  expect(getComputedStyle(required).borderColor).toBe('rgb(220, 38, 38)');
-  expect(getComputedStyle(invalid).borderColor).toBe('rgb(220, 38, 38)');
+  await expect
+    .poll(() => getComputedStyle(required).borderColor)
+    .toBe('rgb(220, 38, 38)');
+  await expect
+    .poll(() => getComputedStyle(invalid).borderColor)
+    .toBe('rgb(220, 38, 38)');
   expect(getComputedStyle(custom).backgroundColor).toBe('rgb(1, 2, 3)');
 
   await userEvent.tab();

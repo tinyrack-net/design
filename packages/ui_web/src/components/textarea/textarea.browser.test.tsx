@@ -97,9 +97,9 @@ test('uses vertical resizing, native overflow, and semantic state tokens', async
   expect(getComputedStyle(textarea as HTMLTextAreaElement).resize).toBe('vertical');
   expect(getComputedStyle(textarea as HTMLTextAreaElement).overflowX).toBe('auto');
   expect(getComputedStyle(textarea as HTMLTextAreaElement).overflowY).toBe('auto');
-  expect(getComputedStyle(invalid as HTMLTextAreaElement).borderColor).toBe(
-    'rgb(220, 38, 38)',
-  );
+  await expect
+    .poll(() => getComputedStyle(invalid as HTMLTextAreaElement).borderColor)
+    .toBe('rgb(220, 38, 38)');
   invalid?.focus();
   const invalidFocus = getComputedStyle(invalid as HTMLTextAreaElement);
   expect(invalidFocus.outlineOffset).toBe('-2px');

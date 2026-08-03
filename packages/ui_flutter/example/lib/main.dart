@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 // ignore: implementation_imports
 import 'package:tinyrack_ui/src/internal/layer.dart';
+// ignore: implementation_imports
+import 'package:tinyrack_ui/src/internal/motion_boundary.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 import 'code_highlighter.dart';
@@ -82,6 +84,7 @@ class _PreviewAppState extends State<PreviewApp> {
   late Locale _locale;
   late ThemeMode _themeMode;
   bool _focused = false;
+  bool _focusVisible = false;
   bool _hovered = false;
   bool _pressed = false;
   int _activations = 0;
@@ -97,6 +100,7 @@ class _PreviewAppState extends State<PreviewApp> {
     _themeMode = widget.initialTheme;
     _textFieldController = TextEditingController();
     _bridge = PreviewBridge(_handleMessage);
+    HardwareKeyboard.instance.addHandler(_handleHardwareKey);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bridge.send('ready', _component, {
         'generation': _generation,
@@ -136,6 +140,44 @@ class _PreviewAppState extends State<PreviewApp> {
         popupRenderObject ?? _previewKey.currentContext?.findRenderObject();
     if (renderObject is! RenderBox || !renderObject.hasSize) return;
     final origin = renderObject.localToGlobal(Offset.zero);
+    double? motionOpacity;
+    final globalTransform = renderObject.getTransformTo(null).storage;
+    final motionScaleX = globalTransform[0].abs();
+    final motionScaleY = globalTransform[5].abs();
+    double? motionTranslateX;
+    double? motionTranslateY;
+    double? motionProgress;
+    void findMotionProgress(RenderObject node) {
+      if (motionProgress != null) return;
+      if (node is RenderTRMotionBoundary) {
+        motionProgress = node.progress;
+        return;
+      }
+      node.visitChildren(findMotionProgress);
+    }
+
+    findMotionProgress(renderObject);
+    RenderObject? ancestor = renderObject.parent;
+    while (ancestor != null) {
+      if (motionOpacity == null && ancestor is RenderOpacity) {
+        motionOpacity = ancestor.opacity;
+      } else if (motionOpacity == null && ancestor is RenderAnimatedOpacity) {
+        motionOpacity = ancestor.opacity.value;
+      }
+      if (_component == 'drawer' && ancestor is RenderFractionalTranslation) {
+        motionTranslateX = ancestor.translation.dx * renderObject.size.width;
+        motionTranslateY = ancestor.translation.dy * renderObject.size.height;
+      } else if (_component == 'toast' && ancestor is RenderTransform) {
+        final transform = ancestor.getTransformTo(ancestor.parent).storage;
+        motionTranslateX ??= transform[12];
+        motionTranslateY ??= transform[13];
+      }
+      ancestor = ancestor.parent;
+    }
+    if (_component == 'toast' && motionOpacity != null) {
+      motionTranslateX = 0;
+      motionTranslateY = TRGeneratedSpacing.sm * (1 - motionOpacity);
+    }
     double? baseline;
     try {
       baseline = renderObject.getDistanceToBaseline(TextBaseline.alphabetic);
@@ -175,8 +217,7 @@ class _PreviewAppState extends State<PreviewApp> {
             _focused &&
             (_component == 'text-field' ||
                 _component == 'textarea' ||
-                FocusManager.instance.highlightMode ==
-                    FocusHighlightMode.traditional),
+                _focusVisible),
         'focused': _focused,
         'hovered': _hovered,
         'invalid': _args['errorText'] != null,
@@ -184,6 +225,15 @@ class _PreviewAppState extends State<PreviewApp> {
         'pressed': _pressed,
         'readonly': _args['readOnly'] == true,
       },
+      if (motionOpacity != null || layerKind != null)
+        'motion': {
+          'opacity': ?motionOpacity,
+          'scaleX': motionScaleX,
+          'scaleY': motionScaleY,
+          'translateX': ?motionTranslateX,
+          'translateY': ?motionTranslateY,
+        },
+      'motionProgress': ?motionProgress,
       if (renderObject is RenderParagraph)
         'textStyle': {
           'fontFamily': renderObject.text.style?.fontFamily,
@@ -386,6 +436,7 @@ class _PreviewAppState extends State<PreviewApp> {
         _activations = 0;
         _args = const {};
         _contentRevision += 1;
+        _focusVisible = false;
         _focused = false;
         _pressed = false;
       });
@@ -472,6 +523,7 @@ class _PreviewAppState extends State<PreviewApp> {
       _args = const {};
       _activations = 0;
       _focused = false;
+      _focusVisible = false;
       _hovered = false;
       _pressed = false;
       _contentRevision += 1;
@@ -599,6 +651,11 @@ class _PreviewAppState extends State<PreviewApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _sendMetrics());
   }
 
+  bool _handleHardwareKey(KeyEvent event) {
+    if (event is KeyDownEvent) _focusVisible = true;
+    return false;
+  }
+
   Widget _previewContent(PreviewExampleBuilder? exampleBuilder) {
     if (exampleBuilder != null) {
       return Builder(builder: (context) => exampleBuilder(context, _locale));
@@ -608,19 +665,16 @@ class _PreviewAppState extends State<PreviewApp> {
       onExit: (_) => _updateInteraction(hovered: false),
       child: Listener(
         onPointerCancel: (_) => _updateInteraction(pressed: false),
-        onPointerDown: (_) => _updateInteraction(pressed: true),
+        onPointerDown: (_) {
+          _focusVisible = false;
+          _updateInteraction(pressed: true);
+        },
         onPointerUp: (_) => _updateInteraction(pressed: false),
         child: Focus(
           canRequestFocus: false,
           onFocusChange: (focused) => _updateInteraction(focused: focused),
-          onKeyEvent: (_, event) {
-            if (event.logicalKey == LogicalKeyboardKey.space ||
-                event.logicalKey == LogicalKeyboardKey.enter) {
-              _updateInteraction(pressed: event is KeyDownEvent);
-            }
-            return KeyEventResult.ignored;
-          },
           child: PreviewComponent(
+            key: ValueKey('$_component-$_contentRevision'),
             args: _args,
             component: _component,
             contentRevision: _contentRevision,
@@ -647,6 +701,7 @@ class _PreviewAppState extends State<PreviewApp> {
 
   @override
   void dispose() {
+    HardwareKeyboard.instance.removeHandler(_handleHardwareKey);
     _bridge.dispose();
     _textFieldController.dispose();
     super.dispose();
@@ -749,16 +804,16 @@ List<String> _supportedArgs(String component) => switch (component) {
   'avatar' => ['shape', 'uiSize'],
   'fieldset' => ['disabled'],
   'field' => ['disabled', 'errorText', 'helper'],
-  'meter' => ['variant'],
-  'progress' => ['uiSize', 'variant'],
+  'meter' => ['value', 'variant'],
+  'progress' => ['uiSize', 'value', 'variant'],
   'link' => ['disabled', 'underline', 'variant'],
-  'toggle' => ['disabled', 'pressed'],
+  'toggle' => ['disabled', 'pressed', 'uiSize'],
   'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
   'radio' => ['checked', 'disabled', 'uiSize'],
   'switch' => ['checked', 'disabled'],
   'toggle-group' => ['disabled'],
   'collapsible' => ['disabled', 'open'],
-  'accordion' => ['disabledItem', 'multiple'],
+  'accordion' => ['disabledItem', 'multiple', 'open'],
   'animated-number' => [
     'animation',
     'duration',
@@ -780,6 +835,15 @@ List<String> _supportedArgs(String component) => switch (component) {
     'value',
   ],
   'tabs' => ['uiSize'],
+  'pagination' => [
+    'boundaryCount',
+    'currentPage',
+    'siblingCount',
+    'totalPages',
+  ],
+  'scroll-area' => ['autoHide'],
+  'table' => ['density', 'striped'],
+  'window-frame' => ['padding', 'variant'],
   'text-field' => [
     'disabled',
     'errorText',
@@ -801,9 +865,18 @@ Map<String, Object?>? _validateArgs(
   for (final MapEntry(:key, :value) in raw.entries) {
     if (key is! String || !allowed.contains(key)) return null;
     final valid = switch (key) {
+      'boundaryCount' || 'currentPage' || 'siblingCount' || 'totalPages' =>
+        value is num || (value is String && int.tryParse(value) != null),
+      'density' =>
+        value is String &&
+            const {'compact', 'comfortable', 'spacious'}.contains(value),
+      'striped' => value is bool,
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
-      'value' when component == 'animated-number' => value is num,
+      'value' when component == 'animated-number' || component == 'meter' =>
+        value is num,
+      'value' when component == 'progress' =>
+        value is num || value == 'indeterminate',
       'duration' when component == 'animated-number' =>
         value is num && value >= 0 && value <= 1500,
       'animation' when component == 'animated-number' =>
@@ -834,6 +907,7 @@ Map<String, Object?>? _validateArgs(
       'placeholder' ||
       'value' => value is String,
       'animate' ||
+      'autoHide' ||
       'checked' ||
       'disabled' ||
       'disabledItem' ||
@@ -901,6 +975,8 @@ Map<String, Object?>? _validateArgs(
       'variant' when component == 'card' =>
         value is String &&
             const {'default', 'outlined', 'elevated'}.contains(value),
+      'variant' when component == 'window-frame' =>
+        value is String && const {'macos', 'browser'}.contains(value),
       'padding' =>
         value is String && const {'none', 'sm', 'md', 'lg'}.contains(value),
       'completionMode' =>
@@ -1028,6 +1104,12 @@ class PreviewComponent extends StatelessWidget {
   };
 
   GlobalKey _partKey(String name) => partKeys.putIfAbsent(name, GlobalKey.new);
+
+  int _intArg(String name, int fallback) => switch (args[name]) {
+    final num value => value.round(),
+    final String value => int.tryParse(value) ?? fallback,
+    _ => fallback,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -1320,6 +1402,26 @@ class PreviewComponent extends StatelessWidget {
               )
             : const SizedBox(width: TRGeneratedControlMetrics.smGap),
       ),
+      'pagination' => TRPagination(
+        key: measureKey,
+        currentPage: _intArg('currentPage', 3),
+        totalPages: _intArg('totalPages', 12),
+        boundaryCount: _intArg('boundaryCount', 1),
+        siblingCount: _intArg('siblingCount', 1),
+        previousLabel: switch (locale) {
+          'ko' => '이전',
+          'ja' => '前へ',
+          _ => 'Previous',
+        },
+        nextLabel: switch (locale) {
+          'ko' => '다음',
+          'ja' => '次へ',
+          _ => 'Next',
+        },
+        onPageChanged: (page) => onStateChanged({
+          'args': {'currentPage': page},
+        }),
+      ),
       'popover' => _PreviewPopover(args: args, key: measureKey),
       'preview-card' => _PreviewPreviewCard(args: args, key: measureKey),
       'scroll-area' => SizedBox(
@@ -1327,6 +1429,7 @@ class PreviewComponent extends StatelessWidget {
         width: 320,
         height: 160,
         child: TRScrollArea(
+          autoHide: args['autoHide'] == true,
           semanticLabel: 'Rack activity',
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1407,6 +1510,44 @@ class PreviewComponent extends StatelessWidget {
               label: Text('Settings', key: _partKey('leaf2Label')),
             ),
           ],
+        ),
+      ),
+      'table' => TRTable(
+        key: measureKey,
+        caption: Text(switch (locale) {
+          'ko' => '랙 상태',
+          'ja' => 'ラックの状態',
+          _ => 'Rack status',
+        }),
+        density: TRTableDensity.values.byName(
+          args['density'] as String? ?? 'comfortable',
+        ),
+        striped: args['striped'] == true,
+        columns: const [
+          TRTableColumn(label: Text('Rack')),
+          TRTableColumn(label: Text('Status')),
+        ],
+        rows: const [
+          TRTableRow(cells: [Text('Rack A'), Text('Healthy')]),
+          TRTableRow(cells: [Text('Rack B'), Text('Degraded')]),
+        ],
+      ),
+      'window-frame' => SizedBox(
+        key: measureKey,
+        width: 400,
+        child: TRWindowFrame(
+          variant: args['variant'] == 'browser'
+              ? TRWindowFrameVariant.browser
+              : TRWindowFrameVariant.macos,
+          padding: TRWindowFramePadding.values.byName(
+            args['padding'] as String? ?? 'md',
+          ),
+          title: const Text('zsh — tinyrack'),
+          address: const Text('https://tinyrack.net'),
+          body: const SizedBox(
+            height: 39.796875,
+            child: Text('❯ tinyrack status\n✓ Ready'),
+          ),
         ),
       ),
       'alert' => SizedBox(
@@ -1660,15 +1801,21 @@ class PreviewComponent extends StatelessWidget {
             'ja' => 'ストレージ',
             _ => 'Storage',
           },
-          value: 75,
-          valueText: '75%',
+          value: (args['value'] as num?)?.toDouble() ?? 75,
+          valueText: '${((args['value'] as num?)?.toDouble() ?? 75).round()}%',
           variant: statusVariant,
         ),
       ),
       'progress' => SizedBox(
         key: measureKey,
         width: 320,
-        child: TRProgress(uiSize: size, value: 60, variant: statusVariant),
+        child: TRProgress(
+          uiSize: size,
+          value: args['value'] == 'indeterminate'
+              ? null
+              : (args['value'] as num?)?.toDouble() ?? 60,
+          variant: statusVariant,
+        ),
       ),
       'link' => TRLink(
         key: measureKey,
@@ -1707,6 +1854,7 @@ class PreviewComponent extends StatelessWidget {
         key: measureKey,
         disabled: args['disabled'] == true,
         pressed: args['pressed'] == true,
+        uiSize: size,
         onPressedChange: (_) => onStateChanged({'pressed': true}),
         child: Text(switch (locale) {
           'ko' => '굵게',
@@ -1745,6 +1893,7 @@ class PreviewComponent extends StatelessWidget {
       ),
       'switch' => TRSwitch(
         key: measureKey,
+        thumbKey: _partKey('thumb'),
         checked: args['checked'] == true,
         disabled: args['disabled'] == true,
         onCheckedChange: (_) => onStateChanged({'pressed': true}),
@@ -1787,6 +1936,8 @@ class PreviewComponent extends StatelessWidget {
               : _partKey('configureTrigger'),
           locale: locale,
           multiple: args['multiple'] == true,
+          open: args['open'] == true,
+          parityMode: parityMode,
           onStateChanged: onStateChanged,
         ),
       ),
@@ -1995,6 +2146,8 @@ class _PreviewAccordion extends StatefulWidget {
     required this.installTriggerKey,
     required this.locale,
     required this.multiple,
+    required this.open,
+    required this.parityMode,
     required this.onStateChanged,
     super.key,
   });
@@ -2005,6 +2158,8 @@ class _PreviewAccordion extends StatefulWidget {
   final Key installTriggerKey;
   final String locale;
   final bool multiple;
+  final bool open;
+  final bool parityMode;
   final ValueChanged<Map<String, Object?>> onStateChanged;
 
   @override
@@ -2031,7 +2186,7 @@ class _PreviewAccordionState extends State<_PreviewAccordion> {
   };
 
   void _handleValueChange(List<String> value) {
-    setState(() => _value = value);
+    if (!widget.parityMode) setState(() => _value = value);
     widget.onStateChanged({'pressed': true, 'value': value.join(',')});
   }
 
@@ -2039,7 +2194,9 @@ class _PreviewAccordionState extends State<_PreviewAccordion> {
   Widget build(BuildContext context) => TRAccordion(
     multiple: widget.multiple,
     onValueChange: _handleValueChange,
-    value: _value,
+    value: widget.parityMode
+        ? (widget.open ? const ['install'] : const [])
+        : _value,
     items: [
       TRAccordionItem(
         value: 'install',
@@ -2998,8 +3155,8 @@ class _PreviewDrawerState extends State<_PreviewDrawer> {
 
   TRDrawerPlacement get _placement => switch (widget.args['swipeDirection']) {
     'up' => TRDrawerPlacement.top,
-    'left' => TRDrawerPlacement.end,
-    'right' => TRDrawerPlacement.start,
+    'left' => TRDrawerPlacement.start,
+    'right' => TRDrawerPlacement.end,
     _ => TRDrawerPlacement.bottom,
   };
 
@@ -3389,7 +3546,7 @@ class _PreviewSelectState extends State<_PreviewSelect> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.args['value'] != widget.args['value']) {
       final value = widget.args['value'];
-      _value = value is String && value.isNotEmpty ? value : null;
+      _value = value is String ? (value.isEmpty ? null : value) : 'stable';
     }
     if (oldWidget.args['open'] != widget.args['open']) _syncOpenState();
   }

@@ -1,8 +1,11 @@
+import { readdir, readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   defaultMotionParityScenarios,
   motionParityScenarios,
   motionSampleTimes,
+  motionSourceCoverage,
   parityComponents,
   parityContract,
   parityLocales,
@@ -16,13 +19,13 @@ describe('React and Flutter visual parity catalog', () => {
   it('preserves the full endpoint and motion execution counts', () => {
     expect(
       visualParityScenarios.length * parityLocales.length * parityThemes.length,
-    ).toBe(12_414);
-    expect(defaultMotionParityScenarios.length * parityThemes.length).toBe(276);
+    ).toBe(12_528);
+    expect(defaultMotionParityScenarios.length * parityThemes.length).toBe(430);
     expect(
       defaultMotionParityScenarios.length *
         parityThemes.length *
         motionSampleTimes.length,
-    ).toBe(1_656);
+    ).toBe(2_580);
   });
   it('covers every common component and canonical variant value', () => {
     expect(new Set(visualParityScenarios.map(({ component }) => component))).toEqual(
@@ -42,6 +45,32 @@ describe('React and Flutter visual parity catalog', () => {
         expect(actualValues, `${component}.${axis}`).toEqual(new Set(expectedValues));
       }
     }
+  });
+
+  it('maps every public CSS motion source to a sampled Flutter scenario', () => {
+    const sampledComponents = new Set(
+      motionParityScenarios.map(({ component }) => component),
+    );
+    for (const [source, component] of Object.entries(motionSourceCoverage)) {
+      expect(sampledComponents.has(component), source).toBe(true);
+    }
+  });
+
+  it('keeps the motion source catalog synchronized with component CSS', async () => {
+    const componentsRoot = resolve(import.meta.dirname, '../../ui_web/src/components');
+    const entries = await readdir(componentsRoot, { withFileTypes: true });
+    const discovered = new Set<string>();
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const files = await readdir(resolve(componentsRoot, entry.name));
+      for (const file of files.filter((name) => name.endsWith('.css'))) {
+        const css = await readFile(resolve(componentsRoot, entry.name, file), 'utf8');
+        if (/\b(?:animation|transition)(?:-[\w-]+)?\s*:/.test(css)) {
+          discovered.add(entry.name);
+        }
+      }
+    }
+    expect(discovered).toEqual(new Set(Object.keys(motionSourceCoverage)));
   });
 
   it('uses stable unique scenario ids', () => {

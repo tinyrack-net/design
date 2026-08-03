@@ -107,14 +107,18 @@ class _TRLinkState extends State<TRLink> {
                     color: colors.focus,
                     visible: showFocusRing,
                   ),
-                  child: DefaultTextStyle.merge(
-                    style: TextStyle(
-                      color: color,
-                      fontWeight: TRGeneratedFontWeights.medium,
-                      decoration: underlineVisible
-                          ? TextDecoration.underline
-                          : TextDecoration.none,
-                      decorationColor: color,
+                  child: AnimatedDefaultTextStyle(
+                    curve: TRMotion.standard,
+                    duration: motionDuration,
+                    style: DefaultTextStyle.of(context).style.merge(
+                      TextStyle(
+                        color: color,
+                        fontWeight: TRGeneratedFontWeights.medium,
+                        decoration: underlineVisible
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
+                        decorationColor: color,
+                      ),
                     ),
                     child: widget.child,
                   ),

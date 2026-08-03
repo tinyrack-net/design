@@ -349,6 +349,8 @@ class TRAnchoredLayer extends StatefulWidget {
     this.onOpenChange,
     this.placement = TRLayerPlacement.bottomStart,
     this.gap = TRGeneratedLayerMetrics.anchorGap,
+    this.motionDuration = TRGeneratedMotion.normal,
+    this.motionScale = true,
     this.viewportInset = TRGeneratedMeasurements.overlayInlineInset / 2,
     this.useRootOverlay = true,
     this.dismissOnTapOutside = true,
@@ -364,6 +366,8 @@ class TRAnchoredLayer extends StatefulWidget {
   final ValueChanged<bool>? onOpenChange;
   final TRLayerPlacement placement;
   final double gap;
+  final Duration motionDuration;
+  final bool motionScale;
   final double viewportInset;
   final bool useRootOverlay;
   final bool dismissOnTapOutside;
@@ -528,7 +532,11 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
             maxWidth: math.max(0, safeRect.width),
             maxHeight: math.max(0, safeRect.height),
           ),
-          child: _TRAnchoredLayerMotion(child: layer),
+          child: _TRAnchoredLayerMotion(
+            duration: widget.motionDuration,
+            scale: widget.motionScale,
+            child: layer,
+          ),
         );
         return CustomSingleChildLayout(
           delegate: _TRAnchoredLayerLayoutDelegate(
@@ -547,26 +555,34 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
 }
 
 class _TRAnchoredLayerMotion extends StatelessWidget {
-  const _TRAnchoredLayerMotion({required this.child});
+  const _TRAnchoredLayerMotion({
+    required this.child,
+    required this.duration,
+    required this.scale,
+  });
 
   final Widget child;
+  final Duration duration;
+  final bool scale;
 
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.disableAnimationsOf(context)) return child;
     return TweenAnimationBuilder<double>(
-      duration: TRGeneratedMotion.fast,
+      duration: duration,
       curve: TRGeneratedMotion.easeOut,
       tween: Tween(begin: 0, end: 1),
       builder: (context, value, child) => Opacity(
         opacity: value,
-        child: Transform.scale(
-          alignment: Alignment.topCenter,
-          scale:
-              TRGeneratedMeasurements.overlayClosedScale +
-              (1 - TRGeneratedMeasurements.overlayClosedScale) * value,
-          child: child,
-        ),
+        child: scale
+            ? Transform.scale(
+                alignment: Alignment.topCenter,
+                scale:
+                    TRGeneratedMeasurements.overlayClosedScale +
+                    (1 - TRGeneratedMeasurements.overlayClosedScale) * value,
+                child: child,
+              )
+            : child,
       ),
       child: child,
     );

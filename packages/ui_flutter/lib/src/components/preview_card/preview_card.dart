@@ -148,6 +148,8 @@ class _TRPreviewCardState extends State<TRPreviewCard> {
       widget.onOpenChange?.call(value);
     },
     placement: widget.placement,
+    motionDuration: TRGeneratedMotion.slow,
+    motionScale: false,
     useRootOverlay: widget.useRootOverlay,
     triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
         MouseRegion(

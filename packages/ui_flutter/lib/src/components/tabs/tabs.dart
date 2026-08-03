@@ -203,6 +203,9 @@ class _TRTabItemState extends State<_TRTabItem> {
     final showFocusRing =
         _focused &&
         FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final motionDuration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : TRGeneratedMotion.fast;
 
     return CallbackShortcuts(
       bindings: interactive
@@ -229,7 +232,9 @@ class _TRTabItemState extends State<_TRTabItem> {
                 opacity: widget.disabled ? TRGeneratedOpacity.disabled : 1,
                 child: Stack(
                   children: [
-                    DecoratedBox(
+                    AnimatedContainer(
+                      curve: TRGeneratedMotion.standard,
+                      duration: motionDuration,
                       decoration: BoxDecoration(
                         color: widget.selected
                             ? colors.surface
@@ -264,8 +269,9 @@ class _TRTabItemState extends State<_TRTabItem> {
                         ),
                         child: Center(
                           widthFactor: 1,
-                          child: Text(
-                            widget.label,
+                          child: AnimatedDefaultTextStyle(
+                            curve: TRGeneratedMotion.standard,
+                            duration: motionDuration,
                             style: TextStyle(
                               color: widget.selected
                                   ? colors.text
@@ -279,6 +285,7 @@ class _TRTabItemState extends State<_TRTabItem> {
                                   : TRGeneratedFontWeights.medium,
                               height: lineHeight / fontSize,
                             ),
+                            child: Text(widget.label),
                           ),
                         ),
                       ),

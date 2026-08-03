@@ -36,6 +36,9 @@
 
   .tr-accordion > .tr-accordion-item > .tr-accordion-content {
     background-color: var(--tr-accordion-content-background, transparent);
+    border-block-start: var(--tinyrack-border-width-default) solid
+      var(--tinyrack-control-border);
+    box-shadow: none;
     height: var(--accordion-panel-height);
     padding: 0;
     transition:
