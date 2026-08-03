@@ -68,6 +68,11 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'form-states': _formStates,
   'form-server-errors': _formServerErrors,
   'form-actions': _formActions,
+  'textarea-basic': _textareaBasic,
+  'textarea-states': _textareaStates,
+  'textarea-sizes': _textareaSizes,
+  'textarea-form': _textareaForm,
+  'textarea-validation': _textareaValidation,
   'menu-settings': _menuSettings,
   'menu-submenu': _menuSubmenu,
   'select-controlled': _selectControlled,
@@ -2017,6 +2022,268 @@ class _FormActionsExampleState extends State<_FormActionsExample> {
             ),
           if (_valid.isNotEmpty) TRText(_valid, variant: TRTextVariant.bodySm),
         ],
+      ),
+    );
+  }
+}
+
+Widget _textareaBasic(BuildContext context, Locale locale) {
+  return SizedBox(
+    width: 320,
+    child: TRField(
+      label: _pick(locale, 'Rack notes', '랙 메모', 'ラックのメモ'),
+      description: _pick(
+        locale,
+        'Shared with everyone on the rack team.',
+        '랙 팀 모두에게 공유돼요.',
+        'ラックチーム全員に共有されます。',
+      ),
+      control: TRTextarea(
+        name: 'notes',
+        placeholder: _pick(locale, 'Operational notes', '운영 메모', '運用メモ'),
+      ),
+    ),
+  );
+}
+
+Widget _textareaStates(BuildContext context, Locale locale) {
+  final note = _pick(
+    locale,
+    'Swap the fan tray tomorrow.',
+    '내일 팬 트레이를 교체하세요.',
+    '明日ファントレイを交換してください。',
+  );
+  final placeholder = _pick(locale, 'Operational notes', '운영 메모', '運用メモ');
+
+  Widget state(
+    String label, {
+    bool enabled = true,
+    bool readOnly = false,
+    String? text,
+  }) {
+    return SizedBox(
+      width: 240,
+      child: TRField(
+        label: label,
+        disabled: !enabled,
+        control: TRTextarea(
+          enabled: enabled,
+          initialValue: text,
+          placeholder: placeholder,
+          readOnly: readOnly,
+        ),
+      ),
+    );
+  }
+
+  return Wrap(
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      state(_pick(locale, 'Editable', '편집 가능', '編集可能')),
+      state(
+        _pick(locale, 'Read only', '읽기 전용', '読み取り専用'),
+        readOnly: true,
+        text: note,
+      ),
+      state(
+        _pick(locale, 'Disabled', '비활성', '無効'),
+        enabled: false,
+        text: note,
+      ),
+    ],
+  );
+}
+
+Widget _textareaSizes(BuildContext context, Locale locale) {
+  final note = _pick(locale, 'Rack notes', '랙 메모', 'ラックのメモ');
+  return Wrap(
+    spacing: TRSpacing.large,
+    runSpacing: TRSpacing.large,
+    children: [
+      for (final size in TRUiSize.values)
+        SizedBox(
+          width: 240,
+          child: TRField(
+            label: size.name,
+            control: TRTextarea(initialValue: note, uiSize: size),
+          ),
+        ),
+    ],
+  );
+}
+
+Widget _textareaForm(BuildContext context, Locale locale) =>
+    _TextareaFormExample(locale: locale);
+
+class _TextareaFormExample extends StatefulWidget {
+  const _TextareaFormExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_TextareaFormExample> createState() => _TextareaFormExampleState();
+}
+
+class _TextareaFormExampleState extends State<_TextareaFormExample> {
+  final _formKey = GlobalKey<TRFormState>();
+  late final String _initialNote = _pick(
+    widget.locale,
+    'Scheduled maintenance',
+    '예정된 유지보수',
+    '予定メンテナンス',
+  );
+  // TRTextarea is not a FormField, so reset() cannot restore its text.
+  // The docs snippet keeps the same controller for the same reason.
+  late final TextEditingController _controller = TextEditingController(
+    text: _initialNote,
+  );
+  String _submitted = '';
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    return SizedBox(
+      width: 320,
+      child: TRForm(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.medium,
+          children: [
+            TRField(
+              label: _pick(
+                locale,
+                'Maintenance notes',
+                '유지보수 메모',
+                'メンテナンスのメモ',
+              ),
+              control: TRTextarea(name: 'notes', controller: _controller),
+            ),
+            Wrap(
+              spacing: TRSpacing.small,
+              runSpacing: TRSpacing.small,
+              children: [
+                TRButton(
+                  onPressed: () {
+                    final values = _formKey.currentState!.values;
+                    setState(
+                      () => _submitted = values['notes']?.toString() ?? '',
+                    );
+                  },
+                  child: Text(_pick(locale, 'Submit', '제출', '送信')),
+                ),
+                TRButton(
+                  appearance: TRAppearance.outline,
+                  onPressed: () {
+                    _controller.text = _initialNote;
+                    setState(() => _submitted = '');
+                  },
+                  child: Text(_pick(locale, 'Reset', '초기화', 'リセット')),
+                ),
+              ],
+            ),
+            if (_submitted.isNotEmpty)
+              TRText(
+                '${_pick(locale, 'Submitted', '제출한 값', '送信値')}: $_submitted',
+                variant: TRTextVariant.bodySm,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Widget _textareaValidation(BuildContext context, Locale locale) =>
+    _TextareaValidationExample(locale: locale);
+
+class _TextareaValidationExample extends StatefulWidget {
+  const _TextareaValidationExample({required this.locale});
+
+  final Locale locale;
+
+  @override
+  State<_TextareaValidationExample> createState() =>
+      _TextareaValidationExampleState();
+}
+
+class _TextareaValidationExampleState
+    extends State<_TextareaValidationExample> {
+  final _reasonFocusNode = FocusNode();
+  bool _attempted = false;
+  bool _submitted = false;
+  String _reason = '';
+
+  @override
+  void dispose() {
+    _reasonFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = widget.locale;
+    final invalid = _attempted && _reason.trim().isEmpty;
+    return SizedBox(
+      width: 320,
+      child: TRForm(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRSpacing.medium,
+          children: [
+            TRField(
+              label: _pick(locale, 'Change reason', '변경 이유', '変更理由'),
+              errorText: invalid
+                  ? _pick(
+                      locale,
+                      'Add a reason before submitting.',
+                      '제출하기 전에 이유를 입력하세요.',
+                      '送信前に理由を入力してください。',
+                    )
+                  : null,
+              control: TRTextarea(
+                name: 'reason',
+                focusNode: _reasonFocusNode,
+                onChanged: (value) => setState(() {
+                  _reason = value;
+                  _submitted = false;
+                }),
+              ),
+            ),
+            TRButton(
+              onPressed: () {
+                final empty = _reason.trim().isEmpty;
+                setState(() {
+                  _attempted = true;
+                  _submitted = !empty;
+                });
+                if (empty) _reasonFocusNode.requestFocus();
+              },
+              child: Text(
+                _pick(locale, 'Submit change', '변경 사항 제출', '変更を送信'),
+              ),
+            ),
+            if (_submitted)
+              TRText(
+                _pick(
+                  locale,
+                  'Change submitted.',
+                  '변경 사항을 제출했어요.',
+                  '変更を送信しました。',
+                ),
+                variant: TRTextVariant.bodySm,
+              ),
+          ],
+        ),
       ),
     );
   }
