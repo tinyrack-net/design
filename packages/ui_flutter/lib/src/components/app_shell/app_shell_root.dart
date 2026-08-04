@@ -215,7 +215,8 @@ class _TRAppShellState extends State<TRAppShell> {
       pageScroll: widget.pageScroll,
       sidebarMode: effectiveSidebarMode,
       shellChrome: widget.chrome,
-      child: ColoredBox(
+      child: Material(
+        type: MaterialType.canvas,
         color: context.tinyrackTheme.surface,
         child: Stack(
           fit: StackFit.expand,

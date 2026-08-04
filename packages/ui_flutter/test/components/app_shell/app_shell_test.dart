@@ -10,6 +10,24 @@ void main() {
 
   setUp(() => TestWidgetsFlutterBinding.ensureInitialized());
 
+  testWidgets('provides a Material surface for composed Tinyrack controls', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const TRAppShell(
+          main: TRAppShellMain(
+            child: TRTextField(uiSize: TRUiSize.sm, label: 'Workspace name'),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(TextField), findsOneWidget);
+  });
+
   testWidgets('matches header-first and sidebar-first desktop geometry', (
     tester,
   ) async {
