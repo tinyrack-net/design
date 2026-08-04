@@ -1,3 +1,8 @@
+## 0.4.3
+
+- Preserves explicit null-valued select options in controlled display,
+  selection, and restored form state.
+
 ## 0.4.2
 
 - Defers controlled anchored-layer closure until after the current frame so
