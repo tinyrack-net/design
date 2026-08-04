@@ -155,24 +155,19 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
     registerForRestoration(_restoredLabel, 'selected_label');
     if (widget._controlled) return;
-    final restoredValue = _valueForLabel(_restoredLabel.value);
-    if (restoredValue != null) _uncontrolledValue = restoredValue;
+    for (final item in widget.items) {
+      if (item.label == _restoredLabel.value) {
+        _uncontrolledValue = item.value;
+        break;
+      }
+    }
   }
 
   String _labelFor(T? value) {
-    if (value == null) return '';
     for (final item in widget.items) {
       if (item.value == value) return item.label;
     }
     return '';
-  }
-
-  T? _valueForLabel(String? label) {
-    if (label == null) return null;
-    for (final item in widget.items) {
-      if (item.label == label) return item.value;
-    }
-    return null;
   }
 
   void _syncItemFocusNodes() {

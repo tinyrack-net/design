@@ -90,8 +90,12 @@ class _TRSelectFormFieldState<T> extends FormFieldState<T> {
   void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
     super.restoreState(oldBucket, initialRestore);
     _registerController();
-    final restoredValue = _valueFor(_restorableController!.value.text);
-    if (restoredValue != null) setValue(restoredValue);
+    for (final item in _selectField.items) {
+      if (item.label == _restorableController!.value.text) {
+        setValue(item.value);
+        break;
+      }
+    }
   }
 
   @override
@@ -117,12 +121,5 @@ class _TRSelectFormFieldState<T> extends FormFieldState<T> {
       if (item.value == value) return item.label;
     }
     return '';
-  }
-
-  T? _valueFor(String label) {
-    for (final item in _selectField.items) {
-      if (item.label == label) return item.value;
-    }
-    return null;
   }
 }

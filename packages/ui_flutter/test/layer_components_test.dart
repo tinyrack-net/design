@@ -267,6 +267,43 @@ void main() {
       expect(find.text('Choose one'), findsOneWidget);
     });
 
+    testWidgets('renders and selects an explicit null-valued option', (
+      tester,
+    ) async {
+      String? value;
+      await tester.pumpWidget(
+        _app(
+          StatefulBuilder(
+            builder: (context, setState) => TRSelect<String?>.controlled(
+              items: const [
+                TRSelectItem<String?>(value: null, label: 'System default'),
+                TRSelectItem<String?>(value: 'en', label: 'English'),
+              ],
+              value: value,
+              placeholder: 'Choose one',
+              onValueChange: (next) => setState(() => value = next),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('System default'), findsOneWidget);
+      expect(find.text('Choose one'), findsNothing);
+
+      await tester.tap(_selectTriggers);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('English').last);
+      await tester.pumpAndSettle();
+      expect(value, 'en');
+
+      await tester.tap(_selectTriggers);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('System default').last);
+      await tester.pumpAndSettle();
+      expect(value, isNull);
+      expect(find.text('System default'), findsOneWidget);
+    });
+
     testWidgets('accepts external controlled updates', (tester) async {
       String? value;
       await tester.pumpWidget(
