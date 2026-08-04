@@ -16,6 +16,21 @@ const brandAssets = [
   'tinyrack-lockup-ko-inverse.svg',
   'tinyrack-app-icon.svg',
 ] as const;
+/** Raster fallbacks for surfaces that cannot accept SVG. Each suffix is the
+ *  rendered height in pixels; a lockup keeps the width its viewBox implies. */
+const brandRasters = [
+  ...[128, 256, 512].flatMap((height) => [
+    `tinyrack-mark-${height}.png`,
+    `tinyrack-mark-inverse-${height}.png`,
+  ]),
+  ...[128, 180, 256, 512].map((height) => `tinyrack-app-icon-${height}.png`),
+  ...[64, 128, 256].flatMap((height) => [
+    `tinyrack-lockup-${height}.png`,
+    `tinyrack-lockup-inverse-${height}.png`,
+    `tinyrack-lockup-ko-${height}.png`,
+    `tinyrack-lockup-ko-inverse-${height}.png`,
+  ]),
+];
 const approvedColors = new Set(['#0a0a0a', '#fafafa']);
 
 function readBrandAsset(name: (typeof brandAssets)[number]) {
@@ -35,6 +50,18 @@ describe('Tinyrack logo system', () => {
   it('publishes the complete digital SVG asset set', () => {
     for (const asset of brandAssets) {
       expect(existsSync(join(brandRoot, asset)), asset).toBe(true);
+    }
+  });
+
+  it('publishes a raster fallback for every downloadable logo asset', () => {
+    for (const asset of brandRasters) {
+      const path = join(brandRoot, asset);
+      expect(existsSync(path), asset).toBe(true);
+      expect(readFileSync(path).subarray(1, 4).toString('ascii'), asset).toBe('PNG');
+      expect(
+        readFileSync(join(packageBrandRoot, asset)).equals(readFileSync(path)),
+        asset,
+      ).toBe(true);
     }
   });
 
@@ -123,7 +150,7 @@ describe('Tinyrack logo system', () => {
       );
       expect(logo, locale).not.toContain('TRSwitch to');
       expect(logo, locale).toContain("from '@tinyrack/ui/brand/tinyrack-lockup.svg'");
-      for (const asset of brandAssets) {
+      for (const asset of [...brandAssets, ...brandRasters]) {
         expect(logo, locale).toContain(`href="/brand/${asset}"`);
         expect(logo, locale).toContain(`download="${asset}"`);
       }

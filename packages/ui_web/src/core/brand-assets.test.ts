@@ -7,10 +7,18 @@ import packageJson from '../../package.json' with { type: 'json' };
 const brandRoot = resolve(import.meta.dirname, '../brand');
 const products = ['dotweave', 'proxer', 'tinyauth'] as const;
 const productSizes = [16, 32, 48, 128, 512] as const;
-const tinyrackSizes = [180, 512] as const;
+/** Each entry is a raster height in pixels; square artwork rasterizes to a
+ *  matching width, and a lockup takes the width its `viewBox` ratio implies. */
+const logoRasters = {
+  'tinyrack-app-icon': [128, 180, 256, 512],
+  'tinyrack-lockup': [64, 128, 256],
+  'tinyrack-lockup-inverse': [64, 128, 256],
+  'tinyrack-lockup-ko': [64, 128, 256],
+  'tinyrack-lockup-ko-inverse': [64, 128, 256],
+  'tinyrack-mark': [128, 256, 512],
+  'tinyrack-mark-inverse': [128, 256, 512],
+} as const;
 const expectedAssets = [
-  'tinyrack-app-icon-180.png',
-  'tinyrack-app-icon-512.png',
   'tinyrack-app-icon.svg',
   'tinyrack-lockup-inverse.svg',
   'tinyrack-lockup-ko-inverse.svg',
@@ -18,6 +26,9 @@ const expectedAssets = [
   'tinyrack-lockup.svg',
   'tinyrack-mark-inverse.svg',
   'tinyrack-mark.svg',
+  ...Object.entries(logoRasters).flatMap(([name, heights]) =>
+    heights.map((height) => `${name}-${height}.png`),
+  ),
   ...products.flatMap((product) => [
     `apps/${product}-app-icon-128.png`,
     `apps/${product}-app-icon-16.png`,
@@ -37,26 +48,35 @@ function listFiles(root: string): string[] {
     .sort();
 }
 
-async function rasterize(svgPath: string, size: number) {
+function rasterWidth(svgPath: string, height: number) {
+  const viewBox = /viewBox="([^"]+)"/.exec(readFileSync(svgPath, 'utf8'))?.[1];
+  const [, , boxWidth, boxHeight] = (viewBox ?? '').trim().split(/\s+/).map(Number);
+  expect(boxWidth, svgPath).toBeGreaterThan(0);
+  expect(boxHeight, svgPath).toBeGreaterThan(0);
+  return Math.round(((boxWidth ?? 0) / (boxHeight ?? 1)) * height);
+}
+
+async function rasterize(svgPath: string, width: number, height: number) {
   return sharp(readFileSync(svgPath), { density: 576 })
-    .resize(size, size, { fit: 'fill' })
+    .resize(width, height, { fit: 'fill' })
     .ensureAlpha()
     .raw()
     .toBuffer();
 }
 
 async function expectGeneratedPng(svgPath: string, pngPath: string, size: number) {
+  const width = rasterWidth(svgPath, size);
   const image = sharp(pngPath);
   const metadata = await image.metadata();
   expect(metadata, pngPath).toMatchObject({
     format: 'png',
     height: size,
-    width: size,
+    width,
   });
 
   const [actual, expected] = await Promise.all([
     image.ensureAlpha().raw().toBuffer(),
-    rasterize(svgPath, size),
+    rasterize(svgPath, width, size),
   ]);
   expect(actual.length, pngPath).toBe(expected.length);
 
@@ -71,7 +91,7 @@ async function expectGeneratedPng(svgPath: string, pngPath: string, size: number
     }
     if (maximumDelta > 8) changedPixels += 1;
   }
-  expect(changedPixels / (size * size), pngPath).toBeLessThanOrEqual(0.005);
+  expect(changedPixels / (width * size), pngPath).toBeLessThanOrEqual(0.005);
 }
 
 describe('@tinyrack/ui brand assets', () => {
@@ -91,13 +111,11 @@ describe('@tinyrack/ui brand assets', () => {
   });
 
   it('keeps every committed PNG synchronized with its SVG master', async () => {
-    const tinyrackSvg = join(brandRoot, 'tinyrack-app-icon.svg');
-    for (const size of tinyrackSizes) {
-      await expectGeneratedPng(
-        tinyrackSvg,
-        join(brandRoot, `tinyrack-app-icon-${size}.png`),
-        size,
-      );
+    for (const [name, heights] of Object.entries(logoRasters)) {
+      const svg = join(brandRoot, `${name}.svg`);
+      for (const height of heights) {
+        await expectGeneratedPng(svg, join(brandRoot, `${name}-${height}.png`), height);
+      }
     }
 
     for (const product of products) {
@@ -119,6 +137,7 @@ describe('@tinyrack/ui brand assets', () => {
     });
     expect(packageJson.publishConfig.exports['./brand/*']).toBe('./dist/brand/*');
     expect(expectedAssets).toContain('tinyrack-mark.svg');
+    expect(expectedAssets).toContain('tinyrack-lockup-ko-256.png');
     expect(expectedAssets).toContain('apps/proxer-app-icon-512.png');
   });
 });

@@ -118,8 +118,11 @@ import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
 import proxerIconUrl from '@tinyrack/ui/brand/apps/proxer-app-icon-512.png';
 ```
 
-The product icon SVG is canonical. PNG derivatives are available at 16, 32, 48,
-128, and 512 pixels. The Tinyrack app icon includes 180 and 512 pixel PNGs.
+Every SVG is canonical; the PNGs are rendered from it onto a transparent
+background. Product icons are available at 16, 32, 48, 128, and 512 pixels. The
+Tinyrack app icon adds 128, 180, 256, and 512 pixels, the mark 128, 256, and 512
+pixels, and each lockup 64, 128, and 256 pixels tall. A lockup filename names its
+height, because its width follows the artwork.
 
 ## Color scheme
 

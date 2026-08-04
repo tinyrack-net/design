@@ -195,6 +195,10 @@ describe('homepage build assets', () => {
       'tinyrack-lockup.svg',
       'tinyrack-lockup-inverse.svg',
       'tinyrack-app-icon.svg',
+      'tinyrack-mark-512.png',
+      'tinyrack-lockup-256.png',
+      'tinyrack-lockup-ko-inverse-64.png',
+      'tinyrack-app-icon-180.png',
     ]) {
       assert(existsSync(join(brandAssetRoot, asset)), `Missing brand asset: ${asset}`);
     }
