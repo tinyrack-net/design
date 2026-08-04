@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
+import '../../types.dart';
+import '../button/button.dart';
 
 enum TRWindowFrameVariant { macos, browser }
 
 enum TRWindowFramePadding { none, sm, md, lg }
 
 enum TRWindowFrameControlTone { close, minimize, maximize }
+
+/// Native window command represented by a caption button.
+enum TRWindowCaptionAction { minimize, maximize, restore, close }
 
 // @tinyrack-preview window-frame
 /// Decorative desktop or browser chrome around application content.
@@ -82,11 +88,15 @@ class TRWindowFrameTitleBar extends StatelessWidget {
   const TRWindowFrameTitleBar({
     required this.child,
     this.controls,
+    this.leading,
+    this.actions,
     this.height,
     super.key,
   });
   final Widget child;
   final Widget? controls;
+  final Widget? leading;
+  final Widget? actions;
   final double? height;
   @override
   Widget build(BuildContext context) => Container(
@@ -100,11 +110,44 @@ class TRWindowFrameTitleBar extends StatelessWidget {
     child: Stack(
       alignment: Alignment.center,
       children: [
-        if (controls != null)
-          Align(alignment: Alignment.centerLeft, child: controls),
+        if (leading ?? controls case final leading?)
+          Align(alignment: Alignment.centerLeft, child: leading),
+        if (actions case final actions?)
+          Align(alignment: Alignment.centerRight, child: actions),
         child,
       ],
     ),
+  );
+}
+
+/// Compact, accessible action for Flutter-owned desktop window chrome.
+class TRWindowCaptionButton extends StatelessWidget {
+  const TRWindowCaptionButton({
+    required this.action,
+    required this.label,
+    required this.onPressed,
+    super.key,
+  });
+
+  final TRWindowCaptionAction action;
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) => TRIconButton(
+    icon: Icon(switch (action) {
+      TRWindowCaptionAction.minimize => LucideIcons.minus,
+      TRWindowCaptionAction.maximize => LucideIcons.square,
+      TRWindowCaptionAction.restore => LucideIcons.copy,
+      TRWindowCaptionAction.close => LucideIcons.x,
+    }),
+    label: label,
+    onPressed: onPressed,
+    appearance: TRAppearance.ghost,
+    intent: action == TRWindowCaptionAction.close
+        ? TRIntent.danger
+        : TRIntent.neutral,
+    uiSize: TRUiSize.sm,
   );
 }
 

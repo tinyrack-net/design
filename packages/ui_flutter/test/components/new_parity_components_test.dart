@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 Widget _app(Widget child) => MaterialApp(
@@ -70,5 +71,48 @@ void main() {
     expect(find.byType(TRWindowFrameControl), findsNWidgets(3));
     final semantics = tester.getSemantics(find.byType(TRWindowFrameControls));
     expect(semantics.label, isEmpty);
+  });
+
+  testWidgets('window title bar exposes application and caption slots', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const SizedBox(
+          width: 480,
+          child: TRWindowFrameTitleBar(
+            leading: Text('File'),
+            actions: Text('Close'),
+            child: Text('Drag region'),
+          ),
+        ),
+      ),
+    );
+
+    final leading = tester.getCenter(find.text('File'));
+    final center = tester.getCenter(find.text('Drag region'));
+    final actions = tester.getCenter(find.text('Close'));
+    expect(leading.dx, lessThan(center.dx));
+    expect(center.dx, lessThan(actions.dx));
+  });
+
+  testWidgets('window caption actions use Lucide glyphs and activate', (
+    tester,
+  ) async {
+    var pressed = false;
+    await tester.pumpWidget(
+      _app(
+        TRWindowCaptionButton(
+          action: TRWindowCaptionAction.close,
+          label: 'Close window',
+          onPressed: () => pressed = true,
+        ),
+      ),
+    );
+
+    expect(find.bySemanticsLabel('Close window'), findsOneWidget);
+    expect(tester.widget<Icon>(find.byType(Icon)).icon, LucideIcons.x);
+    await tester.tap(find.bySemanticsLabel('Close window'));
+    expect(pressed, isTrue);
   });
 }

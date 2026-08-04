@@ -3,6 +3,9 @@
 Tinyrack UI provides Material 3 themes, shared design tokens, and accessible
 Flutter widgets for Android, iOS, Linux, macOS, web, and Windows.
 
+Component-owned glyphs use Lucide. Application-supplied icons should use the
+same `lucide_flutter` package so stroke weight and geometry stay consistent.
+
 ```dart
 import 'package:flutter/material.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';

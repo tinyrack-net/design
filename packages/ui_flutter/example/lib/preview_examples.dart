@@ -124,6 +124,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'pagination-controlled': _paginationControlled,
   'table-dense-status': _tableDenseStatus,
   'window-frame-browser': _windowFrameBrowser,
+  'window-frame-caption-actions': _windowFrameCaptionActions,
   'toast-track': _toastTrack,
 };
 
@@ -4025,6 +4026,20 @@ Widget _windowFrameBrowser(BuildContext context, Locale locale) =>
         variant: TRWindowFrameVariant.browser,
         address: Text('https://tinyrack.net'),
         body: Text('Ready'),
+      ),
+    );
+
+Widget _windowFrameCaptionActions(BuildContext context, Locale locale) =>
+    SizedBox(
+      width: 400,
+      child: TRWindowFrameTitleBar(
+        leading: const Text('File'),
+        actions: TRWindowCaptionButton(
+          action: TRWindowCaptionAction.close,
+          label: _pick(locale, 'Close window', '창 닫기', 'ウィンドウを閉じる'),
+          onPressed: () {},
+        ),
+        child: const Text('Tinyrack'),
       ),
     );
 

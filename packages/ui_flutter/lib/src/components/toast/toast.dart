@@ -3,11 +3,13 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
 import '../../types.dart';
+import '../button/button.dart';
 
 /// Logical viewport position of a toast stack.
 enum TRToastPlacement {
@@ -429,17 +431,12 @@ class _TRToastCardState extends State<_TRToastCard>
                 offset: const Offset(-TRGeneratedSpacing.sm, 0),
                 child: TRLayerPartBoundary(
                   name: 'dismissIcon',
-                  child: IconButton(
-                    icon: const Icon(Icons.close, size: 16),
+                  child: TRIconButton(
+                    icon: const Icon(LucideIcons.x),
+                    label: MaterialLocalizations.of(context).closeButtonTooltip,
                     onPressed: widget.onDismiss,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints.tightFor(
-                      width: TRGeneratedControlMetrics.smHeight,
-                      height: TRGeneratedControlMetrics.smHeight,
-                    ),
-                    tooltip: MaterialLocalizations.of(
-                      context,
-                    ).closeButtonTooltip,
+                    appearance: TRAppearance.ghost,
+                    uiSize: TRUiSize.sm,
                   ),
                 ),
               ),

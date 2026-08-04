@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
@@ -475,7 +476,7 @@ class _TRMenuIndicator extends StatelessWidget {
       child: switch (kind) {
         _TRMenuIndicatorKind.empty => null,
         _TRMenuIndicatorKind.check => Icon(
-          Icons.check,
+          LucideIcons.check,
           color: context.tinyrackTheme.primary,
           size: TRGeneratedSpacing.lg,
         ),

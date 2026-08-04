@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
@@ -697,7 +698,7 @@ class _TRComboboxInputState<T extends Object>
     final empty = widget.controller.text.isEmpty && widget.selected.isEmpty;
     if (empty) return null;
     return TRIconButton(
-      icon: const Icon(Icons.close),
+      icon: const Icon(LucideIcons.x),
       label: widget.clearSemanticLabel,
       onPressed: onClear,
       appearance: TRAppearance.ghost,

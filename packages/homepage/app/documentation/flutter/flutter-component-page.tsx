@@ -4288,7 +4288,7 @@ class _AlignmentBarState extends State<AlignmentBar> {
       ja: 'アプリの内容を macOS またはブラウザ風の装飾フレームで囲みます。',
     },
     usage:
-      "const TRWindowFrame(\n  title: Text('Terminal'),\n  body: Text('Ready'),\n)",
+      "TRWindowFrameTitleBar(\n  leading: const Text('File'),\n  actions: TRWindowCaptionButton(\n    action: TRWindowCaptionAction.close,\n    label: 'Close window',\n    onPressed: closeWindow,\n  ),\n  child: const Text('Tinyrack'),\n)",
     contractRows: [
       {
         axis: { en: 'Variant', ko: '형태', ja: 'バリアント' },
@@ -4331,6 +4331,24 @@ class _AlignmentBarState extends State<AlignmentBar> {
               en: 'Chooses app or browser chrome.',
               ko: '앱 또는 브라우저 프레임을 선택해요.',
               ja: 'アプリまたはブラウザのフレームを選択します。',
+            },
+          },
+          {
+            name: 'TRWindowFrameTitleBar.leading / actions',
+            type: 'Widget?',
+            purpose: {
+              en: 'Places application menus and native caption actions on opposite edges.',
+              ko: '앱 메뉴와 네이티브 캡션 동작을 양쪽 가장자리에 배치해요.',
+              ja: 'アプリメニューとネイティブのキャプション操作を両端に配置します。',
+            },
+          },
+          {
+            name: 'TRWindowCaptionButton.action',
+            type: 'TRWindowCaptionAction',
+            purpose: {
+              en: 'Selects a Lucide minimize, maximize, restore, or close glyph.',
+              ko: 'Lucide 최소화, 최대화, 복원 또는 닫기 글리프를 선택해요.',
+              ja: 'Lucide の最小化、最大化、復元、閉じるグリフを選択します。',
             },
           },
           {

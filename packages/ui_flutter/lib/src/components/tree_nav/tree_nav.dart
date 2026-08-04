@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -369,8 +370,8 @@ class _TRTreeNavNode<T extends Object> extends StatelessWidget {
                 trailing ??
                     Icon(
                       expanded
-                          ? Icons.keyboard_arrow_down
-                          : Icons.chevron_right,
+                          ? LucideIcons.chevronDown
+                          : LucideIcons.chevronRight,
                       color: disabled ? colors.textMuted : colors.textMuted,
                       size: TRGeneratedSpacing.md,
                     ),
