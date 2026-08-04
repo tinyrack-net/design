@@ -168,18 +168,78 @@ Every rule above applies unchanged. The Korean wordmark is outlined artwork, so 
 
 Use SVG for every digital application. These files contain outlined artwork and need no installed font or runtime stylesheet.
 
+Choose PNG only when a surface cannot accept SVG, such as a slide deck, a store listing, or a social profile. Every PNG is rendered from the same SVG master onto a transparent background, so the inverse artwork stays legible on dark surfaces. A square asset is labeled by its side length; a lockup is labeled by its height, because its width follows the artwork.
+
 <div className="mt-tinyrack-lg grid gap-3 sm:grid-cols-2" data-logo-downloads>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Primary mark</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Dark artwork for light backgrounds.</span><TRLink download="tinyrack-mark.svg" href="/brand/tinyrack-mark.svg">Download SVG</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Inverse mark</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Light artwork for dark backgrounds.</span><TRLink download="tinyrack-mark-inverse.svg" href="/brand/tinyrack-mark-inverse.svg">Download SVG</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Primary lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Tinyrack wordmark for light backgrounds.</span><TRLink download="tinyrack-lockup.svg" href="/brand/tinyrack-lockup.svg">Download SVG</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Inverse lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Tinyrack wordmark for dark backgrounds.</span><TRLink download="tinyrack-lockup-inverse.svg" href="/brand/tinyrack-lockup-inverse.svg">Download SVG</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Korean lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Korean wordmark for light backgrounds.</span><TRLink download="tinyrack-lockup-ko.svg" href="/brand/tinyrack-lockup-ko.svg">Download SVG</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>Korean inverse lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Korean wordmark for dark backgrounds.</span><TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">Download SVG</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2 sm:col-span-2" variant="outlined"><strong>App icon</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Approved square tile for favicons, launchers, and service avatars.</span><TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">Download SVG</TRLink></TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>Primary mark</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Dark artwork for light backgrounds.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-mark.svg" href="/brand/tinyrack-mark.svg">SVG</TRLink>
+      <TRLink download="tinyrack-mark-128.png" href="/brand/tinyrack-mark-128.png">128px PNG</TRLink>
+      <TRLink download="tinyrack-mark-256.png" href="/brand/tinyrack-mark-256.png">256px PNG</TRLink>
+      <TRLink download="tinyrack-mark-512.png" href="/brand/tinyrack-mark-512.png">512px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>Inverse mark</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Light artwork for dark backgrounds.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-mark-inverse.svg" href="/brand/tinyrack-mark-inverse.svg">SVG</TRLink>
+      <TRLink download="tinyrack-mark-inverse-128.png" href="/brand/tinyrack-mark-inverse-128.png">128px PNG</TRLink>
+      <TRLink download="tinyrack-mark-inverse-256.png" href="/brand/tinyrack-mark-inverse-256.png">256px PNG</TRLink>
+      <TRLink download="tinyrack-mark-inverse-512.png" href="/brand/tinyrack-mark-inverse-512.png">512px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>Primary lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Tinyrack wordmark for light backgrounds.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup.svg" href="/brand/tinyrack-lockup.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-64.png" href="/brand/tinyrack-lockup-64.png">64px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-128.png" href="/brand/tinyrack-lockup-128.png">128px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-256.png" href="/brand/tinyrack-lockup-256.png">256px tall PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>Inverse lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Tinyrack wordmark for dark backgrounds.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup-inverse.svg" href="/brand/tinyrack-lockup-inverse.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-inverse-64.png" href="/brand/tinyrack-lockup-inverse-64.png">64px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-inverse-128.png" href="/brand/tinyrack-lockup-inverse-128.png">128px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-inverse-256.png" href="/brand/tinyrack-lockup-inverse-256.png">256px tall PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>Korean lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Korean wordmark for light backgrounds.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup-ko.svg" href="/brand/tinyrack-lockup-ko.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-64.png" href="/brand/tinyrack-lockup-ko-64.png">64px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-128.png" href="/brand/tinyrack-lockup-ko-128.png">128px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-256.png" href="/brand/tinyrack-lockup-ko-256.png">256px tall PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>Korean inverse lockup</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Mark and Korean wordmark for dark backgrounds.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-inverse-64.png" href="/brand/tinyrack-lockup-ko-inverse-64.png">64px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-inverse-128.png" href="/brand/tinyrack-lockup-ko-inverse-128.png">128px tall PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-inverse-256.png" href="/brand/tinyrack-lockup-ko-inverse-256.png">256px tall PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3 sm:col-span-2" variant="outlined">
+    <div className="grid gap-1"><strong>App icon</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">Approved square tile for favicons, launchers, and service avatars.</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">SVG</TRLink>
+      <TRLink download="tinyrack-app-icon-128.png" href="/brand/tinyrack-app-icon-128.png">128px PNG</TRLink>
+      <TRLink download="tinyrack-app-icon-180.png" href="/brand/tinyrack-app-icon-180.png">180px PNG</TRLink>
+      <TRLink download="tinyrack-app-icon-256.png" href="/brand/tinyrack-app-icon-256.png">256px PNG</TRLink>
+      <TRLink download="tinyrack-app-icon-512.png" href="/brand/tinyrack-app-icon-512.png">512px PNG</TRLink>
+    </div>
+  </TRCard.Root>
 </div>
 
 The same artwork ships with `@tinyrack/ui`. Import it from a `brand` subpath when your build tool should copy and fingerprint the file.
 
 ```tsx
+import tinyrackIconUrl from '@tinyrack/ui/brand/tinyrack-app-icon-512.png';
 import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
 ```

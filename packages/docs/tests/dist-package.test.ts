@@ -21,9 +21,14 @@ let consumerRoot = '';
 const suppliedUiArchive = process.env['TINYRACK_UI_TARBALL'];
 const uiBrandRoot = resolve(docsRoot, '../ui_web/src/brand');
 const uiBrandAssets = [
+  'tinyrack-app-icon-128.png',
   'tinyrack-app-icon-180.png',
+  'tinyrack-app-icon-256.png',
   'tinyrack-app-icon-512.png',
   'tinyrack-app-icon.svg',
+  'tinyrack-lockup-256.png',
+  'tinyrack-lockup-ko-inverse-64.png',
+  'tinyrack-mark-512.png',
   'tinyrack-lockup-inverse.svg',
   'tinyrack-lockup-ko-inverse.svg',
   'tinyrack-lockup-ko.svg',

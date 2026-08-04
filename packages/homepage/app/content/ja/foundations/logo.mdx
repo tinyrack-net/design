@@ -168,18 +168,78 @@ import { TRLink } from '@tinyrack/ui/components/link';
 
 デジタル用途では SVG を使ってください。文字をアウトライン化したアートワークなので、フォントのインストールや実行時のスタイルシートは不要です。
 
+スライド資料、ストアの掲載情報、ソーシャルプロフィールなど、SVG を受け付けない場面でのみ PNG を選んでください。すべての PNG は同じ SVG マスターを透過背景でレンダリングしているため、反転アートワークも暗い背景で判読できます。正方形のアセットは一辺の長さ、ロックアップは高さで表記しています。ロックアップの幅はアートワークの比率に従います。
+
 <div className="mt-tinyrack-lg grid gap-3 sm:grid-cols-2" data-logo-downloads>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>基本マーク</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用の暗い原本です。</span><TRLink download="tinyrack-mark.svg" href="/brand/tinyrack-mark.svg">SVG をダウンロード</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>反転マーク</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用の明るい原本です。</span><TRLink download="tinyrack-mark-inverse.svg" href="/brand/tinyrack-mark-inverse.svg">SVG をダウンロード</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>基本ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用のマークと Tinyrack ワードマークです。</span><TRLink download="tinyrack-lockup.svg" href="/brand/tinyrack-lockup.svg">SVG をダウンロード</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>反転ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用のマークと Tinyrack ワードマークです。</span><TRLink download="tinyrack-lockup-inverse.svg" href="/brand/tinyrack-lockup-inverse.svg">SVG をダウンロード</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>韓国語ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用のマークと韓国語ワードマークです。</span><TRLink download="tinyrack-lockup-ko.svg" href="/brand/tinyrack-lockup-ko.svg">SVG をダウンロード</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2" variant="outlined"><strong>韓国語の反転ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用のマークと韓国語ワードマークです。</span><TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">SVG をダウンロード</TRLink></TRCard.Root>
-  <TRCard.Root className="grid gap-2 sm:col-span-2" variant="outlined"><strong>アプリアイコン</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">ファビコン、ランチャー、サービスアバター用の承認済み正方形タイルです。</span><TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">SVG をダウンロード</TRLink></TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>基本マーク</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用の暗い原本です。</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-mark.svg" href="/brand/tinyrack-mark.svg">SVG</TRLink>
+      <TRLink download="tinyrack-mark-128.png" href="/brand/tinyrack-mark-128.png">128px PNG</TRLink>
+      <TRLink download="tinyrack-mark-256.png" href="/brand/tinyrack-mark-256.png">256px PNG</TRLink>
+      <TRLink download="tinyrack-mark-512.png" href="/brand/tinyrack-mark-512.png">512px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>反転マーク</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用の明るい原本です。</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-mark-inverse.svg" href="/brand/tinyrack-mark-inverse.svg">SVG</TRLink>
+      <TRLink download="tinyrack-mark-inverse-128.png" href="/brand/tinyrack-mark-inverse-128.png">128px PNG</TRLink>
+      <TRLink download="tinyrack-mark-inverse-256.png" href="/brand/tinyrack-mark-inverse-256.png">256px PNG</TRLink>
+      <TRLink download="tinyrack-mark-inverse-512.png" href="/brand/tinyrack-mark-inverse-512.png">512px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>基本ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用のマークと Tinyrack ワードマークです。</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup.svg" href="/brand/tinyrack-lockup.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-64.png" href="/brand/tinyrack-lockup-64.png">高さ 64px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-128.png" href="/brand/tinyrack-lockup-128.png">高さ 128px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-256.png" href="/brand/tinyrack-lockup-256.png">高さ 256px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>反転ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用のマークと Tinyrack ワードマークです。</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup-inverse.svg" href="/brand/tinyrack-lockup-inverse.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-inverse-64.png" href="/brand/tinyrack-lockup-inverse-64.png">高さ 64px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-inverse-128.png" href="/brand/tinyrack-lockup-inverse-128.png">高さ 128px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-inverse-256.png" href="/brand/tinyrack-lockup-inverse-256.png">高さ 256px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>韓国語ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">明るい背景用のマークと韓国語ワードマークです。</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup-ko.svg" href="/brand/tinyrack-lockup-ko.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-64.png" href="/brand/tinyrack-lockup-ko-64.png">高さ 64px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-128.png" href="/brand/tinyrack-lockup-ko-128.png">高さ 128px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-256.png" href="/brand/tinyrack-lockup-ko-256.png">高さ 256px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3" variant="outlined">
+    <div className="grid gap-1"><strong>韓国語の反転ロックアップ</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">暗い背景用のマークと韓国語ワードマークです。</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-lockup-ko-inverse.svg" href="/brand/tinyrack-lockup-ko-inverse.svg">SVG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-inverse-64.png" href="/brand/tinyrack-lockup-ko-inverse-64.png">高さ 64px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-inverse-128.png" href="/brand/tinyrack-lockup-ko-inverse-128.png">高さ 128px PNG</TRLink>
+      <TRLink download="tinyrack-lockup-ko-inverse-256.png" href="/brand/tinyrack-lockup-ko-inverse-256.png">高さ 256px PNG</TRLink>
+    </div>
+  </TRCard.Root>
+  <TRCard.Root className="grid gap-3 sm:col-span-2" variant="outlined">
+    <div className="grid gap-1"><strong>アプリアイコン</strong><span className="text-tinyrack-sm text-tinyrack-text-muted">ファビコン、ランチャー、サービスアバター用の承認済み正方形タイルです。</span></div>
+    <div className="flex flex-wrap gap-x-4 gap-y-2">
+      <TRLink download="tinyrack-app-icon.svg" href="/brand/tinyrack-app-icon.svg">SVG</TRLink>
+      <TRLink download="tinyrack-app-icon-128.png" href="/brand/tinyrack-app-icon-128.png">128px PNG</TRLink>
+      <TRLink download="tinyrack-app-icon-180.png" href="/brand/tinyrack-app-icon-180.png">180px PNG</TRLink>
+      <TRLink download="tinyrack-app-icon-256.png" href="/brand/tinyrack-app-icon-256.png">256px PNG</TRLink>
+      <TRLink download="tinyrack-app-icon-512.png" href="/brand/tinyrack-app-icon-512.png">512px PNG</TRLink>
+    </div>
+  </TRCard.Root>
 </div>
 
 同じアートワークを `@tinyrack/ui` にも収録しています。ビルドツールでファイルをコピーし、ハッシュを付ける場合は、`brand` サブパスから読み込んでください。
 
 ```tsx
+import tinyrackIconUrl from '@tinyrack/ui/brand/tinyrack-app-icon-512.png';
 import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
 ```
