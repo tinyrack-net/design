@@ -1,3 +1,8 @@
+## 0.4.2
+
+- Defers controlled anchored-layer closure until after the current frame so
+  tooltips and other overlays can close safely during widget updates.
+
 ## 0.4.1
 
 - Makes `TRAppShell` the Material surface for its composed controls, so apps
