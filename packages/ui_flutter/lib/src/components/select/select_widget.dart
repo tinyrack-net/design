@@ -461,6 +461,7 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
             ],
           );
     final select = MenuAnchor(
+      alignmentOffset: const Offset(0, TRGeneratedSpacing.xs),
       animated: !MediaQuery.disableAnimationsOf(context),
       controller: _menuController,
       crossAxisUnconstrained: false,
@@ -508,6 +509,7 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
       onOpen: _handleOpen,
       style: TRLayerStyles.menu(
         context,
+        alignment: AlignmentDirectional.bottomStart,
         minWidth: popupWidth,
         maxWidth: popupWidth,
       ),

@@ -128,7 +128,7 @@ export function TRTableOfContents({
             </TRSelect.Icon>
           </TRSelect.Trigger>
           <TRSelect.Portal>
-            <TRSelect.Positioner sideOffset={8}>
+            <TRSelect.Positioner>
               <TRSelect.Popup>
                 <TRSelect.List>
                   {items.map((item) => (

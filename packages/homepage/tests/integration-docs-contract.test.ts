@@ -127,7 +127,9 @@ describe('integration documentation contracts', () => {
     );
     expect(cspGuide).toContain('Configure its two capabilities independently');
     expect(cspGuide).toContain('does not suppress Base UI script elements');
-    expect(cspGuide).toContain('`Select.List`');
+    expect(cspGuide).toContain(
+      "Tinyrack Select uses trigger-relative placement and does not enable Base UI's item-aligned positioning mode.",
+    );
   });
 
   it('keeps the three locale routes structurally aligned and removes old slugs', () => {

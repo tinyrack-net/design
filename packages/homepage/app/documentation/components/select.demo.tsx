@@ -128,7 +128,7 @@ export function SelectLongCollection() {
           </TRSelect.Icon>
         </TRSelect.Trigger>
         <TRSelect.Portal>
-          <TRSelect.Positioner sideOffset={8}>
+          <TRSelect.Positioner>
             <TRSelect.Popup>
               <TRSelect.Arrow />
               <TRSelect.ScrollUpArrow aria-label={text.scrollUp}>
@@ -205,7 +205,7 @@ export function SelectPreview({
           </TRSelect.Icon>
         </TRSelect.Trigger>
         <TRSelect.Portal>
-          <TRSelect.Positioner sideOffset={8}>
+          <TRSelect.Positioner>
             <TRSelect.Popup>
               <TRSelect.Arrow />
               <TRSelect.ScrollUpArrow aria-label={text.scrollUp}>
@@ -346,7 +346,7 @@ function AvailabilitySelect({
         </TRSelect.Icon>
       </TRSelect.Trigger>
       <TRSelect.Portal>
-        <TRSelect.Positioner sideOffset={8}>
+        <TRSelect.Positioner>
           <TRSelect.Popup>
             <TRSelect.Arrow />
             <TRSelect.List>

@@ -49,7 +49,7 @@ const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamm
     <TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
-    <TRSelect.Positioner sideOffset={8}>
+    <TRSelect.Positioner>
       <TRSelect.Popup>
         <TRSelect.Arrow />
         <TRSelect.ScrollUpArrow aria-label="上にスクロール">↑</TRSelect.ScrollUpArrow>
@@ -130,7 +130,7 @@ function RackSelectForm() {
         <TRSelect.Root items={racks} name="rack" onValueChange={setValue} required value={value}>
           <TRSelect.Label>デプロイ先ラック</TRSelect.Label>
           <TRSelect.Trigger aria-label="デプロイ先ラック"><TRSelect.Value placeholder="ラックを選択" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
-          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="上にスクロール">↑</TRSelect.ScrollUpArrow><TRSelect.List>
+          <TRSelect.Portal><TRSelect.Positioner><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="上にスクロール">↑</TRSelect.ScrollUpArrow><TRSelect.List>
             <TRSelect.Group><TRSelect.GroupLabel>本番</TRSelect.GroupLabel>
               <TRSelect.Item value="alpha"><TRSelect.ItemText>ラックアルファ</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
               <TRSelect.Item value="beta"><TRSelect.ItemText>ラックベータ</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
@@ -173,7 +173,7 @@ const racks = Object.fromEntries(
     <TRSelect.Value /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
-    <TRSelect.Positioner sideOffset={8}>
+    <TRSelect.Positioner>
       <TRSelect.Popup>
         <TRSelect.Arrow />
         <TRSelect.ScrollUpArrow aria-label="上にスクロール">↑</TRSelect.ScrollUpArrow>
@@ -202,7 +202,7 @@ const racks = Object.fromEntries(
 | 開閉 | `defaultOpen` のデフォルトは `false` です。制御された `open` も使え、`modal` と `highlightItemOnHover` のデフォルトは `true` です。 |
 | 利用状態 | `disabled`、`readOnly`、`required` のデフォルトはすべて `false` です。 |
 | トリガー | `uiSize="sm" | "md" | "lg"` を受け取り、デフォルトは `"md"` です。 |
-| 配置 | `Positioner` は `alignItemWithTrigger={false}` と `sideOffset={4}` がデフォルトです。その他の衝突・配置 prop は Base UI から合成されます。 |
+| 配置 | `Positioner` はトリガーの下 4 px の位置で開き、配置用 prop は受け取りません。十分な空きがない場合はトリガーの上へ切り替わります。 |
 | フォーム | `name`、`form`、`autoComplete`、`inputRef` を受け取ります。非制御 select は native reset で `defaultValue` に戻ります。 |
 
 `Trigger` にアクセシブルな名前を付けます。キーボードでは Arrow Down で開き、有効な option 間を移動し、typeahead を使い、Enter で確定し、Escape で閉じた後に trigger へ focus が戻ります。必要に応じて `value` と `open` を独立して制御します。利用できない control には `disabled`、変更できない focusable value には `readOnly` を使います。

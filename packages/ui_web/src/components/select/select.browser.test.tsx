@@ -10,7 +10,17 @@ import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { TRDrawer } from '../drawer/index.js';
 import { TRField } from '../field/index.js';
-import { TRSelect, TRSelectRoot } from './index.js';
+import { TRSelect, type TRSelectPositionerProps, TRSelectRoot } from './index.js';
+
+const validPositionerProps: TRSelectPositionerProps = {
+  className: 'consumer-positioner',
+};
+const invalidPositionerProps: TRSelectPositionerProps = {
+  // @ts-expect-error Select placement is owned by Tinyrack.
+  side: 'top',
+};
+void validPositionerProps;
+void invalidPositionerProps;
 
 test('renders the Tinyrack TRSelect wrapper', async () => {
   expect(TRSelect.Root).toBe(TRSelectRoot);
@@ -180,8 +190,12 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
 
   await expect.poll(() => positioner?.dataset['side']).toBe('bottom');
   await expect
-    .poll(() => popup?.getBoundingClientRect().top)
-    .toBeGreaterThan(trigger?.getBoundingClientRect().bottom ?? 0);
+    .poll(
+      () =>
+        (popup?.getBoundingClientRect().top ?? 0) -
+        (trigger?.getBoundingClientRect().bottom ?? 0),
+    )
+    .toBe(4);
 
   const triggerWidth = trigger?.getBoundingClientRect().width ?? 0;
   expect(popup?.getBoundingClientRect().width ?? 0).toBeGreaterThanOrEqual(
@@ -259,7 +273,12 @@ test('keeps a select popup above an open drawer', async () => {
     .toBe(popup);
 });
 
-test('preserves explicit positioning props and class names', async () => {
+test('fixes positioning while preserving general positioner props', async () => {
+  const unsupportedPositioningProps = {
+    alignItemWithTrigger: true,
+    side: 'top',
+    sideOffset: 0,
+  } as unknown as TRSelectPositionerProps;
   await render(
     <TRSelect.Root defaultValue="alpha">
       <TRSelect.Trigger aria-label="Aligned choice">
@@ -267,9 +286,8 @@ test('preserves explicit positioning props and class names', async () => {
       </TRSelect.Trigger>
       <TRSelect.Portal>
         <TRSelect.Positioner
-          alignItemWithTrigger
+          {...unsupportedPositioningProps}
           className="consumer-positioner"
-          sideOffset={0}
         >
           <TRSelect.Popup>
             <TRSelect.List>
@@ -292,13 +310,14 @@ test('preserves explicit positioning props and class names', async () => {
   const positioner = document.querySelector<HTMLElement>('.tr-select-positioner');
   const popup = document.querySelector<HTMLElement>('.tr-select-popup');
   expect(positioner?.classList.contains('consumer-positioner')).toBe(true);
+  await expect.poll(() => positioner?.dataset['side']).toBe('bottom');
   await expect
     .poll(
       () =>
         (popup?.getBoundingClientRect().top ?? 0) -
         (trigger?.getBoundingClientRect().bottom ?? 0),
     )
-    .toBe(0);
+    .toBe(4);
 });
 
 function ControlledRackSelect() {

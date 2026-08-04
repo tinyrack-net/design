@@ -515,12 +515,48 @@ void main() {
       expect(tester.getSize(_selectTriggers.at(0)), const Size(320, 32));
       expect(tester.getSize(_selectTriggers.at(1)), const Size(320, 40));
       expect(tester.getSize(_selectTriggers.at(2)), const Size(320, 48));
+      final triggerRect = tester.getRect(_selectTriggers.at(1));
       controller.open();
       await tester.pumpAndSettle();
       expect(
         tester.getSize(_layerBoundary(TRLayerBoundaryKind.select)),
         const Size(320, 86),
       );
+      final layerRect = tester.getRect(
+        _layerBoundary(TRLayerBoundaryKind.select),
+      );
+      expect(layerRect.top - triggerRect.bottom, 4);
+    });
+
+    testWidgets('flips above when the preferred bottom side has no room', (
+      tester,
+    ) async {
+      final controller = MenuController();
+      await tester.pumpWidget(
+        _app(
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: TRSelect<String>.controlled(
+              items: const [
+                TRSelectItem(value: 'alpha', label: 'Alpha'),
+                TRSelectItem(value: 'beta', label: 'Beta'),
+              ],
+              value: 'alpha',
+              menuController: controller,
+              width: 320,
+            ),
+          ),
+        ),
+      );
+
+      final triggerRect = tester.getRect(_selectTriggers);
+      controller.open();
+      await tester.pumpAndSettle();
+      final layerRect = tester.getRect(
+        _layerBoundary(TRLayerBoundaryKind.select),
+      );
+
+      expect(triggerRect.top - layerRect.bottom, 4);
     });
 
     testWidgets(

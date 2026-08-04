@@ -45,7 +45,7 @@ pnpm add @tinyrack/ui react react-dom
 
 <TRCodeBlock aria-label="Base UI 스크롤바 보조 CSS" code={cspScrollbarSource} language="css" />
 
-현재 Tinyrack이 사용하는 Base UI에서는 Scroll Area가 Viewport에 이 클래스를 적용해 네이티브 스크롤바를 숨기고 사용자 지정 스크롤바를 표시해요. 항목을 트리거에 맞추는 Select도 보조 스타일을 만들고, 스크롤을 담당하는 `Select.Popup`이나 List가 있다면 `Select.List`에 이 클래스를 적용해요. Tinyrack의 `TRSelect.Positioner`는 `alignItemWithTrigger` 기본값이 `false`지만 애플리케이션에서 켤 수 있어요. 어느 조건이든 발생할 수 있다면 정적 규칙을 유지하세요.
+현재 Tinyrack이 사용하는 Base UI에서는 Scroll Area가 Viewport에 이 클래스를 적용해 네이티브 스크롤바를 숨기고 사용자 지정 스크롤바를 표시해요. 애플리케이션에서 Scroll Area를 렌더링한다면 정적 규칙을 유지하세요. Tinyrack Select는 트리거 기준 배치를 사용하며 Base UI의 항목 정렬 배치 모드를 사용하지 않아요.
 
 ## 적용 범위 이해
 
