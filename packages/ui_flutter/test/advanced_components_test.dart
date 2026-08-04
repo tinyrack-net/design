@@ -99,6 +99,132 @@ void main() {
       expect(find.text('Current model'), findsNothing);
     });
 
+    testWidgets('tooltip closes when a pointer activates its trigger', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRTooltipProvider(
+            openDelay: Duration.zero,
+            closeDelay: Duration.zero,
+            child: TRTooltip(
+              message: 'Choose project',
+              child: TextButton(
+                onPressed: () {},
+                child: const Text('Projects'),
+              ),
+            ),
+          ),
+        ),
+      );
+      final pointer = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(pointer.removePointer);
+      await pointer.addPointer(location: Offset.zero);
+      await pointer.moveTo(tester.getCenter(find.text('Projects')));
+      await tester.pumpAndSettle();
+      expect(find.text('Choose project'), findsOneWidget);
+
+      final triggerCenter = tester.getCenter(find.text('Projects'));
+      await pointer.down(triggerCenter);
+      await pointer.up();
+      await tester.pumpAndSettle();
+
+      expect(find.text('Choose project'), findsNothing);
+    });
+
+    testWidgets('tooltip closes when the keyboard activates its trigger', (
+      tester,
+    ) async {
+      final focusNode = FocusNode();
+      addTearDown(focusNode.dispose);
+      await tester.pumpWidget(
+        _app(
+          TRTooltipProvider(
+            openDelay: Duration.zero,
+            closeDelay: Duration.zero,
+            child: Builder(
+              builder: (context) => TRTooltip(
+                message: 'Choose project',
+                child: TextButton(
+                  focusNode: focusNode,
+                  onPressed: () => showTRDialog<void>(
+                    context: context,
+                    requestFocus: false,
+                    builder: (_) =>
+                        const TRDialog(content: Text('Project dialog')),
+                  ),
+                  child: const Text('Projects'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      focusNode.requestFocus();
+      await tester.pumpAndSettle();
+      expect(find.text('Choose project'), findsOneWidget);
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Project dialog'), findsOneWidget);
+      expect(find.text('Choose project'), findsNothing);
+    });
+
+    testWidgets('controlled tooltip reports trigger activation', (
+      tester,
+    ) async {
+      var open = true;
+      await tester.pumpWidget(
+        _app(
+          StatefulBuilder(
+            builder: (context, setState) => TRTooltip.controlled(
+              open: open,
+              message: 'Choose project',
+              onOpenChange: (value) => setState(() => open = value),
+              child: TextButton(
+                onPressed: () {},
+                child: const Text('Projects'),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Choose project'), findsOneWidget);
+
+      await tester.tap(find.text('Projects'));
+      await tester.pumpAndSettle();
+
+      expect(open, isFalse);
+      expect(find.text('Choose project'), findsNothing);
+    });
+
+    testWidgets('long press still opens and closes a tooltip', (tester) async {
+      await tester.pumpWidget(
+        _app(
+          const TRTooltipProvider(
+            openDelay: Duration.zero,
+            closeDelay: Duration.zero,
+            child: TRTooltip(
+              message: 'Choose project',
+              child: Text('Projects'),
+            ),
+          ),
+        ),
+      );
+      final pointer = await tester.startGesture(
+        tester.getCenter(find.text('Projects')),
+      );
+      await tester.pump(kLongPressTimeout);
+      await tester.pump();
+      expect(find.text('Choose project'), findsOneWidget);
+
+      await pointer.up();
+      await tester.pumpAndSettle();
+      expect(find.text('Choose project'), findsNothing);
+    });
+
     testWidgets('preview card keeps its interactive surface open on hover', (
       tester,
     ) async {

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
@@ -164,6 +165,22 @@ class _TRTooltipState extends State<TRTooltip> {
     }
   }
 
+  void _dismiss() {
+    _timer?.cancel();
+    if (!_open) return;
+    if (widget.open == null) _controller.close();
+    widget.onOpenChange?.call(false);
+  }
+
+  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent &&
+        (event.logicalKey == LogicalKeyboardKey.enter ||
+            event.logicalKey == LogicalKeyboardKey.space)) {
+      _dismiss();
+    }
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) => TRAnchoredLayer(
     open: _open,
@@ -185,11 +202,15 @@ class _TRTooltipState extends State<TRTooltip> {
             onExit: (_) => _request(false),
             child: Focus(
               onFocusChange: _request,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onLongPress: () => _request(true),
-                onLongPressEnd: (_) => _request(false),
-                child: widget.child,
+              onKeyEvent: _handleKeyEvent,
+              child: Listener(
+                onPointerDown: (_) => _dismiss(),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onLongPress: () => _request(true),
+                  onLongPressEnd: (_) => _request(false),
+                  child: widget.child,
+                ),
               ),
             ),
           ),
