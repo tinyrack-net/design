@@ -1,3 +1,9 @@
+## 0.4.1
+
+- Makes `TRAppShell` the Material surface for its composed controls, so apps
+  can use Tinyrack fields, collapsibles, and other interactive components
+  without retaining a `Scaffold` wrapper.
+
 ## 0.4.0
 
 - Adds secure single-line and bounded multiline editing contracts to
