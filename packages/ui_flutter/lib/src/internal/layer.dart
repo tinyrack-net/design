@@ -416,7 +416,7 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
       _controller.addListener(_handleControllerChange);
     }
     if (oldWidget.open != widget.open) {
-      _isOpen ? _showAfterLayout() : _hide();
+      _isOpen ? _showAfterLayout() : _hideAfterLayout();
     }
   }
 
@@ -441,6 +441,12 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
   void _showAfterLayout() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted && _isOpen) _show();
+    });
+  }
+
+  void _hideAfterLayout() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_isOpen) _hide();
     });
   }
 

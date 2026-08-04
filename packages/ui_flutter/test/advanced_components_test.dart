@@ -66,6 +66,37 @@ void main() {
       expect(find.text('Refresh rack'), findsOneWidget);
     });
 
+    testWidgets('tooltip can close while its trigger is being laid out', (
+      tester,
+    ) async {
+      var open = true;
+      late StateSetter update;
+
+      await tester.pumpWidget(
+        _app(
+          StatefulBuilder(
+            builder: (context, setState) {
+              update = setState;
+              return TRTooltip.controlled(
+                open: open,
+                message: 'Current model',
+                child: const Text('Model'),
+              );
+            },
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Current model'), findsOneWidget);
+
+      update(() => open = false);
+      await tester.pump();
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Current model'), findsNothing);
+    });
+
     testWidgets('preview card keeps its interactive surface open on hover', (
       tester,
     ) async {
