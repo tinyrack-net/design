@@ -101,6 +101,7 @@ class TRTooltip extends StatefulWidget {
 class _TRTooltipState extends State<TRTooltip> {
   TRTooltipController? _internalController;
   Timer? _timer;
+  bool _suppressFocusOpen = false;
 
   TRTooltipController get _controller =>
       widget.controller ??
@@ -172,6 +173,23 @@ class _TRTooltipState extends State<TRTooltip> {
     widget.onOpenChange?.call(false);
   }
 
+  void _handleFocusChange(bool value) {
+    if (value && _suppressFocusOpen) {
+      _suppressFocusOpen = false;
+      _timer?.cancel();
+      return;
+    }
+    _request(value);
+  }
+
+  void _handlePointerDown(PointerDownEvent event) {
+    _suppressFocusOpen = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _suppressFocusOpen = false;
+    });
+    _dismiss();
+  }
+
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
     if (event is KeyDownEvent &&
         (event.logicalKey == LogicalKeyboardKey.enter ||
@@ -201,10 +219,10 @@ class _TRTooltipState extends State<TRTooltip> {
             onEnter: (_) => _request(true),
             onExit: (_) => _request(false),
             child: Focus(
-              onFocusChange: _request,
+              onFocusChange: _handleFocusChange,
               onKeyEvent: _handleKeyEvent,
               child: Listener(
-                onPointerDown: (_) => _dismiss(),
+                onPointerDown: _handlePointerDown,
                 child: GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onLongPress: () => _request(true),

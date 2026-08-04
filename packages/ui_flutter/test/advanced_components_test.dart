@@ -132,6 +132,37 @@ void main() {
       expect(find.text('Choose project'), findsNothing);
     });
 
+    testWidgets('pointer focus does not reopen a tooltip over its menu', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRTooltipProvider(
+            openDelay: Duration.zero,
+            closeDelay: Duration.zero,
+            child: TRTooltip(
+              message: 'Choose project',
+              child: TRMenu(
+                trigger: const Text('Projects'),
+                menuChildren: <Widget>[
+                  TRMenuItem(
+                    onPressed: () {},
+                    child: const Text('Project menu item'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Projects'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Project menu item'), findsOneWidget);
+      expect(find.text('Choose project'), findsNothing);
+    });
+
     testWidgets('tooltip closes when the keyboard activates its trigger', (
       tester,
     ) async {

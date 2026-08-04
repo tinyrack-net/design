@@ -1,3 +1,8 @@
+## 0.4.5
+
+- Prevents pointer-acquired focus from reopening a tooltip after its trigger
+  opens a menu or another overlay.
+
 ## 0.4.4
 
 - Dismisses open tooltips immediately when their trigger is activated by a
