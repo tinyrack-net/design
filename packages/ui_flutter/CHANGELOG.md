@@ -1,3 +1,10 @@
+## 0.3.0
+
+- Uses Lucide icons for every icon owned by a Tinyrack Flutter component.
+- Adds leading and action slots to `TRWindowFrameTitleBar`.
+- Adds typed, accessible `TRWindowCaptionButton` actions for Flutter-owned
+  desktop window chrome.
+
 ## 0.2.0
 
 - Adds `filterMode`, `filter`, `autoHighlight`, and `clearable` to `TRCombobox`,

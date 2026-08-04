@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -277,7 +278,7 @@ class _TRNumberFieldState extends State<TRNumberField> {
       spacing: TRGeneratedSpacing.xs,
       children: [
         _TRNumberStepButton(
-          icon: Icons.remove,
+          icon: LucideIcons.minus,
           label: 'Decrement',
           onPressed: widget.enabled && !widget.readOnly
               ? () => _increment(-widget.step)
@@ -309,7 +310,7 @@ class _TRNumberFieldState extends State<TRNumberField> {
           ),
         ),
         _TRNumberStepButton(
-          icon: Icons.add,
+          icon: LucideIcons.plus,
           label: 'Increment',
           onPressed: widget.enabled && !widget.readOnly
               ? () => _increment(widget.step)

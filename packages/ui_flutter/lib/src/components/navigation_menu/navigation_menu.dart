@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
@@ -323,9 +324,7 @@ class _TRNavigationMenuEntryState<T> extends State<_TRNavigationMenuEntry<T>> {
                   children: [
                     widget.item.trigger,
                     Icon(
-                      open
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
+                      open ? LucideIcons.chevronUp : LucideIcons.chevronDown,
                       size: TRGeneratedControlMetrics.mdIconSize,
                     ),
                   ],

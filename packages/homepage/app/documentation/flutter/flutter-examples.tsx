@@ -4275,6 +4275,28 @@ class _RegionAutocompleteState extends State<RegionAutocomplete> {
   ],
   'window-frame': [
     {
+      id: 'window-frame-caption-actions',
+      title: {
+        en: 'Application window chrome',
+        ko: '애플리케이션 창 크롬',
+        ja: 'アプリケーションウィンドウクローム',
+      },
+      description: {
+        en: 'Place application menus and typed native caption actions around a draggable center region.',
+        ko: '드래그 가능한 중앙 영역 양쪽에 앱 메뉴와 타입이 지정된 네이티브 캡션 동작을 배치해요.',
+        ja: 'ドラッグ可能な中央領域の両側にアプリメニューと型付きのネイティブキャプション操作を配置します。',
+      },
+      dart: String.raw`TRWindowFrameTitleBar(
+  leading: const Text('File'),
+  actions: TRWindowCaptionButton(
+    action: TRWindowCaptionAction.close,
+    label: 'Close window',
+    onPressed: closeWindow,
+  ),
+  child: const Text('Tinyrack'),
+)`,
+    },
+    {
       id: 'window-frame-browser',
       title: { en: 'Browser chrome', ko: '브라우저 프레임', ja: 'ブラウザクローム' },
       description: {
