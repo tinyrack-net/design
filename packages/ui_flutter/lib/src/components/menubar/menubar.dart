@@ -104,10 +104,7 @@ class TRMenubar extends StatelessWidget {
       container: true,
       label: semanticLabel,
       child: SizedBox(
-        height:
-            TRGeneratedControlMetrics.smHeight +
-            TRGeneratedSpacing.xs * 2 +
-            TRGeneratedBorders.defaultWidth * 2,
+        height: TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs * 2,
         child: MenuBar(
           style: MenuStyle(
             backgroundColor: WidgetStatePropertyAll(colors.surface),
@@ -118,7 +115,6 @@ class TRMenubar extends StatelessWidget {
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(TRGeneratedRadii.lg),
-                side: BorderSide(color: colors.border),
               ),
             ),
           ),

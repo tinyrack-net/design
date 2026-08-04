@@ -349,6 +349,7 @@ test('styles items, submenu triggers, indicators, separators, and overflow as me
   expect(getComputedStyle(item as HTMLElement).backgroundColor).not.toBe(
     getComputedStyle(popup as HTMLElement).backgroundColor,
   );
+  expect(getComputedStyle(item as HTMLElement).outlineStyle).toBe('none');
   delete document.documentElement.dataset['theme'];
 });
 

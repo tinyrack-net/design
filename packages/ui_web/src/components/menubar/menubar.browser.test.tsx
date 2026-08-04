@@ -177,6 +177,61 @@ test('switches the open menu with horizontal navigation', async () => {
   expect(onEditOpenChange).toHaveBeenCalledWith(true, expect.any(Object));
 });
 
+test('opens three nested menu layers and restores focus one layer at a time', async () => {
+  await render(
+    <TRMenubar aria-label="Deployment menu">
+      <TRMenu.Root>
+        <TRMenu.Trigger>Deploy</TRMenu.Trigger>
+        <TRMenu.Portal>
+          <TRMenu.Positioner>
+            <TRMenu.Popup>
+              <TRMenu.SubmenuRoot>
+                <TRMenu.SubmenuTrigger>Region</TRMenu.SubmenuTrigger>
+                <TRMenu.Portal>
+                  <TRMenu.Positioner>
+                    <TRMenu.Popup>
+                      <TRMenu.SubmenuRoot>
+                        <TRMenu.SubmenuTrigger>Asia Pacific</TRMenu.SubmenuTrigger>
+                        <TRMenu.Portal>
+                          <TRMenu.Positioner>
+                            <TRMenu.Popup>
+                              <TRMenu.Item>Seoul</TRMenu.Item>
+                            </TRMenu.Popup>
+                          </TRMenu.Positioner>
+                        </TRMenu.Portal>
+                      </TRMenu.SubmenuRoot>
+                    </TRMenu.Popup>
+                  </TRMenu.Positioner>
+                </TRMenu.Portal>
+              </TRMenu.SubmenuRoot>
+            </TRMenu.Popup>
+          </TRMenu.Positioner>
+        </TRMenu.Portal>
+      </TRMenu.Root>
+    </TRMenubar>,
+  );
+
+  const deploy = page.getByRole('menuitem', { name: 'Deploy' });
+  deploy.element().focus();
+  await userEvent.keyboard('{Enter}');
+  const region = page.getByRole('menuitem', { name: 'Region' });
+  await expect.element(region).toHaveFocus();
+  await userEvent.keyboard('{ArrowRight}');
+  const asiaPacific = page.getByRole('menuitem', { name: 'Asia Pacific' });
+  await expect.element(asiaPacific).toHaveFocus();
+  await userEvent.keyboard('{ArrowRight}');
+  const seoul = page.getByRole('menuitem', { name: 'Seoul' });
+  await expect.element(seoul).toHaveFocus();
+  expect(document.querySelectorAll('.tr-menu-content[data-open]')).toHaveLength(3);
+
+  await userEvent.keyboard('{Escape}');
+  await expect.element(asiaPacific).toHaveFocus();
+  await userEvent.keyboard('{Escape}');
+  await expect.element(region).toHaveFocus();
+  await userEvent.keyboard('{Escape}');
+  await expect.element(deploy).toHaveFocus();
+});
+
 test('uses vertical keys, respects loop boundaries, and blocks disabled roots', async () => {
   await render(
     <TRMenubar
@@ -326,7 +381,7 @@ test('applies consumer menubar tokens without replacing semantic defaults', asyn
   const style = getComputedStyle(menubar.element());
   expect(style.backgroundColor).toBe('rgb(12, 34, 56)');
   expect(style.color).toBe('rgb(245, 246, 247)');
-  expect(style.borderTopStyle).toBe('solid');
+  expect(style.borderTopStyle).toBe('none');
 });
 
 test('server-renders and hydrates menu integration without recovery', async () => {

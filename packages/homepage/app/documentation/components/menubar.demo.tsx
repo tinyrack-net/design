@@ -28,6 +28,11 @@ const menubarCopy = {
     disabled: 'Disabled menubar',
     looping: 'Looping focus',
     bounded: 'Bounded focus',
+    deploy: 'Deploy',
+    region: 'Region',
+    asiaPacific: 'Asia Pacific',
+    seoul: 'Seoul',
+    deployed: 'Deploy to Seoul',
   },
   ko: {
     app: '애플리케이션 메뉴',
@@ -48,6 +53,11 @@ const menubarCopy = {
     disabled: '사용할 수 없는 메뉴 막대',
     looping: '초점 순환',
     bounded: '초점 경계 유지',
+    deploy: '배포',
+    region: '리전',
+    asiaPacific: '아시아 태평양',
+    seoul: '서울',
+    deployed: '서울에 배포',
   },
   ja: {
     app: 'アプリケーションメニュー',
@@ -68,6 +78,11 @@ const menubarCopy = {
     disabled: '無効なメニューバー',
     looping: 'フォーカスを循環',
     bounded: '境界で停止',
+    deploy: 'デプロイ',
+    region: 'リージョン',
+    asiaPacific: 'アジア太平洋',
+    seoul: 'ソウル',
+    deployed: 'ソウルへデプロイ',
   },
 } as const;
 
@@ -153,6 +168,52 @@ export function MenubarKeyboardComparison() {
     <div className="grid gap-4 sm:grid-cols-2">
       <CompactMenubar label={text.looping} loopFocus />
       <CompactMenubar label={text.bounded} loopFocus={false} />
+    </div>
+  );
+}
+
+export function MenubarNestedLayersPreview() {
+  const text = menubarCopy[useDemoLocale()];
+  const [result, setResult] = useState<string>(text.none);
+  return (
+    <div data-docs-example-item="">
+      <TRMenubar aria-label={text.app}>
+        <TRMenu.Root>
+          <TRMenu.Trigger>{text.deploy}</TRMenu.Trigger>
+          <TRMenu.Portal>
+            <TRMenu.Positioner>
+              <TRMenu.Popup>
+                <TRMenu.SubmenuRoot>
+                  <TRMenu.SubmenuTrigger>{text.region}</TRMenu.SubmenuTrigger>
+                  <TRMenu.Portal>
+                    <TRMenu.Positioner>
+                      <TRMenu.Popup>
+                        <TRMenu.SubmenuRoot>
+                          <TRMenu.SubmenuTrigger>
+                            {text.asiaPacific}
+                          </TRMenu.SubmenuTrigger>
+                          <TRMenu.Portal>
+                            <TRMenu.Positioner>
+                              <TRMenu.Popup>
+                                <TRMenu.Item onClick={() => setResult(text.deployed)}>
+                                  {text.seoul}
+                                </TRMenu.Item>
+                              </TRMenu.Popup>
+                            </TRMenu.Positioner>
+                          </TRMenu.Portal>
+                        </TRMenu.SubmenuRoot>
+                      </TRMenu.Popup>
+                    </TRMenu.Positioner>
+                  </TRMenu.Portal>
+                </TRMenu.SubmenuRoot>
+              </TRMenu.Popup>
+            </TRMenu.Positioner>
+          </TRMenu.Portal>
+        </TRMenu.Root>
+      </TRMenubar>
+      <output aria-live="polite" className="mt-3 block text-sm">
+        {result}
+      </output>
     </div>
   );
 }
@@ -351,6 +412,55 @@ export function MenubarConfigurations() {
   </div>;
 }`;
 
+const menubarNestedLayersSourceEn = `import { useState } from 'react';
+import '@tinyrack/ui/components/menubar.css';
+import { TRMenu } from '@tinyrack/ui/components/menu';
+import { TRMenubar } from '@tinyrack/ui/components/menubar';
+
+export function NestedMenubar() {
+  const [result, setResult] = useState('No command selected');
+  return <div>
+    <TRMenubar aria-label="Application menu">
+      <TRMenu.Root>
+        <TRMenu.Trigger>Deploy</TRMenu.Trigger>
+        <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+          <TRMenu.SubmenuRoot>
+            <TRMenu.SubmenuTrigger>Region</TRMenu.SubmenuTrigger>
+            <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+              <TRMenu.SubmenuRoot>
+                <TRMenu.SubmenuTrigger>Asia Pacific</TRMenu.SubmenuTrigger>
+                <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
+                  <TRMenu.Item onClick={() => setResult('Deploy to Seoul')}>
+                    Seoul
+                  </TRMenu.Item>
+                </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+              </TRMenu.SubmenuRoot>
+            </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+          </TRMenu.SubmenuRoot>
+        </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
+      </TRMenu.Root>
+    </TRMenubar>
+    <output aria-live="polite">{result}</output>
+  </div>;
+}`;
+
+const menubarNestedLayersSourceKo = menubarNestedLayersSourceEn
+  .replaceAll('No command selected', '명령을 선택하지 않았어요')
+  .replaceAll('Application menu', '애플리케이션 메뉴')
+  .replaceAll('Deploy to Seoul', '서울에 배포')
+  .replaceAll('Deploy', '배포')
+  .replaceAll('Region', '리전')
+  .replaceAll('Asia Pacific', '아시아 태평양')
+  .replaceAll('Seoul', '서울');
+const menubarNestedLayersSourceJa = menubarNestedLayersSourceEn
+  .replaceAll('No command selected', 'コマンドは未選択です')
+  .replaceAll('Application menu', 'アプリケーションメニュー')
+  .replaceAll('Deploy to Seoul', 'ソウルへデプロイ')
+  .replaceAll('Deploy', 'デプロイ')
+  .replaceAll('Region', 'リージョン')
+  .replaceAll('Asia Pacific', 'アジア太平洋')
+  .replaceAll('Seoul', 'ソウル');
+
 const menubarBasicSourceKo = `import '@tinyrack/ui/components/menubar.css';
 import { TRMenu } from '@tinyrack/ui/components/menu';
 import { TRMenubar } from '@tinyrack/ui/components/menubar';
@@ -382,6 +492,11 @@ export const menubarConfigurationsSource = {
   en: menubarConfigurationsSourceEn,
   ja: menubarConfigurationsSourceJa,
   ko: menubarConfigurationsSourceKo,
+} as const;
+export const menubarNestedLayersSource = {
+  en: menubarNestedLayersSourceEn,
+  ja: menubarNestedLayersSourceJa,
+  ko: menubarNestedLayersSourceKo,
 } as const;
 
 const meta = {

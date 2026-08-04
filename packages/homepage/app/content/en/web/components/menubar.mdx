@@ -47,6 +47,8 @@ Use a menubar for persistent application commands, not site navigation.
 
 <ComponentExampleTabs id="menubar-keyboard-loop" title="Looping and bounded focus" description="The orientation axis chooses the arrow keys. `loopFocus` only decides whether movement wraps at the first and last menu." preview={<div data-docs-example-item-count="2"><Stories.MenubarKeyboardComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.en }]} />
 
+<ComponentExampleTabs id="menubar-nested-layers" title="Three nested menu layers" description="Open Deploy, then Region and Asia Pacific. Arrow keys enter each submenu, while Escape returns focus one layer at a time." preview={<div data-docs-example-item-count="1"><Stories.MenubarNestedLayersPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarNestedLayersSource.en }]} />
+
 ## API
 
 `TRMenubar` accepts Base UI root props. `orientation` is `'horizontal' | 'vertical'` with default `'horizontal'`; `loopFocus` is boolean with default `true`; `disabled` is boolean with default `false`. Give the root an accessible name. It maintains one roving tab stop, skips disabled child menus, switches an open menu as focus moves, and restores trigger focus after Escape.

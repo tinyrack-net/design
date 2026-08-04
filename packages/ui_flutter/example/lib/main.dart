@@ -814,6 +814,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'drawer' => ['open', 'swipeDirection'],
   'slider' => ['disabled', 'label', 'orientation', 'uiSize'],
   'menu' => ['disabled', 'open'],
+  'menubar' => ['open'],
   'select' => ['disabled', 'errorText', 'open', 'readOnly', 'uiSize', 'value'],
   'icon-button' => [
     'appearance',
@@ -1465,30 +1466,10 @@ class PreviewComponent extends StatelessWidget {
         ),
       ),
       'form' => _PreviewForm(args: args, key: measureKey, locale: locale),
-      'menubar' => TRMenubar(
+      'menubar' => _PreviewMenubar(
+        args: args,
         key: measureKey,
-        semanticLabel: 'Application',
-        menus: [
-          TRMenubarMenu(
-            trigger: const SizedBox(
-              width: 29,
-              child: Center(child: Text('File')),
-            ),
-            menuChildren: [
-              TRMenuItem(onPressed: () {}, child: const Text('New rack')),
-              TRMenuItem(onPressed: () {}, child: const Text('Open')),
-            ],
-          ),
-          TRMenubarMenu(
-            trigger: const SizedBox(
-              width: 37,
-              child: Center(child: Text('View')),
-            ),
-            menuChildren: [
-              TRMenuItem(onPressed: () {}, child: const Text('Refresh')),
-            ],
-          ),
-        ],
+        onStateChanged: onStateChanged,
       ),
       'navigation-menu' => _PreviewNavigationMenu(args: args, key: measureKey),
       'number-field' => SizedBox(
@@ -3761,6 +3742,68 @@ class _PreviewToastState extends State<_PreviewToast> {
         ),
       ),
     ),
+  );
+}
+
+class _PreviewMenubar extends StatefulWidget {
+  const _PreviewMenubar({
+    required this.args,
+    required this.onStateChanged,
+    super.key,
+  });
+
+  final Map<String, Object?> args;
+  final ValueChanged<Map<String, Object?>> onStateChanged;
+
+  @override
+  State<_PreviewMenubar> createState() => _PreviewMenubarState();
+}
+
+class _PreviewMenubarState extends State<_PreviewMenubar> {
+  final MenuController _fileController = MenuController();
+
+  @override
+  void initState() {
+    super.initState();
+    _syncOpenState();
+  }
+
+  @override
+  void didUpdateWidget(_PreviewMenubar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.args['open'] != widget.args['open']) _syncOpenState();
+  }
+
+  void _syncOpenState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final shouldOpen = widget.args['open'] == true;
+      if (shouldOpen && !_fileController.isOpen) _fileController.open();
+      if (!shouldOpen && _fileController.isOpen) _fileController.close();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => TRMenubar(
+    semanticLabel: 'Application',
+    menus: [
+      TRMenubarMenu(
+        controller: _fileController,
+        onClose: () => widget.onStateChanged({'open': false}),
+        onOpen: () => widget.onStateChanged({'open': true}),
+        trigger: const SizedBox(width: 27, child: Center(child: Text('File'))),
+        menuChildren: [
+          TRMenuItem(onPressed: () {}, child: const Text('New rack')),
+          TRMenuItem(onPressed: () {}, child: const Text('Open')),
+        ],
+      ),
+      TRMenubarMenu(
+        trigger: const SizedBox(width: 37, child: Center(child: Text('View'))),
+        menuChildren: [
+          TRMenuItem(onPressed: () {}, child: const Text('Refresh')),
+        ],
+      ),
+    ],
   );
 }
 

@@ -39,6 +39,7 @@ function ActionsMenu({ onRestart }: { onRestart?: () => void }) {
 }
 
 test('opens from the trigger and exposes Tinyrack menu semantics', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
   expect(TRMenu.Root).toBe(TRMenuRoot);
   const screen = await render(<ActionsMenu />);
   const trigger = screen.getByRole('button', { name: 'Actions' });
@@ -51,6 +52,12 @@ test('opens from the trigger and exposes Tinyrack menu semantics', async () => {
     .element(screen.getByRole('menuitem', { name: 'Restart' }))
     .toHaveClass('tr-menu-item');
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'true');
+  expect(getComputedStyle(trigger.element()).borderTopColor).toBe('rgba(0, 0, 0, 0)');
+  expect(
+    getComputedStyle(screen.getByRole('menu', { name: 'Actions' }).element())
+      .borderTopStyle,
+  ).toBe('solid');
+  delete document.documentElement.dataset['theme'];
 });
 
 test('uses keyboard typeahead, activates an item, and restores trigger focus', async () => {
@@ -65,7 +72,7 @@ test('uses keyboard typeahead, activates an item, and restores trigger focus', a
   await expect.element(restart).toHaveFocus();
   await userEvent.keyboard('{ArrowDown}r');
   await expect.element(restart).toHaveAttribute('data-highlighted');
-  expect(getComputedStyle(restart.element()).outlineStyle).toBe('solid');
+  expect(getComputedStyle(restart.element()).outlineStyle).toBe('none');
   await userEvent.keyboard('{Enter}');
   expect(onRestart).toHaveBeenCalledOnce();
   await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');

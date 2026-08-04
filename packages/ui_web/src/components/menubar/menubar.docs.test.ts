@@ -25,6 +25,7 @@ describe('menubar documentation', () => {
       'menubarBasicSource',
       'menubarApplicationSource',
       'menubarConfigurationsSource',
+      'menubarNestedLayersSource',
     ];
 
     for (const sourceName of sourceNames) {

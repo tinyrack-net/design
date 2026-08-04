@@ -1210,8 +1210,142 @@ class _RackFormState extends State<RackForm> {
       ko: '방향키 이동과 중첩 항목을 지원하는 가로 애플리케이션 메뉴를 구성해요.',
       ja: '矢印キー移動と階層項目に対応した横並びのアプリケーションメニューを構成します。',
     },
-    usage:
-      "TRMenubar(\n  menus: [TRMenubarMenu(trigger: const Text('File'), menuChildren: items)],\n)",
+    contractRows: [
+      {
+        axis: { en: 'Composition', ko: '구성', ja: '構成' },
+        choices: {
+          en: '`TRMenubar` lays out ordered `TRMenubarMenu` entries horizontally. Each entry owns one trigger and one popup child list.',
+          ko: '`TRMenubar`는 순서가 있는 `TRMenubarMenu`를 가로로 배치해요. 각 항목은 트리거 하나와 팝업 자식 목록 하나를 가져요.',
+          ja: '`TRMenubar` は順序付きの `TRMenubarMenu` を横方向に配置します。各項目は1つのトリガーとポップアップの子リストを持ちます。',
+        },
+      },
+      {
+        axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
+        choices: {
+          en: 'Material menu traversal coordinates arrow keys across top-level triggers and nested submenus. Escape closes the active cascade.',
+          ko: 'Material 메뉴 탐색이 상위 트리거와 중첩 메뉴 사이의 방향키 이동을 조정해요. Escape는 열린 메뉴 묶음을 닫아요.',
+          ja: 'Material のメニュー操作により、上位トリガーとネストしたサブメニューを方向キーで移動できます。Escape は開いているメニュー階層を閉じます。',
+        },
+      },
+      {
+        axis: { en: 'Availability', ko: '사용 가능 여부', ja: '利用可否' },
+        choices: {
+          en: 'Set `enabled: false` on one `TRMenubarMenu` to remove its commands without disabling sibling menus.',
+          ko: '한 `TRMenubarMenu`에 `enabled: false`를 지정하면 다른 메뉴는 유지하면서 해당 명령만 사용할 수 없게 해요.',
+          ja: '1つの `TRMenubarMenu` に `enabled: false` を指定すると、ほかのメニューを保ったまま、そのコマンドだけを無効にできます。',
+        },
+      },
+      {
+        axis: { en: 'Nested layers', ko: '중첩 레이어', ja: 'ネストレイヤー' },
+        choices: {
+          en: 'Place `TRMenuSubmenu` entries inside `menuChildren`; each nested popup keeps its own bordered layer surface.',
+          ko: '`menuChildren` 안에 `TRMenuSubmenu`를 넣으세요. 중첩된 각 팝업은 자체 테두리가 있는 레이어 표면을 유지해요.',
+          ja: '`menuChildren` に `TRMenuSubmenu` を配置します。ネストした各ポップアップは、それぞれ枠線付きのレイヤー面を保ちます。',
+        },
+      },
+    ],
+    contractIntro: {
+      en: 'Give the menubar a `semanticLabel` that names the command group. Menubar and active triggers are borderless; popup layers retain their border, while focused items use a background highlight without changing border geometry.',
+      ko: '명령 그룹을 설명하는 `semanticLabel`을 메뉴바에 지정하세요. 메뉴바와 활성 트리거에는 테두리가 없고 팝업 레이어는 테두리를 유지해요. 초점 항목은 테두리 크기를 바꾸지 않고 배경으로 강조해요.',
+      ja: 'コマンドグループを示す `semanticLabel` をメニューバーに指定してください。メニューバーとアクティブなトリガーに枠線はなく、ポップアップレイヤーは枠線を保ちます。フォーカス項目は枠線の寸法を変えず、背景で強調します。',
+    },
+    usage: {
+      en: "TRMenubar(\n  semanticLabel: 'Application menu',\n  menus: [\n    TRMenubarMenu(\n      trigger: const Text('File'),\n      menuChildren: [\n        TRMenuItem(onPressed: createRack, child: const Text('New rack')),\n        TRMenuItem(onPressed: openRack, child: const Text('Open')),\n      ],\n    ),\n  ],\n)",
+      ko: "TRMenubar(\n  semanticLabel: '애플리케이션 메뉴',\n  menus: [\n    TRMenubarMenu(\n      trigger: const Text('파일'),\n      menuChildren: [\n        TRMenuItem(onPressed: createRack, child: const Text('새 랙')),\n        TRMenuItem(onPressed: openRack, child: const Text('열기')),\n      ],\n    ),\n  ],\n)",
+      ja: "TRMenubar(\n  semanticLabel: 'アプリケーションメニュー',\n  menus: [\n    TRMenubarMenu(\n      trigger: const Text('ファイル'),\n      menuChildren: [\n        TRMenuItem(onPressed: createRack, child: const Text('新規ラック')),\n        TRMenuItem(onPressed: openRack, child: const Text('開く')),\n      ],\n    ),\n  ],\n)",
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'TRMenubar properties',
+          ko: 'TRMenubar 속성',
+          ja: 'TRMenubar のプロパティ',
+        },
+        rows: [
+          {
+            name: 'menus',
+            type: 'List<TRMenubarMenu> · required',
+            purpose: {
+              en: 'Defines the ordered top-level menus.',
+              ko: '순서가 있는 상위 메뉴를 정의해요.',
+              ja: '順序付きの上位メニューを定義します。',
+            },
+          },
+          {
+            name: 'semanticLabel',
+            type: 'String? · null',
+            purpose: {
+              en: 'Names the application command group for assistive technology.',
+              ko: '보조 기술에 애플리케이션 명령 그룹의 이름을 제공해요.',
+              ja: '支援技術にアプリケーションコマンドグループの名前を伝えます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRMenubarMenu properties',
+          ko: 'TRMenubarMenu 속성',
+          ja: 'TRMenubarMenu のプロパティ',
+        },
+        rows: [
+          {
+            name: 'trigger',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Renders the top-level menu label.',
+              ko: '상위 메뉴 레이블을 렌더링해요.',
+              ja: '上位メニューのラベルを表示します。',
+            },
+          },
+          {
+            name: 'menuChildren',
+            type: 'List<Widget> · required',
+            purpose: {
+              en: 'Provides commands, settings, separators, and nested submenus for the popup.',
+              ko: '팝업에 표시할 명령, 설정, 구분선, 중첩 메뉴를 제공해요.',
+              ja: 'ポップアップに表示するコマンド、設定、区切り線、ネストしたサブメニューを指定します。',
+            },
+          },
+          {
+            name: 'enabled',
+            type: 'bool · true',
+            purpose: {
+              en: 'Controls whether the trigger can open its menu.',
+              ko: '트리거가 메뉴를 열 수 있는지 정해요.',
+              ja: 'トリガーからメニューを開けるかを制御します。',
+            },
+          },
+          {
+            name: 'controller',
+            type: 'MenuController? · null',
+            purpose: {
+              en: 'Lets the parent open, close, or inspect this menu.',
+              ko: '부모에서 이 메뉴를 열고 닫거나 상태를 확인할 수 있게 해요.',
+              ja: '親からこのメニューを開閉したり、状態を確認したりできます。',
+            },
+          },
+          {
+            name: 'focusNode',
+            type: 'FocusNode? · null',
+            purpose: {
+              en: 'Lets the parent coordinate focus for the top-level trigger.',
+              ko: '부모에서 상위 트리거의 초점을 조정할 수 있게 해요.',
+              ja: '親から上位トリガーのフォーカスを制御できます。',
+            },
+          },
+          {
+            name: 'onOpen / onClose',
+            type: 'VoidCallback? · null',
+            purpose: {
+              en: 'Reports this menu opening and closing.',
+              ko: '이 메뉴가 열리고 닫힐 때 알려 줘요.',
+              ja: 'このメニューが開閉したときに通知します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'navigation-menu': {
     title: 'NavigationMenu',

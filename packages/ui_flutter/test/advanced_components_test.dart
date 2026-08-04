@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:tinyrack_ui/src/generated/tokens.g.dart';
+// ignore: implementation_imports
+import 'package:tinyrack_ui/src/internal/layer.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 void main() {
@@ -1008,6 +1010,93 @@ void main() {
       expect(find.text('New'), findsOneWidget);
       expect(find.text('Save'), findsOneWidget);
       expect(find.text('Scrollable content'), findsOneWidget);
+    });
+
+    testWidgets('menubar has no outer border and keeps compact geometry', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenubar(
+            menus: [
+              TRMenubarMenu(
+                trigger: const Text('File'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('New')),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      final menuBar = tester.widget<MenuBar>(find.byType(MenuBar));
+      final shape =
+          menuBar.style?.shape?.resolve({})! as RoundedRectangleBorder;
+      expect(shape.side.style, BorderStyle.none);
+      expect(
+        tester.getSize(find.byType(MenuBar)).height,
+        TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs * 2,
+      );
+    });
+
+    testWidgets('menubar opens three nested layers', (tester) async {
+      final deployFocus = FocusNode();
+      final regionFocus = FocusNode();
+      final asiaPacificFocus = FocusNode();
+      final seoulFocus = FocusNode();
+      addTearDown(deployFocus.dispose);
+      addTearDown(regionFocus.dispose);
+      addTearDown(asiaPacificFocus.dispose);
+      addTearDown(seoulFocus.dispose);
+      await tester.pumpWidget(
+        _app(
+          TRMenubar(
+            semanticLabel: 'Deployment menu',
+            menus: [
+              TRMenubarMenu(
+                focusNode: deployFocus,
+                trigger: const Text('Deploy'),
+                menuChildren: [
+                  TRMenuSubmenu(
+                    focusNode: regionFocus,
+                    menuChildren: [
+                      TRMenuSubmenu(
+                        focusNode: asiaPacificFocus,
+                        menuChildren: [
+                          TRMenuItem(
+                            focusNode: seoulFocus,
+                            onPressed: () {},
+                            child: const Text('Seoul'),
+                          ),
+                        ],
+                        child: const Text('Asia Pacific'),
+                      ),
+                    ],
+                    child: const Text('Region'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Deploy'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Region'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Asia Pacific'));
+      await tester.pumpAndSettle();
+      expect(find.text('Seoul'), findsOneWidget);
+      seoulFocus.requestFocus();
+      await tester.pump();
+      expect(seoulFocus.hasFocus, isTrue);
+      expect(find.byType(TRLayerBoundary), findsNWidgets(3));
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.text('Seoul'), findsNothing);
+      expect(find.text('Asia Pacific'), findsNothing);
     });
   });
 }

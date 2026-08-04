@@ -95,6 +95,8 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'textarea-validation': _textareaValidation,
   'menu-settings': _menuSettings,
   'menu-submenu': _menuSubmenu,
+  'menubar-nested-layers': _menubarNestedLayers,
+  'menubar-menu-states': _menubarMenuStates,
   'select-controlled': _selectControlled,
   'select-form': _selectForm,
   'dialog-result': _dialogResult,
@@ -3099,6 +3101,84 @@ Widget _menuSubmenu(BuildContext context, Locale locale) => TRMenu(
     ),
   ],
 );
+
+Widget _menubarNestedLayers(BuildContext context, Locale locale) => TRMenubar(
+  semanticLabel: _pick(locale, 'Application menu', '애플리케이션 메뉴', 'アプリケーションメニュー'),
+  menus: [
+    TRMenubarMenu(
+      trigger: Text(_pick(locale, 'Deploy', '배포', 'デプロイ')),
+      menuChildren: [
+        TRMenuSubmenu(
+          menuChildren: [
+            TRMenuSubmenu(
+              menuChildren: [
+                TRMenuItem(
+                  onPressed: () {},
+                  child: Text(_pick(locale, 'Seoul', '서울', 'ソウル')),
+                ),
+              ],
+              child: Text(_pick(locale, 'Asia Pacific', '아시아 태평양', 'アジア太平洋')),
+            ),
+          ],
+          child: Text(_pick(locale, 'Region', '리전', 'リージョン')),
+        ),
+      ],
+    ),
+  ],
+);
+
+Widget _menubarMenuStates(BuildContext context, Locale locale) {
+  var status = _pick(locale, 'Menu closed', '메뉴 닫힘', 'メニューは閉じています');
+  return StatefulBuilder(
+    builder: (context, setState) => Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: TRSpacing.medium,
+      children: [
+        TRMenubar(
+          semanticLabel: _pick(
+            locale,
+            'Application menu',
+            '애플리케이션 메뉴',
+            'アプリケーションメニュー',
+          ),
+          menus: [
+            TRMenubarMenu(
+              trigger: Text(_pick(locale, 'File', '파일', 'ファイル')),
+              onOpen: () => setState(
+                () => status = _pick(
+                  locale,
+                  'File menu open',
+                  '파일 메뉴 열림',
+                  'ファイルメニューを開きました',
+                ),
+              ),
+              onClose: () => setState(
+                () => status = _pick(
+                  locale,
+                  'Menu closed',
+                  '메뉴 닫힘',
+                  'メニューを閉じました',
+                ),
+              ),
+              menuChildren: [
+                TRMenuItem(
+                  onPressed: () {},
+                  child: Text(_pick(locale, 'New rack', '새 랙', '新規ラック')),
+                ),
+              ],
+            ),
+            TRMenubarMenu(
+              enabled: false,
+              trigger: Text(_pick(locale, 'Managed', '관리됨', '管理対象')),
+              menuChildren: const [],
+            ),
+          ],
+        ),
+        Text(status),
+      ],
+    ),
+  );
+}
 
 Widget _selectControlled(BuildContext context, Locale locale) {
   String? channel = 'stable';

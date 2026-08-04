@@ -174,6 +174,53 @@ describe('built React Router documentation', () => {
         .poll(() => editMenu.evaluate((element) => document.activeElement === element))
         .toBe(true);
 
+      const nestedMenubarExample = page.locator(
+        '[data-component-example-id="menubar-nested-layers"]',
+      );
+      const deployMenu = nestedMenubarExample.getByRole('menuitem', {
+        name: 'Deploy',
+      });
+      await deployMenu.focus();
+      await page.keyboard.press('Enter');
+      const regionMenu = page.getByRole('menuitem', { name: 'Region' });
+      await regionMenu.waitFor();
+      await expect
+        .poll(() =>
+          regionMenu.evaluate((element) => document.activeElement === element),
+        )
+        .toBe(true);
+      await page.keyboard.press('ArrowRight');
+      const asiaPacificMenu = page.getByRole('menuitem', {
+        name: 'Asia Pacific',
+      });
+      await asiaPacificMenu.waitFor();
+      await expect
+        .poll(() =>
+          asiaPacificMenu.evaluate((element) => document.activeElement === element),
+        )
+        .toBe(true);
+      await page.keyboard.press('ArrowRight');
+      const seoulCommand = page.getByRole('menuitem', { name: 'Seoul' });
+      await seoulCommand.waitFor();
+      const nestedPopups = page.locator('.tr-menu-content:visible');
+      await expect.poll(() => nestedPopups.count()).toBe(3);
+      for (const popup of await nestedPopups.all()) {
+        await expectInsideViewport(page, popup);
+        await expect
+          .poll(() =>
+            popup.evaluate((element) => getComputedStyle(element).borderTopStyle),
+          )
+          .toBe('solid');
+      }
+      await page.keyboard.press('Escape');
+      await page.keyboard.press('Escape');
+      await page.keyboard.press('Escape');
+      await expect
+        .poll(() =>
+          deployMenu.evaluate((element) => document.activeElement === element),
+        )
+        .toBe(true);
+
       await gotoHydrated(page, `${origin}/en/web/components/navigation-menu`);
       const responsiveNavigation = page.locator(
         '[data-component-example-id="navigation-menu-states"]',
