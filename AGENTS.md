@@ -13,9 +13,10 @@ standalone documentation copy edits, generic test review, dependency
 maintenance, or release-only work.
 
 For any task that versions, tags, publishes, retries, or verifies an
-`@tinyrack/ui` or `@tinyrack/docs` package release, use
+`@tinyrack/ui`, `@tinyrack/docs`, or `tinyrack_ui` package release, use
 `$tinyrack-package-release` and follow
-`.agents/skills/tinyrack-package-release/SKILL.md`.
+`.agents/skills/tinyrack-package-release/SKILL.md`. This covers both the npm
+packages and the `tinyrack_ui` Flutter package published to pub.dev.
 
 When writing, rewriting, translating, or reviewing public Tinyrack UI
 documentation under `packages/homepage/app/content`, or documentation-facing

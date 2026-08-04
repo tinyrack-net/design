@@ -1,0 +1,43 @@
+name: Verify Flutter package
+description: >-
+  Set up Flutter and run the tinyrack_ui format, analyze, test, and publish
+  archive checks. Shared by pull request CI and the pub.dev publish workflow so
+  both gates stay identical.
+
+inputs:
+  flutter-version:
+    description: Flutter SDK version to install.
+    required: false
+    default: 3.44.4
+  working-directory:
+    description: Directory containing the Flutter package to verify.
+    required: false
+    default: packages/ui_flutter
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2.21.0
+      with:
+        channel: stable
+        flutter-version: ${{ inputs.flutter-version }}
+        cache: true
+
+    - name: Resolve package dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: flutter pub get
+
+    - name: Analyze and test package
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        dart format --output=none --set-exit-if-changed lib test example/lib
+        flutter analyze
+        flutter test
+
+    - name: Validate the public package archive
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: dart pub publish --dry-run
