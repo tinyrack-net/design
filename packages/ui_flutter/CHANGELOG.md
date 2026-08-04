@@ -1,3 +1,9 @@
+## 0.4.4
+
+- Dismisses open tooltips immediately when their trigger is activated by a
+  pointer or the Enter and Space keys, preventing stale tooltips over menus and
+  dialogs.
+
 ## 0.4.3
 
 - Preserves explicit null-valued select options in controlled display,
