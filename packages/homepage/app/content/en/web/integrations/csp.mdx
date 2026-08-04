@@ -45,7 +45,7 @@ Then add this exact helper rule to a static stylesheet allowed by the policy:
 
 <TRCodeBlock aria-label="Base UI scrollbar helper CSS" code={cspScrollbarSource} language="css" />
 
-In the Base UI version used by Tinyrack, a rendered Scroll Area uses this class on its Viewport to hide the native scrollbar while displaying its custom scrollbar. An item-aligned Select also creates the helper style and applies the class to whichever element owns scrolling: `Select.Popup`, or `Select.List` when a List is present. Tinyrack's `TRSelect.Positioner` defaults `alignItemWithTrigger` to `false`, but applications can enable it. Keep the static rule if either condition can occur.
+In the Base UI version used by Tinyrack, a rendered Scroll Area uses this class on its Viewport to hide the native scrollbar while displaying its custom scrollbar. Keep the static rule when the application renders a Scroll Area. Tinyrack Select uses trigger-relative placement and does not enable Base UI's item-aligned positioning mode.
 
 ## Know the boundary
 

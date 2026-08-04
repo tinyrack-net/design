@@ -49,7 +49,7 @@ const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', sta
     <TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
-    <TRSelect.Positioner sideOffset={8}>
+    <TRSelect.Positioner>
       <TRSelect.Popup>
         <TRSelect.Arrow />
         <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
@@ -130,7 +130,7 @@ function RackSelectForm() {
         <TRSelect.Root items={racks} name="rack" onValueChange={setValue} required value={value}>
           <TRSelect.Label>Deployment rack</TRSelect.Label>
           <TRSelect.Trigger aria-label="Deployment rack"><TRSelect.Value placeholder="Choose a rack" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
-          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow><TRSelect.List>
+          <TRSelect.Portal><TRSelect.Positioner><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow><TRSelect.List>
             <TRSelect.Group><TRSelect.GroupLabel>Production</TRSelect.GroupLabel>
               <TRSelect.Item value="alpha"><TRSelect.ItemText>Rack Alpha</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
               <TRSelect.Item value="beta"><TRSelect.ItemText>Rack Beta</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
@@ -173,7 +173,7 @@ const racks = Object.fromEntries(
     <TRSelect.Value /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
-    <TRSelect.Positioner sideOffset={8}>
+    <TRSelect.Positioner>
       <TRSelect.Popup>
         <TRSelect.Arrow />
         <TRSelect.ScrollUpArrow aria-label="Scroll up">↑</TRSelect.ScrollUpArrow>
@@ -202,7 +202,7 @@ The complete anatomy is `Root`, `Label`, `Trigger`, `Value`, `Icon`, `Portal`, `
 | disclosure | `defaultOpen={false}` or controlled `open`; `modal={true}` and `highlightItemOnHover={true}` by default |
 | availability | `disabled={false}`, `readOnly={false}`, and `required={false}` |
 | trigger | `uiSize="sm" | "md" | "lg"`, default `"md"` |
-| positioning | `Positioner` defaults `alignItemWithTrigger={false}` and `sideOffset={4}`; other collision and placement props compose from Base UI |
+| positioning | `Positioner` opens 4 px below the trigger and does not accept placement props; it flips above when the available space requires it |
 | forms | `name`, `form`, `autoComplete`, and `inputRef`; uncontrolled selects restore `defaultValue` on native reset |
 
 Give `Trigger` an accessible name. Keyboard users can open with Arrow Down, move through enabled options, use typeahead, confirm with Enter, and dismiss with Escape while focus returns to the trigger. Keep `value` and `open` controlled independently when needed. Use `disabled` for unavailable controls and `readOnly` for focusable values that cannot change.

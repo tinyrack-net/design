@@ -49,7 +49,7 @@ const racks = { alpha: '랙 알파예요', beta: '랙 베타예요', gamma: '랙
     <TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
-    <TRSelect.Positioner sideOffset={8}>
+    <TRSelect.Positioner>
       <TRSelect.Popup>
         <TRSelect.Arrow />
         <TRSelect.ScrollUpArrow aria-label="위로 스크롤하세요">↑</TRSelect.ScrollUpArrow>
@@ -130,7 +130,7 @@ function RackSelectForm() {
         <TRSelect.Root items={racks} name="rack" onValueChange={setValue} required value={value}>
           <TRSelect.Label>배포 랙</TRSelect.Label>
           <TRSelect.Trigger aria-label="배포 랙이에요"><TRSelect.Value placeholder="랙을 선택하세요" /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon></TRSelect.Trigger>
-          <TRSelect.Portal><TRSelect.Positioner sideOffset={8}><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="위로 스크롤하세요">↑</TRSelect.ScrollUpArrow><TRSelect.List>
+          <TRSelect.Portal><TRSelect.Positioner><TRSelect.Popup><TRSelect.Arrow /><TRSelect.ScrollUpArrow aria-label="위로 스크롤하세요">↑</TRSelect.ScrollUpArrow><TRSelect.List>
             <TRSelect.Group><TRSelect.GroupLabel>프로덕션이에요</TRSelect.GroupLabel>
               <TRSelect.Item value="alpha"><TRSelect.ItemText>랙 알파예요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
               <TRSelect.Item value="beta"><TRSelect.ItemText>랙 베타예요</TRSelect.ItemText><TRSelect.ItemIndicator aria-hidden="true">✓</TRSelect.ItemIndicator></TRSelect.Item>
@@ -173,7 +173,7 @@ const racks = Object.fromEntries(
     <TRSelect.Value /><TRSelect.Icon aria-hidden="true"><ChevronDown /></TRSelect.Icon>
   </TRSelect.Trigger>
   <TRSelect.Portal>
-    <TRSelect.Positioner sideOffset={8}>
+    <TRSelect.Positioner>
       <TRSelect.Popup>
         <TRSelect.Arrow />
         <TRSelect.ScrollUpArrow aria-label="위로 스크롤하세요">↑</TRSelect.ScrollUpArrow>
@@ -202,7 +202,7 @@ const racks = Object.fromEntries(
 | 열림 | `defaultOpen` 기본값은 `false`예요. 제어형 `open`도 사용할 수 있고 `modal`과 `highlightItemOnHover` 기본값은 `true`예요. |
 | 사용 가능 상태 | `disabled`, `readOnly`, `required` 기본값은 모두 `false`예요. |
 | 트리거 | `uiSize="sm" | "md" | "lg"`를 받고 기본값은 `"md"`예요. |
-| 배치 | `Positioner`의 `alignItemWithTrigger` 기본값은 `false`, `sideOffset` 기본값은 `4`예요. 나머지 충돌·배치 prop은 Base UI에서 합성돼요. |
+| 배치 | `Positioner`는 트리거 아래 4px에서 열리고 배치 prop을 받지 않아요. 공간이 부족하면 트리거 위로 전환해요. |
 | form | `name`, `form`, `autoComplete`, `inputRef`를 받아요. 비제어 select는 native reset에서 `defaultValue`로 돌아가요. |
 
 `Trigger`에 접근 가능한 이름을 제공하세요. Arrow Down으로 열고 사용 가능한 option 사이를 이동하거나 typeahead를 사용할 수 있어요. Enter로 확정하고 Escape로 닫으면 trigger로 focus가 돌아가요. 필요하면 `value`와 `open`을 독립적으로 제어하세요. 사용할 수 없는 control에는 `disabled`, 변경할 수 없는 focusable value에는 `readOnly`를 사용하세요.

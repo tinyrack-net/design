@@ -45,7 +45,7 @@ pnpm add @tinyrack/ui react react-dom
 
 <TRCodeBlock aria-label="Base UI のスクロールバー補助 CSS" code={cspScrollbarSource} language="css" />
 
-現在 Tinyrack が使用する Base UI では、Scroll Area が Viewport にこのクラスを適用し、ネイティブのスクロールバーを隠してカスタムスクロールバーを表示します。項目をトリガーに揃える Select も補助スタイルを生成し、スクロールを担当する `Select.Popup`、または List がある場合は `Select.List` にこのクラスを適用します。Tinyrack の `TRSelect.Positioner` では `alignItemWithTrigger` の既定値は `false` ですが、アプリケーション側で有効にできます。いずれかの条件が発生し得る場合は、静的規則を維持してください。
+現在 Tinyrack が使用する Base UI では、Scroll Area が Viewport にこのクラスを適用し、ネイティブのスクロールバーを隠してカスタムスクロールバーを表示します。アプリケーションで Scroll Area をレンダリングする場合は、静的規則を維持してください。Tinyrack Select はトリガー基準の配置を使用し、Base UI の項目整列配置モードを使用しません。
 
 ## 適用範囲を理解する
 
