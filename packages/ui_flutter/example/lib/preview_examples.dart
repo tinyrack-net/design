@@ -2524,6 +2524,17 @@ class _FormBasicExampleState extends State<_FormBasicExample> {
             label: _pick(locale, 'Rack name', '랙 이름', 'ラック名'),
             initialValue: 'rack-alpha',
           ),
+          TRTextField(
+            name: 'secret',
+            label: _pick(locale, 'Access token', '액세스 토큰', 'アクセストークン'),
+            obscureText: true,
+          ),
+          TRTextField(
+            name: 'notes',
+            label: _pick(locale, 'Notes', '메모', 'メモ'),
+            minLines: 2,
+            maxLines: 4,
+          ),
           Wrap(
             spacing: TRSpacing.small,
             runSpacing: TRSpacing.small,

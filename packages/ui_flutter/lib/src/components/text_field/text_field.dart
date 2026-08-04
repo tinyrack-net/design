@@ -22,7 +22,9 @@ class TRTextField extends StatelessWidget {
     this.keyboardType,
     this.label,
     this.maxLines = 1,
+    this.minLines,
     this.name,
+    this.obscureText = false,
     this.onChanged,
     this.onReset,
     this.onSaved,
@@ -38,6 +40,14 @@ class TRTextField extends StatelessWidget {
   }) : assert(
          controller == null || initialValue == null,
          'controller and initialValue cannot both be provided.',
+       ),
+       assert(
+         minLines == null || maxLines == null || minLines <= maxLines,
+         'minLines must not exceed maxLines.',
+       ),
+       assert(
+         !obscureText || maxLines == 1,
+         'obscured fields must use exactly one line.',
        );
 
   final AutovalidateMode? autovalidateMode;
@@ -52,7 +62,9 @@ class TRTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? label;
   final int? maxLines;
+  final int? minLines;
   final String? name;
+  final bool obscureText;
   final ValueChanged<String>? onChanged;
   final VoidCallback? onReset;
   final FormFieldSetter<String>? onSaved;
@@ -138,6 +150,8 @@ class TRTextField extends StatelessWidget {
         initialValue: initialValue,
         keyboardType: keyboardType,
         maxLines: maxLines,
+        minLines: minLines,
+        obscureText: obscureText,
         onChanged: (value) {
           registeredValue = value;
           onChanged?.call(value);
