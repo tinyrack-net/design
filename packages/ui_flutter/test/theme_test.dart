@@ -230,6 +230,29 @@ void main() {
     expect(value, 'Rack beta');
   });
 
+  testWidgets('text field forwards secure and multiline editing contracts', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const Scaffold(
+          body: Column(
+            children: [
+              TRTextField(obscureText: true),
+              TRTextField(minLines: 3, maxLines: 8),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    final fields = tester.widgetList<TextField>(find.byType(TextField));
+    expect(fields.first.obscureText, isTrue);
+    expect(fields.last.minLines, 3);
+    expect(fields.last.maxLines, 8);
+  });
+
   testWidgets('text field participates in form validation, save, and reset', (
     tester,
   ) async {

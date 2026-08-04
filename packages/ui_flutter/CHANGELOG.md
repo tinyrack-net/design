@@ -1,3 +1,8 @@
+## 0.4.0
+
+- Adds secure single-line and bounded multiline editing contracts to
+  `TRTextField` through `obscureText` and `minLines`.
+
 ## 0.3.0
 
 - Uses Lucide icons for every icon owned by a Tinyrack Flutter component.

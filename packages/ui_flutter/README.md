@@ -46,7 +46,8 @@ canonical React components.
 | `TRText.role`, `TRTextStyle`, and arbitrary `Color` | `variant: TRTextVariant.*` plus typed `color`, `align`, `weight`, and `truncate` |
 
 Flutter-only editing and Form lifecycle properties remain available on
-`TRTextField`.
+`TRTextField`, including secure single-line fields and bounded multiline
+editors through `obscureText`, `minLines`, and `maxLines`.
 
 From the repository root, verify every shared variant in light and dark themes
 and English, Korean, and Japanese with:
