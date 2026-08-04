@@ -79,8 +79,7 @@
   .tr-context-menu-radio-item:is(:focus-visible, [data-highlighted]),
   .tr-context-menu-submenu-trigger:is(:focus-visible, [data-highlighted]) {
     background: var(--tinyrack-surface-hover);
-    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: calc(var(--tinyrack-focus-width) * -1);
+    outline: none;
   }
 
   .tr-context-menu-item[data-variant="danger"] {

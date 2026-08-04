@@ -4,7 +4,7 @@
   .tr-menubar {
     align-items: center;
     background: var(--tr-menubar-background, var(--tinyrack-surface));
-    border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
+    border: 0;
     border-radius: var(--tinyrack-radius-lg);
     box-sizing: border-box;
     color: var(--tr-menubar-color, var(--tinyrack-text));

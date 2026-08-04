@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore: implementation_imports
+import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 // ignore: implementation_imports
 import 'package:tinyrack_ui/src/internal/layer.dart';
@@ -33,6 +35,43 @@ Widget _app(Widget child, {double? width, TextDirection? textDirection}) {
 
 void main() {
   group('TRMenu', () {
+    testWidgets('keeps menu layers bordered without a focused item border', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenu(
+            trigger: const Text('Actions'),
+            menuChildren: [
+              TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+
+      final item = tester.widget<MenuItemButton>(
+        find.widgetWithText(MenuItemButton, 'Duplicate'),
+      );
+      final focusedSide = item.style?.side?.resolve({WidgetState.focused});
+      expect(focusedSide?.color, Colors.transparent);
+      expect(focusedSide?.width, TRGeneratedBorders.defaultWidth);
+
+      final surface = tester.widget<Container>(
+        find
+            .descendant(
+              of: _layerBoundary(TRLayerBoundaryKind.menu),
+              matching: find.byType(Container),
+            )
+            .first,
+      );
+      final decoration = surface.decoration! as BoxDecoration;
+      expect(decoration.border, isA<Border>());
+      expect((decoration.border! as Border).top.style, BorderStyle.solid);
+    });
+
     testWidgets('opens, activates a command, and restores trigger focus', (
       tester,
     ) async {

@@ -3726,6 +3726,155 @@ class _MonitoringFormState extends State<MonitoringForm> {
 )`,
     },
   ],
+  menubar: [
+    {
+      id: 'menubar-nested-layers',
+      title: {
+        en: 'Three nested menu layers',
+        ja: '3段階のネストメニューレイヤー',
+        ko: '3단계 중첩 메뉴 레이어',
+      },
+      description: {
+        en: 'Open Deploy, then Region and Asia Pacific. Arrow keys enter each submenu, while Escape closes the active cascade.',
+        ja: 'デプロイを開き、リージョン、アジア太平洋の順に進みます。方向キーで各サブメニューへ移動し、Escapeを押すと開いているメニュー階層が閉じます。',
+        ko: '배포를 열고 리전과 아시아 태평양을 차례로 여세요. 방향키로 각 하위 메뉴에 들어가고, Escape를 누르면 열린 메뉴 묶음이 닫혀요.',
+      },
+      dart: {
+        en: String.raw`TRMenubar(
+  semanticLabel: 'Application menu',
+  menus: [
+    TRMenubarMenu(
+      trigger: const Text('Deploy'),
+      menuChildren: [
+        TRMenuSubmenu(
+          child: const Text('Region'),
+          menuChildren: [
+            TRMenuSubmenu(
+              child: const Text('Asia Pacific'),
+              menuChildren: [
+                TRMenuItem(onPressed: deployToSeoul, child: const Text('Seoul')),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+)`,
+        ko: String.raw`TRMenubar(
+  semanticLabel: '애플리케이션 메뉴',
+  menus: [
+    TRMenubarMenu(
+      trigger: const Text('배포'),
+      menuChildren: [
+        TRMenuSubmenu(
+          child: const Text('리전'),
+          menuChildren: [
+            TRMenuSubmenu(
+              child: const Text('아시아 태평양'),
+              menuChildren: [
+                TRMenuItem(onPressed: deployToSeoul, child: const Text('서울')),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+)`,
+        ja: String.raw`TRMenubar(
+  semanticLabel: 'アプリケーションメニュー',
+  menus: [
+    TRMenubarMenu(
+      trigger: const Text('デプロイ'),
+      menuChildren: [
+        TRMenuSubmenu(
+          child: const Text('リージョン'),
+          menuChildren: [
+            TRMenuSubmenu(
+              child: const Text('アジア太平洋'),
+              menuChildren: [
+                TRMenuItem(onPressed: deployToSeoul, child: const Text('ソウル')),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+)`,
+      },
+    },
+    {
+      id: 'menubar-menu-states',
+      title: {
+        en: 'Menu availability and lifecycle',
+        ja: 'メニューの利用可否とライフサイクル',
+        ko: '메뉴 사용 가능 여부와 수명 주기',
+      },
+      description: {
+        en: 'Disable one top-level menu without affecting its siblings, and use open and close callbacks when surrounding UI follows the menu lifecycle.',
+        ja: 'ほかのメニューに影響を与えず、1つの上位メニューだけを無効にできます。周辺UIをメニューの状態に連動させる場合は、開閉コールバックを使います。',
+        ko: '다른 메뉴에 영향을 주지 않고 상위 메뉴 하나만 비활성화할 수 있어요. 주변 UI를 메뉴 상태와 연동하려면 열기·닫기 콜백을 사용하세요.',
+      },
+      dart: {
+        en: String.raw`TRMenubar(
+  semanticLabel: 'Application menu',
+  menus: [
+    TRMenubarMenu(
+      trigger: const Text('File'),
+      onOpen: handleFileOpen,
+      onClose: handleFileClose,
+      menuChildren: [
+        TRMenuItem(onPressed: createRack, child: const Text('New rack')),
+      ],
+    ),
+    const TRMenubarMenu(
+      enabled: false,
+      trigger: Text('Managed'),
+      menuChildren: [],
+    ),
+  ],
+)`,
+        ko: String.raw`TRMenubar(
+  semanticLabel: '애플리케이션 메뉴',
+  menus: [
+    TRMenubarMenu(
+      trigger: const Text('파일'),
+      onOpen: handleFileOpen,
+      onClose: handleFileClose,
+      menuChildren: [
+        TRMenuItem(onPressed: createRack, child: const Text('새 랙')),
+      ],
+    ),
+    const TRMenubarMenu(
+      enabled: false,
+      trigger: Text('관리됨'),
+      menuChildren: [],
+    ),
+  ],
+)`,
+        ja: String.raw`TRMenubar(
+  semanticLabel: 'アプリケーションメニュー',
+  menus: [
+    TRMenubarMenu(
+      trigger: const Text('ファイル'),
+      onOpen: handleFileOpen,
+      onClose: handleFileClose,
+      menuChildren: [
+        TRMenuItem(onPressed: createRack, child: const Text('新規ラック')),
+      ],
+    ),
+    const TRMenubarMenu(
+      enabled: false,
+      trigger: Text('管理対象'),
+      menuChildren: [],
+    ),
+  ],
+)`,
+      },
+    },
+  ],
   select: [
     {
       id: 'select-controlled',

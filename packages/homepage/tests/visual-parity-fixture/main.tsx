@@ -1050,8 +1050,16 @@ function Fixture() {
       case 'menubar':
         return (
           <TRMenubar aria-label="Application">
-            <TRMenu.Root>
+            <TRMenu.Root open={flag('open')}>
               <TRMenu.Trigger>File</TRMenu.Trigger>
+              <TRMenu.Portal>
+                <TRMenu.Positioner>
+                  <TRMenu.Popup>
+                    <TRMenu.Item>New rack</TRMenu.Item>
+                    <TRMenu.Item>Open</TRMenu.Item>
+                  </TRMenu.Popup>
+                </TRMenu.Positioner>
+              </TRMenu.Portal>
             </TRMenu.Root>
             <TRMenu.Root>
               <TRMenu.Trigger>View</TRMenu.Trigger>

@@ -470,16 +470,13 @@ export const visualParityScenarios: VisualParityScenario[] = [
     uiSize: sizes,
   }),
   ...(
-    [
-      'file-tree',
-      'form',
-      'menubar',
-      'number-field',
-      'otp-field',
-      'toolbar',
-      'tree-nav',
-    ] as const
+    ['file-tree', 'form', 'number-field', 'otp-field', 'toolbar', 'tree-nav'] as const
   ).map((component) => ({ args: {}, component, id: component })),
+  ...[false, true].map((open) => ({
+    args: { open },
+    component: 'menubar' as const,
+    id: `menubar-open-${open}`,
+  })),
   ...product('scroll-area', { autoHide: [false, true] }),
   ...withStates(
     product('collapsible', {}).map((scenario) => ({
@@ -659,7 +656,7 @@ export const parityContract = {
   },
   'file-tree': {},
   form: {},
-  menubar: {},
+  menubar: { open: [false, true] },
   'navigation-menu': { open: [false, true] },
   'number-field': {},
   'otp-field': {},

@@ -140,7 +140,11 @@ abstract final class TRLayerStyles {
     );
   }
 
-  static ButtonStyle item(BuildContext context, {bool selected = false}) {
+  static ButtonStyle item(
+    BuildContext context, {
+    bool selected = false,
+    bool showFocusBorder = true,
+  }) {
     final colors = context.tinyrackTheme;
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
@@ -183,10 +187,10 @@ abstract final class TRLayerStyles {
       ),
       side: WidgetStateProperty.resolveWith(
         (states) => BorderSide(
-          color: states.contains(WidgetState.focused)
+          color: showFocusBorder && states.contains(WidgetState.focused)
               ? colors.focus
               : Colors.transparent,
-          width: states.contains(WidgetState.focused)
+          width: showFocusBorder && states.contains(WidgetState.focused)
               ? TRGeneratedBorders.focusWidth
               : TRGeneratedBorders.defaultWidth,
         ),

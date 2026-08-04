@@ -28,7 +28,6 @@
 
   .tr-menu-trigger:is(:hover, [data-popup-open]) {
     background: var(--tinyrack-surface-hover);
-    border-color: var(--tinyrack-control-border);
   }
 
   .tr-menu-trigger:focus-visible {
@@ -50,6 +49,7 @@
     --_tr-menu-content-min-width: var(--tinyrack-measure-md);
     --_tr-menu-viewport-inset: var(--tinyrack-space-lg);
     --tr-layer-padding: var(--tinyrack-space-xs);
+    border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
     display: grid;
     min-width: min(
       var(--tr-menu-content-min-width, var(--_tr-menu-content-min-width)),
@@ -113,8 +113,7 @@
 
   .tr-menu-item:is(:focus-visible, [data-highlighted]) {
     background: var(--tinyrack-surface-hover);
-    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: calc(var(--tinyrack-focus-width) * -1);
+    outline: none;
   }
 
   .tr-menu-item:is(:disabled, [aria-disabled="true"]) {

@@ -47,6 +47,8 @@ import * as Stories from '../../../../documentation/components/menubar.demo.js';
 
 <ComponentExampleTabs id="menubar-keyboard-loop" title="순환 초점과 경계 초점" description="`orientation`은 방향키 축을 고르고, `loopFocus`는 첫 메뉴와 마지막 메뉴 사이를 순환할지 정해요." preview={<div data-docs-example-item-count="2"><Stories.MenubarKeyboardComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ko }]} />
 
+<ComponentExampleTabs id="menubar-nested-layers" title="3단계 중첩 메뉴 레이어" description="배포를 열고 리전과 아시아 태평양을 차례로 여세요. 방향키로 각 하위 메뉴에 들어가고, Escape를 누르면 한 레이어씩 이전 항목으로 초점이 돌아와요." preview={<div data-docs-example-item-count="1"><Stories.MenubarNestedLayersPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarNestedLayersSource.ko }]} />
+
 ## API
 
 `TRMenubar`는 Base UI 루트 prop을 받아요. `orientation`은 `'horizontal' | 'vertical'`이고 기본값은 `'horizontal'`이에요. `loopFocus`는 불리언이고 기본값은 `true`, `disabled`는 불리언이고 기본값은 `false`예요. 루트에 접근 가능한 이름을 제공해요. 하나의 순환 tab stop을 유지하고, 비활성 자식을 건너뛰고, 초점이 이동할 때 열린 메뉴를 바꾸고, Escape 뒤에 트리거 초점을 복원해요.

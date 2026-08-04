@@ -47,6 +47,8 @@ import * as Stories from '../../../../documentation/components/menubar.demo.js';
 
 <ComponentExampleTabs id="menubar-keyboard-loop" title="循環フォーカスと境界フォーカス" description="`orientation` は方向キーの軸を選び、`loopFocus` は最初と最後の間を循環するか決めます。" preview={<div data-docs-example-item-count="2"><Stories.MenubarKeyboardComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarApplicationSource.ja }]} />
 
+<ComponentExampleTabs id="menubar-nested-layers" title="3段階のネストメニューレイヤー" description="デプロイを開き、リージョン、アジア太平洋の順に進みます。方向キーで各サブメニューへ移動し、Escapeを押すと1レイヤーずつ前の項目へフォーカスが戻ります。" preview={<div data-docs-example-item-count="1"><Stories.MenubarNestedLayersPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.menubarNestedLayersSource.ja }]} />
+
 ## API
 
 `TRMenubar` は Base UI ルート prop を受け取ります。`orientation` は `'horizontal' | 'vertical'`、デフォルトは `'horizontal'` です。`loopFocus` は boolean でデフォルト `true`、`disabled` は boolean でデフォルト `false` です。アクセシブルな名前を付けてください。1つのロービング tab stop を保ち、無効な子を飛ばし、フォーカス移動時に開くメニューを切り替え、Escape 後にトリガーへフォーカスを戻します。

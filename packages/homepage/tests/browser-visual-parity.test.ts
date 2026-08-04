@@ -489,6 +489,7 @@ async function reactSnapshot(
           dialog: '.tr-dialog-box[data-open]',
           drawer: '.tr-drawer-popup[data-open]',
           menu: '.tr-menu-content[data-open]',
+          menubar: '.tr-menu-content[data-open]',
           'navigation-menu': '.tr-navigation-menu-popup[data-open]',
           popover: '.tr-popover-popup[data-open]',
           'preview-card': '.tr-preview-card-popup[data-open]',

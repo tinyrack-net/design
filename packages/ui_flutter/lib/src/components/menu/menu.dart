@@ -109,8 +109,6 @@ class _TRMenuState extends State<TRMenu> {
         (states) => BorderSide(
           color: states.contains(WidgetState.focused)
               ? colors.focus
-              : controller.isOpen || states.contains(WidgetState.hovered)
-              ? colors.border
               : Colors.transparent,
           width: states.contains(WidgetState.focused)
               ? TRGeneratedBorders.focusWidth
@@ -264,7 +262,7 @@ class TRMenuItem extends StatelessWidget {
       leadingIcon: leadingIcon,
       onPressed: onPressed,
       shortcut: shortcut,
-      style: TRLayerStyles.item(context),
+      style: TRLayerStyles.item(context, showFocusBorder: false),
       trailingIcon: trailingIcon,
       child: child,
     );
@@ -423,7 +421,7 @@ class TRMenuSubmenu extends StatelessWidget {
       ),
     ],
     menuStyle: TRLayerStyles.menu(context),
-    style: TRLayerStyles.item(context),
+    style: TRLayerStyles.item(context, showFocusBorder: false),
     trailingIcon: trailingIcon,
     useRootOverlay: true,
     child: child,
