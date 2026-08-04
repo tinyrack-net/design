@@ -1,4 +1,4 @@
-## Unreleased
+## 0.2.0
 
 - Adds `filterMode`, `filter`, `autoHighlight`, and `clearable` to `TRCombobox`,
   `TRMultiCombobox`, and their form fields.
