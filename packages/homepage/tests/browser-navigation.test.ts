@@ -1110,9 +1110,16 @@ describe('built React Router documentation', () => {
           )
           .toBe(scenario.expectedAsset);
 
-        const downloads = page.locator('[data-logo-downloads] a[download]');
+        const downloads = '[data-logo-downloads] a[download]';
         // Mark, lockup, and Korean lockup in both polarities, plus the app icon.
-        await expect(downloads.count()).resolves.toBe(7);
+        await expect(page.locator(`${downloads}[href$=".svg"]`).count()).resolves.toBe(
+          7,
+        );
+        // Every one of those assets also offers a raster fallback: three sizes
+        // for the marks and lockups, four for the app icon.
+        await expect(page.locator(`${downloads}[href$=".png"]`).count()).resolves.toBe(
+          22,
+        );
         for (const image of await page.locator('main img').all()) {
           await expect
             .poll(() =>
