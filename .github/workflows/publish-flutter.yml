@@ -23,31 +23,22 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2.21.0
-        with:
-          channel: stable
-          flutter-version: 3.44.4
-          cache: true
-
       - name: Verify tag matches package version
         working-directory: packages/ui_flutter
         shell: bash
         run: |
-          package_version="tinyrack_ui-v$(sed -n 's/^version: //p' pubspec.yaml)"
-          if [ "$package_version" != "$GITHUB_REF_NAME" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME does not match package version $package_version"
+          package_version="$(sed -n 's/^version: *//p' pubspec.yaml | head -1)"
+          if [ -z "$package_version" ]; then
+            echo "::error::Could not read version from packages/ui_flutter/pubspec.yaml"
+            exit 1
+          fi
+          if [ "tinyrack_ui-v$package_version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package version tinyrack_ui-v$package_version"
             exit 1
           fi
 
-      - name: Analyze and test package
-        working-directory: packages/ui_flutter
-        run: |
-          flutter pub get
-          dart format --output=none --set-exit-if-changed lib test example/lib
-          flutter analyze
-          flutter test
-          dart pub publish --dry-run
+      - name: Verify Flutter package
+        uses: ./.github/actions/verify-flutter-package
 
   publish:
     name: Publish tinyrack_ui

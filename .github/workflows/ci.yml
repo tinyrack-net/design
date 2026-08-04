@@ -331,27 +331,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2.21.0
-        with:
-          channel: stable
-          flutter-version: 3.44.4
-          cache: true
-
-      - name: Resolve package dependencies
-        working-directory: packages/ui_flutter
-        run: flutter pub get
-
-      - name: Analyze and test package
-        working-directory: packages/ui_flutter
-        run: |
-          dart format --output=none --set-exit-if-changed lib test example/lib
-          flutter analyze
-          flutter test
-
-      - name: Validate the public package archive
-        working-directory: packages/ui_flutter
-        run: dart pub publish --dry-run
+      - name: Verify Flutter package
+        uses: ./.github/actions/verify-flutter-package
 
   flutter_platforms:
     name: Flutter example (${{ matrix.target }})
