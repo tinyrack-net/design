@@ -20,10 +20,12 @@ class TRCard extends StatelessWidget {
 
   /// Whether the card paints the focus ring for the group it hosts.
   ///
-  /// A card that frames focusable children, such as a composer built around a
-  /// [TRTextInputVariant.plain] input, sets this while one of them holds focus
-  /// so focus stays visible. The ring is painted over the card rather than
-  /// around it, so turning it on never changes the card's size or layout.
+  /// A card that frames several focusable children sets this while one of them
+  /// holds focus so the group reads as one control. A field using
+  /// [TRFieldAppearance.ghost] already paints its own focus emphasis, so a card
+  /// wrapping only that field should leave this off rather than ring it twice.
+  /// The ring is painted over the card rather than around it, so turning it on
+  /// never changes the card's size or layout.
   final bool focused;
 
   final TRCardPadding padding;

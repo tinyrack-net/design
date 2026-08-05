@@ -16,6 +16,9 @@ function dartFiles(directory: string): string[] {
 
 const styleFiles = [
   ...dartFiles(join(flutterSource, 'components')),
+  // Shared chrome resolvers pick real design values too, so they are held to
+  // the same no-literals rule as the components that call them.
+  ...dartFiles(join(flutterSource, 'internal')),
   join(flutterSource, 'theme.dart'),
 ];
 

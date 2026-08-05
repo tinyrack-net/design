@@ -3870,9 +3870,9 @@ class _BackupSettingState extends State<BackupSetting> {
       {
         axis: { en: 'Frame', ko: '프레임', ja: 'フレーム' },
         choices: {
-          en: '`defaultVariant` paints the border and fill. `plain` drops both so an enclosing surface, such as a `TRCard` composer, owns the frame; that surface then has to show focus itself, which you can drive from a supplied `focusNode`.',
-          ko: '`defaultVariant`는 테두리와 배경을 직접 그려요. `plain`은 둘 다 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 이때 포커스 표시는 그 표면의 책임이며, 넘겨준 `focusNode`로 직접 처리할 수 있어요.',
-          ja: '`defaultVariant` は枠線と背景を自分で描画します。`plain` は両方を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。その場合フォーカス表示はそのサーフェスの責任になり、渡した `focusNode` から制御できます。',
+          en: '`solid` paints the border and fill. `ghost` drops both while resting so an enclosing surface, such as a `TRCard` composer, owns the frame. The textarea still paints its own hover and focus, so the surface no longer has to, and the border box is kept at the same width so swapping appearance never moves the field.',
+          ko: '`solid`는 테두리와 배경을 직접 그려요. `ghost`는 평상시에만 둘 다 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. hover와 포커스는 textarea가 계속 직접 그리니 표면이 대신 처리하지 않아도 되고, 테두리 박스는 같은 두께로 유지되어 appearance를 바꿔도 필드가 움직이지 않아요.',
+          ja: '`solid` は枠線と背景を自分で描画します。`ghost` は通常時のみ両方を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。ホバーとフォーカスは textarea が引き続き自分で描くためサーフェス側で用意する必要はなく、枠線のボックスは同じ幅で保たれるので appearance を切り替えてもフィールドは動きません。',
         },
       },
       {
@@ -3992,12 +3992,12 @@ class _BackupSettingState extends State<BackupSetting> {
             },
           },
           {
-            name: 'variant',
-            type: 'TRTextInputVariant · defaultVariant',
+            name: 'appearance',
+            type: 'TRFieldAppearance · solid',
             purpose: {
-              en: 'Chooses the framed control or `plain`, which drops the border and fill so a host surface can frame the textarea.',
-              ko: '테두리가 있는 기본 컨트롤과, 테두리와 배경을 없애 상위 표면이 감쌀 수 있게 하는 `plain` 중 하나를 선택해요.',
-              ja: '枠線のある既定のコントロールと、枠線と背景を外して上位のサーフェスが囲めるようにする `plain` のいずれかを選びます。',
+              en: 'Chooses the framed control or `ghost`, which drops the resting border and fill so a host surface can frame the textarea while the field still paints its own hover and focus.',
+              ko: '테두리가 있는 기본 컨트롤과, 평상시 테두리와 배경을 없애 상위 표면이 감쌀 수 있게 하면서도 hover와 포커스는 직접 그리는 `ghost` 중 하나를 선택해요.',
+              ja: '枠線のある既定のコントロールと、通常時の枠線と背景を外して上位のサーフェスが囲めるようにしつつ、ホバーとフォーカスは自身で描く `ghost` のいずれかを選びます。',
             },
           },
         ],
@@ -4462,9 +4462,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'Focus', ko: '포커스', ja: 'フォーカス' },
         choices: {
-          en: 'A card that only groups content leaves `focused` off. Set it while a focusable child holds focus, which a card framing a `TRTextInputVariant.plain` input must do so focus stays visible. The ring paints over the card, so it never changes the card size.',
-          ko: '콘텐츠만 묶는 카드는 `focused`를 끈 채로 두세요. 포커스 가능한 자식이 포커스를 가질 때 켜면 되고, `TRTextInputVariant.plain` 입력을 감싸는 카드는 포커스가 계속 보이도록 반드시 켜야 해요. 링은 카드 위에 그려져서 카드 크기를 바꾸지 않아요.',
-          ja: 'コンテンツをまとめるだけのカードでは `focused` をオフのままにします。フォーカス可能な子がフォーカスを持つ間にオンにし、`TRTextInputVariant.plain` の入力を囲むカードはフォーカスを見える状態に保つため必ずオンにしてください。リングはカードの上に描画されるため、カードの寸法は変わりません。',
+          en: 'A card that only groups content leaves `focused` off. Set it while a focusable child holds focus so a group of controls reads as one. A `TRFieldAppearance.ghost` field already paints its own focus, so a card wrapping just that field should leave this off. The ring paints over the card, so it never changes the card size.',
+          ko: '콘텐츠만 묶는 카드는 `focused`를 끈 채로 두세요. 포커스 가능한 자식이 포커스를 가질 때 켜면 여러 컨트롤이 하나로 읽혀요. `TRFieldAppearance.ghost` 필드는 포커스를 직접 그리니, 그 필드만 감싸는 카드는 꺼 두세요. 링은 카드 위에 그려져서 카드 크기를 바꾸지 않아요.',
+          ja: 'コンテンツをまとめるだけのカードでは `focused` をオフのままにします。フォーカス可能な子がフォーカスを持つ間にオンにすると、複数のコントロールがひとつにまとまって読めます。`TRFieldAppearance.ghost` のフィールドは自身でフォーカスを描くため、そのフィールドだけを囲むカードではオフのままにしてください。リングはカードの上に描画されるため、カードの寸法は変わりません。',
         },
       },
     ],
@@ -4633,9 +4633,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'Frame', ko: '프레임', ja: 'フレーム' },
         choices: {
-          en: '`defaultVariant` paints the border, fill, focus ring, and invalid emphasis. `plain` drops the border and fill so an enclosing surface, such as a `TRCard` composer, owns the frame; that surface then has to show focus and invalid state itself, which you can drive from a supplied `focusNode`.',
-          ko: '`defaultVariant`는 테두리와 배경, 포커스 링, 오류 강조를 직접 그려요. `plain`은 테두리와 배경을 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 이때 포커스와 오류 표시는 그 표면의 책임이며, 넘겨준 `focusNode`로 직접 처리할 수 있어요.',
-          ja: '`defaultVariant` は枠線と背景、フォーカスリング、エラー強調を自分で描画します。`plain` は枠線と背景を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。その場合フォーカスとエラーの表示はそのサーフェスの責任になり、渡した `focusNode` から制御できます。',
+          en: '`solid` paints the border, fill, focus ring, and invalid emphasis. `ghost` drops only the resting border and fill so an enclosing surface, such as a `TRCard` composer, owns the frame; focus and invalid emphasis are still painted by the field itself, so the surface does not have to repaint them.',
+          ko: '`solid`는 테두리와 배경, 포커스 링, 오류 강조를 직접 그려요. `ghost`는 평상시 테두리와 배경만 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 포커스와 오류 강조는 필드가 계속 직접 그리니 표면이 다시 그릴 필요는 없어요.',
+          ja: '`solid` は枠線と背景、フォーカスリング、エラー強調を自分で描画します。`ghost` は通常時の枠線と背景だけを外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。フォーカスとエラー強調はフィールド自身が描き続けるため、サーフェス側で描き直す必要はありません。',
         },
       },
     ],

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/field_chrome.dart';
 import '../../theme.dart';
 import '../../types.dart';
 
@@ -35,6 +36,7 @@ class TROtpFieldController extends ChangeNotifier {
 class TROtpField extends StatefulWidget {
   const TROtpField({
     this.allowedPattern,
+    this.appearance = TRFieldAppearance.solid,
     this.autofocus = false,
     this.controller,
     this.defaultValue = '',
@@ -57,6 +59,7 @@ class TROtpField extends StatefulWidget {
   const TROtpField.controlled({
     required this.value,
     this.allowedPattern,
+    this.appearance = TRFieldAppearance.solid,
     this.autofocus = false,
     this.controller,
     this.enabled = true,
@@ -78,6 +81,14 @@ class TROtpField extends StatefulWidget {
   static final RegExp _digits = RegExp('[0-9]');
 
   final Pattern? allowedPattern;
+
+  /// Whether each slot paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// field. Unlike a bare surface, the active slot still paints its own focus
+  /// and invalid emphasis.
+  final TRFieldAppearance appearance;
+
   final bool autofocus;
   final TROtpFieldController? controller;
   final String defaultValue;
@@ -217,24 +228,38 @@ class _TROtpFieldState extends State<TROtpField> {
                       width: slotSize,
                       height: slotSize,
                       alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: widget.enabled
-                            ? colors.surface
-                            : colors.surfaceMuted,
-                        border: Border.all(
-                          color: widget.errorText != null
+                      decoration: () {
+                        final active = _focused && index == activeIndex;
+                        final chrome = resolveFieldChrome(
+                          appearance: widget.appearance,
+                          colors: colors,
+                          solidFill: widget.enabled
+                              ? colors.surface
+                              : colors.surfaceMuted,
+                          solidBorderColor: widget.errorText != null
                               ? colors.dangerBorder
-                              : _focused && index == activeIndex
+                              : active
                               ? colors.focus
                               : colors.borderStrong,
-                          width: _focused && index == activeIndex
+                          solidBorderWidth: active
                               ? TRGeneratedBorders.focusWidth
                               : TRGeneratedBorders.defaultWidth,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          TRGeneratedRadii.md,
-                        ),
-                      ),
+                          enabled: widget.enabled,
+                          error: widget.errorText != null,
+                          focused: active,
+                          readOnly: widget.readOnly,
+                        );
+                        return BoxDecoration(
+                          color: chrome.fill,
+                          border: Border.all(
+                            color: chrome.borderColor,
+                            width: chrome.borderWidth,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            TRGeneratedRadii.md,
+                          ),
+                        );
+                      }(),
                       child: Text(
                         index < characters.length
                             ? widget.obscureText
@@ -316,6 +341,7 @@ class _TROtpFieldState extends State<TROtpField> {
 /// Form-integrated [TROtpField].
 class TROtpFieldFormField extends FormField<String> {
   TROtpFieldFormField({
+    TRFieldAppearance appearance = TRFieldAppearance.solid,
     super.initialValue = '',
     super.autovalidateMode,
     super.enabled = true,
@@ -332,6 +358,7 @@ class TROtpFieldFormField extends FormField<String> {
   }) : super(
          builder: (field) => TROtpField.controlled(
            value: field.value ?? '',
+           appearance: appearance,
            enabled: enabled,
            errorText: field.errorText,
            helperText: helperText,

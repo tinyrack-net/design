@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/field_chrome.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -10,6 +11,7 @@ import '../../types.dart';
 /// A themed multi-line text input.
 class TRTextarea extends StatefulWidget {
   const TRTextarea({
+    this.appearance = TRFieldAppearance.solid,
     this.autofocus = false,
     this.controller,
     this.enabled = true,
@@ -21,12 +23,18 @@ class TRTextarea extends StatefulWidget {
     this.placeholder,
     this.readOnly = false,
     this.uiSize = TRUiSize.md,
-    this.variant = TRTextInputVariant.defaultVariant,
     super.key,
   }) : assert(
          controller == null || initialValue == null,
          'controller and initialValue cannot both be provided.',
        );
+
+  /// Whether the textarea paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// textarea. Unlike a bare surface, the textarea still paints its own hover,
+  /// focus, and invalid emphasis.
+  final TRFieldAppearance appearance;
 
   final bool autofocus;
   final TextEditingController? controller;
@@ -39,13 +47,6 @@ class TRTextarea extends StatefulWidget {
   final String? placeholder;
   final bool readOnly;
   final TRUiSize uiSize;
-
-  /// Whether the textarea paints its own border and fill.
-  ///
-  /// [TRTextInputVariant.plain] drops both so a host surface can frame the
-  /// textarea. The host then owns focus visibility; pass a [focusNode] to
-  /// observe focus for that purpose.
-  final TRTextInputVariant variant;
 
   @override
   State<TRTextarea> createState() => _TRTextareaState();
@@ -104,20 +105,28 @@ class _TRTextareaState extends State<TRTextarea> {
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };
     final interactive = widget.enabled && !widget.readOnly;
-    final borderColor = _focused
-        ? colors.focus
-        : _hovered && interactive
-        ? colors.borderStrong
-        : generated.controlBorder;
-    final fillColor = widget.readOnly || !widget.enabled
-        ? colors.surfaceMuted
-        : colors.surface;
+    final chrome = resolveFieldChrome(
+      appearance: widget.appearance,
+      colors: colors,
+      solidFill: widget.readOnly || !widget.enabled
+          ? colors.surfaceMuted
+          : colors.surface,
+      solidBorderColor: _focused
+          ? colors.focus
+          : _hovered && interactive
+          ? colors.borderStrong
+          : generated.controlBorder,
+      solidBorderWidth: _focused
+          ? TRGeneratedBorders.focusWidth
+          : TRGeneratedBorders.defaultWidth,
+      enabled: widget.enabled,
+      focused: _focused,
+      hovered: _hovered,
+      readOnly: widget.readOnly,
+    );
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
-    // A plain textarea renders no chrome of its own so the host surface can
-    // frame it; the fill would otherwise cover that surface.
-    final plain = widget.variant == TRTextInputVariant.plain;
 
     return TRFormRegistration(
       name: widget.name,
@@ -138,18 +147,14 @@ class _TRTextareaState extends State<TRTextarea> {
             child: AnimatedContainer(
               curve: TRMotion.standard,
               duration: motionDuration,
-              decoration: plain
-                  ? null
-                  : BoxDecoration(
-                      color: fillColor,
-                      border: Border.all(
-                        color: borderColor,
-                        width: _focused
-                            ? TRGeneratedBorders.focusWidth
-                            : TRGeneratedBorders.defaultWidth,
-                      ),
-                      borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-                    ),
+              decoration: BoxDecoration(
+                color: chrome.fill,
+                border: Border.all(
+                  color: chrome.borderColor,
+                  width: chrome.borderWidth,
+                ),
+                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+              ),
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
                 vertical: TRGeneratedSpacing.sm,

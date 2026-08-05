@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/field_chrome.dart';
 import '../../internal/layer.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
@@ -24,6 +25,7 @@ class TRSelect<T> extends StatefulWidget {
     this.placeholder,
     this.helperText,
     this.errorText,
+    this.appearance = TRFieldAppearance.solid,
     this.uiSize = TRUiSize.md,
     this.enabled = true,
     this.readOnly = false,
@@ -50,6 +52,7 @@ class TRSelect<T> extends StatefulWidget {
     this.placeholder,
     this.helperText,
     this.errorText,
+    this.appearance = TRFieldAppearance.solid,
     this.uiSize = TRUiSize.md,
     this.enabled = true,
     this.readOnly = false,
@@ -72,6 +75,14 @@ class TRSelect<T> extends StatefulWidget {
   final String? placeholder;
   final String? helperText;
   final String? errorText;
+
+  /// Whether the trigger paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// select. Unlike a bare surface, the trigger still paints its own hover,
+  /// focus, open, and invalid emphasis.
+  final TRFieldAppearance appearance;
+
   final TRUiSize uiSize;
   final bool enabled;
   final bool readOnly;
@@ -362,13 +373,44 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
       ),
       visualDensity: VisualDensity.standard,
     );
+    // Resolved from the same states for both the fill and the border so the
+    // two never disagree about the trigger's appearance.
+    TRFieldChrome triggerChrome(Set<WidgetState> states) {
+      final focused = states.contains(WidgetState.focused);
+      final hovered = states.contains(WidgetState.hovered);
+      final error = widget.errorText != null;
+      return resolveFieldChrome(
+        appearance: widget.appearance,
+        colors: colors,
+        solidFill: !interactive
+            ? colors.surfaceMuted
+            : hovered
+            ? colors.surfaceHover
+            : colors.surface,
+        solidBorderColor: focused
+            ? error
+                  ? colors.danger
+                  : colors.focus
+            : error
+            ? colors.dangerBorder
+            : colors.border,
+        solidBorderWidth: focused
+            ? TRGeneratedBorders.focusWidth
+            : TRGeneratedBorders.defaultWidth,
+        enabled: widget.enabled,
+        error: error,
+        focused: focused,
+        hovered: hovered,
+        open: _menuController.isOpen,
+        readOnly: widget.readOnly,
+      );
+    }
+
     final triggerStyle = ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (!interactive) return colors.surfaceMuted;
-        if (states.contains(WidgetState.hovered)) return colors.surfaceHover;
-        return colors.surface;
-      }),
+      backgroundColor: WidgetStateProperty.resolveWith(
+        (states) => triggerChrome(states).fill,
+      ),
       foregroundColor: WidgetStatePropertyAll(
         widget.enabled ? colors.text : colors.textMuted,
       ),
@@ -385,19 +427,8 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
         ),
       ),
       side: WidgetStateProperty.resolveWith((states) {
-        final focused = states.contains(WidgetState.focused);
-        return BorderSide(
-          color: focused
-              ? widget.errorText == null
-                    ? colors.focus
-                    : colors.danger
-              : widget.errorText == null
-              ? colors.border
-              : colors.dangerBorder,
-          width: focused
-              ? TRGeneratedBorders.focusWidth
-              : TRGeneratedBorders.defaultWidth,
-        );
+        final chrome = triggerChrome(states);
+        return BorderSide(color: chrome.borderColor, width: chrome.borderWidth);
       }),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: WidgetStatePropertyAll(
