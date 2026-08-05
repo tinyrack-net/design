@@ -14,8 +14,13 @@ import {
   settleMotion,
   sharp,
 } from './browser-audit-runtime.ts';
+import {
+  browserAuditShardCases,
+  isBrowserAuditShardSelected,
+} from './browser-audit-sharding.ts';
 
 const runtime = createBrowserAuditRuntime();
+const t3 = isBrowserAuditShardSelected(3) ? it : it.skip;
 
 describe('built React Router documentation', () => {
   let browser: Browser;
@@ -33,11 +38,9 @@ describe('built React Router documentation', () => {
 
   // Split per locale so each gets its own timeout budget rather than three
   // sharing one, and so a failure names the locale without reading the body.
-  it.each([
-    'en',
-    'ko',
-    'ja',
-  ] as const)('renders each documented example group within its declared item range (%s)', async (locale) => {
+  it.each(
+    browserAuditShardCases(['en', 'ko', 'ja'] as const),
+  )('renders each documented example group within its declared item range (%s)', async (locale) => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     const manifest: readonly ComponentDocsManifestEntry[] = componentDocsManifest;
     const documentedComponents = manifest.filter(
@@ -73,7 +76,7 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('preserves the 0.2 documentation chrome geometry', async () => {
+  t3('preserves the 0.2 documentation chrome geometry', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 900, width: 1440 },
     });
@@ -371,7 +374,7 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('keeps the TOC compact until the content column has room for it', async () => {
+  t3('keeps the TOC compact until the content column has room for it', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1024 } });
 
     try {
@@ -427,11 +430,13 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('previews adjacent documents and keeps pagination responsive', async () => {
+  t3('previews adjacent documents and keeps pagination responsive', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 900, width: 1280 },
     });
-    const mobilePage = await browser.newPage({ viewport: { height: 844, width: 390 } });
+    const mobilePage = await browser.newPage({
+      viewport: { height: 844, width: 390 },
+    });
 
     try {
       await setTheme(desktopPage, 'tinyrack-light');
@@ -513,314 +518,326 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('runs independent Welcome motion and resumes from its paused position', async () => {
-    const desktopPage = await browser.newPage({
-      viewport: { height: 1024, width: 1440 },
-    });
-    const reducedPage = await browser.newPage({
-      viewport: { height: 844, width: 390 },
-    });
-    const stripAnimatedNumberNoise = (elements: Element[]) =>
-      elements.map((element) => {
-        const clone = element.cloneNode(true) as Element;
-        for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) {
-          hidden.remove();
-        }
-        return clone.textContent;
+  t3(
+    'runs independent Welcome motion and resumes from its paused position',
+    async () => {
+      const desktopPage = await browser.newPage({
+        viewport: { height: 1024, width: 1440 },
       });
-    const readMotionValues = async (page: typeof desktopPage) => {
-      const productWindow = page.locator('[data-welcome-app]');
-      return {
-        deploymentPhase: await productWindow
-          .locator('[data-welcome-throughput]')
-          .getAttribute('data-welcome-deployment-phase'),
-        liveActivity: await productWindow
-          .locator('[data-welcome-live-activity] strong')
-          .textContent(),
-        metrics: await productWindow
-          .locator('[data-welcome-metric-value]')
-          .evaluateAll(stripAnimatedNumberNoise),
-        progress: (
-          await productWindow
-            .locator('[data-welcome-deployment-progress]')
-            .evaluateAll(stripAnimatedNumberNoise)
-        )[0],
-        services: await productWindow
-          .locator('[data-welcome-service-value]')
-          .evaluateAll(stripAnimatedNumberNoise),
-      };
-    };
-
-    try {
-      await desktopPage.clock.install();
-      await setTheme(desktopPage, 'tinyrack-dark');
-      await gotoHydrated(desktopPage, `${origin}/en`);
-
-      const productWindow = desktopPage.locator('[data-welcome-app]');
-      await expect
-        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
-        .toBe('true');
-      expect(
-        await productWindow.getAttribute('data-welcome-simulation-phase'),
-      ).toBeNull();
-      expect(
-        await productWindow.evaluate(
-          (element) => getComputedStyle(element).animationName,
-        ),
-      ).toBe('none');
-      const initialBox = await productWindow.boundingBox();
-      expect(initialBox).not.toBeNull();
-      const status = productWindow.locator('[data-welcome-status]');
-      expect(await status.textContent()).toContain('All systems operational');
-
-      const phaseLabel = productWindow.locator('[data-welcome-phase-label]');
-      await phaseLabel.evaluate((element) => {
-        element.setAttribute('data-dom-marker', 'persistent');
+      const reducedPage = await browser.newPage({
+        viewport: { height: 844, width: 390 },
       });
-      expect(
-        await phaseLabel.evaluate((element) =>
-          getComputedStyle(element)
-            .transitionDuration.split(',')
-            .map((value) => value.trim()),
-        ),
-      ).toContain('0.36s');
-
-      const barMotion = await productWindow
-        .locator('[data-welcome-throughput-bar]')
-        .evaluateAll((elements) =>
-          elements.slice(0, 2).map((element) => {
-            const style = getComputedStyle(element);
-            return {
-              delay: style.animationDelay,
-              name: style.animationName,
-              playState: style.animationPlayState,
-            };
-          }),
-        );
-      expect(barMotion).toEqual([
-        {
-          delay: '0s',
-          name: 'welcome-throughput-wave',
-          playState: 'running',
-        },
-        {
-          delay: '-0.32s',
-          name: 'welcome-throughput-wave',
-          playState: 'running',
-        },
-      ]);
-
-      const readDeploymentOpacity = () =>
-        productWindow
-          .locator('[data-welcome-deployment]')
-          .evaluate((element) => Number.parseFloat(getComputedStyle(element).opacity));
-
-      // `resetting` + `8%` spans 2900-3300ms of the deployment cycle, but only
-      // 2900-3066ms is also faded out — after that the panel fades back in and
-      // opacity climbs to 1. Stepping 80ms at a time, the first frame matching
-      // just phase and progress can therefore be anywhere on that ramp, so the
-      // loop has to match the opacity it is about to assert. The qualifying
-      // slice is ~166ms wide, i.e. always at least two 80ms samples.
-      const signalSamples = [await readMotionValues(desktopPage)];
-      let hiddenReset = await readMotionValues(desktopPage);
-      let hiddenResetOpacity = await readDeploymentOpacity();
-      for (let index = 0; index < 60; index += 1) {
-        if (
-          hiddenReset.deploymentPhase === 'resetting' &&
-          hiddenReset.progress === '8%' &&
-          hiddenResetOpacity < 0.2
-        )
-          break;
-        await desktopPage.clock.runFor(80);
-        hiddenReset = await readMotionValues(desktopPage);
-        hiddenResetOpacity = await readDeploymentOpacity();
-      }
-      expect(hiddenReset.deploymentPhase).toBe('resetting');
-      expect(hiddenReset.progress).toBe('8%');
-      expect(hiddenResetOpacity).toBeLessThan(0.2);
-
-      for (let index = 0; index < 8; index += 1) {
-        const phase = await productWindow
-          .locator('[data-welcome-throughput]')
-          .getAttribute('data-welcome-deployment-phase');
-        if (phase === 'deploying') break;
-        await desktopPage.clock.runFor(80);
-      }
-      await expect
-        .poll(() =>
-          productWindow
+      const stripAnimatedNumberNoise = (elements: Element[]) =>
+        elements.map((element) => {
+          const clone = element.cloneNode(true) as Element;
+          for (const hidden of clone.querySelectorAll('[aria-hidden="true"]')) {
+            hidden.remove();
+          }
+          return clone.textContent;
+        });
+      const readMotionValues = async (page: typeof desktopPage) => {
+        const productWindow = page.locator('[data-welcome-app]');
+        return {
+          deploymentPhase: await productWindow
             .locator('[data-welcome-throughput]')
             .getAttribute('data-welcome-deployment-phase'),
-        )
-        .toBe('deploying');
-      expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
-      expect(await phaseLabel.getAttribute('data-variant')).toBe('info');
-      const activityBefore = await productWindow
-        .locator('[data-welcome-live-activity] strong')
-        .textContent();
+          liveActivity: await productWindow
+            .locator('[data-welcome-live-activity] strong')
+            .textContent(),
+          metrics: await productWindow
+            .locator('[data-welcome-metric-value]')
+            .evaluateAll(stripAnimatedNumberNoise),
+          progress: (
+            await productWindow
+              .locator('[data-welcome-deployment-progress]')
+              .evaluateAll(stripAnimatedNumberNoise)
+          )[0],
+          services: await productWindow
+            .locator('[data-welcome-service-value]')
+            .evaluateAll(stripAnimatedNumberNoise),
+        };
+      };
 
-      let activityAfter = activityBefore;
-      for (let index = 0; index < 8 && activityAfter === activityBefore; index += 1) {
-        await desktopPage.clock.runFor(80);
-        activityAfter = await productWindow
+      try {
+        await desktopPage.clock.install();
+        await setTheme(desktopPage, 'tinyrack-dark');
+        await gotoHydrated(desktopPage, `${origin}/en`);
+
+        const productWindow = desktopPage.locator('[data-welcome-app]');
+        await expect
+          .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+          .toBe('true');
+        expect(
+          await productWindow.getAttribute('data-welcome-simulation-phase'),
+        ).toBeNull();
+        expect(
+          await productWindow.evaluate(
+            (element) => getComputedStyle(element).animationName,
+          ),
+        ).toBe('none');
+        const initialBox = await productWindow.boundingBox();
+        expect(initialBox).not.toBeNull();
+        const status = productWindow.locator('[data-welcome-status]');
+        expect(await status.textContent()).toContain('All systems operational');
+
+        const phaseLabel = productWindow.locator('[data-welcome-phase-label]');
+        await phaseLabel.evaluate((element) => {
+          element.setAttribute('data-dom-marker', 'persistent');
+        });
+        expect(
+          await phaseLabel.evaluate((element) =>
+            getComputedStyle(element)
+              .transitionDuration.split(',')
+              .map((value) => value.trim()),
+          ),
+        ).toContain('0.36s');
+
+        const barMotion = await productWindow
+          .locator('[data-welcome-throughput-bar]')
+          .evaluateAll((elements) =>
+            elements.slice(0, 2).map((element) => {
+              const style = getComputedStyle(element);
+              return {
+                delay: style.animationDelay,
+                name: style.animationName,
+                playState: style.animationPlayState,
+              };
+            }),
+          );
+        expect(barMotion).toEqual([
+          {
+            delay: '0s',
+            name: 'welcome-throughput-wave',
+            playState: 'running',
+          },
+          {
+            delay: '-0.32s',
+            name: 'welcome-throughput-wave',
+            playState: 'running',
+          },
+        ]);
+
+        const readDeploymentOpacity = () =>
+          productWindow
+            .locator('[data-welcome-deployment]')
+            .evaluate((element) =>
+              Number.parseFloat(getComputedStyle(element).opacity),
+            );
+
+        // `resetting` + `8%` spans 2900-3300ms of the deployment cycle, but only
+        // 2900-3066ms is also faded out — after that the panel fades back in and
+        // opacity climbs to 1. Keep the sampling interval well below the ~166ms
+        // qualifying slice so a busy parallel browser worker cannot skip it
+        // while React commits the clock-driven update. Search a full deployment
+        // cycle because hydration and intersection observation can start the
+        // clock at any phase when the four browser workers are busy.
+        const signalSamples = [await readMotionValues(desktopPage)];
+        let hiddenReset = await readMotionValues(desktopPage);
+        let hiddenResetOpacity = await readDeploymentOpacity();
+        for (let index = 0; index < 600; index += 1) {
+          if (
+            hiddenReset.deploymentPhase === 'resetting' &&
+            hiddenReset.progress === '8%' &&
+            hiddenResetOpacity < 0.2
+          )
+            break;
+          await desktopPage.clock.runFor(40);
+          hiddenReset = await readMotionValues(desktopPage);
+          hiddenResetOpacity = await readDeploymentOpacity();
+        }
+        expect(hiddenReset.deploymentPhase).toBe('resetting');
+        expect(hiddenReset.progress).toBe('8%');
+        expect(hiddenResetOpacity).toBeLessThan(0.2);
+
+        for (let index = 0; index < 8; index += 1) {
+          const phase = await productWindow
+            .locator('[data-welcome-throughput]')
+            .getAttribute('data-welcome-deployment-phase');
+          if (phase === 'deploying') break;
+          await desktopPage.clock.runFor(80);
+        }
+        await expect
+          .poll(() =>
+            productWindow
+              .locator('[data-welcome-throughput]')
+              .getAttribute('data-welcome-deployment-phase'),
+          )
+          .toBe('deploying');
+        expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
+        expect(await phaseLabel.getAttribute('data-variant')).toBe('info');
+        const activityBefore = await productWindow
           .locator('[data-welcome-live-activity] strong')
           .textContent();
-      }
-      expect(activityAfter).not.toBe(activityBefore);
-      expect(
-        await productWindow
-          .locator('[data-welcome-throughput]')
-          .getAttribute('data-welcome-deployment-phase'),
-      ).toBe('deploying');
 
-      const deploymentProgress = [
-        Number.parseInt((await readMotionValues(desktopPage)).progress ?? '0', 10),
-      ];
-      for (let index = 0; index < 5; index += 1) {
-        await desktopPage.clock.runFor(2_400);
-        const values = await readMotionValues(desktopPage);
-        signalSamples.push(values);
-        deploymentProgress.push(Number.parseInt(values.progress ?? '0', 10));
-      }
-      expect(deploymentProgress).toEqual([...deploymentProgress].sort((a, b) => a - b));
-      expect(
-        new Set(signalSamples.map((sample) => sample.metrics[0])).size,
-      ).toBeGreaterThan(1);
-      expect(
-        new Set(signalSamples.map((sample) => sample.metrics[1])).size,
-      ).toBeGreaterThan(1);
-      for (const serviceIndex of [0, 1, 2]) {
+        let activityAfter = activityBefore;
+        for (
+          let index = 0;
+          index < 40 && activityAfter === activityBefore;
+          index += 1
+        ) {
+          await desktopPage.clock.runFor(80);
+          activityAfter = await productWindow
+            .locator('[data-welcome-live-activity] strong')
+            .textContent();
+        }
+        expect(activityAfter).not.toBe(activityBefore);
         expect(
-          new Set(signalSamples.map((sample) => sample.services[serviceIndex])).size,
+          await productWindow
+            .locator('[data-welcome-throughput]')
+            .getAttribute('data-welcome-deployment-phase'),
+        ).toBe('deploying');
+
+        const deploymentProgress = [
+          Number.parseInt((await readMotionValues(desktopPage)).progress ?? '0', 10),
+        ];
+        for (let index = 0; index < 5; index += 1) {
+          await desktopPage.clock.runFor(2_400);
+          const values = await readMotionValues(desktopPage);
+          signalSamples.push(values);
+          deploymentProgress.push(Number.parseInt(values.progress ?? '0', 10));
+        }
+        expect(deploymentProgress).toEqual(
+          [...deploymentProgress].sort((a, b) => a - b),
+        );
+        expect(
+          new Set(signalSamples.map((sample) => sample.metrics[0])).size,
         ).toBeGreaterThan(1);
+        expect(
+          new Set(signalSamples.map((sample) => sample.metrics[1])).size,
+        ).toBeGreaterThan(1);
+        for (const serviceIndex of [0, 1, 2]) {
+          expect(
+            new Set(signalSamples.map((sample) => sample.services[serviceIndex])).size,
+          ).toBeGreaterThan(1);
+        }
+
+        await desktopPage.clock.runFor(1_000);
+        await expect
+          .poll(() =>
+            productWindow
+              .locator('[data-welcome-throughput]')
+              .getAttribute('data-welcome-deployment-phase'),
+          )
+          .toBe('verifying');
+        expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
+        expect(await phaseLabel.getAttribute('data-variant')).toBe('warning');
+
+        await desktopPage.clock.runFor(4_600);
+        await expect
+          .poll(() =>
+            productWindow
+              .locator('[data-welcome-throughput]')
+              .getAttribute('data-welcome-deployment-phase'),
+          )
+          .toBe('complete');
+        expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
+        expect(await phaseLabel.getAttribute('data-variant')).toBe('success');
+        expect((await readMotionValues(desktopPage)).progress).toBe('100%');
+        expect(await status.textContent()).toContain('All systems operational');
+
+        await desktopPage.setViewportSize({ height: 160, width: 1440 });
+        await desktopPage.evaluate(() => {
+          window.scrollTo(0, document.documentElement.scrollHeight);
+        });
+        await desktopPage.clock.runFor(80);
+        const offscreenGeometry = await productWindow.evaluate((element) => {
+          const productBox = element.getBoundingClientRect();
+          return {
+            productBottom: productBox.bottom,
+            productTop: productBox.top,
+            scrollHeight: document.documentElement.scrollHeight,
+            scrollTop: window.scrollY,
+            viewportBottom: window.innerHeight,
+            viewportTop: 0,
+          };
+        });
+        expect(offscreenGeometry.productBottom).toBeLessThanOrEqual(
+          offscreenGeometry.viewportTop,
+        );
+        await expect
+          .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+          .toBe('false');
+        await desktopPage.clock.runFor(80);
+        const offscreenValues = await readMotionValues(desktopPage);
+        await desktopPage.clock.runFor(3_000);
+        const offscreenValuesAfterWait = await readMotionValues(desktopPage);
+        expect(offscreenValuesAfterWait).toEqual(offscreenValues);
+        expect(
+          await productWindow
+            .locator('[data-welcome-throughput-bar]')
+            .first()
+            .evaluate((element) => getComputedStyle(element).animationPlayState),
+        ).toBe('paused');
+
+        await desktopPage.setViewportSize({ height: 1024, width: 1440 });
+        await desktopPage.evaluate(() => window.scrollTo(0, 0));
+        await desktopPage.clock.runFor(80);
+        await expect
+          .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+          .toBe('true');
+        await desktopPage.clock.runFor(480);
+        expect(await readMotionValues(desktopPage)).not.toEqual(offscreenValues);
+
+        await desktopPage.evaluate(() => {
+          Object.defineProperty(document, 'hidden', {
+            configurable: true,
+            get: () => true,
+          });
+          document.dispatchEvent(new Event('visibilitychange'));
+        });
+        await expect
+          .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+          .toBe('false');
+        await desktopPage.clock.runFor(80);
+        const hiddenTabValues = await readMotionValues(desktopPage);
+        await desktopPage.clock.runFor(3_000);
+        const hiddenTabValuesAfterWait = await readMotionValues(desktopPage);
+        expect(hiddenTabValuesAfterWait).toEqual(hiddenTabValues);
+        await desktopPage.evaluate(() => {
+          Object.defineProperty(document, 'hidden', {
+            configurable: true,
+            get: () => false,
+          });
+          document.dispatchEvent(new Event('visibilitychange'));
+        });
+        await expect
+          .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
+          .toBe('true');
+        const resumedBox = await productWindow.boundingBox();
+        expect(resumedBox).not.toBeNull();
+        expect(
+          Math.abs((resumedBox?.x ?? 0) - (initialBox?.x ?? 0)),
+        ).toBeLessThanOrEqual(1);
+
+        await reducedPage.clock.install();
+        await reducedPage.emulateMedia({ reducedMotion: 'reduce' });
+        await setTheme(reducedPage, 'tinyrack-dark');
+        await gotoHydrated(reducedPage, `${origin}/ko`);
+        const reducedProductWindow = reducedPage.locator('[data-welcome-app]');
+        await expect
+          .poll(() =>
+            reducedProductWindow.getAttribute('data-welcome-simulation-running'),
+          )
+          .toBe('false');
+        const reducedValues = await readMotionValues(reducedPage);
+        expect(reducedValues.metrics.slice(0, 2)).toEqual(['12 / 14', '48%']);
+        expect(reducedValues.progress).toBe('100%');
+        expect(reducedValues.services).toEqual(['92%', '72%', '86%']);
+        expect(reducedValues.deploymentPhase).toBe('complete');
+        expect(
+          await reducedProductWindow
+            .locator('[data-welcome-throughput-bar]')
+            .first()
+            .evaluate((element) => getComputedStyle(element).animationName),
+        ).toBe('none');
+        await reducedPage.clock.runFor(60_000);
+        expect(await readMotionValues(reducedPage)).toEqual(reducedValues);
+      } finally {
+        await desktopPage.close();
+        await reducedPage.close();
       }
-
-      await desktopPage.clock.runFor(1_000);
-      await expect
-        .poll(() =>
-          productWindow
-            .locator('[data-welcome-throughput]')
-            .getAttribute('data-welcome-deployment-phase'),
-        )
-        .toBe('verifying');
-      expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
-      expect(await phaseLabel.getAttribute('data-variant')).toBe('warning');
-
-      await desktopPage.clock.runFor(4_600);
-      await expect
-        .poll(() =>
-          productWindow
-            .locator('[data-welcome-throughput]')
-            .getAttribute('data-welcome-deployment-phase'),
-        )
-        .toBe('complete');
-      expect(await phaseLabel.getAttribute('data-dom-marker')).toBe('persistent');
-      expect(await phaseLabel.getAttribute('data-variant')).toBe('success');
-      expect((await readMotionValues(desktopPage)).progress).toBe('100%');
-      expect(await status.textContent()).toContain('All systems operational');
-
-      await desktopPage.setViewportSize({ height: 160, width: 1440 });
-      await desktopPage.evaluate(() => {
-        window.scrollTo(0, document.documentElement.scrollHeight);
-      });
-      await desktopPage.clock.runFor(80);
-      const offscreenGeometry = await productWindow.evaluate((element) => {
-        const productBox = element.getBoundingClientRect();
-        return {
-          productBottom: productBox.bottom,
-          productTop: productBox.top,
-          scrollHeight: document.documentElement.scrollHeight,
-          scrollTop: window.scrollY,
-          viewportBottom: window.innerHeight,
-          viewportTop: 0,
-        };
-      });
-      expect(offscreenGeometry.productBottom).toBeLessThanOrEqual(
-        offscreenGeometry.viewportTop,
-      );
-      await expect
-        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
-        .toBe('false');
-      await desktopPage.clock.runFor(80);
-      const offscreenValues = await readMotionValues(desktopPage);
-      await desktopPage.clock.runFor(3_000);
-      const offscreenValuesAfterWait = await readMotionValues(desktopPage);
-      expect(offscreenValuesAfterWait).toEqual(offscreenValues);
-      expect(
-        await productWindow
-          .locator('[data-welcome-throughput-bar]')
-          .first()
-          .evaluate((element) => getComputedStyle(element).animationPlayState),
-      ).toBe('paused');
-
-      await desktopPage.setViewportSize({ height: 1024, width: 1440 });
-      await desktopPage.evaluate(() => window.scrollTo(0, 0));
-      await desktopPage.clock.runFor(80);
-      await expect
-        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
-        .toBe('true');
-      await desktopPage.clock.runFor(480);
-      expect(await readMotionValues(desktopPage)).not.toEqual(offscreenValues);
-
-      await desktopPage.evaluate(() => {
-        Object.defineProperty(document, 'hidden', {
-          configurable: true,
-          get: () => true,
-        });
-        document.dispatchEvent(new Event('visibilitychange'));
-      });
-      await expect
-        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
-        .toBe('false');
-      await desktopPage.clock.runFor(80);
-      const hiddenTabValues = await readMotionValues(desktopPage);
-      await desktopPage.clock.runFor(3_000);
-      const hiddenTabValuesAfterWait = await readMotionValues(desktopPage);
-      expect(hiddenTabValuesAfterWait).toEqual(hiddenTabValues);
-      await desktopPage.evaluate(() => {
-        Object.defineProperty(document, 'hidden', {
-          configurable: true,
-          get: () => false,
-        });
-        document.dispatchEvent(new Event('visibilitychange'));
-      });
-      await expect
-        .poll(() => productWindow.getAttribute('data-welcome-simulation-running'))
-        .toBe('true');
-      const resumedBox = await productWindow.boundingBox();
-      expect(resumedBox).not.toBeNull();
-      expect(Math.abs((resumedBox?.x ?? 0) - (initialBox?.x ?? 0))).toBeLessThanOrEqual(
-        1,
-      );
-
-      await reducedPage.clock.install();
-      await reducedPage.emulateMedia({ reducedMotion: 'reduce' });
-      await setTheme(reducedPage, 'tinyrack-dark');
-      await gotoHydrated(reducedPage, `${origin}/ko`);
-      const reducedProductWindow = reducedPage.locator('[data-welcome-app]');
-      await expect
-        .poll(() =>
-          reducedProductWindow.getAttribute('data-welcome-simulation-running'),
-        )
-        .toBe('false');
-      const reducedValues = await readMotionValues(reducedPage);
-      expect(reducedValues.metrics.slice(0, 2)).toEqual(['12 / 14', '48%']);
-      expect(reducedValues.progress).toBe('100%');
-      expect(reducedValues.services).toEqual(['92%', '72%', '86%']);
-      expect(reducedValues.deploymentPhase).toBe('complete');
-      expect(
-        await reducedProductWindow
-          .locator('[data-welcome-throughput-bar]')
-          .first()
-          .evaluate((element) => getComputedStyle(element).animationName),
-      ).toBe('none');
-      await reducedPage.clock.runFor(60_000);
-      expect(await readMotionValues(reducedPage)).toEqual(reducedValues);
-    } finally {
-      await desktopPage.close();
-      await reducedPage.close();
-    }
-  });
+    },
+  );
 
   const welcomeLocaleCases = [
     {
@@ -861,7 +878,7 @@ describe('built React Router documentation', () => {
   // One case per locale: each gets its own timeout budget instead of three
   // sharing one, which is what pushed this past 180s under load.
   it.each(
-    welcomeLocaleCases,
+    browserAuditShardCases(welcomeLocaleCases),
   )('keeps the $locale Welcome simulation readable at 320px', async (localeCase) => {
     const page = await browser.newPage({ viewport: { height: 800, width: 320 } });
     try {
@@ -931,14 +948,16 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('presents Welcome as a cinematic responsive product showcase', async () => {
+  t3('presents Welcome as a cinematic responsive product showcase', async () => {
     const desktopPage = await browser.newPage({
       viewport: { height: 1024, width: 1440 },
     });
     const compactPage = await browser.newPage({
       viewport: { height: 720, width: 1280 },
     });
-    const mobilePage = await browser.newPage({ viewport: { height: 844, width: 390 } });
+    const mobilePage = await browser.newPage({
+      viewport: { height: 844, width: 390 },
+    });
     const pageErrors: string[] = [];
     const consoleErrors: string[] = [];
     desktopPage.on('pageerror', (error) => pageErrors.push(error.message));
@@ -1334,7 +1353,7 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('keeps the splash shell centered on very wide desktop viewports', async () => {
+  t3('keeps the splash shell centered on very wide desktop viewports', async () => {
     const widths = [1920, 2560, 3440];
 
     for (const width of widths) {
@@ -1368,12 +1387,17 @@ describe('built React Router documentation', () => {
     }
   });
 
-  it('keeps the welcome hero readable on short and narrow viewports', async () => {
+  t3('keeps the welcome hero readable on short and narrow viewports', async () => {
     // The hero used to be a fixed `max(42rem, 100dvh - header)` box with its copy
     // pinned by `absolute bottom`, so on a landscape phone the box was 672px tall
     // inside a 390px viewport and every word of the hero sat below the fold.
     const viewportCases = [
-      { height: 390, locales: ['en', 'ko', 'ja'], name: 'landscape phone', width: 844 },
+      {
+        height: 390,
+        locales: ['en', 'ko', 'ja'],
+        name: 'landscape phone',
+        width: 844,
+      },
       { height: 360, locales: ['en'], name: 'small landscape phone', width: 740 },
       { height: 620, locales: ['en'], name: 'short laptop', width: 1280 },
       { height: 450, locales: ['en'], name: 'desktop at 200% zoom', width: 720 },

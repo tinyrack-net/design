@@ -1392,9 +1392,11 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts['dev']).not.toContain('build');
     expect(packageJson.scripts['dev:app']).not.toContain('build');
     expect(packageJson.scripts['dev:app']).toContain('react-router dev');
-    expect(packageJson.scripts['build']).toBe(
-      'pnpm typegen && tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.test.json --noEmit && node scripts/sync-brand.ts --check && cross-env TINYRACK_WORKERS=1 react-router build',
-    );
+    expect(packageJson.scripts['build']).toBe('node scripts/build.ts');
+    const buildScript = readText('scripts/build.ts');
+    expect(buildScript).toContain('Promise.allSettled');
+    expect(buildScript).toContain('TINYRACK_DOCS_ASSET_WORKERS');
+    expect(buildScript).toContain('TINYRACK_DOCS_PRERENDER_WORKERS');
     expect(
       Object.keys(packageJson.scripts)
         .filter((name) => name === 'test' || name.startsWith('test:'))
@@ -1473,6 +1475,14 @@ describe('React Router documentation contract', () => {
     expect(packageJson.scripts['test:prepared']).toBe(
       'pnpm test:unit && vitest run --project e2e && vitest run --project e2e-overlays',
     );
+    const vitestConfig = readText('vitest.config.ts');
+    expect(vitestConfig).toContain("'tests/browser-rendering.test.ts'");
+    expect(vitestConfig).toContain("'tests/browser-flutter-preview.test.ts'");
+    for (let shard = 1; shard <= 4; shard += 1) {
+      expect(
+        existsSync(join(homepageRoot, `tests/browser-audit-shard-${shard}.test.ts`)),
+      ).toBe(true);
+    }
     expect(browserAudit).not.toContain('it.concurrent(');
     expect(browserAudit).not.toContain('waitForTimeout(');
     expect(oneShotVisibilityAssertions).toEqual([]);
