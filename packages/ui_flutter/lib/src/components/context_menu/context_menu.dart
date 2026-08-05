@@ -48,7 +48,7 @@ class _TRContextMenuState extends State<TRContextMenu> {
         kind: TRLayerBoundaryKind.contextMenu,
         minWidth: TRGeneratedControlMetrics.mdHeight * 5,
         maxWidth: TRGeneratedMeasurements.overlayWidthMd,
-        padding: const EdgeInsets.all(TRGeneratedControlMetrics.smGap),
+        padding: const EdgeInsets.all(TRGeneratedControlMetrics.mdGap),
         child: SingleChildScrollView(
           primary: false,
           child: Column(

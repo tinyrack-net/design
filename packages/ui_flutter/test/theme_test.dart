@@ -1472,11 +1472,11 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      _wrapNarrow(const TRAvatar(fallback: 'AB', uiSize: TRUiSize.sm)),
+      _wrapNarrow(const TRAvatar(fallback: 'AB', uiSize: TRUiSize.md)),
     );
     final size = tester.getSize(find.byType(TRAvatar));
-    expect(size.width, TRGeneratedControlMetrics.smHeight);
-    expect(size.height, TRGeneratedControlMetrics.smHeight);
+    expect(size.width, TRGeneratedControlMetrics.mdHeight);
+    expect(size.height, TRGeneratedControlMetrics.mdHeight);
   });
 
   testWidgets('code block renders its code as monospace text', (tester) async {

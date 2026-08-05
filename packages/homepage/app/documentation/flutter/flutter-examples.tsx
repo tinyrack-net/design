@@ -543,7 +543,7 @@ const otpSizesSourceEn = String.raw`Column(
       label: 'SM',
       length: 4,
       semanticLabel: 'SM verification code',
-      uiSize: TRUiSize.sm,
+      uiSize: TRUiSize.md,
     ),
     TROtpField(
       defaultValue: '2048',
@@ -1522,9 +1522,9 @@ class AccordionStates extends StatelessWidget {
       id: 'button-sizes',
       title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
       description: {
-        en: 'Match the button size to its surrounding density with sm, md, or lg.',
-        ja: '周囲の密度に合わせて sm・md・lg のサイズを選びます。',
-        ko: '주변 밀도에 맞춰 sm, md, lg 크기를 선택하세요.',
+        en: 'Match the button size to its surrounding density with md or lg.',
+        ja: '周囲の密度に合わせて md・lg のサイズを選びます。',
+        ko: '주변 밀도에 맞춰 md and lg 크기를 선택하세요.',
       },
       dart: String.raw`Wrap(
   crossAxisAlignment: WrapCrossAlignment.center,
@@ -1677,7 +1677,7 @@ class AccordionStates extends StatelessWidget {
   spacing: TRSpacing.small,
   children: [
     for (final (size, label) in const [
-      (TRUiSize.sm, 'Small settings'),
+      (TRUiSize.md, 'Small settings'),
       (TRUiSize.md, 'Medium settings'),
       (TRUiSize.lg, 'Large settings'),
     ])
@@ -1821,7 +1821,7 @@ class _BoldToggleState extends State<BoldToggle> {
   spacing: TRSpacing.small,
   children: [
     for (final (size, label) in const [
-      (TRUiSize.sm, 'Small'),
+      (TRUiSize.md, 'Small'),
       (TRUiSize.md, 'Medium'),
       (TRUiSize.lg, 'Large'),
     ])
@@ -1969,7 +1969,7 @@ class _AlignmentGroupState extends State<AlignmentGroup> {
     TRButton(
       appearance: TRAppearance.ghost,
       intent: TRIntent.success,
-      uiSize: TRUiSize.sm,
+      uiSize: TRUiSize.md,
       onPressed: () {},
       child: const Text('Review'),
     ),
@@ -1998,9 +1998,9 @@ class _AlignmentGroupState extends State<AlignmentGroup> {
       id: 'badge-sizes',
       title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
       description: {
-        en: 'Scale the badge with sm, md, and lg to sit beside text or headings.',
-        ja: 'sm・md・lg でバッジの大きさを変え、本文や見出しに合わせます。',
-        ko: 'sm, md, lg로 배지 크기를 조절해 본문이나 제목 옆에 맞추세요.',
+        en: 'Scale the badge with md and lg to sit beside text or headings.',
+        ja: 'md・lg でバッジの大きさを変え、本文や見出しに合わせます。',
+        ko: 'md and lg로 배지 크기를 조절해 본문이나 제목 옆에 맞추세요.',
       },
       dart: String.raw`Wrap(
   crossAxisAlignment: WrapCrossAlignment.center,
@@ -2267,7 +2267,7 @@ TRCodeBlock(
   runSpacing: TRSpacing.small,
   children: const [
     TRCopyButton(
-      uiSize: TRUiSize.sm,
+      uiSize: TRUiSize.md,
       intent: TRIntent.primary,
       resetDelay: Duration(milliseconds: 750),
       value: 'tinyrack.net',
@@ -2470,13 +2470,13 @@ Column(
         children: [
           TRButton(
             appearance: TRAppearance.ghost,
-            uiSize: TRUiSize.sm,
+            uiSize: TRUiSize.md,
             onPressed: () {},
             child: const Text('Details'),
           ),
           TRButton(
             intent: TRIntent.primary,
-            uiSize: TRUiSize.sm,
+            uiSize: TRUiSize.md,
             onPressed: () {},
             child: const Text('Restart'),
           ),
@@ -2492,9 +2492,9 @@ Column(
       id: 'tabs-sizes',
       title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
       description: {
-        en: 'The tab bar scales with sm, md, and lg while keeping its active indicator.',
-        ja: 'sm・md・lg でタブバーの大きさが変わり、アクティブなインジケーターは保たれます。',
-        ko: 'sm, md, lg로 탭 바 크기가 바뀌며 활성 표시는 그대로 유지돼요.',
+        en: 'The tab bar scales with md and lg while keeping its active indicator.',
+        ja: 'md・lg でタブバーの大きさが変わり、アクティブなインジケーターは保たれます。',
+        ko: 'md and lg로 탭 바 크기가 바뀌며 활성 표시는 그대로 유지돼요.',
       },
       dart: String.raw`Column(
   spacing: TRSpacing.large,
@@ -2573,14 +2573,14 @@ Widget checkboxStates() => const Wrap(
     {
       id: 'checkbox-sizes',
       title: {
-        en: 'Small, medium, and large',
+        en: 'Medium and large',
         ja: '小、中、大',
         ko: '작게, 보통으로, 크게',
       },
       description: {
-        en: 'Match sm, md, or lg to the density of nearby controls.',
-        ja: '周囲のコントロールの密度に合わせて sm、md、lg を選びます。',
-        ko: '주변 컨트롤 밀도에 맞춰 sm, md, lg를 선택하세요.',
+        en: 'Match md or lg to the density of nearby controls.',
+        ja: '周囲のコントロールの密度に合わせて md、lg を選びます。',
+        ko: '주변 컨트롤 밀도에 맞춰 md and lg를 선택하세요.',
       },
       dart: String.raw`import 'package:flutter/material.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
@@ -2837,9 +2837,9 @@ class _MonitoringFormState extends State<MonitoringForm> {
       id: 'slider-sizes',
       title: { en: 'Sizes', ja: 'サイズ', ko: '크기' },
       description: {
-        en: '`uiSize` scales the thumb and the space around the track while the track thickness stays the same. Use `TRUiSize.sm` when the slider sits in a dense control surface.',
-        ja: '`uiSize` はトラックの太さを保ったまま、つまみとトラック周辺の領域を拡大縮小します。密度の高いコントロール面に置く場合は `TRUiSize.sm` を使ってください。',
-        ko: '`uiSize`는 트랙 두께는 그대로 두고 썸과 트랙 주변 공간의 크기를 조절해요. 밀도가 높은 컨트롤 영역에 놓을 때는 `TRUiSize.sm`을 쓰세요.',
+        en: '`uiSize` scales the thumb and the space around the track while the track thickness stays the same. Use `TRUiSize.md` when the slider sits in a dense control surface.',
+        ja: '`uiSize` はトラックの太さを保ったまま、つまみとトラック周辺の領域を拡大縮小します。密度の高いコントロール面に置く場合は `TRUiSize.md` を使ってください。',
+        ko: '`uiSize`는 트랙 두께는 그대로 두고 썸과 트랙 주변 공간의 크기를 조절해요. 밀도가 높은 컨트롤 영역에 놓을 때는 `TRUiSize.md`을 쓰세요.',
       },
       dart: sliderSources(sliderSizesSourceEn),
     },
@@ -3069,14 +3069,14 @@ class _MonitoringFormState extends State<MonitoringForm> {
     {
       id: 'radio-sizes',
       title: {
-        en: 'Small, medium, and large',
+        en: 'Medium and large',
         ja: '小、中、大',
         ko: '작게, 보통으로, 크게',
       },
       description: {
-        en: 'Match sm, md, or lg to the density of the controls around the option.',
-        ja: 'sm・md・lg を、選択肢の周囲にあるコントロールの密度に合わせます。',
-        ko: '옵션 주변 컨트롤의 밀도에 맞춰 sm, md, lg 중에서 고르세요.',
+        en: 'Match md or lg to the density of the controls around the option.',
+        ja: 'md・lg を、選択肢の周囲にあるコントロールの密度に合わせます。',
+        ko: '옵션 주변 컨트롤의 밀도에 맞춰 md and lg 중에서 고르세요.',
       },
       dart: radioSources(radioSizesSourceEn),
     },
@@ -3632,14 +3632,14 @@ class _MonitoringFormState extends State<MonitoringForm> {
     {
       id: 'textarea-sizes',
       title: {
-        en: 'Small, medium, and large',
-        ja: 'スモール、ミディアム、ラージ',
-        ko: '작게, 보통, 크게',
+        en: 'Medium and large',
+        ja: 'ミディアムとラージ',
+        ko: '보통과 크게',
       },
       description: {
-        en: 'uiSize changes the typography and inline padding, and the minimum height follows from the matching control height. Pick sm for dense screens and lg when the reader edits longer text.',
-        ja: 'uiSize はタイポグラフィと左右の余白を変え、最小の高さは対応するコントロール高さから決まります。密度の高い画面では sm を、長い文章を編集する場合は lg を選びます。',
-        ko: 'uiSize는 타이포그래피와 좌우 패딩을 바꾸고, 최소 높이는 해당 컨트롤 높이에서 정해져요. 밀도가 높은 화면에는 sm을, 긴 글을 편집할 때는 lg를 고르세요.',
+        en: 'uiSize changes the typography and inline padding, and the minimum height follows from the matching control height. Pick md for dense screens and lg when the reader edits longer text.',
+        ja: 'uiSize はタイポグラフィと左右の余白を変え、最小の高さは対応するコントロール高さから決まります。密度の高い画面では md を、長い文章を編集する場合は lg を選びます。',
+        ko: 'uiSize는 타이포그래피와 좌우 패딩을 바꾸고, 최소 높이는 해당 컨트롤 높이에서 정해져요. 밀도가 높은 화면에는 md를, 긴 글을 편집할 때는 lg를 고르세요.',
       },
       dart: textareaSources(textareaSizesSourceEn),
     },
@@ -4069,7 +4069,7 @@ class _MonitoringFormState extends State<MonitoringForm> {
       dart: String.raw`Column(
   children: [
     TRAutocomplete<String>(
-      uiSize: TRUiSize.sm,
+      uiSize: TRUiSize.md,
       label: 'Compact',
       items: const [TRAutocompleteItem(value: 'seoul', label: 'Seoul')],
     ),

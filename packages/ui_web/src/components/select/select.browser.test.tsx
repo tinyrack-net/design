@@ -48,13 +48,13 @@ test('renders the Tinyrack TRSelect wrapper', async () => {
 test('supports compact ui size on the root and trigger', async () => {
   await render(
     <TRSelect.Root defaultValue="alpha">
-      <TRSelect.Trigger aria-label="Compact choice" uiSize="sm">
+      <TRSelect.Trigger aria-label="Compact choice" uiSize="md">
         <TRSelect.Value />
       </TRSelect.Trigger>
     </TRSelect.Root>,
   );
   const trigger = document.querySelector<HTMLElement>('.tr-select-trigger');
-  expect(trigger?.dataset['uiSize']).toBe('sm');
+  expect(trigger?.dataset['uiSize']).toBe('md');
   expect(getComputedStyle(trigger as HTMLElement).minHeight).toBe('32px');
   trigger?.focus();
   expect(getComputedStyle(trigger as HTMLElement).outlineOffset).toBe('-2px');
@@ -527,7 +527,7 @@ test('sizes overflow scroll controls and keeps the collection within available s
 
   const down = document.querySelector<HTMLElement>('.tr-select-scroll-down-arrow');
   expect(down).not.toBeNull();
-  expect(Number.parseFloat(getComputedStyle(down as HTMLElement).minHeight)).toBe(40);
+  expect(Number.parseFloat(getComputedStyle(down as HTMLElement).minHeight)).toBe(32);
   expect(
     document.querySelector<HTMLElement>('.tr-select-popup')?.scrollHeight,
   ).toBeGreaterThan(120);

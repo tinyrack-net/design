@@ -60,14 +60,12 @@ class _TRTabsState extends State<TRTabs> {
         _uncontrolledValue ??
         (widget.tabs.isEmpty ? '' : widget.tabs.first.value);
     final tabHeight = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final panelPadding = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedSpacing.md,
-      TRUiSize.md => TRGeneratedSpacing.lg,
-      TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+      TRUiSize.md => TRGeneratedSpacing.md,
+      TRUiSize.lg => TRGeneratedSpacing.lg,
     };
 
     return Column(
@@ -186,17 +184,14 @@ class _TRTabItemState extends State<_TRTabItem> {
     final colors = context.tinyrackTheme;
     final interactive = !widget.disabled;
     final fontSize = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };
     final lineHeight = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smLineHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,
     };
     final paddingInline = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };

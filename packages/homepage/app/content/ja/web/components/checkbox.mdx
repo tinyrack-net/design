@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/checkbox.demo.js'
 | --- | --- |
 | 選択状態 | 未選択、選択済み、集合の一部だけを選択した場合の `indeterminate` |
 | 利用可否 | 通常、フォーカスとフォーム値を保つ `readOnly`、利用できない `disabled` |
-| サイズ | `sm`、`md`、`lg`。デフォルトは `md` です。 |
+| サイズ | `md`、`lg`。デフォルトは `md` です。 |
 | フォーム | `name`、`value`、`uncheckedValue`、`form`、`required`、ネイティブリセット |
 
 すべてのチェックボックスに表示ラベルまたはアクセシブルな名前を付けます。コントロールと `TRField.Label` を `TRField.Item` で囲むと、クリックできる表示ラベルになります。アイテムが内側のコントロールにラベルを結び付けるため、`id` や `htmlFor` の指定は不要です。 `TRField.Item` には `TRField.Root` の祖先が必須なので、アイテムまたはグループ全体を 1 つの `TRField.Root` で囲みます。独立した選択やまとめて送信する選択にはチェックボックスを使い、複数の値を連携させる場合は `TRCheckboxGroup` を使います。
@@ -61,7 +61,7 @@ export function BackupChoice() {
 
 ### 密度に合わせる
 
-<ComponentExampleTabs id="checkbox-sizes" title="小、中、大" preview={<div data-docs-example-item-count="3"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
+<ComponentExampleTabs id="checkbox-sizes" title="小、中、大" preview={<div data-docs-example-item-count="2"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
 
 ### 操作を維持または除外する
 
@@ -85,7 +85,7 @@ export function BackupChoice() {
 | `indeterminate` | `boolean`, `false` | 一部選択を公開し、ユーザーが確定したら解除します。 |
 | `onCheckedChange` | `(checked, details) => void` | 変更の試行を通知します。 |
 | `disabled`, `readOnly` | `boolean`, `false` | 操作を除外するか、フォーカス可能な不変値を保ちます。 |
-| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | 表示サイズを指定します。 |
+| `uiSize` | `'md' \| 'lg'`, `'md'` | 表示サイズを指定します。 |
 
 ### フォームと合成
 

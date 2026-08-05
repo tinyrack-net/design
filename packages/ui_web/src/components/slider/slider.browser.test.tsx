@@ -80,7 +80,7 @@ test('renders the Tinyrack TRSlider wrapper', async () => {
 
 test('supports compact ui size', async () => {
   await render(
-    <TRSlider.Root uiSize="sm" defaultValue={[50]}>
+    <TRSlider.Root uiSize="md" defaultValue={[50]}>
       <TRSlider.Control>
         <TRSlider.Track>
           <TRSlider.Indicator />
@@ -91,14 +91,14 @@ test('supports compact ui size', async () => {
   );
   const slider = document.querySelector<HTMLElement>('.tr-slider');
   const thumb = document.querySelector<HTMLElement>('.tr-slider-thumb');
-  expect(slider?.dataset['uiSize']).toBe('sm');
+  expect(slider?.dataset['uiSize']).toBe('md');
   expect(getComputedStyle(thumb as HTMLElement).width).toBe('12px');
 });
 
 test('preserves the vertical measure across ui sizes while sizing each thumb', async () => {
   await render(
     <div>
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <TRSlider.Root
           data-testid={`vertical-${uiSize}`}
           defaultValue={[50]}
@@ -117,7 +117,7 @@ test('preserves the vertical measure across ui sizes while sizing each thumb', a
     </div>,
   );
 
-  const roots = (['sm', 'md', 'lg'] as const).map(
+  const roots = (['md', 'lg'] as const).map(
     (uiSize) => document.querySelector(`[data-testid="vertical-${uiSize}"]`) as Element,
   );
   const thumbs = Array.from(document.querySelectorAll<HTMLElement>('.tr-slider-thumb'));
@@ -125,12 +125,10 @@ test('preserves the vertical measure across ui sizes while sizing each thumb', a
   expect(roots.map((root) => getComputedStyle(root).minHeight)).toEqual([
     '192px',
     '192px',
-    '192px',
   ]);
   expect(thumbs.map((thumb) => getComputedStyle(thumb).width)).toEqual([
     '12px',
     '16px',
-    '24px',
   ]);
 });
 

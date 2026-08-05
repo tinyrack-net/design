@@ -18,7 +18,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | `shape` | `circle`, `square` | `circle` |
 | parts | `Root`, `Image`, `Fallback` | compound API |
 
@@ -76,7 +76,7 @@ const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   description="Choose the size that matches adjacent controls and identity density."
   preview={(
     <div className="flex items-center gap-3">
-      <TRAvatar.Root data-docs-example-item="" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
       <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
       <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
     </div>
@@ -84,7 +84,7 @@ const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 <div className="flex items-center gap-3">
-  <TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
   <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
   <TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
 </div>` ,
@@ -115,7 +115,7 @@ const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 | Prop | Type | Default | Purpose |
 | --- | --- | --- | --- |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Sets the avatar size. |
+| `uiSize` | `'md' \| 'lg'` | `'md'` | Sets the avatar size. |
 | `shape` | `'circle' \| 'square'` | `'circle'` | Sets the identity silhouette. |
 
 ### Image and fallback

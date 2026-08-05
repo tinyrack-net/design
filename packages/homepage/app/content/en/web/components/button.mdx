@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/button.demo.js';
 | --- | --- | --- | --- |
 | `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | Communicates the purpose or outcome of an action. |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes visual emphasis without changing intent. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | Matches the size of surrounding controls. |
+| `uiSize` | `md`, `lg` | `md` | Matches the size of surrounding controls. |
 | `disabled` | `boolean` | `false` | Prevents the action. |
 | `loading` | `boolean` | `false` | Prevents the action and communicates that it is in progress. |
 
@@ -174,7 +174,7 @@ export function GhostButtonIntents() {
   description="Choose a size that matches nearby controls, not the importance of the action."
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRButton data-docs-example-item="" intent="primary" uiSize="sm">Small</TRButton>
+      <TRButton data-docs-example-item="" intent="primary" uiSize="md">Small</TRButton>
       <TRButton data-docs-example-item="" intent="primary" uiSize="md">Medium</TRButton>
       <TRButton data-docs-example-item="" intent="primary" uiSize="lg">Large</TRButton>
     </div>
@@ -187,7 +187,7 @@ export function GhostButtonIntents() {
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
-  <TRButton intent="primary" uiSize="sm">Small</TRButton>
+  <TRButton intent="primary" uiSize="md">Small</TRButton>
   <TRButton intent="primary" uiSize="md">Medium</TRButton>
   <TRButton intent="primary" uiSize="lg">Large</TRButton>
 </div>;
@@ -233,7 +233,7 @@ export function ButtonStates() {
 | --- | --- | --- | --- |
 | `intent` | `neutral \| primary \| info \| success \| warning \| danger` | `neutral` | Selects the action's semantic meaning and color role. |
 | `appearance` | `solid \| outline \| ghost` | `solid` | Selects visual emphasis without changing the intent. |
-| `uiSize` | `sm \| md \| lg` | `md` | Selects the button size. |
+| `uiSize` | `md \| lg` | `md` | Selects the button size. |
 | `loading` | `boolean` | `false` | Prevents activation and exposes an in-progress state. |
 | `loadingLabel` | `string` | none | Sets the accessible name while loading. |
 | `variant` | `secondary \| primary \| danger` | `secondary` | Deprecated compatibility prop; use `intent` in new code. |

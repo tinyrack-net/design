@@ -20,7 +20,7 @@ import * as Stories from '../../../../documentation/components/select.demo.js';
 | collection | group, label, separator, disabled item, text, indicator가 menu anatomy를 설명해요. |
 | form | `name`, `form`, `required`, `inputRef`가 native 제출, validation, reset과 통합돼요. |
 
-trigger가 밀도 높은 컨트롤 표면에 속하면 `TRSelect.Trigger uiSize="sm"`을 사용하세요.
+trigger가 밀도 높은 컨트롤 표면에 속하면 `TRSelect.Trigger uiSize="md"`을 사용하세요.
 
 ## 설치
 
@@ -82,10 +82,10 @@ const racks = { alpha: '랙 알파예요', beta: '랙 베타예요', gamma: '랙
   id="select-sizes"
   title="트리거 크기"
   description="팝업 목록과 별개로 트리거 밀도를 선택하세요."
-  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.SelectSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
 
-{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+{(['md', 'lg'] as const).map((uiSize) => (
   <TRSelect.Root defaultValue="alpha" items={{ alpha: '랙 알파' }} key={uiSize}>
     <TRSelect.Label>{uiSize.toUpperCase() + ' 배포 랙'}</TRSelect.Label>
     <TRSelect.Trigger uiSize={uiSize}><TRSelect.Value /></TRSelect.Trigger>
@@ -201,7 +201,7 @@ const racks = Object.fromEntries(
 | 값 | `defaultValue` 또는 제어형 `value`를 사용해요. `multiple` 기본값은 `false`이고 `items`는 값을 표시 label에 연결해요. |
 | 열림 | `defaultOpen` 기본값은 `false`예요. 제어형 `open`도 사용할 수 있고 `modal`과 `highlightItemOnHover` 기본값은 `true`예요. |
 | 사용 가능 상태 | `disabled`, `readOnly`, `required` 기본값은 모두 `false`예요. |
-| 트리거 | `uiSize="sm" | "md" | "lg"`를 받고 기본값은 `"md"`예요. |
+| 트리거 | `uiSize="md" | "md" | "lg"`를 받고 기본값은 `"md"`예요. |
 | 배치 | `Positioner`는 트리거 아래 4px에서 열리고 배치 prop을 받지 않아요. 공간이 부족하면 트리거 위로 전환해요. |
 | form | `name`, `form`, `autoComplete`, `inputRef`를 받아요. 비제어 select는 native reset에서 `defaultValue`로 돌아가요. |
 

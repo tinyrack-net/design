@@ -21,7 +21,7 @@ Use IconButton for a familiar action whose icon is unambiguous in context. Every
 | --- | --- | --- | --- |
 | `variant` | `secondary`, `primary`, `danger` | `secondary` | Communicates action intent. |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes emphasis without changing intent. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | Sets a square target and its icon size. |
+| `uiSize` | `md`, `lg` | `md` | Sets a square target and its icon size. |
 | state | `disabled`, `loading` | interactive | Uses native disabled behavior; loading adds `aria-busy` and a spinner. |
 
 ## Install
@@ -73,7 +73,7 @@ Use IconButton for a familiar action whose icon is unambiguous in context. Every
   id="icon-button-sizes"
   title="Sizes"
   description="Match the icon button size to adjacent controls and preserve an adequate target for the input method."
-  preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="Small settings" uiSize="sm"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="Medium settings" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="Large settings" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>}
+  preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="Medium settings" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="Large settings" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]}
 />
 

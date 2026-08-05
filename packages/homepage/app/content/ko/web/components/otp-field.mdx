@@ -59,15 +59,12 @@ import * as Stories from '../../../../documentation/components/otp-field.demo.js
   id="otp-field-sizes"
   title="크기"
   description="uiSize로 OTP 슬롯 높이를 인접한 Input, Button, NumberField와 맞춰 보세요."
-  preview={<div data-docs-example-item-count="3"><Stories.OTPFieldSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.OTPFieldSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 export function OTPFieldSizes() {
   return (
     <div className="grid gap-5">
-      <TROTPField.Root aria-label="SM 코드" length={4} name="code-sm" uiSize="sm">
-        <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
-      </TROTPField.Root>
       <TROTPField.Root aria-label="MD 코드" length={4} name="code-md" uiSize="md">
         <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
       </TROTPField.Root>

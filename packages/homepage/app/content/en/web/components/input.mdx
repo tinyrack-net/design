@@ -16,7 +16,7 @@ import * as Stories from '../../../../documentation/components/input.demo.js';
 
 `TRInput` renders a native `<input>` and preserves its props, ref, events, validity, and form behavior. Wrap it in `TRField.Root` and add a `TRField.Label`: the field associates the label with the input, so you do not write `id` or `htmlFor` yourself. Use `TRField.Description` for instructions and `TRField.Error` for validation messages, which the field links through `aria-describedby`.
 
-Use `uiSize="sm"` for dense controls, the default `md` for forms, and `lg` where a larger target is useful. `disabled`, `readOnly`, and `required` retain their native semantics and Tinyrack state styles. Set `disabled` or `invalid` on `TRField.Root` to drive the whole field, or keep `aria-invalid` on the input when there is no surrounding field.
+Use `uiSize="md"` for dense controls, the default `md` for forms, and `lg` where a larger target is useful. `disabled`, `readOnly`, and `required` retain their native semantics and Tinyrack state styles. Set `disabled` or `invalid` on `TRField.Root` to drive the whole field, or keep `aria-invalid` on the input when there is no surrounding field.
 
 To put an icon or a button beside the text, wrap the input in `TRInput.Group`. The group draws the border, background, and focus ring, and the input inside it goes flat, so the parts read as one control. Size the group rather than the input, because the group owns the control height. Use `TRInput.Adornment` for static content — it ignores pointer events, so clicking it still focuses the input — and `TRInput.Action` for something pressable, which defaults to `type="button"` so it cannot submit the surrounding form. Give every action an accessible name, and mark decorative icons `aria-hidden` so the field keeps a single name.
 
@@ -56,7 +56,7 @@ export function RackNameInput() {
 <ComponentExampleTabs
   id="input-sizes"
   title="Sizes"
-  preview={<div data-docs-example-item-count="3"><Stories.InputSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.InputSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -65,7 +65,7 @@ export function InputSizes() {
     <div className="grid gap-4">
       <TRField.Root>
         <TRField.Label>SM input</TRField.Label>
-        <TRInput placeholder="rack-alpha" uiSize="sm" />
+        <TRInput placeholder="rack-alpha" uiSize="md" />
       </TRField.Root>
       <TRField.Root>
         <TRField.Label>MD input</TRField.Label>
@@ -209,8 +209,8 @@ export function RequiredInput() {
 
 ## API
 
-`TRInputProps` extends Base UI Input props and adds `uiSize?: 'sm' | 'md' | 'lg'` with a default of `md`. It forwards native input attributes such as `name`, `type`, `autoComplete`, `disabled`, `readOnly`, and `required`, plus `ref`, `className`, `style`, and event handlers.
+`TRInputProps` extends Base UI Input props and adds `uiSize?: 'md' | 'lg'` with a default of `md`. It forwards native input attributes such as `name`, `type`, `autoComplete`, `disabled`, `readOnly`, and `required`, plus `ref`, `className`, `style`, and event handlers.
 
 Use `value` with `onValueChange(value, details)` for controlled text, or `defaultValue` for native uncontrolled and form-reset behavior. Use native `onChange` when the event object matters. `aria-invalid="true"`, Base UI `data-invalid`, and native `:invalid` all activate the invalid border. The `render` prop replaces the rendered element while Base UI merges behavior, state, ref, and `.tr-input` styling onto it.
 
-`TRInput.Group` renders a `div` and takes `uiSize?: 'sm' | 'md' | 'lg'`, defaulting to `md`; it forwards native div props and `ref`. An input rendered inside it picks up the group's control styling on its own, so you never write the group's class names yourself. `TRInput.Adornment` renders a `span` and takes `side?: 'start' | 'end'`, defaulting to `start`. `TRInput.Action` renders a `button` with `type="button"` unless you override it. Each part is also exported individually as `TRInputGroup`, `TRInputAdornment`, and `TRInputAction`, with matching prop types.
+`TRInput.Group` renders a `div` and takes `uiSize?: 'md' | 'lg'`, defaulting to `md`; it forwards native div props and `ref`. An input rendered inside it picks up the group's control styling on its own, so you never write the group's class names yourself. `TRInput.Adornment` renders a `span` and takes `side?: 'start' | 'end'`, defaulting to `start`. `TRInput.Action` renders a `button` with `type="button"` unless you override it. Each part is also exported individually as `TRInputGroup`, `TRInputAdornment`, and `TRInputAction`, with matching prop types.

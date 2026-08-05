@@ -31,8 +31,6 @@
   --text-tinyrack-5xl--line-height: var(--tinyrack-leading-sm);
   --text-tinyrack-6xl: var(--tinyrack-text-6xl);
   --text-tinyrack-6xl--line-height: var(--tinyrack-leading-xs);
-  --text-tinyrack-control-sm: var(--tinyrack-control-font-size-sm);
-  --text-tinyrack-control-sm--line-height: var(--tinyrack-control-line-height-sm);
   --text-tinyrack-control-md: var(--tinyrack-control-font-size-md);
   --text-tinyrack-control-md--line-height: var(--tinyrack-control-line-height-md);
   --text-tinyrack-control-lg: var(--tinyrack-control-font-size-lg);
@@ -42,7 +40,6 @@
   --leading-tinyrack-md: var(--tinyrack-leading-md);
   --leading-tinyrack-lg: var(--tinyrack-leading-lg);
   --leading-tinyrack-xl: var(--tinyrack-leading-xl);
-  --leading-tinyrack-control-sm: var(--tinyrack-control-line-height-sm);
   --leading-tinyrack-control-md: var(--tinyrack-control-line-height-md);
   --leading-tinyrack-control-lg: var(--tinyrack-control-line-height-lg);
   --tracking-tinyrack-none: var(--tinyrack-tracking-none);
@@ -65,19 +62,14 @@
   --spacing-tinyrack-3xl: var(--tinyrack-space-3xl);
   --spacing-tinyrack-4xl: var(--tinyrack-space-4xl);
   --spacing-tinyrack-5xl: var(--tinyrack-space-5xl);
-  --spacing-tinyrack-control-height-sm: var(--tinyrack-control-height-sm);
   --spacing-tinyrack-control-height-md: var(--tinyrack-control-height-md);
   --spacing-tinyrack-control-height-lg: var(--tinyrack-control-height-lg);
-  --spacing-tinyrack-control-padding-inline-sm: var(
-    --tinyrack-control-padding-inline-sm
-  );
   --spacing-tinyrack-control-padding-inline-md: var(
     --tinyrack-control-padding-inline-md
   );
   --spacing-tinyrack-control-padding-inline-lg: var(
     --tinyrack-control-padding-inline-lg
   );
-  --spacing-tinyrack-control-gap-sm: var(--tinyrack-control-gap-sm);
   --spacing-tinyrack-control-gap-md: var(--tinyrack-control-gap-md);
   --spacing-tinyrack-control-gap-lg: var(--tinyrack-control-gap-lg);
   --spacing-tinyrack-measure-xs: var(--tinyrack-measure-xs);
@@ -101,7 +93,6 @@
   --spacing-tinyrack-overlay-width-lg: var(--tinyrack-overlay-width-lg);
   --spacing-tinyrack-overlay-width-xl: var(--tinyrack-overlay-width-xl);
   --spacing-tinyrack-overlay-inline-inset: var(--tinyrack-overlay-inline-inset);
-  --spacing-tinyrack-spinner-size-sm: var(--tinyrack-spinner-size-sm);
   --spacing-tinyrack-spinner-size-md: var(--tinyrack-spinner-size-md);
   --spacing-tinyrack-spinner-size-lg: var(--tinyrack-spinner-size-lg);
   --spacing-tinyrack-spinner-stroke-width: var(--tinyrack-spinner-stroke-width);

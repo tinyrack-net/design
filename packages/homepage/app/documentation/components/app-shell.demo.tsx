@@ -93,14 +93,14 @@ function WorkspaceSidebar({
           <TRAppShell.SidebarToggle
             appearance={controlAppearance}
             aria-label={copy[0] ?? ''}
-            uiSize="sm"
+            uiSize="md"
           >
             <PanelLeftCloseIcon aria-hidden="true" />
           </TRAppShell.SidebarToggle>
           <TRAppShell.Close
             appearance={controlAppearance}
             aria-label={copy[1] ?? ''}
-            uiSize="sm"
+            uiSize="md"
           >
             <XIcon aria-hidden="true" />
           </TRAppShell.Close>

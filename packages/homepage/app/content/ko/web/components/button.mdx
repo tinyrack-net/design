@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/button.demo.js';
 | --- | --- | --- | --- |
 | `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | 동작의 목적이나 결과를 전달해요. |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | 의도는 유지하면서 시각적 강조를 바꿔요. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | 주변 컨트롤의 크기에 맞춰요. |
+| `uiSize` | `md`, `lg` | `md` | 주변 컨트롤의 크기에 맞춰요. |
 | `disabled` | `boolean` | `false` | 동작을 실행하지 못하게 해요. |
 | `loading` | `boolean` | `false` | 동작을 막고 진행 중인 상태를 전달해요. |
 
@@ -174,7 +174,7 @@ export function GhostButtonIntents() {
   description="동작의 중요도가 아니라 주변 컨트롤에 맞춰 크기를 선택하세요."
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRButton data-docs-example-item="" intent="primary" uiSize="sm">작은 버튼</TRButton>
+      <TRButton data-docs-example-item="" intent="primary" uiSize="md">작은 버튼</TRButton>
       <TRButton data-docs-example-item="" intent="primary" uiSize="md">중간 버튼</TRButton>
       <TRButton data-docs-example-item="" intent="primary" uiSize="lg">큰 버튼</TRButton>
     </div>
@@ -187,7 +187,7 @@ export function GhostButtonIntents() {
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
-  <TRButton intent="primary" uiSize="sm">작은 버튼</TRButton>
+  <TRButton intent="primary" uiSize="md">작은 버튼</TRButton>
   <TRButton intent="primary" uiSize="md">중간 버튼</TRButton>
   <TRButton intent="primary" uiSize="lg">큰 버튼</TRButton>
 </div>;
@@ -233,7 +233,7 @@ export function ButtonStates() {
 | --- | --- | --- | --- |
 | `intent` | `neutral \| primary \| info \| success \| warning \| danger` | `neutral` | 동작의 의미와 색상 역할을 정해요. |
 | `appearance` | `solid \| outline \| ghost` | `solid` | 의미는 유지하면서 시각적 강조 방식을 정해요. |
-| `uiSize` | `sm \| md \| lg` | `md` | 버튼 크기를 정해요. |
+| `uiSize` | `md \| lg` | `md` | 버튼 크기를 정해요. |
 | `loading` | `boolean` | `false` | 동작을 막고 진행 중인 상태를 전달해요. |
 | `loadingLabel` | `string` | 없음 | 로딩 중에 사용할 접근 가능한 이름을 정해요. |
 | `variant` | `secondary \| primary \| danger` | `secondary` | 이전 API와의 호환을 위한 속성이에요. 새 코드에서는 `intent`를 사용하세요. |

@@ -57,7 +57,7 @@ class TRAppShellTrigger extends StatelessWidget {
         onPressed?.call();
         scope.controller.openMobileNavigation();
       },
-      uiSize: TRUiSize.sm,
+      uiSize: TRUiSize.md,
     );
   }
 }
@@ -89,7 +89,7 @@ class TRAppShellClose extends StatelessWidget {
         onPressed?.call();
         scope.controller.closeMobileNavigation();
       },
-      uiSize: TRUiSize.sm,
+      uiSize: TRUiSize.md,
     );
   }
 }

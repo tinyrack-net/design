@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/tabs.demo.js';
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | `orientation` | `horizontal`, `vertical` | `horizontal` |
 | disabled tab | `TRTabs.Tab disabled` | `false` |
 | activation | manual or `activateOnFocus` | manual |
@@ -46,10 +46,10 @@ import * as Stories from '../../../../documentation/components/tabs.demo.js';
 
 <ComponentExampleTabs
   id="tabs-sizes"
-  data-docs-example-item-count="3"
+  data-docs-example-item-count="2"
   title="Size and activation comparison"
   previewLayout="stretch"
-  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="sm"><TRTabs.List aria-label="Small manual tabs"><TRTabs.Tab value="one">Small</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Manual activation at small density.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="Automatic tabs"><TRTabs.Tab value="one">Automatic</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="Bounded focus tabs" loopFocus={false}><TRTabs.Tab value="one">Bounded focus</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root></div>}
+  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="Medium automatic tabs"><TRTabs.Tab value="one">Medium</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Arrow focus also selects.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="Large bounded focus tabs" loopFocus={false}><TRTabs.Tab value="one">Large</TRTabs.Tab><TRTabs.Tab value="two">Details</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">Focus stops at each end.</TRTabs.Panel><TRTabs.Panel value="two">Details</TRTabs.Panel></TRTabs.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tabsSizesSource }]}
 />
 

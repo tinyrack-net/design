@@ -320,13 +320,13 @@ test('server renders and hydrates a populated field without recovery', async () 
 test('forwards uiSize to the root and rescales segment height', async () => {
   const rootRef = createRef<HTMLDivElement>();
   await render(
-    <TROTPField.Root length={2} ref={rootRef} uiSize="sm">
+    <TROTPField.Root length={2} ref={rootRef} uiSize="md">
       <TROTPField.Input />
       <TROTPField.Input />
     </TROTPField.Root>,
   );
 
-  expect(rootRef.current?.getAttribute('data-ui-size')).toBe('sm');
+  expect(rootRef.current?.getAttribute('data-ui-size')).toBe('md');
   const segments = document.querySelectorAll<HTMLInputElement>('.tr-otp-field-digit');
   expect(segments[0]?.getBoundingClientRect().height).toBe(32);
 });

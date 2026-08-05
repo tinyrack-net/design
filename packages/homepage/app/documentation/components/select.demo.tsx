@@ -293,7 +293,7 @@ export function SelectStateComparison() {
 export function SelectSizeComparison() {
   return (
     <div className="grid gap-5" data-docs-example-item-count={3}>
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <SelectPreview
           data-docs-example-item=""
           defaultValue="alpha"
@@ -476,7 +476,7 @@ const meta = {
     disabled: { control: 'boolean' },
     disabledItem: { control: 'boolean' },
     readOnly: { control: 'boolean' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   render: function Render(args) {
     const [open, setOpen] = useState(false);

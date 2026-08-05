@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/checkbox.demo.js'
 | --- | --- |
 | 선택 상태 | 선택 안 함, 선택함, 일부 항목만 선택했을 때 `indeterminate`를 써요. |
 | 사용 가능 여부 | 기본 상태, 초점과 폼 값을 유지하는 `readOnly`, 사용할 수 없는 `disabled` 중에서 골라요. |
-| 크기 | `sm`, `md`, `lg` 중에서 고르며 기본값은 `md`예요. |
+| 크기 | `md`, `lg` 중에서 고르며 기본값은 `md`예요. |
 | 폼 | `name`, `value`, `uncheckedValue`, `form`, `required`와 네이티브 초기화를 지원해요. |
 
 모든 체크박스에 보이는 레이블이나 접근 가능한 이름을 제공해요. 컨트롤과 `TRField.Label`을 `TRField.Item`으로 감싸면 클릭할 수 있는 레이블이 생겨요. 아이템이 그 안의 컨트롤에 레이블을 연결하니 `id`나 `htmlFor`를 직접 이어줄 필요가 없어요. `TRField.Item`에는 `TRField.Root` 조상이 반드시 필요하니, 아이템이나 그룹 전체를 하나의 `TRField.Root`로 감싸세요. 독립 선택이나 여러 항목을 함께 제출하는 선택에는 체크박스를 쓰고, 여러 체크박스 값을 조정할 때는 `TRCheckboxGroup`을 써요.
@@ -65,7 +65,7 @@ export function BackupChoice() {
 
 ### 컨트롤 밀도에 맞춰요
 
-<ComponentExampleTabs id="checkbox-sizes" title="작게, 보통으로, 크게" preview={<div data-docs-example-item-count="3"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
+<ComponentExampleTabs id="checkbox-sizes" title="작게, 보통으로, 크게" preview={<div data-docs-example-item-count="2"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
 
 ### 상호작용을 유지하거나 없애요
 
@@ -93,7 +93,7 @@ export function BackupChoice() {
 | `indeterminate` | `boolean`, `false` | 일부 선택 상태를 노출하며 사용자가 선택을 확정하면 해제해요. |
 | `onCheckedChange` | `(checked, details) => void` | 변경 시도를 알려줘요. |
 | `disabled`, `readOnly` | `boolean`, `false` | 상호작용을 없애거나 초점 가능한 읽기 전용 값을 유지해요. |
-| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | 보이는 컨트롤 크기를 정해요. |
+| `uiSize` | `'md' \| 'lg'`, `'md'` | 보이는 컨트롤 크기를 정해요. |
 
 ### 폼과 합성
 

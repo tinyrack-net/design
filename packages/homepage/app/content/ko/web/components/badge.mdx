@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/badge.demo.js';
 | 속성 | 값 | 기본값 |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 
 ## 설치
 
@@ -80,9 +80,9 @@ import { CircleCheck, Clock } from 'lucide-react';
 </div>` }]}
 />
 
-<ComponentExampleTabs id="badge-sizes" title="크기" description="주변 텍스트와 컨트롤의 밀도에 맞추세요." preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="sm">작게</TRBadge><TRBadge data-docs-example-item="" uiSize="md">중간</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">크게</TRBadge></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+<ComponentExampleTabs id="badge-sizes" title="크기" description="주변 텍스트와 컨트롤의 밀도에 맞추세요." preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="md">중간</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">크게</TRBadge></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
 
-<div className="flex items-center gap-3"><TRBadge uiSize="sm">작게</TRBadge><TRBadge uiSize="md">중간</TRBadge><TRBadge uiSize="lg">크게</TRBadge></div>` }]} />
+<div className="flex items-center gap-3"><TRBadge uiSize="md">중간</TRBadge><TRBadge uiSize="lg">크게</TRBadge></div>` }]} />
 
 ## API
 
@@ -91,7 +91,7 @@ import { CircleCheck, Clock } from 'lucide-react';
 | Prop | 타입 | 기본값 | 용도 |
 | --- | --- | --- | --- |
 | `variant` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | 상태 의미와 색상 표현을 선택해요. |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Badge 밀도를 정해요. |
+| `uiSize` | `'md' \| 'lg'` | `'md'` | Badge 밀도를 정해요. |
 
 ### HTML과 접근성
 

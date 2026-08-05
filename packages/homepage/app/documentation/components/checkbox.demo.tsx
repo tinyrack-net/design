@@ -182,7 +182,7 @@ export function CheckboxSizeComparison() {
   const text = copy[useDemoLocale()];
   return (
     <div className="flex flex-wrap items-end gap-4">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <CheckboxPreview
           defaultChecked
           disabled={false}
@@ -307,7 +307,7 @@ const meta = {
     indeterminate: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

@@ -164,7 +164,7 @@ function ComponentExampleSourcePanel({
         copiedLabel={copy.copied}
         data-copy-source={label}
         idleLabel={copy.copy}
-        uiSize="sm"
+        uiSize="md"
         unavailableLabel={copy.copyUnavailable}
         value={normalizedCode}
       />
@@ -215,7 +215,7 @@ function ComponentExampleStylesPanel({
         copiedLabel={copy.copied}
         data-copy-source={stylesCopyKey}
         idleLabel={copy.copyStyles}
-        uiSize="sm"
+        uiSize="md"
         unavailableLabel={copy.copyUnavailable}
         value={normalizedStylesCode}
       />
@@ -307,7 +307,7 @@ export function ComponentExampleTabs({
         data-component-example-tabs=""
         data-pagefind-ignore="all"
         defaultValue="preview"
-        uiSize="sm"
+        uiSize="md"
       >
         <TRTabs.List
           aria-label={ariaLabel ?? copy.exampleTabs(title)}

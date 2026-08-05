@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/button.demo.js';
 | --- | --- | --- | --- |
 | `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | 操作の目的や結果を伝えます。 |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | 目的を変えずに視覚的な強調度を調整します。 |
-| `uiSize` | `sm`, `md`, `lg` | `md` | 周囲のコントロールのサイズに合わせます。 |
+| `uiSize` | `md`, `lg` | `md` | 周囲のコントロールのサイズに合わせます。 |
 | `disabled` | `boolean` | `false` | 操作を実行できない状態にします。 |
 | `loading` | `boolean` | `false` | 操作を無効にし、処理中であることを伝えます。 |
 
@@ -174,7 +174,7 @@ export function GhostButtonIntents() {
   description="操作の重要度ではなく、周囲のコントロールに合わせてサイズを選びます。"
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRButton data-docs-example-item="" intent="primary" uiSize="sm">小サイズ</TRButton>
+      <TRButton data-docs-example-item="" intent="primary" uiSize="md">小サイズ</TRButton>
       <TRButton data-docs-example-item="" intent="primary" uiSize="md">中サイズ</TRButton>
       <TRButton data-docs-example-item="" intent="primary" uiSize="lg">大サイズ</TRButton>
     </div>
@@ -187,7 +187,7 @@ export function GhostButtonIntents() {
 
 export function ButtonUiSizes() {
   return <div className="flex flex-wrap items-center gap-3">
-  <TRButton intent="primary" uiSize="sm">小サイズ</TRButton>
+  <TRButton intent="primary" uiSize="md">小サイズ</TRButton>
   <TRButton intent="primary" uiSize="md">中サイズ</TRButton>
   <TRButton intent="primary" uiSize="lg">大サイズ</TRButton>
 </div>;
@@ -233,7 +233,7 @@ export function ButtonStates() {
 | --- | --- | --- | --- |
 | `intent` | `neutral \| primary \| info \| success \| warning \| danger` | `neutral` | 操作の意味と色の役割を選びます。 |
 | `appearance` | `solid \| outline \| ghost` | `solid` | 意味を変えずに視覚的な強調方法を選びます。 |
-| `uiSize` | `sm \| md \| lg` | `md` | ボタンのサイズを選びます。 |
+| `uiSize` | `md \| lg` | `md` | ボタンのサイズを選びます。 |
 | `loading` | `boolean` | `false` | 操作を無効にし、処理中であることを伝えます。 |
 | `loadingLabel` | `string` | なし | 読み込み中に使うアクセシブル名を指定します。 |
 | `variant` | `secondary \| primary \| danger` | `secondary` | 以前の API との互換性を保つためのプロパティです。新しいコードでは `intent` を使ってください。 |

@@ -28,8 +28,8 @@ test('renders a centered, visible indicator inside its radio group', async () =>
 
   expect(controlElement.getAttribute('aria-checked')).toBe('true');
   expect(indicatorStyle.display).toBe('block');
-  expect(indicatorStyle.height).toBe('8px');
-  expect(indicatorStyle.width).toBe('8px');
+  expect(indicatorStyle.height).toBe('4px');
+  expect(indicatorStyle.width).toBe('4px');
   expect(indicatorStyle.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
   expect(indicatorRect.x + indicatorRect.width / 2).toBeCloseTo(
     controlRect.x + controlRect.width / 2,
@@ -42,22 +42,17 @@ test('renders a centered, visible indicator inside its radio group', async () =>
 test('supports compact ui size', async () => {
   await render(
     <TRRadioGroup defaultValue="compact" name="compact-choice">
-      <TRRadio.Root uiSize="sm" value="compact" />
+      <TRRadio.Root uiSize="md" value="compact" />
     </TRRadioGroup>,
   );
   const radio = document.querySelector<HTMLElement>('.tr-radio');
-  expect(radio?.dataset['uiSize']).toBe('sm');
+  expect(radio?.dataset['uiSize']).toBe('md');
   expect(getComputedStyle(radio as HTMLElement).width).toBe('12px');
 });
 
 test('scales the indicator with the radio size', async () => {
   await render(
     <>
-      <TRRadioGroup defaultValue="small" name="small-choice">
-        <TRRadio.Root uiSize="sm" value="small">
-          <TRRadio.Indicator />
-        </TRRadio.Root>
-      </TRRadioGroup>
       <TRRadioGroup defaultValue="medium" name="medium-choice">
         <TRRadio.Root uiSize="md" value="medium">
           <TRRadio.Indicator />
@@ -72,10 +67,9 @@ test('scales the indicator with the radio size', async () => {
   );
 
   const indicators = document.querySelectorAll<HTMLElement>('.tr-radio-indicator');
-  expect(indicators).toHaveLength(3);
+  expect(indicators).toHaveLength(2);
   expect(getComputedStyle(indicators.item(0)).width).toBe('4px');
   expect(getComputedStyle(indicators.item(1)).width).toBe('8px');
-  expect(getComputedStyle(indicators.item(2)).width).toBe('12px');
 });
 
 test('forwards root and hidden-input refs with native form identity', async () => {

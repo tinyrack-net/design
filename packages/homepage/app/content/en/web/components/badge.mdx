@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/badge.demo.js';
 | Axis | Values | Default |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 
 ## Install
 
@@ -84,11 +84,11 @@ import { CircleCheck, Clock } from 'lucide-react';
   id="badge-sizes"
   title="Sizes"
   description="Match badge density to nearby text and controls."
-  preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="sm">Small</TRBadge><TRBadge data-docs-example-item="" uiSize="md">Medium</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">Large</TRBadge></div>}
+  preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="md">Medium</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">Large</TRBadge></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
 
 <div className="flex items-center gap-3">
-  <TRBadge uiSize="sm">Small</TRBadge><TRBadge uiSize="md">Medium</TRBadge><TRBadge uiSize="lg">Large</TRBadge>
+  <TRBadge uiSize="md">Medium</TRBadge><TRBadge uiSize="lg">Large</TRBadge>
 </div>` }]}
 />
 
@@ -99,7 +99,7 @@ import { CircleCheck, Clock } from 'lucide-react';
 | Prop | Type | Default | Purpose |
 | --- | --- | --- | --- |
 | `variant` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | Selects the status meaning and color treatment. |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Sets badge density. |
+| `uiSize` | `'md' \| 'lg'` | `'md'` | Sets badge density. |
 
 ### HTML and accessibility
 

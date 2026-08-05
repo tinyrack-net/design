@@ -541,7 +541,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
         <TRAppShell.Header className="flex h-14 items-center justify-between border-b-tinyrack-default border-tinyrack-border bg-tinyrack-surface-muted px-tinyrack-lg max-md:px-tinyrack-md">
           <div className="flex items-center gap-tinyrack-sm" data-welcome-brand="">
             <span
-              className="grid min-h-tinyrack-control-height-sm min-w-tinyrack-control-height-sm flex-none place-items-center rounded-tinyrack-md border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-selected leading-none text-tinyrack-text [&>svg]:size-tinyrack-lg"
+              className="grid min-h-tinyrack-control-height-md min-w-tinyrack-control-height-md flex-none place-items-center rounded-tinyrack-md border-tinyrack-default border-tinyrack-border bg-tinyrack-surface-selected leading-none text-tinyrack-text [&>svg]:size-tinyrack-lg"
               data-welcome-brand-icon=""
             >
               <CloudCog />
@@ -566,7 +566,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
               </TRText>
             </span>
             <Bell />
-            <span className="grid min-h-tinyrack-control-height-sm w-tinyrack-control-height-sm place-items-center rounded-tinyrack-full bg-tinyrack-primary text-tinyrack-2xs font-tinyrack-bold text-tinyrack-on-primary">
+            <span className="grid min-h-tinyrack-control-height-md w-tinyrack-control-height-md place-items-center rounded-tinyrack-full bg-tinyrack-primary text-tinyrack-2xs font-tinyrack-bold text-tinyrack-on-primary">
               WT
             </span>
           </div>
@@ -971,7 +971,7 @@ function ActivityRow({
       }`}
       data-welcome-live-activity={animated ? '' : undefined}
     >
-      <span className="grid min-h-tinyrack-control-height-sm min-w-tinyrack-control-height-sm place-items-center rounded-tinyrack-full bg-tinyrack-surface-muted [&>svg]:size-tinyrack-md">
+      <span className="grid min-h-tinyrack-control-height-md min-w-tinyrack-control-height-md place-items-center rounded-tinyrack-full bg-tinyrack-surface-muted [&>svg]:size-tinyrack-md">
         <Sparkles />
       </span>
       <div className="grid flex-1 gap-tinyrack-xs">
@@ -1044,7 +1044,7 @@ function SystemVisual({ id }: { id: 'components' | 'themes' | 'tokens' }) {
             }}
           >
             <span className="h-tinyrack-sm w-3/4 rounded-tinyrack-full bg-tinyrack-text" />
-            <span className="h-tinyrack-control-height-sm rounded-tinyrack-md bg-tinyrack-primary" />
+            <span className="h-tinyrack-control-height-md rounded-tinyrack-md bg-tinyrack-primary" />
           </div>
         ))}
       </div>

@@ -71,7 +71,7 @@ class _TRSkeletonState extends State<TRSkeleton>
       TRSkeletonShape.text => TRGeneratedTypographySizes.md,
       TRSkeletonShape.rectangle =>
         TRGeneratedMeasurements.skeletonRectangleHeight,
-      TRSkeletonShape.circle => TRGeneratedControlMetrics.lgHeight,
+      TRSkeletonShape.circle => TRGeneratedSpacing.size3xl,
     };
     final radius = switch (widget.shape) {
       TRSkeletonShape.text => TRRadii.small,
@@ -79,7 +79,7 @@ class _TRSkeletonState extends State<TRSkeleton>
       TRSkeletonShape.circle => TRRadii.full,
     };
     final width = widget.shape == TRSkeletonShape.circle
-        ? TRGeneratedControlMetrics.lgHeight
+        ? TRGeneratedSpacing.size3xl
         : widget.width ?? double.infinity;
 
     return Semantics(

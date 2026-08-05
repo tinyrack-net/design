@@ -131,7 +131,7 @@ export function TRDocsNavigation({
           >
             <span>{item.label}</span>
             {state.pending ? (
-              <TRSpinner decorative uiSize="sm" variant="primary" />
+              <TRSpinner decorative uiSize="md" variant="primary" />
             ) : null}
           </TRLink>
         );

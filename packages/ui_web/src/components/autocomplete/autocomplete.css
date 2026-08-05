@@ -69,7 +69,7 @@
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-medium);
-    padding: var(--tinyrack-space-xs) var(--tinyrack-control-padding-inline-sm);
+    padding: var(--tinyrack-space-xs) var(--tinyrack-control-padding-inline-md);
   }
 
   .tr-autocomplete-item {
@@ -79,8 +79,8 @@
     cursor: pointer;
     display: flex;
     gap: var(--tinyrack-control-gap-md);
-    min-height: var(--tinyrack-control-height-sm);
-    padding-inline: var(--tinyrack-control-padding-inline-sm);
+    min-height: var(--tinyrack-control-height-md);
+    padding-inline: var(--tinyrack-control-padding-inline-md);
   }
 
   .tr-autocomplete-item:hover {

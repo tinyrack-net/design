@@ -20,7 +20,7 @@ import * as Stories from '../../../../documentation/components/select.demo.js';
 | collection | group、label、separator、disabled item、text、indicator が menu anatomy を表します。 |
 | form | `name`、`form`、`required`、`inputRef` が native submit、validation、reset と統合されます。 |
 
-trigger が密度の高いコントロールサーフェスに属する場合は `TRSelect.Trigger uiSize="sm"` を使います。
+trigger が密度の高いコントロールサーフェスに属する場合は `TRSelect.Trigger uiSize="md"` を使います。
 
 ## インストール
 
@@ -82,10 +82,10 @@ const racks = { alpha: 'ラックアルファ', beta: 'ラックベータ', gamm
   id="select-sizes"
   title="トリガーのサイズ"
   description="ポップアップの一覧とは別にトリガーの密度を選べます。"
-  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.SelectSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
 
-{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+{(['md', 'lg'] as const).map((uiSize) => (
   <TRSelect.Root defaultValue="alpha" items={{ alpha: 'ラックアルファ' }} key={uiSize}>
     <TRSelect.Label>{uiSize.toUpperCase() + ' デプロイ先ラック'}</TRSelect.Label>
     <TRSelect.Trigger uiSize={uiSize}><TRSelect.Value /></TRSelect.Trigger>
@@ -201,7 +201,7 @@ const racks = Object.fromEntries(
 | 値 | `defaultValue` または制御された `value` を使います。`multiple` のデフォルトは `false` で、`items` は値と表示ラベルを対応付けます。 |
 | 開閉 | `defaultOpen` のデフォルトは `false` です。制御された `open` も使え、`modal` と `highlightItemOnHover` のデフォルトは `true` です。 |
 | 利用状態 | `disabled`、`readOnly`、`required` のデフォルトはすべて `false` です。 |
-| トリガー | `uiSize="sm" | "md" | "lg"` を受け取り、デフォルトは `"md"` です。 |
+| トリガー | `uiSize="md" | "md" | "lg"` を受け取り、デフォルトは `"md"` です。 |
 | 配置 | `Positioner` はトリガーの下 4 px の位置で開き、配置用 prop は受け取りません。十分な空きがない場合はトリガーの上へ切り替わります。 |
 | フォーム | `name`、`form`、`autoComplete`、`inputRef` を受け取ります。非制御 select は native reset で `defaultValue` に戻ります。 |
 

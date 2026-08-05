@@ -463,18 +463,18 @@ test('server-renders and hydrates a localized field without recovery', async () 
   host.remove();
 });
 
-test('forwards uiSize to the root and matches Input height across sm/md/lg', async () => {
+test('forwards md uiSize to the root and matches the compact Input height', async () => {
   const rootRef = createRef<HTMLDivElement>();
   await render(
-    <TRNumberField.Root ref={rootRef} uiSize="sm">
+    <TRNumberField.Root ref={rootRef} uiSize="md">
       <TRNumberField.Input aria-label="Sized count" />
     </TRNumberField.Root>,
   );
 
-  expect(rootRef.current?.getAttribute('data-ui-size')).toBe('sm');
-  const smInput = document.querySelector<HTMLInputElement>(
+  expect(rootRef.current?.getAttribute('data-ui-size')).toBe('md');
+  const mdInput = document.querySelector<HTMLInputElement>(
     '[aria-label="Sized count"]',
   );
-  const smHeight = smInput?.getBoundingClientRect().height;
-  expect(smHeight).toBe(32);
+  const mdHeight = mdInput?.getBoundingClientRect().height;
+  expect(mdHeight).toBe(32);
 });

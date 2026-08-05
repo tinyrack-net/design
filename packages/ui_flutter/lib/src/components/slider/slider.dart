@@ -12,16 +12,14 @@ typedef TRSliderLabelBuilder = String Function(double value);
 
 /// The thumb diameter for each size on the shared control scale.
 double _sliderThumbSize(TRUiSize uiSize) => switch (uiSize) {
-  TRUiSize.sm => TRGeneratedSpacing.md,
-  TRUiSize.md => TRGeneratedSpacing.lg,
-  TRUiSize.lg => TRGeneratedSpacing.xl,
+  TRUiSize.md => TRGeneratedSpacing.md,
+  TRUiSize.lg => TRGeneratedSpacing.lg,
 };
 
 /// The cross-axis extent reserved for the track and thumb at each size.
 double _sliderControlExtent(TRUiSize uiSize) => switch (uiSize) {
-  TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
-  TRUiSize.md => TRGeneratedSpacing.xl,
-  TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+  TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
+  TRUiSize.lg => TRGeneratedSpacing.xl,
 };
 
 // @tinyrack-preview slider
@@ -285,7 +283,7 @@ class _TRSliderFrame extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        spacing: TRGeneratedControlMetrics.smGap,
+        spacing: TRGeneratedControlMetrics.mdGap,
         children: [result, _error(context, errorText!)],
       );
     }
@@ -343,7 +341,7 @@ class _TRSliderFrame extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        spacing: TRGeneratedControlMetrics.smGap,
+        spacing: TRGeneratedControlMetrics.mdGap,
         children: [
           Flexible(child: track),
           _error(context, errorText!),

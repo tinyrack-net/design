@@ -110,7 +110,7 @@ export function InputSizeComparison() {
   const copy = inputCopy[useDemoLocale()];
   return (
     <div className="grid w-80 max-w-full gap-4">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <InputPreview
           disabled={false}
           key={uiSize}
@@ -256,7 +256,7 @@ const meta = {
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   localizedArgs: {
     ja: { label: 'ラック名' },

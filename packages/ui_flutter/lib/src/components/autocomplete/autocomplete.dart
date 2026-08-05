@@ -263,7 +263,7 @@ class _TRAutocompleteOptionsViewState<T extends Object>
       }
       if (!_scrollController.hasClients) return;
       final estimatedOffset =
-          index * (TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs);
+          index * (TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs);
       _scrollController.jumpTo(
         estimatedOffset.clamp(
           _scrollController.position.minScrollExtent,

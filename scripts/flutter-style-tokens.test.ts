@@ -82,12 +82,11 @@ test('the canonical token source covers Flutter component metrics', () => {
         metrics.iconSize,
       ]),
     ),
-    { sm: '1rem', md: '1rem', lg: '1.5rem' },
+    { md: '1rem', lg: '1rem' },
   );
   assert.deepEqual(tokens.spinnerMetrics, {
-    sizeSm: '1rem',
-    sizeMd: '1.25rem',
-    sizeLg: '1.75rem',
+    sizeMd: '1rem',
+    sizeLg: '1.25rem',
     strokeWidth: '0.125rem',
     trackOpacity: '24%',
   });
@@ -157,7 +156,7 @@ test('the canonical token source covers Flutter component metrics', () => {
       navigationPanelWidth: '32rem',
       toolbarHeight: '2.5rem',
       treeItemHeight: '2rem',
-      otpSlotSize: '2.5rem',
+      otpSlotSize: '2rem',
       visuallyHiddenOpacity: 0,
       numberStepWidth: '2.75rem',
       sliderTrackThickness: '0.25rem',

@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/radio.demo.js';
 | --- | --- |
 | composition | place every `TRRadio.Root` inside `TRRadioGroup` |
 | selection | give each root a unique `value`; the group owns the selected value |
-| size | `sm`, `md`, or `lg`; default `md` |
+| size | `md` or `lg`; default `md` |
 | item availability | use root `readOnly` or `disabled` only when one option differs from the group |
 
 Pair each root with a `TRField.Label` inside a `TRField.Item` for a visible, clickable option label; the item scopes its label to the radio inside it, so no `id` or `htmlFor` is needed. Every `TRField.Item` needs a `TRField.Root` ancestor, so wrap the item — or the whole group — in one `TRField.Root`.
@@ -59,7 +59,7 @@ A radio is not a standalone boolean control. Use `TRCheckbox` or `TRSwitch` when
 
 ### Match the control density
 
-<ComponentExampleTabs id="radio-sizes" title="Small, medium, and large" preview={<div data-docs-example-item-count="3"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Density" defaultValue="md">{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-sizes" title="Medium and large" preview={<div data-docs-example-item-count="2"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="Density" defaultValue="md">{(['md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
 
 ### Change one option's availability
 
@@ -76,7 +76,7 @@ A radio is not a standalone boolean control. Use `TRCheckbox` or `TRSwitch` when
 | Prop | Type / default | Purpose |
 | --- | --- | --- |
 | `value` | `unknown` | Identifies this option in its group. |
-| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | Sets the visual glyph size. |
+| `uiSize` | `'md' \| 'lg'`, `'md'` | Sets the visual glyph size. |
 | `disabled`, `readOnly` | `boolean`, inherited / `false` | Overrides availability for one option. |
 | `inputRef`, `ref` | input ref, root ref | Accesses the hidden input or visual root. |
 

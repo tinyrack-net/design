@@ -23,27 +23,24 @@ class TRBadge extends StatelessWidget {
     final colors = context.tinyrackTheme;
     final borderWidth = TRGeneratedBorders.defaultWidth;
     final vertical = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedSpacing.size3xs * 3 + borderWidth,
-      TRUiSize.md => TRGeneratedSpacing.xs + borderWidth,
-      TRUiSize.lg => TRGeneratedControlMetrics.smGap + borderWidth,
+      TRUiSize.md => TRGeneratedSpacing.size3xs * 3 + borderWidth,
+      TRUiSize.lg => TRGeneratedSpacing.xs + borderWidth,
     };
     final horizontal = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedSpacing.sm + borderWidth,
-      TRUiSize.md => TRGeneratedControlMetrics.lgGap + borderWidth,
-      TRUiSize.lg => TRGeneratedSpacing.md + borderWidth,
+      TRUiSize.md => TRGeneratedSpacing.sm + borderWidth,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgGap + borderWidth,
     };
     final fontSize = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedTypographySizes.xs,
-      TRUiSize.md => TRGeneratedTypographySizes.sm,
-      TRUiSize.lg => TRGeneratedTypographySizes.md,
+      TRUiSize.md => TRGeneratedTypographySizes.xs,
+      TRUiSize.lg => TRGeneratedTypographySizes.sm,
     };
     final locale = Localizations.localeOf(context).languageCode;
     final letterSpacing = switch ((uiSize, locale)) {
-      (TRUiSize.sm, 'en') =>
-        TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.xs,
       (TRUiSize.md, 'en') =>
+        TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.xs,
+      (TRUiSize.lg, 'en') =>
         -TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.xs,
-      (TRUiSize.md, 'ko') =>
+      (TRUiSize.lg, 'ko') =>
         -TRGeneratedBorders.defaultWidth +
             TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.md,
       _ =>

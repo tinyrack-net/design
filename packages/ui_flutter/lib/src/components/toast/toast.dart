@@ -436,7 +436,7 @@ class _TRToastCardState extends State<_TRToastCard>
                     label: MaterialLocalizations.of(context).closeButtonTooltip,
                     onPressed: widget.onDismiss,
                     appearance: TRAppearance.ghost,
-                    uiSize: TRUiSize.sm,
+                    uiSize: TRUiSize.md,
                   ),
                 ),
               ),

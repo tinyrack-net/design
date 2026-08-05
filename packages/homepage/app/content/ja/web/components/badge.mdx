@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/badge.demo.js';
 | プロパティ | 値 | 既定値 |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 
 ## インストール
 
@@ -80,9 +80,9 @@ import { CircleCheck, Clock } from 'lucide-react';
 </div>` }]}
 />
 
-<ComponentExampleTabs id="badge-sizes" title="サイズ" description="周囲のテキストやコントロールの密度に合わせます。" preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="sm">小</TRBadge><TRBadge data-docs-example-item="" uiSize="md">中</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">大</TRBadge></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
+<ComponentExampleTabs id="badge-sizes" title="サイズ" description="周囲のテキストやコントロールの密度に合わせます。" preview={<div className="flex items-center gap-3"><TRBadge data-docs-example-item="" uiSize="md">中</TRBadge><TRBadge data-docs-example-item="" uiSize="lg">大</TRBadge></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRBadge } from '@tinyrack/ui/components/badge';
 
-<div className="flex items-center gap-3"><TRBadge uiSize="sm">小</TRBadge><TRBadge uiSize="md">中</TRBadge><TRBadge uiSize="lg">大</TRBadge></div>` }]} />
+<div className="flex items-center gap-3"><TRBadge uiSize="md">中</TRBadge><TRBadge uiSize="lg">大</TRBadge></div>` }]} />
 
 ## API
 
@@ -91,7 +91,7 @@ import { CircleCheck, Clock } from 'lucide-react';
 | プロパティ | 型 | 既定値 | 用途 |
 | --- | --- | --- | --- |
 | `variant` | `'neutral' \| 'info' \| 'success' \| 'warning' \| 'danger'` | `'neutral'` | ステータスの意味と色の表現を選びます。 |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | バッジの密度を設定します。 |
+| `uiSize` | `'md' \| 'lg'` | `'md'` | バッジの密度を設定します。 |
 
 ### HTML とアクセシビリティ
 

@@ -62,7 +62,7 @@ import { TRLinkButton } from '@tinyrack/ui/components/link-button';
 
 export function LinkButtonSizes() {
   return <div className="flex flex-wrap items-center gap-3">
-    <TRLinkButton href="#destination" intent="primary" uiSize="sm">Small</TRLinkButton>
+    <TRLinkButton href="#destination" intent="primary" uiSize="md">Small</TRLinkButton>
     <TRLinkButton href="#destination" intent="primary" uiSize="md">Medium</TRLinkButton>
     <TRLinkButton href="#destination" intent="primary" uiSize="lg">Large</TRLinkButton>
   </div>;
@@ -98,7 +98,7 @@ const meta = {
       control: 'select',
       options: ['neutral', 'primary', 'info', 'success', 'warning', 'danger'],
     },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   render: (args) => (
     <TRLinkButton {...args} href="#link-button-playground">

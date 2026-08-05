@@ -16,7 +16,7 @@ test('reuses TRButton variants while exposing an icon-only accessible name', asy
       aria-label="Open navigation"
       onClick={onClick}
       ref={ref}
-      uiSize="sm"
+      uiSize="md"
       variant="primary"
     >
       <svg aria-hidden="true" />
@@ -92,10 +92,10 @@ test('keeps a large icon square without shrinking it inside the touch target', a
   const button = document.querySelector<HTMLButtonElement>('.tr-icon-btn');
   const icon = button?.querySelector('svg');
 
-  expect(button?.getBoundingClientRect().width).toBe(48);
-  expect(button?.getBoundingClientRect().height).toBe(48);
-  expect(icon?.getBoundingClientRect().width).toBe(24);
-  expect(icon?.getBoundingClientRect().height).toBe(24);
+  expect(button?.getBoundingClientRect().width).toBe(40);
+  expect(button?.getBoundingClientRect().height).toBe(40);
+  expect(icon?.getBoundingClientRect().width).toBe(16);
+  expect(icon?.getBoundingClientRect().height).toBe(16);
   if (icon === null || icon === undefined)
     throw new Error('Missing TRIconButton icon.');
   expect(getComputedStyle(icon).flexShrink).toBe('0');

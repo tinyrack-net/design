@@ -16,7 +16,7 @@ import * as Stories from '../../../../documentation/components/progress.demo.js'
 | Axis | Values | Default |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | parts | `Root`, `Label`, `Track`, `Indicator`, `Value` | compound API |
 
 ## Install
@@ -55,12 +55,12 @@ import * as Stories from '../../../../documentation/components/progress.demo.js'
   description="Choose a track thickness that fits the surrounding layout. Size does not communicate task importance."
   previewLayout="stretch"
   preview={(
-    <div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="sm" value={68}><TRProgress.Label>Small</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>Medium</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>Large</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>
+    <div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>Medium</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>Large</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 <div className="grid gap-4">
-  {(['sm', 'md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}
+  {(['md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}
 </div>` ,
       styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
     },
@@ -162,7 +162,7 @@ Base UI supplies value semantics. Pass `null` for indeterminate progress so `ari
 | `format` | `Intl.NumberFormatOptions` | — | Formats `Value` and the default accessible value text |
 | `locale` | `Intl.LocalesArgument` | runtime locale | Locale used by `Intl.NumberFormat` |
 | `getAriaValueText` | `(formattedValue, value) => string` | built in | Customizes `aria-valuetext` |
-| `uiSize` | `sm \| md \| lg` | `md` | Track thickness |
+| `uiSize` | `md \| lg` | `md` | Track thickness |
 | `variant` | `neutral \| info \| success \| warning \| danger` | `neutral` | Semantic fill color |
 | `render` | Base UI render prop | `<div>` | Replaces the native root while preserving behavior |
 

@@ -58,17 +58,17 @@ class TRMenubarMenu extends StatelessWidget {
         return Colors.transparent;
       }),
       fixedSize: const WidgetStatePropertyAll(
-        Size.fromHeight(TRGeneratedControlMetrics.smHeight),
+        Size.fromHeight(TRGeneratedControlMetrics.mdHeight),
       ),
       minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.smHeight),
+        Size(0, TRGeneratedControlMetrics.mdHeight),
       ),
       maximumSize: const WidgetStatePropertyAll(
-        Size(double.infinity, TRGeneratedControlMetrics.smHeight),
+        Size(double.infinity, TRGeneratedControlMetrics.mdHeight),
       ),
       padding: const WidgetStatePropertyAll(
         EdgeInsets.symmetric(
-          horizontal: TRGeneratedControlMetrics.smPaddingInline,
+          horizontal: TRGeneratedControlMetrics.mdPaddingInline,
         ),
       ),
       shape: WidgetStatePropertyAll(
@@ -104,7 +104,7 @@ class TRMenubar extends StatelessWidget {
       container: true,
       label: semanticLabel,
       child: SizedBox(
-        height: TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs * 2,
+        height: TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs * 2,
         child: MenuBar(
           style: MenuStyle(
             backgroundColor: WidgetStatePropertyAll(colors.surface),

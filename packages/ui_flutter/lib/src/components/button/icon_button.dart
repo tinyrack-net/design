@@ -26,12 +26,10 @@ class TRIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final iconSize = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdIconSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgIconSize,
     };

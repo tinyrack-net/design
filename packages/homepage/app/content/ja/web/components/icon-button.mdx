@@ -21,7 +21,7 @@ import * as Stories from '../../../../documentation/components/icon-button.demo.
 | --- | --- | --- | --- |
 | `variant` | `secondary`, `primary`, `danger` | `secondary` | アクションの意図を伝えます。 |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | 意図を変えずに強調度を変更します。 |
-| `uiSize` | `sm`, `md`, `lg` | `md` | 正方形のターゲットとアイコンサイズを設定します。 |
+| `uiSize` | `md`, `lg` | `md` | 正方形のターゲットとアイコンサイズを設定します。 |
 | 状態 | `disabled`, `loading` | 操作可能 | ネイティブの disabled 動作を使用し、loading は `aria-busy` とスピナーを追加します。 |
 
 ## インストール
@@ -63,7 +63,7 @@ import * as Stories from '../../../../documentation/components/icon-button.demo.
 
 <ComponentExampleTabs id="icon-button-variants" title="アクションの意図" description="主要な操作には primary、破壊的な操作にのみ danger を使用してください。secondary は中立的なデフォルトです。" preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="補助アクション" variant="secondary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="主要アクション" variant="primary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="危険なアクション" variant="danger"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonVariantsSource }]} />
 
-<ComponentExampleTabs id="icon-button-sizes" title="サイズ" description="隣接するコントロールにアイコンボタンのサイズを合わせ、入力方法に十分な操作領域を確保してください。" preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="小さい設定" uiSize="sm"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="中サイズの設定" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="大きい設定" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]} />
+<ComponentExampleTabs id="icon-button-sizes" title="サイズ" description="隣接するコントロールにアイコンボタンのサイズを合わせ、入力方法に十分な操作領域を確保してください。" preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="中サイズの設定" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="大きい設定" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]} />
 
 ## API
 

@@ -56,10 +56,10 @@ class TRTable extends StatelessWidget {
     };
     final rowHeight = switch (density) {
       TRTableDensity.compact =>
-        TRGeneratedControlMetrics.smHeight -
+        TRGeneratedControlMetrics.mdHeight -
             TRGeneratedBorders.defaultWidth * 2,
-      TRTableDensity.comfortable => TRGeneratedControlMetrics.mdHeight,
-      TRTableDensity.spacious => TRGeneratedControlMetrics.lgHeight,
+      TRTableDensity.comfortable => TRGeneratedControlMetrics.lgHeight,
+      TRTableDensity.spacious => TRGeneratedSpacing.size3xl,
     };
     final horizontalMargin = switch (density) {
       TRTableDensity.compact => TRGeneratedSpacing.md,
@@ -96,7 +96,7 @@ class TRTable extends StatelessWidget {
       dataRowMinHeight: rowHeight,
       dataRowMaxHeight: double.infinity,
       headingRowHeight:
-          TRGeneratedControlMetrics.mdHeight -
+          TRGeneratedControlMetrics.lgHeight -
           TRGeneratedBorders.strongWidth +
           vertical * 2 +
           headingCorrection,

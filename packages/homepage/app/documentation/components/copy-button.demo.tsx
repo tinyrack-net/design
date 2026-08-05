@@ -50,7 +50,7 @@ type StoryArgs = {
   idleLabel: string;
   loading: boolean;
   resetDelay: number;
-  uiSize: 'sm' | 'md' | 'lg';
+  uiSize: 'md' | 'lg';
   unavailableLabel: string;
   value: string;
   variant: 'secondary' | 'primary' | 'danger';
@@ -97,7 +97,7 @@ export function CopyButtonCombinationPreview() {
         copiedLabel={labels.copied}
         idleLabel={labels.idle}
         resetDelay={750}
-        uiSize="sm"
+        uiSize="md"
         value="solid-primary"
         variant="primary"
       />
@@ -146,7 +146,7 @@ const meta = {
     idleLabel: { control: 'text' },
     loading: { control: 'boolean' },
     resetDelay: { control: { type: 'range', min: 500, max: 5000, step: 250 } },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
     unavailableLabel: { control: 'text' },
     variant: { control: 'select', options: ['secondary', 'primary', 'danger'] },
   },

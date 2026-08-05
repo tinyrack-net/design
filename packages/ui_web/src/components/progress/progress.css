@@ -1,7 +1,7 @@
 @layer components {
   .tr-progress {
     --_tr-progress-fill: var(--tinyrack-text-muted);
-    --_tr-progress-height: var(--tinyrack-space-sm);
+    --_tr-progress-height: var(--tinyrack-space-xs);
     --_tr-progress-duration: var(--tinyrack-duration-normal);
     --_tr-progress-easing: var(--tinyrack-ease-out);
     --_tr-progress-indeterminate-duration: var(--tinyrack-duration-loading);
@@ -15,12 +15,8 @@
     width: 100%;
   }
 
-  .tr-progress[data-ui-size="sm"] {
-    --_tr-progress-height: var(--tinyrack-space-xs);
-  }
-
   .tr-progress[data-ui-size="lg"] {
-    --_tr-progress-height: var(--tinyrack-space-md);
+    --_tr-progress-height: var(--tinyrack-space-sm);
   }
 
   .tr-progress[data-variant="info"] {

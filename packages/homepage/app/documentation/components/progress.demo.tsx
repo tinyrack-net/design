@@ -43,7 +43,7 @@ const meta = {
     label: { control: 'text' },
     max: { control: 'number' },
     min: { control: 'number' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
     value: {
       control: { type: 'range', min: 0, max: 100, step: 1 },
       when: (args) => args['indeterminate'] !== true,

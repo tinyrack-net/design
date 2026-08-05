@@ -36,7 +36,7 @@ test('preserves defaults, native props, events, refs, and consumer tokens', asyn
 
 test('maps every documented size and status variant to stable data attributes', async () => {
   const themes = ['tinyrack-light', 'tinyrack-dark'] as const;
-  const sizes = ['sm', 'md', 'lg'] as const;
+  const sizes = ['md', 'lg'] as const;
   const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
   const badges = themes.flatMap((theme) =>
     sizes.flatMap((size) =>
@@ -89,12 +89,9 @@ test('maps every documented size and status variant to stable data attributes', 
 
   for (const theme of themes) {
     for (const variant of variants) {
-      const small = dimensions.get(`${theme}-sm-${variant}`);
       const medium = dimensions.get(`${theme}-md-${variant}`);
       const large = dimensions.get(`${theme}-lg-${variant}`);
-      expect(small?.fontSize).toBeLessThan(medium?.fontSize ?? 0);
       expect(medium?.fontSize).toBeLessThan(large?.fontSize ?? 0);
-      expect(small?.height).toBeLessThan(medium?.height ?? 0);
       expect(medium?.height).toBeLessThan(large?.height ?? 0);
     }
   }

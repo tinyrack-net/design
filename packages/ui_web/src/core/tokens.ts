@@ -21,7 +21,7 @@ export const tinyrackBreakpoints = {
 } as const;
 
 export const tinyrackControlMetrics = {
-  "sm": {
+  "md": {
     "height": "2rem",
     "paddingInline": "0.75rem",
     "gap": "0.375rem",
@@ -29,21 +29,13 @@ export const tinyrackControlMetrics = {
     "lineHeight": "1.25rem",
     "iconSize": "1rem"
   },
-  "md": {
+  "lg": {
     "height": "2.5rem",
     "paddingInline": "1rem",
     "gap": "0.5rem",
     "fontSize": "sm",
     "lineHeight": "1.25rem",
     "iconSize": "1rem"
-  },
-  "lg": {
-    "height": "3rem",
-    "paddingInline": "1.25rem",
-    "gap": "0.625rem",
-    "fontSize": "md",
-    "lineHeight": "1.5rem",
-    "iconSize": "1.5rem"
   }
 } as const;
 
@@ -327,9 +319,8 @@ export const tinyrackSpacing = {
 } as const;
 
 export const tinyrackSpinnerMetrics = {
-  "sizeSm": "1rem",
-  "sizeMd": "1.25rem",
-  "sizeLg": "1.75rem",
+  "sizeMd": "1rem",
+  "sizeLg": "1.25rem",
   "strokeWidth": "0.125rem",
   "trackOpacity": "24%"
 } as const;

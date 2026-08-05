@@ -147,7 +147,7 @@ const meta = {
     taskState: { control: 'select', options: ['idle', 'running', 'complete'] },
     uiSize: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
+      options: ['md', 'lg'],
       when: (args) => args['taskState'] === 'running',
     },
     variant: {

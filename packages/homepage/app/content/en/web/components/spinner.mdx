@@ -18,7 +18,7 @@ import * as Stories from '../../../../documentation/components/spinner.demo.js';
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | `variant` | `current`, `muted`, `primary`, `danger` | `current` |
 | `label` | accessible status text | `Loading` |
 | `decorative` | `true`, `false` | `false` |
@@ -48,11 +48,11 @@ import * as Stories from '../../../../documentation/components/spinner.demo.js';
   id="spinner-size-variant-matrix"
   title="Sizes"
   description="Match the spinner size to nearby text or controls."
-  preview={<div className="flex flex-wrap items-end gap-5"><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="sm" /><span>Small</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="md" /><span>Medium</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="lg" /><span>Large</span></span></div>}
+  preview={<div className="flex flex-wrap items-end gap-5"><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="md" /><span>Medium</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="lg" /><span>Large</span></span></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function SpinnerSizes() {
-  return <div className="flex items-end gap-5">{(['sm', 'md', 'lg']).map((uiSize) => <TRSpinner decorative key={uiSize} uiSize={uiSize} />)}</div>;
+  return <div className="flex items-end gap-5">{(['md', 'lg']).map((uiSize) => <TRSpinner decorative key={uiSize} uiSize={uiSize} />)}</div>;
 }` ,
       styles: { code: "@import '@tinyrack/ui/components/spinner.css';" },
     },
@@ -81,7 +81,7 @@ export function SpinnerVariants() {
   preview={(
     <div className="flex flex-wrap items-center gap-4">
       <TRSpinner data-docs-example-item="" label="Loading server inventory" variant="primary" />
-      <TRButton data-docs-example-item="" aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />Refreshing inventory</TRButton>
+      <TRButton data-docs-example-item="" aria-busy="true" disabled><TRSpinner decorative uiSize="md" />Refreshing inventory</TRButton>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
@@ -89,7 +89,7 @@ import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 <div className="flex flex-wrap items-center gap-4">
   <TRSpinner label="Loading server inventory" variant="primary" />
-  <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />Refreshing inventory</TRButton>
+  <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="md" />Refreshing inventory</TRButton>
 </div>` }]}
 />
 
@@ -134,7 +134,7 @@ By default TRSpinner exposes `role="status"`; use a non-empty, task-specific `la
 | `--tr-spinner-size` | size recipe | Indicator diameter |
 | `--tr-spinner-stroke-width` | `--tinyrack-spinner-stroke-width` | Ring thickness |
 | `--tr-spinner-color` | semantic variant color | Active and track color |
-| `--tinyrack-spinner-size-sm` | foundation metric | Small diameter |
+| `--tinyrack-spinner-size-md` | foundation metric | Small diameter |
 | `--tinyrack-spinner-size-md` | foundation metric | Medium diameter |
 | `--tinyrack-spinner-size-lg` | foundation metric | Large diameter |
 | `--tinyrack-spinner-track-opacity` | foundation metric | Inactive ring opacity |

@@ -21,10 +21,6 @@
       var(--tinyrack-ease-linear) infinite;
   }
 
-  .tr-spinner[data-ui-size="sm"] {
-    --_tr-spinner-size: var(--tinyrack-spinner-size-sm);
-  }
-
   .tr-spinner[data-ui-size="md"] {
     --_tr-spinner-size: var(--tinyrack-spinner-size-md);
   }

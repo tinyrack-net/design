@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/checkbox.demo.js'
 | --- | --- |
 | selection | unchecked, checked, or `indeterminate` for a partially selected set |
 | availability | enabled, `readOnly` when focus and form value must remain, or `disabled` when unavailable |
-| size | `sm`, `md`, or `lg`; default `md` |
+| size | `md` or `lg`; default `md` |
 | form | `name`, `value`, `uncheckedValue`, `form`, `required`, and native reset |
 
 Give every checkbox a visible label or accessible name. Wrap the control and a `TRField.Label` in a `TRField.Item` to get a clickable visible label; the item scopes the label to the control inside it, so no `id` or `htmlFor` wiring is needed. Every `TRField.Item` needs a `TRField.Root` ancestor, so wrap the item — or the whole group — in one `TRField.Root`. Use a checkbox for an independent or batched choice; use `TRCheckboxGroup` to coordinate several checkbox values.
@@ -69,7 +69,7 @@ export function BackupChoice() {
 
 ### Match the control density
 
-<ComponentExampleTabs id="checkbox-sizes" title="Small, medium, and large" preview={<div data-docs-example-item-count="3"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
+<ComponentExampleTabs id="checkbox-sizes" title="Medium and large" preview={<div data-docs-example-item-count="2"><Stories.CheckboxSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['md', 'lg'] as const).map((uiSize) => <TRCheckbox.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} />)}` }]} />
 
 ### Keep or remove interaction
 
@@ -97,7 +97,7 @@ export function BackupChoice() {
 | `indeterminate` | `boolean`, `false` | Exposes the mixed state; clear it when a user resolves the choice. |
 | `onCheckedChange` | `(checked, details) => void` | Reports an attempted change. |
 | `disabled`, `readOnly` | `boolean`, `false` | Removes interaction, or keeps a focusable immutable value. |
-| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | Sets the visual control size. |
+| `uiSize` | `'md' \| 'lg'`, `'md'` | Sets the visual control size. |
 
 ### Forms and composition
 

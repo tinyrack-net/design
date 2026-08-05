@@ -128,7 +128,7 @@ export const tabsSizesSource = `import { TRTabs } from '@tinyrack/ui/components/
 export function TabsSizes() {
   return (
     <div className="grid gap-5">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <TRTabs.Root defaultValue="overview" key={uiSize} uiSize={uiSize}>
           <TRTabs.List aria-label={'Service tabs, size ' + uiSize}>
             <TRTabs.Tab value="overview">Overview</TRTabs.Tab>
@@ -193,7 +193,7 @@ const meta = {
   argTypes: {
     disabledTab: { control: 'boolean' },
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   render: (args) => <TabsPreview {...args} />,
 } satisfies Meta<TabsStoryArgs>;

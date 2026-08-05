@@ -17,7 +17,7 @@
 
   .tr-table {
     --_tr-table-cell-padding-x: var(--tinyrack-space-lg);
-    --_tr-table-cell-padding-y: var(--tinyrack-control-gap-lg);
+    --_tr-table-cell-padding-y: var(--tinyrack-space-lg);
     --_tr-table-cell-line-height: calc(
       var(--tinyrack-control-line-height-md) +
       var(--tinyrack-space-3xs) *
@@ -45,13 +45,13 @@
 
   .tr-table[data-density="compact"] {
     --_tr-table-cell-padding-x: var(--tinyrack-space-md);
-    --_tr-table-cell-padding-y: var(--tinyrack-control-gap-sm);
+    --_tr-table-cell-padding-y: var(--tinyrack-control-gap-md);
     --_tr-table-cell-line-height: var(--tinyrack-control-line-height-md);
   }
 
   .tr-table[data-density="comfortable"] {
     --_tr-table-cell-padding-x: var(--tinyrack-space-lg);
-    --_tr-table-cell-padding-y: var(--tinyrack-control-gap-lg);
+    --_tr-table-cell-padding-y: var(--tinyrack-space-lg);
     --_tr-table-cell-line-height: calc(
       var(--tinyrack-control-line-height-md) +
       var(--tinyrack-space-3xs) *
@@ -60,12 +60,12 @@
   }
 
   .tr-table[data-density="spacious"] {
-    --_tr-table-cell-padding-x: var(--tinyrack-control-padding-inline-lg);
+    --_tr-table-cell-padding-x: var(--tinyrack-space-xl);
     --_tr-table-cell-padding-y: calc(
       var(--tinyrack-space-sm) +
-      var(--tinyrack-control-gap-sm)
+      var(--tinyrack-control-gap-md)
     );
-    --_tr-table-cell-line-height: var(--tinyrack-control-line-height-lg);
+    --_tr-table-cell-line-height: var(--tinyrack-space-xl);
   }
 
   .tr-table thead {

@@ -17,7 +17,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
 | --- | --- | --- | --- |
 | `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | Communicates the purpose or outcome of the destination. |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | Changes visual emphasis without changing intent. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | Matches the size of surrounding controls. |
+| `uiSize` | `md`, `lg` | `md` | Matches the size of surrounding controls. |
 | `disabled` | `boolean` | `false` | Removes the destination and blocks navigation. |
 
 ## Install
@@ -106,7 +106,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
   description="Choose a size that matches nearby controls, not the importance of the destination."
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="sm">Small</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Small</TRLinkButton>
       <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Medium</TRLinkButton>
       <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="lg">Large</TRLinkButton>
     </div>
@@ -136,7 +136,7 @@ Use `TRLinkButton` for navigation that looks like a button, and [`TRButton`](/en
 | --- | --- | --- |
 | `intent` | `neutral \| primary \| info \| success \| warning \| danger` / `neutral` | Selects the semantic meaning and color role. |
 | `appearance` | `solid \| outline \| ghost` / `solid` | Selects visual emphasis without changing the intent. |
-| `uiSize` | `sm \| md \| lg` / `md` | Selects the control size. |
+| `uiSize` | `md \| lg` / `md` | Selects the control size. |
 | `disabled` | `boolean` / `false` | Removes the destination and blocks navigation. |
 | `href` | native anchor `href` | Sets the destination; omitted while disabled. |
 | `render` | Base UI render element or callback | Composes React Router or another link component without nested anchors. |

@@ -16,7 +16,7 @@ import * as Stories from '../../../../documentation/components/progress.demo.js'
 | プロパティ | 値 | 既定値 |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | parts | `Root`, `Label`, `Track`, `Indicator`, `Value` | compound API |
 
 ## インストール
@@ -54,11 +54,11 @@ import * as Stories from '../../../../documentation/components/progress.demo.js'
   title="サイズ"
   description="周囲のレイアウトに合うトラックの太さを選んでください。サイズはタスクの重要度を表しません。"
   previewLayout="stretch"
-  preview={<div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="sm" value={68}><TRProgress.Label>小</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>大</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>}
+  preview={<div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>中</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>大</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 export function ProgressSizes() {
-  return <div className="grid gap-4">{(['sm', 'md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>;
+  return <div className="grid gap-4">{(['md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>;
 }` ,
       styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
     },
@@ -159,7 +159,7 @@ Base UI が値のセマンティクスを提供します。不確定プログレ
 | `format` | `Intl.NumberFormatOptions` | — | `Value` と既定のアクセシブルな値テキストを整形 |
 | `locale` | `Intl.LocalesArgument` | 実行時ロケール | `Intl.NumberFormat` のロケール |
 | `getAriaValueText` | `(formattedValue, value) => string` | 組み込み | `aria-valuetext` をカスタマイズ |
-| `uiSize` | `sm \| md \| lg` | `md` | トラックの太さ |
+| `uiSize` | `md \| lg` | `md` | トラックの太さ |
 | `variant` | `neutral \| info \| success \| warning \| danger` | `neutral` | 意味に応じた塗りの色 |
 | `render` | Base UI render prop | `<div>` | 動作を維持しながらルート要素を置換 |
 

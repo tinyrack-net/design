@@ -71,7 +71,6 @@ type DesignTokens = {
   spinnerMetrics: {
     sizeLg: string;
     sizeMd: string;
-    sizeSm: string;
     strokeWidth: string;
     trackOpacity: string;
   };
@@ -326,9 +325,14 @@ function cssOutput() {
 
   rootDeclarations.push(
     ...declarations(tokens.measurements, ''),
-    `  --tinyrack-spinner-size-sm: ${tokens.spinnerMetrics.sizeSm};`,
-    `  --tinyrack-spinner-size-md: ${tokens.spinnerMetrics.sizeMd};`,
-    `  --tinyrack-spinner-size-lg: ${tokens.spinnerMetrics.sizeLg};`,
+    ...declarations(
+      Object.fromEntries(
+        Object.entries(tokens.spinnerMetrics)
+          .filter(([key]) => key.startsWith('size'))
+          .map(([key, value]) => [key.slice(4), value]),
+      ),
+      'spinner-size-',
+    ),
     `  --tinyrack-spinner-stroke-width: ${tokens.spinnerMetrics.strokeWidth};`,
     `  --tinyrack-spinner-track-opacity: ${tokens.spinnerMetrics.trackOpacity};`,
   );
@@ -524,7 +528,6 @@ function dartOutput() {
     dartConstClass(
       'TRGeneratedSpinnerMetrics',
       {
-        sizeSm: tokens.spinnerMetrics.sizeSm,
         sizeMd: tokens.spinnerMetrics.sizeMd,
         sizeLg: tokens.spinnerMetrics.sizeLg,
         strokeWidth: tokens.spinnerMetrics.strokeWidth,

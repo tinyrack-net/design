@@ -152,7 +152,7 @@ export const componentDocsManifest = [
       exampleGroup('badge-basic', 'usage', 'basic', 1),
       exampleGroup('badge-icon-and-long-label', 'examples', 'recipe', 2),
       exampleGroup('badge-size-variant-matrix', 'examples', 'series', 5),
-      exampleGroup('badge-sizes', 'examples', 'series', 3),
+      exampleGroup('badge-sizes', 'examples', 'series', 2),
     ],
     requiredExamples: [
       'badge-basic',
@@ -264,7 +264,7 @@ export const componentDocsManifest = [
     ],
     exampleGroups: [
       exampleGroup('combobox-basic', 'usage', 'basic', 1),
-      exampleGroup('combobox-sizes', 'examples', 'series', 3),
+      exampleGroup('combobox-sizes', 'examples', 'series', 2),
       exampleGroup('combobox-option-states', 'examples', 'series', 3),
       exampleGroup('combobox-filter-modes', 'examples', 'series', 3),
       exampleGroup('combobox-multiple-anatomy', 'examples', 'recipe', 1),
@@ -349,7 +349,7 @@ export const componentDocsManifest = [
     controls: ['disabled', 'invalid', 'label', 'readOnly', 'required', 'size'],
     exampleGroups: [
       exampleGroup('field-basic', 'usage', 'basic', 1),
-      exampleGroup('field-sizes', 'examples', 'series', 3),
+      exampleGroup('field-sizes', 'examples', 'series', 2),
       exampleGroup('field-field-states', 'examples', 'series', 3),
       exampleGroup('field-validation', 'examples', 'recipe', 1),
       exampleGroup('field-item-validity', 'examples', 'recipe', 1),
@@ -460,7 +460,7 @@ export const componentDocsManifest = [
     controls: ['disabled', 'length', 'readOnly', 'uiSize'],
     exampleGroups: [
       exampleGroup('otp-field-basic', 'usage', 'basic', 1),
-      exampleGroup('otp-field-sizes', 'examples', 'series', 3),
+      exampleGroup('otp-field-sizes', 'examples', 'series', 2),
       exampleGroup('otp-field-length-states', 'examples', 'series'),
       exampleGroup('otp-field-validation', 'examples', 'recipe'),
       exampleGroup('otp-field-input-flow', 'examples', 'recipe'),
@@ -523,7 +523,7 @@ export const componentDocsManifest = [
     ],
     exampleGroups: [
       exampleGroup('progress-basic', 'usage', 'basic', 1),
-      exampleGroup('progress-size-variant-matrix', 'examples', 'series', 3),
+      exampleGroup('progress-size-variant-matrix', 'examples', 'series', 2),
       exampleGroup('progress-variants', 'examples', 'series', 5),
       exampleGroup('progress-values', 'examples', 'series', 4),
       exampleGroup('progress-custom-range', 'examples', 'recipe', 1),
@@ -563,7 +563,7 @@ export const componentDocsManifest = [
     controls: ['decorative', 'label', 'taskState', 'uiSize', 'variant'],
     exampleGroups: [
       exampleGroup('spinner-basic', 'usage', 'basic', 1),
-      exampleGroup('spinner-size-variant-matrix', 'examples', 'series', 3),
+      exampleGroup('spinner-size-variant-matrix', 'examples', 'series', 2),
       exampleGroup('spinner-variants', 'examples', 'series', 4),
       exampleGroup('spinner-status-ownership', 'examples', 'recipe', 2),
       exampleGroup('spinner-task-lifecycle', 'examples', 'recipe', 1),
@@ -605,7 +605,7 @@ export const componentDocsManifest = [
     controls: ['disabledTab', 'orientation', 'uiSize'],
     exampleGroups: [
       exampleGroup('tabs-basic', 'usage', 'basic', 1),
-      exampleGroup('tabs-sizes', 'examples', 'series', 3),
+      exampleGroup('tabs-sizes', 'examples', 'series', 2),
       exampleGroup('tabs-vertical', 'examples', 'recipe', 1),
       exampleGroup('tabs-overflow-indicator', 'examples', 'recipe', 1),
     ],
@@ -708,7 +708,7 @@ export const componentDocsManifest = [
     ],
     exampleGroups: [
       exampleGroup('autocomplete-basic', 'usage', 'basic', 1),
-      exampleGroup('autocomplete-sizes', 'examples', 'series', 3),
+      exampleGroup('autocomplete-sizes', 'examples', 'series', 2),
       exampleGroup('autocomplete-states', 'examples', 'series', 3),
       exampleGroup('autocomplete-modes', 'examples', 'series', 4),
       exampleGroup('autocomplete-option-states', 'examples', 'series', 3),
@@ -740,7 +740,7 @@ export const componentDocsManifest = [
     exampleGroups: [
       exampleGroup('checkbox-basic', 'usage', 'basic', 1),
       exampleGroup('checkbox-states', 'examples', 'series', 3),
-      exampleGroup('checkbox-sizes', 'examples', 'series', 3),
+      exampleGroup('checkbox-sizes', 'examples', 'series', 2),
       exampleGroup('checkbox-availability', 'examples', 'series', 3),
       exampleGroup('checkbox-validation', 'examples', 'recipe', 1),
       exampleGroup('checkbox-form-values', 'examples', 'recipe', 1),
@@ -861,7 +861,7 @@ export const componentDocsManifest = [
     controls: ['placeholder', 'disabled', 'label', 'readOnly', 'required', 'uiSize'],
     exampleGroups: [
       exampleGroup('input-basic', 'usage', 'basic', 1),
-      exampleGroup('input-sizes', 'examples', 'series'),
+      exampleGroup('input-sizes', 'examples', 'series', 2),
       exampleGroup('input-states', 'examples', 'series'),
       exampleGroup('input-group', 'examples', 'recipe', 1),
       exampleGroup('input-validation', 'examples', 'recipe'),
@@ -885,7 +885,7 @@ export const componentDocsManifest = [
       exampleGroup('icon-button-states', 'examples', 'series', 3),
       exampleGroup('icon-button-matrix', 'examples', 'series', 3),
       exampleGroup('icon-button-variants', 'examples', 'series', 3),
-      exampleGroup('icon-button-sizes', 'examples', 'series', 3),
+      exampleGroup('icon-button-sizes', 'examples', 'series', 2),
     ],
     requiredExamples: [
       'icon-button-basic',
@@ -962,7 +962,7 @@ export const componentDocsManifest = [
     controls: ['label', 'disabled', 'max', 'min', 'readOnly', 'step', 'uiSize'],
     exampleGroups: [
       exampleGroup('number-field-basic', 'usage', 'basic', 1),
-      exampleGroup('number-field-sizes', 'examples', 'series', 3),
+      exampleGroup('number-field-sizes', 'examples', 'series', 2),
       exampleGroup('number-field-states', 'examples', 'series'),
       exampleGroup('number-field-validation', 'examples', 'recipe'),
       exampleGroup('number-field-format', 'examples', 'recipe'),
@@ -1009,7 +1009,7 @@ export const componentDocsManifest = [
     exampleGroups: [
       exampleGroup('radio-basic', 'usage', 'basic', 1),
       exampleGroup('radio-states', 'examples', 'recipe', 2),
-      exampleGroup('radio-sizes', 'examples', 'series', 3),
+      exampleGroup('radio-sizes', 'examples', 'series', 2),
       exampleGroup('radio-availability', 'examples', 'series', 3),
     ],
     requiredExamples: [
@@ -1067,7 +1067,7 @@ export const componentDocsManifest = [
     controls: ['disabled', 'disabledItem', 'readOnly', 'uiSize'],
     exampleGroups: [
       exampleGroup('select-basic', 'usage', 'basic', 1),
-      exampleGroup('select-sizes', 'examples', 'series', 3),
+      exampleGroup('select-sizes', 'examples', 'series', 2),
       exampleGroup('select-states', 'examples', 'series', 3),
       exampleGroup('select-validation', 'examples', 'recipe', 1),
       exampleGroup('select-long-collection', 'examples', 'recipe', 1),
@@ -1088,7 +1088,7 @@ export const componentDocsManifest = [
     controls: ['label', 'disabled', 'orientation', 'uiSize'],
     exampleGroups: [
       exampleGroup('slider-basic', 'usage', 'basic', 1),
-      exampleGroup('slider-sizes', 'examples', 'series', 3),
+      exampleGroup('slider-sizes', 'examples', 'series', 2),
       exampleGroup('slider-states', 'examples', 'recipe', 2),
       exampleGroup('slider-disabled', 'examples', 'recipe', 1),
       exampleGroup('slider-range', 'examples', 'recipe', 1),
@@ -1174,7 +1174,7 @@ export const componentDocsManifest = [
     exampleGroups: [
       exampleGroup('textarea-basic', 'usage', 'basic', 1),
       exampleGroup('textarea-states', 'examples', 'series'),
-      exampleGroup('textarea-sizes', 'examples', 'series'),
+      exampleGroup('textarea-sizes', 'examples', 'series', 2),
       exampleGroup('textarea-form', 'examples', 'recipe'),
       exampleGroup('textarea-validation', 'examples', 'recipe'),
     ],

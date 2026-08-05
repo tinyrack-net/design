@@ -224,9 +224,8 @@ describe('tinyrack design tokens', () => {
       'control-width-md': '20rem',
     });
     expect(tinyrackSpinnerMetrics).toEqual({
-      sizeSm: '1rem',
-      sizeMd: '1.25rem',
-      sizeLg: '1.75rem',
+      sizeMd: '1rem',
+      sizeLg: '1.25rem',
       strokeWidth: '0.125rem',
       trackOpacity: '24%',
     });
@@ -252,10 +251,10 @@ describe('tinyrack design tokens', () => {
     // dim the page it blocks.
     expect(tinyrackLayers.chrome).toBeLessThan(tinyrackLayers.backdrop);
     expect(tinyrackControlMetrics).toMatchObject({
-      sm: { height: '2rem', paddingInline: '0.75rem' },
-      md: { height: '2.5rem', paddingInline: '1rem' },
-      lg: { height: '3rem', paddingInline: '1.25rem' },
+      md: { height: '2rem', paddingInline: '0.75rem' },
+      lg: { height: '2.5rem', paddingInline: '1rem' },
     });
+    expect(tinyrackControlMetrics).not.toHaveProperty('sm');
   });
 
   it('keeps IBM Plex for prose and IBM Plex Mono for the mono role', () => {

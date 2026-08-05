@@ -44,8 +44,8 @@ test('TRButton, TRForm, and TRTabs share the medium control recipe', async () =>
     }
 
     const styles = getComputedStyle(control);
-    expect(styles.height).toBe('40px');
-    expect(styles.paddingLeft).toBe('16px');
+    expect(styles.height).toBe('32px');
+    expect(styles.paddingLeft).toBe('12px');
     expect(styles.fontSize).toBe('14px');
   }
 });
@@ -78,5 +78,5 @@ test('component recipe overrides remain isolated from the global recipe', async 
   );
   expect(
     getComputedStyle(document.querySelector('.tr-field-control') as Element).height,
-  ).toBe('40px');
+  ).toBe('32px');
 });

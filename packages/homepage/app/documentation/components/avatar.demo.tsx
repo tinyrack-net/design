@@ -37,7 +37,7 @@ const meta = {
     fallback: { control: 'text', when: (args) => args['imageState'] !== 'loaded' },
     imageState: { control: 'select', options: ['loaded', 'missing', 'error'] },
     shape: { control: 'select', options: ['circle', 'square'] },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   render: ({ fallback, imageState, shape, uiSize }) => {
     const locale = useDemoLocale();

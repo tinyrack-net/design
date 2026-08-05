@@ -10,7 +10,7 @@ export type TRAppShellCloseProps = TRIconButtonProps;
 export function TRAppShellClose({
   appearance = 'ghost',
   className,
-  uiSize = 'sm',
+  uiSize = 'md',
   ...props
 }: TRAppShellCloseProps) {
   const { drawerActive, mobile } = useAppShellContext('Close');

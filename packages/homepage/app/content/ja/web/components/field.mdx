@@ -67,12 +67,11 @@ export function AlertEmailField() {
   title="サイズ"
   description="周囲のコントロールとコンテンツの密度に合うサイズを選びます。"
   previewLayout="stretch"
-  preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-small" disabled={false} invalid={false} label="小さいフィールド" size="sm" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="中サイズのフィールド" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="大きいフィールド" size="lg" /></div>}
+  preview={<div className="grid gap-5 sm:grid-cols-2"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="中サイズのフィールド" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="大きいフィールド" size="lg" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldSizes() {
-  return <div className="grid gap-5 sm:grid-cols-3">
-    <TRField.Root><TRField.Label>小さいフィールド</TRField.Label><TRField.Control defaultValue="rack-small" uiSize="sm" /></TRField.Root>
+  return <div className="grid gap-5 sm:grid-cols-2">
     <TRField.Root><TRField.Label>中サイズのフィールド</TRField.Label><TRField.Control defaultValue="rack-medium" uiSize="md" /></TRField.Root>
     <TRField.Root><TRField.Label>大きいフィールド</TRField.Label><TRField.Control defaultValue="rack-large" uiSize="lg" /></TRField.Root>
   </div>;
@@ -163,6 +162,6 @@ export function NotificationChannels() {
 | `validationDebounceTime` | `number` / `0` | onChange 検証のデバウンス時間（ミリ秒） |
 | `actionsRef` | `RefObject<TRFieldRootActions>` | `validate()` を公開します |
 
-`Control` はネイティブ入力のプロパティ、`value` / `defaultValue`、`onValueChange(value, details)` を受け取ります。サイズは `Root` ではなくコントロールに指定します。`Control` は `uiSize?: 'sm' | 'md' | 'lg'`（既定値 `md`）を受け取り、ほかの Tinyrack コントロールも同じプロパティを持つため、`Root` の内側でも単独でも同じルールで指定できます。`Label.nativeLabel={false}` は、`render` が label 以外のホスト要素を使う場合に指定します。`Error.match` は `true` または `valueMissing` などの `ValidityState` のキー、`Item.disabled` は単一の選択肢の無効化、`Validity` は `validity`、`value`、`initialValue`、`error`、`errors` を提供します。
+`Control` はネイティブ入力のプロパティ、`value` / `defaultValue`、`onValueChange(value, details)` を受け取ります。サイズは `Root` ではなくコントロールに指定します。`Control` は `uiSize?: 'md' | 'lg'`（既定値 `md`）を受け取り、ほかの Tinyrack コントロールも同じプロパティを持つため、`Root` の内側でも単独でも同じルールで指定できます。`Label.nativeLabel={false}` は、`render` が label 以外のホスト要素を使う場合に指定します。`Error.match` は `true` または `valueMissing` などの `ValidityState` のキー、`Item.disabled` は単一の選択肢の無効化、`Validity` は `validity`、`value`、`initialValue`、`error`、`errors` を提供します。
 
 すべてのホストパーツは `ref`、ネイティブ属性・イベント、関数形式の `className` / `style`、Base UI の `render` を保持します。名前空間、7 つの名前付きパーツ、各プロパティ・状態型、`TRFieldRootActions`、`TRFieldValidityData`、Control の変更イベント型はすべて個別にエクスポートされます。CSS は明示的に読み込みます。

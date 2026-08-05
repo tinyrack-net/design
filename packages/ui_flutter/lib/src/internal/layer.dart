@@ -167,17 +167,17 @@ abstract final class TRLayerStyles {
             : colors.text,
       ),
       minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs),
+        Size(0, TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs),
       ),
       maximumSize: const WidgetStatePropertyAll(
         Size(
           double.infinity,
-          TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs,
+          TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs,
         ),
       ),
       padding: const WidgetStatePropertyAll(
         EdgeInsets.symmetric(
-          horizontal: TRGeneratedControlMetrics.smPaddingInline,
+          horizontal: TRGeneratedControlMetrics.mdPaddingInline,
         ),
       ),
       shape: WidgetStatePropertyAll(
@@ -231,14 +231,14 @@ abstract final class TRLayerStyles {
             : colors.text,
       ),
       minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.smHeight),
+        Size(0, TRGeneratedControlMetrics.mdHeight),
       ),
       maximumSize: const WidgetStatePropertyAll(
-        Size(double.infinity, TRGeneratedControlMetrics.smHeight),
+        Size(double.infinity, TRGeneratedControlMetrics.mdHeight),
       ),
       padding: const WidgetStatePropertyAll(
         EdgeInsets.symmetric(
-          horizontal: TRGeneratedControlMetrics.smPaddingInline,
+          horizontal: TRGeneratedControlMetrics.mdPaddingInline,
         ),
       ),
       shape: WidgetStatePropertyAll(

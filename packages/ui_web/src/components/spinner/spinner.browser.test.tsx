@@ -52,7 +52,7 @@ test('styles the public muted variant independently from current color', async (
 test('styles every size and semantic color variant', async () => {
   await render(
     <>
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <TRSpinner data-testid={`size-${uiSize}`} key={uiSize} uiSize={uiSize} />
       ))}
       {(['muted', 'primary', 'danger'] as const).map((variant) => (
@@ -60,7 +60,7 @@ test('styles every size and semantic color variant', async () => {
       ))}
     </>,
   );
-  const sizes = (['sm', 'md', 'lg'] as const).map(
+  const sizes = (['md', 'lg'] as const).map(
     (uiSize) =>
       getComputedStyle(
         document.querySelector(`[data-testid="size-${uiSize}"]`) as HTMLElement,
@@ -72,7 +72,7 @@ test('styles every size and semantic color variant', async () => {
         document.querySelector(`[data-testid="variant-${variant}"]`) as HTMLElement,
       ).borderTopColor,
   );
-  expect(new Set(sizes).size).toBe(3);
+  expect(new Set(sizes).size).toBe(2);
   expect(new Set(colors).size).toBe(3);
 });
 

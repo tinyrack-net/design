@@ -21,25 +21,20 @@ test('renders the Tinyrack TRInput wrapper', async () => {
 test('uses control tokens for every ui size', async () => {
   await render(
     <>
-      <TRInput aria-label="Small name" uiSize="sm" />
       <TRInput aria-label="Medium name" />
       <TRInput aria-label="Large name" uiSize="lg" />
     </>,
   );
 
-  const small = page.getByRole('textbox', { name: 'Small name' }).element();
   const medium = page.getByRole('textbox', { name: 'Medium name' }).element();
   const large = page.getByRole('textbox', { name: 'Large name' }).element();
 
-  expect(small.dataset['uiSize']).toBe('sm');
   expect(medium.dataset['uiSize']).toBe('md');
   expect(large.dataset['uiSize']).toBe('lg');
-  expect(getComputedStyle(small).minHeight).toBe('32px');
-  expect(getComputedStyle(medium).minHeight).toBe('40px');
-  expect(getComputedStyle(large).minHeight).toBe('48px');
-  expect(getComputedStyle(small).fontSize).toBe('14px');
+  expect(getComputedStyle(medium).minHeight).toBe('32px');
+  expect(getComputedStyle(large).minHeight).toBe('40px');
   expect(getComputedStyle(medium).fontSize).toBe('14px');
-  expect(getComputedStyle(large).fontSize).toBe('16px');
+  expect(getComputedStyle(large).fontSize).toBe('14px');
 });
 
 test('reports string values and merges behavior onto a rendered native input', async () => {
@@ -196,7 +191,7 @@ test('uses the Rack Blue inset focus without changing control geometry in both t
 test('frames a group so the input takes the group height and goes flat', async () => {
   await render(
     <div data-theme="tinyrack-light">
-      <TRInput.Group uiSize="sm">
+      <TRInput.Group uiSize="md">
         <TRInput.Adornment aria-hidden>@</TRInput.Adornment>
         <TRInput aria-label="Grouped rack" />
         <TRInput.Action aria-label="Clear rack">x</TRInput.Action>
@@ -218,7 +213,7 @@ test('frames a group so the input takes the group height and goes flat', async (
   expect(standalone).not.toHaveClass('tr-input-group-input');
 
   // The frame belongs to the group; the input inside it is borderless.
-  expect(group.dataset['uiSize']).toBe('sm');
+  expect(group.dataset['uiSize']).toBe('md');
   expect(getComputedStyle(group).borderBottomWidth).toBe('1px');
   expect(getComputedStyle(grouped).borderBottomWidth).toBe('0px');
   expect(getComputedStyle(standalone).borderBottomWidth).toBe('1px');

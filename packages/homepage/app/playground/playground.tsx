@@ -84,7 +84,7 @@ function ChoiceControl({
         onValueChange={(index) => onChange(options[Number(index)])}
         value={String(selectedIndex)}
       >
-        <TRSelect.Trigger aria-label={name} uiSize="sm" id={`playground-${name}`}>
+        <TRSelect.Trigger aria-label={name} uiSize="md" id={`playground-${name}`}>
           <TRSelect.Value />
           <TRSelect.Icon aria-hidden="true">
             <ChevronDown />
@@ -124,7 +124,7 @@ function ChoiceControl({
             className="inline-flex items-center gap-2"
             key={optionLabel(option)}
           >
-            <TRRadio.Root uiSize="sm" value={String(index)}>
+            <TRRadio.Root uiSize="md" value={String(index)}>
               <TRRadio.Indicator aria-hidden="true" />
             </TRRadio.Root>
             <TRField.Label className="cursor-pointer font-normal normal-case tracking-normal">
@@ -168,7 +168,7 @@ function ChecklistControl({
                     : [...selected, option],
                 )
               }
-              uiSize="sm"
+              uiSize="md"
             >
               <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
             </TRCheckbox.Root>
@@ -228,7 +228,7 @@ function JsonControl({
         className="min-h-24 font-mono"
         id={`playground-${name}`}
         onChange={updateDraft}
-        uiSize="sm"
+        uiSize="md"
         value={draft}
       />
       {invalid ? (
@@ -269,7 +269,7 @@ function ControlField({
           <TRCheckbox.Root
             checked={Boolean(value)}
             onCheckedChange={(checked) => onChange(checked)}
-            uiSize="sm"
+            uiSize="md"
           >
             <TRCheckbox.Indicator aria-hidden="true">✓</TRCheckbox.Indicator>
           </TRCheckbox.Root>
@@ -315,7 +315,7 @@ function ControlField({
     const numericValue = typeof value === 'number' ? value : 0;
     control = (
       <TRSlider.Root
-        uiSize="sm"
+        uiSize="md"
         {...limits}
         onValueChange={(values) =>
           onChange(Array.isArray(values) ? (values[0] ?? numericValue) : values)
@@ -333,7 +333,7 @@ function ControlField({
   } else if (kind === 'textarea') {
     control = (
       <TRTextarea
-        uiSize="sm"
+        uiSize="md"
         id={`playground-${name}`}
         onChange={(event) => onChange(event.currentTarget.value)}
         value={typeof value === 'string' ? value : ''}
@@ -342,7 +342,7 @@ function ControlField({
   } else {
     control = (
       <TRInput
-        uiSize="sm"
+        uiSize="md"
         {...limits}
         id={`playground-${name}`}
         onChange={(event) => {
@@ -484,7 +484,7 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
               setArgs(initialArgs);
               setResetKey((current) => current + 1);
             }}
-            uiSize="sm"
+            uiSize="md"
           >
             {copy.reset}
           </TRButton>

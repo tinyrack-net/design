@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/slider.demo.js';
 | form | `name` serializes the current thumb values through native hidden inputs |
 | validation | TRSlider has no native `required`; put business rules on `TRField.Root`, show `TRField.Error`, and focus the invalid thumb |
 
-Use `uiSize="sm"` when the slider is part of a dense control surface.
+Use `uiSize="md"` when the slider is part of a dense control surface.
 
 ## Install
 
@@ -56,11 +56,11 @@ Use `uiSize="sm"` when the slider is part of a dense control surface.
 <ComponentExampleTabs
   id="slider-sizes"
   title="Sizes"
-  preview={<div data-docs-example-item-count="3"><Stories.SliderSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.SliderSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <div className="grid gap-6">
-  {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  {(['md', 'lg'] as const).map((uiSize) => (
     <TRSlider.Root defaultValue={[48]} key={uiSize} uiSize={uiSize}>
       <TRSlider.Label>{uiSize.toUpperCase()} volume</TRSlider.Label>
       <TRSlider.Value />
@@ -249,7 +249,7 @@ function CapacitySliderForm() {
 | Purpose | Public props and defaults |
 | --- | --- |
 | scale | `min={0}`, `max={100}`, `step={1}`, and `largeStep={10}` |
-| layout | `orientation="horizontal" | "vertical"`, default `"horizontal"`; `uiSize="sm" | "md" | "lg"`, default `"md"` |
+| layout | `orientation="horizontal" | "vertical"`, default `"horizontal"`; `uiSize="md" | "md" | "lg"`, default `"md"` |
 | range | `minStepsBetweenValues={0}`; `thumbCollisionBehavior="push" | "swap" | "none"`, default `"push"` |
 | thumb edge | `thumbAlignment="center" | "edge" | "edge-client-only"`, default `"center"` |
 | state and forms | controlled `value` or `defaultValue`, `disabled={false}`, plus `name` and optional external `form` |

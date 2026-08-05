@@ -85,7 +85,7 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
   id="combobox-sizes"
   title="サイズ"
   description="InputGroup に uiSize を渡して、Combobox の高さを隣の Input、NumberField、Button と揃えます。"
-  preview={<div data-docs-example-item-count="3"><Stories.ComboboxSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.ComboboxSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { TRField } from '@tinyrack/ui/components/field';
 import { ChevronDown, Search, X } from 'lucide-react';
@@ -95,7 +95,7 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
 export function ComboboxSizes() {
   return (
     <div className="grid gap-5">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <TRField.Root key={uiSize}>
           <TRField.Label>{uiSize.toUpperCase()} デプロイ先ラック</TRField.Label>
           <TRCombobox.Root items={racks} name={'rack-' + uiSize}>
@@ -314,7 +314,7 @@ function ControlledRackCombobox() {
 | サーフェス | 用途 |
 | --- | --- |
 | `Root` | 項目、フィルター、単一・複数の値、入力テキスト、開閉状態、検証、フォームの直列化、ロケール、オブジェクトの比較と文字列変換を管理します。 |
-| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 編集可能なコントロールを構成します。`InputAdornment` は装飾で、`Icon` は `Trigger` 内に置きます。`InputGroup` は `uiSize?: 'sm' \| 'md' \| 'lg'` を渡して input、adornment、clear、trigger の高さを一括で調整できます。 |
+| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | 編集可能なコントロールを構成します。`InputAdornment` は装飾で、`Icon` は `Trigger` 内に置きます。`InputGroup` は `uiSize?: 'md' \| 'lg'` を渡して input、adornment、clear、trigger の高さを一括で調整できます。 |
 | `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | 閉じることができるオーバーレイをマウントして配置します。`Portal` はカスタムコンテナーに対応し、インライン表示では省略できます。 |
 | `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | リストまたはグリッドのコレクションとアクセシブルなフィードバックを描画します。 |
 | `Chips`, `Value`, `Chip`, `ChipRemove` | 複数の選択値を表示・削除します。 |
@@ -322,6 +322,6 @@ function ControlledRackCombobox() {
 
 各パートには個別の `TRCombobox*` エクスポートとプロパティ・状態型があります。ルートアクション、状態変更とハイライトの詳細・理由型、`TRComboboxFilter`、`TRComboboxFilterOptions` もエクスポートします。
 
-編集可能な `Input` は `TRField.Root` で囲み、`TRField.Label` で名前を付けます。ラベルは登録済みのコントロールから `htmlFor` を解決するため、`id` や `useId` を手動で指定する必要はありません。`TRCombobox.Label` はトリガーだけを使う選択構造専用です。`InputGroup` は `uiSize?: 'sm' | 'md' | 'lg'`(既定値 `md`) を受け取り、input、adornment、clear、trigger の高さを隣のコントロールと揃えます。無効なルートや項目は変更できません。読み取り専用ルートはフォーカスできますが、入力やクリアはできません。オブジェクト値は安定した同一性を保ち、`{ label, value }` 規約で足りない場合は `itemToStringLabel`、`itemToStringValue`、`isItemEqualToValue` を指定します。
+編集可能な `Input` は `TRField.Root` で囲み、`TRField.Label` で名前を付けます。ラベルは登録済みのコントロールから `htmlFor` を解決するため、`id` や `useId` を手動で指定する必要はありません。`TRCombobox.Label` はトリガーだけを使う選択構造専用です。`InputGroup` は `uiSize?: 'md' | 'lg'`(既定値 `md`) を受け取り、input、adornment、clear、trigger の高さを隣のコントロールと揃えます。無効なルートや項目は変更できません。読み取り専用ルートはフォーカスできますが、入力やクリアはできません。オブジェクト値は安定した同一性を保ち、`{ label, value }` 規約で足りない場合は `itemToStringLabel`、`itemToStringValue`、`isItemEqualToValue` を指定します。
 
 Combobox モジュールは SSR でも安全です。`Portal` はハイドレーション後にマウントされるため、サーバーとクライアントで制御付きの初期値を一致させる必要があります。スタイルは `combobox.css` で別途提供されます。`--tr-combobox-input-background`、`--tr-combobox-content-background`、`--tr-combobox-content-max-height`、`--tr-combobox-content-max-width`、`--tr-combobox-option-min-height` で外観を調整でき、ライト・ダークのセマンティックトークンへフォールバックします。

@@ -20,12 +20,9 @@
   }
 
   .tr-skeleton[data-shape="circle"] {
-    --_tr-skeleton-height: var(
-      --tr-skeleton-circle-size,
-      var(--tinyrack-control-height-lg)
-    );
+    --_tr-skeleton-height: var(--tr-skeleton-circle-size, var(--tinyrack-space-3xl));
     --_tr-skeleton-radius: var(--tinyrack-radius-full);
-    width: var(--tr-skeleton-circle-size, var(--tinyrack-control-height-lg));
+    width: var(--tr-skeleton-circle-size, var(--tinyrack-space-3xl));
   }
 
   .tr-skeleton[data-animate="true"]::after {

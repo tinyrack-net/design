@@ -3,7 +3,7 @@
     color: var(--tr-field-color, var(--tinyrack-text));
     display: grid;
     font-family: var(--tinyrack-font-body);
-    gap: var(--tr-field-gap, var(--tinyrack-control-gap-sm));
+    gap: var(--tr-field-gap, var(--tinyrack-control-gap-md));
     min-width: 0;
   }
 
@@ -12,13 +12,6 @@
     --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-md);
     --_tr-field-control-font-size: var(--tinyrack-control-font-size-md);
     --_tr-field-control-line-height: var(--tinyrack-control-line-height-md);
-  }
-
-  .tr-field-control[data-ui-size="sm"] {
-    --_tr-field-control-height: var(--tinyrack-control-height-sm);
-    --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-sm);
-    --_tr-field-control-font-size: var(--tinyrack-control-font-size-sm);
-    --_tr-field-control-line-height: var(--tinyrack-control-line-height-sm);
   }
 
   .tr-field-control[data-ui-size="lg"] {
@@ -99,7 +92,7 @@
   .tr-field-item {
     align-items: flex-start;
     display: flex;
-    gap: var(--tr-field-item-gap, var(--tinyrack-control-gap-sm));
+    gap: var(--tr-field-item-gap, var(--tinyrack-control-gap-md));
     min-width: 0;
   }
 

@@ -17,7 +17,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
 | --- | --- | --- | --- |
 | `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | 목적지의 의미나 결과를 전달해요. |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | intent를 바꾸지 않고 시각적 강조를 조정해요. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | 주변 컨트롤 크기에 맞춰요. |
+| `uiSize` | `md`, `lg` | `md` | 주변 컨트롤 크기에 맞춰요. |
 | `disabled` | `boolean` | `false` | 목적지를 제거하고 탐색을 막아요. |
 
 ## 설치
@@ -106,7 +106,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
   description="목적지의 중요도가 아니라 주변 컨트롤에 맞는 크기를 선택하세요."
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="sm">Small</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Small</TRLinkButton>
       <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Medium</TRLinkButton>
       <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="lg">Large</TRLinkButton>
     </div>
@@ -136,7 +136,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
 | --- | --- | --- |
 | `intent` | `neutral \| primary \| info \| success \| warning \| danger` / `neutral` | 의미와 색상 역할을 선택해요. |
 | `appearance` | `solid \| outline \| ghost` / `solid` | intent를 바꾸지 않고 시각적 강조를 선택해요. |
-| `uiSize` | `sm \| md \| lg` / `md` | 컨트롤 크기를 선택해요. |
+| `uiSize` | `md \| lg` / `md` | 컨트롤 크기를 선택해요. |
 | `disabled` | `boolean` / `false` | 목적지를 제거하고 탐색을 막아요. |
 | `href` | 네이티브 앵커 `href` | 목적지를 지정하며 `disabled`일 때 생략해요. |
 | `render` | Base UI 렌더 요소 또는 콜백 | 앵커를 중첩하지 않고 React Router 등의 링크를 조합해요. |

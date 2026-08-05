@@ -67,7 +67,7 @@ function InstallCodeBlock({
         copiedLabel={copy.copied}
         data-install-copy={copyKey}
         idleLabel={copy.copy}
-        uiSize="sm"
+        uiSize="md"
         unavailableLabel={copy.copyUnavailable}
         value={code}
       />
@@ -115,7 +115,7 @@ export function ComponentInstall({ surfaces }: ComponentInstallProps) {
       data-component-install=""
       data-pagefind-ignore="all"
       defaultValue={surfaceValue(firstSurface.label)}
-      uiSize="sm"
+      uiSize="md"
     >
       <TRScrollArea.Root variant="plain">
         <TRScrollArea.Viewport aria-label={copy.installationTargets} tabIndex={0}>
