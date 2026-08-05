@@ -467,6 +467,7 @@ abstract final class TRGeneratedLayerMetrics {
   static const double appShellLgBreakpoint = 1024.0;
   static const double appShellSidebarWidth = 288.0;
   static const double appShellRailWidth = 64.0;
+  static const double appShellCollapsedWidth = 0.0;
   static const double appShellHeaderHeight = 48.0;
 }
 

@@ -213,7 +213,9 @@ class _TRAppShellState extends State<TRAppShell> {
       mobileDrawerSide: widget.mobileDrawerSide,
       onMainScroll: _recordScroll,
       pageScroll: widget.pageScroll,
+      railWidth: widget.railWidth,
       sidebarMode: effectiveSidebarMode,
+      sidebarWidth: widget.sidebarWidth,
       shellChrome: widget.chrome,
       child: Material(
         type: MaterialType.canvas,
@@ -221,7 +223,7 @@ class _TRAppShellState extends State<TRAppShell> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            _buildLayout(mobile: mobile, sidebarMode: effectiveSidebarMode),
+            _buildLayout(mobile: mobile),
             if (_isPending)
               PositionedDirectional(
                 start: 0,
@@ -246,19 +248,16 @@ class _TRAppShellState extends State<TRAppShell> {
     return scope;
   }
 
-  Widget _buildLayout({
-    required bool mobile,
-    required TRAppShellSidebarMode sidebarMode,
-  }) {
+  Widget _buildLayout({required bool mobile}) {
     if (widget.chrome == TRAppShellChrome.standalone) return widget.main;
 
+    // The sidebar sizes itself from the scope, so the layout only decides
+    // whether it participates at all.
+    final sidebar = widget.sidebar;
     final showSidebar =
-        widget.sidebar != null &&
+        sidebar != null &&
         widget.chrome != TRAppShellChrome.splash &&
         (!mobile || widget.mobileSidebar == TRAppShellMobileSidebar.rail);
-    final sidebarWidth = sidebarMode == TRAppShellSidebarMode.expanded
-        ? widget.sidebarWidth
-        : widget.railWidth;
     final main = _mainWithOutline();
     final header = widget.header;
 
@@ -272,7 +271,6 @@ class _TRAppShellState extends State<TRAppShell> {
       );
     }
 
-    final sidebar = SizedBox(width: sidebarWidth, child: widget.sidebar);
     if (widget.layout == TRAppShellLayout.sidebarFirst) {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -376,7 +374,9 @@ class _TRAppShellState extends State<TRAppShell> {
             mobileDrawerSide: widget.mobileDrawerSide,
             onMainScroll: _recordScroll,
             pageScroll: widget.pageScroll,
+            railWidth: widget.railWidth,
             sidebarMode: TRAppShellSidebarMode.expanded,
+            sidebarWidth: widget.sidebarWidth,
             shellChrome: widget.chrome,
             child: Align(
               alignment:

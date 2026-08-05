@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
@@ -130,7 +131,8 @@ void main() {
     controller.setSidebarMode(TRAppShellSidebarMode.rail);
     controller.openMobileNavigation();
     controller.openMobileNavigation();
-    await tester.pump();
+    // The sidebar animates every width change, so settle before measuring.
+    await tester.pumpAndSettle();
     expect(tester.getSize(find.byKey(sidebarKey)).width, 64);
     expect(sidebarChanges, [TRAppShellSidebarMode.rail]);
     expect(mobileChanges, [true]);
@@ -386,13 +388,13 @@ void main() {
     );
 
     setHostState(() => controller = second);
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(tester.getSize(find.byKey(sidebarKey)).width, 64);
     first.setSidebarMode(TRAppShellSidebarMode.rail);
     await tester.pump();
     expect(changes, isEmpty);
     second.setSidebarMode(TRAppShellSidebarMode.expanded);
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(changes, [TRAppShellSidebarMode.expanded]);
     expect(tester.getSize(find.byKey(sidebarKey)).width, 288);
   });
@@ -436,6 +438,257 @@ void main() {
     expect(find.byKey(headerKey), findsNothing);
     expect(find.byKey(sidebarKey), findsNothing);
     expect(find.byKey(mainKey), findsOneWidget);
+  });
+
+  testWidgets('animates the sidebar between expanded and collapsed', (
+    tester,
+  ) async {
+    await _setViewport(tester, const Size(800, 400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    late StateSetter setHostState;
+    var collapsed = false;
+    await tester.pumpWidget(
+      _app(
+        StatefulBuilder(
+          builder: (context, setState) {
+            setHostState = setState;
+            return TRAppShell(
+              breakpoint: TRAppShellBreakpoint.sm,
+              sidebar: TRAppShellSidebar(
+                key: sidebarKey,
+                collapsed: collapsed,
+                child: const Text('Navigation'),
+              ),
+              main: const TRAppShellMain(child: Text('Content')),
+            );
+          },
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byKey(sidebarKey)).width, 288);
+
+    setHostState(() => collapsed = true);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    final collapsing = tester.getSize(find.byKey(sidebarKey)).width;
+    expect(collapsing, greaterThan(0));
+    expect(collapsing, lessThan(288));
+
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byKey(sidebarKey)).width, 0);
+    expect(find.text('Navigation'), findsNothing);
+
+    setHostState(() => collapsed = false);
+    await tester.pump();
+    expect(find.text('Navigation'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 80));
+    final expanding = tester.getSize(find.byKey(sidebarKey)).width;
+    expect(expanding, greaterThan(0));
+    expect(expanding, lessThan(288));
+
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byKey(sidebarKey)).width, 288);
+  });
+
+  testWidgets('a collapsing sidebar drops focus, pointers, and semantics', (
+    tester,
+  ) async {
+    await _setViewport(tester, const Size(800, 400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final semantics = tester.ensureSemantics();
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    late StateSetter setHostState;
+    var collapsed = false;
+    var taps = 0;
+    await tester.pumpWidget(
+      _app(
+        StatefulBuilder(
+          builder: (context, setState) {
+            setHostState = setState;
+            return TRAppShell(
+              breakpoint: TRAppShellBreakpoint.sm,
+              sidebar: TRAppShellSidebar(
+                key: sidebarKey,
+                collapsed: collapsed,
+                child: TextButton(
+                  focusNode: focusNode,
+                  onPressed: () => taps++,
+                  child: const Text('Navigate'),
+                ),
+              ),
+              main: const TRAppShellMain(child: Text('Content')),
+            );
+          },
+        ),
+      ),
+    );
+    focusNode.requestFocus();
+    await tester.pump();
+    expect(focusNode.hasFocus, isTrue);
+
+    expect(_semanticsLabels(tester), contains('Navigate'));
+
+    setHostState(() => collapsed = true);
+    await tester.pump();
+    expect(focusNode.hasFocus, isFalse);
+    expect(_semanticsLabels(tester), isNot(contains('Navigate')));
+    await tester.tap(find.text('Navigate'), warnIfMissed: false);
+    await tester.pump();
+    expect(taps, 0);
+
+    await tester.pumpAndSettle();
+    expect(find.text('Navigate'), findsNothing);
+    semantics.dispose();
+  });
+
+  testWidgets('animates between rail and expanded sidebar widths', (
+    tester,
+  ) async {
+    await _setViewport(tester, const Size(800, 400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final controller = TRAppShellController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _app(
+        TRAppShell(
+          breakpoint: TRAppShellBreakpoint.sm,
+          controller: controller,
+          sidebar: const TRAppShellSidebar(
+            key: sidebarKey,
+            child: Text('Navigation'),
+          ),
+          main: const TRAppShellMain(child: Text('Content')),
+        ),
+      ),
+    );
+
+    controller.setSidebarMode(TRAppShellSidebarMode.rail);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    final narrowing = tester.getSize(find.byKey(sidebarKey)).width;
+    expect(narrowing, greaterThan(64));
+    expect(narrowing, lessThan(288));
+
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byKey(sidebarKey)).width, 64);
+  });
+
+  testWidgets('reduced motion collapses the sidebar without animating', (
+    tester,
+  ) async {
+    await _setViewport(tester, const Size(800, 400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    late StateSetter setHostState;
+    var collapsed = false;
+    await tester.pumpWidget(
+      _app(
+        MediaQuery(
+          data: const MediaQueryData(
+            disableAnimations: true,
+            size: Size(800, 400),
+          ),
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              setHostState = setState;
+              return TRAppShell(
+                breakpoint: TRAppShellBreakpoint.sm,
+                sidebar: TRAppShellSidebar(
+                  key: sidebarKey,
+                  collapsed: collapsed,
+                  child: const Text('Navigation'),
+                ),
+                main: const TRAppShellMain(child: Text('Content')),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    setHostState(() => collapsed = true);
+    await tester.pump();
+    expect(tester.getSize(find.byKey(sidebarKey)).width, 0);
+
+    await tester.pumpAndSettle();
+    expect(find.text('Navigation'), findsNothing);
+  });
+
+  testWidgets('a sidebar composed inside main animates its own width', (
+    tester,
+  ) async {
+    await _setViewport(tester, const Size(800, 400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    late StateSetter setHostState;
+    var collapsed = false;
+    await tester.pumpWidget(
+      _app(
+        StatefulBuilder(
+          builder: (context, setState) {
+            setHostState = setState;
+            return TRAppShell(
+              breakpoint: TRAppShellBreakpoint.sm,
+              main: TRAppShellMain(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TRAppShellSidebar(
+                      key: sidebarKey,
+                      collapsed: collapsed,
+                      width: 240,
+                      child: const Text('Navigation'),
+                    ),
+                    const Expanded(child: Text('Content')),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byKey(sidebarKey)).width, 240);
+
+    setHostState(() => collapsed = true);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    final collapsing = tester.getSize(find.byKey(sidebarKey)).width;
+    expect(collapsing, greaterThan(0));
+    expect(collapsing, lessThan(240));
+
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byKey(sidebarKey)).width, 0);
+    expect(find.text('Navigation'), findsNothing);
+  });
+
+  testWidgets('the mobile drawer surface ignores the collapsed flag', (
+    tester,
+  ) async {
+    await _setViewport(tester, const Size(480, 320));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final controller = TRAppShellController(mobileOpen: true);
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _app(
+        TRAppShell(
+          breakpoint: TRAppShellBreakpoint.sm,
+          controller: controller,
+          sidebar: const TRAppShellSidebar(
+            key: sidebarKey,
+            collapsed: true,
+            child: Text('Drawer navigation'),
+          ),
+          main: const TRAppShellMain(child: Text('Content')),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      tester.getRect(find.byKey(sidebarKey)),
+      const Rect.fromLTWH(0, 0, 288, 320),
+    );
+    expect(find.text('Drawer navigation'), findsOneWidget);
   });
 
   testWidgets('docs outline precedes content and moves inline at xl', (
@@ -604,6 +857,21 @@ void main() {
     await tester.pump();
     expect(primary.offset, moreOrLessEquals(saved));
   });
+}
+
+/// Labels reachable from the live semantics tree, not from stale render data.
+Set<String> _semanticsLabels(WidgetTester tester) {
+  final labels = <String>{};
+  void visit(SemanticsNode node) {
+    if (node.label.isNotEmpty) labels.add(node.label);
+    node.visitChildren((child) {
+      visit(child);
+      return true;
+    });
+  }
+
+  visit(tester.semantics.find(find.byType(TRAppShell)));
+  return labels;
 }
 
 Future<void> _setViewport(WidgetTester tester, Size size) async {

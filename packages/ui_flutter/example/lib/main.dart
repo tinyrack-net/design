@@ -809,6 +809,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'layout',
     'mobileSidebar',
     'open',
+    'sidebarCollapsed',
     'sidebarMode',
   ],
   'drawer' => ['open', 'swipeDirection'],
@@ -999,6 +1000,7 @@ Map<String, Object?>? _validateArgs(
       'showActions' ||
       'showDescription' ||
       'showIcon' ||
+      'sidebarCollapsed' ||
       'selected' ||
       'truncate' => value is bool,
       'wrap' => value is bool,
@@ -2831,6 +2833,7 @@ class _PreviewAppShellState extends State<_PreviewAppShell> {
         ),
         sidebar: TRAppShellSidebar(
           key: _partKey('sidebar'),
+          collapsed: widget.args['sidebarCollapsed'] == true,
           padding: const EdgeInsets.all(12),
           scroll: false,
           semanticLabel: _pick('Example navigation', '예제 탐색', 'サンプルナビゲーション'),

@@ -138,9 +138,9 @@ export function ShellControls() {
 
 `Root`는 `breakpoint`(`sm` 또는 `lg`), `layout`(`header-first` 또는 `sidebar-first`), `mobileSidebar`(`drawer` 또는 `rail`)를 받아요. 드로어 상태는 `open`, `defaultOpen`, `onOpenChange`로, 사이드바 너비는 `sidebarMode`, `defaultSidebarMode`, `onSidebarModeChange`로 제어해요. 포함형 미리 보기나 임베드된 앱에서는 `portalContainer`를, 팝업 스타일에는 `drawerPopupClassName`을 사용해요.
 
-`Header`는 헤더 랜드마크를 렌더링해요. `Sidebar`는 독립적으로 스크롤되는 `aside`이며 모바일 대화상자에도 접근 가능한 이름을 전달해요. `Trigger`는 모바일 드로어를 열고 `Close`는 닫아요. `SidebarToggle`은 포커스를 유지하고 `aria-expanded`를 노출하면서 확장 모드와 레일 모드를 전환해요. `SidebarLabel`은 레일 모드에서도 제거되지 않고 시각적으로 숨겨져요. `Main`은 메인 랜드마크와 Base UI `render` 규약을 제공해요.
+`Header`는 헤더 랜드마크를 렌더링해요. `Sidebar`는 독립적으로 스크롤되는 `aside`이며 모바일 대화상자에도 접근 가능한 이름을 전달해요. 자기 인라인 크기를 스스로 가지므로 펼침, 접힘, 레일 전환 같은 너비 변화가 모두 애니메이션돼요. `collapsed`를 넘기면 사이드바가 접히면서 즉시 `inert`가 되고 전환이 끝나면 화면에서 사라져요. 고정 너비 상자로 감싸지 마세요. `Trigger`는 모바일 드로어를 열고 `Close`는 닫아요. `SidebarToggle`은 포커스를 유지하고 `aria-expanded`를 노출하면서 확장 모드와 레일 모드를 전환해요. `SidebarLabel`은 레일 모드에서도 제거되지 않고 시각적으로 숨겨져요. `Main`은 메인 랜드마크와 Base UI `render` 규약을 제공해요.
 
-안정적인 스타일 규약은 `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, `--tr-app-shell-header-block-size`, `--tr-app-shell-drawer-block-size`예요. `Root` 상태는 `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, `data-page-scroll`, `data-sidebar-mode`에 반영돼요.
+안정적인 스타일 규약은 `--tr-app-shell-background`, `--tr-app-shell-sidebar-background`, `--tr-app-shell-sidebar-width`, `--tr-app-shell-sidebar-rail-width`, `--tr-app-shell-header-block-size`, `--tr-app-shell-drawer-block-size`예요. `Root` 상태는 `data-breakpoint`, `data-layout`, `data-mobile-sidebar`, `data-page-scroll`, `data-sidebar-mode`에 반영되고, 사이드바에는 `data-collapsed`와 `data-sidebar-mode`가 붙어요. 모션은 `prefers-reduced-motion`을 따라요.
 
 ## 페이지 스크롤
 

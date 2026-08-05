@@ -13,6 +13,11 @@
 - Added the `data-highlight` state attribute (`plain`, `pending`, `highlighted`, `unsupported`, `no-highlighter`, `error`) and the `onHighlightFailure` callback, replacing a silent `catch {}` that hid missing grammars.
 - Added `highlight.languages` to `DocsConfig` and published `@tinyrack/docs/highlighting`. A docs site declares its grammars and only those are built; unknown identifiers now fail the build instead of silently rendering as plain text.
 - Added `mdx` and `python` to the documentation site's grammar set. Nine pages that requested `mdx` had been rendering unhighlighted, while the site now emits chunks only for grammars its content requests.
+- Added `collapsed` to `TRAppShell.Sidebar`. A collapsed sidebar animates to zero inline size over `--tinyrack-duration-normal`, becomes `inert` the moment the collapse starts so a focused control cannot keep receiving keys, and is hidden from the page once the transition ends. It reflects `data-collapsed` for styling and honours `prefers-reduced-motion`.
+
+### Changed
+
+- `TRAppShell` sidebar sizing moved from the root's `grid-template-columns` onto `inline-size` on `.tr-app-shell-sidebar`, so the sidebar animates its own width and keeps that width when it is composed inside a flex row instead of the shell's grid area. `--tr-app-shell-sidebar-width` and `--tr-app-shell-sidebar-rail-width` keep their meaning and their defaults; a consumer that overrode `grid-template-columns` on `.tr-app-shell` directly must move that override to the sidebar. Switching between the expanded width and the rail is now animated as well.
 
 ## 0.19.0
 

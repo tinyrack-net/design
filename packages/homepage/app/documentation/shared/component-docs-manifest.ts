@@ -133,6 +133,7 @@ export const componentDocsManifest = [
       'controlAppearance',
       'layout',
       'mobileSidebar',
+      'sidebarCollapsed',
       'sidebarMode',
     ],
     exampleGroups: [

@@ -2203,6 +2203,18 @@ async function compareMotionScenario(
             .then((count) => count > 0),
         60_000,
       );
+    } else if (scenario.component === 'app-shell') {
+      await waitForTrue(
+        () =>
+          reactPage.evaluate(
+            (collapsed) =>
+              document
+                .querySelector('.tr-app-shell-sidebar')
+                ?.getAttribute('data-collapsed') === String(collapsed),
+            nextArgs['sidebarCollapsed'] === true,
+          ),
+        60_000,
+      );
     } else if (scenario.transition === 'open' || scenario.transition === 'close') {
       await waitForTrue(
         () =>
@@ -2392,7 +2404,9 @@ async function compareMotionScenario(
                             (animation.effect as KeyframeEffect).target as HTMLElement
                           ).classList.contains(contentClass),
                       ),
-                  'tr-collapsible-content',
+                  scenario.component === 'app-shell'
+                    ? 'tr-app-shell-sidebar'
+                    : 'tr-collapsible-content',
                 )
               : reactPage
                   .locator(motionLayerSelector)
@@ -3248,6 +3262,7 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
     ? parityThemes.flatMap((theme) =>
         (
           [
+            'app-shell',
             'button',
             'animated-number',
             'accordion',

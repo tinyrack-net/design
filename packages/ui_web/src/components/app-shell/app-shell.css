@@ -30,12 +30,50 @@
     min-inline-size: 0;
   }
 
+  /*
+   * The sidebar owns its inline size rather than a grid track, so a width
+   * change — collapse, expand, or rail — is a transition on the item itself
+   * and works the same when the sidebar is composed inside a flex row.
+   */
   .tr-app-shell-sidebar {
+    --tr-app-shell-sidebar-border-inline-size: var(--tinyrack-border-width-default);
+    --tr-app-shell-sidebar-content-inline-size: var(
+      --tr-app-shell-sidebar-width,
+      calc(var(--tinyrack-space-2xl) * 9)
+    );
     background: var(--tr-app-shell-sidebar-background, var(--tinyrack-surface));
     border-inline-end: var(--tinyrack-border-width-default) solid
       var(--tinyrack-control-border);
+    /* The declared width is the outer edge, as the grid track used to be. */
+    box-sizing: border-box;
+    flex: none;
     grid-area: sidebar;
+    inline-size: var(--tr-app-shell-sidebar-content-inline-size);
     min-block-size: 0;
+    overflow: hidden;
+    /*
+     * `visibility` interpolates as a step that stays `visible` whenever either
+     * end is visible, so it hides exactly when the collapse lands and reveals
+     * as soon as the sidebar starts opening again.
+     */
+    transition:
+      inline-size var(--tinyrack-duration-normal) var(--tinyrack-ease-standard),
+      border-inline-end-width var(--tinyrack-duration-normal)
+      var(--tinyrack-ease-standard),
+      visibility var(--tinyrack-duration-normal) var(--tinyrack-ease-standard);
+  }
+
+  .tr-app-shell-sidebar[data-sidebar-mode="rail"] {
+    --tr-app-shell-sidebar-content-inline-size: var(
+      --tr-app-shell-sidebar-rail-width,
+      calc(var(--tinyrack-space-2xl) * 2)
+    );
+  }
+
+  .tr-app-shell-sidebar[data-collapsed="true"] {
+    border-inline-end-width: 0;
+    inline-size: 0;
+    visibility: hidden;
   }
 
   .tr-app-shell > .tr-app-shell-sidebar {
@@ -47,6 +85,18 @@
   .tr-app-shell-main-scroll-area,
   .tr-app-shell-main-viewport {
     block-size: 100%;
+  }
+
+  /*
+   * The content keeps its full width and is clipped, so nothing reflows while
+   * the surface slides. `visibility` waits out the transition and then takes
+   * the collapsed content out of the tab order and the accessibility tree.
+   */
+  .tr-app-shell-sidebar > .tr-app-shell-scroll-area {
+    inline-size: calc(
+      var(--tr-app-shell-sidebar-content-inline-size) -
+      var(--tr-app-shell-sidebar-border-inline-size)
+    );
   }
 
   .tr-app-shell > .tr-app-shell-sidebar .tr-app-shell-close {
@@ -64,10 +114,7 @@
   }
 
   .tr-app-shell[data-mobile-sidebar="rail"] {
-    grid-template-columns: var(
-        --tr-app-shell-sidebar-rail-width,
-        calc(var(--tinyrack-space-2xl) * 2)
-      ) minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr);
   }
 
   .tr-app-shell[data-mobile-sidebar="rail"][data-layout="header-first"] {
@@ -119,9 +166,16 @@
     padding: 0;
   }
 
+  /* The drawer route sizes and animates its own surface. */
   .tr-drawer-content.tr-app-shell-drawer-content .tr-app-shell-sidebar {
+    /* A percentage already resolves against the content box, so discounting
+       the border again would leave the scroll area short of the edge. */
+    --tr-app-shell-sidebar-border-inline-size: 0px;
+    --tr-app-shell-sidebar-content-inline-size: 100%;
     block-size: 100%;
     inline-size: 100%;
+    transition: none;
+    visibility: visible;
   }
 
   /* ---------------------------------------------------------------------- */
@@ -178,6 +232,7 @@
   }
 
   .tr-app-shell:not([data-chrome="app"]) > .tr-app-shell-sidebar {
+    --tr-app-shell-sidebar-border-inline-size: 0px;
     border-inline-end: 0;
     position: relative;
   }
@@ -246,18 +301,8 @@
     }
 
     .tr-app-shell[data-breakpoint="sm"] {
-      grid-template-columns: var(
-          --tr-app-shell-sidebar-width,
-          calc(var(--tinyrack-space-2xl) * 9)
-        ) minmax(0, 1fr);
+      grid-template-columns: auto minmax(0, 1fr);
       grid-template-rows: auto minmax(0, 1fr);
-    }
-
-    .tr-app-shell[data-breakpoint="sm"][data-sidebar-mode="rail"] {
-      grid-template-columns: var(
-          --tr-app-shell-sidebar-rail-width,
-          calc(var(--tinyrack-space-2xl) * 2)
-        ) minmax(0, 1fr);
     }
 
     .tr-app-shell[data-breakpoint="sm"][data-layout="header-first"] {
@@ -289,18 +334,8 @@
     }
 
     .tr-app-shell[data-breakpoint="lg"] {
-      grid-template-columns: var(
-          --tr-app-shell-sidebar-width,
-          calc(var(--tinyrack-space-2xl) * 9)
-        ) minmax(0, 1fr);
+      grid-template-columns: auto minmax(0, 1fr);
       grid-template-rows: auto minmax(0, 1fr);
-    }
-
-    .tr-app-shell[data-breakpoint="lg"][data-sidebar-mode="rail"] {
-      grid-template-columns: var(
-          --tr-app-shell-sidebar-rail-width,
-          calc(var(--tinyrack-space-2xl) * 2)
-        ) minmax(0, 1fr);
     }
 
     .tr-app-shell[data-breakpoint="lg"][data-layout="header-first"] {
@@ -441,5 +476,16 @@
       100dvh -
       var(--tr-app-shell-header-block-size, var(--tinyrack-space-3xl))
     );
+  }
+
+  /*
+   * Reduced motion keeps the same end states and only drops the tweening, so
+   * it must come after the collapsed rule it has to out-rank on source order.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    .tr-app-shell-sidebar,
+    .tr-app-shell-sidebar[data-collapsed="true"] {
+      transition: none;
+    }
   }
 }
