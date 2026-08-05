@@ -1,3 +1,8 @@
+## 0.4.6
+
+- Prevents reduced-motion collapsibles from throwing a Flutter layout
+  assertion when their open content changes size.
+
 ## 0.4.5
 
 - Prevents pointer-acquired focus from reopening a tooltip after its trigger
