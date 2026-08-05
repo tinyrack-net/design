@@ -21,6 +21,7 @@ enum TRLayerBoundaryKind {
   previewCard,
   autocomplete,
   combobox,
+  inlineSuggestions,
   contextMenu,
   menubar,
   navigationMenu,
@@ -359,6 +360,7 @@ class TRAnchoredLayer extends StatefulWidget {
     this.useRootOverlay = true,
     this.dismissOnTapOutside = true,
     this.requestFocus = true,
+    this.matchAnchorWidth = false,
     super.key,
   });
 
@@ -376,6 +378,12 @@ class TRAnchoredLayer extends StatefulWidget {
   final bool useRootOverlay;
   final bool dismissOnTapOutside;
   final bool requestFocus;
+
+  /// Sizes the layer to the anchor instead of the surface's own width.
+  ///
+  /// A layer that continues an input, rather than floating beside it, reads as
+  /// part of that control only when the two share an edge.
+  final bool matchAnchorWidth;
 
   @override
   State<TRAnchoredLayer> createState() => _TRAnchoredLayerState();
@@ -545,14 +553,20 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
               : null,
           child: layer,
         );
+        final anchorWidth = math.min(anchor.width, safeRect.width);
         layer = ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: math.max(0, safeRect.width),
+            minWidth: widget.matchAnchorWidth ? math.max(0, anchorWidth) : 0,
+            maxWidth: math.max(
+              0,
+              widget.matchAnchorWidth ? anchorWidth : safeRect.width,
+            ),
             maxHeight: math.max(0, safeRect.height),
           ),
           child: _TRAnchoredLayerMotion(
             duration: widget.motionDuration,
             scale: widget.motionScale,
+            alignment: _motionAlignment(widget.placement),
             child: layer,
           ),
         );
@@ -572,16 +586,37 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
   }
 }
 
+/// Grows a layer from the edge nearest its anchor.
+///
+/// A layer placed above its trigger that scaled from the top would appear to
+/// pull away from the control it belongs to.
+Alignment _motionAlignment(TRLayerPlacement placement) => switch (placement) {
+  TRLayerPlacement.topStart ||
+  TRLayerPlacement.topCenter ||
+  TRLayerPlacement.topEnd => Alignment.bottomCenter,
+  TRLayerPlacement.leftStart ||
+  TRLayerPlacement.leftCenter ||
+  TRLayerPlacement.leftEnd => Alignment.centerRight,
+  TRLayerPlacement.rightStart ||
+  TRLayerPlacement.rightCenter ||
+  TRLayerPlacement.rightEnd => Alignment.centerLeft,
+  TRLayerPlacement.bottomStart ||
+  TRLayerPlacement.bottomCenter ||
+  TRLayerPlacement.bottomEnd => Alignment.topCenter,
+};
+
 class _TRAnchoredLayerMotion extends StatelessWidget {
   const _TRAnchoredLayerMotion({
     required this.child,
     required this.duration,
     required this.scale,
+    this.alignment = Alignment.topCenter,
   });
 
   final Widget child;
   final Duration duration;
   final bool scale;
+  final Alignment alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -594,7 +629,7 @@ class _TRAnchoredLayerMotion extends StatelessWidget {
         opacity: value,
         child: scale
             ? Transform.scale(
-                alignment: Alignment.topCenter,
+                alignment: alignment,
                 scale:
                     TRGeneratedMeasurements.overlayClosedScale +
                     (1 - TRGeneratedMeasurements.overlayClosedScale) * value,

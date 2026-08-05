@@ -28,6 +28,7 @@ export const flutterPreviewComponents = [
   'file-tree',
   'form',
   'icon-button',
+  'inline-suggestions',
   'link',
   'menu',
   'menubar',

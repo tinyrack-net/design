@@ -289,6 +289,15 @@ export const comboboxPlayground = flutterPlayground(
     ko: { placeholder: '채널 선택' },
   },
 );
+export const inlineSuggestionsPlayground = flutterPlayground(
+  'inline-suggestions',
+  { disabledOption: false, open: true, status: 'ready' },
+  {
+    disabledOption: { control: 'boolean' },
+    open: { control: 'boolean' },
+    status: { control: 'select', options: ['ready', 'loading', 'error'] },
+  },
+);
 export const contextMenuPlayground = flutterPlayground('context-menu', {}, {});
 export const drawerPlayground = flutterPlayground('drawer', {}, {});
 export const fileTreePlayground = flutterPlayground('file-tree', {}, {});
@@ -717,6 +726,7 @@ export const flutterPlaygrounds = {
   'code-block': codeBlockPlayground,
   collapsible: collapsiblePlayground,
   combobox: comboboxPlayground,
+  'inline-suggestions': inlineSuggestionsPlayground,
   'context-menu': contextMenuPlayground,
   'copy-button': copyButtonPlayground,
   dialog: dialogPlayground,

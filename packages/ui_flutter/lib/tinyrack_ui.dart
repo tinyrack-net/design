@@ -26,6 +26,7 @@ export 'src/components/field/field.dart';
 export 'src/components/fieldset/fieldset.dart';
 export 'src/components/file_tree/file_tree.dart';
 export 'src/components/form/form.dart';
+export 'src/components/inline_suggestions/inline_suggestions.dart';
 export 'src/components/link/link.dart';
 export 'src/components/meter/meter.dart';
 export 'src/components/menu/menu.dart';

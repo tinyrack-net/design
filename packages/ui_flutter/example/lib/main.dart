@@ -122,6 +122,7 @@ class _PreviewAppState extends State<PreviewApp> {
             'alert-dialog' => TRLayerBoundaryKind.alertDialog,
             'autocomplete' => TRLayerBoundaryKind.autocomplete,
             'combobox' => TRLayerBoundaryKind.combobox,
+            'inline-suggestions' => TRLayerBoundaryKind.inlineSuggestions,
             'context-menu' => TRLayerBoundaryKind.contextMenu,
             'dialog' => TRLayerBoundaryKind.dialog,
             'drawer' => TRLayerBoundaryKind.drawer,
@@ -805,6 +806,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'readOnly',
     'uiSize',
   ],
+  'inline-suggestions' => ['disabledOption', 'open', 'status'],
   'context-menu' ||
   'navigation-menu' ||
   'popover' ||
@@ -966,6 +968,8 @@ Map<String, Object?>? _validateArgs(
             const {'contains', 'startsWith', 'none'}.contains(value),
       'layout' when component == 'combobox' =>
         value is String && const {'list', 'grid'}.contains(value),
+      'status' when component == 'inline-suggestions' =>
+        value is String && const {'ready', 'loading', 'error'}.contains(value),
       'required' when component == 'form' => value is bool,
       'submitLabel' when component == 'form' => value is String,
       'copiedLabel' when component == 'copy-button' => value is String,
@@ -1466,6 +1470,11 @@ class PreviewComponent extends StatelessWidget {
         locale: locale,
       ),
       'context-menu' => _PreviewContextMenu(
+        args: args,
+        key: measureKey,
+        locale: locale,
+      ),
+      'inline-suggestions' => _PreviewInlineSuggestions(
         args: args,
         key: measureKey,
         locale: locale,
@@ -3351,6 +3360,101 @@ class _PreviewAutocompleteState extends State<_PreviewAutocomplete> {
       ],
     ),
   );
+}
+
+class _PreviewInlineSuggestions extends StatefulWidget {
+  const _PreviewInlineSuggestions({
+    required this.args,
+    required this.locale,
+    super.key,
+  });
+
+  final Map<String, Object?> args;
+  final String locale;
+
+  @override
+  State<_PreviewInlineSuggestions> createState() =>
+      _PreviewInlineSuggestionsState();
+}
+
+class _PreviewInlineSuggestionsState extends State<_PreviewInlineSuggestions> {
+  final TRInlineSuggestionsController<String> _suggestions =
+      TRInlineSuggestionsController<String>();
+  final TextEditingController _text = TextEditingController(text: '@lib/');
+  final FocusNode _focus = FocusNode();
+
+  @override
+  void dispose() {
+    _suggestions.dispose();
+    _text.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final args = widget.args;
+    final disabledOption = args['disabledOption'] == true;
+    final status = args['status'] is String
+        ? TRInlineSuggestionsStatus.values.byName(args['status']! as String)
+        : TRInlineSuggestionsStatus.ready;
+    final descriptions = switch (widget.locale) {
+      'ko' => <String>['앱 진입점', '컴포저 위젯'],
+      'ja' => <String>['アプリのエントリポイント', 'コンポーザーウィジェット'],
+      _ => <String>['Application entry point', 'Composer widget'],
+    };
+    return SizedBox(
+      width: 320,
+      child: TRInlineSuggestions<String>(
+        open: args['open'] == true,
+        status: status,
+        controller: _suggestions,
+        emptyLabel: switch (widget.locale) {
+          'ko' => '일치하는 항목 없음',
+          'ja' => '一致する項目がありません',
+          _ => 'No matches',
+        },
+        loadingLabel: switch (widget.locale) {
+          'ko' => '검색 중',
+          'ja' => '検索中',
+          _ => 'Loading',
+        },
+        errorLabel: switch (widget.locale) {
+          'ko' => '제안을 불러오지 못했습니다',
+          'ja' => '候補を読み込めませんでした',
+          _ => 'Could not load suggestions',
+        },
+        items: status == TRInlineSuggestionsStatus.ready
+            ? <TRInlineSuggestionItem<String>>[
+                TRInlineSuggestionItem<String>(
+                  value: 'lib/app.dart',
+                  label: 'lib/app.dart',
+                  description: descriptions.first,
+                  matchedIndices: const <int>[0, 1, 2],
+                ),
+                TRInlineSuggestionItem<String>(
+                  value: 'lib/composer.dart',
+                  label: 'lib/composer.dart',
+                  description: descriptions.last,
+                  hint: '<path>',
+                  tag: 'lib',
+                  enabled: !disabledOption,
+                ),
+              ]
+            : const <TRInlineSuggestionItem<String>>[],
+        onSelected: (item) => _text.text = item.value,
+        child: Focus(
+          onKeyEvent: (node, event) => _suggestions.handleKeyEvent(event),
+          child: TRTextField(
+            controller: _text,
+            focusNode: _focus,
+            maxLines: 3,
+            minLines: 1,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _PreviewCombobox extends StatefulWidget {
