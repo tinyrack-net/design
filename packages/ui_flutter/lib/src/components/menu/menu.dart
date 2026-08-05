@@ -420,7 +420,10 @@ class TRMenuSubmenu extends StatelessWidget {
         ),
       ),
     ],
-    menuStyle: TRLayerStyles.menu(context),
+    menuStyle: TRLayerStyles.menu(
+      context,
+      alignment: AlignmentDirectional.topEnd,
+    ),
     style: TRLayerStyles.item(context, showFocusBorder: false),
     trailingIcon: trailingIcon,
     useRootOverlay: true,

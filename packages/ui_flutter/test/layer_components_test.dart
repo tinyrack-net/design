@@ -181,21 +181,25 @@ void main() {
     });
 
     testWidgets('opens submenus in RTL', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1200, 700));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(
         _app(
-          TRMenu(
-            trigger: const Text('More'),
-            menuChildren: [
-              TRMenuSubmenu(
-                menuChildren: [
-                  TRMenuItem(
-                    onPressed: () {},
-                    child: const Text('Nested command'),
-                  ),
-                ],
-                child: const Text('Nested'),
-              ),
-            ],
+          Center(
+            child: TRMenu(
+              trigger: const Text('More'),
+              menuChildren: [
+                TRMenuSubmenu(
+                  menuChildren: [
+                    TRMenuItem(
+                      onPressed: () {},
+                      child: const Text('Nested command'),
+                    ),
+                  ],
+                  child: const Text('Nested'),
+                ),
+              ],
+            ),
           ),
           textDirection: TextDirection.rtl,
         ),
@@ -206,6 +210,31 @@ void main() {
       await tester.tap(find.text('Nested'));
       await tester.pumpAndSettle();
       expect(find.text('Nested command'), findsOneWidget);
+      final parentLayer = tester.getRect(
+        find
+            .ancestor(
+              of: find.text('Nested'),
+              matching: _layerBoundary(TRLayerBoundaryKind.menu),
+            )
+            .first,
+      );
+      final childLayer = tester.getRect(
+        find
+            .ancestor(
+              of: find.text('Nested command'),
+              matching: _layerBoundary(TRLayerBoundaryKind.menu),
+            )
+            .first,
+      );
+      expect(
+        childLayer.right,
+        closeTo(
+          parentLayer.left +
+              TRGeneratedSpacing.xs +
+              TRGeneratedBorders.defaultWidth,
+          0.01,
+        ),
+      );
     });
 
     testWidgets('reports open and outside-click close', (tester) async {
