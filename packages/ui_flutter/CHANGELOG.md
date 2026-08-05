@@ -15,6 +15,32 @@
 
 ## 0.11.0
 
+- Adds `TRText.inherit`, which keeps the ambient `DefaultTextStyle` instead of
+  replacing it with a typography role. Tinyrack components style their slots by
+  merging into the default text style, so a slot child built with the primary
+  constructor discarded the size, color, and truncation its host applied — a
+  `TRText` in a `TRTreeNav` description lost the muted label style, and one in a
+  list row subtitle lost both the muted color and the ellipsis. The primary
+  constructor is unchanged and remains correct wherever the text owns its role.
+- Decouples `TRText`'s `overflow` and `softWrap` from `truncate` and adds them
+  as parameters. `truncate` forced `maxLines` to 1, so a two-line ellipsized
+  label was not expressible. It is now shorthand that any explicit `maxLines`,
+  `overflow`, or `softWrap` overrides, and only a single-line clip stops
+  wrapping. `TRText` also no longer forces `TextAlign.start` when no alignment
+  is given, so it inherits the ambient alignment as `Text` does.
+- Adds `TRScrollArea.forScrollable`, a themed scrollbar over a scrollable the
+  caller already owns. The default constructor always supplies its own
+  `SingleChildScrollView`, so hosting a lazy or reversed `ListView` nested two
+  scrollables, unbounded the list's height, and defeated its lazy building.
+- Fills in `headlineSmall`, `headlineMedium`, and `headlineLarge` on the theme's
+  `TextTheme`. They were unset, so their size, line height, and weight were all
+  null and text sized by them fell back to the ambient default rather than a
+  token. All three take the same style as their `titleLarge` and `displaySmall`
+  neighbours, which Tinyrack already renders identically.
+- Themes text selection. `textSelectionTheme` was unset, so the selection
+  highlight, caret, and drag handles were drawn with Material's default accent,
+  which is outside the token set. Selection now uses `surfaceSelected`, the
+  caret uses `text`, and the handles use `focus`.
 - Fixes `TRTerminalView` repeating text that a multi-character input method
   composes. The terminal reports the whole platform editing buffer when a
   composition ends and relies on resetting that buffer afterwards; Hangul and

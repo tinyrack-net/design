@@ -352,6 +352,14 @@ abstract final class TinyrackTheme {
           TargetPlatform.windows: TRPageTransitionsBuilder(),
         },
       ),
+      // Selection is otherwise drawn with Material's default accent, which is
+      // outside the token set. The highlight paints behind the glyphs, so the
+      // opaque selected-surface token is the right fill for it.
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: colors.text,
+        selectionColor: colors.surfaceSelected,
+        selectionHandleColor: colors.focus,
+      ),
       inputDecorationTheme: InputDecorationThemeData(
         filled: true,
         fillColor: colors.surface,
@@ -408,6 +416,13 @@ abstract final class TinyrackTheme {
       titleSmall: style(TRGeneratedTextStyles.headingSm),
       titleMedium: style(TRGeneratedTextStyles.headingMd),
       titleLarge: style(TRGeneratedTextStyles.headingLg),
+      // Material's headline tier sits between `titleLarge` and `displaySmall`,
+      // which Tinyrack already renders with the same style. Leaving these unset
+      // gave them null metrics, so text sized by them fell back to the ambient
+      // default instead of a token.
+      headlineSmall: style(TRGeneratedTextStyles.headingLg),
+      headlineMedium: style(TRGeneratedTextStyles.headingLg),
+      headlineLarge: style(TRGeneratedTextStyles.headingLg),
       displaySmall: style(TRGeneratedTextStyles.headingLg),
       displayMedium: style(TRGeneratedTextStyles.display),
       displayLarge: style(TRGeneratedTextStyles.displayLg),

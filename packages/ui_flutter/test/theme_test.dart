@@ -222,6 +222,79 @@ void main() {
     }
   });
 
+  test('every Material text role resolves to a Tinyrack typography style', () {
+    for (final theme in <ThemeData>[
+      TinyrackTheme.light(),
+      TinyrackTheme.dark(),
+    ]) {
+      final text = theme.textTheme;
+      final roles = <String, TextStyle?>{
+        'displayLarge': text.displayLarge,
+        'displayMedium': text.displayMedium,
+        'displaySmall': text.displaySmall,
+        'headlineLarge': text.headlineLarge,
+        'headlineMedium': text.headlineMedium,
+        'headlineSmall': text.headlineSmall,
+        'titleLarge': text.titleLarge,
+        'titleMedium': text.titleMedium,
+        'titleSmall': text.titleSmall,
+        'bodyLarge': text.bodyLarge,
+        'bodyMedium': text.bodyMedium,
+        'bodySmall': text.bodySmall,
+        'labelLarge': text.labelLarge,
+        'labelMedium': text.labelMedium,
+        'labelSmall': text.labelSmall,
+      };
+
+      // An unset role leaves the metrics null, so text sized by it falls back
+      // to whatever the ambient default happens to be rather than a token.
+      for (final MapEntry(key: role, value: style) in roles.entries) {
+        expect(style, isNotNull, reason: '$role is unset');
+        expect(
+          style!.fontFamily,
+          TRGeneratedFontFamilies.body,
+          reason: '$role does not use the token family',
+        );
+        expect(style.fontSize, isNotNull, reason: '$role has no size');
+        expect(style.height, isNotNull, reason: '$role has no line height');
+        expect(style.fontWeight, isNotNull, reason: '$role has no weight');
+      }
+
+      // The Material scale must not invert where Tinyrack collapses roles onto
+      // a shared style.
+      double size(TextStyle? style) => style!.fontSize!;
+      expect(
+        size(text.titleLarge),
+        lessThanOrEqualTo(size(text.headlineSmall)),
+      );
+      expect(
+        size(text.headlineSmall),
+        lessThanOrEqualTo(size(text.headlineMedium)),
+      );
+      expect(
+        size(text.headlineMedium),
+        lessThanOrEqualTo(size(text.headlineLarge)),
+      );
+      expect(
+        size(text.headlineLarge),
+        lessThanOrEqualTo(size(text.displaySmall)),
+      );
+    }
+  });
+
+  test('text selection is themed from tokens', () {
+    for (final (theme, tokens) in <(ThemeData, TRGeneratedColorTheme)>[
+      (TinyrackTheme.light(), TRGeneratedColors.light),
+      (TinyrackTheme.dark(), TRGeneratedColors.dark),
+    ]) {
+      final selection = theme.textSelectionTheme;
+
+      expect(selection.cursorColor, tokens.text);
+      expect(selection.selectionHandleColor, tokens.focus);
+      expect(selection.selectionColor, tokens.surfaceSelected);
+    }
+  });
+
   testWidgets('button reports loading semantics and prevents activation', (
     tester,
   ) async {
