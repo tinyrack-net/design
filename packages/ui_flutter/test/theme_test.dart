@@ -1201,6 +1201,48 @@ void main() {
     expect(find.text('Panel body'), findsNothing);
   });
 
+  testWidgets(
+    'collapsible content can resize while reduced motion is enabled',
+    (tester) async {
+      final itemCount = ValueNotifier<int>(1);
+      addTearDown(itemCount.dispose);
+
+      await tester.pumpWidget(
+        _wrapNarrow(
+          MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: SizedBox(
+              height: 240,
+              child: ListView(
+                children: <Widget>[
+                  ValueListenableBuilder<int>(
+                    valueListenable: itemCount,
+                    builder: (context, count, child) => TRCollapsible(
+                      defaultOpen: true,
+                      trigger: const Text('Workspace'),
+                      content: Column(
+                        children: <Widget>[
+                          for (var index = 0; index < count; index++)
+                            Text('Worktree $index'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      itemCount.value = 2;
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Worktree 1'), findsOneWidget);
+    },
+  );
+
   testWidgets('collapsible does not toggle when disabled', (tester) async {
     var calls = 0;
     await tester.pumpWidget(

@@ -76,7 +76,37 @@ class _TRCollapsibleState extends State<TRCollapsible> {
         FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
     final disableAnimations = MediaQuery.disableAnimationsOf(context);
     final motionDuration = disableAnimations ? Duration.zero : TRMotion.fast;
-    final sizeDuration = disableAnimations ? Duration.zero : TRMotion.normal;
+    final content = open
+        ? DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: generated.controlBorder,
+                  width: TRGeneratedBorders.defaultWidth,
+                ),
+              ),
+            ),
+            child: Padding(
+              // The divider and the root border paint inside; widen
+              // the insets they overlap.
+              padding: const EdgeInsets.fromLTRB(
+                TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
+                TRGeneratedSpacing.lg,
+                TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
+                TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
+              ),
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  color: colors.textMuted,
+                  fontFamily: TRGeneratedFontFamilies.body,
+                  fontSize: TRGeneratedTypographySizes.sm,
+                  height: TRGeneratedTypographyLineHeights.md,
+                ),
+                child: widget.content,
+              ),
+            ),
+          )
+        : const SizedBox(width: double.infinity);
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -191,41 +221,14 @@ class _TRCollapsibleState extends State<TRCollapsible> {
               ),
             ),
           ),
-          AnimatedSize(
-            curve: TRMotion.standard,
-            duration: sizeDuration,
-            child: open
-                ? DecoratedBox(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(
-                          color: generated.controlBorder,
-                          width: TRGeneratedBorders.defaultWidth,
-                        ),
-                      ),
-                    ),
-                    child: Padding(
-                      // The divider and the root border paint inside; widen
-                      // the insets they overlap.
-                      padding: const EdgeInsets.fromLTRB(
-                        TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
-                        TRGeneratedSpacing.lg,
-                        TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
-                        TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
-                      ),
-                      child: DefaultTextStyle.merge(
-                        style: TextStyle(
-                          color: colors.textMuted,
-                          fontFamily: TRGeneratedFontFamilies.body,
-                          fontSize: TRGeneratedTypographySizes.sm,
-                          height: TRGeneratedTypographyLineHeights.md,
-                        ),
-                        child: widget.content,
-                      ),
-                    ),
-                  )
-                : const SizedBox(width: double.infinity),
-          ),
+          if (disableAnimations)
+            content
+          else
+            AnimatedSize(
+              curve: TRMotion.standard,
+              duration: TRMotion.normal,
+              child: content,
+            ),
         ],
       ),
     );
