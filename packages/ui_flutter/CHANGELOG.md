@@ -1,3 +1,11 @@
+## 0.8.1
+
+- Fixes an anchored layer that never requested focus, such as a `TRTooltip`
+  opened by focusing its trigger, restoring focus to that trigger when it
+  closes. The restored focus dismissed whatever had gained focus meanwhile, so
+  opening a `TRMenubar` menu while a focus tooltip was showing closed the menu
+  immediately.
+
 ## 0.8.0
 
 - Adds default and muted separator variants so content dividers can use the
