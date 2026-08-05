@@ -68,6 +68,65 @@ void main() {
       expect(find.text('Refresh rack'), findsOneWidget);
     });
 
+    testWidgets('a focus tooltip keeps an open menubar menu when it closes', (
+      tester,
+    ) async {
+      final triggerFocus = FocusNode(debugLabel: 'tooltip trigger');
+      addTearDown(triggerFocus.dispose);
+      await tester.pumpWidget(
+        _app(
+          TRTooltipProvider(
+            openDelay: const Duration(milliseconds: 200),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TRMenubar(
+                  menus: <TRMenubarMenu>[
+                    TRMenubarMenu(
+                      trigger: const Text('File'),
+                      menuChildren: <Widget>[
+                        TRMenuItem(
+                          onPressed: () {},
+                          child: const Text('New rack'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                TRTooltip(
+                  message: 'Pick a project',
+                  // Keep the tooltip surface off the menubar so tapping a menu
+                  // trigger is a real hit rather than an overlay-blocked tap.
+                  placement: TRLayerPlacement.bottomCenter,
+                  child: Focus(
+                    focusNode: triggerFocus,
+                    child: const Text('Project'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      triggerFocus.requestFocus();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump();
+      expect(find.text('Pick a project'), findsOneWidget);
+
+      await tester.tap(find.text('File'));
+      await tester.pump();
+      expect(find.text('New rack'), findsOneWidget);
+
+      // The tooltip never took focus, so closing it must not pull focus back to
+      // its trigger and make the menubar dismiss itself.
+      await tester.pumpAndSettle();
+      expect(find.text('New rack'), findsOneWidget);
+      expect(triggerFocus.hasPrimaryFocus, isFalse);
+      expect(find.text('Pick a project'), findsNothing);
+    });
+
     testWidgets('tooltip can close while its trigger is being laid out', (
       tester,
     ) async {

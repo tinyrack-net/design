@@ -455,7 +455,9 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
   }
 
   void _show() {
-    _previousFocus ??= FocusManager.instance.primaryFocus;
+    if (widget.requestFocus) {
+      _previousFocus ??= FocusManager.instance.primaryFocus;
+    }
     _overlayController.show();
     if (widget.requestFocus) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -465,9 +467,15 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
   }
 
   void _hide() {
+    // Restore focus only while this layer still holds it. A layer that never
+    // took focus, such as a tooltip opened by focusing its trigger, would
+    // otherwise pull focus back to that trigger as it closes and dismiss
+    // whatever gained focus meanwhile, such as a just-opened menubar menu.
+    final restoreFocus = widget.requestFocus && _layerFocusNode.hasFocus;
     _overlayController.hide();
     final focus = _previousFocus;
     _previousFocus = null;
+    if (!restoreFocus) return;
     if (focus != null && focus.canRequestFocus) focus.requestFocus();
   }
 
