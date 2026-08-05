@@ -27,6 +27,28 @@ IBM Plex Sans、Mono、韓国語、日本語のフォントファイル11個を�
 アプリケーションのFlutterアセットバンドルに含まれます。実行時に
 フォントをダウンロードする必要はありません。
 
+## ページ遷移
+
+どちらのテーマもすべての`TargetPlatform`に`TRPageTransitionsBuilder`を
+登録します。そのためルーティングされたページは、Materialのプラットフォーム
+別デフォルトを継承せず、Android、iOS、macOS、Linux、Windowsで同じように
+アニメーションします。入ってくるページはダイアログやドロワーと同じ
+オーバーレイモーションで、閉じた状態のスケールから拡大しながらフェード
+インし、popではそのアニメーションを逆再生します。プラットフォームが
+`disableAnimations`を報告する場合は、遷移せずにページをそのまま返します。
+
+特定の画面だけ別のモーションが必要な場合は、自分でビルダーを登録します。
+
+```dart
+ThemeData theme = TinyrackTheme.light().copyWith(
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    },
+  ),
+);
+```
+
 ## Reactパリティへの移行
 
 FlutterでもReactコンポーネントと同じvariant名を使います。

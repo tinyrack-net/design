@@ -1,3 +1,14 @@
+## 0.10.0
+
+- Adds `TRPageTransitionsBuilder` and installs it in `TinyrackTheme.light()` and
+  `TinyrackTheme.dark()` for every `TargetPlatform`. A routed page previously
+  inherited Material's per-platform default, so the same application animated
+  one way on Android and another on macOS, Linux, and Windows, and the motion
+  came from outside the token set. The arriving page now fades in while it
+  scales up from the closed overlay scale, matching the dialog and drawer
+  motion, and a pop plays that animation in reverse. The transition is skipped
+  when the platform reports `disableAnimations`.
+
 ## 0.9.1
 
 - Fixes a `TRMenubar` menu and a `TRMenu` panel that opened over their own

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'generated/tokens.g.dart';
+import 'page_transitions.dart';
 import 'types.dart';
 
 /// Semantic colors available through the active [ThemeData].
@@ -291,6 +292,19 @@ abstract final class TinyrackTheme {
       scaffoldBackgroundColor: colors.surface,
       textTheme: textTheme,
       useMaterial3: true,
+      // Every platform gets the same builder. Inheriting Material's per-platform
+      // defaults would make a Tinyrack app animate differently on Android,
+      // macOS, and Linux, and would leave the motion outside the token set.
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.android: TRPageTransitionsBuilder(),
+          TargetPlatform.fuchsia: TRPageTransitionsBuilder(),
+          TargetPlatform.iOS: TRPageTransitionsBuilder(),
+          TargetPlatform.linux: TRPageTransitionsBuilder(),
+          TargetPlatform.macOS: TRPageTransitionsBuilder(),
+          TargetPlatform.windows: TRPageTransitionsBuilder(),
+        },
+      ),
       inputDecorationTheme: InputDecorationThemeData(
         filled: true,
         fillColor: colors.surface,

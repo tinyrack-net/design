@@ -106,6 +106,7 @@ void main() {
       TROtpFieldController,
       TROtpFieldFormField,
       TROtpSeparatorBuilder,
+      TRPageTransitionsBuilder,
       TRPagination,
       TRPaginationRangeItem,
       TRPopover,
@@ -176,6 +177,6 @@ void main() {
       TRWindowFrameVariant,
     ];
 
-    expect(publicTypes, hasLength(170));
+    expect(publicTypes, hasLength(171));
   });
 }

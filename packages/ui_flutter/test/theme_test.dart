@@ -30,7 +30,95 @@ Focus _radioFocus(WidgetTester tester, int index) => tester.widget<Focus>(
 FocusNode _radioFocusNode(WidgetTester tester, int index) =>
     _radioFocus(tester, index).focusNode!;
 
+/// Two routes whose page transition can be driven from the first one.
+Widget _pageTransitionApp() => MaterialApp(
+  theme: TinyrackTheme.light(),
+  home: Scaffold(
+    body: Builder(
+      builder: (context) => TextButton(
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (routeContext) => Scaffold(
+              body: TextButton(
+                onPressed: () => Navigator.of(routeContext).pop(),
+                child: const Text('second'),
+              ),
+            ),
+          ),
+        ),
+        child: const Text('open'),
+      ),
+    ),
+  ),
+);
+
 void main() {
+  test('every platform animates pages with the Tinyrack builder', () {
+    for (final theme in <ThemeData>[
+      TinyrackTheme.light(),
+      TinyrackTheme.dark(),
+    ]) {
+      for (final platform in TargetPlatform.values) {
+        expect(
+          theme.pageTransitionsTheme.builders[platform],
+          isA<TRPageTransitionsBuilder>(),
+          reason: 'no Tinyrack page transition for $platform',
+        );
+      }
+    }
+  });
+
+  testWidgets('a pushed page scales up into place and settles', (tester) async {
+    await tester.pumpWidget(_pageTransitionApp());
+    await tester.tap(find.text('open'));
+    await tester.pump();
+    await tester.pump(TRMotion.slow ~/ 2);
+
+    final midFlight = tester.getRect(find.text('second'));
+    await tester.pumpAndSettle();
+    final settled = tester.getRect(find.text('second'));
+
+    expect(midFlight.width, lessThan(settled.width));
+    expect(
+      midFlight.width,
+      greaterThanOrEqualTo(
+        settled.width * TRGeneratedMeasurements.overlayClosedScale,
+      ),
+    );
+  });
+
+  testWidgets('a popped page plays the entry transition in reverse', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_pageTransitionApp());
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+    final settled = tester.getRect(find.text('second'));
+
+    await tester.tap(find.text('second'));
+    await tester.pump();
+    await tester.pump(TRMotion.slow ~/ 2);
+
+    expect(tester.getRect(find.text('second')).width, lessThan(settled.width));
+  });
+
+  testWidgets('disabled animations skip the page transition', (tester) async {
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(disableAnimations: true),
+        child: _pageTransitionApp(),
+      ),
+    );
+    await tester.tap(find.text('open'));
+    await tester.pump();
+    await tester.pump(TRMotion.slow ~/ 2);
+
+    final midFlight = tester.getRect(find.text('second'));
+    await tester.pumpAndSettle();
+
+    expect(midFlight, tester.getRect(find.text('second')));
+  });
+
   test('light and dark themes expose semantic extensions', () {
     final light = TinyrackTheme.light().extension<TinyrackThemeData>()!;
     final dark = TinyrackTheme.dark().extension<TinyrackThemeData>()!;
