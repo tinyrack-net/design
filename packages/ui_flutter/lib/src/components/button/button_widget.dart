@@ -178,19 +178,7 @@ class TRButton extends StatelessWidget {
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       padding: WidgetStatePropertyAll(_paddingOverride ?? padding),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textStyle: WidgetStatePropertyAll(
-        TextStyle(
-          fontFamily: TRGeneratedFontFamilies.body,
-          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-          fontSize: switch (uiSize) {
-            TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
-            TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
-          },
-          fontWeight: TRGeneratedFontWeights.medium,
-          height: TRGeneratedTypographyLineHeights.sm,
-          letterSpacing: TRGeneratedTypographyTracking.none,
-        ),
-      ),
+      textStyle: WidgetStatePropertyAll(TRControlMetrics.labelStyleOf(uiSize)),
       side: WidgetStatePropertyAll(
         appearance != TRAppearance.ghost
             ? BorderSide(
