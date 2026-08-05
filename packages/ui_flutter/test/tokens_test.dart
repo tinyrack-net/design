@@ -3,6 +3,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 void main() {
+  group('TRMeasurements', () {
+    // A layout sizing content to the measure scale needs every step of it.
+    // Publishing only two forces a consumer to approximate the rest with a
+    // literal, which is the thing the scale exists to prevent.
+    test('publishes the complete measure scale in ascending order', () {
+      const scale = <double>[
+        TRMeasurements.measureXs,
+        TRMeasurements.measureSm,
+        TRMeasurements.measureMd,
+        TRMeasurements.measureLg,
+        TRMeasurements.measureXl,
+      ];
+      expect(scale.first, greaterThan(0));
+      for (var step = 1; step < scale.length; step++) {
+        expect(scale[step], greaterThan(scale[step - 1]));
+      }
+    });
+  });
+
   group('TRControlMetrics', () {
     test('publishes the geometry of a control at every size', () {
       for (final size in TRUiSize.values) {

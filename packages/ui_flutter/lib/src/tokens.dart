@@ -47,7 +47,10 @@ abstract final class TRShadows {
 
 /// Platform-resolved measurements used by Tinyrack surfaces and overlays.
 abstract final class TRMeasurements {
+  static const measureXs = TRGeneratedMeasurements.measureXs;
+  static const measureSm = TRGeneratedMeasurements.measureSm;
   static const measureMd = TRGeneratedMeasurements.measureMd;
+  static const measureLg = TRGeneratedMeasurements.measureLg;
   static const measureXl = TRGeneratedMeasurements.measureXl;
   static const overlayWidthSm = TRGeneratedMeasurements.overlayWidthSm;
   static const overlayWidthMd = TRGeneratedMeasurements.overlayWidthMd;

@@ -1,3 +1,12 @@
+## 0.18.0
+
+- `TRMeasurements` publishes the complete measure scale: `measureXs`,
+  `measureSm`, and `measureLg` join the `measureMd` and `measureXl` steps it
+  already exposed. The tokens behind them were already generated, but only two
+  of the five were public, so a consumer sizing a surface to any other step —
+  a boot splash brand mark, a constrained illustration — had to approximate it
+  with a literal or misuse a `TRSpacing` gap token as a dimension.
+
 ## 0.17.0
 
 - Raises the `sm` control height from 24px to 28px. 24px left four pixels of
