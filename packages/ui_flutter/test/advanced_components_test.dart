@@ -1239,6 +1239,35 @@ void main() {
       );
     });
 
+    testWidgets('menubar menu panel adds no chrome around its layer', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenubar(
+            menus: [
+              TRMenubarMenu(
+                trigger: const Text('File'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('New')),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      await tester.tap(find.text('File'));
+      await tester.pumpAndSettle();
+
+      final layer = find.byType(TRLayerBoundary);
+      final panel = find
+          .ancestor(of: layer, matching: find.byType(Material))
+          .first;
+      expect(tester.getRect(panel), tester.getRect(layer));
+      expect(tester.widget<Material>(panel).color, Colors.transparent);
+      expect(tester.widget<Material>(panel).elevation, 0);
+    });
+
     testWidgets('menubar opens three nested layers', (tester) async {
       await tester.binding.setSurfaceSize(const Size(1280, 720));
       addTearDown(() => tester.binding.setSurfaceSize(null));
