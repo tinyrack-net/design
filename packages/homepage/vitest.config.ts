@@ -35,7 +35,9 @@ export default defineConfig({
           include: ['tests/**/*.test.ts'],
           exclude: [
             'tests/app-icons.test.ts',
+            'tests/browser-flutter-preview.test.ts',
             'tests/browser-overlays.test.ts',
+            'tests/browser-rendering.test.ts',
             'tests/closure-00-29.test.ts',
             'tests/code-block-languages.test.ts',
             'tests/dev-worktree-port.test.ts',

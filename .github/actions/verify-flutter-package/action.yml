@@ -29,15 +29,31 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: flutter pub get
 
-    - name: Analyze and test package
+    - name: Check package formatting
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: dart format --output=none --set-exit-if-changed lib test example/lib
+
+    - name: Analyze, test, and validate the package archive in parallel
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
-        dart format --output=none --set-exit-if-changed lib test example/lib
-        flutter analyze
-        flutter test
+        analyze_status=0
+        test_status=0
+        publish_status=0
 
-    - name: Validate the public package archive
-      shell: bash
-      working-directory: ${{ inputs.working-directory }}
-      run: dart pub publish --dry-run
+        flutter analyze &
+        analyze_pid=$!
+        flutter test &
+        test_pid=$!
+        dart pub publish --dry-run &
+        publish_pid=$!
+
+        wait "$analyze_pid" || analyze_status=$?
+        wait "$test_pid" || test_status=$?
+        wait "$publish_pid" || publish_status=$?
+
+        if (( analyze_status != 0 || test_status != 0 || publish_status != 0 )); then
+          echo "::error::Flutter verification failed (analyze=$analyze_status test=$test_status publish=$publish_status)"
+          exit 1
+        fi

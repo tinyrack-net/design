@@ -105,6 +105,10 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('continue-on-error: true');
     expect(ci).toContain("if: steps.ui-firefox-test.outcome == 'failure'");
     expect(ci).toContain('Preserve the first UI Firefox failure');
+    expect(ci).toContain('name: UI Chromium and contracts');
+    expect(ci).toContain('name: UI Firefox');
+    expect(ci).toContain(`UI_FIREFOX_RESULT: \${{ needs.ui_firefox.result }}`);
+    expect(ci).not.toContain('playwright install --with-deps');
     expect(ci).toContain('pnpm --filter @tinyrack/docs test:prepared');
     expect(ci).toContain('pnpm --filter @tinyrack/homepage test:prepared');
   });
@@ -129,13 +133,18 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('name: CI gate');
     expect(ci).toContain('name: ui-docs-runtime');
     expect(ci).toContain('name: docs-smoke-input');
+    expect(ci).toContain('name: flutter-preview-runtime');
+    expect(ci.match(/pnpm run tokens:check/g)).toHaveLength(1);
+    expect(ci).toMatch(
+      /name: Build Homepage Flutter preview[\s\S]*pnpm run tokens:check[\s\S]*name: Homepage package/,
+    );
     expect(ci).not.toContain('name: prepared-workspace');
     expect(ci).not.toContain('name: Prepare package outputs');
     expect(ci).toMatch(
-      /name: UI package[\s\S]*name: Build UI package\s+run: pnpm --filter @tinyrack\/ui build/,
+      /name: UI Chromium and contracts[\s\S]*name: Build UI package\s+run: pnpm --filter @tinyrack\/ui build/,
     );
     expect(ci).toMatch(
-      /name: UI package[\s\S]*pnpm --filter @tinyrack\/ui test:docs-contract/,
+      /name: UI Chromium and contracts[\s\S]*pnpm --filter @tinyrack\/ui test:docs-contract/,
     );
     expect(ci).toContain(
       'tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui_web --strip-components=1 package/dist',

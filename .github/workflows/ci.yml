@@ -66,6 +66,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Build Web packages
+          phase: start
+
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
@@ -104,8 +110,66 @@ jobs:
           include-hidden-files: true
           retention-days: 1
 
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Build Web packages
+          phase: finish
+
+  homepage_preview:
+    name: Build Homepage Flutter preview
+    if: >-
+      needs.changes.outputs.homepage == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Build Homepage Flutter preview
+          phase: start
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2.21.0
+        with:
+          channel: stable
+          flutter-version: 3.44.4
+          cache: true
+
+      - name: Check generated design tokens
+        run: pnpm run tokens:check
+
+      - name: Build Flutter preview
+        run: pnpm run flutter:preview:build
+
+      - name: Upload Flutter preview runtime
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: flutter-preview-runtime
+          path: packages/ui_flutter/example/build/web
+          if-no-files-found: error
+          include-hidden-files: true
+          retention-days: 1
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Build Homepage Flutter preview
+          phase: finish
+
   ui:
-    name: UI package
+    name: UI Chromium and contracts
     if: >-
       needs.changes.outputs.ui == 'true' ||
       needs.changes.outputs.shared == 'true'
@@ -117,6 +181,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI Chromium and contracts
+          phase: start
+
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
@@ -126,14 +196,56 @@ jobs:
       - name: Build UI package
         run: pnpm --filter @tinyrack/ui build
 
-      - name: Install browser engines
-        run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
+      - name: Install Chromium
+        run: |
+          pnpm --filter @tinyrack/ui exec playwright install chromium
+          pnpm --filter @tinyrack/ui exec node --input-type=module -e "import { chromium } from 'playwright'; const browser = await chromium.launch({ headless: true }); await browser.close();"
 
       - name: Test UI unit, documentation contract, and Chromium suites
         run: |
           pnpm --filter @tinyrack/ui test:unit
           pnpm --filter @tinyrack/ui test:docs-contract
           pnpm --filter @tinyrack/ui test:chromium
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI Chromium and contracts
+          phase: finish
+
+  ui_firefox:
+    name: UI Firefox
+    if: >-
+      needs.changes.outputs.ui == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6.0.3
+
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI Firefox
+          phase: start
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install UI dependencies
+        run: pnpm --filter @tinyrack/ui... install --frozen-lockfile
+
+      - name: Build UI package
+        run: pnpm --filter @tinyrack/ui build
+
+      - name: Install Firefox
+        run: |
+          pnpm --filter @tinyrack/ui exec playwright install firefox
+          pnpm --filter @tinyrack/ui exec node --input-type=module -e "import { firefox } from 'playwright'; const browser = await firefox.launch({ headless: true }); await browser.close();"
 
       - name: Test UI Firefox suite
         id: ui-firefox-test
@@ -147,6 +259,13 @@ jobs:
       - name: Preserve the first UI Firefox failure
         if: steps.ui-firefox-test.outcome == 'failure'
         run: exit 1
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI Firefox
+          phase: finish
 
   docs_contract:
     name: UI documentation contracts
@@ -211,6 +330,7 @@ jobs:
       needs.changes.outputs.shared == 'true'
     needs:
       - changes
+      - homepage_preview
       - web_packages
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -219,15 +339,14 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Homepage package
+          phase: start
+
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2.21.0
-        with:
-          channel: stable
-          flutter-version: 3.44.4
-          cache: true
 
       - name: Install Homepage and quality dependencies
         run: >-
@@ -241,7 +360,6 @@ jobs:
           pnpm run biome
           pnpm run scripts:check
           pnpm run ci:plan:test
-          pnpm run tokens:check
           pnpm run flutter:preview:check
 
       - name: Download Web package runtime
@@ -250,14 +368,21 @@ jobs:
           name: ui-docs-runtime
           path: packages
 
+      - name: Download Flutter preview runtime
+        uses: actions/download-artifact@v8.0.1
+        with:
+          name: flutter-preview-runtime
+          path: packages/ui_flutter/example/build/web
+
       - name: Build Homepage
         run: |
-          pnpm run flutter:preview:build
           pnpm --filter @tinyrack/homepage build
           pnpm run flutter:preview:budget
 
       - name: Install Chromium
-        run: pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
+        run: |
+          pnpm --filter @tinyrack/homepage exec playwright install chromium
+          pnpm --filter @tinyrack/homepage exec node --input-type=module -e "import { chromium } from 'playwright'; const browser = await chromium.launch({ headless: true }); await browser.close();"
 
       - name: Test Homepage package
         run: pnpm --filter @tinyrack/homepage test:prepared
@@ -272,6 +397,13 @@ jobs:
           include-hidden-files: true
           retention-days: 1
 
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Homepage package
+          phase: finish
+
   visual_parity:
     name: React and Flutter pixel parity
     if: >-
@@ -285,6 +417,12 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
+
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: React and Flutter pixel parity
+          phase: start
 
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
@@ -318,6 +456,13 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: React and Flutter pixel parity
+          phase: finish
+
   flutter:
     name: Flutter package
     if: >-
@@ -331,8 +476,21 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Flutter package
+          phase: start
+
       - name: Verify Flutter package
         uses: ./.github/actions/verify-flutter-package
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Flutter package
+          phase: finish
 
   flutter_platforms:
     name: Flutter example (${{ matrix.target }})
@@ -372,6 +530,10 @@ jobs:
         with:
           distribution: temurin
           java-version: "17"
+          cache: gradle
+          cache-dependency-path: |
+            packages/ui_flutter/example/android/**/*.gradle*
+            packages/ui_flutter/example/android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Install Linux desktop dependencies
         if: matrix.target == 'linux'
@@ -401,6 +563,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6.0.3
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Flutter preview development
+          phase: start
+
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
@@ -415,10 +583,19 @@ jobs:
         run: pnpm --filter @tinyrack/homepage... install --frozen-lockfile
 
       - name: Install Chromium
-        run: pnpm --filter @tinyrack/homepage exec playwright install --with-deps chromium
+        run: |
+          pnpm --filter @tinyrack/homepage exec playwright install chromium
+          pnpm --filter @tinyrack/homepage exec node --input-type=module -e "import { chromium } from 'playwright'; const browser = await chromium.launch({ headless: true }); await browser.close();"
 
       - name: Test Flutter preview development server
         run: pnpm --filter @tinyrack/homepage test:flutter-dev
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Flutter preview development
+          phase: finish
 
   ci_gate:
     name: CI gate
@@ -426,7 +603,9 @@ jobs:
     needs:
       - changes
       - web_packages
+      - homepage_preview
       - ui
+      - ui_firefox
       - docs_contract
       - docs
       - homepage
@@ -447,8 +626,13 @@ jobs:
                 needs.changes.outputs.homepage == 'true' ||
                 needs.changes.outputs.shared == 'true' }}
           WEB_RESULT: ${{ needs.web_packages.result }}
+          HOMEPAGE_PREVIEW_SELECTED: >-
+            ${{ needs.changes.outputs.homepage == 'true' ||
+                needs.changes.outputs.shared == 'true' }}
+          HOMEPAGE_PREVIEW_RESULT: ${{ needs.homepage_preview.result }}
           UI_SELECTED: ${{ needs.changes.outputs.ui == 'true' || needs.changes.outputs.shared == 'true' }}
           UI_RESULT: ${{ needs.ui.result }}
+          UI_FIREFOX_RESULT: ${{ needs.ui_firefox.result }}
           CONTRACT_SELECTED: >-
             ${{ needs.changes.outputs.docs_contract == 'true' &&
                 needs.changes.outputs.ui != 'true' &&
@@ -488,7 +672,9 @@ jobs:
           }
 
           require_success "$WEB_SELECTED" "$WEB_RESULT" "Build Web packages"
-          require_success "$UI_SELECTED" "$UI_RESULT" "UI package"
+          require_success "$HOMEPAGE_PREVIEW_SELECTED" "$HOMEPAGE_PREVIEW_RESULT" "Build Homepage Flutter preview"
+          require_success "$UI_SELECTED" "$UI_RESULT" "UI Chromium and contracts"
+          require_success "$UI_SELECTED" "$UI_FIREFOX_RESULT" "UI Firefox"
           require_success "$CONTRACT_SELECTED" "$CONTRACT_RESULT" "UI documentation contracts"
           require_success "$DOCS_SELECTED" "$DOCS_RESULT" "Docs package"
           require_success "$HOMEPAGE_SELECTED" "$HOMEPAGE_RESULT" "Homepage package"

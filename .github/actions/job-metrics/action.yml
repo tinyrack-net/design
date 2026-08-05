@@ -1,0 +1,39 @@
+name: Record CI job metrics
+description: Record runner capacity and elapsed job time in the job summary.
+
+inputs:
+  phase:
+    description: Start or finish the job timer.
+    required: true
+  label:
+    description: Human-readable job label.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Record runner metrics
+      shell: bash
+      env:
+        METRICS_LABEL: ${{ inputs.label }}
+        METRICS_PHASE: ${{ inputs.phase }}
+      run: |
+        if [[ "$METRICS_PHASE" == "start" ]]; then
+          started_at="$(date +%s)"
+          processors="$(getconf _NPROCESSORS_ONLN 2>/dev/null || nproc)"
+          echo "TINYRACK_CI_JOB_STARTED_AT=$started_at" >> "$GITHUB_ENV"
+          {
+            echo "### $METRICS_LABEL"
+            echo
+            echo "- Runner: \`$RUNNER_OS/$RUNNER_ARCH\`"
+            echo "- Logical processors: \`$processors\`"
+            echo "- Started: \`$(date -u +%Y-%m-%dT%H:%M:%SZ)\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+        elif [[ "$METRICS_PHASE" == "finish" ]]; then
+          finished_at="$(date +%s)"
+          started_at="${TINYRACK_CI_JOB_STARTED_AT:-$finished_at}"
+          echo "- Elapsed: \`$((finished_at - started_at))s\`" >> "$GITHUB_STEP_SUMMARY"
+        else
+          echo "Unknown metrics phase: $METRICS_PHASE" >&2
+          exit 2
+        fi
