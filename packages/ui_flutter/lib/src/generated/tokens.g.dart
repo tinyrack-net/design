@@ -416,6 +416,9 @@ abstract final class TRGeneratedBorders {
 abstract final class TRGeneratedMeasurements {
   static const double controlPressDistance = 1.0;
   static const double skeletonRectangleHeight = 64.0;
+  static const double brandMarkSm = 64.0;
+  static const double brandMarkMd = 96.0;
+  static const double brandMarkLg = 128.0;
   static const double measureXs = 64.0;
   static const double measureSm = 128.0;
   static const double measureMd = 192.0;

@@ -22,6 +22,29 @@ void main() {
     });
   });
 
+  group('TRBrandMark measurements', () {
+    // A brand mark is a graphic, not a text region and not a control glyph.
+    // Without its own scale a splash or an empty state has to borrow a
+    // `measure` inline size or a `TRSpacing` gap, which reads as a token while
+    // meaning something else.
+    test('publishes an ascending brand mark scale', () {
+      const scale = <double>[
+        TRMeasurements.brandMarkSm,
+        TRMeasurements.brandMarkMd,
+        TRMeasurements.brandMarkLg,
+      ];
+      expect(scale.first, greaterThan(0));
+      for (var step = 1; step < scale.length; step++) {
+        expect(scale[step], greaterThan(scale[step - 1]));
+      }
+      // Larger than the glyph inside a control, so the two are never confused.
+      expect(
+        TRMeasurements.brandMarkSm,
+        greaterThan(TRControlMetrics.iconSizeOf(TRUiSize.lg)),
+      );
+    });
+  });
+
   group('TRControlMetrics', () {
     test('publishes the geometry of a control at every size', () {
       for (final size in TRUiSize.values) {

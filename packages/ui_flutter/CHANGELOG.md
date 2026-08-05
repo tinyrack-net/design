@@ -1,3 +1,13 @@
+## 0.21.0
+
+- Adds `TRMeasurements.brandMarkSm`, `brandMarkMd`, and `brandMarkLg` — a 64,
+  96, and 128px square scale for a brand mark, such as the one a boot splash
+  centers. A product had no token for this: the `measure` scale constrains the
+  inline size of a content region, `TRSpacing` describes gaps, and
+  `TRControlMetrics.iconSizeOf` is the 14-16px glyph inside a control, so
+  sizing a mark with any of them read as a token while meaning something else.
+  Also exposed to the web package as `--tinyrack-brand-mark-*`.
+
 ## 0.20.0
 
 - Removes `TRWindowCaptionButton`, `TRWindowCaptionAction`, and
