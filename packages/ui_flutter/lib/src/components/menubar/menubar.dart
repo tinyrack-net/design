@@ -44,6 +44,7 @@ class TRMenubarMenu extends StatelessWidget {
             ),
           ]
         : const [],
+    menuStyle: TRLayerStyles.menu(context),
     onClose: enabled ? onClose : null,
     onOpen: enabled ? onOpen : null,
     style: ButtonStyle(

@@ -1,3 +1,8 @@
+## 0.6.1
+
+- Fixes `TRMenubarMenu` popup panels rendering Material default vertical
+  padding and background around their Tinyrack layer surface.
+
 ## 0.6.0
 
 - Adds optional secondary descriptions to `TRTreeNavGroup` and
