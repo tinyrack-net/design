@@ -1,3 +1,13 @@
+## 0.13.0
+
+- Adds `TRControlMetrics`, which publishes the geometry every Tinyrack control
+  is built from — outer height, inline padding, content gap, icon size, font
+  size, and line height per `TRUiSize`, plus the border width that adds to a
+  control's outer size. A layout that has to decide how many controls fit an
+  available width, or align its own content to a control, previously had to
+  measure a rendered control or copy a literal, because these values were only
+  reachable through the private generated tokens.
+
 ## 0.12.0
 
 - `TRAppShellSidebar` now owns its own inline size and animates every change to
