@@ -176,6 +176,42 @@
     outline-color: var(--tinyrack-danger-border);
   }
 
+  /* Ghost drops only the resting frame. An open trigger stays anchored even
+     when focus has moved into the popup. */
+  .tr-select-trigger[data-appearance="ghost"] {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .tr-select-trigger[data-appearance="ghost"]:hover:not(
+    :disabled,
+    [data-disabled],
+    [data-readonly],
+    :focus-visible,
+    [data-popup-open]
+  ) {
+    background: var(--tinyrack-surface-hover);
+  }
+
+  .tr-select-trigger[data-appearance="ghost"]:focus-visible {
+    background: var(--tinyrack-surface);
+  }
+
+  .tr-select-trigger[data-appearance="ghost"][data-popup-open] {
+    background: var(--tinyrack-surface-selected);
+  }
+
+  .tr-select-trigger[data-appearance="ghost"][data-readonly] {
+    background: transparent;
+  }
+
+  .tr-select-trigger[data-appearance="ghost"]:is(
+    [aria-invalid="true"],
+    [data-invalid]
+  ) {
+    border-color: var(--tinyrack-danger-border);
+  }
+
   .tr-select-scroll-down-arrow:focus-visible,
   .tr-select-scroll-up-arrow:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);

@@ -1,3 +1,4 @@
+export type { TRFieldAppearance } from './field-appearance.js';
 export {
   createTinyrackFontPreloadLinks,
   type TinyrackFontPreload,

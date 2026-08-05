@@ -550,3 +550,29 @@ test('forwards uiSize to InputGroup and aligns inner Input and Trigger heights',
   expect(input?.getBoundingClientRect().height).toBe(32);
   expect(trigger?.getBoundingClientRect().height).toBe(32);
 });
+
+test('a ghost combobox group drops only its resting chrome', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRCombobox.Root items={['Alpha', 'Beta']}>
+        <TRCombobox.InputGroup appearance="ghost" data-testid="ghost-group">
+          <TRCombobox.Input aria-label="Ghost service" />
+        </TRCombobox.InputGroup>
+      </TRCombobox.Root>
+    </div>,
+  );
+  const group = document.querySelector<HTMLElement>('[data-testid="ghost-group"]');
+  if (!group) throw new Error('group did not render');
+
+  // The group owns the frame, so ghost is resolved there and inherited from
+  // the shared .tr-input-group rules.
+  expect(group.dataset['appearance']).toBe('ghost');
+  const resting = getComputedStyle(group);
+  expect(resting.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(resting.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+
+  await userEvent.click(page.getByRole('combobox', { name: 'Ghost service' }));
+  await expect
+    .poll(() => getComputedStyle(group).backgroundColor)
+    .not.toBe('rgba(0, 0, 0, 0)');
+});

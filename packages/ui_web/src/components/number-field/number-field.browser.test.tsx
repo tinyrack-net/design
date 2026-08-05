@@ -478,3 +478,30 @@ test('forwards md uiSize to the root and matches the compact Input height', asyn
   const mdHeight = mdInput?.getBoundingClientRect().height;
   expect(mdHeight).toBe(32);
 });
+
+test('a ghost number field drops only its resting chrome', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRNumberField.Root appearance="ghost" defaultValue={1}>
+        <TRNumberField.Group>
+          <TRNumberField.Decrement aria-label="Decrease">-</TRNumberField.Decrement>
+          <TRNumberField.Input aria-label="Ghost amount" />
+          <TRNumberField.Increment aria-label="Increase">+</TRNumberField.Increment>
+        </TRNumberField.Group>
+      </TRNumberField.Root>
+    </div>,
+  );
+  const root = document.querySelector<HTMLElement>('.tr-number-field');
+  const input = document.querySelector<HTMLElement>('.tr-number-field-input');
+  const increment = document.querySelector<HTMLElement>('.tr-number-field-increment');
+  if (!root || !input || !increment) throw new Error('number field did not render');
+
+  expect(root.dataset['appearance']).toBe('ghost');
+  // The input and its steppers go flat together, so the control reads as one
+  // unit rather than a field with two boxed buttons beside it.
+  for (const element of [input, increment]) {
+    const style = getComputedStyle(element);
+    expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(style.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+  }
+});

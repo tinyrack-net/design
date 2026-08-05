@@ -428,3 +428,22 @@ test('forwards uiSize to InputGroup and aligns inner Input height', async () => 
   expect(input?.getBoundingClientRect().height).toBe(32);
   expect(trigger?.getBoundingClientRect().height).toBe(32);
 });
+
+test('a ghost autocomplete group drops only its resting chrome', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRAutocomplete.Root items={['Alpha', 'Beta']}>
+        <TRAutocomplete.InputGroup appearance="ghost" data-testid="ghost-group">
+          <TRAutocomplete.Input aria-label="Ghost search" />
+        </TRAutocomplete.InputGroup>
+      </TRAutocomplete.Root>
+    </div>,
+  );
+  const group = document.querySelector<HTMLElement>('[data-testid="ghost-group"]');
+  if (!group) throw new Error('group did not render');
+
+  expect(group.dataset['appearance']).toBe('ghost');
+  const resting = getComputedStyle(group);
+  expect(resting.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(resting.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+});

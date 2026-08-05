@@ -63,6 +63,36 @@
     outline-color: var(--tinyrack-danger-border);
   }
 
+  /* Ghost drops only the resting frame; hover, focus, and invalid emphasis are
+     still painted here, at the same border width so the box never moves. */
+  .tr-textarea[data-appearance="ghost"] {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .tr-textarea[data-appearance="ghost"]:hover:not(
+    :disabled,
+    [readonly],
+    [aria-invalid="true"],
+    :invalid,
+    :focus-visible
+  ) {
+    background: var(--tinyrack-surface-hover);
+    border-color: transparent;
+  }
+
+  .tr-textarea[data-appearance="ghost"]:focus-visible {
+    background: var(--tinyrack-surface);
+  }
+
+  .tr-textarea[data-appearance="ghost"]:read-only {
+    background: transparent;
+  }
+
+  .tr-textarea[data-appearance="ghost"]:is([aria-invalid="true"], :invalid) {
+    border-color: var(--tinyrack-danger-border);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .tr-textarea {
       transition: none;
