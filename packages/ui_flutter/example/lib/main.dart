@@ -876,6 +876,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'readOnly',
     'uiSize',
     'value',
+    'variant',
   ],
   'tabs' => ['uiSize'],
   'pagination' => [
@@ -896,6 +897,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'readOnly',
     'uiSize',
     'value',
+    'variant',
   ],
   'otp-field' => [
     'disabled',
@@ -1063,6 +1065,8 @@ Map<String, Object?>? _validateArgs(
             const {'current', 'muted', 'primary', 'danger'}.contains(value),
       'variant' when component == 'separator' =>
         value is String && const {'defaultVariant', 'muted'}.contains(value),
+      'variant' when component == 'text-field' || component == 'textarea' =>
+        value is String && const {'defaultVariant', 'plain'}.contains(value),
       'variant' when component == 'text' =>
         value is String &&
             const {
@@ -1318,6 +1322,11 @@ class PreviewComponent extends StatelessWidget {
               'args': {'value': value},
             }),
             uiSize: size,
+            variant: TRTextInputVariant.values.byName(
+              args['variant'] is String
+                  ? args['variant']! as String
+                  : 'defaultVariant',
+            ),
           ),
         ),
       ),
@@ -2396,6 +2405,11 @@ class PreviewComponent extends StatelessWidget {
                 : null,
             readOnly: args['readOnly'] == true,
             uiSize: size,
+            variant: TRTextInputVariant.values.byName(
+              args['variant'] is String
+                  ? args['variant']! as String
+                  : 'defaultVariant',
+            ),
           ),
         ),
       ),

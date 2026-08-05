@@ -21,6 +21,7 @@ class TRTextarea extends StatefulWidget {
     this.placeholder,
     this.readOnly = false,
     this.uiSize = TRUiSize.md,
+    this.variant = TRTextInputVariant.defaultVariant,
     super.key,
   }) : assert(
          controller == null || initialValue == null,
@@ -38,6 +39,13 @@ class TRTextarea extends StatefulWidget {
   final String? placeholder;
   final bool readOnly;
   final TRUiSize uiSize;
+
+  /// Whether the textarea paints its own border and fill.
+  ///
+  /// [TRTextInputVariant.plain] drops both so a host surface can frame the
+  /// textarea. The host then owns focus visibility; pass a [focusNode] to
+  /// observe focus for that purpose.
+  final TRTextInputVariant variant;
 
   @override
   State<TRTextarea> createState() => _TRTextareaState();
@@ -104,6 +112,9 @@ class _TRTextareaState extends State<TRTextarea> {
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
+    // A plain textarea renders no chrome of its own so the host surface can
+    // frame it; the fill would otherwise cover that surface.
+    final plain = widget.variant == TRTextInputVariant.plain;
 
     return TRFormRegistration(
       name: widget.name,
@@ -124,16 +135,18 @@ class _TRTextareaState extends State<TRTextarea> {
             child: AnimatedContainer(
               curve: TRMotion.standard,
               duration: motionDuration,
-              decoration: BoxDecoration(
-                color: fillColor,
-                border: Border.all(
-                  color: borderColor,
-                  width: _focused
-                      ? TRGeneratedBorders.focusWidth
-                      : TRGeneratedBorders.defaultWidth,
-                ),
-                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-              ),
+              decoration: plain
+                  ? null
+                  : BoxDecoration(
+                      color: fillColor,
+                      border: Border.all(
+                        color: borderColor,
+                        width: _focused
+                            ? TRGeneratedBorders.focusWidth
+                            : TRGeneratedBorders.defaultWidth,
+                      ),
+                      borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                    ),
               padding: EdgeInsets.symmetric(
                 horizontal: horizontalPadding,
                 vertical: TRGeneratedSpacing.sm,

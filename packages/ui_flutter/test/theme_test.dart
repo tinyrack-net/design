@@ -305,6 +305,134 @@ void main() {
     );
   });
 
+  testWidgets('text field variants keep or drop the input frame', (
+    tester,
+  ) async {
+    Future<AnimatedContainer> frame(TRTextInputVariant variant) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(body: TRTextField(variant: variant)),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester.widget<AnimatedContainer>(
+        find.descendant(
+          of: find.byType(TRTextField),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+    }
+
+    final outlined = await frame(TRTextInputVariant.defaultVariant);
+    expect(
+      (outlined.decoration! as BoxDecoration).color,
+      TinyrackTheme.light().extension<TinyrackThemeData>()!.surface,
+    );
+    expect((outlined.foregroundDecoration! as BoxDecoration).border, isNotNull);
+
+    final plain = await frame(TRTextInputVariant.plain);
+    expect(plain.decoration, isNull);
+    expect(plain.foregroundDecoration, isNull);
+  });
+
+  testWidgets('textarea variants keep or drop the input frame', (tester) async {
+    Future<AnimatedContainer> frame(TRTextInputVariant variant) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(body: TRTextarea(variant: variant)),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester.widget<AnimatedContainer>(
+        find.descendant(
+          of: find.byType(TRTextarea),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+    }
+
+    final outlined = await frame(TRTextInputVariant.defaultVariant);
+    expect(outlined.decoration, isA<BoxDecoration>());
+    expect((outlined.decoration! as BoxDecoration).border, isNotNull);
+
+    final plain = await frame(TRTextInputVariant.plain);
+    expect(plain.decoration, isNull);
+  });
+
+  testWidgets('plain text inputs delegate focus visibility to their host', (
+    tester,
+  ) async {
+    final fieldFocus = FocusNode();
+    final areaFocus = FocusNode();
+    addTearDown(fieldFocus.dispose);
+    addTearDown(areaFocus.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: Column(
+            children: [
+              TRTextField(
+                focusNode: fieldFocus,
+                variant: TRTextInputVariant.plain,
+              ),
+              TRTextarea(
+                focusNode: areaFocus,
+                variant: TRTextInputVariant.plain,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(TextField).first);
+    await tester.pumpAndSettle();
+    expect(fieldFocus.hasFocus, isTrue);
+    expect(areaFocus.hasFocus, isFalse);
+
+    await tester.tap(find.byType(TextField).last);
+    await tester.pumpAndSettle();
+    expect(areaFocus.hasFocus, isTrue);
+    expect(fieldFocus.hasFocus, isFalse);
+  });
+
+  testWidgets('plain text inputs preserve disabled and read-only states', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const Scaffold(
+          body: Column(
+            children: [
+              TRTextField(enabled: false, variant: TRTextInputVariant.plain),
+              TRTextarea(readOnly: true, variant: TRTextInputVariant.plain),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final fields = tester.widgetList<TextField>(find.byType(TextField));
+    expect(fields.first.enabled, isFalse);
+    expect(fields.last.readOnly, isTrue);
+    expect(
+      tester
+          .widget<AnimatedOpacity>(
+            find.descendant(
+              of: find.byType(TRTextField),
+              matching: find.byType(AnimatedOpacity),
+            ),
+          )
+          .opacity,
+      TRGeneratedOpacity.disabled,
+    );
+  });
+
   testWidgets('alert announces non-neutral status', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

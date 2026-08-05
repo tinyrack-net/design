@@ -151,6 +151,7 @@ export const textFieldPlayground = flutterPlayground(
     readOnly: false,
     uiSize: 'md',
     value: '',
+    variant: 'defaultVariant',
   },
   {
     disabled: { control: 'boolean' },
@@ -159,6 +160,7 @@ export const textFieldPlayground = flutterPlayground(
     readOnly: { control: 'boolean' },
     uiSize: { control: 'select', options: sizes },
     value: { control: 'text' },
+    variant: { control: 'select', options: ['defaultVariant', 'plain'] },
   },
 );
 
@@ -617,12 +619,19 @@ export const tabsPlayground = flutterPlayground(
 
 export const textareaPlayground = flutterPlayground(
   'textarea',
-  { disabled: false, placeholder: 'Rack alpha', readOnly: false, uiSize: 'md' },
+  {
+    disabled: false,
+    placeholder: 'Rack alpha',
+    readOnly: false,
+    uiSize: 'md',
+    variant: 'defaultVariant',
+  },
   {
     disabled: { control: 'boolean' },
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     uiSize: { control: 'select', options: sizes },
+    variant: { control: 'select', options: ['defaultVariant', 'plain'] },
   },
 );
 

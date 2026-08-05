@@ -143,6 +143,7 @@ void main() {
       TRTerminalView,
       TRText,
       TRTextField,
+      TRTextInputVariant,
       TRTextarea,
       TRToastAnchor,
       TRToastController,
@@ -175,6 +176,6 @@ void main() {
       TRWindowFrameVariant,
     ];
 
-    expect(publicTypes, hasLength(169));
+    expect(publicTypes, hasLength(170));
   });
 }

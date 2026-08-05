@@ -36,6 +36,7 @@ class TRTextField extends StatelessWidget {
     this.textInputAction,
     this.uiSize = TRUiSize.md,
     this.validator,
+    this.variant = TRTextInputVariant.defaultVariant,
     super.key,
   }) : assert(
          controller == null || initialValue == null,
@@ -80,6 +81,13 @@ class TRTextField extends StatelessWidget {
   final TRUiSize uiSize;
   final FormFieldValidator<String>? validator;
 
+  /// Whether the field paints its own border and fill.
+  ///
+  /// [TRTextInputVariant.plain] drops both so a host surface can frame the
+  /// field. The host then owns focus visibility and invalid emphasis; pass a
+  /// [focusNode] to observe focus for that purpose.
+  final TRTextInputVariant variant;
+
   @override
   Widget build(BuildContext context) {
     var registeredValue = controller?.text ?? initialValue ?? '';
@@ -108,6 +116,7 @@ class TRTextField extends StatelessWidget {
       error: errorText != null,
       fillColor: fillColor,
       focusNode: focusNode,
+      variant: variant,
       childBuilder: (resolvedFocusNode) => TextFormField(
         autovalidateMode: autovalidateMode,
         autofillHints: autofillHints,
@@ -246,6 +255,7 @@ class _TRTextFieldInteractionFrame extends StatefulWidget {
     required this.enabled,
     required this.error,
     required this.fillColor,
+    required this.variant,
     this.focusNode,
   });
 
@@ -254,6 +264,7 @@ class _TRTextFieldInteractionFrame extends StatefulWidget {
   final bool error;
   final Color fillColor;
   final FocusNode? focusNode;
+  final TRTextInputVariant variant;
 
   @override
   State<_TRTextFieldInteractionFrame> createState() =>
@@ -308,6 +319,9 @@ class _TRTextFieldInteractionFrameState
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
+    // A plain field renders no chrome of its own so the host surface can frame
+    // it; the fill would otherwise cover that surface.
+    final plain = widget.variant == TRTextInputVariant.plain;
 
     return AnimatedOpacity(
       curve: TRMotion.standard,
@@ -316,16 +330,18 @@ class _TRTextFieldInteractionFrameState
       child: AnimatedContainer(
         curve: TRMotion.standard,
         duration: duration,
-        color: widget.fillColor,
-        foregroundDecoration: BoxDecoration(
-          border: Border.all(
-            color: borderColor,
-            width: focused
-                ? TRGeneratedBorders.focusWidth
-                : TRGeneratedBorders.defaultWidth,
-          ),
-          borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-        ),
+        color: plain ? null : widget.fillColor,
+        foregroundDecoration: plain
+            ? null
+            : BoxDecoration(
+                border: Border.all(
+                  color: borderColor,
+                  width: focused
+                      ? TRGeneratedBorders.focusWidth
+                      : TRGeneratedBorders.defaultWidth,
+                ),
+                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+              ),
         child: widget.childBuilder(_focusNode),
       ),
     );

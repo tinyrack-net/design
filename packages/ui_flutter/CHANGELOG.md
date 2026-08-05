@@ -1,3 +1,10 @@
+## 0.9.0
+
+- Adds `TRTextInputVariant` and a `variant` property on `TRTextField` and
+  `TRTextarea`. The new `plain` variant drops the input's own border and fill so
+  an enclosing surface can frame the input; that surface then owns focus
+  visibility and invalid emphasis.
+
 ## 0.8.1
 
 - Fixes an anchored layer that never requested focus, such as a `TRTooltip`

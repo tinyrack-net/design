@@ -3850,6 +3850,14 @@ class _BackupSettingState extends State<BackupSetting> {
         },
       },
       {
+        axis: { en: 'Frame', ko: '프레임', ja: 'フレーム' },
+        choices: {
+          en: '`defaultVariant` paints the border and fill. `plain` drops both so an enclosing surface, such as a `TRCard` composer, owns the frame; that surface then has to show focus itself, which you can drive from a supplied `focusNode`.',
+          ko: '`defaultVariant`는 테두리와 배경을 직접 그려요. `plain`은 둘 다 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 이때 포커스 표시는 그 표면의 책임이며, 넘겨준 `focusNode`로 직접 처리할 수 있어요.',
+          ja: '`defaultVariant` は枠線と背景を自分で描画します。`plain` は両方を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。その場合フォーカス表示はそのサーフェスの責任になり、渡した `focusNode` から制御できます。',
+        },
+      },
+      {
         axis: { en: 'Labeling', ko: '레이블', ja: 'ラベル' },
         choices: {
           en: '`TRTextarea` renders no label of its own. Wrap it in `TRField` to attach a visible label, a description, or an error message. `placeholder` is a hint in the placeholder text color and disappears on the first character, so it cannot replace a label.',
@@ -3963,6 +3971,15 @@ class _BackupSettingState extends State<BackupSetting> {
               en: 'Supplies an external focus node so the screen can move focus to the textarea, for example after a failed submit.',
               ko: '외부 포커스 노드를 넘겨 제출 실패 후처럼 화면이 Textarea로 포커스를 옮길 수 있게 해요.',
               ja: '外部のフォーカスノードを渡し、送信失敗後などに画面側から Textarea へフォーカスを移せるようにします。',
+            },
+          },
+          {
+            name: 'variant',
+            type: 'TRTextInputVariant · defaultVariant',
+            purpose: {
+              en: 'Chooses the framed control or `plain`, which drops the border and fill so a host surface can frame the textarea.',
+              ko: '테두리가 있는 기본 컨트롤과, 테두리와 배경을 없애 상위 표면이 감쌀 수 있게 하는 `plain` 중 하나를 선택해요.',
+              ja: '枠線のある既定のコントロールと、枠線と背景を外して上位のサーフェスが囲めるようにする `plain` のいずれかを選びます。',
             },
           },
         ],
@@ -4584,6 +4601,16 @@ class _AlignmentBarState extends State<AlignmentBar> {
     },
     usage:
       "TRTextField(\n  label: 'Rack name',\n  controller: controller,\n  validator: (value) =>\n      value == null || value.isEmpty ? 'Required' : null,\n  onSaved: save,\n)",
+    contractRows: [
+      {
+        axis: { en: 'Frame', ko: '프레임', ja: 'フレーム' },
+        choices: {
+          en: '`defaultVariant` paints the border, fill, focus ring, and invalid emphasis. `plain` drops the border and fill so an enclosing surface, such as a `TRCard` composer, owns the frame; that surface then has to show focus and invalid state itself, which you can drive from a supplied `focusNode`.',
+          ko: '`defaultVariant`는 테두리와 배경, 포커스 링, 오류 강조를 직접 그려요. `plain`은 테두리와 배경을 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 이때 포커스와 오류 표시는 그 표면의 책임이며, 넘겨준 `focusNode`로 직접 처리할 수 있어요.',
+          ja: '`defaultVariant` は枠線と背景、フォーカスリング、エラー強調を自分で描画します。`plain` は枠線と背景を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。その場合フォーカスとエラーの表示はそのサーフェスの責任になり、渡した `focusNode` から制御できます。',
+        },
+      },
+    ],
   },
   pagination: {
     title: 'Pagination',
