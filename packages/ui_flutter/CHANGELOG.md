@@ -1,3 +1,20 @@
+## 0.11.0
+
+- Fixes `TRTerminalView` repeating text that a multi-character input method
+  composes. The terminal reports the whole platform editing buffer when a
+  composition ends and relies on resetting that buffer afterwards; Hangul and
+  Kana input methods keep their own buffer for the length of a composition
+  session and ignore the reset, so typing `반갑다` sent `반반갑반갑다` to the
+  program. The terminal now sends only what each report adds.
+- Adds `TRTerminalController.selectedText`, `hasSelection`, `selectAll`,
+  `clearSelection`, `paste`, and `selectionChanges` so a consumer can build
+  clipboard actions against the selected region.
+- Adds `TRTerminalView.contextMenuBuilder`, which opens a `TRContextMenu` at the
+  secondary pointer button. The terminal owns this interaction because it
+  consumes secondary taps itself, so an enclosing `TRContextMenu` never saw
+  them. A program that asks the terminal to report mouse events still receives
+  the secondary button instead.
+
 ## 0.10.0
 
 - Adds `TRPageTransitionsBuilder` and installs it in `TinyrackTheme.light()` and
