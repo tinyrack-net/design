@@ -1041,6 +1041,8 @@ void main() {
     });
 
     testWidgets('menubar opens three nested layers', (tester) async {
+      await tester.binding.setSurfaceSize(const Size(1280, 720));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       final deployFocus = FocusNode();
       final regionFocus = FocusNode();
       final asiaPacificFocus = FocusNode();
@@ -1093,6 +1095,48 @@ void main() {
       await tester.pump();
       expect(seoulFocus.hasFocus, isTrue);
       expect(find.byType(TRLayerBoundary), findsNWidgets(3));
+      final regionLayer = tester.getRect(
+        find
+            .ancestor(
+              of: find.text('Region'),
+              matching: find.byType(TRLayerBoundary),
+            )
+            .first,
+      );
+      final asiaPacificLayer = tester.getRect(
+        find
+            .ancestor(
+              of: find.text('Asia Pacific'),
+              matching: find.byType(TRLayerBoundary),
+            )
+            .first,
+      );
+      final seoulLayer = tester.getRect(
+        find
+            .ancestor(
+              of: find.text('Seoul'),
+              matching: find.byType(TRLayerBoundary),
+            )
+            .first,
+      );
+      expect(
+        asiaPacificLayer.left,
+        closeTo(
+          regionLayer.right -
+              TRGeneratedSpacing.xs -
+              TRGeneratedBorders.defaultWidth,
+          0.01,
+        ),
+      );
+      expect(
+        seoulLayer.left,
+        closeTo(
+          asiaPacificLayer.right -
+              TRGeneratedSpacing.xs -
+              TRGeneratedBorders.defaultWidth,
+          0.01,
+        ),
+      );
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
       expect(find.text('Seoul'), findsNothing);
