@@ -27,6 +27,9 @@ class TRMenubarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SubmenuButton(
+    // The bar insets its triggers, so shift the panel down by that inset to
+    // attach it to the bar's bottom edge instead of the trigger's.
+    alignmentOffset: const Offset(0, TRGeneratedSpacing.xs),
     controller: controller,
     focusNode: focusNode,
     menuChildren: enabled

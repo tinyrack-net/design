@@ -1,3 +1,11 @@
+## 0.9.1
+
+- Fixes a `TRMenubar` menu and a `TRMenu` panel that opened over their own
+  trigger instead of below it. The shared menu layer style anchored the panel to
+  the trigger's top edge, so an open menubar menu covered the bar. A menubar
+  panel now attaches to the bar's bottom edge and a `TRMenu` panel keeps its
+  `alignmentOffset` gap below its trigger.
+
 ## 0.9.0
 
 - Adds `TRTextInputVariant` and a `variant` property on `TRTextField` and

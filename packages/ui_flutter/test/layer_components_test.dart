@@ -72,6 +72,27 @@ void main() {
       expect((decoration.border! as Border).top.style, BorderStyle.solid);
     });
 
+    testWidgets('opens its panel below the trigger', (tester) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenu(
+            trigger: const Text('Actions'),
+            menuChildren: [
+              TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+            ],
+          ),
+        ),
+      );
+      final trigger = tester.getRect(find.byType(TextButton));
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+
+      final panel = tester.getRect(_layerBoundary(TRLayerBoundaryKind.menu));
+      expect(panel.top, trigger.bottom + TRGeneratedSpacing.xs);
+      expect(panel.left, trigger.left);
+    });
+
     testWidgets('opens, activates a command, and restores trigger focus', (
       tester,
     ) async {
