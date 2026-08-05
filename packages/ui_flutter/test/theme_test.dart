@@ -361,6 +361,68 @@ void main() {
     expect(plain.decoration, isNull);
   });
 
+  testWidgets('a focused card reflects the focus of the group it hosts', (
+    tester,
+  ) async {
+    Future<List<BoxDecoration>> decorations({required bool focused}) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(
+            body: TRCard(
+              focused: focused,
+              child: const TRTextField(variant: TRTextInputVariant.plain),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester
+          .widgetList<DecoratedBox>(
+            find.descendant(
+              of: find.byType(TRCard),
+              matching: find.byType(DecoratedBox),
+            ),
+          )
+          .map((box) => box.decoration as BoxDecoration)
+          .toList();
+    }
+
+    final theme = TinyrackTheme.light().extension<TinyrackThemeData>()!;
+
+    // The resting card keeps its own border and paints no focus ring.
+    final resting = await decorations(focused: false);
+    expect(resting.first.border!.top.color, theme.border);
+    expect(resting.first.border!.top.width, 1);
+    expect(resting.skip(1).map((box) => box.border), everyElement(isNull));
+
+    // The focused card paints the wider focus ring over that border.
+    final active = await decorations(focused: true);
+    final ring = active.last.border!.top;
+    expect(ring.color, theme.focus);
+    expect(ring.width, greaterThan(1));
+  });
+
+  testWidgets('a focused card keeps its outer size', (tester) async {
+    Future<Size> size({required bool focused}) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(
+            body: Center(
+              child: TRCard(focused: focused, child: const SizedBox.square()),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester.getSize(find.byType(TRCard));
+    }
+
+    // The wider focus border must not reflow the content it frames.
+    expect(await size(focused: true), await size(focused: false));
+  });
+
   testWidgets('plain text inputs delegate focus visibility to their host', (
     tester,
   ) async {

@@ -4440,6 +4440,16 @@ class _AlignmentBarState extends State<AlignmentBar> {
     },
     usage:
       "const TRCard(\n  variant: TRCardVariant.outlined,\n  child: TRCardHeader(\n    children: [\n      TRCardTitle(child: Text('Rack alpha')),\n      TRCardDescription(child: Text('Healthy')),\n    ],\n  ),\n)",
+    contractRows: [
+      {
+        axis: { en: 'Focus', ko: '포커스', ja: 'フォーカス' },
+        choices: {
+          en: 'A card that only groups content leaves `focused` off. Set it while a focusable child holds focus, which a card framing a `TRTextInputVariant.plain` input must do so focus stays visible. The ring paints over the card, so it never changes the card size.',
+          ko: '콘텐츠만 묶는 카드는 `focused`를 끈 채로 두세요. 포커스 가능한 자식이 포커스를 가질 때 켜면 되고, `TRTextInputVariant.plain` 입력을 감싸는 카드는 포커스가 계속 보이도록 반드시 켜야 해요. 링은 카드 위에 그려져서 카드 크기를 바꾸지 않아요.',
+          ja: 'コンテンツをまとめるだけのカードでは `focused` をオフのままにします。フォーカス可能な子がフォーカスを持つ間にオンにし、`TRTextInputVariant.plain` の入力を囲むカードはフォーカスを見える状態に保つため必ずオンにしてください。リングはカードの上に描画されるため、カードの寸法は変わりません。',
+        },
+      },
+    ],
   },
   'icon-button': {
     title: 'IconButton',

@@ -772,7 +772,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   ],
   'alert' => ['showActions', 'showDescription', 'showIcon', 'variant'],
   'badge' => ['uiSize', 'variant'],
-  'card' => ['padding', 'variant'],
+  'card' => ['focused', 'padding', 'variant'],
   'code-block' => ['code', 'language', 'wrap'],
   'dialog' => ['open', 'placement'],
   'autocomplete' => [
@@ -985,6 +985,7 @@ Map<String, Object?>? _validateArgs(
       'disabled' ||
       'disabledItem' ||
       'disabledOption' ||
+      'focused' ||
       'indeterminate' ||
       'invalid' ||
       'open' ||
@@ -1334,6 +1335,7 @@ class PreviewComponent extends StatelessWidget {
         key: measureKey,
         width: 320,
         child: TRCard(
+          focused: args['focused'] == true,
           padding: TRCardPadding.values.byName(
             args['padding'] is String ? args['padding']! as String : 'md',
           ),

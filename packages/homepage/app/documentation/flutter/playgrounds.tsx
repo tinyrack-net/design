@@ -166,8 +166,9 @@ export const textFieldPlayground = flutterPlayground(
 
 export const cardPlayground = flutterPlayground(
   'card',
-  { padding: 'md', variant: 'default' },
+  { focused: false, padding: 'md', variant: 'default' },
   {
+    focused: { control: 'boolean' },
     padding: { control: 'select', options: ['none', 'sm', 'md', 'lg'] },
     variant: {
       control: 'select',

@@ -9,6 +9,7 @@ import '../../types.dart';
 class TRCard extends StatelessWidget {
   const TRCard({
     required this.child,
+    this.focused = false,
     this.padding = TRCardPadding.md,
     this.semanticContainer = true,
     this.variant = TRCardVariant.defaultVariant,
@@ -16,6 +17,15 @@ class TRCard extends StatelessWidget {
   });
 
   final Widget child;
+
+  /// Whether the card paints the focus ring for the group it hosts.
+  ///
+  /// A card that frames focusable children, such as a composer built around a
+  /// [TRTextInputVariant.plain] input, sets this while one of them holds focus
+  /// so focus stays visible. The ring is painted over the card rather than
+  /// around it, so turning it on never changes the card's size or layout.
+  final bool focused;
+
   final TRCardPadding padding;
   final bool semanticContainer;
   final TRCardVariant variant;
@@ -52,17 +62,31 @@ class TRCard extends StatelessWidget {
       container: semanticContainer,
       child: DecoratedBox(
         decoration: decoration,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: inset + TRGeneratedBorders.defaultWidth,
-            // CSS line boxes retain their 1/64 px layout precision. Split
-            // the residual block-size fraction across both card edges.
-            vertical:
-                inset +
-                TRGeneratedBorders.defaultWidth +
-                TRGeneratedFlutterRendering.cardBlockInsetCorrection,
+        child: DecoratedBox(
+          position: DecorationPosition.foreground,
+          decoration: BoxDecoration(
+            border: focused
+                ? Border.all(
+                    color: colors.focus,
+                    width: TRGeneratedBorders.focusWidth,
+                  )
+                : null,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(TRGeneratedRadii.lg),
+            ),
           ),
-          child: child,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: inset + TRGeneratedBorders.defaultWidth,
+              // CSS line boxes retain their 1/64 px layout precision. Split
+              // the residual block-size fraction across both card edges.
+              vertical:
+                  inset +
+                  TRGeneratedBorders.defaultWidth +
+                  TRGeneratedFlutterRendering.cardBlockInsetCorrection,
+            ),
+            child: child,
+          ),
         ),
       ),
     );
