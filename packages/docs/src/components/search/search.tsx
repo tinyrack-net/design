@@ -260,7 +260,7 @@ export function TRDocsSearchDialog({
             />
             <TRDialog.Close
               render={
-                <TRButton appearance="ghost" aria-label={messages.close} uiSize="sm">
+                <TRButton appearance="ghost" aria-label={messages.close} uiSize="md">
                   <kbd>Esc</kbd>
                 </TRButton>
               }
@@ -278,7 +278,7 @@ export function TRDocsSearchDialog({
             ) : null}
             {loading ? (
               <p className="tr-docs-search-message" role="status">
-                <TRSpinner decorative uiSize="sm" /> {messages.loading}
+                <TRSpinner decorative uiSize="md" /> {messages.loading}
               </p>
             ) : searchFailed ? (
               <p className="tr-docs-search-message" role="alert">

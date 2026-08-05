@@ -105,9 +105,9 @@ class TRPagination extends StatelessWidget {
             item == null
                 ? const ExcludeSemantics(
                     child: SizedBox(
-                      width: TRGeneratedControlMetrics.smHeight,
+                      width: TRGeneratedControlMetrics.mdHeight,
                       height:
-                          TRGeneratedControlMetrics.smHeight +
+                          TRGeneratedControlMetrics.mdHeight +
                           TRGeneratedBorders.defaultWidth * 2,
                       child: Center(child: Text('…')),
                     ),
@@ -149,7 +149,7 @@ class _TRPaginationButton extends StatelessWidget {
     final colors = context.tinyrackTheme;
     final step = child == null;
     final dimension =
-        TRGeneratedControlMetrics.smHeight +
+        TRGeneratedControlMetrics.mdHeight +
         TRGeneratedBorders.defaultWidth * 2;
     final cellWidth = dimension + TRGeneratedSpacing.sm;
     final content =
@@ -175,9 +175,9 @@ class _TRPaginationButton extends StatelessWidget {
               horizontal: step ? TRGeneratedSpacing.sm : TRGeneratedSpacing.xs,
             ),
             minimumSize: const Size(
-              TRGeneratedControlMetrics.smHeight +
+              TRGeneratedControlMetrics.mdHeight +
                   TRGeneratedBorders.defaultWidth * 2,
-              TRGeneratedControlMetrics.smHeight +
+              TRGeneratedControlMetrics.mdHeight +
                   TRGeneratedBorders.defaultWidth * 2,
             ),
             foregroundColor: selected ? colors.onPrimary : colors.text,

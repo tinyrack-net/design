@@ -43,7 +43,7 @@ type StoryArgs = {
   disabled: boolean;
   label: string;
   loading: boolean;
-  uiSize: 'sm' | 'md' | 'lg';
+  uiSize: 'md' | 'lg';
   variant: 'secondary' | 'primary' | 'danger';
 };
 
@@ -152,7 +152,7 @@ export function IconButtonVariants() {
 export function IconButtonSizes() {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <TRIconButton aria-label={`${uiSize} settings`} key={uiSize} uiSize={uiSize}>
           <SettingsIcon aria-hidden="true" />
         </TRIconButton>
@@ -245,7 +245,7 @@ import { SettingsIcon } from 'lucide-react';
 
 export function IconButtonSizes() {
   return <div className="flex flex-wrap items-center gap-3">
-    {(['sm', 'md', 'lg'] as const).map((uiSize) => <TRIconButton aria-label={uiSize + ' settings'} key={uiSize} uiSize={uiSize}><SettingsIcon aria-hidden="true" /></TRIconButton>)}
+    {(['md', 'lg'] as const).map((uiSize) => <TRIconButton aria-label={uiSize + ' settings'} key={uiSize} uiSize={uiSize}><SettingsIcon aria-hidden="true" /></TRIconButton>)}
   </div>;
 }`;
 
@@ -266,7 +266,7 @@ const meta = {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     loading: { control: 'boolean' },
-    uiSize: { options: ['sm', 'md', 'lg'], control: 'select' },
+    uiSize: { options: ['md', 'lg'], control: 'select' },
     variant: { options: ['secondary', 'primary', 'danger'], control: 'radio' },
   },
   render: (args) => <IconButtonPreview {...args} />,

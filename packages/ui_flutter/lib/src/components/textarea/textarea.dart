@@ -81,17 +81,14 @@ class _TRTextareaState extends State<TRTextarea> {
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
     final controlHeight = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final horizontalPadding = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
     final fontSize = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };

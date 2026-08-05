@@ -128,18 +128,15 @@ test('forwards a callback root ref through its mount lifecycle', async () => {
 });
 
 test('supports compact ui size', async () => {
-  await render(<TRCheckbox.Root aria-label="Compact option" uiSize="sm" />);
+  await render(<TRCheckbox.Root aria-label="Compact option" uiSize="md" />);
   const checkbox = document.querySelector<HTMLElement>('.tr-checkbox');
-  expect(checkbox?.dataset['uiSize']).toBe('sm');
+  expect(checkbox?.dataset['uiSize']).toBe('md');
   expect(getComputedStyle(checkbox as HTMLElement).width).toBe('12px');
 });
 
 test('scales the indicator with the checkbox size', async () => {
   await render(
     <>
-      <TRCheckbox.Root aria-label="Small" defaultChecked uiSize="sm">
-        <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
-      </TRCheckbox.Root>
       <TRCheckbox.Root aria-label="Medium" defaultChecked uiSize="md">
         <TRCheckbox.Indicator>✓</TRCheckbox.Indicator>
       </TRCheckbox.Root>
@@ -150,10 +147,9 @@ test('scales the indicator with the checkbox size', async () => {
   );
 
   const indicators = document.querySelectorAll<HTMLElement>('.tr-checkbox-indicator');
-  expect(indicators).toHaveLength(3);
+  expect(indicators).toHaveLength(2);
   expect(getComputedStyle(indicators.item(0)).fontSize).toBe('10px');
   expect(getComputedStyle(indicators.item(1)).fontSize).toBe('12px');
-  expect(getComputedStyle(indicators.item(2)).fontSize).toBe('16px');
 });
 
 test('serializes explicit checked and unchecked values to an external form', async () => {

@@ -393,7 +393,7 @@ Widget _copyButtonCombinations(BuildContext context, Locale locale) {
     runSpacing: TRSpacing.small,
     children: [
       TRCopyButton(
-        uiSize: TRUiSize.sm,
+        uiSize: TRUiSize.md,
         intent: TRIntent.primary,
         resetDelay: const Duration(milliseconds: 750),
         value: 'tinyrack.net',
@@ -435,7 +435,7 @@ Widget _buttonSizes(BuildContext context, Locale locale) {
     runSpacing: TRSpacing.small,
     children: [
       for (final (size, label) in const [
-        (TRUiSize.sm, 'Small'),
+        (TRUiSize.md, 'Small'),
         (TRUiSize.md, 'Medium'),
         (TRUiSize.lg, 'Large'),
       ])
@@ -561,7 +561,7 @@ Widget _iconButtonSizes(BuildContext context, Locale locale) {
     runSpacing: TRSpacing.small,
     children: [
       for (final (size, label) in [
-        (TRUiSize.sm, _pick(locale, 'Small settings', '작은 크기 설정', '小サイズの設定')),
+        (TRUiSize.md, _pick(locale, 'Small settings', '작은 크기 설정', '小サイズの設定')),
         (TRUiSize.md, _pick(locale, 'Medium settings', '중간 크기 설정', '中サイズの設定')),
         (TRUiSize.lg, _pick(locale, 'Large settings', '큰 크기 설정', '大サイズの設定')),
       ])
@@ -620,7 +620,7 @@ Widget _alertActions(BuildContext context, Locale locale) {
         TRButton(
           appearance: TRAppearance.ghost,
           intent: TRIntent.success,
-          uiSize: TRUiSize.sm,
+          uiSize: TRUiSize.md,
           onPressed: () {},
           child: Text(_pick(locale, 'Review', '검토', '確認')),
         ),
@@ -647,7 +647,7 @@ Widget _badgeSizes(BuildContext context, Locale locale) {
     runSpacing: TRSpacing.small,
     children: [
       for (final (size, label) in const [
-        (TRUiSize.sm, 'Small'),
+        (TRUiSize.md, 'Small'),
         (TRUiSize.md, 'Medium'),
         (TRUiSize.lg, 'Large'),
       ])
@@ -760,13 +760,13 @@ Widget _cardRecipe(BuildContext context, Locale locale) {
             children: [
               TRButton(
                 appearance: TRAppearance.ghost,
-                uiSize: TRUiSize.sm,
+                uiSize: TRUiSize.md,
                 onPressed: () {},
                 child: Text(_pick(locale, 'Details', '자세히', '詳細')),
               ),
               TRButton(
                 intent: TRIntent.primary,
-                uiSize: TRUiSize.sm,
+                uiSize: TRUiSize.md,
                 onPressed: () {},
                 child: Text(_pick(locale, 'Restart', '재시작', '再起動')),
               ),
@@ -1106,7 +1106,7 @@ Widget _otpSizes(BuildContext context, Locale locale) {
     spacing: TRSpacing.large,
     children: [
       for (final (uiSize, label) in <(TRUiSize, String)>[
-        (TRUiSize.sm, 'SM'),
+        (TRUiSize.md, 'SM'),
         (TRUiSize.md, 'MD'),
         (TRUiSize.lg, 'LG'),
       ])
@@ -1749,7 +1749,7 @@ Widget _toggleSizes(BuildContext context, Locale locale) {
     runSpacing: TRSpacing.small,
     children: [
       for (final (size, label) in [
-        (TRUiSize.sm, _pick(locale, 'Small', '작게', '小')),
+        (TRUiSize.md, _pick(locale, 'Small', '작게', '小')),
         (TRUiSize.md, _pick(locale, 'Medium', '보통', '中')),
         (TRUiSize.lg, _pick(locale, 'Large', '크게', '大')),
       ])
@@ -3511,7 +3511,7 @@ Widget _autocompleteStates(BuildContext context, Locale locale) => SizedBox(
       TRAutocomplete<String>(
         items: _autocompleteItems,
         label: _pick(locale, 'Compact', '좁게', 'コンパクト'),
-        uiSize: TRUiSize.sm,
+        uiSize: TRUiSize.md,
       ),
       TRAutocomplete<String>(
         enabled: false,

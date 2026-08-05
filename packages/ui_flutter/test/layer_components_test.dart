@@ -543,8 +543,7 @@ void main() {
 
       expect(tester.getSize(_selectTriggers.at(0)), const Size(320, 32));
       expect(tester.getSize(_selectTriggers.at(1)), const Size(320, 40));
-      expect(tester.getSize(_selectTriggers.at(2)), const Size(320, 48));
-      final triggerRect = tester.getRect(_selectTriggers.at(1));
+      final triggerRect = tester.getRect(_selectTriggers.at(0));
       controller.open();
       await tester.pumpAndSettle();
       expect(

@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/radio.demo.js';
 | --- | --- |
 | 합성 | 모든 `TRRadio.Root`를 `TRRadioGroup` 안에 배치해요. |
 | 선택 | 각 루트에 고유한 `value`를 주고 그룹이 선택한 값을 소유해요. |
-| 크기 | `sm`, `md`, `lg` 중에서 고르며 기본값은 `md`예요. |
+| 크기 | `md`, `lg` 중에서 고르며 기본값은 `md`예요. |
 | 항목 사용 가능 여부 | 한 항목만 그룹과 달라야 할 때 루트의 `readOnly`나 `disabled`를 써요. |
 
 보이는 항목 레이블은 각 루트를 `TRField.Item` 안에 `TRField.Label`과 함께 두어 만들어요. 아이템이 그 안의 라디오에 레이블을 연결하니 `id`나 `htmlFor`가 필요 없어요. `TRField.Item`에는 `TRField.Root` 조상이 반드시 필요하니, 아이템이나 그룹 전체를 하나의 `TRField.Root`로 감싸세요.
@@ -59,7 +59,7 @@ import * as Stories from '../../../../documentation/components/radio.demo.js';
 
 ### 컨트롤 밀도에 맞춰요
 
-<ComponentExampleTabs id="radio-sizes" title="작게, 보통으로, 크게" preview={<div data-docs-example-item-count="3"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="밀도를 골라요" defaultValue="md">{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-sizes" title="작게, 보통으로, 크게" preview={<div data-docs-example-item-count="2"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="밀도를 골라요" defaultValue="md">{(['md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
 
 ### 한 항목의 사용 가능 여부를 바꿔요
 
@@ -76,7 +76,7 @@ import * as Stories from '../../../../documentation/components/radio.demo.js';
 | Prop | 타입 / 기본값 | 용도 |
 | --- | --- | --- |
 | `value` | `unknown` | 그룹 안에서 이 항목을 구분해요. |
-| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | 보이는 글리프 크기를 정해요. |
+| `uiSize` | `'md' \| 'lg'`, `'md'` | 보이는 글리프 크기를 정해요. |
 | `disabled`, `readOnly` | `boolean`, 상속하거나 `false` | 한 항목의 사용 가능 여부를 덮어써요. |
 | `inputRef`, `ref` | 입력 ref, 루트 ref | 숨겨진 입력이나 보이는 루트에 접근해요. |
 

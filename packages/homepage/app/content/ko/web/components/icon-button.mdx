@@ -21,7 +21,7 @@ import * as Stories from '../../../../documentation/components/icon-button.demo.
 | --- | --- | --- | --- |
 | `variant` | `secondary`, `primary`, `danger` | `secondary` | 동작의 의도를 전달해요. |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | 의도를 바꾸지 않고 강조 수준을 변경해요. |
-| `uiSize` | `sm`, `md`, `lg` | `md` | 정사각형 동작 영역과 아이콘 크기를 설정해요. |
+| `uiSize` | `md`, `lg` | `md` | 정사각형 동작 영역과 아이콘 크기를 설정해요. |
 | 상태 | `disabled`, `loading` | 상호작용 가능 | 네이티브 비활성 동작을 사용하며 `loading`은 `aria-busy`와 스피너를 추가해요. |
 
 ## 설치
@@ -63,7 +63,7 @@ import * as Stories from '../../../../documentation/components/icon-button.demo.
 
 <ComponentExampleTabs id="icon-button-variants" title="동작 의도" description="주요 동작에는 primary를, 파괴적인 동작에만 danger를 사용하세요. secondary는 중립적인 기본값이에요." preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="보조 동작" variant="secondary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="주요 동작" variant="primary"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="위험 동작" variant="danger"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonVariantsSource }]} />
 
-<ComponentExampleTabs id="icon-button-sizes" title="크기" description="주변 컨트롤에 아이콘 버튼 크기를 맞추고 입력 방식에 충분한 동작 영역을 확보하세요." preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="작은 설정" uiSize="sm"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="중간 설정" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="큰 설정" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]} />
+<ComponentExampleTabs id="icon-button-sizes" title="크기" description="주변 컨트롤에 아이콘 버튼 크기를 맞추고 입력 방식에 충분한 동작 영역을 확보하세요." preview={<div className="flex flex-wrap items-center gap-3"><TRIconButton data-docs-example-item="" aria-label="중간 설정" uiSize="md"><SettingsIcon aria-hidden="true" /></TRIconButton><TRIconButton data-docs-example-item="" aria-label="큰 설정" uiSize="lg"><SettingsIcon aria-hidden="true" /></TRIconButton></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.iconButtonSizesSource }]} />
 
 ## API
 

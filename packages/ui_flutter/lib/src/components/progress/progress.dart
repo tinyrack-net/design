@@ -87,9 +87,8 @@ class _TRProgressState extends State<TRProgress>
       TRStatusVariant.danger => colors.danger,
     };
     final height = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedSpacing.xs,
-      TRUiSize.md => TRGeneratedSpacing.sm,
-      TRUiSize.lg => TRGeneratedSpacing.md,
+      TRUiSize.md => TRGeneratedSpacing.xs,
+      TRUiSize.lg => TRGeneratedSpacing.sm,
     };
     final fraction = _fractionOf(widget);
     final motionDuration = MediaQuery.disableAnimationsOf(context)

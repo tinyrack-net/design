@@ -1099,7 +1099,7 @@ Map<String, Object?>? _validateArgs(
               'bold',
               'strong',
             }.contains(value),
-      'uiSize' => value is String && const {'sm', 'md', 'lg'}.contains(value),
+      'uiSize' => value is String && const {'md', 'lg'}.contains(value),
       'length' when component == 'otp-field' =>
         value is num && value >= 3 && value <= 8,
       _ => false,
@@ -1193,12 +1193,10 @@ class PreviewComponent extends StatelessWidget {
   /// remaining seams aligned with the resolved [TRUiSize].
   TROtpSeparatorBuilder _otpSeparatorBuilder(TRUiSize uiSize, int length) {
     final slotHeight = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final gap = switch (uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smGap,
       TRUiSize.md => TRGeneratedControlMetrics.mdGap,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
     };
@@ -1503,7 +1501,7 @@ class PreviewComponent extends StatelessWidget {
                   ),
                 ),
               )
-            : const SizedBox(width: TRGeneratedControlMetrics.smGap),
+            : const SizedBox(width: TRGeneratedControlMetrics.mdGap),
       ),
       'otp-field' => TROtpField(
         key: measureKey,
@@ -3659,7 +3657,7 @@ class _PreviewPreviewCard extends StatelessWidget {
   Widget build(BuildContext context) => TRPreviewCard.controlled(
     open: args['open'] == true,
     trigger: SizedBox(
-      width: 113,
+      width: 105,
       child: TRButton(onPressed: () {}, child: const Text('Rack alpha')),
     ),
     content: const Column(

@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import { mergeClassNames } from '../../internal/component-class-name.js';
 
-export type TRBadgeUiSize = 'sm' | 'md' | 'lg';
+export type TRBadgeUiSize = 'md' | 'lg';
 export type TRBadgeVariant = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 export type TRBadgeProps = ComponentProps<'span'> & {
   uiSize?: TRBadgeUiSize;

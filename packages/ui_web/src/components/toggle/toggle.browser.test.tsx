@@ -199,7 +199,7 @@ test('uses control tokens and exposes pointer visual states', async () => {
   expect(idleStyle.color).toBe('rgb(23, 23, 23)');
   expect(idleStyle.fontSize).toBe('14px');
   expect(idleStyle.lineHeight).toBe('20px');
-  expect(idleStyle.minHeight).toBe('40px');
+  expect(idleStyle.minHeight).toBe('32px');
 
   await idle.hover();
   await expect

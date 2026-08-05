@@ -16,7 +16,7 @@ import * as Stories from '../../../../documentation/components/progress.demo.js'
 | 속성 | 값 | 기본값 |
 | --- | --- | --- |
 | `variant` | `neutral`, `info`, `success`, `warning`, `danger` | `neutral` |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | parts | `Root`, `Label`, `Track`, `Indicator`, `Value` | compound API |
 
 ## 설치
@@ -54,11 +54,11 @@ import * as Stories from '../../../../documentation/components/progress.demo.js'
   title="크기"
   description="주변 레이아웃에 맞는 트랙 두께를 선택하세요. 크기는 작업의 중요도를 나타내지 않아요."
   previewLayout="stretch"
-  preview={<div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="sm" value={68}><TRProgress.Label>작게</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>중간</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>크게</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>}
+  preview={<div className="grid gap-4"><TRProgress.Root data-docs-example-item="" uiSize="md" value={68}><TRProgress.Label>중간</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root><TRProgress.Root data-docs-example-item="" uiSize="lg" value={68}><TRProgress.Label>크게</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProgress } from '@tinyrack/ui/components/progress';
 
 export function ProgressSizes() {
-  return <div className="grid gap-4">{(['sm', 'md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>;
+  return <div className="grid gap-4">{(['md', 'lg']).map((uiSize) => <TRProgress.Root key={uiSize} uiSize={uiSize} value={68}><TRProgress.Label>{uiSize}</TRProgress.Label><TRProgress.Track><TRProgress.Indicator /></TRProgress.Track><TRProgress.Value /></TRProgress.Root>)}</div>;
 }` ,
       styles: { code: "@import '@tinyrack/ui/components/progress.css';" },
     },
@@ -159,7 +159,7 @@ Base UI가 값의 의미를 제공해요. 비결정적 진행률에는 `null`을
 | `format` | `Intl.NumberFormatOptions` | — | `Value`와 기본 접근성 값 텍스트 형식 지정 |
 | `locale` | `Intl.LocalesArgument` | 런타임 로케일 | `Intl.NumberFormat` 로케일 |
 | `getAriaValueText` | `(formattedValue, value) => string` | 내장 함수 | `aria-valuetext` 사용자 지정 |
-| `uiSize` | `sm \| md \| lg` | `md` | 트랙 두께 |
+| `uiSize` | `md \| lg` | `md` | 트랙 두께 |
 | `variant` | `neutral \| info \| success \| warning \| danger` | `neutral` | 의미별 채움 색상 |
 | `render` | Base UI render prop | `<div>` | 동작을 유지하면서 루트 요소 교체 |
 

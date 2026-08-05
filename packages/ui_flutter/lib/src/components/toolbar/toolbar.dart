@@ -93,7 +93,7 @@ class TRToolbarButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
     final button = SizedBox.square(
-      dimension: TRGeneratedControlMetrics.smHeight,
+      dimension: TRGeneratedControlMetrics.mdHeight,
       child: TextButton(
         focusNode: focusNode,
         onPressed: onPressed,
@@ -110,7 +110,7 @@ class TRToolbarButton extends StatelessWidget {
             return selected ? colors.surfaceSelected : Colors.transparent;
           }),
           fixedSize: const WidgetStatePropertyAll(
-            Size.square(TRGeneratedControlMetrics.smHeight),
+            Size.square(TRGeneratedControlMetrics.mdHeight),
           ),
           padding: const WidgetStatePropertyAll(EdgeInsets.zero),
           shape: WidgetStatePropertyAll(
@@ -200,7 +200,7 @@ class TRToolbarSeparator extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     width: TRGeneratedBorders.defaultWidth,
-    height: TRGeneratedControlMetrics.smLineHeight,
+    height: TRGeneratedControlMetrics.mdLineHeight,
     color: context.tinyrackTheme.border,
   );
 }

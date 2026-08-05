@@ -165,7 +165,7 @@ describe('built React Router documentation', () => {
           .locator(':scope > .tr-language-select-trigger')
           .first()
           .getAttribute('data-ui-size'),
-      ).resolves.toBe('sm');
+      ).resolves.toBe('md');
       await expect(
         desktopActions
           .locator(':scope > .tr-language-select-trigger')
@@ -329,7 +329,7 @@ describe('built React Router documentation', () => {
           .evaluate((element) => element === element.parentElement?.lastElementChild),
       ).resolves.toBe(true);
       await expect(mobileLanguageSelect.getAttribute('data-ui-size')).resolves.toBe(
-        'sm',
+        'md',
       );
       await mobileLanguageSelect.click();
       const mobileLanguagePopup = mobilePage.locator('.tr-select-popup[data-open]');

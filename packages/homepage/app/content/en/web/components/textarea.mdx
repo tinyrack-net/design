@@ -15,7 +15,7 @@ TRTextarea preserves native refs, names, FormData, reset, disabled, read-only, r
 
 Pair it with `TRField.Root` and `TRField.Label`. The field associates the label and any `TRField.Error` message with the textarea, so you do not write `id` or `htmlFor` yourself.
 
-Use `uiSize="sm"` for dense surfaces and `uiSize="lg"` when a larger reading and editing target is useful. Content scrolls natively when it exceeds the visible rows, while resizing is limited to the vertical axis to avoid horizontal layout overflow.
+Use `uiSize="md"` for dense surfaces and `uiSize="lg"` when a larger reading and editing target is useful. Content scrolls natively when it exceeds the visible rows, while resizing is limited to the vertical axis to avoid horizontal layout overflow.
 
 ## Install
 
@@ -76,7 +76,7 @@ export function TextareaStates() {
   ]}
 />
 
-<ComponentExampleTabs id="textarea-sizes" title="Small, medium, and large" preview={<div data-docs-example-item-count="3"><Stories.TextareaSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+<ComponentExampleTabs id="textarea-sizes" title="Medium and large" preview={<div data-docs-example-item-count="2"><Stories.TextareaSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['md', 'lg'] as const).map((uiSize) => (
   <div className="grid gap-2" key={uiSize}>
     <span>{uiSize}</span>
     <TRTextarea aria-label={uiSize + ' rack notes'} defaultValue="Rack notes" rows={3} uiSize={uiSize} />
@@ -179,5 +179,5 @@ function ChangeReasonForm() {
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `uiSize` | `'sm' \| 'md' \| 'lg'` | `'md'` | Applies the matching control typography, padding, and minimum block size. |
+| `uiSize` | `'md' \| 'lg'` | `'md'` | Applies the matching control typography, padding, and minimum block size. |
 | Native props | `ComponentPropsWithRef<'textarea'>` | n/a | Includes `value`, `defaultValue`, `rows`, `name`, validation attributes, events, styles, and `ref`. |

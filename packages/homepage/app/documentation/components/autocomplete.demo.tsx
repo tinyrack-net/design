@@ -81,7 +81,7 @@ type StoryArgs = {
   openOnInputClick: boolean;
   placeholder: string;
   readOnly: boolean;
-  uiSize?: 'sm' | 'md' | 'lg';
+  uiSize?: 'md' | 'lg';
   value: string;
 };
 
@@ -98,7 +98,7 @@ type AutocompletePreviewProps = Omit<StoryArgs, 'limit' | 'open' | 'value'> & {
   open?: boolean;
   required?: boolean;
   submitOnItemClick?: boolean;
-  uiSize?: 'sm' | 'md' | 'lg';
+  uiSize?: 'md' | 'lg';
   value?: string;
 };
 
@@ -279,7 +279,7 @@ export function AutocompleteSizeComparison() {
   }[locale];
   return (
     <div className="grid w-full max-w-md gap-5">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <AutocompletePreview
           autoHighlight={false}
           defaultValue=""
@@ -663,7 +663,7 @@ const racks = ['Rack Alpha', 'Rack Beta', 'Rack Gamma'];
 export function AutocompleteSizes() {
   return (
     <div className="grid gap-5">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <TRField.Root key={uiSize}>
           <TRField.Label>{uiSize.toUpperCase()} rack</TRField.Label>
           <TRAutocomplete.Root items={racks} name={\`rack-\${uiSize}\`}>
@@ -738,7 +738,7 @@ const meta = {
     openOnInputClick: { control: 'boolean' },
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
-    uiSize: { control: 'radio', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'radio', options: ['md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

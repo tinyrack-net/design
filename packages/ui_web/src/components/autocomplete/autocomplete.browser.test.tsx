@@ -406,7 +406,7 @@ test('removes the clear action from a read-only input and keeps disabled items i
 test('forwards uiSize to InputGroup and aligns inner Input height', async () => {
   await render(
     <TRAutocomplete.Root items={['Alpha', 'Beta']}>
-      <TRAutocomplete.InputGroup data-testid="sized-autocomplete-group" uiSize="sm">
+      <TRAutocomplete.InputGroup data-testid="sized-autocomplete-group" uiSize="md">
         <TRAutocomplete.Input aria-label="Sized autocomplete" />
         <TRAutocomplete.Trigger aria-label="Open sized autocomplete">
           Open
@@ -418,7 +418,7 @@ test('forwards uiSize to InputGroup and aligns inner Input height', async () => 
   const group = document.querySelector<HTMLDivElement>(
     '[data-testid="sized-autocomplete-group"]',
   );
-  expect(group?.getAttribute('data-ui-size')).toBe('sm');
+  expect(group?.getAttribute('data-ui-size')).toBe('md');
   const input = document.querySelector<HTMLInputElement>(
     '[aria-label="Sized autocomplete"]',
   );

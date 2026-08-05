@@ -94,7 +94,7 @@ type FieldStoryArgs = {
   label: string;
   readOnly: boolean;
   required: boolean;
-  size: 'sm' | 'md' | 'lg';
+  size: 'md' | 'lg';
   value: string;
 };
 
@@ -207,10 +207,10 @@ export function FieldValidationPreview() {
 export function FieldSizeComparison() {
   const locale = useDemoLocale();
   const text = copy[locale];
-  const labels = { sm: text.small, md: text.medium, lg: text.large } as const;
+  const labels = { md: text.medium, lg: text.large } as const;
   return (
-    <div className="grid gap-5 sm:grid-cols-3">
-      {(['sm', 'md', 'lg'] as const).map((size) => (
+    <div className="grid gap-5 sm:grid-cols-2">
+      {(['md', 'lg'] as const).map((size) => (
         <FieldPreview
           defaultValue={`${size}-rack`}
           disabled={false}
@@ -321,7 +321,7 @@ const meta = {
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    size: { control: 'select', options: ['sm', 'md', 'lg'] },
+    size: { control: 'select', options: ['md', 'lg'] },
   },
   render: function Render(args) {
     const locale = useDemoLocale();

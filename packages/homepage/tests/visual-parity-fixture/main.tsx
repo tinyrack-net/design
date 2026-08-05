@@ -516,7 +516,7 @@ function Fixture() {
     | 'warning'
     | 'danger';
   const appearance = arg('appearance', 'solid') as 'solid' | 'outline' | 'ghost';
-  const uiSize = arg('uiSize', 'md') as 'sm' | 'md' | 'lg';
+  const uiSize = arg('uiSize', 'md') as 'md' | 'lg';
   const statusVariant = arg('variant', 'neutral') as
     | 'neutral'
     | 'info'
@@ -808,7 +808,7 @@ function Fixture() {
               render={
                 <TRButton
                   intent="danger"
-                  style={{ height: 40, whiteSpace: 'nowrap', width: 128 }}
+                  style={{ height: 32, whiteSpace: 'nowrap', width: 128 }}
                 />
               }
             >
@@ -1231,7 +1231,7 @@ function Fixture() {
                 ? { height: 240 }
                 : { width: 320 }
             }
-            uiSize={arg('uiSize', 'md') as 'sm' | 'md' | 'lg'}
+            uiSize={arg('uiSize', 'md') as 'md' | 'lg'}
           >
             <TRSlider.Label>Traffic</TRSlider.Label>
             <TRSlider.Value />
@@ -1567,7 +1567,7 @@ function Fixture() {
       case 'card':
         return (
           <TRCard.Root
-            padding={arg('padding', 'md') as 'none' | 'sm' | 'md' | 'lg'}
+            padding={arg('padding', 'md') as 'none' | 'md' | 'lg'}
             variant={arg('variant', 'default') as 'default' | 'outlined' | 'elevated'}
           >
             <TRCard.Header>
@@ -1713,9 +1713,7 @@ function Fixture() {
                 <TRWindowFrame.Title>zsh — tinyrack</TRWindowFrame.Title>
               )}
             </TRWindowFrame.TitleBar>
-            <TRWindowFrame.Body
-              padding={arg('padding', 'md') as 'none' | 'sm' | 'md' | 'lg'}
-            >
+            <TRWindowFrame.Body padding={arg('padding', 'md') as 'none' | 'md' | 'lg'}>
               <span style={{ whiteSpace: 'pre' }}>{'❯ tinyrack status\n✓ Ready'}</span>
             </TRWindowFrame.Body>
           </TRWindowFrame.Root>

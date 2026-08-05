@@ -349,7 +349,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
                     // Web navigation links use a 32px content box plus 4px
                     // block padding on each side (content-box sizing).
                     minHeight:
-                        TRGeneratedControlMetrics.smHeight +
+                        TRGeneratedControlMetrics.mdHeight +
                         TRGeneratedSpacing.xs * 2,
                   ),
                   padding: const EdgeInsets.symmetric(

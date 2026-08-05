@@ -203,7 +203,7 @@ export function RadioSizeComparison() {
   return (
     <TRField.Root>
       <TRRadioGroup aria-label={text.sizes} className="flex items-end gap-6" value="sm">
-        {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+        {(['md', 'lg'] as const).map((uiSize) => (
           <TRField.Item className="grid min-h-10 place-items-center gap-1" key={uiSize}>
             <TRRadio.Root data-docs-example-item="" uiSize={uiSize} value={uiSize}>
               <TRRadio.Indicator aria-hidden="true" />
@@ -271,7 +271,7 @@ const meta = {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     readOnly: { control: 'boolean' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

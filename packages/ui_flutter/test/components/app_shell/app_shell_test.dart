@@ -18,7 +18,7 @@ void main() {
         theme: TinyrackTheme.light(),
         home: const TRAppShell(
           main: TRAppShellMain(
-            child: TRTextField(uiSize: TRUiSize.sm, label: 'Workspace name'),
+            child: TRTextField(uiSize: TRUiSize.md, label: 'Workspace name'),
           ),
         ),
       ),

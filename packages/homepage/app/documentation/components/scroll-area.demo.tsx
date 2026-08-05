@@ -40,7 +40,14 @@ export function ScrollAreaPreview({
     <TRScrollArea.Root
       data-docs-example-item=""
       autoHide={autoHide}
-      style={{ height: '10rem', maxWidth: '100%', minWidth: 0, width: '20rem' }}
+      style={{
+        boxSizing: 'border-box',
+        contain: 'inline-size',
+        height: '10rem',
+        maxWidth: '20rem',
+        minWidth: 0,
+        width: '100%',
+      }}
       variant={variant}
     >
       <TRScrollArea.Viewport aria-label={visibleContent} tabIndex={0}>

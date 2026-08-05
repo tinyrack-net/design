@@ -107,7 +107,7 @@ export function TextareaSizeComparison() {
   const copy = textareaCopy[useDemoLocale()];
   return (
     <div className="grid w-full gap-4 sm:grid-cols-3">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <div className="grid min-w-0 gap-2" data-docs-example-item="" key={uiSize}>
           <span>{uiSize}</span>
           <TRTextarea
@@ -247,7 +247,7 @@ const meta = {
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     required: { control: 'boolean' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   localizedArgs: {
     ja: { label: 'ラックのメモ', placeholder: '運用メモ' },

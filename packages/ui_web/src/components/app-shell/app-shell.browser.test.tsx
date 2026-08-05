@@ -151,7 +151,7 @@ test('renders a static desktop sidebar landmark and both layout contracts', asyn
   vi.restoreAllMocks();
 });
 
-test('defaults Trigger and Close to ghost 32px controls with sm icons', async () => {
+test('defaults Trigger and Close to ghost 32px controls with compact icons', async () => {
   setMobileMatch(true);
   const view = await render(
     <TRAppShell.Root defaultOpen defaultSidebarMode="rail">
@@ -190,7 +190,7 @@ test('defaults Trigger and Close to ghost 32px controls with sm icons', async ()
     const button = document.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`);
     const icon = button?.querySelector('svg');
     expect(button?.dataset['appearance']).toBe('ghost');
-    expect(button?.dataset['uiSize']).toBe('sm');
+    expect(button?.dataset['uiSize']).toBe('md');
     expect(button?.getBoundingClientRect().width).toBe(32);
     expect(button?.getBoundingClientRect().height).toBe(32);
     expect(icon?.getBoundingClientRect().width).toBe(16);
@@ -203,14 +203,14 @@ test('defaults Trigger and Close to ghost 32px controls with sm icons', async ()
       <TRAppShell.Header>
         <TRAppShell.Trigger
           aria-label="Open compact menu"
-          uiSize="sm"
+          uiSize="md"
           style={{ display: 'inline-flex' }}
         >
           <MenuIcon />
         </TRAppShell.Trigger>
       </TRAppShell.Header>
       <TRAppShell.Sidebar aria-label="Compact menu">
-        <TRAppShell.Close aria-label="Close compact menu" uiSize="sm">
+        <TRAppShell.Close aria-label="Close compact menu" uiSize="md">
           <CloseIcon />
         </TRAppShell.Close>
       </TRAppShell.Sidebar>
@@ -225,7 +225,7 @@ test('defaults Trigger and Close to ghost 32px controls with sm icons', async ()
 
   for (const label of ['Open compact menu', 'Close compact menu']) {
     const button = document.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`);
-    expect(button?.dataset['uiSize']).toBe('sm');
+    expect(button?.dataset['uiSize']).toBe('md');
     expect(button?.getBoundingClientRect().width).toBe(32);
     expect(button?.getBoundingClientRect().height).toBe(32);
   }

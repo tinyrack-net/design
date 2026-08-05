@@ -75,7 +75,7 @@ type StoryArgs = {
   disabled: boolean;
   length: number;
   readOnly: boolean;
-  uiSize?: 'sm' | 'md' | 'lg';
+  uiSize?: 'md' | 'lg';
 };
 
 type OTPFieldPreviewProps = StoryArgs & {
@@ -222,7 +222,7 @@ export function OTPFieldSizeComparison() {
   }[locale];
   return (
     <div className="grid gap-5">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <OTPFieldPreview
           defaultValue="1234"
           disabled={false}
@@ -290,7 +290,7 @@ const meta = {
     disabled: { control: 'boolean' },
     length: { control: { type: 'range', min: 3, max: 8, step: 1 } },
     readOnly: { control: 'boolean' },
-    uiSize: { control: 'radio', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'radio', options: ['md', 'lg'] },
   },
   render: function Render(args) {
     const [value, setValue] = useState('');

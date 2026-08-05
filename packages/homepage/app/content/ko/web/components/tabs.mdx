@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/tabs.demo.js';
 
 | 속성 | 값 | 기본값 |
 | --- | --- | --- |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | `orientation` | `horizontal`, `vertical` | `horizontal` |
 | 비활성화된 탭 | `TRTabs.Tab disabled` | `false` |
 | 활성화 | 수동 또는 `activateOnFocus` | 수동 |
@@ -46,10 +46,10 @@ import * as Stories from '../../../../documentation/components/tabs.demo.js';
 
 <ComponentExampleTabs
   id="tabs-sizes"
-  data-docs-example-item-count="3"
+  data-docs-example-item-count="2"
   title="크기와 활성화 비교"
   previewLayout="stretch"
-  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="sm"><TRTabs.List aria-label="작은 수동 탭"><TRTabs.Tab value="one">작게</TRTabs.Tab><TRTabs.Tab value="two">세부 정보</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">작은 밀도에서 수동으로 활성화해요.</TRTabs.Panel><TRTabs.Panel value="two">세부 정보</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="자동 탭"><TRTabs.Tab value="one">자동</TRTabs.Tab><TRTabs.Tab value="two">세부 정보</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">화살표로 포커스를 옮기면 선택도 바뀌어요.</TRTabs.Panel><TRTabs.Panel value="two">세부 정보</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="경계에서 멈추는 탭" loopFocus={false}><TRTabs.Tab value="one">경계에서 멈춤</TRTabs.Tab><TRTabs.Tab value="two">세부 정보</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">포커스가 양 끝에서 멈춰요.</TRTabs.Panel><TRTabs.Panel value="two">세부 정보</TRTabs.Panel></TRTabs.Root></div>}
+  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="중간 자동 탭"><TRTabs.Tab value="one">중간</TRTabs.Tab><TRTabs.Tab value="two">세부 정보</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">화살표로 포커스를 옮기면 선택도 바뀌어요.</TRTabs.Panel><TRTabs.Panel value="two">세부 정보</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="큰 경계 탭" loopFocus={false}><TRTabs.Tab value="one">크게</TRTabs.Tab><TRTabs.Tab value="two">세부 정보</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">포커스가 양 끝에서 멈춰요.</TRTabs.Panel><TRTabs.Panel value="two">세부 정보</TRTabs.Panel></TRTabs.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tabsSizesSource }]}
 />
 

@@ -63,7 +63,7 @@ test('reports image load success and exposes the alternative text', async () => 
   expect(image).toHaveClass('tr-avatar-image');
   expect(root?.dataset['shape']).toBe('circle');
   expect(root?.dataset['uiSize']).toBe('md');
-  expect(getComputedStyle(root as HTMLElement).width).toBe('40px');
+  expect(getComputedStyle(root as HTMLElement).width).toBe('32px');
   expect(getComputedStyle(image).objectFit).toBe('cover');
   expect(document.querySelector('.tr-avatar-fallback')).toBeNull();
 });

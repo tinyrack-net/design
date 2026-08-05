@@ -5,7 +5,7 @@ enum TRIntent { neutral, primary, info, success, warning, danger }
 enum TRAppearance { solid, outline, ghost }
 
 /// The shared control size scale.
-enum TRUiSize { sm, md, lg }
+enum TRUiSize { md, lg }
 
 /// Logical placement of an anchored Tinyrack layer.
 ///

@@ -85,7 +85,7 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
   id="combobox-sizes"
   title="Sizes"
   description="Pass uiSize to InputGroup to align the Combobox control with neighboring Input, NumberField, or Button heights."
-  preview={<div data-docs-example-item-count="3"><Stories.ComboboxSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.ComboboxSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCombobox } from '@tinyrack/ui/components/combobox';
 import { TRField } from '@tinyrack/ui/components/field';
 import { ChevronDown, Search, X } from 'lucide-react';
@@ -95,7 +95,7 @@ const racks = ['Rack A', 'Rack B', 'Rack C'];
 export function ComboboxSizes() {
   return (
     <div className="grid gap-5">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <TRField.Root key={uiSize}>
           <TRField.Label>{uiSize.toUpperCase()} deployment rack</TRField.Label>
           <TRCombobox.Root items={racks} name={'rack-' + uiSize}>
@@ -343,7 +343,7 @@ function ControlledRackCombobox() {
 | Surface | Purpose |
 | --- | --- |
 | `Root` | Owns items, filtering, single/multiple value, input text, open state, validation, form serialization, locale, and equality/string conversion for object values. |
-| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | Compose an editable control. `InputAdornment` is decorative; `Icon` belongs in `Trigger`. `InputGroup` forwards `uiSize?: 'sm' \| 'md' \| 'lg'` to scale the input, adornment, clear, and trigger together. |
+| `InputGroup`, `InputAdornment`, `Input`, `Clear`, `Trigger`, `Icon` | Compose an editable control. `InputAdornment` is decorative; `Icon` belongs in `Trigger`. `InputGroup` forwards `uiSize?: 'md' \| 'lg'` to scale the input, adornment, clear, and trigger together. |
 | `Portal`, `Backdrop`, `Positioner`, `Popup`, `Arrow` | Mount and position the dismissible overlay. Portal accepts a custom container and may be omitted for inline rendering. |
 | `Status`, `List`, `Group`, `GroupLabel`, `Collection`, `Row`, `Item`, `ItemIndicator`, `Separator`, `Empty` | Render list or grid collections and accessible feedback. |
 | `Chips`, `Value`, `Chip`, `ChipRemove` | Render and remove multiple selections. |
@@ -351,6 +351,6 @@ function ControlledRackCombobox() {
 
 Every part also has a named `TRCombobox*` export and matching props/state types. Root additionally exports action and open/value/highlight event detail and reason types, plus `TRComboboxFilter` and `TRComboboxFilterOptions`.
 
-Wrap an editable `Input` in `TRField.Root` and name it with `TRField.Label`. The label resolves its own `htmlFor` from the registered control, so no manual `id` or `useId` is needed. `TRCombobox.Label` names a trigger-only select anatomy. `InputGroup` accepts `uiSize?: 'sm' | 'md' | 'lg'` (default `md`) to align the input, adornment, clear, and trigger heights with neighboring controls. Disabled roots and items cannot be changed; read-only roots remain focusable but cannot edit or clear. Keep popup content mounted only when needed, preserve stable item identity for object values, and supply `itemToStringLabel`, `itemToStringValue`, or `isItemEqualToValue` when the automatic `{ label, value }` object convention is insufficient.
+Wrap an editable `Input` in `TRField.Root` and name it with `TRField.Label`. The label resolves its own `htmlFor` from the registered control, so no manual `id` or `useId` is needed. `TRCombobox.Label` names a trigger-only select anatomy. `InputGroup` accepts `uiSize?: 'md' | 'lg'` (default `md`) to align the input, adornment, clear, and trigger heights with neighboring controls. Disabled roots and items cannot be changed; read-only roots remain focusable but cannot edit or clear. Keep popup content mounted only when needed, preserve stable item identity for object values, and supply `itemToStringLabel`, `itemToStringValue`, or `isItemEqualToValue` when the automatic `{ label, value }` object convention is insufficient.
 
 Combobox modules are SSR-safe. Interactive files are client boundaries, portals mount after hydration, and controlled server/client initial values must match. Styling ships separately through `combobox.css`; customize `--tr-combobox-input-background`, `--tr-combobox-content-background`, `--tr-combobox-content-max-height`, `--tr-combobox-content-max-width`, and `--tr-combobox-option-min-height`, which fall back to semantic Tinyrack tokens in light and dark themes.

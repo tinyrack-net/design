@@ -68,7 +68,7 @@ export function TRButton({
       nativeButton={nativeButton}
       type={nativeButton ? type : undefined}
     >
-      {loading ? <TRSpinner decorative uiSize="sm" /> : null}
+      {loading ? <TRSpinner decorative uiSize="md" /> : null}
       {children}
     </BaseButton>
   );

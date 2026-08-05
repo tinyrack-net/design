@@ -20,7 +20,7 @@ type StoryArgs = {
   min: number;
   readOnly: boolean;
   step: number;
-  uiSize?: 'sm' | 'md' | 'lg';
+  uiSize?: 'md' | 'lg';
   value: number | null;
 };
 
@@ -158,7 +158,7 @@ export function NumberFieldSizeComparison() {
   }[locale];
   return (
     <div className="grid w-80 max-w-full gap-5">
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <NumberFieldPreview
           defaultValue={3}
           disabled={false}
@@ -512,7 +512,7 @@ export const numberFieldSizesSource = `import { TRNumberField } from '@tinyrack/
 export function NumberFieldSizes() {
   return (
     <div className="grid gap-5">
-      <TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas-sm" uiSize="sm">
+      <TRNumberField.Root defaultValue={3} max={20} min={0} name="replicas-sm" uiSize="md">
         <TRNumberField.Group>
           <TRNumberField.Decrement aria-label="Decrease">−</TRNumberField.Decrement>
           <TRNumberField.Input aria-label="Replicas" />
@@ -558,7 +558,7 @@ const meta = {
     min: { control: { type: 'number' } },
     readOnly: { control: 'boolean' },
     step: { control: { type: 'number', min: 0.1 } },
-    uiSize: { control: 'radio', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'radio', options: ['md', 'lg'] },
   },
   localizedArgs: {
     ja: { label: 'レプリカ数' },

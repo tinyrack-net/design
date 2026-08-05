@@ -89,12 +89,12 @@ export function CopyImport() {
   id="copy-button-combinations"
   title="Inherited Button combinations"
   description="Appearance, variant, uiSize, and labels compose across Button styles. Idle and copied labels share a stable footprint; the longer unavailable label appears only on failure."
-  preview={<div className="flex flex-wrap items-center gap-3"><TRCopyButton data-docs-example-item="" appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" /><TRCopyButton data-docs-example-item="" appearance="outline" copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Import unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" variant="secondary" /><TRCopyButton data-docs-example-item="" appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" /></div>}
+  preview={<div className="flex flex-wrap items-center gap-3"><TRCopyButton data-docs-example-item="" appearance="solid" resetDelay={750} uiSize="md" value="solid-primary" variant="primary" /><TRCopyButton data-docs-example-item="" appearance="outline" copiedLabel="Import copied" idleLabel="Copy import" unavailableLabel="Import unavailable" value="import { TRButton } from '@tinyrack/ui/components/button';" variant="secondary" /><TRCopyButton data-docs-example-item="" appearance="ghost" idleLabel="Copy cleanup command" uiSize="lg" value="pnpm clean" variant="danger" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRCopyButton } from '@tinyrack/ui/components/copy-button';
 
 export function CopyButtonCombinations() {
   return <div className="flex flex-wrap items-center gap-3">
-  <TRCopyButton appearance="solid" resetDelay={750} uiSize="sm" value="solid-primary" variant="primary" />
+  <TRCopyButton appearance="solid" resetDelay={750} uiSize="md" value="solid-primary" variant="primary" />
   <TRCopyButton
     appearance="outline"
     copiedLabel="Import copied"

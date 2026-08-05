@@ -158,10 +158,7 @@
     border-block-end: var(--tinyrack-border-width-default) solid var(--tinyrack-border);
     display: flex;
     gap: var(--tinyrack-space-sm);
-    block-size: var(
-      --tr-app-shell-header-block-size,
-      var(--tinyrack-control-height-lg)
-    );
+    block-size: var(--tr-app-shell-header-block-size, var(--tinyrack-space-3xl));
     padding-inline: var(--tinyrack-space-lg);
     position: sticky;
     inset-block-start: 0;
@@ -358,11 +355,11 @@
     .tr-app-shell[data-page-scroll="document"][data-chrome="docs"] .tr-app-shell-outline {
       inset-block-start: var(
         --tr-app-shell-header-block-size,
-        var(--tinyrack-control-height-lg)
+        var(--tinyrack-space-3xl)
       );
       max-block-size: calc(
         100dvh -
-        var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+        var(--tr-app-shell-header-block-size, var(--tinyrack-space-3xl))
       );
       overscroll-behavior: contain;
     }
@@ -388,7 +385,7 @@
      * spans both rows and the header would overlap `main`.
      */
     grid-template-rows:
-      var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+      var(--tr-app-shell-header-block-size, var(--tinyrack-space-3xl))
       minmax(0, 1fr);
     min-block-size: 100dvh;
     overflow: visible;
@@ -424,12 +421,9 @@
     align-self: start;
     block-size: calc(
       100dvh -
-      var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+      var(--tr-app-shell-header-block-size, var(--tinyrack-space-3xl))
     );
-    inset-block-start: var(
-      --tr-app-shell-header-block-size,
-      var(--tinyrack-control-height-lg)
-    );
+    inset-block-start: var(--tr-app-shell-header-block-size, var(--tinyrack-space-3xl));
     max-block-size: none;
     position: sticky;
   }
@@ -445,7 +439,7 @@
   .tr-app-shell[data-page-scroll="document"] .tr-app-shell-main-content {
     min-block-size: calc(
       100dvh -
-      var(--tr-app-shell-header-block-size, var(--tinyrack-control-height-lg))
+      var(--tr-app-shell-header-block-size, var(--tinyrack-space-3xl))
     );
   }
 }

@@ -18,7 +18,7 @@ import * as Stories from '../../../../documentation/components/spinner.demo.js';
 
 | プロパティ | 値 | 既定値 |
 | --- | --- | --- |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | `variant` | `current`, `muted`, `primary`, `danger` | `current` |
 | `label` | アクセス可能なステータステキスト | `Loading` |
 | `decorative` | `true`, `false` | `false` |
@@ -48,11 +48,11 @@ import * as Stories from '../../../../documentation/components/spinner.demo.js';
   id="spinner-size-variant-matrix"
   title="サイズ"
   description="周囲のテキストやコントロールにスピナーのサイズを合わせてください。"
-  preview={<div className="flex flex-wrap items-end gap-5"><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="sm" /><span>小</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="md" /><span>中</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="lg" /><span>大</span></span></div>}
+  preview={<div className="flex flex-wrap items-end gap-5"><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="md" /><span>中</span></span><span className="grid justify-items-center gap-1"><TRSpinner data-docs-example-item="" decorative uiSize="lg" /><span>大</span></span></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 export function SpinnerSizes() {
-  return <div className="flex items-end gap-5">{(['sm', 'md', 'lg']).map((uiSize) => <TRSpinner decorative key={uiSize} uiSize={uiSize} />)}</div>;
+  return <div className="flex items-end gap-5">{(['md', 'lg']).map((uiSize) => <TRSpinner decorative key={uiSize} uiSize={uiSize} />)}</div>;
 }` ,
       styles: { code: "@import '@tinyrack/ui/components/spinner.css';" },
     },
@@ -81,7 +81,7 @@ export function SpinnerVariants() {
   preview={(
     <div className="flex flex-wrap items-center gap-4">
       <TRSpinner data-docs-example-item="" label="サーバー一覧を読み込み中" variant="primary" />
-      <TRButton data-docs-example-item="" aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />インベントリを更新しています</TRButton>
+      <TRButton data-docs-example-item="" aria-busy="true" disabled><TRSpinner decorative uiSize="md" />インベントリを更新しています</TRButton>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRButton } from '@tinyrack/ui/components/button';
@@ -89,7 +89,7 @@ import { TRSpinner } from '@tinyrack/ui/components/spinner';
 
 <div className="flex flex-wrap items-center gap-4">
   <TRSpinner label="サーバー一覧を読み込み中" variant="primary" />
-  <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="sm" />インベントリを更新しています</TRButton>
+  <TRButton aria-busy="true" disabled><TRSpinner decorative uiSize="md" />インベントリを更新しています</TRButton>
 </div>` }]}
 />
 
@@ -134,7 +134,7 @@ TRSpinner は既定で `role="status"` を公開するため、空でないタ�
 | `--tr-spinner-size` | size recipe | Indicator diameter |
 | `--tr-spinner-stroke-width` | `--tinyrack-spinner-stroke-width` | Ring thickness |
 | `--tr-spinner-color` | semantic variant color | Active and track color |
-| `--tinyrack-spinner-size-sm` | foundation metric | Small diameter |
+| `--tinyrack-spinner-size-md` | foundation metric | Small diameter |
 | `--tinyrack-spinner-size-md` | foundation metric | Medium diameter |
 | `--tinyrack-spinner-size-lg` | foundation metric | Large diameter |
 | `--tinyrack-spinner-track-opacity` | foundation metric | Inactive ring opacity |

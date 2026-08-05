@@ -127,7 +127,7 @@ class TRAppShellSidebarToggle extends StatelessWidget {
           onPressed?.call();
           scope.controller.toggleSidebar();
         },
-        uiSize: TRUiSize.sm,
+        uiSize: TRUiSize.md,
       ),
     );
   }

@@ -19,7 +19,7 @@ import * as Stories from '../../../../documentation/components/slider.demo.js';
 | form | `name` は現在の thumb 値を native hidden input を通してシリアライズします。 |
 | 検証 | TRSlider にネイティブの `required` はありません。ビジネスルールは `TRField.Root` に置き、`TRField.Error` を表示して無効なつまみにフォーカスします。 |
 
-slider が密度の高いコントロールサーフェスの一部である場合は `uiSize="sm"` を使います。
+slider が密度の高いコントロールサーフェスの一部である場合は `uiSize="md"` を使います。
 
 ## インストール
 
@@ -56,11 +56,11 @@ slider が密度の高いコントロールサーフェスの一部である場�
 <ComponentExampleTabs
   id="slider-sizes"
   title="サイズ"
-  preview={<div data-docs-example-item-count="3"><Stories.SliderSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.SliderSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSlider } from '@tinyrack/ui/components/slider';
 
 <div className="grid gap-6">
-  {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  {(['md', 'lg'] as const).map((uiSize) => (
     <TRSlider.Root defaultValue={[48]} key={uiSize} uiSize={uiSize}>
       <TRSlider.Label>{uiSize.toUpperCase()} volume</TRSlider.Label>
       <TRSlider.Value />
@@ -249,7 +249,7 @@ function CapacitySliderForm() {
 | 目的 | 公開 prop とデフォルト |
 | --- | --- |
 | スケール | `min={0}`、`max={100}`、`step={1}`、`largeStep={10}` がデフォルトです。 |
-| レイアウト | `orientation="horizontal" | "vertical"` を受け取り、デフォルトは `"horizontal"` です。`uiSize="sm" | "md" | "lg"` のデフォルトは `"md"` です。 |
+| レイアウト | `orientation="horizontal" | "vertical"` を受け取り、デフォルトは `"horizontal"` です。`uiSize="md" | "md" | "lg"` のデフォルトは `"md"` です。 |
 | range | `minStepsBetweenValues` のデフォルトは `0` です。`thumbCollisionBehavior="push" | "swap" | "none"` のデフォルトは `"push"` です。 |
 | thumb の端 | `thumbAlignment="center" | "edge" | "edge-client-only"` を受け取り、デフォルトは `"center"` です。 |
 | 状態と form | 制御された `value` または `defaultValue`、`disabled={false}`、`name`、外部 `form` を受け取ります。 |

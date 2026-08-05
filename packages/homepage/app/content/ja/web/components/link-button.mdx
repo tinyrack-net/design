@@ -17,7 +17,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
 | --- | --- | --- | --- |
 | `intent` | `neutral`, `primary`, `info`, `success`, `warning`, `danger` | `neutral` | 移動先の意味や結果を伝えます。 |
 | `appearance` | `solid`, `outline`, `ghost` | `solid` | intent を変えずに視覚的な強調を調整します。 |
-| `uiSize` | `sm`, `md`, `lg` | `md` | 周囲のコントロールのサイズに合わせます。 |
+| `uiSize` | `md`, `lg` | `md` | 周囲のコントロールのサイズに合わせます。 |
 | `disabled` | `boolean` | `false` | 移動先を削除し、ナビゲーションを無効化します。 |
 
 ## インストール
@@ -106,7 +106,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
   description="移動先の重要度ではなく、近くのコントロールに合うサイズを選んでください。"
   preview={(
     <div className="flex flex-wrap items-center gap-3">
-      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="sm">Small</TRLinkButton>
+      <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Small</TRLinkButton>
       <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="md">Medium</TRLinkButton>
       <TRLinkButton data-docs-example-item="" href="#destination" intent="primary" uiSize="lg">Large</TRLinkButton>
     </div>
@@ -136,7 +136,7 @@ import * as Stories from '../../../../documentation/components/link-button.demo.
 | --- | --- | --- |
 | `intent` | `neutral \| primary \| info \| success \| warning \| danger` / `neutral` | 意味と色の役割を選びます。 |
 | `appearance` | `solid \| outline \| ghost` / `solid` | intent を変えずに視覚的な強調を選びます。 |
-| `uiSize` | `sm \| md \| lg` / `md` | コントロールのサイズを選びます。 |
+| `uiSize` | `md \| lg` / `md` | コントロールのサイズを選びます。 |
 | `disabled` | `boolean` / `false` | 移動先を削除し、ナビゲーションを無効化します。 |
 | `href` | native anchor `href` | 移動先を設定し、disabled の間は省略されます。 |
 | `render` | Base UI render element または callback | anchor を入れ子にせず React Router などの link を合成します。 |

@@ -412,7 +412,7 @@ describe('built React Router documentation', () => {
             button.evaluate((element) => getComputedStyle(element).height),
           ),
         ),
-      ).resolves.toEqual(['40px', '40px']);
+      ).resolves.toEqual(['32px', '32px']);
       await expect(
         Promise.all(
           [neutralOutline, primaryOutline].map((button) =>
@@ -491,7 +491,7 @@ describe('built React Router documentation', () => {
         await expect(button.count()).resolves.toBe(1);
         await expect(
           button.evaluate((element) => getComputedStyle(element).height),
-        ).resolves.toBe('40px');
+        ).resolves.toBe('32px');
         await expect(
           alert.evaluate((element) => getComputedStyle(element).backgroundColor),
         ).resolves.toBe(

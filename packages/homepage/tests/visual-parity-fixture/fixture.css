@@ -191,7 +191,7 @@ body {
   font-size: var(--tinyrack-text-sm);
   inline-size: 100%;
   justify-content: space-between;
-  min-block-size: var(--tinyrack-control-height-sm);
+  min-block-size: var(--tinyrack-control-height-md);
   min-inline-size: 0;
   padding: var(--tinyrack-space-xs) var(--tinyrack-space-md);
   transition:

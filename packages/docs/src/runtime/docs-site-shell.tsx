@@ -332,7 +332,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
               label={localeConfig.messages.language}
               onValueChange={changeLocale}
               options={localeOptions}
-              uiSize="sm"
+              uiSize="md"
               value={locale}
             />
           ) : null}
@@ -340,7 +340,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             aria-label={localeConfig.messages.search}
             appearance="ghost"
             onClick={(event) => openSearch(event.currentTarget)}
-            uiSize="sm"
+            uiSize="md"
           >
             <Search aria-hidden="true" />
           </TRIconButton>
@@ -349,7 +349,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
             darkLabel={localeConfig.messages.useDarkColorScheme}
             lightLabel={localeConfig.messages.useLightColorScheme}
             onValueChange={applyScheme}
-            uiSize="sm"
+            uiSize="md"
             value={preference}
           />
           {hasNavigation ? (
@@ -417,7 +417,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
                   label={localeConfig.messages.language}
                   onValueChange={changeLocale}
                   options={localeOptions}
-                  uiSize="sm"
+                  uiSize="md"
                   value={locale}
                 />
               ) : null}

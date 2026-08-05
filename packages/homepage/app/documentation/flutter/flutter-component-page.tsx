@@ -1412,9 +1412,9 @@ class _RackFormState extends State<RackForm> {
       {
         axis: { en: 'Length and size', ko: '길이와 크기', ja: '長さとサイズ' },
         choices: {
-          en: '`length` clamps the value and decides when `onCompleted` fires. `uiSize` scales the square slots along the shared control height scale, so `sm`, `md`, and `lg` line up with a neighboring `TRTextField` or `TRButton` of the same size.',
-          ko: '`length`는 값을 잘라내고 `onCompleted`가 호출되는 시점을 결정해요. `uiSize`는 공용 컨트롤 높이 스케일에 맞춰 정사각형 슬롯 크기를 조절하므로, `sm`·`md`·`lg`가 같은 크기의 `TRTextField`나 `TRButton`과 나란히 맞아요.',
-          ja: '`length` は値を切り詰め、`onCompleted` が呼ばれるタイミングを決めます。`uiSize` は共通のコントロール高さスケールに沿って正方形スロットを拡縮するため、`sm`・`md`・`lg` が同じサイズの `TRTextField` や `TRButton` と揃います。',
+          en: '`length` clamps the value and decides when `onCompleted` fires. `uiSize` scales the square slots along the shared control height scale, so `md` and `lg` line up with a neighboring `TRTextField` or `TRButton` of the same size.',
+          ko: '`length`는 값을 잘라내고 `onCompleted`가 호출되는 시점을 결정해요. `uiSize`는 공용 컨트롤 높이 스케일에 맞춰 정사각형 슬롯 크기를 조절하므로, `md`·`lg`가 같은 크기의 `TRTextField`나 `TRButton`과 나란히 맞아요.',
+          ja: '`length` は値を切り詰め、`onCompleted` が呼ばれるタイミングを決めます。`uiSize` は共通のコントロール高さスケールに沿って正方形スロットを拡縮するため、`md`・`lg` が同じサイズの `TRTextField` や `TRButton` と揃います。',
         },
       },
     ],
@@ -1502,9 +1502,9 @@ class _RackFormState extends State<RackForm> {
             name: 'uiSize',
             type: 'TRUiSize · TRUiSize.md',
             purpose: {
-              en: 'Scales the square slots and the default gap to the `sm`, `md`, or `lg` control height. A `separatorBuilder` replaces the gap entirely, so size it yourself there.',
-              ko: '정사각형 슬롯과 기본 간격을 `sm`·`md`·`lg` 컨트롤 높이에 맞춰 조절해요. `separatorBuilder`는 간격을 완전히 대체하므로, 그 안에서 직접 크기를 정하세요.',
-              ja: '正方形スロットと既定の間隔を `sm`・`md`・`lg` のコントロール高さに合わせて拡縮します。`separatorBuilder` は間隔をすべて置き換えるため、その中で自分でサイズを決めてください。',
+              en: 'Scales the square slots and the default gap to the `md` or `lg` control height. A `separatorBuilder` replaces the gap entirely, so size it yourself there.',
+              ko: '정사각형 슬롯과 기본 간격을 `md`·`lg` 컨트롤 높이에 맞춰 조절해요. `separatorBuilder`는 간격을 완전히 대체하므로, 그 안에서 직접 크기를 정하세요.',
+              ja: '正方形スロットと既定の間隔を `md`・`lg` のコントロール高さに合わせて拡縮します。`separatorBuilder` は間隔をすべて置き換えるため、その中で自分でサイズを決めてください。',
             },
           },
           {
@@ -1841,9 +1841,9 @@ class _RackFormState extends State<RackForm> {
             name: 'uiSize',
             type: 'TRUiSize · TRUiSize.md',
             purpose: {
-              en: 'Scales the thumb and the space reserved around the track. The track thickness stays the same at every size. Use `TRUiSize.sm` on dense surfaces.',
-              ko: '썸과 트랙 주변에 확보되는 공간의 크기를 조절해요. 트랙 두께는 모든 크기에서 같아요. 밀도가 높은 화면에는 `TRUiSize.sm`을 쓰세요.',
-              ja: 'つまみとトラック周辺に確保される領域の大きさを調整します。トラックの太さはどのサイズでも同じです。密度の高い画面では `TRUiSize.sm` を使ってください。',
+              en: 'Scales the thumb and the space reserved around the track. The track thickness stays the same at every size. Use `TRUiSize.md` on dense surfaces.',
+              ko: '썸과 트랙 주변에 확보되는 공간의 크기를 조절해요. 트랙 두께는 모든 크기에서 같아요. 밀도가 높은 화면에는 `TRUiSize.md`을 쓰세요.',
+              ja: 'つまみとトラック周辺に確保される領域の大きさを調整します。トラックの太さはどのサイズでも同じです。密度の高い画面では `TRUiSize.md` を使ってください。',
             },
           },
           {
@@ -2327,9 +2327,9 @@ class _DocsTreeState extends State<DocsTree> {
       {
         axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
         choices: {
-          en: '`sm`, `md`, or `lg`; the default is `md`.',
-          ko: '`sm`, `md`, `lg` 중에서 고르며 기본값은 `md`예요.',
-          ja: '`sm`、`md`、`lg` から選びます。デフォルトは `md` です。',
+          en: '`md` or `lg`; the default is `md`.',
+          ko: '`md`, `lg` 중에서 고르며 기본값은 `md`예요.',
+          ja: '`md`、`lg` から選びます。デフォルトは `md` です。',
         },
       },
       {
@@ -2903,9 +2903,9 @@ class _InstallCommandState extends State<InstallCommand> {
             name: 'uiSize',
             type: 'TRUiSize = TRUiSize.md',
             purpose: {
-              en: 'Sets the control height and typography to `sm`, `md`, or `lg`.',
-              ko: '컨트롤 높이와 타이포그래피를 `sm`, `md`, `lg`로 지정해요.',
-              ja: 'コントロールの高さとタイポグラフィを `sm`、`md`、`lg` に設定します。',
+              en: 'Sets the control height and typography to `md` or `lg`.',
+              ko: '컨트롤 높이와 타이포그래피를 `md`, `lg`로 지정해요.',
+              ja: 'コントロールの高さとタイポグラフィを `md`、`lg` に設定します。',
             },
           },
         ],
@@ -3088,9 +3088,9 @@ class _InstallCommandState extends State<InstallCommand> {
       {
         axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
         choices: {
-          en: '`uiSize` takes `TRUiSize.sm`, `TRUiSize.md`, or `TRUiSize.lg`; the default is `md`. Match it to the controls around the option.',
-          ko: '`uiSize`는 `TRUiSize.sm`, `TRUiSize.md`, `TRUiSize.lg`를 받고 기본값은 `md`예요. 주변 컨트롤의 밀도에 맞추세요.',
-          ja: '`uiSize` は `TRUiSize.sm`・`TRUiSize.md`・`TRUiSize.lg` を受け取り、既定値は `md` です。周囲のコントロールの密度に合わせてください。',
+          en: '`uiSize` takes `TRUiSize.md` or `TRUiSize.lg`; the default is `md`. Match it to the controls around the option.',
+          ko: '`uiSize`는 `TRUiSize.md`, `TRUiSize.lg`를 받고 기본값은 `md`예요. 주변 컨트롤의 밀도에 맞추세요.',
+          ja: '`uiSize` は `TRUiSize.md`・`TRUiSize.lg` を受け取り、既定値は `md` です。周囲のコントロールの密度に合わせてください。',
         },
       },
       {
@@ -4002,9 +4002,9 @@ class _FormattingBarState extends State<FormattingBar> {
       {
         axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
         choices: {
-          en: '`uiSize` accepts `sm`, `md`, and `lg`; the default is `md`. Each size sets height, inline padding, and text size from the shared control metrics.',
-          ko: '`uiSize`는 `sm`, `md`, `lg`를 받고 기본값은 `md`예요. 각 크기는 공통 컨트롤 지표에서 높이와 좌우 여백, 글자 크기를 함께 정해요.',
-          ja: '`uiSize` は `sm`、`md`、`lg` を受け取り、既定値は `md` です。各サイズは共通のコントロール指標から高さ・左右の余白・文字サイズを決めます。',
+          en: '`uiSize` accepts `md` and `lg`; the default is `md`. Each size sets height, inline padding, and text size from the shared control metrics.',
+          ko: '`uiSize`는 `md`, `lg`를 받고 기본값은 `md`예요. 각 크기는 공통 컨트롤 지표에서 높이와 좌우 여백, 글자 크기를 함께 정해요.',
+          ja: '`uiSize` は `md`、`lg` を受け取り、既定値は `md` です。各サイズは共通のコントロール指標から高さ・左右の余白・文字サイズを決めます。',
         },
       },
       {
@@ -4078,9 +4078,9 @@ class _FormattingBarState extends State<FormattingBar> {
             name: 'uiSize',
             type: 'TRUiSize · TRUiSize.md',
             purpose: {
-              en: 'Selects the `sm`, `md`, or `lg` control metrics.',
-              ko: '`sm`, `md`, `lg` 중 컨트롤 지표를 선택해요.',
-              ja: '`sm`、`md`、`lg` のコントロール指標を選びます。',
+              en: 'Selects the `md` or `lg` control metrics.',
+              ko: '`md`, `lg` 중 컨트롤 지표를 선택해요.',
+              ja: '`md`、`lg` のコントロール指標を選びます。',
             },
           },
           {
@@ -4392,9 +4392,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'Size', ko: '크기', ja: 'サイズ' },
         choices: {
-          en: '`uiSize` accepts `sm`, `md`, and `lg`; the default is `md`. Each size sets a square target and its icon size from the shared control metrics.',
-          ko: '`uiSize`는 `sm`, `md`, `lg`를 받고 기본값은 `md`예요. 각 크기는 공통 컨트롤 지표에서 정사각형 터치 영역과 아이콘 크기를 함께 정해요.',
-          ja: '`uiSize` は `sm`、`md`、`lg` を受け取り、既定値は `md` です。各サイズは共通のコントロール指標から正方形のタップ領域とアイコンサイズを決めます。',
+          en: '`uiSize` accepts `md` and `lg`; the default is `md`. Each size sets a square target and its icon size from the shared control metrics.',
+          ko: '`uiSize`는 `md`, `lg`를 받고 기본값은 `md`예요. 각 크기는 공통 컨트롤 지표에서 정사각형 터치 영역과 아이콘 크기를 함께 정해요.',
+          ja: '`uiSize` は `md`、`lg` を受け取り、既定値は `md` です。各サイズは共通のコントロール指標から正方形のタップ領域とアイコンサイズを決めます。',
         },
       },
       {
@@ -4695,9 +4695,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'Body padding', ko: '본문 여백', ja: '本文余白' },
         choices: {
-          en: '`none`, `sm`, `md`, `lg`',
-          ko: '`none`, `sm`, `md`, `lg`',
-          ja: '`none`, `sm`, `md`, `lg`',
+          en: '`none`, `md`, `lg`',
+          ko: '`none`, `md`, `lg`',
+          ja: '`none`, `md`, `lg`',
         },
       },
     ],

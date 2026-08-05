@@ -274,9 +274,8 @@ test('suppresses pointer and keyboard activation while loading', async () => {
 });
 
 test.each([
-  ['sm', '32px', '12px', '14px'],
-  ['md', '40px', '16px', '14px'],
-  ['lg', '48px', '20px', '16px'],
+  ['md', '32px', '12px', '14px'],
+  ['lg', '40px', '16px', '14px'],
 ] as const)('computes the %s control recipe', async (uiSize, height, padding, fontSize) => {
   const screen = await render(<TRButton uiSize={uiSize}>{uiSize}</TRButton>);
   const styles = getComputedStyle(screen.getByRole('button').element());

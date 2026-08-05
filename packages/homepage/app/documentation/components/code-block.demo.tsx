@@ -84,7 +84,7 @@ export function CopyableCodeBlock() {
       <TRCodeBlock code={code} highlighter={trShikiWebHighlighter} language="shellscript" />
       <div className="flex items-center justify-between gap-3">
         <output aria-live="polite">{copyResult}</output>
-        <TRButton appearance="outline" onClick={copyCode} uiSize="sm">Copy code</TRButton>
+        <TRButton appearance="outline" onClick={copyCode} uiSize="md">Copy code</TRButton>
       </div>
     </div>
   );
@@ -128,7 +128,7 @@ export function CodeBlockPreview({ language, ...args }: CodeBlockStoryArgs) {
       <TRCodeBlock {...args} {...(language === 'plain text' ? {} : { language })} />
       <div className="flex items-center justify-between gap-3">
         <output aria-live="polite">{copyResult}</output>
-        <TRButton appearance="outline" onClick={copyCode} uiSize="sm">
+        <TRButton appearance="outline" onClick={copyCode} uiSize="md">
           {copy.copy}
         </TRButton>
       </div>

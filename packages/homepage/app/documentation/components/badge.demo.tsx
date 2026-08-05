@@ -28,7 +28,7 @@ const meta = {
   argTypes: {
     children: { control: 'text' },
     icon: { control: 'boolean' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
     variant: {
       control: 'select',
       options: ['neutral', 'info', 'success', 'warning', 'danger'],

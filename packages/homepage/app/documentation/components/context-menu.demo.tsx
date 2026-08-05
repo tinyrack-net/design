@@ -302,7 +302,7 @@ export function ContextMenuPreview({
               appearance="outline"
               aria-label={fallbackLabel}
               onClick={(event) => openAtTrigger(event.currentTarget)}
-              uiSize="sm"
+              uiSize="md"
               type="button"
             >
               {text.more}
@@ -518,7 +518,7 @@ export function RackRowActions() {
           aria-label="Open actions for Rack Alpha"
           onClick={(event) => openActions(event.currentTarget)}
           type="button"
-          uiSize="sm"
+          uiSize="md"
         >
           More actions
         </TRButton>

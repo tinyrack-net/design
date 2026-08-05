@@ -127,7 +127,7 @@
   }
 
   .tr-toast-action {
-    min-height: var(--tinyrack-control-height-sm);
+    min-height: var(--tinyrack-control-height-md);
     padding-inline: var(--tinyrack-space-sm);
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-strong);
@@ -137,8 +137,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--tinyrack-control-height-sm);
-    height: var(--tinyrack-control-height-sm);
+    width: var(--tinyrack-control-height-md);
+    height: var(--tinyrack-control-height-md);
     padding: 0;
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-lg);

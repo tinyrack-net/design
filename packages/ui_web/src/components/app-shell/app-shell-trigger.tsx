@@ -12,7 +12,7 @@ export function TRAppShellTrigger({
   appearance = 'ghost',
   className,
   ref,
-  uiSize = 'sm',
+  uiSize = 'md',
   ...props
 }: TRAppShellTriggerProps) {
   const { drawerActive, drawerHandle, mobile, triggerRef } =

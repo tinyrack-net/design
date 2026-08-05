@@ -18,9 +18,4 @@
     flex: none;
     inline-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-lg));
   }
-
-  .tr-btn.tr-icon-btn[data-ui-size="lg"] > svg {
-    block-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-xl));
-    inline-size: var(--tr-icon-button-icon-size, var(--tinyrack-space-xl));
-  }
 }

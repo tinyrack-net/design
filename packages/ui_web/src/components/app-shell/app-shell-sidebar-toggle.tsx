@@ -10,7 +10,7 @@ export function TRAppShellSidebarToggle({
   appearance = 'ghost',
   className,
   onClick,
-  uiSize = 'sm',
+  uiSize = 'md',
   ...props
 }: TRAppShellSidebarToggleProps) {
   const { mobile, setSidebarMode, sidebarMode } = useAppShellContext('SidebarToggle');

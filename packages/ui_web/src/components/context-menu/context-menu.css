@@ -54,7 +54,7 @@
     display: flex;
     font: inherit;
     gap: var(--tinyrack-space-sm);
-    min-height: var(--tinyrack-control-height-sm);
+    min-height: var(--tinyrack-control-height-md);
     padding: var(--tinyrack-space-sm) var(--tinyrack-space-md);
     text-align: start;
     text-decoration: none;

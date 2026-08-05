@@ -99,7 +99,7 @@ test('preserves refs, native props, render props, and consumer classes', async (
 
 test('applies every size, semantic variant, and customization token', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
-  const sizes = ['sm', 'md', 'lg'] as const;
+  const sizes = ['md', 'lg'] as const;
   const variants = ['neutral', 'info', 'success', 'warning', 'danger'] as const;
   await render(
     <div>
@@ -192,7 +192,7 @@ test('preserves its accessible name through narrow SSR hydration', async () => {
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = true;
   const fixture = (
     <div style={{ width: 320 }}>
-      <TRProgress.Root uiSize="sm" value={25} variant="info">
+      <TRProgress.Root uiSize="md" value={25} variant="info">
         <TRProgress.Label>Mobile upload</TRProgress.Label>
         <TRProgress.Track>
           <TRProgress.Indicator />

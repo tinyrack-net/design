@@ -130,9 +130,8 @@ test('associates with a TRField.Label without manual id wiring', async () => {
 });
 
 test.each([
-  ['sm', '14px', '20px', '64px', '12px'],
-  ['md', '14px', '20px', '80px', '16px'],
-  ['lg', '16px', '24px', '96px', '20px'],
+  ['md', '14px', '20px', '64px', '12px'],
+  ['lg', '14px', '20px', '80px', '16px'],
 ] as const)('applies %s control size tokens', async (uiSize, fontSize, lineHeight, minBlockSize, paddingInline) => {
   await render(<TRTextarea aria-label={`${uiSize} notes`} uiSize={uiSize} />);
   const textarea = document.querySelector<HTMLTextAreaElement>('.tr-textarea');

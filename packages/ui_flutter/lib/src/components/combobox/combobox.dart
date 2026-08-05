@@ -702,7 +702,7 @@ class _TRComboboxInputState<T extends Object>
       label: widget.clearSemanticLabel,
       onPressed: onClear,
       appearance: TRAppearance.ghost,
-      uiSize: TRUiSize.sm,
+      uiSize: TRUiSize.md,
     );
   }
 

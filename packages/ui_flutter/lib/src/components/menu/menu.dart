@@ -91,12 +91,12 @@ class _TRMenuState extends State<TRMenu> {
             : colors.text,
       ),
       minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.smHeight),
+        Size(0, TRGeneratedControlMetrics.mdHeight),
       ),
       padding: const WidgetStatePropertyAll(
         EdgeInsets.symmetric(
           horizontal:
-              TRGeneratedControlMetrics.smPaddingInline +
+              TRGeneratedControlMetrics.mdPaddingInline +
               TRGeneratedBorders.defaultWidth,
         ),
       ),
@@ -120,18 +120,18 @@ class _TRMenuState extends State<TRMenu> {
         TextStyle(
           fontFamily: TRGeneratedFontFamilies.body,
           fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-          fontSize: TRGeneratedControlMetrics.smFontSize,
+          fontSize: TRGeneratedControlMetrics.mdFontSize,
           fontWeight: TRGeneratedFontWeights.medium,
           height:
-              TRGeneratedControlMetrics.smLineHeight /
-              TRGeneratedControlMetrics.smFontSize,
+              TRGeneratedControlMetrics.mdLineHeight /
+              TRGeneratedControlMetrics.mdFontSize,
         ),
       ),
       visualDensity: VisualDensity.standard,
     );
 
     return SizedBox(
-      height: TRGeneratedControlMetrics.smHeight,
+      height: TRGeneratedControlMetrics.mdHeight,
       child: MenuAnchor(
         alignmentOffset: widget.alignmentOffset,
         animated: false,
@@ -440,9 +440,9 @@ class TRMenuGroupLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.fromLTRB(
-      TRGeneratedControlMetrics.smPaddingInline,
+      TRGeneratedControlMetrics.mdPaddingInline,
       TRGeneratedSpacing.sm,
-      TRGeneratedControlMetrics.smPaddingInline,
+      TRGeneratedControlMetrics.mdPaddingInline,
       TRGeneratedSpacing.xs,
     ),
     child: DefaultTextStyle.merge(

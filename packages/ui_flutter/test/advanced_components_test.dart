@@ -551,7 +551,6 @@ void main() {
       tester,
     ) async {
       for (final (size, expected) in const [
-        (TRUiSize.sm, TRGeneratedControlMetrics.smHeight),
         (TRUiSize.md, TRGeneratedLayerMetrics.otpSlotSize),
         (TRUiSize.lg, TRGeneratedControlMetrics.lgHeight),
       ]) {
@@ -770,7 +769,7 @@ void main() {
       expect(saved, 80);
     });
 
-    testWidgets('slider sizes scale the control without moving md', (
+    testWidgets('slider sizes follow the two-step control scale', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -796,9 +795,8 @@ void main() {
           )
           .height;
 
-      expect(controlHeight(TRUiSize.md), TRGeneratedSpacing.xl);
-      expect(controlHeight(TRUiSize.sm), TRGeneratedControlMetrics.smHeight);
-      expect(controlHeight(TRUiSize.lg), TRGeneratedControlMetrics.lgHeight);
+      expect(controlHeight(TRUiSize.md), TRGeneratedControlMetrics.mdHeight);
+      expect(controlHeight(TRUiSize.lg), TRGeneratedSpacing.xl);
     });
   });
 
@@ -1237,7 +1235,7 @@ void main() {
       expect(shape.side.style, BorderStyle.none);
       expect(
         tester.getSize(find.byType(MenuBar)).height,
-        TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs * 2,
+        TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs * 2,
       );
     });
 

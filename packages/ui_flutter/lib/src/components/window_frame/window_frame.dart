@@ -104,7 +104,7 @@ class TRWindowFrameTitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     height:
-        height ?? TRGeneratedControlMetrics.smHeight + TRGeneratedSpacing.xs,
+        height ?? TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs,
     padding: const EdgeInsets.symmetric(horizontal: TRGeneratedSpacing.md),
     decoration: BoxDecoration(
       color: context.tinyrackTheme.surfaceMuted,
@@ -170,7 +170,7 @@ class TRWindowCaptionButton extends StatelessWidget {
     intent: action == TRWindowCaptionAction.close
         ? TRIntent.danger
         : TRIntent.neutral,
-    uiSize: TRUiSize.sm,
+    uiSize: TRUiSize.md,
   );
 }
 

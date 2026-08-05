@@ -1,7 +1,7 @@
 @layer components {
   .tr-radio {
-    --_tr-radio-indicator-size: var(--tinyrack-space-sm);
-    --_tr-radio-size: var(--tinyrack-space-lg);
+    --_tr-radio-indicator-size: var(--tinyrack-space-xs);
+    --_tr-radio-size: var(--tinyrack-space-md);
 
     align-items: center;
     appearance: none;
@@ -45,14 +45,9 @@
     width: var(--tr-radio-indicator-size, var(--_tr-radio-indicator-size));
   }
 
-  .tr-radio[data-ui-size="sm"] {
-    --_tr-radio-indicator-size: var(--tinyrack-space-xs);
-    --_tr-radio-size: var(--tinyrack-space-md);
-  }
-
   .tr-radio[data-ui-size="lg"] {
-    --_tr-radio-indicator-size: var(--tinyrack-space-md);
-    --_tr-radio-size: var(--tinyrack-space-xl);
+    --_tr-radio-indicator-size: var(--tinyrack-space-sm);
+    --_tr-radio-size: var(--tinyrack-space-lg);
   }
 
   .tr-radio:focus-visible {

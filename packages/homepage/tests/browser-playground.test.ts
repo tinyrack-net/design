@@ -80,8 +80,8 @@ describe('built React Router documentation', () => {
         .locator('[data-playground-control="uiSize"]')
         .getByRole('combobox');
       await sizeControl.click();
-      await page.getByRole('option', { name: 'sm', exact: true }).click();
-      await expect(checkbox.getAttribute('data-ui-size')).resolves.toBe('sm');
+      await page.getByRole('option', { name: 'lg', exact: true }).click();
+      await expect(checkbox.getAttribute('data-ui-size')).resolves.toBe('lg');
 
       await page
         .locator('[data-component-playground]')
@@ -135,15 +135,17 @@ describe('built React Router documentation', () => {
         await gotoHydrated(page, `${origin}/en/web/components/${route}`);
         const controls = page.locator('[data-playground-controls]');
         await expect(
-          controls.locator('[data-ui-size="sm"]').count(),
+          controls.locator('[data-ui-size="md"]').count(),
         ).resolves.toBeGreaterThan(0);
+        const compactControls = controls.locator(
+          '.tr-input[data-ui-size="md"], .tr-textarea[data-ui-size="md"], .tr-select-trigger[data-ui-size="md"], .tr-checkbox[data-ui-size="md"], .tr-radio[data-ui-size="md"], .tr-slider[data-ui-size="md"]',
+        );
+        await expect(compactControls.count()).resolves.toBeGreaterThan(0);
         await expect(
-          controls
-            .locator(
-              '.tr-input[data-ui-size="md"], .tr-textarea[data-ui-size="md"], .tr-select-trigger[data-ui-size="md"], .tr-checkbox[data-ui-size="md"], .tr-radio[data-ui-size="md"], .tr-slider[data-ui-size="md"]',
-            )
-            .count(),
-        ).resolves.toBe(0);
+          compactControls.evaluateAll((elements) =>
+            elements.every((element) => element.getBoundingClientRect().height <= 32),
+          ),
+        ).resolves.toBe(true);
       }
     } finally {
       await page.close();

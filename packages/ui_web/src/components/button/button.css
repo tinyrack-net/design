@@ -51,14 +51,6 @@
     white-space: nowrap;
   }
 
-  .tr-btn[data-ui-size="sm"] {
-    --_tr-btn-height: var(--tinyrack-control-height-sm);
-    --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-sm);
-    --_tr-btn-gap: var(--tinyrack-control-gap-sm);
-    --_tr-btn-font-size: var(--tinyrack-control-font-size-sm);
-    --_tr-btn-line-height: var(--tinyrack-control-line-height-sm);
-  }
-
   .tr-btn[data-ui-size="md"] {
     --_tr-btn-height: var(--tinyrack-control-height-md);
     --_tr-btn-padding-x: var(--tinyrack-control-padding-inline-md);

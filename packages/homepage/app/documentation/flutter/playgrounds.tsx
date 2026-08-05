@@ -5,7 +5,7 @@ import type { FlutterPreviewComponent } from './preview-registry.generated.js';
 
 const intents = ['neutral', 'primary', 'info', 'success', 'warning', 'danger'];
 const statusVariants = ['neutral', 'info', 'success', 'warning', 'danger'];
-const sizes = ['sm', 'md', 'lg'];
+const sizes = ['md', 'lg'];
 
 function flutterPlayground(
   component: FlutterPreviewComponent,

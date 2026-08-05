@@ -4,7 +4,7 @@ import { Checkbox as BaseCheckbox } from '@base-ui/react/checkbox';
 import { type ComponentPropsWithRef, useEffect, useRef, useState } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
-export type TRCheckboxUiSize = 'sm' | 'md' | 'lg';
+export type TRCheckboxUiSize = 'md' | 'lg';
 export type TRCheckboxRootProps = ComponentPropsWithRef<typeof BaseCheckbox.Root> & {
   uiSize?: TRCheckboxUiSize;
 };

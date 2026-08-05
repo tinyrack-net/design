@@ -10,7 +10,7 @@ type CardStoryArgs = {
   content: string;
   description: string;
   footer: boolean;
-  padding: 'none' | 'sm' | 'md' | 'lg';
+  padding: 'none' | 'md' | 'lg';
   title: string;
   variant: 'default' | 'outlined' | 'elevated';
 };

@@ -59,15 +59,12 @@ import * as Stories from '../../../../documentation/components/otp-field.demo.js
   id="otp-field-sizes"
   title="サイズ"
   description="uiSize を指定して OTP スロットの高さを隣の Input、Button、NumberField と揃えます。"
-  preview={<div data-docs-example-item-count="3"><Stories.OTPFieldSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.OTPFieldSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
 
 export function OTPFieldSizes() {
   return (
     <div className="grid gap-5">
-      <TROTPField.Root aria-label="SM コード" length={4} name="code-sm" uiSize="sm">
-        <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
-      </TROTPField.Root>
       <TROTPField.Root aria-label="MD コード" length={4} name="code-md" uiSize="md">
         <TROTPField.Input /><TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
       </TROTPField.Root>
@@ -202,4 +199,4 @@ function OTPEvents() {
 | `Input` | ネイティブ input props、`className`、`style`、`ref`、Base UI の `render` |
 | `Separator` | `orientation`（既定値は `vertical`）、`TRSeparator` props、`ref` |
 
-`Root` はラベル付きの `role="group"` をレンダリングします。表示ラベルを用意し、`aria-labelledby` で関連付けてください。スロット ID はルートの `id` から派生し、最初のスロットには既定で `one-time-code` 自動入力が適用されます。`uiSize?: 'sm' | 'md' | 'lg'`(既定値 `md`) ですべてのスロットとセパレーターの高さを一括で調整できます。値イベントの `details.reason` で入力、削除、貼り付け、キーボード変更を区別できます。無効なフィールドはフォームデータから除外され、読み取り専用フィールドは値を送信します。
+`Root` はラベル付きの `role="group"` をレンダリングします。表示ラベルを用意し、`aria-labelledby` で関連付けてください。スロット ID はルートの `id` から派生し、最初のスロットには既定で `one-time-code` 自動入力が適用されます。`uiSize?: 'md' | 'lg'`(既定値 `md`) ですべてのスロットとセパレーターの高さを一括で調整できます。値イベントの `details.reason` で入力、削除、貼り付け、キーボード変更を区別できます。無効なフィールドはフォームデータから除外され、読み取り専用フィールドは値を送信します。

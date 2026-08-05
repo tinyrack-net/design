@@ -334,7 +334,7 @@ describe('core.css source contract', () => {
       ...controlSpacingDeclarations,
       ...measurementSpacingDeclarations,
       ...tokenReferences(
-        ['size-sm', 'size-md', 'size-lg', 'stroke-width'],
+        ['size-md', 'size-lg', 'stroke-width'],
         'spacing-tinyrack-spinner',
         'tinyrack-spinner',
       ),

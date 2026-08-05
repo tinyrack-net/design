@@ -7,7 +7,7 @@
        hover would double up on it. */
     --tr-link-hover-opacity: 1;
     --tr-link-radius: var(--tr-pagination-radius, var(--tinyrack-radius-md));
-    --_tr-pagination-size: var(--tinyrack-control-height-sm);
+    --_tr-pagination-size: var(--tinyrack-control-height-md);
   }
 
   .tr-pagination-list {

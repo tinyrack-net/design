@@ -19,13 +19,13 @@ describe('React and Flutter visual parity catalog', () => {
   it('preserves the full endpoint and motion execution counts', () => {
     expect(
       visualParityScenarios.length * parityLocales.length * parityThemes.length,
-    ).toBe(12_576);
-    expect(defaultMotionParityScenarios.length * parityThemes.length).toBe(430);
+    ).toBe(9_636);
+    expect(defaultMotionParityScenarios.length * parityThemes.length).toBe(408);
     expect(
       defaultMotionParityScenarios.length *
         parityThemes.length *
         motionSampleTimes.length,
-    ).toBe(2_580);
+    ).toBe(2_448);
   });
   it('covers every common component and canonical variant value', () => {
     expect(new Set(visualParityScenarios.map(({ component }) => component))).toEqual(

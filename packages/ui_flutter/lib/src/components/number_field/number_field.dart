@@ -411,7 +411,7 @@ class _TRNumberStepButton extends StatelessWidget {
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           visualDensity: VisualDensity.standard,
         ),
-        child: Icon(icon, size: TRGeneratedControlMetrics.smIconSize),
+        child: Icon(icon, size: TRGeneratedControlMetrics.mdIconSize),
       ),
     );
   }

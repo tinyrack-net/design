@@ -16,7 +16,7 @@ import * as Stories from '../../../../documentation/components/input.demo.js';
 
 `TRInput` はネイティブの `<input>` をレンダーし、props、ref、イベント、妥当性、フォーム動作を保持します。`TRField.Root` で包み、`TRField.Label` を添えてください。フィールドがラベルと入力を関連付けるため、`id` や `htmlFor` を自分で書く必要はありません。説明は `TRField.Description`、検証メッセージは `TRField.Error` に置くと、フィールドが `aria-describedby` で関連付けます。
 
-密度の高いコントロールには `uiSize="sm"`、通常のフォームにはデフォルトの `md`、大きな操作領域が必要な場合は `lg` を使います。`disabled`、`readOnly`、`required` はネイティブの意味と Tinyrack の状態スタイルを保持します。フィールド全体の状態は `TRField.Root` の `disabled` や `invalid` で指定し、囲むフィールドがない場合にだけ input へ `aria-invalid` を付けてください。
+密度の高いコントロールには `uiSize="md"`、通常のフォームにはデフォルトの `md`、大きな操作領域が必要な場合は `lg` を使います。`disabled`、`readOnly`、`required` はネイティブの意味と Tinyrack の状態スタイルを保持します。フィールド全体の状態は `TRField.Root` の `disabled` や `invalid` で指定し、囲むフィールドがない場合にだけ input へ `aria-invalid` を付けてください。
 
 テキストの隣にアイコンやボタンを置くときは、input を `TRInput.Group` で包みます。枠線・背景・フォーカスリングはグループが描き、中の input は枠を持たなくなるため、全体がひとつのコントロールとして読めます。コントロールの高さはグループが持つので、サイズは input ではなくグループに指定してください。静的な内容には `TRInput.Adornment` を使います（ポインターイベントを受け取らないため、クリックしても input にフォーカスが移ります）。押せるものには `TRInput.Action` を使い、これは既定で `type="button"` なので囲むフォームを送信しません。アクションには必ずアクセシブルな名前を付け、装飾的なアイコンには `aria-hidden` を付けてフィールドの名前がひとつに保たれるようにしてください。
 
@@ -56,7 +56,7 @@ export function RackNameInput() {
 <ComponentExampleTabs
   id="input-sizes"
   title="サイズ"
-  preview={<div data-docs-example-item-count="3"><Stories.InputSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.InputSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 import { TRInput } from '@tinyrack/ui/components/input';
 
@@ -65,7 +65,7 @@ export function InputSizes() {
     <div className="grid gap-4">
       <TRField.Root>
         <TRField.Label>小</TRField.Label>
-        <TRInput placeholder="rack-alpha" uiSize="sm" />
+        <TRInput placeholder="rack-alpha" uiSize="md" />
       </TRField.Root>
       <TRField.Root>
         <TRField.Label>中</TRField.Label>
@@ -209,8 +209,8 @@ export function RequiredInput() {
 
 ## API
 
-`TRInputProps` は Base UI Input のプロパティを拡張し、デフォルトが `md` の `uiSize?: 'sm' | 'md' | 'lg'` を追加します。`name`、`type`、`autoComplete`、`disabled`、`readOnly`、`required` などのネイティブ input 属性に加え、`ref`、`className`、`style`、イベントハンドラーを転送します。
+`TRInputProps` は Base UI Input のプロパティを拡張し、デフォルトが `md` の `uiSize?: 'md' | 'lg'` を追加します。`name`、`type`、`autoComplete`、`disabled`、`readOnly`、`required` などのネイティブ input 属性に加え、`ref`、`className`、`style`、イベントハンドラーを転送します。
 
 制御されたテキストには `value` と `onValueChange(value, details)` を使い、ネイティブの非制御およびフォームリセット動作には `defaultValue` を使います。イベントオブジェクトが必要な場合はネイティブの `onChange` を使います。`aria-invalid="true"`、Base UI の `data-invalid`、ネイティブの `:invalid` はすべて無効状態の枠線を有効にします。`render` プロパティはレンダリングされる要素を置き換え、Base UI が動作、状態、`ref`、`.tr-input` スタイルをマージします。
 
-`TRInput.Group` は `div` をレンダーし、既定が `md` の `uiSize?: 'sm' | 'md' | 'lg'` を受け取ります。ネイティブの div プロパティと `ref` を転送します。その中に置かれた input はグループのコントロールスタイルを自動的に受け取るため、グループのクラス名を自分で書く必要はありません。`TRInput.Adornment` は `span` をレンダーし、既定が `start` の `side?: 'start' | 'end'` を受け取ります。`TRInput.Action` は `button` をレンダーし、明示的に上書きしない限り `type="button"` になります。各パーツは `TRInputGroup`、`TRInputAdornment`、`TRInputAction` として個別にもエクスポートされ、対応するプロパティ型も提供されます。
+`TRInput.Group` は `div` をレンダーし、既定が `md` の `uiSize?: 'md' | 'lg'` を受け取ります。ネイティブの div プロパティと `ref` を転送します。その中に置かれた input はグループのコントロールスタイルを自動的に受け取るため、グループのクラス名を自分で書く必要はありません。`TRInput.Adornment` は `span` をレンダーし、既定が `start` の `side?: 'start' | 'end'` を受け取ります。`TRInput.Action` は `button` をレンダーし、明示的に上書きしない限り `type="button"` になります。各パーツは `TRInputGroup`、`TRInputAdornment`、`TRInputAction` として個別にもエクスポートされ、対応するプロパティ型も提供されます。

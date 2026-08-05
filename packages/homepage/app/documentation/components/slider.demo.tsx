@@ -148,7 +148,7 @@ export function SliderSizeComparison() {
   const text = copy[useDemoLocale()];
   return (
     <div className="grid w-full min-w-0 gap-6" data-docs-example-item-count={3}>
-      {(['sm', 'md', 'lg'] as const).map((uiSize) => (
+      {(['md', 'lg'] as const).map((uiSize) => (
         <SliderPreview
           defaultValue={48}
           data-docs-example-item=""
@@ -312,7 +312,7 @@ const meta = {
     disabled: { control: 'boolean' },
     label: { control: 'text' },
     orientation: { options: ['horizontal', 'vertical'], control: 'radio' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
   },
   render: function Render(args) {
     const [, updateArgs] = useArgs<StoryArgs>();

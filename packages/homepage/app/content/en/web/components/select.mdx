@@ -20,7 +20,7 @@ import * as Stories from '../../../../documentation/components/select.demo.js';
 | collection | groups, labels, separators, disabled items, text, and indicators describe the menu anatomy |
 | forms | `name`, `form`, `required`, and `inputRef` integrate with native submission, validation, and reset |
 
-Use `TRSelect.Trigger uiSize="sm"` when the trigger belongs to a dense control surface.
+Use `TRSelect.Trigger uiSize="md"` when the trigger belongs to a dense control surface.
 
 ## Install
 
@@ -82,10 +82,10 @@ const racks = { alpha: 'Rack Alpha', beta: 'Rack Beta', gamma: 'Rack Gamma', sta
   id="select-sizes"
   title="Trigger sizes"
   description="Choose the trigger density independently from the popup collection."
-  preview={<div data-docs-example-item-count="3"><Stories.SelectSizeComparison /></div>}
+  preview={<div data-docs-example-item-count="2"><Stories.SelectSizeComparison /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRSelect } from '@tinyrack/ui/components/select';
 
-{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+{(['md', 'lg'] as const).map((uiSize) => (
   <TRSelect.Root defaultValue="alpha" items={{ alpha: 'Rack Alpha' }} key={uiSize}>
     <TRSelect.Label>{uiSize.toUpperCase() + ' deployment rack'}</TRSelect.Label>
     <TRSelect.Trigger uiSize={uiSize}><TRSelect.Value /></TRSelect.Trigger>
@@ -201,7 +201,7 @@ The complete anatomy is `Root`, `Label`, `Trigger`, `Value`, `Icon`, `Portal`, `
 | value | `defaultValue` or controlled `value`; `multiple={false}` by default; `items` maps values to displayed labels |
 | disclosure | `defaultOpen={false}` or controlled `open`; `modal={true}` and `highlightItemOnHover={true}` by default |
 | availability | `disabled={false}`, `readOnly={false}`, and `required={false}` |
-| trigger | `uiSize="sm" | "md" | "lg"`, default `"md"` |
+| trigger | `uiSize="md" | "md" | "lg"`, default `"md"` |
 | positioning | `Positioner` opens 4 px below the trigger and does not accept placement props; it flips above when the available space requires it |
 | forms | `name`, `form`, `autoComplete`, and `inputRef`; uncontrolled selects restore `defaultValue` on native reset |
 

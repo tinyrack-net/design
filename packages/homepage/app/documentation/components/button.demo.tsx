@@ -40,7 +40,7 @@ const meta = {
     children: { control: 'text' },
     disabled: { control: 'boolean' },
     loading: { control: 'boolean' },
-    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    uiSize: { control: 'select', options: ['md', 'lg'] },
     intent: {
       control: 'select',
       options: ['neutral', 'primary', 'info', 'success', 'warning', 'danger'],

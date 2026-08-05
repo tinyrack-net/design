@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/radio.demo.js';
 | --- | --- |
 | 合成 | すべての `TRRadio.Root` を `TRRadioGroup` 内に置きます。 |
 | 選択 | 各ルートに固有の `value` を与え、グループが選択値を所有します。 |
-| サイズ | `sm`、`md`、`lg`。デフォルトは `md` です。 |
+| サイズ | `md`、`lg`。デフォルトは `md` です。 |
 | 項目の利用可否 | 1 項目だけがグループと異なる場合にルートの `readOnly` または `disabled` を使います。 |
 
 表示ラベルは、各ルートを `TRField.Item` の中に `TRField.Label` と並べて作ります。アイテムが内側のラジオにラベルを結び付けるため、`id` や `htmlFor` は不要です。 `TRField.Item` には `TRField.Root` の祖先が必須なので、アイテムまたはグループ全体を 1 つの `TRField.Root` で囲みます。
@@ -56,7 +56,7 @@ import * as Stories from '../../../../documentation/components/radio.demo.js';
 
 ### 密度に合わせる
 
-<ComponentExampleTabs id="radio-sizes" title="小、中、大" preview={<div data-docs-example-item-count="3"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="密度" defaultValue="md">{(['sm', 'md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
+<ComponentExampleTabs id="radio-sizes" title="小、中、大" preview={<div data-docs-example-item-count="2"><Stories.RadioSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRadioGroup aria-label="密度" defaultValue="md">{(['md', 'lg'] as const).map((uiSize) => <TRRadio.Root aria-label={uiSize} key={uiSize} uiSize={uiSize} value={uiSize} />)}</TRRadioGroup>` }]} />
 
 ### 1 項目の利用可否を変える
 
@@ -69,7 +69,7 @@ import * as Stories from '../../../../documentation/components/radio.demo.js';
 | プロパティ | 型 / 既定値 | 用途 |
 | --- | --- | --- |
 | `value` | `unknown` | グループ内でこの項目を識別します。 |
-| `uiSize` | `'sm' \| 'md' \| 'lg'`, `'md'` | 表示グリフのサイズを指定します。 |
+| `uiSize` | `'md' \| 'lg'`, `'md'` | 表示グリフのサイズを指定します。 |
 | `disabled`, `readOnly` | `boolean`, 継承または `false` | 1 項目の利用可否を上書きします。 |
 | `inputRef`, `ref` | input ref, root ref | 非表示入力または表示ルートへアクセスします。 |
 

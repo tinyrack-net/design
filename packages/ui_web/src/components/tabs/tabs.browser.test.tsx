@@ -259,7 +259,7 @@ test('applies all sizes, consumer tokens, and indicator geometry', async () => {
           '--tr-tabs-panel-padding': '7px',
         } as CSSProperties
       }
-      uiSize="sm"
+      uiSize="md"
     >
       <TRTabs.List>
         <TRTabs.Tab value="general">General</TRTabs.Tab>
@@ -276,7 +276,7 @@ test('applies all sizes, consumer tokens, and indicator geometry', async () => {
   ) as HTMLButtonElement;
   const indicator = document.querySelector<HTMLElement>('.tr-tabs-indicator');
   const panel = document.querySelector<HTMLElement>('[role="tabpanel"]') as HTMLElement;
-  const smallHeight = getComputedStyle(tab).height;
+  const mediumHeight = getComputedStyle(tab).height;
 
   expect(getComputedStyle(indicator as HTMLElement).backgroundColor).toBe(
     'rgb(1, 2, 3)',
@@ -285,10 +285,7 @@ test('applies all sizes, consumer tokens, and indicator geometry', async () => {
   await expect
     .poll(() => getComputedStyle(indicator as HTMLElement).width)
     .not.toBe('0px');
-  root?.setAttribute('data-ui-size', 'md');
-  const mediumHeight = getComputedStyle(tab).height;
   root?.setAttribute('data-ui-size', 'lg');
-  expect(Number.parseFloat(smallHeight)).toBeLessThan(Number.parseFloat(mediumHeight));
   expect(Number.parseFloat(mediumHeight)).toBeLessThan(
     Number.parseFloat(getComputedStyle(tab).height),
   );

@@ -28,11 +28,11 @@
     display: inline-flex;
     font: inherit;
     gap: var(--tinyrack-control-gap-md);
-    height: var(--tinyrack-control-height-sm);
+    height: var(--tinyrack-control-height-md);
     justify-content: center;
-    min-height: var(--tinyrack-control-height-sm);
+    min-height: var(--tinyrack-control-height-md);
     padding: 0;
-    width: var(--tinyrack-control-height-sm);
+    width: var(--tinyrack-control-height-md);
   }
 
   .tr-toolbar-input {
@@ -56,7 +56,7 @@
     cursor: pointer;
     display: flex;
     gap: var(--tinyrack-control-gap-md);
-    min-height: var(--tinyrack-control-height-sm);
+    min-height: var(--tinyrack-control-height-md);
     justify-content: center;
     padding-inline: var(--tinyrack-space-sm);
   }

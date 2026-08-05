@@ -179,12 +179,10 @@ class _TROtpFieldState extends State<TROtpField> {
     // Square slots track the shared control height scale, so an OTP field lines
     // up with a neighboring TRTextField or TRButton of the same uiSize.
     final slotSize = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
-      TRUiSize.md => TRGeneratedLayerMetrics.otpSlotSize,
+      TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final slotGap = switch (widget.uiSize) {
-      TRUiSize.sm => TRGeneratedControlMetrics.smGap,
       TRUiSize.md => TRGeneratedControlMetrics.mdGap,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
     };
@@ -286,7 +284,7 @@ class _TROtpFieldState extends State<TROtpField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
-        spacing: TRGeneratedControlMetrics.smGap,
+        spacing: TRGeneratedControlMetrics.mdGap,
         children: [
           if (widget.label case final label?)
             Text(

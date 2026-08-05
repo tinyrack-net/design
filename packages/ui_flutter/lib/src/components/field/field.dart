@@ -30,7 +30,7 @@ class TRField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      spacing: TRGeneratedControlMetrics.smGap,
+      spacing: TRGeneratedControlMetrics.mdGap,
       children: [
         if (label case final label?)
           Text(

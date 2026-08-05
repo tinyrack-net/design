@@ -15,7 +15,7 @@ import * as Stories from '../../../../documentation/components/tabs.demo.js';
 
 | プロパティ | 値 | 既定値 |
 | --- | --- | --- |
-| `uiSize` | `sm`, `md`, `lg` | `md` |
+| `uiSize` | `md`, `lg` | `md` |
 | `orientation` | `horizontal`, `vertical` | `horizontal` |
 | disabled tab | `TRTabs.Tab disabled` | `false` |
 | activation | manual or `activateOnFocus` | manual |
@@ -46,10 +46,10 @@ import * as Stories from '../../../../documentation/components/tabs.demo.js';
 
 <ComponentExampleTabs
   id="tabs-sizes"
-  data-docs-example-item-count="3"
+  data-docs-example-item-count="2"
   title="サイズとアクティベーションの比較"
   previewLayout="stretch"
-  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="sm"><TRTabs.List aria-label="小サイズの手動タブ"><TRTabs.Tab value="one">小</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">小サイズでは手動で選択します。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="自動選択タブ"><TRTabs.Tab value="one">自動</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">矢印キーでフォーカスすると選択も切り替わります。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="端で停止するタブ" loopFocus={false}><TRTabs.Tab value="one">端で停止</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">フォーカスは両端で停止します。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root></div>}
+  preview={<div className="grid gap-5"><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="md"><TRTabs.List activateOnFocus aria-label="中サイズの自動タブ"><TRTabs.Tab value="one">中</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">矢印キーでフォーカスすると選択も切り替わります。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root><TRTabs.Root data-docs-example-item="" defaultValue="one" uiSize="lg"><TRTabs.List aria-label="大サイズのタブ" loopFocus={false}><TRTabs.Tab value="one">大</TRTabs.Tab><TRTabs.Tab value="two">詳細</TRTabs.Tab></TRTabs.List><TRTabs.Panel value="one">フォーカスは両端で停止します。</TRTabs.Panel><TRTabs.Panel value="two">詳細</TRTabs.Panel></TRTabs.Root></div>}
   sources={[{ label: 'React', language: 'tsx', code: Stories.tabsSizesSource }]}
 />
 

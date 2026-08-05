@@ -457,7 +457,7 @@ abstract final class TRGeneratedLayerMetrics {
   static const double navigationPanelWidth = 512.0;
   static const double toolbarHeight = 40.0;
   static const double treeItemHeight = 32.0;
-  static const double otpSlotSize = 40.0;
+  static const double otpSlotSize = 32.0;
   static const double visuallyHiddenOpacity = 0.0;
   static const double numberStepWidth = 44.0;
   static const double sliderTrackThickness = 4.0;
@@ -471,30 +471,23 @@ abstract final class TRGeneratedLayerMetrics {
 }
 
 abstract final class TRGeneratedControlMetrics {
-  static const double smHeight = 32.0;
-  static const double smPaddingInline = 12.0;
-  static const double smGap = 6.0;
-  static const double smFontSize = 14.0;
-  static const double smLineHeight = 20.0;
-  static const double smIconSize = 16.0;
-  static const double mdHeight = 40.0;
-  static const double mdPaddingInline = 16.0;
-  static const double mdGap = 8.0;
+  static const double mdHeight = 32.0;
+  static const double mdPaddingInline = 12.0;
+  static const double mdGap = 6.0;
   static const double mdFontSize = 14.0;
   static const double mdLineHeight = 20.0;
   static const double mdIconSize = 16.0;
-  static const double lgHeight = 48.0;
-  static const double lgPaddingInline = 20.0;
-  static const double lgGap = 10.0;
-  static const double lgFontSize = 16.0;
-  static const double lgLineHeight = 24.0;
-  static const double lgIconSize = 24.0;
+  static const double lgHeight = 40.0;
+  static const double lgPaddingInline = 16.0;
+  static const double lgGap = 8.0;
+  static const double lgFontSize = 14.0;
+  static const double lgLineHeight = 20.0;
+  static const double lgIconSize = 16.0;
 }
 
 abstract final class TRGeneratedSpinnerMetrics {
-  static const double sizeSm = 16.0;
-  static const double sizeMd = 20.0;
-  static const double sizeLg = 28.0;
+  static const double sizeMd = 16.0;
+  static const double sizeLg = 20.0;
   static const double strokeWidth = 2.0;
 }
 

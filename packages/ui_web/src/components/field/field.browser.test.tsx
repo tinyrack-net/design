@@ -344,7 +344,7 @@ test('applies sizes, item layout, disabled styling, and public customization tok
   await render(
     <div data-theme="tinyrack-light">
       <TRField.Root>
-        <TRField.Control aria-label="Small rack" uiSize="sm" />
+        <TRField.Control aria-label="Small rack" uiSize="md" />
       </TRField.Root>
       <TRField.Root>
         <TRField.Control aria-label="Large rack" uiSize="lg" />
@@ -373,7 +373,7 @@ test('applies sizes, item layout, disabled styling, and public customization tok
   const error = document.querySelector<HTMLElement>('.tr-field-error');
   const item = document.querySelector<HTMLElement>('.tr-field-item');
   expect(small?.getBoundingClientRect().height).toBe(32);
-  expect(large?.getBoundingClientRect().height).toBe(48);
+  expect(large?.getBoundingClientRect().height).toBe(40);
   expect(getComputedStyle(customized as HTMLInputElement).backgroundColor).toBe(
     'rgb(24, 24, 27)',
   );
@@ -421,8 +421,8 @@ test('renders and hydrates a populated invalid field without recovery', async ()
 });
 
 test('Field.Control scales its height when used standalone with uiSize', async () => {
-  await render(<TRFieldControl aria-label="Standalone" uiSize="sm" />);
+  await render(<TRFieldControl aria-label="Standalone" uiSize="md" />);
   const control = document.querySelector<HTMLInputElement>('[aria-label="Standalone"]');
-  expect(control?.getAttribute('data-ui-size')).toBe('sm');
+  expect(control?.getAttribute('data-ui-size')).toBe('md');
   expect(control?.getBoundingClientRect().height).toBe(32);
 });

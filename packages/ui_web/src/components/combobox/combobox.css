@@ -73,7 +73,7 @@
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-medium);
-    padding: var(--tinyrack-space-xs) var(--tinyrack-control-padding-inline-sm);
+    padding: var(--tinyrack-space-xs) var(--tinyrack-control-padding-inline-md);
   }
 
   .tr-combobox-option {
@@ -84,8 +84,8 @@
     display: flex;
     gap: var(--tinyrack-control-gap-md);
     justify-content: space-between;
-    min-height: var(--tr-combobox-option-min-height, var(--tinyrack-control-height-sm));
-    padding-inline: var(--tinyrack-control-padding-inline-sm);
+    min-height: var(--tr-combobox-option-min-height, var(--tinyrack-control-height-md));
+    padding-inline: var(--tinyrack-control-padding-inline-md);
   }
 
   .tr-combobox-option:hover {
@@ -133,7 +133,7 @@
   }
 
   .tr-combobox-input-group:has(.tr-combobox-chips) .tr-combobox-trigger {
-    --tr-input-group-action-size: var(--tinyrack-control-height-sm);
+    --tr-input-group-action-size: var(--tinyrack-control-height-md);
     align-self: center;
     border: 0;
     border-radius: var(--tinyrack-radius-sm);
@@ -149,8 +149,8 @@
     display: inline-flex;
     font-size: var(--tinyrack-text-xs);
     gap: var(--tinyrack-space-xs);
-    min-height: var(--tinyrack-control-height-sm);
-    padding-inline: var(--tinyrack-control-padding-inline-sm);
+    min-height: var(--tinyrack-control-height-md);
+    padding-inline: var(--tinyrack-control-padding-inline-md);
   }
 
   .tr-combobox-chip-remove {

@@ -69,12 +69,11 @@ export function AlertEmailField() {
   title="Sizes"
   description="Match field density to nearby controls and content."
   previewLayout="stretch"
-  preview={<div className="grid gap-5 sm:grid-cols-3"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-small" disabled={false} invalid={false} label="Small field" size="sm" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="Medium field" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="Large field" size="lg" /></div>}
+  preview={<div className="grid gap-5 sm:grid-cols-2"><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-medium" disabled={false} invalid={false} label="Medium field" size="md" /><Stories.FieldPreview data-docs-example-item="" defaultValue="rack-large" disabled={false} invalid={false} label="Large field" size="lg" /></div>}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
 
 export function FieldSizes() {
-  return <div className="grid gap-5 sm:grid-cols-3">
-    <TRField.Root><TRField.Label>Small field</TRField.Label><TRField.Control defaultValue="rack-small" uiSize="sm" /></TRField.Root>
+  return <div className="grid gap-5 sm:grid-cols-2">
     <TRField.Root><TRField.Label>Medium field</TRField.Label><TRField.Control defaultValue="rack-medium" uiSize="md" /></TRField.Root>
     <TRField.Root><TRField.Label>Large field</TRField.Label><TRField.Control defaultValue="rack-large" uiSize="lg" /></TRField.Root>
   </div>;
@@ -194,7 +193,7 @@ export function NotificationChannels() {
 
 ### Parts
 
-`Control` accepts native input props plus controlled `value`, uncontrolled `defaultValue`, and `onValueChange(value, details)`. Size lives on the control, not on `Root`: `Control` accepts `uiSize?: 'sm' | 'md' | 'lg'` (default `md`), and every other Tinyrack control carries the same prop, so one rule applies whether the control sits inside a `Root` or stands alone. `Label.nativeLabel={false}` is available when `render` replaces the native label with a non-label host. `Error.match` accepts `true` or a `ValidityState` key such as `valueMissing`, `typeMismatch`, or `patternMismatch`. `Item.disabled` disables one collection item. `Validity` requires a render function and exposes `validity`, `value`, `initialValue`, `error`, and `errors`.
+`Control` accepts native input props plus controlled `value`, uncontrolled `defaultValue`, and `onValueChange(value, details)`. Size lives on the control, not on `Root`: `Control` accepts `uiSize?: 'md' | 'lg'` (default `md`), and every other Tinyrack control carries the same prop, so one rule applies whether the control sits inside a `Root` or stands alone. `Label.nativeLabel={false}` is available when `render` replaces the native label with a non-label host. `Error.match` accepts `true` or a `ValidityState` key such as `valueMissing`, `typeMismatch`, or `patternMismatch`. `Item.disabled` disables one collection item. `Validity` requires a render function and exposes `validity`, `value`, `initialValue`, `error`, and `errors`.
 
 Every host part preserves refs, native attributes and events, functional `className`/`style`, and Base UI `render`. Root and host parts expose `data-disabled`, `data-valid`, `data-invalid`, `data-dirty`, `data-touched`, `data-filled`, and `data-focused`.
 
