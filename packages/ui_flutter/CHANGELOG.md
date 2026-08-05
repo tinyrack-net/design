@@ -17,6 +17,18 @@
 
 ## 0.10.0
 
+- Maps every Material color role onto a Tinyrack token. `TinyrackTheme` set
+  only nine of the `ColorScheme` roles, so the rest resolved through Flutter's
+  fallback chain: `outline` and `outlineVariant` collapsed onto `onSurface`,
+  which made a plain `Divider` or `VerticalDivider` paint in the full-contrast
+  `text` token — a near-white hairline in dark mode. `onSurfaceVariant` had the
+  same fallback, so muted metadata rendered at full contrast, and every
+  `surfaceContainer*` tier collapsed onto `surface`, leaving raised surfaces
+  invisible against the page. The boundary roles now use the two border tokens,
+  the container tiers use `surfaceMuted`, `surfaceTint` is transparent to match
+  the flat surface system, and `ThemeData.dividerColor` is pinned to `border` so
+  the legacy and Material 3 divider paths agree. `shadow` deliberately keeps its
+  opaque-black default, which already matches the token shadows.
 - Adds `TRPageTransitionsBuilder` and installs it in `TinyrackTheme.light()` and
   `TinyrackTheme.dark()` for every `TargetPlatform`. A routed page previously
   inherited Material's per-platform default, so the same application animated

@@ -266,26 +266,73 @@ abstract final class TinyrackTheme {
   static ThemeData dark() => _theme(Brightness.dark);
 
   static ThemeData _theme(Brightness brightness) {
-    final generated = brightness == Brightness.light
+    final isLight = brightness == Brightness.light;
+    final generated = isLight
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
+    // The opposite mode's palette. `inverseSurface` is the other mode's
+    // background, so the other mode's accent is the only one legible on it.
+    final inverted = isLight ? TRGeneratedColors.dark : TRGeneratedColors.light;
     final colors = TinyrackThemeData._generated(generated);
     final textTheme = _textTheme(colors);
+    // Every role Material reads must resolve to a token. An omitted role falls
+    // back through `onBackground` to `onSurface` or to `surface`, which paints
+    // dividers, muted metadata, and raised containers in the wrong token.
     final colorScheme = ColorScheme(
       brightness: brightness,
-      primary: colors.primary,
-      onPrimary: colors.onPrimary,
-      secondary: colors.textMuted,
-      onSecondary: colors.surface,
-      error: colors.danger,
+      primary: generated.primary,
+      onPrimary: generated.onPrimary,
+      // Tinyrack has no primary-tinted surface; `info` is the same blue scale.
+      primaryContainer: generated.infoSurface,
+      onPrimaryContainer: generated.primary,
+      secondary: generated.textMuted,
+      onSecondary: generated.surface,
+      secondaryContainer: generated.surfaceMuted,
+      onSecondaryContainer: generated.text,
+      error: generated.danger,
       onError: generated.onDanger,
-      surface: colors.surface,
-      onSurface: colors.text,
+      // `TinyrackThemeData.dangerSurface` aliases the subtle tier, which is too
+      // washed out to read as an error container. Take the full-strength token.
+      errorContainer: generated.dangerSurface,
+      onErrorContainer: generated.danger,
+      surface: generated.surface,
+      onSurface: generated.text,
+      // Tinyrack has two neutral surfaces, so the five Material elevation tiers
+      // collapse onto them. The direction holds in both modes: emphasis moves
+      // light surfaces darker and dark surfaces lighter.
+      surfaceContainerLowest: generated.surface,
+      surfaceContainerLow: generated.surface,
+      surfaceContainer: generated.surfaceMuted,
+      surfaceContainerHigh: generated.surfaceMuted,
+      surfaceContainerHighest: generated.surfaceMuted,
+      // Unlike the tiers above, these two are defined as the darkest and
+      // lightest surface regardless of mode, so they invert with brightness.
+      surfaceDim: isLight ? generated.surfaceMuted : generated.surface,
+      surfaceBright: isLight ? generated.surface : generated.surfaceMuted,
+      onSurfaceVariant: generated.textMuted,
+      // Material 3 reserves `outline` for boundaries that carry emphasis and
+      // `outlineVariant` for decorative ones such as dividers, which is exactly
+      // the split between the two Tinyrack border tiers.
+      outline: generated.borderStrong,
+      outlineVariant: generated.border,
+      scrim: generated.scrim,
+      inverseSurface: generated.surfaceInverse,
+      onInverseSurface: generated.textInverse,
+      inversePrimary: inverted.primary,
+      // Tinyrack is a flat system: no surface carries an elevation tint, so a
+      // consumer's plain Material must not pick up the primary-tinted default.
+      surfaceTint: Colors.transparent,
+      // `shadow` stays unset on purpose. Its opaque-black fallback is the
+      // correct shadow color for both modes and matches the token shadows.
     );
 
     return ThemeData(
       brightness: brightness,
       colorScheme: colorScheme,
+      // `ThemeData` derives this from `colorScheme.outline`, which would give
+      // the legacy divider path a heavier tone than the Material 3 `Divider`.
+      // Pin both to the same token `TRSeparator` uses.
+      dividerColor: generated.border,
       extensions: [colors],
       fontFamily: TRGeneratedFontFamilies.body,
       fontFamilyFallback: TRGeneratedFontFamilies.fallback,
