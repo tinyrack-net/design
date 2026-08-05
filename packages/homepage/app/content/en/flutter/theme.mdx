@@ -25,6 +25,27 @@ The package bundles 11 IBM Plex Sans, Mono, Korean, and Japanese font files.
 They total about 16.4 MB before platform packaging and are included in the
 application’s Flutter asset bundle. No runtime font download is required.
 
+## Page transitions
+
+Both themes install `TRPageTransitionsBuilder` for every `TargetPlatform`, so a
+routed page animates the same way on Android, iOS, macOS, Linux, and Windows
+instead of inheriting Material's per-platform default. An arriving page fades in
+while it scales up from the shared closed-overlay scale, matching the dialog and
+drawer motion, and a pop plays that animation in reverse. The builder returns the
+page unanimated when the platform reports `disableAnimations`.
+
+Install the builder yourself only when a surface needs different motion:
+
+```dart
+ThemeData theme = TinyrackTheme.light().copyWith(
+  pageTransitionsTheme: const PageTransitionsTheme(
+    builders: <TargetPlatform, PageTransitionsBuilder>{
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    },
+  ),
+);
+```
+
 ## React parity migration
 
 Flutter uses the same public variant names as the React components.

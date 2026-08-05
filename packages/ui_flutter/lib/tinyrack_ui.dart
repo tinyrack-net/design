@@ -58,6 +58,7 @@ export 'src/components/toolbar/toolbar.dart';
 export 'src/components/tooltip/tooltip.dart';
 export 'src/components/tree_nav/tree_nav.dart';
 export 'src/components/window_frame/window_frame.dart';
+export 'src/page_transitions.dart';
 export 'src/theme.dart';
 export 'src/providers/code_highlighter.dart';
 export 'src/tokens.dart';
