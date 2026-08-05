@@ -100,6 +100,19 @@ abstract final class TRControlMetrics {
 
   /// Width of the border a control draws, which adds to its outer width.
   static const borderWidth = TRGeneratedBorders.defaultWidth;
+
+  /// Text style a control renders its label in.
+  ///
+  /// Measuring a label with anything else misreports its width, because the
+  /// weight and tracking a control uses are not the ambient ones.
+  static TextStyle labelStyleOf(TRUiSize size) => TextStyle(
+    fontFamily: TRGeneratedFontFamilies.body,
+    fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+    fontSize: fontSizeOf(size),
+    fontWeight: TRGeneratedFontWeights.medium,
+    height: TRGeneratedTypographyLineHeights.sm,
+    letterSpacing: TRGeneratedTypographyTracking.none,
+  );
 }
 
 /// Platform-resolved typography roles without semantic foreground colors.

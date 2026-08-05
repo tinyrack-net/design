@@ -56,6 +56,53 @@ void main() {
       }
     });
 
+    testWidgets('publishes the style a control renders its label in', (
+      tester,
+    ) async {
+      for (final size in TRUiSize.values) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: TinyrackTheme.light(),
+            home: Scaffold(
+              body: Center(
+                child: TRButton(
+                  uiSize: size,
+                  onPressed: () {},
+                  child: const Text('Label'),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        // A consumer measuring a label to decide what fits has to measure it
+        // in the weight and tracking the control will actually render.
+        final rendered = tester.widget<RichText>(
+          find.descendant(
+            of: find.byType(TRButton),
+            matching: find.byType(RichText),
+          ),
+        );
+        final published = TRControlMetrics.labelStyleOf(size);
+        final actual = (rendered.text as TextSpan).style!;
+        expect(actual.fontFamily, published.fontFamily);
+        expect(actual.fontSize, published.fontSize);
+        expect(actual.fontWeight, published.fontWeight);
+        expect(actual.letterSpacing, published.letterSpacing);
+        expect(actual.height, published.height);
+
+        final painter = TextPainter(
+          text: TextSpan(text: 'Label', style: published),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        expect(
+          tester.getSize(find.text('Label')).width,
+          moreOrLessEquals(painter.width, epsilon: 0.5),
+        );
+        painter.dispose();
+      }
+    });
+
     testWidgets('sizes the icon of an icon button', (tester) async {
       for (final size in TRUiSize.values) {
         await tester.pumpWidget(

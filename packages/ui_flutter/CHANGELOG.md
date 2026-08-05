@@ -1,3 +1,11 @@
+## 0.14.0
+
+- Adds `TRControlMetrics.labelStyleOf`, the text style a control renders its
+  label in. A consumer measuring a label to decide what fits had to guess the
+  weight and tracking, because they are not the ambient ones; measuring with
+  the ambient style under-reports the width. `TRButton` now takes its own label
+  style from the same accessor, so the two cannot drift.
+
 ## 0.13.0
 
 - Sizes and colors icons from tokens. `ThemeData.iconTheme` was unset, so every
