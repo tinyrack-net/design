@@ -200,6 +200,7 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
     ? documentPathFromLocation(navigation.location.pathname, docsManifest)
     : undefined;
   const page = findDocsPage(location.pathname, docsManifest);
+  const chrome = page?.layout ?? 'docs';
   const currentInstance = findDocsInstance(location.pathname, docsManifest);
   const locale = page?.locale ?? docsManifest.defaultLocale;
   const localeConfig =
@@ -294,8 +295,8 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
     if (!open) setMobileMenuView('main');
   }
 
-  const chrome = page?.layout ?? 'docs';
   const hasNavigation = chrome !== 'standalone';
+  const visibleMobileMenuView = chrome === 'splash' ? 'site' : mobileMenuView;
 
   return (
     <TRAppShell.Root
@@ -363,23 +364,34 @@ export function TRDocsSiteShell({ children }: { children: ReactNode }) {
         </TRAppShell.Actions>
       </TRAppShell.Header>
       {hasNavigation ? (
-        <TRAppShell.Sidebar aria-label={localeConfig.messages.navigationSidebar}>
+        <TRAppShell.Sidebar
+          aria-label={
+            chrome === 'splash'
+              ? localeConfig.messages.headerNavigation
+              : localeConfig.messages.navigationSidebar
+          }
+        >
           <TRAppShell.Close
             aria-label={localeConfig.messages.closeNavigation}
             className="tr-docs-menu-close"
           >
             <X aria-hidden="true" />
           </TRAppShell.Close>
-          <div className="tr-docs-sidebar-inner" data-mobile-menu-view={mobileMenuView}>
+          <div
+            className="tr-docs-sidebar-inner"
+            data-mobile-menu-view={visibleMobileMenuView}
+          >
             <SiteBrand homePath={homePath} scheme={scheme} />
-            {mobileMenuView === 'site' ? (
-              <button
-                className="tr-docs-mobile-menu-back tr-docs-navigation-link"
-                onClick={() => setMobileMenuView('main')}
-                type="button"
-              >
-                {localeConfig.messages.backToMainMenu}
-              </button>
+            {visibleMobileMenuView === 'site' ? (
+              chrome === 'splash' ? null : (
+                <button
+                  className="tr-docs-mobile-menu-back tr-docs-navigation-link"
+                  onClick={() => setMobileMenuView('main')}
+                  type="button"
+                >
+                  {localeConfig.messages.backToMainMenu}
+                </button>
+              )
             ) : (
               <>
                 {hasHeaderLinks ? (
