@@ -339,6 +339,12 @@ abstract final class TinyrackTheme {
       scaffoldBackgroundColor: colors.surface,
       textTheme: textTheme,
       useMaterial3: true,
+      // Material picks the ink sparkle on Android and the ripple everywhere
+      // else, so the same press animates differently per platform and the
+      // sparkle pulls in a fragment shader that a headless test environment
+      // cannot always compile. Pin the ripple for the same reason the page
+      // transitions are pinned below.
+      splashFactory: InkRipple.splashFactory,
       // Every platform gets the same builder. Inheriting Material's per-platform
       // defaults would make a Tinyrack app animate differently on Android,
       // macOS, and Linux, and would leave the motion outside the token set.
