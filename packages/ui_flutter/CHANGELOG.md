@@ -1,3 +1,10 @@
+## 0.17.0
+
+- Raises the `sm` control height from 24px to 28px. 24px left four pixels of
+  air around a 12px label, which reads as cramped rather than dense on the
+  desktop title bar the step was added for. The rest of the recipe is
+  unchanged.
+
 ## 0.16.0
 
 - `TRTreeNav` and `TRTreeNav.controlled` take an `itemSpacing` parameter for

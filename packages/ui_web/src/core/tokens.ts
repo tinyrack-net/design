@@ -22,7 +22,7 @@ export const tinyrackBreakpoints = {
 
 export const tinyrackControlMetrics = {
   "sm": {
-    "height": "1.5rem",
+    "height": "1.75rem",
     "paddingInline": "0.5rem",
     "gap": "0.25rem",
     "fontSize": "xs",

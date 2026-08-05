@@ -252,7 +252,7 @@ describe('tinyrack design tokens', () => {
     // dim the page it blocks.
     expect(tinyrackLayers.chrome).toBeLessThan(tinyrackLayers.backdrop);
     expect(tinyrackControlMetrics).toMatchObject({
-      sm: { height: '1.5rem', paddingInline: '0.5rem' },
+      sm: { height: '1.75rem', paddingInline: '0.5rem' },
       md: { height: '2rem', paddingInline: '0.75rem' },
       lg: { height: '2.5rem', paddingInline: '1rem' },
     });
