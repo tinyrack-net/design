@@ -50,9 +50,8 @@ Flutter-only editing and Form lifecycle properties remain available on
 editors through `obscureText`, `minLines`, and `maxLines`.
 
 `TRTreeNavGroup` and `TRTreeNavLeaf` accept an optional `description` for a
-muted secondary line. Native caption buttons can opt into neutral corner
-glyphs with `TRWindowCaptionGlyphStyle.expandCollapse` while the standard
-window marks remain the default.
+muted secondary line. `TRWindowFrameTitleBar` takes any widget in its `leading`
+and `actions` slots, so window commands are composed from `TRIconButton`.
 
 From the repository root, verify every shared variant in light and dark themes
 and English, Korean, and Japanese with:

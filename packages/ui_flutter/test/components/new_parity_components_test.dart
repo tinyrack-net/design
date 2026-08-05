@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 Widget _app(Widget child) => MaterialApp(
@@ -94,79 +93,5 @@ void main() {
     final actions = tester.getCenter(find.text('Close'));
     expect(leading.dx, lessThan(center.dx));
     expect(center.dx, lessThan(actions.dx));
-  });
-
-  testWidgets('window caption actions use Lucide glyphs and activate', (
-    tester,
-  ) async {
-    var pressed = false;
-    await tester.pumpWidget(
-      _app(
-        TRWindowCaptionButton(
-          action: TRWindowCaptionAction.close,
-          label: 'Close window',
-          onPressed: () => pressed = true,
-        ),
-      ),
-    );
-
-    expect(find.bySemanticsLabel('Close window'), findsOneWidget);
-    expect(tester.widget<Icon>(find.byType(Icon)).icon, LucideIcons.x);
-    await tester.tap(find.bySemanticsLabel('Close window'));
-    expect(pressed, isTrue);
-  });
-
-  testWidgets('window caption actions render at the requested control size', (
-    tester,
-  ) async {
-    for (final size in TRUiSize.values) {
-      await tester.pumpWidget(
-        _app(
-          TRWindowCaptionButton(
-            action: TRWindowCaptionAction.close,
-            label: 'Close window',
-            onPressed: () {},
-            uiSize: size,
-          ),
-        ),
-      );
-
-      expect(
-        tester.widget<TRIconButton>(find.byType(TRIconButton)).uiSize,
-        size,
-      );
-      expect(
-        tester.getSize(find.byType(TRIconButton)),
-        Size.square(TRControlMetrics.heightOf(size)),
-      );
-    }
-  });
-
-  testWidgets('window caption actions offer neutral expand-collapse glyphs', (
-    tester,
-  ) async {
-    const expected = <TRWindowCaptionAction, IconData>{
-      TRWindowCaptionAction.minimize: LucideIcons.minimize,
-      TRWindowCaptionAction.maximize: LucideIcons.maximize,
-      TRWindowCaptionAction.restore: LucideIcons.minimize2,
-    };
-    for (final entry in expected.entries) {
-      await tester.pumpWidget(
-        _app(
-          TRWindowCaptionButton(
-            action: entry.key,
-            glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,
-            label: entry.key.name,
-            onPressed: () {},
-          ),
-        ),
-      );
-
-      expect(tester.widget<Icon>(find.byType(Icon)).icon, entry.value);
-      expect(
-        tester.widget<TRIconButton>(find.byType(TRIconButton)).intent,
-        TRIntent.neutral,
-      );
-    }
   });
 }

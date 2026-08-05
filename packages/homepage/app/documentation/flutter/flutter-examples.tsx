@@ -4489,24 +4489,25 @@ class _DocumentationNavigationState
   ],
   'window-frame': [
     {
-      id: 'window-frame-caption-actions',
+      id: 'window-frame-title-bar-actions',
       title: {
         en: 'Application window chrome',
         ko: '애플리케이션 창 크롬',
         ja: 'アプリケーションウィンドウクローム',
       },
       description: {
-        en: 'Place application menus and typed native caption actions around a draggable center region.',
-        ko: '드래그 가능한 중앙 영역 양쪽에 앱 메뉴와 타입이 지정된 네이티브 캡션 동작을 배치해요.',
-        ja: 'ドラッグ可能な中央領域の両側にアプリメニューと型付きのネイティブキャプション操作を配置します。',
+        en: 'Place application menus and window commands around a draggable center region. The slots take any widget, so compose the commands from TRIconButton and pick the glyphs and intent your chrome needs.',
+        ko: '드래그 가능한 중앙 영역 양쪽에 앱 메뉴와 창 명령을 배치해요. 슬롯은 어떤 위젯이든 받으므로, 명령은 TRIconButton으로 조립하고 글리프와 intent는 크롬에 맞게 고르세요.',
+        ja: 'ドラッグ可能な中央領域の両側にアプリメニューとウィンドウ操作を配置します。スロットは任意のウィジェットを受け取るので、操作は TRIconButton で組み立て、グリフと intent はクロムに合わせて選んでください。',
       },
       dart: String.raw`TRWindowFrameTitleBar(
   leading: const Text('File'),
-  actions: TRWindowCaptionButton(
-    action: TRWindowCaptionAction.maximize,
-    glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,
-    label: 'Maximize window',
-    onPressed: maximizeWindow,
+  actions: TRIconButton(
+    icon: const Icon(Icons.remove),
+    label: 'Minimize window',
+    onPressed: minimizeWindow,
+    appearance: TRAppearance.ghost,
+    uiSize: TRUiSize.sm,
   ),
   child: const Text('Tinyrack'),
 )`,

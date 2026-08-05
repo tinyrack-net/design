@@ -1,3 +1,17 @@
+## 0.20.0
+
+- Removes `TRWindowCaptionButton`, `TRWindowCaptionAction`, and
+  `TRWindowCaptionGlyphStyle`. The widget was one `TRIconButton` call under a
+  glyph table, and the two decisions it added — a `ghost` appearance and
+  `TRIntent.danger` on close — could not be overridden, so the first consumer
+  that wanted a caption group in one color had to abandon the widget rather
+  than configure it. Nothing in the package used it: `TRWindowFrame` draws its
+  own decorative controls, and there was no React counterpart.
+- Build window commands from `TRIconButton` in the `leading` and `actions`
+  slots of `TRWindowFrameTitleBar`, which is unchanged. The glyphs the widget
+  used were `minus`, `square`, `copy`, and `x`; the neutral corner set was
+  `minimize`, `maximize`, `minimize2`, and `x`.
+
 ## 0.19.0
 
 - Replaces `TRTextInputVariant` with `TRFieldAppearance` and accepts an

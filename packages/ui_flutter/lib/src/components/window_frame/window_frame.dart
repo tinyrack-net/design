@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
-import '../../types.dart';
-import '../button/button.dart';
 
 enum TRWindowFrameVariant { macos, browser }
 
 enum TRWindowFramePadding { none, sm, md, lg }
 
 enum TRWindowFrameControlTone { close, minimize, maximize }
-
-/// Native window command represented by a caption button.
-enum TRWindowCaptionAction { minimize, maximize, restore, close }
-
-/// Lucide glyph family used by native window caption actions.
-enum TRWindowCaptionGlyphStyle { standard, expandCollapse }
 
 // @tinyrack-preview window-frame
 /// Decorative desktop or browser chrome around application content.
@@ -120,61 +111,6 @@ class TRWindowFrameTitleBar extends StatelessWidget {
         child,
       ],
     ),
-  );
-}
-
-/// Compact, accessible action for Flutter-owned desktop window chrome.
-class TRWindowCaptionButton extends StatelessWidget {
-  const TRWindowCaptionButton({
-    required this.action,
-    required this.label,
-    required this.onPressed,
-    this.glyphStyle = TRWindowCaptionGlyphStyle.standard,
-    this.uiSize = TRUiSize.md,
-    super.key,
-  });
-
-  final TRWindowCaptionAction action;
-  final TRWindowCaptionGlyphStyle glyphStyle;
-  final String label;
-  final VoidCallback? onPressed;
-
-  /// Control size the caption glyph and its hit target are built at.
-  final TRUiSize uiSize;
-
-  @override
-  Widget build(BuildContext context) => TRIconButton(
-    icon: Icon(switch ((glyphStyle, action)) {
-      (_, TRWindowCaptionAction.close) => LucideIcons.x,
-      (TRWindowCaptionGlyphStyle.standard, TRWindowCaptionAction.minimize) =>
-        LucideIcons.minus,
-      (TRWindowCaptionGlyphStyle.standard, TRWindowCaptionAction.maximize) =>
-        LucideIcons.square,
-      (TRWindowCaptionGlyphStyle.standard, TRWindowCaptionAction.restore) =>
-        LucideIcons.copy,
-      (
-        TRWindowCaptionGlyphStyle.expandCollapse,
-        TRWindowCaptionAction.minimize,
-      ) =>
-        LucideIcons.minimize,
-      (
-        TRWindowCaptionGlyphStyle.expandCollapse,
-        TRWindowCaptionAction.maximize,
-      ) =>
-        LucideIcons.maximize,
-      (
-        TRWindowCaptionGlyphStyle.expandCollapse,
-        TRWindowCaptionAction.restore,
-      ) =>
-        LucideIcons.minimize2,
-    }),
-    label: label,
-    onPressed: onPressed,
-    appearance: TRAppearance.ghost,
-    intent: action == TRWindowCaptionAction.close
-        ? TRIntent.danger
-        : TRIntent.neutral,
-    uiSize: uiSize,
   );
 }
 

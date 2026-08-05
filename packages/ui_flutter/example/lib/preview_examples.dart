@@ -127,7 +127,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'table-dense-status': _tableDenseStatus,
   'tree-nav-navigation': _treeNavNavigation,
   'window-frame-browser': _windowFrameBrowser,
-  'window-frame-caption-actions': _windowFrameCaptionActions,
+  'window-frame-title-bar-actions': _windowFrameTitleBarActions,
   'toast-track': _toastTrack,
 };
 
@@ -4170,16 +4170,17 @@ Widget _windowFrameBrowser(BuildContext context, Locale locale) =>
       ),
     );
 
-Widget _windowFrameCaptionActions(BuildContext context, Locale locale) =>
+Widget _windowFrameTitleBarActions(BuildContext context, Locale locale) =>
     SizedBox(
       width: 400,
       child: TRWindowFrameTitleBar(
         leading: const Text('File'),
-        actions: TRWindowCaptionButton(
-          action: TRWindowCaptionAction.maximize,
-          glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,
-          label: _pick(locale, 'Maximize window', '창 최대화', 'ウィンドウを最大化'),
+        actions: TRIconButton(
+          icon: const Icon(Icons.remove),
+          label: _pick(locale, 'Minimize window', '창 최소화', 'ウィンドウを最小化'),
           onPressed: () {},
+          appearance: TRAppearance.ghost,
+          uiSize: TRUiSize.sm,
         ),
         child: const Text('Tinyrack'),
       ),
