@@ -4798,7 +4798,7 @@ class _AlignmentBarState extends State<AlignmentBar> {
       ja: 'アプリの内容を macOS またはブラウザ風の装飾フレームで囲みます。',
     },
     usage:
-      "TRWindowFrameTitleBar(\n  leading: const Text('File'),\n  actions: TRWindowCaptionButton(\n    action: TRWindowCaptionAction.maximize,\n    glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,\n    label: 'Maximize window',\n    onPressed: maximizeWindow,\n  ),\n  child: const Text('Tinyrack'),\n)",
+      "TRWindowFrame(\n  variant: TRWindowFrameVariant.macos,\n  title: const Text('Tinyrack'),\n  body: const Text('Rack overview'),\n)",
     contractRows: [
       {
         axis: { en: 'Variant', ko: '형태', ja: 'バリアント' },
@@ -4847,36 +4847,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
             name: 'TRWindowFrameTitleBar.leading / actions',
             type: 'Widget?',
             purpose: {
-              en: 'Places application menus and native caption actions on opposite edges.',
-              ko: '앱 메뉴와 네이티브 캡션 동작을 양쪽 가장자리에 배치해요.',
-              ja: 'アプリメニューとネイティブのキャプション操作を両端に配置します。',
-            },
-          },
-          {
-            name: 'TRWindowCaptionButton.action',
-            type: 'TRWindowCaptionAction',
-            purpose: {
-              en: 'Selects a Lucide minimize, maximize, restore, or close glyph.',
-              ko: 'Lucide 최소화, 최대화, 복원 또는 닫기 글리프를 선택해요.',
-              ja: 'Lucide の最小化、最大化、復元、閉じるグリフを選択します。',
-            },
-          },
-          {
-            name: 'TRWindowCaptionButton.glyphStyle',
-            type: 'TRWindowCaptionGlyphStyle · standard',
-            purpose: {
-              en: 'Chooses standard window marks or neutral expand-and-collapse corner glyphs.',
-              ko: '표준 창 표시 또는 중립 확장·축소 모서리 글리프를 선택해요.',
-              ja: '標準のウィンドウ記号またはニュートラルな展開・縮小コーナーグリフを選びます。',
-            },
-          },
-          {
-            name: 'TRWindowCaptionButton.uiSize',
-            type: 'TRUiSize · TRUiSize.md',
-            purpose: {
-              en: 'Sets the control size of the glyph and its hit target. Match it to the height of the row the caption buttons sit in.',
-              ko: '글리프와 클릭 영역의 컨트롤 크기를 정해요. 캡션 버튼이 놓인 행의 높이에 맞추세요.',
-              ja: 'グリフとヒット領域のコントロールサイズを指定します。キャプションボタンが並ぶ行の高さに合わせてください。',
+              en: 'Places any widget on opposite edges of the drag region. Compose window commands from TRIconButton and choose the glyphs and intent your chrome needs.',
+              ko: '드래그 영역 양쪽 가장자리에 임의의 위젯을 배치해요. 창 명령은 TRIconButton으로 조립하고 글리프와 intent는 크롬에 맞게 고르세요.',
+              ja: 'ドラッグ領域の両端に任意のウィジェットを配置します。ウィンドウ操作は TRIconButton で組み立て、グリフと intent はクロムに合わせて選んでください。',
             },
           },
           {
