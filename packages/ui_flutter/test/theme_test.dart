@@ -305,6 +305,196 @@ void main() {
     );
   });
 
+  testWidgets('text field variants keep or drop the input frame', (
+    tester,
+  ) async {
+    Future<AnimatedContainer> frame(TRTextInputVariant variant) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(body: TRTextField(variant: variant)),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester.widget<AnimatedContainer>(
+        find.descendant(
+          of: find.byType(TRTextField),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+    }
+
+    final outlined = await frame(TRTextInputVariant.defaultVariant);
+    expect(
+      (outlined.decoration! as BoxDecoration).color,
+      TinyrackTheme.light().extension<TinyrackThemeData>()!.surface,
+    );
+    expect((outlined.foregroundDecoration! as BoxDecoration).border, isNotNull);
+
+    final plain = await frame(TRTextInputVariant.plain);
+    expect(plain.decoration, isNull);
+    expect(plain.foregroundDecoration, isNull);
+  });
+
+  testWidgets('textarea variants keep or drop the input frame', (tester) async {
+    Future<AnimatedContainer> frame(TRTextInputVariant variant) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(body: TRTextarea(variant: variant)),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester.widget<AnimatedContainer>(
+        find.descendant(
+          of: find.byType(TRTextarea),
+          matching: find.byType(AnimatedContainer),
+        ),
+      );
+    }
+
+    final outlined = await frame(TRTextInputVariant.defaultVariant);
+    expect(outlined.decoration, isA<BoxDecoration>());
+    expect((outlined.decoration! as BoxDecoration).border, isNotNull);
+
+    final plain = await frame(TRTextInputVariant.plain);
+    expect(plain.decoration, isNull);
+  });
+
+  testWidgets('a focused card reflects the focus of the group it hosts', (
+    tester,
+  ) async {
+    Future<List<BoxDecoration>> decorations({required bool focused}) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(
+            body: TRCard(
+              focused: focused,
+              child: const TRTextField(variant: TRTextInputVariant.plain),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester
+          .widgetList<DecoratedBox>(
+            find.descendant(
+              of: find.byType(TRCard),
+              matching: find.byType(DecoratedBox),
+            ),
+          )
+          .map((box) => box.decoration as BoxDecoration)
+          .toList();
+    }
+
+    final theme = TinyrackTheme.light().extension<TinyrackThemeData>()!;
+
+    // The resting card keeps its own border and paints no focus ring.
+    final resting = await decorations(focused: false);
+    expect(resting.first.border!.top.color, theme.border);
+    expect(resting.first.border!.top.width, 1);
+    expect(resting.skip(1).map((box) => box.border), everyElement(isNull));
+
+    // The focused card paints the wider focus ring over that border.
+    final active = await decorations(focused: true);
+    final ring = active.last.border!.top;
+    expect(ring.color, theme.focus);
+    expect(ring.width, greaterThan(1));
+  });
+
+  testWidgets('a focused card keeps its outer size', (tester) async {
+    Future<Size> size({required bool focused}) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: Scaffold(
+            body: Center(
+              child: TRCard(focused: focused, child: const SizedBox.square()),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      return tester.getSize(find.byType(TRCard));
+    }
+
+    // The wider focus border must not reflow the content it frames.
+    expect(await size(focused: true), await size(focused: false));
+  });
+
+  testWidgets('plain text inputs delegate focus visibility to their host', (
+    tester,
+  ) async {
+    final fieldFocus = FocusNode();
+    final areaFocus = FocusNode();
+    addTearDown(fieldFocus.dispose);
+    addTearDown(areaFocus.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: Column(
+            children: [
+              TRTextField(
+                focusNode: fieldFocus,
+                variant: TRTextInputVariant.plain,
+              ),
+              TRTextarea(
+                focusNode: areaFocus,
+                variant: TRTextInputVariant.plain,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(TextField).first);
+    await tester.pumpAndSettle();
+    expect(fieldFocus.hasFocus, isTrue);
+    expect(areaFocus.hasFocus, isFalse);
+
+    await tester.tap(find.byType(TextField).last);
+    await tester.pumpAndSettle();
+    expect(areaFocus.hasFocus, isTrue);
+    expect(fieldFocus.hasFocus, isFalse);
+  });
+
+  testWidgets('plain text inputs preserve disabled and read-only states', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const Scaffold(
+          body: Column(
+            children: [
+              TRTextField(enabled: false, variant: TRTextInputVariant.plain),
+              TRTextarea(readOnly: true, variant: TRTextInputVariant.plain),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final fields = tester.widgetList<TextField>(find.byType(TextField));
+    expect(fields.first.enabled, isFalse);
+    expect(fields.last.readOnly, isTrue);
+    expect(
+      tester
+          .widget<AnimatedOpacity>(
+            find.descendant(
+              of: find.byType(TRTextField),
+              matching: find.byType(AnimatedOpacity),
+            ),
+          )
+          .opacity,
+      TRGeneratedOpacity.disabled,
+    );
+  });
+
   testWidgets('alert announces non-neutral status', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

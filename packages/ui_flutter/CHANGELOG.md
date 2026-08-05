@@ -1,3 +1,13 @@
+## 0.9.0
+
+- Adds `TRTextInputVariant` and a `variant` property on `TRTextField` and
+  `TRTextarea`. The new `plain` variant drops the input's own border and fill so
+  an enclosing surface can frame the input; that surface then owns focus
+  visibility and invalid emphasis.
+- Adds a `focused` property on `TRCard` so a card framing a focusable group,
+  such as a composer built around a plain input, can paint the focus ring. The
+  ring paints over the card, so it does not change the card size.
+
 ## 0.8.1
 
 - Fixes an anchored layer that never requested focus, such as a `TRTooltip`

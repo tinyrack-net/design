@@ -35,6 +35,13 @@ enum TRCardVariant { defaultVariant, outlined, elevated }
 /// The inset spacing of a card surface.
 enum TRCardPadding { none, sm, md, lg }
 
+/// The visual frame drawn around a text input.
+///
+/// [plain] removes the border and fill so an enclosing surface can own the
+/// frame. That surface becomes responsible for focus visibility, hover, and
+/// invalid emphasis, because the input no longer paints them itself.
+enum TRTextInputVariant { defaultVariant, plain }
+
 /// The semantic color of a progress spinner.
 enum TRSpinnerVariant { current, muted, primary, danger }
 
