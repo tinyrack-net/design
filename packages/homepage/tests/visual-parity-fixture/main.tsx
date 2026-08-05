@@ -519,6 +519,9 @@ function Fixture() {
     | 'danger';
   const appearance = arg('appearance', 'solid') as 'solid' | 'outline' | 'ghost';
   const uiSize = arg('uiSize', 'md') as 'md' | 'lg';
+  // A field has no outline step, so the shared appearance arg narrows to the
+  // two a field understands.
+  const fieldAppearance = appearance === 'ghost' ? 'ghost' : 'solid';
   const statusVariant = arg('variant', 'neutral') as
     | 'neutral'
     | 'info'
@@ -702,7 +705,7 @@ function Fixture() {
             open={flag('open')}
             value={arg('value', 'stable') || null}
           >
-            <TRSelect.Trigger uiSize={uiSize}>
+            <TRSelect.Trigger appearance={fieldAppearance} uiSize={uiSize}>
               <TRSelect.Value placeholder="Choose a channel" />
               <TRSelect.Icon aria-hidden="true">
                 <ChevronDown />
@@ -886,7 +889,7 @@ function Fixture() {
               items={['Seoul', 'Tokyo', 'Virginia']}
               open={flag('open')}
             >
-              <TRAutocomplete.InputGroup>
+              <TRAutocomplete.InputGroup appearance={fieldAppearance}>
                 <TRAutocomplete.Input
                   autoFocus={flag('open')}
                   placeholder="Search regions"
@@ -922,7 +925,7 @@ function Fixture() {
               items={['stable', 'beta']}
               open={flag('open')}
             >
-              <TRCombobox.InputGroup>
+              <TRCombobox.InputGroup appearance={fieldAppearance}>
                 <TRCombobox.Input
                   autoFocus={flag('open')}
                   placeholder="Choose a channel"
@@ -1116,7 +1119,12 @@ function Fixture() {
       case 'number-field':
         return (
           <TRField.Root style={{ width: 320 }}>
-            <TRNumberField.Root defaultValue={12} max={100} min={0}>
+            <TRNumberField.Root
+              appearance={fieldAppearance}
+              defaultValue={12}
+              max={100}
+              min={0}
+            >
               <TRNumberField.ScrubArea>
                 <TRField.Label>Replicas</TRField.Label>
               </TRNumberField.ScrubArea>
@@ -1132,7 +1140,11 @@ function Fixture() {
         return (
           <TRField.Root>
             <TRField.Label>Verification code</TRField.Label>
-            <TROTPField.Root defaultValue="2048" length={4}>
+            <TROTPField.Root
+              appearance={fieldAppearance}
+              defaultValue="2048"
+              length={4}
+            >
               <TROTPField.Input />
               <TROTPField.Input />
               <TROTPField.Separator />
@@ -1483,6 +1495,7 @@ function Fixture() {
       case 'textarea':
         return (
           <TRTextarea
+            appearance={fieldAppearance}
             aria-label={copy.field}
             defaultValue={arg('value', '')}
             disabled={flag('disabled')}
@@ -1650,6 +1663,7 @@ function Fixture() {
           <TRField.Root disabled={flag('disabled')} invalid={query.has('errorText')}>
             <TRField.Label>{copy.field}</TRField.Label>
             <TRInput
+              appearance={fieldAppearance}
               aria-invalid={query.has('errorText') || undefined}
               disabled={flag('disabled')}
               placeholder={arg('placeholder', 'Rack alpha')}

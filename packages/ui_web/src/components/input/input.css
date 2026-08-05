@@ -184,8 +184,7 @@
 
   .tr-input-group[data-appearance="ghost"]:hover:not(
     :has(.tr-input-group-input:is(:disabled, [readonly])),
-    :focus-within,
-    [data-popup-open]
+    :focus-within
   ) {
     background: var(--tinyrack-surface-hover);
     border-color: transparent;
@@ -193,10 +192,6 @@
 
   .tr-input-group[data-appearance="ghost"]:focus-within {
     background: var(--tinyrack-surface);
-  }
-
-  .tr-input-group[data-appearance="ghost"][data-popup-open] {
-    background: var(--tinyrack-surface-selected);
   }
 
   .tr-input-group[data-appearance="ghost"]:has(.tr-input-group-input:read-only) {

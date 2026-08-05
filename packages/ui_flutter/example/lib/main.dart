@@ -760,6 +760,12 @@ class _PreviewAppState extends State<PreviewApp> {
   }
 }
 
+/// Reads the field appearance a preview scenario asks for.
+TRFieldAppearance _fieldAppearance(Map<String, Object?> args) =>
+    args['appearance'] == 'ghost'
+    ? TRFieldAppearance.ghost
+    : TRFieldAppearance.solid;
+
 List<String> _supportedArgs(String component) => switch (component) {
   'button' => [
     'appearance',
@@ -776,6 +782,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'code-block' => ['code', 'language', 'wrap'],
   'dialog' => ['open', 'placement'],
   'autocomplete' => [
+    'appearance',
     'completionMode',
     'disabled',
     'errorText',
@@ -786,6 +793,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   ],
   'alert-dialog' => ['disabled', 'label', 'open'],
   'combobox' => [
+    'appearance',
     'autoHighlight',
     'clearable',
     'disabled',
@@ -816,7 +824,15 @@ List<String> _supportedArgs(String component) => switch (component) {
   'slider' => ['disabled', 'label', 'orientation', 'uiSize'],
   'menu' => ['disabled', 'open'],
   'menubar' => ['open'],
-  'select' => ['disabled', 'errorText', 'open', 'readOnly', 'uiSize', 'value'],
+  'select' => [
+    'appearance',
+    'disabled',
+    'errorText',
+    'open',
+    'readOnly',
+    'uiSize',
+    'value',
+  ],
   'icon-button' => [
     'appearance',
     'disabled',
@@ -901,6 +917,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'value',
   ],
   'otp-field' => [
+    'appearance',
     'disabled',
     'errorText',
     'helperText',
@@ -910,6 +927,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'uiSize',
     'value',
   ],
+  'number-field' => ['appearance'],
   _ => const <String>[],
 };
 
@@ -928,7 +946,18 @@ Map<String, Object?>? _validateArgs(
         value is String &&
             const {'compact', 'comfortable', 'spacious'}.contains(value),
       'striped' => value is bool,
-      'appearance' when component == 'text-field' || component == 'textarea' =>
+      // A field has no outline step, so it is checked before the shared action
+      // rule that allows one.
+      'appearance'
+          when const {
+            'autocomplete',
+            'combobox',
+            'number-field',
+            'otp-field',
+            'select',
+            'text-field',
+            'textarea',
+          }.contains(component) =>
         value is String && const {'solid', 'ghost'}.contains(value),
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
@@ -1390,7 +1419,7 @@ class PreviewComponent extends StatelessWidget {
         child: _PreviewSelect(
           args: args,
           key: ValueKey(
-            '${args['uiSize']}:${args['open']}:${args['value']}:${args['disabled']}:${args['readOnly']}',
+            '${args['uiSize']}:${args['open']}:${args['value']}:${args['disabled']}:${args['readOnly']}:${args['appearance']}',
           ),
           locale: locale,
           onStateChanged: onStateChanged,
@@ -1485,7 +1514,8 @@ class PreviewComponent extends StatelessWidget {
       'number-field' => SizedBox(
         key: measureKey,
         width: 320,
-        child: const TRNumberField(
+        child: TRNumberField(
+          appearance: _fieldAppearance(args),
           defaultValue: 12,
           label: 'Replicas',
           min: 0,
@@ -1495,6 +1525,7 @@ class PreviewComponent extends StatelessWidget {
       // Parity screenshots need a fixed, already-filled code; the docs
       // playground needs an empty field the reader can actually type into.
       'otp-field' when parityMode => TROtpField(
+        appearance: _fieldAppearance(args),
         key: measureKey,
         defaultValue: '2048',
         length: 4,
@@ -3283,6 +3314,7 @@ class _PreviewAutocompleteState extends State<_PreviewAutocomplete> {
   Widget build(BuildContext context) => SizedBox(
     width: 320,
     child: TRAutocomplete<String>(
+      appearance: _fieldAppearance(widget.args),
       completionMode: TRAutocompleteCompletionMode.values.byName(
         widget.args['completionMode'] is String
             ? widget.args['completionMode']! as String
@@ -3377,6 +3409,7 @@ class _PreviewComboboxState extends State<_PreviewCombobox> {
     return SizedBox(
       width: 320,
       child: TRCombobox<String>(
+        appearance: _fieldAppearance(widget.args),
         controller: _controller,
         autoHighlight: args['autoHighlight'] != false,
         clearable: args['clearable'] == true,
@@ -4054,6 +4087,7 @@ class _PreviewSelectState extends State<_PreviewSelect> {
   Widget build(BuildContext context) => SizedBox(
     width: 320,
     child: TRSelect<String>.controlled(
+      appearance: _fieldAppearance(widget.args),
       items: [
         TRSelectItem(
           value: 'stable',

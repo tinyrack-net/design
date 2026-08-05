@@ -348,7 +348,7 @@ const alertScenarios = product('alert', {
   ),
 );
 
-export const visualParityScenarios: VisualParityScenario[] = [
+const baseVisualParityScenarios: VisualParityScenario[] = [
   ...alertScenarios,
   ...product('avatar', { shape: ['circle', 'square'], uiSize: sizes }),
   ...product('badge', { uiSize: sizes, variant: statusVariants }),
@@ -593,6 +593,38 @@ export const visualParityScenarios: VisualParityScenario[] = [
   ),
 ];
 
+/// The input controls that take a field appearance. Their scenarios are
+/// mirrored so ghost is exercised in every state solid is.
+const fieldAppearances = ['solid', 'ghost'] as const;
+
+const fieldAppearanceComponents = new Set<string>([
+  'autocomplete',
+  'combobox',
+  'number-field',
+  'otp-field',
+  'select',
+  'text-field',
+  'textarea',
+]);
+
+export const visualParityScenarios: VisualParityScenario[] = [
+  ...baseVisualParityScenarios.map((scenario) =>
+    fieldAppearanceComponents.has(scenario.component)
+      ? { ...scenario, args: { ...scenario.args, appearance: 'solid' } }
+      : scenario,
+  ),
+  // Appended, never prepended: representativeParityScenarios takes the first
+  // match per component, and the quick parity job renders only those, so the
+  // representative has to stay the solid rendering.
+  ...baseVisualParityScenarios
+    .filter((scenario) => fieldAppearanceComponents.has(scenario.component))
+    .map((scenario) => ({
+      ...scenario,
+      args: { ...scenario.args, appearance: 'ghost' },
+      id: `${scenario.id}-appearance-ghost`,
+    })),
+];
+
 export const parityLocales = ['en', 'ko', 'ja'] as const;
 export const parityThemes = ['light', 'dark'] as const;
 
@@ -629,7 +661,7 @@ export const parityContract = {
   radio: { checked: [false, true], uiSize: sizes },
   switch: { checked: [false, true] },
   tabs: { uiSize: sizes },
-  textarea: { uiSize: sizes },
+  textarea: { appearance: fieldAppearances, uiSize: sizes },
   toggle: { pressed: [false, true] },
   'toggle-group': {},
   'checkbox-group': {},
@@ -639,7 +671,7 @@ export const parityContract = {
   'animated-number': {},
   'copy-button': {},
   menu: { open: [false, true] },
-  select: { open: [false, true], uiSize: sizes },
+  select: { appearance: fieldAppearances, open: [false, true], uiSize: sizes },
   dialog: {
     open: [false, true],
     placement: ['middle', 'top', 'bottom', 'start', 'end'],
@@ -652,8 +684,8 @@ export const parityContract = {
     open: [false, true],
     sidebarMode: ['expanded', 'rail'],
   },
-  autocomplete: { open: [false, true] },
-  combobox: { open: [false, true] },
+  autocomplete: { appearance: fieldAppearances, open: [false, true] },
+  combobox: { appearance: fieldAppearances, open: [false, true] },
   'context-menu': { open: [false, true] },
   drawer: {
     open: [false, true],
@@ -663,8 +695,8 @@ export const parityContract = {
   form: {},
   menubar: { open: [false, true] },
   'navigation-menu': { open: [false, true] },
-  'number-field': {},
-  'otp-field': {},
+  'number-field': { appearance: fieldAppearances },
+  'otp-field': { appearance: fieldAppearances },
   popover: { open: [false, true] },
   'preview-card': { open: [false, true] },
   'scroll-area': { autoHide: [false, true] },
@@ -704,7 +736,7 @@ export const parityContract = {
     variant: textVariants,
     weight: textWeights,
   },
-  'text-field': { uiSize: sizes },
+  'text-field': { appearance: fieldAppearances, uiSize: sizes },
 } as const;
 
 const buttonMotionScenarios = (['button', 'icon-button'] as const).flatMap(
