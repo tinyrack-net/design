@@ -138,6 +138,31 @@ void main() {
     expect(rails, hasLength(2));
   });
 
+  testWidgets('itemSpacing overrides the default top-level gap', (
+    tester,
+  ) async {
+    final flatItems = [
+      const TRTreeNavLeaf(value: 'a', label: Text('A')),
+      const TRTreeNavLeaf(value: 'b', label: Text('B')),
+    ];
+
+    await tester.pumpWidget(_app(TRTreeNav<String>(items: flatItems)));
+    final defaultGap =
+        tester.getTopLeft(find.text('B')).dy -
+        tester.getBottomLeft(find.text('A')).dy;
+
+    await tester.pumpWidget(
+      _app(
+        TRTreeNav<String>(items: flatItems, itemSpacing: TRSpacing.extraSmall),
+      ),
+    );
+    final tightGap =
+        tester.getTopLeft(find.text('B')).dy -
+        tester.getBottomLeft(find.text('A')).dy;
+
+    expect(defaultGap - tightGap, TRSpacing.large - TRSpacing.extraSmall);
+  });
+
   testWidgets('renders selected leaf and its ancestor groups as active', (
     tester,
   ) async {

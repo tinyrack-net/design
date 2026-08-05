@@ -102,6 +102,7 @@ class TRTreeNav<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.pageStorageId,
     this.semanticLabel,
+    this.itemSpacing = TRGeneratedSpacing.lg,
     super.key,
   }) : value = null,
        _controlled = false;
@@ -113,6 +114,7 @@ class TRTreeNav<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.pageStorageId,
     this.semanticLabel,
+    this.itemSpacing = TRGeneratedSpacing.lg,
     super.key,
   }) : defaultValue = null,
        _controlled = true;
@@ -124,6 +126,14 @@ class TRTreeNav<T extends Object> extends StatefulWidget {
   final ValueChanged<T?>? onValueChange;
   final Object? pageStorageId;
   final String? semanticLabel;
+
+  /// Gap between this tree's top-level items.
+  ///
+  /// Defaults to [TRGeneratedSpacing.lg], sized for separating unrelated
+  /// top-level branches. A consumer rendering a flat list of adjacent
+  /// destinations (for example, a settings sidebar) should pass a smaller
+  /// public [TRSpacing] token instead.
+  final double itemSpacing;
   final bool _controlled;
 
   @override
@@ -213,7 +223,7 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        spacing: TRGeneratedSpacing.lg,
+        spacing: widget.itemSpacing,
         children: [
           for (final item in widget.items)
             _TRTreeNavNode<T>(

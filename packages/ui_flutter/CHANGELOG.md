@@ -1,3 +1,12 @@
+## 0.16.0
+
+- `TRTreeNav` and `TRTreeNav.controlled` take an `itemSpacing` parameter for
+  the gap between top-level items. It defaults to `TRGeneratedSpacing.lg`,
+  preserving prior behavior for a tree of unrelated top-level branches. A
+  consumer rendering a flat list of adjacent destinations, such as a settings
+  sidebar, previously had no way to shrink that gap without a private
+  literal — it can now pass a smaller public `TRSpacing` token instead.
+
 ## 0.15.0
 
 - Adds `TRUiSize.sm`, a compact step below `md` on the shared control scale, and
