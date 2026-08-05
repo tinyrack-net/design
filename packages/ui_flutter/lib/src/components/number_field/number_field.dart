@@ -32,6 +32,7 @@ class TRNumberFieldController extends ChangeNotifier {
 /// A locale-aware nullable number input with stepper and scrubbing behavior.
 class TRNumberField extends StatefulWidget {
   const TRNumberField({
+    this.appearance = TRFieldAppearance.solid,
     this.controller,
     this.defaultValue,
     this.enabled = true,
@@ -57,6 +58,7 @@ class TRNumberField extends StatefulWidget {
 
   const TRNumberField.controlled({
     required this.value,
+    this.appearance = TRFieldAppearance.solid,
     this.controller,
     this.enabled = true,
     this.errorText,
@@ -80,6 +82,14 @@ class TRNumberField extends StatefulWidget {
        assert(min == null || max == null || min <= max);
 
   final TRNumberFieldController? controller;
+
+  /// Whether the field paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// field. Unlike a bare surface, the field still paints its own hover,
+  /// focus, and invalid emphasis.
+  final TRFieldAppearance appearance;
+
   final double? defaultValue;
   final double? value;
   final bool enabled;
@@ -289,6 +299,7 @@ class _TRNumberFieldState extends State<TRNumberField> {
           child: Focus(
             onKeyEvent: _handleKey,
             child: TRTextField(
+              appearance: widget.appearance,
               controller: _textController,
               enabled: widget.enabled,
               errorText: widget.errorText,
@@ -420,6 +431,7 @@ class _TRNumberStepButton extends StatelessWidget {
 /// Form-integrated [TRNumberField].
 class TRNumberFieldFormField extends FormField<double> {
   TRNumberFieldFormField({
+    TRFieldAppearance appearance = TRFieldAppearance.solid,
     super.initialValue,
     super.autovalidateMode,
     super.enabled = true,
@@ -437,6 +449,7 @@ class TRNumberFieldFormField extends FormField<double> {
   }) : super(
          builder: (field) => TRNumberField.controlled(
            value: field.value,
+           appearance: appearance,
            enabled: enabled,
            errorText: field.errorText,
            helperText: helperText,

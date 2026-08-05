@@ -1319,10 +1319,10 @@ class PreviewComponent extends StatelessWidget {
               'args': {'value': value},
             }),
             uiSize: size,
-            variant: TRTextInputVariant.values.byName(
-              args['variant'] is String
-                  ? args['variant']! as String
-                  : 'defaultVariant',
+            appearance: TRFieldAppearance.values.byName(
+              args['appearance'] is String
+                  ? args['appearance']! as String
+                  : 'solid',
             ),
           ),
         ),
@@ -2403,10 +2403,10 @@ class PreviewComponent extends StatelessWidget {
                 : null,
             readOnly: args['readOnly'] == true,
             uiSize: size,
-            variant: TRTextInputVariant.values.byName(
-              args['variant'] is String
-                  ? args['variant']! as String
-                  : 'defaultVariant',
+            appearance: TRFieldAppearance.values.byName(
+              args['appearance'] is String
+                  ? args['appearance']! as String
+                  : 'solid',
             ),
           ),
         ),

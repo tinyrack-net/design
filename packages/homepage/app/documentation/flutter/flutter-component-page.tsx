@@ -3992,12 +3992,12 @@ class _BackupSettingState extends State<BackupSetting> {
             },
           },
           {
-            name: 'variant',
-            type: 'TRTextInputVariant · defaultVariant',
+            name: 'appearance',
+            type: 'TRFieldAppearance · solid',
             purpose: {
-              en: 'Chooses the framed control or `plain`, which drops the border and fill so a host surface can frame the textarea.',
-              ko: '테두리가 있는 기본 컨트롤과, 테두리와 배경을 없애 상위 표면이 감쌀 수 있게 하는 `plain` 중 하나를 선택해요.',
-              ja: '枠線のある既定のコントロールと、枠線と背景を外して上位のサーフェスが囲めるようにする `plain` のいずれかを選びます。',
+              en: 'Chooses the framed control or `ghost`, which drops the resting border and fill so a host surface can frame the textarea while the field still paints its own hover and focus.',
+              ko: '테두리가 있는 기본 컨트롤과, 평상시 테두리와 배경을 없애 상위 표면이 감쌀 수 있게 하면서도 hover와 포커스는 직접 그리는 `ghost` 중 하나를 선택해요.',
+              ja: '枠線のある既定のコントロールと、通常時の枠線と背景を外して上位のサーフェスが囲めるようにしつつ、ホバーとフォーカスは自身で描く `ghost` のいずれかを選びます。',
             },
           },
         ],
@@ -4462,9 +4462,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'Focus', ko: '포커스', ja: 'フォーカス' },
         choices: {
-          en: 'A card that only groups content leaves `focused` off. Set it while a focusable child holds focus, which a card framing a `TRTextInputVariant.plain` input must do so focus stays visible. The ring paints over the card, so it never changes the card size.',
-          ko: '콘텐츠만 묶는 카드는 `focused`를 끈 채로 두세요. 포커스 가능한 자식이 포커스를 가질 때 켜면 되고, `TRTextInputVariant.plain` 입력을 감싸는 카드는 포커스가 계속 보이도록 반드시 켜야 해요. 링은 카드 위에 그려져서 카드 크기를 바꾸지 않아요.',
-          ja: 'コンテンツをまとめるだけのカードでは `focused` をオフのままにします。フォーカス可能な子がフォーカスを持つ間にオンにし、`TRTextInputVariant.plain` の入力を囲むカードはフォーカスを見える状態に保つため必ずオンにしてください。リングはカードの上に描画されるため、カードの寸法は変わりません。',
+          en: 'A card that only groups content leaves `focused` off. Set it while a focusable child holds focus so a group of controls reads as one. A `TRFieldAppearance.ghost` field already paints its own focus, so a card wrapping just that field should leave this off. The ring paints over the card, so it never changes the card size.',
+          ko: '콘텐츠만 묶는 카드는 `focused`를 끈 채로 두세요. 포커스 가능한 자식이 포커스를 가질 때 켜면 여러 컨트롤이 하나로 읽혀요. `TRFieldAppearance.ghost` 필드는 포커스를 직접 그리니, 그 필드만 감싸는 카드는 꺼 두세요. 링은 카드 위에 그려져서 카드 크기를 바꾸지 않아요.',
+          ja: 'コンテンツをまとめるだけのカードでは `focused` をオフのままにします。フォーカス可能な子がフォーカスを持つ間にオンにすると、複数のコントロールがひとつにまとまって読めます。`TRFieldAppearance.ghost` のフィールドは自身でフォーカスを描くため、そのフィールドだけを囲むカードではオフのままにしてください。リングはカードの上に描画されるため、カードの寸法は変わりません。',
         },
       },
     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/field_chrome.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -10,6 +11,7 @@ import '../../types.dart';
 /// A themed text input that preserves Flutter form and editing contracts.
 class TRTextField extends StatelessWidget {
   const TRTextField({
+    this.appearance = TRFieldAppearance.solid,
     this.autovalidateMode,
     this.autofillHints,
     this.autofocus = false,
@@ -36,7 +38,6 @@ class TRTextField extends StatelessWidget {
     this.textInputAction,
     this.uiSize = TRUiSize.md,
     this.validator,
-    this.variant = TRTextInputVariant.defaultVariant,
     super.key,
   }) : assert(
          controller == null || initialValue == null,
@@ -50,6 +51,13 @@ class TRTextField extends StatelessWidget {
          !obscureText || maxLines == 1,
          'obscured fields must use exactly one line.',
        );
+
+  /// Whether the field paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// field. Unlike a bare surface, the field still paints its own hover,
+  /// focus, and invalid emphasis.
+  final TRFieldAppearance appearance;
 
   final AutovalidateMode? autovalidateMode;
   final Iterable<String>? autofillHints;
@@ -81,13 +89,6 @@ class TRTextField extends StatelessWidget {
   final TRUiSize uiSize;
   final FormFieldValidator<String>? validator;
 
-  /// Whether the field paints its own border and fill.
-  ///
-  /// [TRTextInputVariant.plain] drops both so a host surface can frame the
-  /// field. The host then owns focus visibility and invalid emphasis; pass a
-  /// [focusNode] to observe focus for that purpose.
-  final TRTextInputVariant variant;
-
   @override
   Widget build(BuildContext context) {
     var registeredValue = controller?.text ?? initialValue ?? '';
@@ -115,11 +116,12 @@ class TRTextField extends StatelessWidget {
         ? context.tinyrackTheme.surfaceMuted
         : context.tinyrackTheme.surface;
     final textField = _TRTextFieldInteractionFrame(
+      appearance: appearance,
       enabled: enabled != false,
       error: errorText != null,
       fillColor: fillColor,
       focusNode: focusNode,
-      variant: variant,
+      readOnly: readOnly,
       childBuilder: (resolvedFocusNode) => TextFormField(
         autovalidateMode: autovalidateMode,
         autofillHints: autofillHints,
@@ -254,20 +256,22 @@ class TRTextField extends StatelessWidget {
 
 class _TRTextFieldInteractionFrame extends StatefulWidget {
   const _TRTextFieldInteractionFrame({
+    required this.appearance,
     required this.childBuilder,
     required this.enabled,
     required this.error,
     required this.fillColor,
-    required this.variant,
+    required this.readOnly,
     this.focusNode,
   });
 
+  final TRFieldAppearance appearance;
   final Widget Function(FocusNode focusNode) childBuilder;
   final bool enabled;
   final bool error;
   final Color fillColor;
   final FocusNode? focusNode;
-  final TRTextInputVariant variant;
+  final bool readOnly;
 
   @override
   State<_TRTextFieldInteractionFrame> createState() =>
@@ -277,6 +281,7 @@ class _TRTextFieldInteractionFrame extends StatefulWidget {
 class _TRTextFieldInteractionFrameState
     extends State<_TRTextFieldInteractionFrame> {
   FocusNode? _internalFocusNode;
+  bool _hovered = false;
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_internalFocusNode ??= FocusNode());
@@ -314,38 +319,51 @@ class _TRTextFieldInteractionFrameState
   Widget build(BuildContext context) {
     final theme = context.tinyrackTheme;
     final focused = widget.enabled && _focusNode.hasFocus;
-    final borderColor = widget.error
-        ? theme.dangerBorder
-        : focused
-        ? theme.focus
-        : theme.borderStrong;
+    final interactive = widget.enabled && !widget.readOnly;
+    final chrome = resolveFieldChrome(
+      appearance: widget.appearance,
+      colors: theme,
+      solidFill: widget.fillColor,
+      solidBorderColor: widget.error
+          ? theme.dangerBorder
+          : focused
+          ? theme.focus
+          : theme.borderStrong,
+      solidBorderWidth: focused
+          ? TRGeneratedBorders.focusWidth
+          : TRGeneratedBorders.defaultWidth,
+      enabled: widget.enabled,
+      error: widget.error,
+      focused: focused,
+      hovered: _hovered,
+      readOnly: widget.readOnly,
+    );
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
-    // A plain field renders no chrome of its own so the host surface can frame
-    // it; the fill would otherwise cover that surface.
-    final plain = widget.variant == TRTextInputVariant.plain;
 
-    return AnimatedOpacity(
-      curve: TRMotion.standard,
-      duration: duration,
-      opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
-      child: AnimatedContainer(
+    return MouseRegion(
+      onEnter: interactive ? (_) => setState(() => _hovered = true) : null,
+      onExit: interactive ? (_) => setState(() => _hovered = false) : null,
+      child: AnimatedOpacity(
         curve: TRMotion.standard,
         duration: duration,
-        color: plain ? null : widget.fillColor,
-        foregroundDecoration: plain
-            ? null
-            : BoxDecoration(
-                border: Border.all(
-                  color: borderColor,
-                  width: focused
-                      ? TRGeneratedBorders.focusWidth
-                      : TRGeneratedBorders.defaultWidth,
-                ),
-                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-              ),
-        child: widget.childBuilder(_focusNode),
+        opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
+        child: AnimatedContainer(
+          curve: TRMotion.standard,
+          duration: duration,
+          color: chrome.fill,
+          // The border is painted in front so it never insets the field's
+          // content, keeping both appearances on the same metrics.
+          foregroundDecoration: BoxDecoration(
+            border: Border.all(
+              color: chrome.borderColor,
+              width: chrome.borderWidth,
+            ),
+            borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+          ),
+          child: widget.childBuilder(_focusNode),
+        ),
       ),
     );
   }

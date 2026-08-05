@@ -1,3 +1,24 @@
+## 0.19.0
+
+- Replaces `TRTextInputVariant` with `TRFieldAppearance` and accepts an
+  `appearance` argument on `TRTextField`, `TRTextarea`, `TRSelect`,
+  `TRCombobox`, `TRMultiCombobox`, `TRAutocomplete`, `TRNumberField`, and
+  `TROtpField`, together with their controlled and form-field variants. Only
+  buttons and shell surfaces could drop their chrome before, so a select or a
+  text field sitting inside a sidebar or a toolbar had no way to stop looking
+  like a boxed control. Replace `variant: TRTextInputVariant.plain` with
+  `appearance: TRFieldAppearance.ghost`, and
+  `TRTextInputVariant.defaultVariant` with `TRFieldAppearance.solid`.
+- `TRFieldAppearance.ghost` is not the old `plain`. `plain` removed the frame
+  outright, including the focus ring, which left the host surface responsible
+  for focus visibility and invalid emphasis and frequently unpainted. `ghost`
+  drops only the resting border and fill; hover, focus, open, and invalid
+  states are still painted by the field from the same tokens `solid` uses.
+- A ghost field keeps its border box at the normal width and paints it
+  transparent, so swapping appearance never moves a field's metrics. A
+  `TRTextarea` migrating from `plain` therefore insets its content by one
+  border width more than before, matching what `solid` has always done.
+
 ## 0.18.0
 
 - `TRMeasurements` publishes the complete measure scale: `measureXs`,

@@ -130,6 +130,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
   const TRCombobox({
     this.items = const [],
     this.optionsBuilder,
+    this.appearance = TRFieldAppearance.solid,
     this.autoHighlight = true,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
@@ -157,6 +158,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     required this.value,
     this.items = const [],
     this.optionsBuilder,
+    this.appearance = TRFieldAppearance.solid,
     this.autoHighlight = true,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
@@ -181,6 +183,13 @@ class TRCombobox<T extends Object> extends StatefulWidget {
 
   final List<TRComboboxItem<T>> items;
   final TRComboboxOptionsBuilder<T>? optionsBuilder;
+
+  /// Whether the field paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// combobox. Unlike a bare surface, the field still paints its own hover,
+  /// focus, and invalid emphasis.
+  final TRFieldAppearance appearance;
 
   /// Arms the first option so Enter commits it without an arrow key first.
   final bool autoHighlight;
@@ -294,6 +303,7 @@ class _TRComboboxState<T extends Object> extends State<TRCombobox<T>> {
 
   @override
   Widget build(BuildContext context) => _TRComboboxInput<T>(
+    appearance: widget.appearance,
     controller: _controller.textEditingController,
     focusNode: _controller.focusNode,
     autoHighlight: widget.autoHighlight,
@@ -323,6 +333,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
   const TRMultiCombobox({
     this.items = const [],
     this.optionsBuilder,
+    this.appearance = TRFieldAppearance.solid,
     this.autoHighlight = true,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
@@ -349,6 +360,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     required this.value,
     this.items = const [],
     this.optionsBuilder,
+    this.appearance = TRFieldAppearance.solid,
     this.autoHighlight = true,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
@@ -372,6 +384,13 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
 
   final List<TRComboboxItem<T>> items;
   final TRComboboxOptionsBuilder<T>? optionsBuilder;
+
+  /// Whether the field paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// combobox. Unlike a bare surface, the field still paints its own hover,
+  /// focus, and invalid emphasis.
+  final TRFieldAppearance appearance;
 
   /// Arms the first option so Enter commits it without an arrow key first.
   final bool autoHighlight;
@@ -491,6 +510,7 @@ class _TRMultiComboboxState<T extends Object>
           ],
         ),
       _TRComboboxInput<T>(
+        appearance: widget.appearance,
         controller: _controller.textEditingController,
         focusNode: _controller.focusNode,
         autoHighlight: widget.autoHighlight,
@@ -526,6 +546,7 @@ class _TRMultiComboboxState<T extends Object>
 
 class _TRComboboxInput<T extends Object> extends StatefulWidget {
   const _TRComboboxInput({
+    required this.appearance,
     required this.controller,
     required this.focusNode,
     required this.autoHighlight,
@@ -549,6 +570,7 @@ class _TRComboboxInput<T extends Object> extends StatefulWidget {
     required this.width,
   });
 
+  final TRFieldAppearance appearance;
   final TextEditingController controller;
   final FocusNode focusNode;
   final bool autoHighlight;
@@ -801,6 +823,7 @@ class _TRComboboxInputState<T extends Object>
     VoidCallback onSubmitted,
   ) {
     TRTextField field(Widget? suffix) => TRTextField(
+      appearance: widget.appearance,
       controller: controller,
       enabled: widget.enabled,
       errorText: widget.errorText,
@@ -859,6 +882,7 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
   TRComboboxFormField({
     required List<TRComboboxItem<T>> items,
     TRComboboxOptionsBuilder<T>? optionsBuilder,
+    TRFieldAppearance appearance = TRFieldAppearance.solid,
     bool autoHighlight = true,
     bool clearable = false,
     String clearSemanticLabel = 'Clear',
@@ -881,6 +905,7 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
            value: field.value,
            items: items,
            optionsBuilder: optionsBuilder,
+           appearance: appearance,
            autoHighlight: autoHighlight,
            clearable: clearable,
            clearSemanticLabel: clearSemanticLabel,
@@ -906,6 +931,7 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
   TRMultiComboboxFormField({
     required List<TRComboboxItem<T>> items,
     TRComboboxOptionsBuilder<T>? optionsBuilder,
+    TRFieldAppearance appearance = TRFieldAppearance.solid,
     bool autoHighlight = true,
     bool clearable = false,
     String clearSemanticLabel = 'Clear',
@@ -929,6 +955,7 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
            value: field.value ?? const [],
            items: items,
            optionsBuilder: optionsBuilder,
+           appearance: appearance,
            autoHighlight: autoHighlight,
            clearable: clearable,
            clearSemanticLabel: clearSemanticLabel,

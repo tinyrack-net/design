@@ -74,6 +74,7 @@ class TRAutocomplete<T extends Object> extends StatefulWidget {
   const TRAutocomplete({
     this.items = const [],
     this.optionsBuilder,
+    this.appearance = TRFieldAppearance.solid,
     this.controller,
     this.completionMode = TRAutocompleteCompletionMode.list,
     this.enabled = true,
@@ -94,6 +95,14 @@ class TRAutocomplete<T extends Object> extends StatefulWidget {
 
   final List<TRAutocompleteItem<T>> items;
   final TRAutocompleteOptionsBuilder<T>? optionsBuilder;
+
+  /// Whether the field paints a resting border and fill.
+  ///
+  /// [TRFieldAppearance.ghost] drops both so a host surface can frame the
+  /// autocomplete. Unlike a bare surface, the field still paints its own
+  /// hover, focus, and invalid emphasis.
+  final TRFieldAppearance appearance;
+
   final TRAutocompleteController<T>? controller;
   final TRAutocompleteCompletionMode completionMode;
   final bool enabled;
@@ -189,6 +198,7 @@ class _TRAutocompleteState<T extends Object> extends State<TRAutocomplete<T>> {
         },
         fieldViewBuilder: (context, textController, focusNode, onSubmitted) =>
             TRTextField(
+              appearance: widget.appearance,
               controller: textController,
               enabled: widget.enabled,
               errorText: widget.errorText,
@@ -342,6 +352,7 @@ class TRAutocompleteFormField<T extends Object> extends FormField<T> {
   TRAutocompleteFormField({
     required List<TRAutocompleteItem<T>> items,
     TRAutocompleteOptionsBuilder<T>? optionsBuilder,
+    TRFieldAppearance appearance = TRFieldAppearance.solid,
     super.initialValue,
     super.autovalidateMode,
     super.enabled = true,
@@ -357,6 +368,7 @@ class TRAutocompleteFormField<T extends Object> extends FormField<T> {
          builder: (field) => TRAutocomplete<T>(
            items: items,
            optionsBuilder: optionsBuilder,
+           appearance: appearance,
            enabled: enabled,
            errorText: field.errorText,
            helperText: helperText,

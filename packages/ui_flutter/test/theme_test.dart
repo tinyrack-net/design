@@ -564,14 +564,14 @@ void main() {
     );
   });
 
-  testWidgets('text field variants keep or drop the input frame', (
+  testWidgets('text field appearances keep or drop the resting frame', (
     tester,
   ) async {
-    Future<AnimatedContainer> frame(TRTextInputVariant variant) async {
+    Future<AnimatedContainer> frame(TRFieldAppearance appearance) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: TinyrackTheme.light(),
-          home: Scaffold(body: TRTextField(variant: variant)),
+          home: Scaffold(body: TRTextField(appearance: appearance)),
         ),
       );
       await tester.pumpAndSettle();
@@ -583,24 +583,32 @@ void main() {
       );
     }
 
-    final outlined = await frame(TRTextInputVariant.defaultVariant);
-    expect(
-      (outlined.decoration! as BoxDecoration).color,
-      TinyrackTheme.light().extension<TinyrackThemeData>()!.surface,
-    );
-    expect((outlined.foregroundDecoration! as BoxDecoration).border, isNotNull);
+    final colors = TinyrackTheme.light().extension<TinyrackThemeData>()!;
 
-    final plain = await frame(TRTextInputVariant.plain);
-    expect(plain.decoration, isNull);
-    expect(plain.foregroundDecoration, isNull);
+    final solid = await frame(TRFieldAppearance.solid);
+    expect((solid.decoration! as BoxDecoration).color, colors.surface);
+    final solidBorder =
+        (solid.foregroundDecoration! as BoxDecoration).border!.top;
+    expect(solidBorder.color, colors.borderStrong);
+
+    // Ghost stops painting the resting frame but keeps the border box at the
+    // same width, so switching appearance never moves the field's metrics.
+    final ghost = await frame(TRFieldAppearance.ghost);
+    expect((ghost.decoration! as BoxDecoration).color, Colors.transparent);
+    final ghostBorder =
+        (ghost.foregroundDecoration! as BoxDecoration).border!.top;
+    expect(ghostBorder.color, Colors.transparent);
+    expect(ghostBorder.width, solidBorder.width);
   });
 
-  testWidgets('textarea variants keep or drop the input frame', (tester) async {
-    Future<AnimatedContainer> frame(TRTextInputVariant variant) async {
+  testWidgets('textarea appearances keep or drop the resting frame', (
+    tester,
+  ) async {
+    Future<AnimatedContainer> frame(TRFieldAppearance appearance) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: TinyrackTheme.light(),
-          home: Scaffold(body: TRTextarea(variant: variant)),
+          home: Scaffold(body: TRTextarea(appearance: appearance)),
         ),
       );
       await tester.pumpAndSettle();
@@ -612,12 +620,15 @@ void main() {
       );
     }
 
-    final outlined = await frame(TRTextInputVariant.defaultVariant);
-    expect(outlined.decoration, isA<BoxDecoration>());
-    expect((outlined.decoration! as BoxDecoration).border, isNotNull);
+    final solid = await frame(TRFieldAppearance.solid);
+    final solidBorder = (solid.decoration! as BoxDecoration).border!.top;
+    expect(solidBorder.color, isNot(Colors.transparent));
 
-    final plain = await frame(TRTextInputVariant.plain);
-    expect(plain.decoration, isNull);
+    final ghost = await frame(TRFieldAppearance.ghost);
+    final ghostDecoration = ghost.decoration! as BoxDecoration;
+    expect(ghostDecoration.color, Colors.transparent);
+    expect(ghostDecoration.border!.top.color, Colors.transparent);
+    expect(ghostDecoration.border!.top.width, solidBorder.width);
   });
 
   testWidgets('a focused card reflects the focus of the group it hosts', (
@@ -630,7 +641,7 @@ void main() {
           home: Scaffold(
             body: TRCard(
               focused: focused,
-              child: const TRTextField(variant: TRTextInputVariant.plain),
+              child: const TRTextField(appearance: TRFieldAppearance.ghost),
             ),
           ),
         ),
@@ -649,17 +660,28 @@ void main() {
 
     final theme = TinyrackTheme.light().extension<TinyrackThemeData>()!;
 
-    // The resting card keeps its own border and paints no focus ring.
+    // The resting card keeps its own border and paints no focus ring. A ghost
+    // field still reserves its border box, so the frame it does not paint has
+    // to be transparent rather than absent.
     final resting = await decorations(focused: false);
     expect(resting.first.border!.top.color, theme.border);
     expect(resting.first.border!.top.width, 1);
-    expect(resting.skip(1).map((box) => box.border), everyElement(isNull));
+    expect(
+      resting.skip(1).map((box) => box.border?.top.color ?? Colors.transparent),
+      everyElement(Colors.transparent),
+    );
 
-    // The focused card paints the wider focus ring over that border.
+    // The focused card paints the wider focus ring over that border, and it is
+    // the only focus emphasis in the group: the unfocused ghost field inside
+    // reserves a border box but leaves it transparent.
     final active = await decorations(focused: true);
-    final ring = active.last.border!.top;
-    expect(ring.color, theme.focus);
-    expect(ring.width, greaterThan(1));
+    final rings = active
+        .map((box) => box.border?.top)
+        .nonNulls
+        .where((side) => side.color == theme.focus)
+        .toList();
+    expect(rings, hasLength(1));
+    expect(rings.single.width, greaterThan(1));
   });
 
   testWidgets('a focused card keeps its outer size', (tester) async {
@@ -697,11 +719,11 @@ void main() {
             children: [
               TRTextField(
                 focusNode: fieldFocus,
-                variant: TRTextInputVariant.plain,
+                appearance: TRFieldAppearance.ghost,
               ),
               TRTextarea(
                 focusNode: areaFocus,
-                variant: TRTextInputVariant.plain,
+                appearance: TRFieldAppearance.ghost,
               ),
             ],
           ),
@@ -729,8 +751,8 @@ void main() {
         home: const Scaffold(
           body: Column(
             children: [
-              TRTextField(enabled: false, variant: TRTextInputVariant.plain),
-              TRTextarea(readOnly: true, variant: TRTextInputVariant.plain),
+              TRTextField(enabled: false, appearance: TRFieldAppearance.ghost),
+              TRTextarea(readOnly: true, appearance: TRFieldAppearance.ghost),
             ],
           ),
         ),
