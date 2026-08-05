@@ -1,4 +1,20 @@
+## 0.7.0
+
+**Breaking:** simplifies the shared control size scale to two steps. This
+shipped unlabelled in 0.6.1, which is retracted; 0.7.0 restates it correctly.
+
+- Removes `TRUiSize.sm` and shifts the scale down one step. The former `sm`
+  metrics are now `md`, and the former `md` metrics are now `lg`; the former
+  `lg` step is gone. Migrate `TRUiSize.sm` to `TRUiSize.md` and `TRUiSize.md`
+  to `TRUiSize.lg` to keep the rendered size unchanged. Callers of the former
+  `TRUiSize.lg` must choose one of the two remaining steps.
+- Fixes `TRMenubarMenu` popup panels rendering Material default vertical
+  padding and background around their Tinyrack layer surface.
+
 ## 0.6.1
+
+Retracted. Published as a patch but contains the breaking control size scale
+change above. Use 0.7.0 instead.
 
 - Fixes `TRMenubarMenu` popup panels rendering Material default vertical
   padding and background around their Tinyrack layer surface.
