@@ -137,6 +137,9 @@ void main() {
       TRTableRow,
       TRTabs,
       TRTabsTab,
+      TRTerminalController,
+      TRTerminalSize,
+      TRTerminalView,
       TRText,
       TRTextField,
       TRTextarea,
@@ -171,6 +174,6 @@ void main() {
       TRWindowFrameVariant,
     ];
 
-    expect(publicTypes, hasLength(165));
+    expect(publicTypes, hasLength(168));
   });
 }

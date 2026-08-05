@@ -48,6 +48,7 @@ export 'src/components/steps/steps.dart';
 export 'src/components/switch/switch.dart';
 export 'src/components/table/table.dart';
 export 'src/components/tabs/tabs.dart';
+export 'src/components/terminal/terminal.dart';
 export 'src/components/text/text.dart';
 export 'src/components/text_field/text_field.dart';
 export 'src/components/textarea/textarea.dart';

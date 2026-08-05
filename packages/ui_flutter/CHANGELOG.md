@@ -1,3 +1,8 @@
+## 0.5.0
+
+- Adds `TRTerminalView`, `TRTerminalController`, and `TRTerminalSize` for
+  token-backed interactive terminal emulator surfaces on mobile and desktop.
+
 ## 0.4.6
 
 - Prevents reduced-motion collapsibles from throwing a Flutter layout
