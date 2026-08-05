@@ -1061,6 +1061,8 @@ Map<String, Object?>? _validateArgs(
       'variant' when component == 'spinner' =>
         value is String &&
             const {'current', 'muted', 'primary', 'danger'}.contains(value),
+      'variant' when component == 'separator' =>
+        value is String && const {'defaultVariant', 'muted'}.contains(value),
       'variant' when component == 'text' =>
         value is String &&
             const {
