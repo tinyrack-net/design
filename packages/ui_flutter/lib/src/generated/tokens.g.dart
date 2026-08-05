@@ -472,7 +472,7 @@ abstract final class TRGeneratedLayerMetrics {
 }
 
 abstract final class TRGeneratedControlMetrics {
-  static const double smHeight = 24.0;
+  static const double smHeight = 28.0;
   static const double smPaddingInline = 8.0;
   static const double smGap = 4.0;
   static const double smFontSize = 12.0;

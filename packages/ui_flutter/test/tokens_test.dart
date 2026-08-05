@@ -20,7 +20,7 @@ void main() {
     });
 
     test('orders the compact size below the default size', () {
-      expect(TRControlMetrics.heightOf(TRUiSize.sm), 24);
+      expect(TRControlMetrics.heightOf(TRUiSize.sm), 28);
       expect(TRControlMetrics.inlinePaddingOf(TRUiSize.sm), 8);
       expect(TRControlMetrics.gapOf(TRUiSize.sm), 4);
       expect(TRControlMetrics.iconSizeOf(TRUiSize.sm), 14);
