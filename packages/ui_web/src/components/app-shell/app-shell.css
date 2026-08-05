@@ -168,6 +168,9 @@
 
   /* The drawer route sizes and animates its own surface. */
   .tr-drawer-content.tr-app-shell-drawer-content .tr-app-shell-sidebar {
+    /* A percentage already resolves against the content box, so discounting
+       the border again would leave the scroll area short of the edge. */
+    --tr-app-shell-sidebar-border-inline-size: 0px;
     --tr-app-shell-sidebar-content-inline-size: 100%;
     block-size: 100%;
     inline-size: 100%;
