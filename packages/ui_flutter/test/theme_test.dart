@@ -136,6 +136,92 @@ void main() {
     );
   });
 
+  test('themes map Material color roles onto Tinyrack tokens', () {
+    final themes =
+        <(ThemeData, TRGeneratedColorTheme, TRGeneratedColorTheme, bool)>[
+          (
+            TinyrackTheme.light(),
+            TRGeneratedColors.light,
+            TRGeneratedColors.dark,
+            true,
+          ),
+          (
+            TinyrackTheme.dark(),
+            TRGeneratedColors.dark,
+            TRGeneratedColors.light,
+            false,
+          ),
+        ];
+
+    for (final (data, tokens, inverted, isLight) in themes) {
+      final scheme = data.colorScheme;
+
+      expect(scheme.outline, tokens.borderStrong);
+      expect(scheme.outlineVariant, tokens.border);
+      expect(scheme.onSurfaceVariant, tokens.textMuted);
+      expect(scheme.scrim, tokens.scrim);
+      expect(scheme.surfaceTint, Colors.transparent);
+      expect(scheme.inverseSurface, tokens.surfaceInverse);
+      expect(scheme.onInverseSurface, tokens.textInverse);
+      expect(scheme.inversePrimary, inverted.primary);
+      expect(scheme.surfaceContainerLowest, tokens.surface);
+      expect(scheme.surfaceContainerLow, tokens.surface);
+      expect(scheme.surfaceContainer, tokens.surfaceMuted);
+      expect(scheme.surfaceContainerHigh, tokens.surfaceMuted);
+      expect(scheme.surfaceContainerHighest, tokens.surfaceMuted);
+      expect(scheme.surfaceDim, isLight ? tokens.surfaceMuted : tokens.surface);
+      expect(
+        scheme.surfaceBright,
+        isLight ? tokens.surface : tokens.surfaceMuted,
+      );
+      expect(scheme.primaryContainer, tokens.infoSurface);
+      expect(scheme.onPrimaryContainer, tokens.primary);
+      expect(scheme.secondaryContainer, tokens.surfaceMuted);
+      expect(scheme.onSecondaryContainer, tokens.text);
+      expect(scheme.errorContainer, tokens.dangerSurface);
+      expect(scheme.onErrorContainer, tokens.danger);
+      expect(data.dividerColor, tokens.border);
+
+      // Flutter resolves an unset boundary role to `onBackground`, which in
+      // turn resolves to `onSurface`. That fallback paints dividers and muted
+      // metadata in the full-contrast text token, so pin the roles that would
+      // otherwise collapse onto a foreground.
+      expect(scheme.outline, isNot(scheme.onSurface));
+      expect(scheme.outlineVariant, isNot(scheme.onSurface));
+      expect(scheme.onSurfaceVariant, isNot(scheme.onSurface));
+      expect(scheme.surfaceContainerHighest, isNot(scheme.surface));
+    }
+  });
+
+  testWidgets('a Material divider resolves to the border token', (
+    tester,
+  ) async {
+    for (final (theme, tokens) in <(ThemeData, TRGeneratedColorTheme)>[
+      (TinyrackTheme.light(), TRGeneratedColors.light),
+      (TinyrackTheme.dark(), TRGeneratedColors.dark),
+    ]) {
+      late BuildContext dividerContext;
+      // `MaterialApp.theme` animates between themes, so the second iteration
+      // would read a value interpolated from the first. Install the theme
+      // directly instead.
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Theme(
+            data: theme,
+            child: Builder(
+              builder: (context) {
+                dividerContext = context;
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(Divider.createBorderSide(dividerContext).color, tokens.border);
+    }
+  });
+
   testWidgets('button reports loading semantics and prevents activation', (
     tester,
   ) async {
