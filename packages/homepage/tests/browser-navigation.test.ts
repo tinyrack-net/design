@@ -145,16 +145,22 @@ describe('built React Router documentation', () => {
       );
 
       await trigger.click();
-      const navigation = page.getByRole('navigation', { name: 'Documentation' });
-      await expect(navigation.locator('a').count()).resolves.toBe(0);
-      await page.getByRole('button', { name: 'Main menu' }).click();
       const primaryNavigation = page.getByRole('navigation', {
         name: 'Primary navigation',
       });
       await expectVisible(primaryNavigation.locator('a[href="/en/foundations/"]'));
       await expectVisible(primaryNavigation.locator('a[href="/en/web/"]'));
+      await expect(
+        page.getByRole('navigation', { name: 'Documentation' }).count(),
+      ).resolves.toBe(0);
+      await expect(
+        page.getByRole('button', { name: 'Main menu' }).count(),
+      ).resolves.toBe(0);
+      await expect(
+        page.getByRole('button', { name: 'Back to docs menu' }).count(),
+      ).resolves.toBe(0);
       const popup = page.locator(
-        '.tr-app-shell-drawer-popup[data-open][aria-label="Documentation sidebar"]',
+        '.tr-app-shell-drawer-popup[data-open][aria-label="Primary navigation"]',
       );
       await expect(popup.getAttribute('data-swipe-direction')).resolves.toBe('right');
       await expect(popup.locator('xpath=..').getAttribute('class')).resolves.toContain(
@@ -162,7 +168,7 @@ describe('built React Router documentation', () => {
       );
 
       await page.getByRole('button', { name: 'Close navigation' }).click();
-      await expect.poll(() => navigation.isVisible()).toBe(false);
+      await expect.poll(() => primaryNavigation.isVisible()).toBe(false);
     } finally {
       await page.close();
     }
