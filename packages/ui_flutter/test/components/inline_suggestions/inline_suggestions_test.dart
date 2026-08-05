@@ -241,6 +241,62 @@ void main() {
     expect(state.fellThrough, contains(LogicalKeyboardKey.enter));
   });
 
+  testWidgets('a held modifier leaves the key to the host', (tester) async {
+    final selected = <String>[];
+    final state = await _pump(
+      tester,
+      _Host(onSelected: (item) => selected.add(item.value)),
+    );
+
+    // Shift+Enter opens a line and Control+Enter submits in the hosts this
+    // exists for; neither may be taken as a commit.
+    for (final modifier in <LogicalKeyboardKey>[
+      LogicalKeyboardKey.shiftLeft,
+      LogicalKeyboardKey.controlLeft,
+      LogicalKeyboardKey.altLeft,
+      LogicalKeyboardKey.metaLeft,
+    ]) {
+      await tester.sendKeyDownEvent(modifier);
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.sendKeyUpEvent(modifier);
+      await tester.pumpAndSettle();
+    }
+
+    expect(selected, isEmpty);
+    expect(
+      state.fellThrough.where((key) => key == LogicalKeyboardKey.enter),
+      hasLength(4),
+    );
+  });
+
+  testWidgets('Shift+Tab is left to the host as well', (tester) async {
+    final selected = <String>[];
+    final state = await _pump(
+      tester,
+      _Host(onSelected: (item) => selected.add(item.value)),
+    );
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.pumpAndSettle();
+
+    expect(selected, isEmpty);
+    expect(state.fellThrough, contains(LogicalKeyboardKey.tab));
+  });
+
+  testWidgets('Shift+arrow leaves the text selection alone', (tester) async {
+    final highlights = <int>[];
+    await _pump(tester, _Host(onHighlightChange: highlights.add));
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+    await tester.pumpAndSettle();
+
+    expect(highlights, isEmpty);
+  });
+
   testWidgets('acceptOnEnter false leaves Enter to the host', (tester) async {
     final selected = <String>[];
     final state = await _pump(

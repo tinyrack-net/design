@@ -121,6 +121,10 @@ class TRInlineSuggestionsController<T extends Object> extends ChangeNotifier {
   /// [KeyEventResult.ignored].
   KeyEventResult handleKeyEvent(KeyEvent event) {
     if (event is! KeyDownEvent || !isOpen) return KeyEventResult.ignored;
+    // A held modifier makes the key a different command: Shift+Enter opens a
+    // line and Control+Enter submits in the hosts this exists for, and neither
+    // is the list's to take.
+    if (_hasModifier) return KeyEventResult.ignored;
     switch (event.logicalKey) {
       case LogicalKeyboardKey.arrowDown:
         highlightNext();
@@ -153,6 +157,18 @@ class TRInlineSuggestionsController<T extends Object> extends ChangeNotifier {
       default:
         return KeyEventResult.ignored;
     }
+  }
+
+  static bool get _hasModifier {
+    final pressed = HardwareKeyboard.instance.logicalKeysPressed;
+    return pressed.contains(LogicalKeyboardKey.shiftLeft) ||
+        pressed.contains(LogicalKeyboardKey.shiftRight) ||
+        pressed.contains(LogicalKeyboardKey.controlLeft) ||
+        pressed.contains(LogicalKeyboardKey.controlRight) ||
+        pressed.contains(LogicalKeyboardKey.altLeft) ||
+        pressed.contains(LogicalKeyboardKey.altRight) ||
+        pressed.contains(LogicalKeyboardKey.metaLeft) ||
+        pressed.contains(LogicalKeyboardKey.metaRight);
   }
 
   void _step(int direction) {

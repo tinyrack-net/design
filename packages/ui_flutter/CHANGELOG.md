@@ -22,6 +22,10 @@
   rather than its index, and a loading list that still holds rows keeps them on
   screen with a spinner below. Together these stop the list reshuffling or
   blanking under the reader on every keystroke.
+- A held modifier leaves the key to the host. Shift+Enter opens a line and
+  Control+Enter submits in the editors this exists for, so a list that claimed
+  every Enter would swallow both; the same rule keeps Shift+Tab and
+  Shift+arrow with the field.
 - `TRInlineSuggestionItem.matchedIndices` names the characters to emphasise, so
   a consumer highlights a fuzzy match without naming a color or a weight.
 - An anchored layer placed above its trigger now grows from the edge nearest
