@@ -151,7 +151,7 @@ export const textFieldPlayground = flutterPlayground(
     readOnly: false,
     uiSize: 'md',
     value: '',
-    variant: 'defaultVariant',
+    appearance: 'solid',
   },
   {
     disabled: { control: 'boolean' },
@@ -160,7 +160,7 @@ export const textFieldPlayground = flutterPlayground(
     readOnly: { control: 'boolean' },
     uiSize: { control: 'select', options: sizes },
     value: { control: 'text' },
-    variant: { control: 'select', options: ['defaultVariant', 'plain'] },
+    appearance: { control: 'select', options: ['solid', 'ghost'] },
   },
 );
 
@@ -627,14 +627,14 @@ export const textareaPlayground = flutterPlayground(
     placeholder: 'Rack alpha',
     readOnly: false,
     uiSize: 'md',
-    variant: 'defaultVariant',
+    appearance: 'solid',
   },
   {
     disabled: { control: 'boolean' },
     placeholder: { control: 'text' },
     readOnly: { control: 'boolean' },
     uiSize: { control: 'select', options: sizes },
-    variant: { control: 'select', options: ['defaultVariant', 'plain'] },
+    appearance: { control: 'select', options: ['solid', 'ghost'] },
   },
 );
 

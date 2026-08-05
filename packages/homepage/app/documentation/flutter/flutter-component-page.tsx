@@ -3870,9 +3870,9 @@ class _BackupSettingState extends State<BackupSetting> {
       {
         axis: { en: 'Frame', ko: '프레임', ja: 'フレーム' },
         choices: {
-          en: '`defaultVariant` paints the border and fill. `plain` drops both so an enclosing surface, such as a `TRCard` composer, owns the frame; that surface then has to show focus itself, which you can drive from a supplied `focusNode`.',
-          ko: '`defaultVariant`는 테두리와 배경을 직접 그려요. `plain`은 둘 다 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 이때 포커스 표시는 그 표면의 책임이며, 넘겨준 `focusNode`로 직접 처리할 수 있어요.',
-          ja: '`defaultVariant` は枠線と背景を自分で描画します。`plain` は両方を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。その場合フォーカス表示はそのサーフェスの責任になり、渡した `focusNode` から制御できます。',
+          en: '`solid` paints the border and fill. `ghost` drops both while resting so an enclosing surface, such as a `TRCard` composer, owns the frame. The textarea still paints its own hover and focus, so the surface no longer has to, and the border box is kept at the same width so swapping appearance never moves the field.',
+          ko: '`solid`는 테두리와 배경을 직접 그려요. `ghost`는 평상시에만 둘 다 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. hover와 포커스는 textarea가 계속 직접 그리니 표면이 대신 처리하지 않아도 되고, 테두리 박스는 같은 두께로 유지되어 appearance를 바꿔도 필드가 움직이지 않아요.',
+          ja: '`solid` は枠線と背景を自分で描画します。`ghost` は通常時のみ両方を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。ホバーとフォーカスは textarea が引き続き自分で描くためサーフェス側で用意する必要はなく、枠線のボックスは同じ幅で保たれるので appearance を切り替えてもフィールドは動きません。',
         },
       },
       {
@@ -4633,9 +4633,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'Frame', ko: '프레임', ja: 'フレーム' },
         choices: {
-          en: '`defaultVariant` paints the border, fill, focus ring, and invalid emphasis. `plain` drops the border and fill so an enclosing surface, such as a `TRCard` composer, owns the frame; that surface then has to show focus and invalid state itself, which you can drive from a supplied `focusNode`.',
-          ko: '`defaultVariant`는 테두리와 배경, 포커스 링, 오류 강조를 직접 그려요. `plain`은 테두리와 배경을 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 이때 포커스와 오류 표시는 그 표면의 책임이며, 넘겨준 `focusNode`로 직접 처리할 수 있어요.',
-          ja: '`defaultVariant` は枠線と背景、フォーカスリング、エラー強調を自分で描画します。`plain` は枠線と背景を外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。その場合フォーカスとエラーの表示はそのサーフェスの責任になり、渡した `focusNode` から制御できます。',
+          en: '`solid` paints the border, fill, focus ring, and invalid emphasis. `ghost` drops only the resting border and fill so an enclosing surface, such as a `TRCard` composer, owns the frame; focus and invalid emphasis are still painted by the field itself, so the surface does not have to repaint them.',
+          ko: '`solid`는 테두리와 배경, 포커스 링, 오류 강조를 직접 그려요. `ghost`는 평상시 테두리와 배경만 없애서 `TRCard` 컴포저처럼 감싸는 표면이 프레임을 소유하게 해요. 포커스와 오류 강조는 필드가 계속 직접 그리니 표면이 다시 그릴 필요는 없어요.',
+          ja: '`solid` は枠線と背景、フォーカスリング、エラー強調を自分で描画します。`ghost` は通常時の枠線と背景だけを外し、`TRCard` のコンポーザーなど囲む側のサーフェスがフレームを持つようにします。フォーカスとエラー強調はフィールド自身が描き続けるため、サーフェス側で描き直す必要はありません。',
         },
       },
     ],

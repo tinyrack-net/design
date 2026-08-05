@@ -871,13 +871,13 @@ List<String> _supportedArgs(String component) => switch (component) {
   'checkbox-group' => ['disabled', 'label', 'readOnly', 'selectedValues'],
   'radio-group' => ['disabled', 'readOnly', 'selectedValue'],
   'textarea' => [
+    'appearance',
     'disabled',
     'parity',
     'placeholder',
     'readOnly',
     'uiSize',
     'value',
-    'variant',
   ],
   'tabs' => ['uiSize'],
   'pagination' => [
@@ -891,6 +891,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'tree-nav' => ['collapsed', 'selected'],
   'window-frame' => ['padding', 'variant'],
   'text-field' => [
+    'appearance',
     'disabled',
     'errorText',
     'parity',
@@ -898,7 +899,6 @@ List<String> _supportedArgs(String component) => switch (component) {
     'readOnly',
     'uiSize',
     'value',
-    'variant',
   ],
   'otp-field' => [
     'disabled',
@@ -928,6 +928,8 @@ Map<String, Object?>? _validateArgs(
         value is String &&
             const {'compact', 'comfortable', 'spacious'}.contains(value),
       'striped' => value is bool,
+      'appearance' when component == 'text-field' || component == 'textarea' =>
+        value is String && const {'solid', 'ghost'}.contains(value),
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
       'filterMode' when component == 'combobox' =>
@@ -1068,8 +1070,6 @@ Map<String, Object?>? _validateArgs(
             const {'current', 'muted', 'primary', 'danger'}.contains(value),
       'variant' when component == 'separator' =>
         value is String && const {'defaultVariant', 'muted'}.contains(value),
-      'variant' when component == 'text-field' || component == 'textarea' =>
-        value is String && const {'defaultVariant', 'plain'}.contains(value),
       'variant' when component == 'text' =>
         value is String &&
             const {
