@@ -102,7 +102,7 @@ class RenderTRLayerPartBoundary extends RenderProxyBox {
 abstract final class TRLayerStyles {
   static MenuStyle menu(
     BuildContext context, {
-    AlignmentGeometry alignment = AlignmentDirectional.topStart,
+    AlignmentGeometry alignment = AlignmentDirectional.bottomStart,
     double minWidth = TRGeneratedMeasurements.measureMd,
     double maxWidth =
         TRGeneratedMeasurements.overlayWidthSm + TRGeneratedSpacing.size2xl,

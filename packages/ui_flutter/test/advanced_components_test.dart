@@ -1327,6 +1327,42 @@ void main() {
       expect(tester.widget<Material>(panel).elevation, 0);
     });
 
+    testWidgets('menubar menu panel opens below the bar without covering it', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenubar(
+            menus: [
+              TRMenubarMenu(
+                trigger: const Text('File'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('New')),
+                ],
+              ),
+              TRMenubarMenu(
+                trigger: const Text('View'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('Zoom')),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+      final bar = tester.getRect(find.byType(MenuBar));
+      final trigger = tester.getRect(
+        find.widgetWithText(SubmenuButton, 'File'),
+      );
+      await tester.tap(find.text('File'));
+      await tester.pumpAndSettle();
+
+      final panel = tester.getRect(find.byType(TRLayerBoundary));
+      expect(panel.top, bar.bottom);
+      expect(panel.left, trigger.left);
+      expect(tester.getRect(find.text('View')).overlaps(panel), isFalse);
+    });
+
     testWidgets('menubar opens three nested layers', (tester) async {
       await tester.binding.setSurfaceSize(const Size(1280, 720));
       addTearDown(() => tester.binding.setSurfaceSize(null));
