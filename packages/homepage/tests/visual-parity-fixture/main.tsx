@@ -1282,29 +1282,76 @@ function Fixture() {
           </TRTooltip.Provider>
         );
       }
-      case 'tree-nav':
+      case 'tree-nav': {
+        const treeCopy =
+          locale === 'ko'
+            ? ['시작하기', '설치', '고급', '플러그인', '테마']
+            : locale === 'ja'
+              ? ['はじめに', 'インストール', '高度な設定', 'プラグイン', 'テーマ']
+              : ['GETTING STARTED', 'Install', 'ADVANCED', 'Plugins', 'Theming'];
+        const selectedTreeLeaf = flag('selected') || !query.has('selected');
         return (
           <div style={{ width: 320 }}>
             <TRTreeNav
               items={[
                 {
+                  activeBranch: selectedTreeLeaf,
                   children: [
-                    { data: 'Racks', key: 'racks', type: 'leaf' },
-                    { data: 'Jobs', key: 'jobs', type: 'leaf' },
+                    {
+                      data: { key: 'leaf0', label: treeCopy[1] },
+                      key: 'install',
+                      type: 'leaf',
+                    },
+                    {
+                      activeBranch: selectedTreeLeaf,
+                      children: [
+                        {
+                          data: { key: 'leaf1', label: treeCopy[3] },
+                          key: 'plugins',
+                          type: 'leaf',
+                        },
+                        {
+                          data: { key: 'leaf2', label: treeCopy[4] },
+                          key: 'theming',
+                          type: 'leaf',
+                        },
+                      ],
+                      forceOpen: true,
+                      key: 'advanced',
+                      label: (
+                        <span data-parity-part="treeNavGroup1Label">{treeCopy[2]}</span>
+                      ),
+                      type: 'group',
+                    },
                   ],
-                  forceOpen: true,
-                  key: 'compute',
-                  label: 'Compute',
+                  forceOpen: !flag('collapsed'),
+                  key: 'getting-started',
+                  label: (
+                    <span data-parity-part="treeNavGroup0Label">{treeCopy[0]}</span>
+                  ),
                   type: 'group',
                 },
-                { data: 'Settings', key: 'settings', type: 'leaf' },
               ]}
               renderLeaf={({ data }) => (
-                <span data-parity-part={`treeNav${data}Label`}>{data}</span>
+                <TRLink
+                  className="parity-tree-nav-link"
+                  data-active={
+                    selectedTreeLeaf && data.key === 'leaf2' ? '' : undefined
+                  }
+                  href="#"
+                  underline="none"
+                >
+                  <span
+                    data-parity-part={`treeNav${data.key[0]?.toUpperCase()}${data.key.slice(1)}Label`}
+                  >
+                    {data.label}
+                  </span>
+                </TRLink>
               )}
             />
           </div>
         );
+      }
       case 'link':
         return (
           <TRLink

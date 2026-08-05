@@ -1991,12 +1991,249 @@ class _RackFormState extends State<RackForm> {
   'tree-nav': {
     title: 'TreeNav',
     description: {
-      en: 'Navigate expandable groups and typed destinations with tree keyboard semantics.',
-      ko: '트리 키보드 시맨틱으로 펼칠 수 있는 그룹과 타입이 있는 목적지를 탐색해요.',
-      ja: 'ツリーのキーボードセマンティクスで、展開可能なグループと型付きの移動先を操作します。',
+      en: 'Build typed, expandable navigation with selected destinations and visible nested rails.',
+      ko: '선택된 목적지와 중첩 rail을 표시하는 타입 기반 확장 탐색을 구성해요.',
+      ja: '選択中の移動先とネストされたレールを表示する、型付きの展開ナビゲーションを構築します。',
     },
-    usage:
-      "const TRTreeNav<String>(\n  items: [TRTreeNavLeaf(value: 'home', label: Text('Home'))],\n)",
+    contractIntro: {
+      en: 'Tab follows reading order. Enter and Space activate the focused row, Up and Down move between rows, and the logical expand and collapse arrow keys follow text direction. Disabled rows are skipped and ignore pointer and keyboard input.',
+      ko: 'Tab은 읽기 순서를 따라요. Enter와 Space는 포커스된 행을 실행하고, 위·아래 화살표는 행 사이를 이동하며, 펼침·접힘 화살표는 텍스트 방향을 따라요. 비활성 행은 건너뛰고 포인터와 키보드 입력을 무시해요.',
+      ja: 'Tab は読み順に従います。Enter と Space はフォーカス中の行を実行し、上下矢印は行間を移動し、展開・折りたたみの矢印はテキスト方向に従います。無効な行はスキップされ、ポインターとキーボード入力を無視します。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Selection', ko: '선택 상태', ja: '選択状態' },
+        choices: {
+          en: 'Use `defaultValue` for local selection or `TRTreeNav.controlled` with `value` and `onValueChange` for parent-owned selection.',
+          ko: '로컬 선택에는 `defaultValue`를 사용하고, 부모가 선택을 관리하려면 `value`, `onValueChange`와 함께 `TRTreeNav.controlled`를 사용해요.',
+          ja: 'ローカル選択には `defaultValue` を使い、親で管理する場合は `value` と `onValueChange` を指定した `TRTreeNav.controlled` を使います。',
+        },
+      },
+      {
+        axis: { en: 'Expansion', ko: '확장 상태', ja: '展開状態' },
+        choices: {
+          en: '`initiallyExpanded` seeds a group; `TRTreeNavController` reads or changes the live expanded set.',
+          ko: '`initiallyExpanded`는 그룹의 초기 상태를 정하고, `TRTreeNavController`는 현재 펼친 집합을 읽거나 바꿔요.',
+          ja: '`initiallyExpanded` はグループの初期状態を設定し、`TRTreeNavController` は現在の展開集合を読み書きします。',
+        },
+      },
+      {
+        axis: { en: 'Nesting', ko: '중첩과 rail', ja: 'ネストとレール' },
+        choices: {
+          en: 'Every nested level adds a guide rail and indentation; groups containing the selected leaf use active emphasis.',
+          ko: '중첩 단계마다 guide rail과 들여쓰기가 추가되고, 선택한 leaf를 포함한 그룹은 활성 강조를 사용해요.',
+          ja: 'ネストの各階層にガイドレールとインデントが加わり、選択中の leaf を含むグループは強調表示されます。',
+        },
+      },
+      {
+        axis: { en: 'Persistence', ko: '상태 유지', ja: '状態の保持' },
+        choices: {
+          en: '`pageStorageId` restores expanded groups within the nearest `PageStorage`; selection ownership is unchanged.',
+          ko: '`pageStorageId`는 가장 가까운 `PageStorage`에서 펼친 그룹을 복원하며 선택 상태의 관리 방식은 바꾸지 않아요.',
+          ja: '`pageStorageId` は最寄りの `PageStorage` から展開グループを復元します。選択状態の管理方法は変わりません。',
+        },
+      },
+      {
+        axis: { en: 'Content', ko: '콘텐츠', ja: 'コンテンツ' },
+        choices: {
+          en: '`leading` and `trailing` stay aligned around wrapping labels. A group `trailing` replaces its default chevron.',
+          ko: '`leading`과 `trailing`은 여러 줄 label 주위에서 정렬을 유지해요. 그룹의 `trailing`은 기본 chevron을 대체해요.',
+          ja: '`leading` と `trailing` は折り返す label の両側で整列します。グループの `trailing` は既定の chevron を置き換えます。',
+        },
+      },
+    ],
+    usage: String.raw`class DocsTree extends StatefulWidget {
+  const DocsTree({super.key});
+
+  @override
+  State<DocsTree> createState() => _DocsTreeState();
+}
+
+class _DocsTreeState extends State<DocsTree> {
+  String? currentPage = 'theming';
+
+  @override
+  Widget build(BuildContext context) => TRTreeNav<String>.controlled(
+    value: currentPage,
+    onValueChange: (value) => setState(() => currentPage = value),
+    pageStorageId: 'docs-navigation',
+    semanticLabel: 'Documentation',
+    items: const [
+      TRTreeNavGroup(
+        value: 'guides',
+        label: Text('GUIDES'),
+        initiallyExpanded: true,
+        children: [
+          TRTreeNavLeaf(value: 'install', label: Text('Install')),
+          TRTreeNavGroup(
+            value: 'advanced',
+            label: Text('ADVANCED'),
+            initiallyExpanded: true,
+            children: [
+              TRTreeNavLeaf(value: 'plugins', label: Text('Plugins')),
+              TRTreeNavLeaf(value: 'theming', label: Text('Theming')),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}`,
+    apiGroups: [
+      {
+        title: {
+          en: 'TRTreeNav properties',
+          ko: 'TRTreeNav 속성',
+          ja: 'TRTreeNav のプロパティ',
+        },
+        rows: [
+          {
+            name: 'items',
+            type: 'List<TRTreeNavItem<T>> · required',
+            purpose: {
+              en: 'Defines the ordered groups and destinations.',
+              ko: '순서가 있는 그룹과 목적지를 정의해요.',
+              ja: '順序付きのグループと移動先を定義します。',
+            },
+          },
+          {
+            name: 'value, defaultValue',
+            type: 'T?, T? · null',
+            purpose: {
+              en: 'Control selection or initialize uncontrolled selection.',
+              ko: '선택을 제어하거나 비제어 선택의 초기값을 정해요.',
+              ja: '選択を制御するか、非制御選択の初期値を設定します。',
+            },
+          },
+          {
+            name: 'onValueChange',
+            type: 'ValueChanged<T?>? · null',
+            purpose: {
+              en: 'Reports an enabled leaf activation.',
+              ko: '활성화된 leaf를 실행하면 값을 전달해요.',
+              ja: '有効な leaf が実行されたときに値を通知します。',
+            },
+          },
+          {
+            name: 'controller',
+            type: 'TRTreeNavController<T>? · null',
+            purpose: {
+              en: 'Observes selection and owns the expanded group set.',
+              ko: '선택을 관찰하고 펼친 그룹 집합을 관리해요.',
+              ja: '選択を監視し、展開グループの集合を管理します。',
+            },
+          },
+          {
+            name: 'pageStorageId, semanticLabel',
+            type: 'Object?, String? · null',
+            purpose: {
+              en: 'Persist expansion and name the navigation region for assistive technology.',
+              ko: '펼침 상태를 유지하고 보조 기술에 탐색 영역 이름을 제공해요.',
+              ja: '展開状態を保持し、支援技術向けにナビゲーション領域へ名前を付けます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRTreeNavGroup properties',
+          ko: 'TRTreeNavGroup 속성',
+          ja: 'TRTreeNavGroup のプロパティ',
+        },
+        rows: [
+          {
+            name: 'value, label, children',
+            type: 'T, Widget, List<TRTreeNavItem<T>> · required',
+            purpose: {
+              en: 'Identify the group and define its trigger and nested nodes.',
+              ko: '그룹을 식별하고 trigger와 중첩 node를 정의해요.',
+              ja: 'グループを識別し、trigger とネストされた node を定義します。',
+            },
+          },
+          {
+            name: 'initiallyExpanded',
+            type: 'bool · false',
+            purpose: {
+              en: 'Adds the group to the initial expanded set.',
+              ko: '그룹을 초기 펼침 집합에 추가해요.',
+              ja: 'グループを初期展開集合へ追加します。',
+            },
+          },
+          {
+            name: 'disabled, leading, trailing',
+            type: 'bool?, Widget?, Widget? · null',
+            purpose: {
+              en: 'Disable expansion or decorate the row; trailing replaces the chevron.',
+              ko: '확장을 막거나 행을 꾸며요. trailing은 chevron을 대체해요.',
+              ja: '展開を無効にするか行を装飾します。trailing は chevron を置き換えます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRTreeNavLeaf properties',
+          ko: 'TRTreeNavLeaf 속성',
+          ja: 'TRTreeNavLeaf のプロパティ',
+        },
+        rows: [
+          {
+            name: 'value, label',
+            type: 'T, Widget · required',
+            purpose: {
+              en: 'Identify and render a selectable destination.',
+              ko: '선택할 수 있는 목적지를 식별하고 렌더링해요.',
+              ja: '選択可能な移動先を識別して描画します。',
+            },
+          },
+          {
+            name: 'disabled, leading, trailing',
+            type: 'bool?, Widget?, Widget? · null',
+            purpose: {
+              en: 'Block selection or add content before and after the label.',
+              ko: '선택을 막거나 label 앞뒤에 콘텐츠를 추가해요.',
+              ja: '選択を無効にするか、label の前後へコンテンツを追加します。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRTreeNavController API',
+          ko: 'TRTreeNavController API',
+          ja: 'TRTreeNavController API',
+        },
+        rows: [
+          {
+            name: 'value, expanded',
+            type: 'T?, Set<T>',
+            purpose: {
+              en: 'Read the current selection and an unmodifiable expanded set.',
+              ko: '현재 선택과 수정할 수 없는 펼침 집합을 읽어요.',
+              ja: '現在の選択と変更不可の展開集合を読み取ります。',
+            },
+          },
+          {
+            name: 'select, toggle',
+            type: 'void Function(T?), void Function(T)',
+            purpose: {
+              en: 'Change selection or invert one group’s expansion.',
+              ko: '선택을 바꾸거나 한 그룹의 펼침 상태를 반전해요.',
+              ja: '選択を変更するか、1 つのグループの展開状態を反転します。',
+            },
+          },
+          {
+            name: 'setExpanded, replaceExpanded',
+            type: 'methods',
+            purpose: {
+              en: 'Set one group or replace the complete expanded set.',
+              ko: '그룹 하나를 설정하거나 전체 펼침 집합을 교체해요.',
+              ja: '1 つのグループを設定するか、展開集合全体を置き換えます。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'animated-number': {
     title: 'AnimatedNumber',

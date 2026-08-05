@@ -164,9 +164,11 @@ const partSelectors: Partial<
   'checkbox-group': { first: '[data-parity-part="first"]' },
   'radio-group': { first: '[data-parity-part="first"]' },
   'tree-nav': {
-    leaf0Label: '[data-parity-part="treeNavRacksLabel"]',
-    leaf1Label: '[data-parity-part="treeNavJobsLabel"]',
-    leaf2Label: '[data-parity-part="treeNavSettingsLabel"]',
+    group0Label: '[data-parity-part="treeNavGroup0Label"]',
+    group1Label: '[data-parity-part="treeNavGroup1Label"]',
+    leaf0Label: '[data-parity-part="treeNavLeaf0Label"]',
+    leaf1Label: '[data-parity-part="treeNavLeaf1Label"]',
+    leaf2Label: '[data-parity-part="treeNavLeaf2Label"]',
   },
 };
 
