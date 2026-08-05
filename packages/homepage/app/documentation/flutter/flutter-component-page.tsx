@@ -5291,6 +5291,31 @@ TRAppShell(
 
           <h2>
             {locale === 'ko'
+              ? 'sidebar 너비와 접기'
+              : locale === 'ja'
+                ? 'sidebar の幅と折りたたみ'
+                : 'Sidebar width and collapse'}
+          </h2>
+          <p>
+            {locale === 'ko'
+              ? 'TRAppShellSidebar는 자기 너비를 스스로 가집니다. 기본값은 현재 모드의 shell 너비이고 width로 덮어쓸 수 있어요. 펼침, 접힘, rail 전환 같은 모든 너비 변화는 TRMotion.normal 동안 애니메이션되고, 그동안 내용은 목표 너비로 배치된 채 잘려요. collapsed를 주면 접히기 시작하는 즉시 포커스, 포인터, 시맨틱스에서 빠지고 애니메이션이 끝나면 트리에서 제거됩니다. 고정 너비 SizedBox로 감싸지 마세요. 접근성 설정에서 애니메이션을 끄면 즉시 전환돼요.'
+              : locale === 'ja'
+                ? 'TRAppShellSidebar は自身の幅を持ちます。既定値は現在のモードの shell 幅で、width で上書きできます。展開・折りたたみ・rail への切り替えなど、幅の変化はすべて TRMotion.normal でアニメーションし、その間コンテンツは目標幅で配置されたままクリップされます。collapsed を渡すと、折りたたみ開始と同時にフォーカス・ポインター・セマンティクスから外れ、アニメーション終了後にツリーからも取り除かれます。固定幅の SizedBox で包まないでください。アニメーションを無効にする設定では即座に切り替わります。'
+                : 'TRAppShellSidebar owns its own width. It defaults to the shell width for the current mode and accepts width as an override. Every width change — expanding, collapsing, or switching to the rail — animates over TRMotion.normal while the content stays laid out at its target width and is clipped. Setting collapsed drops the surface out of focus, pointers, and semantics as the collapse starts, then removes it from the tree once the animation ends. Do not wrap it in a fixed-width SizedBox. Disabling animations in the platform accessibility settings makes the change instant.'}
+          </p>
+          <TRCodeBlock
+            code={`TRAppShell(
+  sidebar: TRAppShellSidebar(
+    collapsed: navigationCollapsed,
+    child: navigation,
+  ),
+  main: const TRAppShellMain(child: Workspace()),
+)`}
+            language="dart"
+          />
+
+          <h2>
+            {locale === 'ko'
               ? '문서 chrome과 스크롤'
               : locale === 'ja'
                 ? 'ドキュメントクロームとスクロール'

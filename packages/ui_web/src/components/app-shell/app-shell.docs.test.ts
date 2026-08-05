@@ -29,6 +29,8 @@ describe('app-shell documentation', () => {
     expect(argTypes).toContain(
       "sidebarMode: { options: ['expanded', 'rail'], control: 'radio' }",
     );
+    expect(argTypes).toContain("sidebarCollapsed: { control: 'boolean' }");
+    expect(demo).toContain('collapsed={sidebarCollapsed}');
   });
 
   it('keeps every locale complete, localized, realistic, and paste-ready', () => {
@@ -72,6 +74,9 @@ describe('app-shell documentation', () => {
       expect(docs).toContain('--tr-app-shell-header-block-size');
       expect(docs).toContain('pageScroll="document"');
       expect(docs).toContain('data-page-scroll');
+      expect(docs).toContain('`collapsed`');
+      expect(docs).toContain('data-collapsed');
+      expect(docs).toContain('prefers-reduced-motion');
       for (const part of anatomy) {
         expect(docs).toContain(`\`${part}\``);
       }

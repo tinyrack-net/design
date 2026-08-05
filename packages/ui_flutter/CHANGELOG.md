@@ -1,3 +1,18 @@
+## 0.12.0
+
+- `TRAppShellSidebar` now owns its own inline size and animates every change to
+  it — collapsing, expanding, and switching between the expanded width and the
+  rail — over `TRMotion.normal`, snapping instead when the platform asks for
+  reduced motion. The new `collapsed` flag animates the surface away: it leaves
+  focus, pointers, and semantics as soon as the collapse starts, its content
+  stays laid out at the target width and clipped while the surface slides, and
+  the content is removed from the tree once the animation ends. The new `width`
+  overrides the shell width for one surface, which is what a sidebar composed
+  inside `TRAppShellMain` needs. A caller that wrapped the sidebar in a fixed
+  `SizedBox` should pass `width` instead, because an outer tight constraint
+  still wins and suppresses the animation. The mobile drawer keeps its own
+  route transition and ignores `collapsed`.
+
 ## 0.11.0
 
 - Fixes `TRTerminalView` repeating text that a multi-character input method

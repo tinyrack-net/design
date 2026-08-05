@@ -1,25 +1,87 @@
 part of 'app_shell_widget.dart';
 
 /// Scrollable navigation surface for [TRAppShell].
+///
+/// The sidebar owns its own inline size and animates every change to it, so a
+/// host must not impose a tight width on it. Set [width] to override the shell
+/// width for this surface, and [collapsed] to animate it away.
 class TRAppShellSidebar extends StatelessWidget {
   const TRAppShellSidebar({
     required this.child,
+    this.collapsed = false,
     this.padding = EdgeInsets.zero,
     this.scroll = true,
     this.semanticLabel,
     this.scrollController,
+    this.width,
     super.key,
   });
 
   final Widget child;
+
+  /// Whether the sidebar is animated away and taken out of interaction.
+  final bool collapsed;
+
   final EdgeInsetsGeometry padding;
   final bool scroll;
   final String? semanticLabel;
   final ScrollController? scrollController;
 
+  /// Expanded inline size; defaults to the shell width for the current mode.
+  final double? width;
+
   @override
   Widget build(BuildContext context) {
     final scope = _TRAppShellScope.of(context, 'Sidebar');
+    final surface = _buildSurface(context, scope);
+    // The drawer route owns the surface size and runs its own transition.
+    if (scope.isDrawerSurface) return surface;
+
+    final contentWidth =
+        width ??
+        (scope.sidebarMode == TRAppShellSidebarMode.expanded
+            ? scope.sidebarWidth
+            : scope.railWidth);
+    const collapsedWidth = TRGeneratedLayerMetrics.appShellCollapsedWidth;
+    return TweenAnimationBuilder<double>(
+      curve: TRMotion.standard,
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : TRMotion.normal,
+      tween: Tween<double>(end: collapsed ? collapsedWidth : contentWidth),
+      builder: (context, animatedWidth, child) {
+        // Once no width is left there is nothing to reveal, so the content
+        // leaves the tree, the focus order, and the semantics tree with it.
+        final hidden = collapsed && animatedWidth <= collapsedWidth;
+        return SizedBox(
+          width: animatedWidth,
+          child: hidden
+              ? null
+              : ClipRect(
+                  child: OverflowBox(
+                    alignment: AlignmentDirectional.centerStart,
+                    // Laying the content out at its resolved width keeps it
+                    // from reflowing on every frame while the surface slides.
+                    maxWidth: contentWidth,
+                    minWidth: contentWidth,
+                    child: child,
+                  ),
+                ),
+        );
+      },
+      // Collapsing hands interaction back before the animation ends, so a
+      // focused control cannot keep receiving keys on the way out.
+      child: ExcludeFocus(
+        excluding: collapsed,
+        child: ExcludeSemantics(
+          excluding: collapsed,
+          child: IgnorePointer(ignoring: collapsed, child: surface),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSurface(BuildContext context, _TRAppShellScope scope) {
     final border = BorderSide(color: context.tinyrackTheme.border);
     final borderDecoration = scope.isDrawerSurface
         ? BoxDecoration(

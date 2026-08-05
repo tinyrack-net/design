@@ -6,7 +6,13 @@ import { TRDrawer } from '../drawer/index.js';
 import { TRScrollArea } from '../scroll-area/index.js';
 import { useAppShellContext } from './app-shell-context.js';
 
-export type TRAppShellSidebarProps = ComponentProps<'aside'>;
+export type TRAppShellSidebarProps = ComponentProps<'aside'> & {
+  /**
+   * Animates the sidebar away and takes it out of interaction. The drawer
+   * surface keeps its own presentation and ignores this.
+   */
+  collapsed?: boolean;
+};
 
 function SidebarScroll({ children }: Pick<TRAppShellSidebarProps, 'children'>) {
   return (
@@ -24,6 +30,7 @@ function SidebarScroll({ children }: Pick<TRAppShellSidebarProps, 'children'>) {
 export function TRAppShellSidebar({
   children,
   className,
+  collapsed = false,
   ...props
 }: TRAppShellSidebarProps) {
   const {
@@ -49,7 +56,11 @@ export function TRAppShellSidebar({
     <aside
       {...props}
       className={mergeClassNames('tr-app-shell-sidebar', className)}
+      data-collapsed={collapsed ? 'true' : 'false'}
       data-sidebar-mode={drawerActive ? 'expanded' : sidebarMode}
+      // Interaction ends when the collapse starts, not when it finishes, so a
+      // focused control cannot keep receiving keys on the way out.
+      inert={collapsed && !drawerActive}
     >
       <SidebarScroll>{children}</SidebarScroll>
     </aside>

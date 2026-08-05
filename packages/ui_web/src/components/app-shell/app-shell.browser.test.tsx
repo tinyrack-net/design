@@ -738,3 +738,147 @@ test('lets a modal scrim cover the sticky header', async () => {
     ),
   ).toBe(backdrop);
 });
+
+function CollapseFixture({
+  collapsed,
+  nested = false,
+}: {
+  collapsed: boolean;
+  nested?: boolean;
+}) {
+  const sidebar = (
+    <TRAppShell.Sidebar aria-label="Collapsible navigation" collapsed={collapsed}>
+      <a href="#overview">Overview</a>
+    </TRAppShell.Sidebar>
+  );
+  if (nested) {
+    return (
+      <TRAppShell.Root>
+        <TRAppShell.Main>
+          <div style={{ display: 'flex' }}>
+            {sidebar}
+            <div>Content</div>
+          </div>
+        </TRAppShell.Main>
+      </TRAppShell.Root>
+    );
+  }
+  return (
+    <TRAppShell.Root mobileSidebar="rail">
+      {sidebar}
+      <TRAppShell.Main>Content</TRAppShell.Main>
+    </TRAppShell.Root>
+  );
+}
+
+// Border and inline size share a duration, so the first `transitionend` is
+// not necessarily the width; wait for the one under test.
+function widthTransitionEnd(sidebar: HTMLElement) {
+  return new Promise<void>((resolve) => {
+    const handle = (event: TransitionEvent) => {
+      if (event.propertyName !== 'inline-size' && event.propertyName !== 'width') {
+        return;
+      }
+      sidebar.removeEventListener('transitionend', handle);
+      resolve();
+    };
+    sidebar.addEventListener('transitionend', handle);
+  });
+}
+
+function sidebarElement() {
+  const sidebar = document.querySelector<HTMLElement>('.tr-app-shell-sidebar');
+  if (sidebar === null) throw new Error('Expected the sidebar to render.');
+  return sidebar;
+}
+
+test('collapses the sidebar over a transition and takes it out of the page', async () => {
+  setMobileMatch(false);
+  const screen = await render(<CollapseFixture collapsed={false} />);
+  const sidebar = sidebarElement();
+  const expanded = sidebar.getBoundingClientRect().width;
+  expect(expanded).toBeGreaterThan(0);
+
+  const transitionEnded = widthTransitionEnd(sidebar);
+  await screen.rerender(<CollapseFixture collapsed />);
+
+  // The surface must still be there on the commit frame: a snap to zero would
+  // mean the width is not animating at all.
+  expect(sidebar.getAttribute('data-collapsed')).toBe('true');
+  expect(sidebar.hasAttribute('inert')).toBe(true);
+  expect(sidebar.getBoundingClientRect().width).toBeGreaterThan(0);
+  await transitionEnded;
+
+  expect(sidebar.getBoundingClientRect().width).toBe(0);
+  expect(getComputedStyle(sidebar).visibility).toBe('hidden');
+  // The link keeps its layout box inside the clip, so visibility — not size —
+  // is what takes it out of the page.
+  const link = document.querySelector<HTMLElement>('.tr-app-shell-sidebar a');
+  expect(link).not.toBeNull();
+  expect(getComputedStyle(link as HTMLElement).visibility).toBe('hidden');
+  vi.restoreAllMocks();
+});
+
+test('restores the collapsed sidebar and its interactive content', async () => {
+  setMobileMatch(false);
+  const screen = await render(<CollapseFixture collapsed />);
+  const sidebar = sidebarElement();
+  expect(sidebar.getBoundingClientRect().width).toBe(0);
+
+  const transitionEnded = widthTransitionEnd(sidebar);
+  await screen.rerender(<CollapseFixture collapsed={false} />);
+  expect(sidebar.hasAttribute('inert')).toBe(false);
+  await transitionEnded;
+
+  expect(sidebar.getBoundingClientRect().width).toBeGreaterThan(0);
+  await expect.element(screen.getByRole('link', { name: 'Overview' })).toBeVisible();
+  vi.restoreAllMocks();
+});
+
+test('keeps a collapsed sidebar out of tab order and pointer targets', async () => {
+  setMobileMatch(false);
+  await render(<CollapseFixture collapsed />);
+  const sidebar = sidebarElement();
+  const link = document.querySelector<HTMLElement>('.tr-app-shell-sidebar a');
+  if (link === null) throw new Error('Expected the sidebar link to render.');
+
+  await userEvent.tab();
+  expect(document.activeElement).not.toBe(link);
+  expect(sidebar.contains(document.activeElement)).toBe(false);
+
+  const bounds = sidebar.getBoundingClientRect();
+  expect(document.elementFromPoint(bounds.left, bounds.top + 1)).not.toBe(link);
+  expect(getComputedStyle(link).visibility).toBe('hidden');
+  vi.restoreAllMocks();
+});
+
+test('animates a sidebar composed inside main and honours reduced motion', async () => {
+  setMobileMatch(false);
+  const screen = await render(<CollapseFixture collapsed={false} nested />);
+  const sidebar = sidebarElement();
+  const expanded = sidebar.getBoundingClientRect().width;
+  expect(expanded).toBeGreaterThan(0);
+  expect(getComputedStyle(sidebar).transitionDuration).toContain('0.16s');
+
+  const transitionEnded = widthTransitionEnd(sidebar);
+  await screen.rerender(<CollapseFixture collapsed nested />);
+  expect(sidebar.getBoundingClientRect().width).toBeGreaterThan(0);
+  await transitionEnded;
+  expect(sidebar.getBoundingClientRect().width).toBe(0);
+
+  const styles = Array.from(document.styleSheets).flatMap((sheet) => {
+    try {
+      return Array.from(sheet.cssRules).map((rule) => rule.cssText);
+    } catch {
+      return [];
+    }
+  });
+  expect(
+    styles.some(
+      (rule) =>
+        rule.includes('prefers-reduced-motion') &&
+        rule.includes('tr-app-shell-sidebar'),
+    ),
+  ).toBe(true);
+  vi.restoreAllMocks();
+});

@@ -28,6 +28,7 @@ type StoryArgs = {
   layout: 'header-first' | 'sidebar-first';
   mobileSidebar: 'drawer' | 'rail';
   open: boolean;
+  sidebarCollapsed: boolean;
   sidebarMode: 'expanded' | 'rail';
 };
 
@@ -246,15 +247,20 @@ export function AppShellPreview({
   onOpenChange,
   onSidebarModeChange,
   open,
+  sidebarCollapsed = false,
   sidebarMode = 'expanded',
   width = 'full',
-}: Omit<StoryArgs, 'controlAppearance' | 'mobileSidebar' | 'open' | 'sidebarMode'> & {
+}: Omit<
+  StoryArgs,
+  'controlAppearance' | 'mobileSidebar' | 'open' | 'sidebarCollapsed' | 'sidebarMode'
+> & {
   contained?: boolean;
   controlAppearance?: StoryArgs['controlAppearance'];
   mobileSidebar?: StoryArgs['mobileSidebar'];
   onOpenChange?: (open: boolean) => void;
   onSidebarModeChange?: (mode: 'expanded' | 'rail') => void;
   open?: boolean;
+  sidebarCollapsed?: boolean;
   sidebarMode?: StoryArgs['sidebarMode'];
   width?: 'full' | 'narrow';
 }) {
@@ -313,7 +319,7 @@ export function AppShellPreview({
           us-east
         </span>
       </TRAppShell.Header>
-      <TRAppShell.Sidebar aria-label={copy.nav}>
+      <TRAppShell.Sidebar aria-label={copy.nav} collapsed={sidebarCollapsed}>
         <WorkspaceSidebar controlAppearance={controlAppearance} />
       </TRAppShell.Sidebar>
       <TRAppShell.Main render={<div />}>
@@ -488,6 +494,7 @@ const meta = {
     layout: 'sidebar-first',
     mobileSidebar: 'drawer',
     open: false,
+    sidebarCollapsed: false,
     sidebarMode: 'expanded',
   },
   argTypes: {
@@ -498,6 +505,7 @@ const meta = {
     },
     layout: { options: ['header-first', 'sidebar-first'], control: 'radio' },
     mobileSidebar: { options: ['drawer', 'rail'], control: 'radio' },
+    sidebarCollapsed: { control: 'boolean' },
     sidebarMode: { options: ['expanded', 'rail'], control: 'radio' },
   },
   render: function Render(args) {

@@ -11,7 +11,9 @@ class _TRAppShellScope extends InheritedWidget {
     required this.mobileDrawerSide,
     required this.onMainScroll,
     required this.pageScroll,
+    required this.railWidth,
     required this.sidebarMode,
+    required this.sidebarWidth,
     required this.shellChrome,
     required super.child,
   });
@@ -25,7 +27,9 @@ class _TRAppShellScope extends InheritedWidget {
   final TRAppShellMobileDrawerSide mobileDrawerSide;
   final ValueChanged<double> onMainScroll;
   final TRAppShellPageScroll pageScroll;
+  final double railWidth;
   final TRAppShellSidebarMode sidebarMode;
+  final double sidebarWidth;
   final TRAppShellChrome shellChrome;
 
   static _TRAppShellScope of(BuildContext context, String part) {
@@ -47,6 +51,8 @@ class _TRAppShellScope extends InheritedWidget {
       mobile != oldWidget.mobile ||
       mobileDrawerSide != oldWidget.mobileDrawerSide ||
       pageScroll != oldWidget.pageScroll ||
+      railWidth != oldWidget.railWidth ||
       sidebarMode != oldWidget.sidebarMode ||
+      sidebarWidth != oldWidget.sidebarWidth ||
       shellChrome != oldWidget.shellChrome;
 }

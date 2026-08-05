@@ -209,6 +209,7 @@ export const appShellPlayground = definePlayground<Record<string, unknown>>({
     layout: 'sidebar-first',
     mobileSidebar: 'drawer',
     open: false,
+    sidebarCollapsed: false,
     sidebarMode: 'expanded',
   },
   argTypes: {
@@ -223,6 +224,7 @@ export const appShellPlayground = definePlayground<Record<string, unknown>>({
     },
     mobileSidebar: { control: 'radio', options: ['drawer', 'rail'] },
     open: { control: 'boolean' },
+    sidebarCollapsed: { control: 'boolean' },
     sidebarMode: { control: 'radio', options: ['expanded', 'rail'] },
   },
   parameters: { playgroundLayout: 'fill-block-wide' },

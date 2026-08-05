@@ -138,9 +138,9 @@ export function ShellControls() {
 
 `Root` は `breakpoint`（`sm` または `lg`）、`layout`（`header-first` または `sidebar-first`）、`mobileSidebar`（`drawer` または `rail`）を受け取ります。ドロワーの状態は `open`、`defaultOpen`、`onOpenChange` で、サイドバーの幅は `sidebarMode`、`defaultSidebarMode`、`onSidebarModeChange` で制御します。埋め込み型のプレビューやアプリでは `portalContainer` を、ポップアップのスタイルには `drawerPopupClassName` を使います。
 
-`Header` はヘッダーランドマークを描画します。`Sidebar` は独立してスクロールする `aside` で、モバイル用ダイアログにもアクセシブルな名前を渡します。`Trigger` はモバイル用ドロワーを開き、`Close` は閉じます。`SidebarToggle` はフォーカスを維持して `aria-expanded` を公開しながら、展開モードとレールモードを切り替えます。`SidebarLabel` はレールモードでも削除されず、視覚的に隠れます。`Main` はメインランドマークと Base UI の `render` コントラクトを提供します。
+`Header` はヘッダーランドマークを描画します。`Sidebar` は独立してスクロールする `aside` で、モバイル用ダイアログにもアクセシブルな名前を渡します。自身のインラインサイズを持つため、展開・折りたたみ・レールへの切り替えといった幅の変化はすべてアニメーションします。`collapsed` を渡すと折りたたみながら即座に `inert` になり、トランジションが終わると表示から外れます。固定幅のボックスで包まないでください。`Trigger` はモバイル用ドロワーを開き、`Close` は閉じます。`SidebarToggle` はフォーカスを維持して `aria-expanded` を公開しながら、展開モードとレールモードを切り替えます。`SidebarLabel` はレールモードでも削除されず、視覚的に隠れます。`Main` はメインランドマークと Base UI の `render` コントラクトを提供します。
 
-安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-header-block-size`、`--tr-app-shell-drawer-block-size` です。`Root` の状態は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-page-scroll`、`data-sidebar-mode` に反映されます。
+安定したスタイルサーフェスは `--tr-app-shell-background`、`--tr-app-shell-sidebar-background`、`--tr-app-shell-sidebar-width`、`--tr-app-shell-sidebar-rail-width`、`--tr-app-shell-header-block-size`、`--tr-app-shell-drawer-block-size` です。`Root` の状態は `data-breakpoint`、`data-layout`、`data-mobile-sidebar`、`data-page-scroll`、`data-sidebar-mode` に反映され、サイドバーには `data-collapsed` と `data-sidebar-mode` が付きます。モーションは `prefers-reduced-motion` に従います。
 
 ## ページスクロール
 

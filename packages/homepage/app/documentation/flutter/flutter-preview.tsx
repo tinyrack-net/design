@@ -47,7 +47,10 @@ function matchingInteractionArgs(
     return matchingArgs(
       current,
       Object.fromEntries(
-        entries.filter(([key]) => key === 'open' || key === 'sidebarMode'),
+        entries.filter(
+          ([key]) =>
+            key === 'open' || key === 'sidebarCollapsed' || key === 'sidebarMode',
+        ),
       ),
     );
   }

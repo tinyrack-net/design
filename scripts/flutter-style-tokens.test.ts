@@ -166,6 +166,7 @@ test('the canonical token source covers Flutter component metrics', () => {
       appShellLgBreakpoint: '64rem',
       appShellSidebarWidth: '18rem',
       appShellRailWidth: '4rem',
+      appShellCollapsedWidth: 0,
       appShellHeaderHeight: '3rem',
     },
   });
