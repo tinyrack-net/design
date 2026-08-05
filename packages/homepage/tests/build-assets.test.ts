@@ -202,7 +202,7 @@ describe('homepage build assets', () => {
     ]) {
       assert(existsSync(join(brandAssetRoot, asset)), `Missing brand asset: ${asset}`);
     }
-    for (const product of ['dotweave', 'tinyauth']) {
+    for (const product of ['coder', 'dotweave', 'tinyauth']) {
       for (const asset of [
         `${product}-app-icon.svg`,
         ...[16, 32, 48, 128, 512].map((size) => `${product}-app-icon-${size}.png`),
