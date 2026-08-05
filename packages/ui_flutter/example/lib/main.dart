@@ -1000,6 +1000,7 @@ Map<String, Object?>? _validateArgs(
       'showActions' ||
       'showDescription' ||
       'showIcon' ||
+      'sidebarCollapsed' ||
       'selected' ||
       'truncate' => value is bool,
       'wrap' => value is bool,

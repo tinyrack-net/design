@@ -331,6 +331,7 @@ function ParityAppShell({ open }: { open: boolean }) {
   const layout = arg('layout', 'sidebar-first') as 'header-first' | 'sidebar-first';
   const mobileSidebar = arg('mobileSidebar', 'drawer') as 'drawer' | 'rail';
   const sidebarMode = arg('sidebarMode', 'expanded') as 'expanded' | 'rail';
+  const sidebarCollapsed = flag('sidebarCollapsed');
   const navigation = {
     en: ['Overview', 'Deployments', 'Services', 'Data stores'],
     ko: ['개요', '배포', '서비스', '데이터 저장소'],
@@ -415,6 +416,7 @@ function ParityAppShell({ open }: { open: boolean }) {
         </TRAppShell.Header>
         <TRAppShell.Sidebar
           aria-label="Example navigation"
+          collapsed={sidebarCollapsed}
           data-parity-part="appShellSidebar"
         >
           <div className="parity-app-shell-sidebar-content">

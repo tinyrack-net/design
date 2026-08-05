@@ -71,6 +71,7 @@ export type VisualParityScenario = {
 export type MotionParityScenario = {
   args: Record<string, boolean | number | string>;
   component:
+    | 'app-shell'
     | 'button'
     | 'animated-number'
     | 'alert-dialog'
@@ -830,6 +831,25 @@ export const motionParityScenarios: MotionParityScenario[] = [
       transition,
     })),
   ),
+  // The parity viewport is 480px wide, where the shell only keeps a sidebar in
+  // the page as an inline rail; the drawer posture unmounts it entirely. One
+  // direction is enough: the reverse shares the same tween, and running both
+  // back to back leaves the second one with no style change to transition.
+  {
+    args: {
+      breakpoint: 'sm',
+      layout: 'sidebar-first',
+      mobileSidebar: 'rail',
+      open: false,
+      sidebarCollapsed: false,
+      sidebarMode: 'rail',
+    },
+    component: 'app-shell' as const,
+    id: 'app-shell-motion-transition-close',
+    nextArgs: { sidebarCollapsed: true },
+    sampleTimes: normalMotionSampleTimes,
+    transition: 'close',
+  },
   ...(['open', 'close'] as const).map((transition) => ({
     args: { open: transition === 'close' },
     component: 'collapsible' as const,
@@ -961,6 +981,14 @@ export const motionParityScenarios: MotionParityScenario[] = [
 ];
 
 export const defaultMotionParityScenarios = motionParityScenarios.filter((scenario) => {
+  // The shell is the one motion source held out of the default sweep. Its
+  // transition moves the whole page layout rather than one control, and the
+  // pooled parity pages reuse a single shell across both themes, which drifts
+  // the sampled frames by a few pixels when the second theme reuses the first
+  // one's warm page. Run it explicitly with TINYRACK_VISUAL_PARITY_SCENARIO
+  // when the collapse itself changes; the animation contract is otherwise held
+  // by app_shell_test.dart and app-shell.browser.test.tsx.
+  if (scenario.component === 'app-shell') return false;
   if (
     scenario.component === 'animated-number' ||
     scenario.component === 'alert-dialog' ||
@@ -1004,6 +1032,7 @@ export const defaultMotionParityScenarios = motionParityScenarios.filter((scenar
 // point at the same scenario component.
 export const motionSourceCoverage = {
   accordion: 'accordion',
+  'app-shell': 'app-shell',
   'alert-dialog': 'alert-dialog',
   'animated-number': 'animated-number',
   button: 'button',
