@@ -410,6 +410,49 @@ void main() {
     expect(size.height, 1);
   });
 
+  testWidgets('separator variants preserve default and muted border colors', (
+    tester,
+  ) async {
+    for (final theme in <ThemeData>[
+      TinyrackTheme.light(),
+      TinyrackTheme.dark(),
+    ]) {
+      Future<Color> separatorColor(TRSeparatorVariant variant) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: TinyrackTheme.light(),
+            darkTheme: TinyrackTheme.dark(),
+            themeMode: theme.brightness == Brightness.light
+                ? ThemeMode.light
+                : ThemeMode.dark,
+            home: Scaffold(body: TRSeparator(variant: variant)),
+          ),
+        );
+        await tester.pumpAndSettle();
+        return tester
+            .widget<ColoredBox>(
+              find.descendant(
+                of: find.byType(TRSeparator),
+                matching: find.byType(ColoredBox),
+              ),
+            )
+            .color;
+      }
+
+      final generated = theme.brightness == Brightness.light
+          ? TRGeneratedColors.light
+          : TRGeneratedColors.dark;
+      expect(
+        await separatorColor(TRSeparatorVariant.defaultVariant),
+        generated.controlBorder,
+      );
+      expect(
+        await separatorColor(TRSeparatorVariant.muted),
+        theme.extension<TinyrackThemeData>()!.border,
+      );
+    }
+  });
+
   testWidgets('vertical separator spans the given min length', (tester) async {
     await tester.pumpWidget(
       _wrapNarrow(

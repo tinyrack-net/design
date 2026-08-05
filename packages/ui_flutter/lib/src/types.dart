@@ -74,6 +74,9 @@ enum TRTextWeight { regular, medium, heading, bold, strong }
 /// The axis a separator divides content along.
 enum TRSeparatorOrientation { horizontal, vertical }
 
+/// The visual emphasis of a separator line.
+enum TRSeparatorVariant { defaultVariant, muted }
+
 /// The placeholder shape a skeleton renders.
 enum TRSkeletonShape { text, rectangle, circle }
 

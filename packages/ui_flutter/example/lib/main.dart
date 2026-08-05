@@ -826,7 +826,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   ],
   'spinner' => ['uiSize', 'variant'],
   'text' => ['align', 'color', 'truncate', 'variant', 'weight'],
-  'separator' => ['orientation'],
+  'separator' => ['orientation', 'variant'],
   'skeleton' => ['animate', 'shape'],
   'avatar' => ['shape', 'uiSize'],
   'fieldset' => ['disabled', 'legend'],
@@ -1792,10 +1792,15 @@ class PreviewComponent extends StatelessWidget {
                 key: measureKey,
                 width: 32,
                 height: 64,
-                child: const Align(
+                child: Align(
                   alignment: Alignment.centerLeft,
                   child: TRSeparator(
                     orientation: TRSeparatorOrientation.vertical,
+                    variant: TRSeparatorVariant.values.byName(
+                      args['variant'] is String
+                          ? args['variant']! as String
+                          : 'defaultVariant',
+                    ),
                   ),
                 ),
               )
@@ -1803,9 +1808,15 @@ class PreviewComponent extends StatelessWidget {
                 key: measureKey,
                 width: 320,
                 height: 32,
-                child: const Align(
+                child: Align(
                   alignment: Alignment.topCenter,
-                  child: TRSeparator(),
+                  child: TRSeparator(
+                    variant: TRSeparatorVariant.values.byName(
+                      args['variant'] is String
+                          ? args['variant']! as String
+                          : 'defaultVariant',
+                    ),
+                  ),
                 ),
               ),
       'skeleton' =>
