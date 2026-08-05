@@ -512,6 +512,272 @@ const componentData: Record<
       },
     ],
   },
+  'inline-suggestions': {
+    title: 'Inline Suggestions',
+    description: {
+      en: 'Offer suggestions for the token being typed inside a text field the caller owns.',
+      ko: '호출하는 쪽이 소유한 텍스트 필드에서 입력 중인 토큰에 대한 제안을 제시해요.',
+      ja: '呼び出し側が所有するテキストフィールドで入力中のトークンに候補を提示します。',
+    },
+    usage:
+      'TRInlineSuggestions<String>(\n  open: trigger != null,\n  sessionKey: trigger?.start,\n  controller: suggestions,\n  items: matches,\n  onSelected: (item) => complete(item.value),\n  child: Focus(\n    onKeyEvent: (node, event) => suggestions.handleKeyEvent(event),\n    child: TRTextField(controller: text, maxLines: 8, minLines: 1),\n  ),\n)',
+    contractIntro: {
+      en: 'Reach for inline suggestions when only part of what someone is typing should be completed, such as a mention or a command in a longer message. Use `TRAutocomplete` when the whole field is the query, and `TRCombobox` when the committed value must come from a list.',
+      ko: '멘션이나 명령처럼 긴 메시지 안에서 입력 중인 일부만 완성해야 할 때 inline suggestions를 쓰세요. 필드 전체가 검색어라면 `TRAutocomplete`를, 확정 값이 반드시 목록에서 나와야 한다면 `TRCombobox`를 쓰세요.',
+      ja: 'メンションやコマンドのように、長い文章の一部だけを補完したい場合に inline suggestions を使ってください。フィールド全体が検索語なら `TRAutocomplete` を、確定値が必ず一覧から選ばれる必要があるなら `TRCombobox` を使ってください。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Ownership', ko: '소유', ja: '所有' },
+        choices: {
+          en: 'The caller keeps its own field, controller, and focus node, and passes them as `child`. This component never builds or reads the field, so a multiline editor keeps every property it already had.',
+          ko: '호출하는 쪽이 필드와 controller, focus node를 그대로 소유하고 `child`로 넘겨요. 이 컴포넌트는 필드를 만들지도 읽지도 않기 때문에, 여러 줄 편집기가 가지고 있던 속성이 그대로 남아요.',
+          ja: '呼び出し側がフィールド、controller、focus node をそのまま所有し、`child` として渡します。このコンポーネントはフィールドを構築も参照もしないため、複数行エディタの既存のプロパティはすべて保たれます。',
+        },
+      },
+      {
+        axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
+        choices: {
+          en: 'A multiline editor consumes the arrow and enter keys itself, so the host calls `controller.handleKeyEvent` first inside its own handler. Anything the list does not consume comes back as `KeyEventResult.ignored`, which leaves Enter-to-send intact. A held modifier is never consumed, so Shift+Enter and Control+Enter stay with the field.',
+          ko: '여러 줄 편집기는 화살표와 Enter 키를 스스로 소비하므로, 호스트가 자신의 핸들러 안에서 `controller.handleKeyEvent`를 먼저 호출해요. 목록이 쓰지 않은 키는 `KeyEventResult.ignored`로 돌아오기 때문에 Enter로 보내기가 그대로 살아 있어요. 수정자 키를 누른 조합은 절대 가져가지 않아서 Shift+Enter와 Control+Enter는 필드에 남아요.',
+          ja: '複数行エディタは矢印キーと Enter キーを自身で消費するため、ホストは自分のハンドラ内でまず `controller.handleKeyEvent` を呼びます。リストが消費しなかったキーは `KeyEventResult.ignored` として返るので、Enter での送信はそのまま機能します。修飾キーを伴う組み合わせは決して消費しないため、Shift+Enter と Control+Enter はフィールドに残ります。',
+        },
+      },
+      {
+        axis: { en: 'Session', ko: '세션', ja: 'セッション' },
+        choices: {
+          en: '`sessionKey` identifies the token being completed. Changing it resets the highlight and clears an earlier dismissal, so Escape hides the current token while a freshly typed one reopens. Results that arrive late for the same session keep the highlighted value rather than its index.',
+          ko: '`sessionKey`는 완성 중인 토큰을 식별해요. 값이 바뀌면 하이라이트가 초기화되고 앞선 닫기도 해제되므로, Escape는 현재 토큰만 감추고 새로 입력한 토큰에서는 다시 열려요. 같은 세션에 늦게 도착한 결과는 인덱스가 아니라 하이라이트된 값을 유지해요.',
+          ja: '`sessionKey` は補完中のトークンを識別します。値が変わるとハイライトが初期化され、以前の非表示も解除されるため、Escape は現在のトークンだけを隠し、新しく入力したトークンでは再び開きます。同じセッションに遅れて届いた結果は、インデックスではなくハイライト中の値を保持します。',
+        },
+      },
+      {
+        axis: { en: 'Status', ko: '상태', ja: '状態' },
+        choices: {
+          en: 'Emptiness is derived from a ready list with no items, so a caller cannot describe a contradictory state. A loading list that still holds results keeps them on screen with a spinner below, which is what stops the list flickering on every keystroke.',
+          ko: '비어 있음은 항목이 없는 ready 목록에서 파생되므로 모순된 상태를 표현할 수 없어요. 이미 결과가 있는 loading 목록은 그 결과를 화면에 남기고 아래에 스피너를 두는데, 이것이 키를 누를 때마다 목록이 깜빡이는 것을 막아줘요.',
+          ja: '空の状態は項目のない ready のリストから導かれるため、矛盾した状態を表現できません。すでに結果を持つ loading のリストはその結果を画面に残し、下にスピナーを表示します。これがキー入力ごとのちらつきを防ぎます。',
+        },
+      },
+      {
+        axis: { en: 'Matching', ko: '매칭', ja: 'マッチング' },
+        choices: {
+          en: 'The caller filters, orders, and scores; this component only renders. `matchedIndices` names the characters of `label` to emphasise, so a consumer highlights a match without naming a color.',
+          ko: '필터링과 정렬, 점수 매기기는 호출하는 쪽이 하고 이 컴포넌트는 그리기만 해요. `matchedIndices`는 강조할 `label`의 문자를 가리키므로, 소비자가 색을 직접 지정하지 않고도 일치 부분을 강조할 수 있어요.',
+          ja: 'フィルタリング、並べ替え、スコア付けは呼び出し側が行い、このコンポーネントは描画のみを担当します。`matchedIndices` は強調する `label` の文字を指すため、利用側は色を指定せずに一致箇所を強調できます。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRInlineSuggestions properties',
+          ko: 'TRInlineSuggestions 속성',
+          ja: 'TRInlineSuggestions のプロパティ',
+        },
+        rows: [
+          {
+            name: 'child',
+            type: 'Widget',
+            purpose: {
+              en: 'The field the caller owns, used verbatim as the trigger and as the position and width anchor.',
+              ko: '호출하는 쪽이 소유한 필드로, 트리거이자 위치와 너비의 기준으로 그대로 쓰여요.',
+              ja: '呼び出し側が所有するフィールドです。トリガーとして、また位置と幅の基準としてそのまま使われます。',
+            },
+          },
+          {
+            name: 'items',
+            type: 'List<TRInlineSuggestionItem<T>>',
+            purpose: {
+              en: 'Rows to offer, already filtered and ordered by the caller.',
+              ko: '호출하는 쪽이 이미 필터링하고 정렬한, 제시할 행이에요.',
+              ja: '呼び出し側が既にフィルタリングし並べ替えた、提示する行です。',
+            },
+          },
+          {
+            name: 'open',
+            type: 'bool',
+            purpose: {
+              en: 'Whether a token is being completed. Fully controlled, because the condition depends on caret state this component cannot observe.',
+              ko: '토큰을 완성 중인지 여부예요. 이 컴포넌트가 볼 수 없는 캐럿 상태에 달려 있어서 완전히 제어형이에요.',
+              ja: 'トークンを補完中かどうかです。このコンポーネントからは観測できないキャレットの状態に依存するため、完全な制御型です。',
+            },
+          },
+          {
+            name: 'sessionKey',
+            type: 'Object? · null',
+            purpose: {
+              en: 'Identity of the token being completed; changing it resets the highlight and clears a dismissal.',
+              ko: '완성 중인 토큰의 식별자예요. 값이 바뀌면 하이라이트가 초기화되고 닫기도 해제돼요.',
+              ja: '補完中のトークンの識別子です。値が変わるとハイライトが初期化され、非表示も解除されます。',
+            },
+          },
+          {
+            name: 'onSelected',
+            type: 'ValueChanged<TRInlineSuggestionItem<T>>',
+            purpose: {
+              en: 'Reports the committed row. The caller performs the text edit with its own offsets.',
+              ko: '확정된 행을 알려줘요. 텍스트 편집은 호출하는 쪽이 자신의 오프셋으로 수행해요.',
+              ja: '確定した行を通知します。テキストの編集は呼び出し側が自身のオフセットで行います。',
+            },
+          },
+          {
+            name: 'status',
+            type: 'TRInlineSuggestionsStatus · ready',
+            purpose: {
+              en: 'Whether the list is settled, still loading, or failed.',
+              ko: '목록이 확정됐는지, 아직 불러오는 중인지, 실패했는지예요.',
+              ja: 'リストが確定済みか、読み込み中か、失敗したかを表します。',
+            },
+          },
+          {
+            name: 'placement',
+            type: 'TRLayerPlacement · topStart',
+            purpose: {
+              en: 'Where the list sits relative to the field; it flips when space runs out.',
+              ko: '필드를 기준으로 목록이 놓이는 위치예요. 공간이 부족하면 반대편으로 뒤집혀요.',
+              ja: 'フィールドを基準としたリストの配置です。余白が足りない場合は反対側へ反転します。',
+            },
+          },
+          {
+            name: 'matchAnchorWidth',
+            type: 'bool · true',
+            purpose: {
+              en: 'Spans the field width instead of the surface default, so the list reads as part of that control.',
+              ko: '기본 표면 너비 대신 필드 너비를 따라가서 목록이 그 컨트롤의 일부처럼 읽혀요.',
+              ja: '既定のサーフェス幅ではなくフィールドの幅に合わせ、リストがそのコントロールの一部として読めるようにします。',
+            },
+          },
+          {
+            name: 'maxVisibleItems',
+            type: 'int · 8',
+            purpose: {
+              en: 'Rows shown before the list scrolls, counted rather than measured so the height follows the reader text size.',
+              ko: '목록이 스크롤되기 전에 보여줄 행 수예요. 픽셀이 아니라 개수라서 높이가 읽는 사람의 글자 크기를 따라가요.',
+              ja: 'スクロールが始まるまでに表示する行数です。ピクセルではなく個数のため、高さは読み手の文字サイズに追従します。',
+            },
+          },
+          {
+            name: 'autoHighlight',
+            type: 'bool · true',
+            purpose: {
+              en: 'Arms the first row so Enter commits without pressing an arrow key first.',
+              ko: '첫 행을 미리 골라 두어 화살표 키 없이도 Enter로 확정할 수 있게 해요.',
+              ja: '最初の行をあらかじめ選択し、矢印キーを押さずに Enter で確定できるようにします。',
+            },
+          },
+          {
+            name: 'acceptOnEnter · acceptOnTab',
+            type: 'bool · true',
+            purpose: {
+              en: 'Whether Enter and Tab commit the highlighted row. Both are separate so a host can leave Enter to sending.',
+              ko: 'Enter와 Tab이 하이라이트된 행을 확정할지 정해요. 둘을 나눠 두어 호스트가 Enter를 보내기 전용으로 남길 수 있어요.',
+              ja: 'Enter と Tab がハイライト行を確定するかどうかです。両者を分けることで、ホストは Enter を送信専用に残せます。',
+            },
+          },
+          {
+            name: 'emptyLabel · loadingLabel · errorLabel',
+            type: 'String',
+            purpose: {
+              en: 'Copy for the three non-collapsing notice rows, supplied by the caller because the package carries no localization delegate.',
+              ko: '접히지 않는 세 가지 안내 행의 문구예요. 패키지에 로컬라이제이션 델리게이트가 없어서 호출하는 쪽이 제공해요.',
+              ja: '折りたたまれない 3 種類の通知行の文言です。パッケージにローカライズのデリゲートがないため、呼び出し側が指定します。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRInlineSuggestionItem properties',
+          ko: 'TRInlineSuggestionItem 속성',
+          ja: 'TRInlineSuggestionItem のプロパティ',
+        },
+        rows: [
+          {
+            name: 'value · label',
+            type: 'T · String',
+            purpose: {
+              en: 'The payload handed back on selection and the primary row text.',
+              ko: '선택 시 돌려주는 값과 행의 기본 텍스트예요.',
+              ja: '選択時に返されるペイロードと、行の主テキストです。',
+            },
+          },
+          {
+            name: 'description · hint · tag',
+            type: 'String? · null',
+            purpose: {
+              en: 'A muted second line, a trailing affordance such as expected arguments, and a short category chip.',
+              ko: '흐린 둘째 줄, 기대하는 인자 같은 뒤쪽 표시, 짧은 분류 칩이에요.',
+              ja: '淡い 2 行目、想定される引数などの末尾表示、短い分類チップです。',
+            },
+          },
+          {
+            name: 'matchedIndices',
+            type: 'List<int> · const []',
+            purpose: {
+              en: 'Characters of `label` to emphasise. The caller owns the matcher; the design system owns the emphasis.',
+              ko: '강조할 `label`의 문자예요. 매칭은 호출하는 쪽이, 강조 표현은 디자인 시스템이 소유해요.',
+              ja: '強調する `label` の文字です。マッチングは呼び出し側が、強調表現はデザインシステムが担います。',
+            },
+          },
+          {
+            name: 'enabled',
+            type: 'bool · true',
+            purpose: {
+              en: 'A disabled row stays visible, renders muted, and is skipped by keyboard navigation and commit.',
+              ko: '비활성 행은 계속 보이되 흐리게 그려지고, 키보드 이동과 확정에서 모두 건너뛰어요.',
+              ja: '無効な行は表示されたまま淡く描画され、キーボード移動と確定の双方でスキップされます。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'TRInlineSuggestionsController members',
+          ko: 'TRInlineSuggestionsController 멤버',
+          ja: 'TRInlineSuggestionsController のメンバー',
+        },
+        rows: [
+          {
+            name: 'handleKeyEvent',
+            type: 'KeyEventResult Function(KeyEvent)',
+            purpose: {
+              en: 'Call this first inside the host field `Focus(onKeyEvent:)`; `ignored` means the host still owns the key.',
+              ko: '호스트 필드의 `Focus(onKeyEvent:)` 안에서 가장 먼저 호출하세요. `ignored`면 그 키는 여전히 호스트 것이에요.',
+              ja: 'ホストフィールドの `Focus(onKeyEvent:)` 内で最初に呼び出します。`ignored` の場合、そのキーは引き続きホストのものです。',
+            },
+          },
+          {
+            name: 'isOpen · highlightIndex · highlightedItem',
+            type: 'bool · int · TRInlineSuggestionItem<T>?',
+            purpose: {
+              en: 'Reads the live list state; `highlightIndex` is -1 when nothing is armed.',
+              ko: '현재 목록 상태를 읽어요. 아무것도 골라 두지 않았다면 `highlightIndex`는 -1이에요.',
+              ja: '現在のリスト状態を読み取ります。何も選択されていない場合、`highlightIndex` は -1 です。',
+            },
+          },
+          {
+            name: 'highlightNext · highlightPrevious · highlightFirst · highlightLast',
+            type: 'void Function()',
+            purpose: {
+              en: 'Moves the highlight, wrapping at each end and skipping disabled rows.',
+              ko: '하이라이트를 옮겨요. 양 끝에서 순환하고 비활성 행은 건너뛰어요.',
+              ja: 'ハイライトを移動します。両端で循環し、無効な行はスキップします。',
+            },
+          },
+          {
+            name: 'commitHighlighted · dismiss',
+            type: 'bool Function() · void Function()',
+            purpose: {
+              en: 'Commits the highlighted row, reporting whether anything was committed, or hides the list until the next session.',
+              ko: '하이라이트된 행을 확정하고 무언가 확정됐는지 알려주거나, 다음 세션까지 목록을 감춰요.',
+              ja: 'ハイライト行を確定して何かが確定されたかを返すか、次のセッションまでリストを非表示にします。',
+            },
+          },
+        ],
+      },
+    ],
+  },
   combobox: {
     title: 'Combobox',
     description: {

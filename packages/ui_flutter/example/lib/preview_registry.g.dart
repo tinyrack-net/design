@@ -28,6 +28,7 @@ const supportedPreviewComponents = <String>{
   'file-tree',
   'form',
   'icon-button',
+  'inline-suggestions',
   'link',
   'menu',
   'menubar',

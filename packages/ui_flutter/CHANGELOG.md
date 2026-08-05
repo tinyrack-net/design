@@ -1,3 +1,37 @@
+## 0.23.0
+
+- Adds `TRInlineSuggestions`, a suggestion layer anchored to a text field the
+  caller keeps. `TRAutocomplete` and `TRCombobox` both build their own field
+  and match against its entire contents, so neither can complete one token of a
+  longer message: a mention or a command typed inside a multiline composer had
+  no component at all, and every consumer that wanted one had to hand-roll an
+  overlay along with its highlight, wrapping keyboard navigation, scroll-into-
+  view, and popup semantics.
+- The component never builds or reads the field. It takes the caller's subtree
+  as `child`, receives rows the caller already filtered and ordered, and reports
+  the committed row through `onSelected` so the caller performs the text edit
+  with the offsets only it knows. `sessionKey` names the token being completed:
+  changing it resets the highlight and clears an earlier dismissal, so Escape
+  hides the current token's list while a freshly typed one reopens.
+- `TRInlineSuggestionsController.handleKeyEvent` is the integration point. A
+  multiline editor consumes the arrow and enter keys itself, so a host calls it
+  first inside its own `Focus(onKeyEvent:)` and falls through to its own
+  behaviour on `KeyEventResult.ignored`. Enter with nothing armed is ignored,
+  which keeps a host's Enter-to-send working over an empty result set.
+- Results that arrive late for the same session keep the highlighted value
+  rather than its index, and a loading list that still holds rows keeps them on
+  screen with a spinner below. Together these stop the list reshuffling or
+  blanking under the reader on every keystroke.
+- A held modifier leaves the key to the host. Shift+Enter opens a line and
+  Control+Enter submits in the editors this exists for, so a list that claimed
+  every Enter would swallow both; the same rule keeps Shift+Tab and
+  Shift+arrow with the field.
+- `TRInlineSuggestionItem.matchedIndices` names the characters to emphasise, so
+  a consumer highlights a fuzzy match without naming a color or a weight.
+- An anchored layer placed above its trigger now grows from the edge nearest
+  that trigger instead of always scaling from its top, so a layer opening
+  upwards no longer appears to pull away from the control it belongs to.
+
 ## 0.22.0
 
 - Pins `splashFactory` to `InkRipple.splashFactory`. Material picks the ink
