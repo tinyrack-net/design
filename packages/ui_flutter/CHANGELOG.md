@@ -1,3 +1,8 @@
+## 0.8.0
+
+- Adds default and muted separator variants so content dividers can use the
+  standard control border or the lower-emphasis semantic border color.
+
 ## 0.7.0
 
 **Breaking:** simplifies the shared control size scale to two steps. This

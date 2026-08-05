@@ -580,9 +580,10 @@ export const radioGroupPlayground = flutterPlayground(
 
 export const separatorPlayground = flutterPlayground(
   'separator',
-  { orientation: 'horizontal' },
+  { orientation: 'horizontal', variant: 'defaultVariant' },
   {
     orientation: { control: 'select', options: ['horizontal', 'vertical'] },
+    variant: { control: 'select', options: ['defaultVariant', 'muted'] },
   },
 );
 

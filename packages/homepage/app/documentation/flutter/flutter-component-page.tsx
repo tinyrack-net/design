@@ -3463,7 +3463,68 @@ class _DeploymentRackState extends State<DeploymentRack> {
       ko: '얇은 시맨틱 선으로 콘텐츠 영역을 구분해요.',
       ja: '細いセマンティックな線でコンテンツ領域を区切ります。',
     },
-    usage: 'const TRSeparator()',
+    usage: 'const TRSeparator(\n  variant: TRSeparatorVariant.muted,\n)',
+    contractIntro: {
+      en: 'Use the default variant between controls or choose `muted` for a lower-emphasis boundary between content regions.',
+      ko: '컨트롤 사이에는 기본 변형을 사용하고, 콘텐츠 영역을 은은하게 나눌 때는 `muted`를 선택하세요.',
+      ja: 'コントロール間には既定のバリアントを使い、コンテンツ領域を控えめに区切る場合は `muted` を選んでください。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Emphasis', ko: '강조', ja: '強調' },
+        choices: {
+          en: '`defaultVariant` uses the control border color; `muted` uses the lower-emphasis semantic border color.',
+          ko: '`defaultVariant`는 컨트롤 테두리 색을 사용하고, `muted`는 더 옅은 시맨틱 테두리 색을 사용해요.',
+          ja: '`defaultVariant` はコントロールの枠線色を使い、`muted` はより控えめなセマンティック枠線色を使います。',
+        },
+      },
+      {
+        axis: { en: 'Orientation', ko: '방향', ja: '方向' },
+        choices: {
+          en: '`horizontal` spans the available width; `vertical` spans its parent height and keeps the configured minimum length.',
+          ko: '`horizontal`은 사용 가능한 너비를 채우고, `vertical`은 부모 높이를 채우면서 지정한 최소 길이를 유지해요.',
+          ja: '`horizontal` は利用可能な幅を満たし、`vertical` は親の高さを満たしながら指定した最小長を保ちます。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRSeparator properties',
+          ko: 'TRSeparator 속성',
+          ja: 'TRSeparator のプロパティ',
+        },
+        rows: [
+          {
+            name: 'orientation',
+            type: 'TRSeparatorOrientation · horizontal',
+            purpose: {
+              en: 'Selects a horizontal or vertical separator.',
+              ko: '가로 또는 세로 구분선을 선택해요.',
+              ja: '水平または垂直の区切り線を選びます。',
+            },
+          },
+          {
+            name: 'minLength',
+            type: 'double? · null',
+            purpose: {
+              en: 'Overrides the minimum length of a vertical separator.',
+              ko: '세로 구분선의 최소 길이를 재정의해요.',
+              ja: '垂直の区切り線の最小長を上書きします。',
+            },
+          },
+          {
+            name: 'variant',
+            type: 'TRSeparatorVariant · defaultVariant',
+            purpose: {
+              en: 'Chooses the standard control border or muted semantic border color.',
+              ko: '표준 컨트롤 테두리와 옅은 시맨틱 테두리 색 중 하나를 선택해요.',
+              ja: '標準のコントロール枠線色または控えめなセマンティック枠線色を選びます。',
+            },
+          },
+        ],
+      },
+    ],
   },
   select: {
     title: 'Select',

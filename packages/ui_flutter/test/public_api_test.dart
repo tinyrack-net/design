@@ -122,6 +122,7 @@ void main() {
       TRSelectFormField,
       TRSelectItem,
       TRSeparator,
+      TRSeparatorVariant,
       TRSkeleton,
       TRSlider,
       TRSliderFormField,
@@ -174,6 +175,6 @@ void main() {
       TRWindowFrameVariant,
     ];
 
-    expect(publicTypes, hasLength(168));
+    expect(publicTypes, hasLength(169));
   });
 }
