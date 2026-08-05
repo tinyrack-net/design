@@ -436,6 +436,9 @@ function dartOutput() {
     return value;
   };
   const layerMeasurements = {
+    brandMarkSm: requiredLayerMeasurement('brand-mark-sm'),
+    brandMarkMd: requiredLayerMeasurement('brand-mark-md'),
+    brandMarkLg: requiredLayerMeasurement('brand-mark-lg'),
     measureXs: requiredLayerMeasurement('measure-xs'),
     measureSm: requiredLayerMeasurement('measure-sm'),
     measureMd: requiredLayerMeasurement('measure-md'),
