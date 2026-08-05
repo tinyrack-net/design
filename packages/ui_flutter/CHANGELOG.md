@@ -1,5 +1,11 @@
 ## 0.13.0
 
+- Sizes and colors icons from tokens. `ThemeData.iconTheme` was unset, so every
+  icon outside a component that installs its own icon theme fell back to
+  Material's 24px default and to `colorScheme.onSurface`. 24 is not a Tinyrack
+  measurement, so those icons rendered off the scale and consumers compensated
+  with size literals. Icons now take `TRControlMetrics.iconSizeOf(TRUiSize.md)`
+  and the `text` token.
 - Adds `TRControlMetrics`, which publishes the geometry every Tinyrack control
   is built from — outer height, inline padding, content gap, icon size, font
   size, and line height per `TRUiSize`, plus the border width that adds to a

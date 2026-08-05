@@ -282,6 +282,18 @@ void main() {
     }
   });
 
+  test('icons are sized and colored from tokens', () {
+    for (final (theme, tokens) in <(ThemeData, TRGeneratedColorTheme)>[
+      (TinyrackTheme.light(), TRGeneratedColors.light),
+      (TinyrackTheme.dark(), TRGeneratedColors.dark),
+    ]) {
+      // An unset icon theme leaves Material's 24px default, which is not a
+      // Tinyrack measurement, so every bare Icon renders off the scale.
+      expect(theme.iconTheme.size, TRControlMetrics.iconSizeOf(TRUiSize.md));
+      expect(theme.iconTheme.color, tokens.text);
+    }
+  });
+
   test('text selection is themed from tokens', () {
     for (final (theme, tokens) in <(ThemeData, TRGeneratedColorTheme)>[
       (TinyrackTheme.light(), TRGeneratedColors.light),
