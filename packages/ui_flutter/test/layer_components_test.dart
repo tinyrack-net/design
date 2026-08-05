@@ -562,9 +562,13 @@ void main() {
         ),
       );
 
-      expect(tester.getSize(_selectTriggers.at(0)), const Size(320, 32));
-      expect(tester.getSize(_selectTriggers.at(1)), const Size(320, 40));
-      final triggerRect = tester.getRect(_selectTriggers.at(0));
+      for (final size in TRUiSize.values) {
+        expect(
+          tester.getSize(_selectTriggers.at(size.index)),
+          Size(320, TRControlMetrics.heightOf(size)),
+        );
+      }
+      final triggerRect = tester.getRect(_selectTriggers.at(TRUiSize.md.index));
       controller.open();
       await tester.pumpAndSettle();
       expect(

@@ -1,6 +1,6 @@
 ---
 title: "コントロールと状態"
-description: "高さや余白をまとめた md または lg のサイズレシピを選び、タスク内のコンポーネントと操作時の状態を揃えます。"
+description: "高さや余白をまとめた sm、md、lg のサイズレシピを選び、タスク内のコンポーネントと操作時の状態を揃えます。"
 section: foundations
 order: 6
 ---
@@ -10,9 +10,9 @@ import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
-## md または lg を選択
+## sm、md、lg を選択
 
-標準的で密度の高い画面には `md`、タッチ操作やタスクの強調に大きなターゲットが必要なら `lg` を使います。視覚的な階層を表すためだけに一つの操作行でサイズを混在させず、`intent` と `appearance` を使ってください。
+標準的で密度の高い画面には `md`、タッチ操作やタスクの強調に大きなターゲットが必要なら `lg` を使います。タイトルバーやツールバーのように、タスクそのものではなくウィンドウの構造に付く高密度なアプリケーションクロムには `sm` を使います。視覚的な階層を表すためだけに一つの操作行でサイズを混在させず、`intent` と `appearance` を使ってください。
 
 ## 完全なサイズレシピ
 
@@ -24,7 +24,7 @@ import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
 隣接するコンポーネントには同じ `uiSize` を設定します。フィールド系コントロールは `TRField.Root` にサイズを設定し、ラベル、説明、エラー、コントロールのレシピを揃えてください。
 
-<div className="grid gap-3" role="list">{(['md', 'lg']).map((uiSize) => <div className="flex flex-wrap items-end gap-2" key={uiSize} role="listitem"><TRField.Root uiSize={uiSize}><TRField.Label>{uiSize} ラック</TRField.Label><TRField.Control placeholder="rack-a" /></TRField.Root><TRButton uiSize={uiSize}>デプロイ</TRButton></div>)}</div>
+<div className="grid gap-3" role="list">{(['sm', 'md', 'lg']).map((uiSize) => <div className="flex flex-wrap items-end gap-2" key={uiSize} role="listitem"><TRField.Root uiSize={uiSize}><TRField.Label>{uiSize} ラック</TRField.Label><TRField.Control placeholder="rack-a" /></TRField.Root><TRButton uiSize={uiSize}>デプロイ</TRButton></div>)}</div>
 
 ## 操作状態を保つ
 
@@ -37,7 +37,7 @@ import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
 ## タッチターゲットを保つ
 
-大きなレシピを配置できるタッチ中心のタスクには `lg` を選びます。小さな見た目が必要でも、操作領域を縮めたりターゲット同士を近づけたりせず、周囲のレイアウト間隔を広げてください。
+大きなレシピを配置できるタッチ中心のタスクには `lg` を選びます。`sm` のレシピは快適なタッチターゲットより小さいため、ポインタで操作するクロムに限って使ってください。他の場所で小さな見た目が必要でも、操作領域を縮めたりターゲット同士を近づけたりせず、周囲のレイアウト間隔を広げてください。
 
 ## 実装
 

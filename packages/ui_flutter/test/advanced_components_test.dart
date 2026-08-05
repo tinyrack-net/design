@@ -828,9 +828,7 @@ void main() {
       expect(saved, 80);
     });
 
-    testWidgets('slider sizes follow the two-step control scale', (
-      tester,
-    ) async {
+    testWidgets('slider sizes follow the shared control scale', (tester) async {
       await tester.pumpWidget(
         _app(
           Column(
@@ -854,6 +852,7 @@ void main() {
           )
           .height;
 
+      expect(controlHeight(TRUiSize.sm), TRGeneratedControlMetrics.smHeight);
       expect(controlHeight(TRUiSize.md), TRGeneratedControlMetrics.mdHeight);
       expect(controlHeight(TRUiSize.lg), TRGeneratedSpacing.xl);
     });
@@ -1295,6 +1294,62 @@ void main() {
       expect(
         tester.getSize(find.byType(MenuBar)).height,
         TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs * 2,
+      );
+    });
+
+    testWidgets('menubar sizes the bar and its triggers to its uiSize', (
+      tester,
+    ) async {
+      for (final size in TRUiSize.values) {
+        await tester.pumpWidget(
+          _app(
+            TRMenubar(
+              uiSize: size,
+              menus: [
+                TRMenubarMenu(
+                  trigger: const Text('File'),
+                  menuChildren: [
+                    TRMenuItem(onPressed: () {}, child: const Text('New')),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+
+        expect(
+          tester.getSize(find.byType(MenuBar)).height,
+          TRControlMetrics.heightOf(size) + TRGeneratedSpacing.xs * 2,
+        );
+        expect(
+          tester.getSize(find.byType(SubmenuButton)).height,
+          TRControlMetrics.heightOf(size),
+        );
+      }
+    });
+
+    testWidgets('menubar menu overrides the size the bar resolves', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenubar(
+            menus: [
+              TRMenubarMenu(
+                uiSize: TRUiSize.sm,
+                trigger: const Text('File'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('New')),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      expect(
+        tester.getSize(find.byType(SubmenuButton)).height,
+        TRControlMetrics.heightOf(TRUiSize.sm),
       );
     });
 

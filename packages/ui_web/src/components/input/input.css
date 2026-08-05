@@ -15,6 +15,12 @@
       background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
   }
 
+  .tr-input[data-ui-size="sm"] {
+    font-size: var(--tinyrack-control-font-size-sm);
+    min-height: var(--tinyrack-control-height-sm);
+    padding-inline: var(--tinyrack-control-padding-inline-sm);
+  }
+
   .tr-input[data-ui-size="lg"] {
     font-size: var(--tinyrack-control-font-size-lg);
     min-height: var(--tinyrack-control-height-lg);
@@ -82,6 +88,15 @@
       border-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
       background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
     width: 100%;
+  }
+
+  .tr-input-group[data-ui-size="sm"] {
+    --_tr-input-group-control-height: var(
+      --tr-input-group-height,
+      var(--tinyrack-control-height-sm)
+    );
+    --_tr-input-group-padding-inline: var(--tinyrack-control-padding-inline-sm);
+    --_tr-input-group-font-size: var(--tinyrack-control-font-size-sm);
   }
 
   .tr-input-group[data-ui-size="lg"] {

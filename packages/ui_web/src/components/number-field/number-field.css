@@ -11,6 +11,12 @@
     gap: var(--tinyrack-space-sm);
   }
 
+  .tr-number-field[data-ui-size="sm"] {
+    --_tr-number-field-height: var(--tinyrack-control-height-sm);
+    --_tr-number-field-padding-inline: var(--tinyrack-control-padding-inline-sm);
+    --_tr-number-field-gap: var(--tinyrack-control-gap-sm);
+  }
+
   .tr-number-field[data-ui-size="lg"] {
     --_tr-number-field-height: var(--tinyrack-control-height-lg);
     --_tr-number-field-padding-inline: var(--tinyrack-control-padding-inline-lg);

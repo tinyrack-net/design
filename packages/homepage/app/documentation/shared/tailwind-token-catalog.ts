@@ -272,6 +272,16 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'typography',
+    runtimeVariable: '--tinyrack-control-font-size-sm',
+    themeVariable: '--text-tinyrack-control-sm',
+  },
+  {
+    group: 'typography',
+    runtimeVariable: '--tinyrack-control-line-height-sm',
+    themeVariable: '--text-tinyrack-control-sm--line-height',
+  },
+  {
+    group: 'typography',
     runtimeVariable: '--tinyrack-control-font-size-md',
     themeVariable: '--text-tinyrack-control-md',
   },
@@ -314,6 +324,11 @@ export const tailwindTokenBridge = [
     group: 'typography',
     runtimeVariable: '--tinyrack-leading-xl',
     themeVariable: '--leading-tinyrack-xl',
+  },
+  {
+    group: 'typography',
+    runtimeVariable: '--tinyrack-control-line-height-sm',
+    themeVariable: '--leading-tinyrack-control-sm',
   },
   {
     group: 'typography',
@@ -427,6 +442,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'spacing',
+    runtimeVariable: '--tinyrack-control-height-sm',
+    themeVariable: '--spacing-tinyrack-control-height-sm',
+  },
+  {
+    group: 'spacing',
     runtimeVariable: '--tinyrack-control-height-md',
     themeVariable: '--spacing-tinyrack-control-height-md',
   },
@@ -437,6 +457,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'spacing',
+    runtimeVariable: '--tinyrack-control-padding-inline-sm',
+    themeVariable: '--spacing-tinyrack-control-padding-inline-sm',
+  },
+  {
+    group: 'spacing',
     runtimeVariable: '--tinyrack-control-padding-inline-md',
     themeVariable: '--spacing-tinyrack-control-padding-inline-md',
   },
@@ -444,6 +469,11 @@ export const tailwindTokenBridge = [
     group: 'spacing',
     runtimeVariable: '--tinyrack-control-padding-inline-lg',
     themeVariable: '--spacing-tinyrack-control-padding-inline-lg',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-control-gap-sm',
+    themeVariable: '--spacing-tinyrack-control-gap-sm',
   },
   {
     group: 'spacing',
@@ -559,6 +589,11 @@ export const tailwindTokenBridge = [
     group: 'spacing',
     runtimeVariable: '--tinyrack-overlay-inline-inset',
     themeVariable: '--spacing-tinyrack-overlay-inline-inset',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-spinner-size-sm',
+    themeVariable: '--spacing-tinyrack-spinner-size-sm',
   },
   {
     group: 'spacing',

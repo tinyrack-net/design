@@ -50,8 +50,17 @@
     width: 100%;
   }
 
+  .tr-slider[data-ui-size="sm"] .tr-slider-control {
+    min-height: var(--tinyrack-control-height-sm);
+  }
+
   .tr-slider[data-ui-size="lg"] .tr-slider-control {
     min-height: var(--tinyrack-space-xl);
+  }
+
+  .tr-slider[data-ui-size="sm"] .tr-slider-thumb {
+    height: var(--tinyrack-space-sm);
+    width: var(--tinyrack-space-sm);
   }
 
   .tr-slider[data-ui-size="lg"] .tr-slider-thumb {

@@ -287,14 +287,17 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
     final controlHeight = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final horizontalPadding = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
     final fontSize = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };
@@ -424,6 +427,7 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
               ),
               SizedBox(
                 width: switch (widget.uiSize) {
+                  TRUiSize.sm => TRGeneratedControlMetrics.smGap,
                   TRUiSize.md => TRGeneratedControlMetrics.mdGap,
                   TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
                 },

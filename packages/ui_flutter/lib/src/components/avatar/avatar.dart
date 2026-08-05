@@ -30,10 +30,12 @@ class TRAvatar extends StatelessWidget {
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
     final size = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final fontSize = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedTypographySizes.size2xs,
       TRUiSize.md => TRGeneratedTypographySizes.xs,
       TRUiSize.lg => TRGeneratedTypographySizes.sm,
     };

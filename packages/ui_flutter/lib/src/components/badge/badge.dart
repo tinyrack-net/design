@@ -23,14 +23,17 @@ class TRBadge extends StatelessWidget {
     final colors = context.tinyrackTheme;
     final borderWidth = TRGeneratedBorders.defaultWidth;
     final vertical = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.size3xs * 2 + borderWidth,
       TRUiSize.md => TRGeneratedSpacing.size3xs * 3 + borderWidth,
       TRUiSize.lg => TRGeneratedSpacing.xs + borderWidth,
     };
     final horizontal = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.xs + borderWidth,
       TRUiSize.md => TRGeneratedSpacing.sm + borderWidth,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap + borderWidth,
     };
     final fontSize = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedTypographySizes.size2xs,
       TRUiSize.md => TRGeneratedTypographySizes.xs,
       TRUiSize.lg => TRGeneratedTypographySizes.sm,
     };

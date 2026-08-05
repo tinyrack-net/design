@@ -14,6 +14,13 @@
     --_tr-field-control-line-height: var(--tinyrack-control-line-height-md);
   }
 
+  .tr-field-control[data-ui-size="sm"] {
+    --_tr-field-control-height: var(--tinyrack-control-height-sm);
+    --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-sm);
+    --_tr-field-control-font-size: var(--tinyrack-control-font-size-sm);
+    --_tr-field-control-line-height: var(--tinyrack-control-line-height-sm);
+  }
+
   .tr-field-control[data-ui-size="lg"] {
     --_tr-field-control-height: var(--tinyrack-control-height-lg);
     --_tr-field-control-padding-x: var(--tinyrack-control-padding-inline-lg);

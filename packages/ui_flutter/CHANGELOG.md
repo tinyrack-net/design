@@ -1,3 +1,19 @@
+## 0.15.0
+
+- Adds `TRUiSize.sm`, a compact step below `md` on the shared control scale, and
+  the `controlMetrics.sm` tokens behind it — 24px height, 8px inline padding,
+  4px gap, 14px icon, and 12px/16px label type. The scale previously started at
+  `md`, so a dense surface such as a desktop title bar had no size to drop to
+  and consumers reached for literals instead. Every control that switches on
+  `TRUiSize` resolves the new step from the same token tier.
+- `TRMenubar` and `TRMenubarMenu` take a `uiSize`. The bar was fixed to `md`, so
+  its height could not follow the rest of a compact chrome row. The bar
+  publishes its size to its menus through an internal scope, and a single
+  `TRMenubarMenu` can still override it.
+- `TRWindowCaptionButton` takes a `uiSize`. It was fixed to `md`, which pinned
+  the minimize, maximize, and close glyphs to a 32px row even when the frame
+  around them was smaller.
+
 ## 0.14.0
 
 - Adds `TRControlMetrics.labelStyleOf`, the text style a control renders its

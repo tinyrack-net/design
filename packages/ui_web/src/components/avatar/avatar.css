@@ -24,6 +24,11 @@
     text-align: center;
   }
 
+  .tr-avatar[data-ui-size="sm"] {
+    --_tr-avatar-size: var(--tinyrack-control-height-sm);
+    --_tr-avatar-font-size: var(--tinyrack-text-2xs);
+  }
+
   .tr-avatar[data-ui-size="md"] {
     --_tr-avatar-size: var(--tinyrack-control-height-md);
     --_tr-avatar-font-size: var(--tinyrack-text-xs);

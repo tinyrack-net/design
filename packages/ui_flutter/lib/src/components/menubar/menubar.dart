@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
+import '../../tokens.dart';
+import '../../types.dart';
 
 /// One top-level menu in a [TRMenubar].
 class TRMenubarMenu extends StatelessWidget {
@@ -14,6 +16,7 @@ class TRMenubarMenu extends StatelessWidget {
     this.focusNode,
     this.onClose,
     this.onOpen,
+    this.uiSize,
     super.key,
   });
 
@@ -25,81 +28,96 @@ class TRMenubarMenu extends StatelessWidget {
   final VoidCallback? onClose;
   final VoidCallback? onOpen;
 
+  /// Overrides the size the enclosing [TRMenubar] resolves for this trigger.
+  final TRUiSize? uiSize;
+
   @override
-  Widget build(BuildContext context) => SubmenuButton(
-    // The bar insets its triggers, so shift the panel down by that inset to
-    // attach it to the bar's bottom edge instead of the trigger's.
-    alignmentOffset: const Offset(0, TRGeneratedSpacing.xs),
-    controller: controller,
-    focusNode: focusNode,
-    menuChildren: enabled
-        ? [
-            TRLayerSurface(
-              kind: TRLayerBoundaryKind.menubar,
-              child: SingleChildScrollView(
-                primary: false,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: menuChildren,
+  Widget build(BuildContext context) {
+    final size =
+        uiSize ?? _TRMenubarScope.maybeOf(context)?.uiSize ?? TRUiSize.md;
+    final height = TRControlMetrics.heightOf(size);
+    return SubmenuButton(
+      // The bar insets its triggers, so shift the panel down by that inset to
+      // attach it to the bar's bottom edge instead of the trigger's.
+      alignmentOffset: const Offset(0, TRGeneratedSpacing.xs),
+      controller: controller,
+      focusNode: focusNode,
+      menuChildren: enabled
+          ? [
+              TRLayerSurface(
+                kind: TRLayerBoundaryKind.menubar,
+                child: SingleChildScrollView(
+                  primary: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: menuChildren,
+                  ),
                 ),
               ),
-            ),
-          ]
-        : const [],
-    menuStyle: TRLayerStyles.menu(context),
-    onClose: enabled ? onClose : null,
-    onOpen: enabled ? onOpen : null,
-    style: ButtonStyle(
-      alignment: Alignment.center,
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        final colors = context.tinyrackTheme;
-        if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
-        if (states.contains(WidgetState.focused) ||
-            states.contains(WidgetState.hovered)) {
-          return colors.surfaceHover;
-        }
-        return Colors.transparent;
-      }),
-      fixedSize: const WidgetStatePropertyAll(
-        Size.fromHeight(TRGeneratedControlMetrics.mdHeight),
-      ),
-      minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.mdHeight),
-      ),
-      maximumSize: const WidgetStatePropertyAll(
-        Size(double.infinity, TRGeneratedControlMetrics.mdHeight),
-      ),
-      padding: const WidgetStatePropertyAll(
-        EdgeInsets.symmetric(
-          horizontal: TRGeneratedControlMetrics.mdPaddingInline,
+            ]
+          : const [],
+      menuStyle: TRLayerStyles.menu(context),
+      onClose: enabled ? onClose : null,
+      onOpen: enabled ? onOpen : null,
+      style: ButtonStyle(
+        alignment: Alignment.center,
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          final colors = context.tinyrackTheme;
+          if (states.contains(WidgetState.pressed)) {
+            return colors.surfacePressed;
+          }
+          if (states.contains(WidgetState.focused) ||
+              states.contains(WidgetState.hovered)) {
+            return colors.surfaceHover;
+          }
+          return Colors.transparent;
+        }),
+        fixedSize: WidgetStatePropertyAll(Size.fromHeight(height)),
+        minimumSize: WidgetStatePropertyAll(Size(0, height)),
+        maximumSize: WidgetStatePropertyAll(Size(double.infinity, height)),
+        padding: WidgetStatePropertyAll(
+          EdgeInsets.symmetric(
+            horizontal: TRControlMetrics.inlinePaddingOf(size),
+          ),
         ),
-      ),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+          ),
         ),
-      ),
-      side: const WidgetStatePropertyAll(BorderSide(color: Colors.transparent)),
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textStyle: WidgetStatePropertyAll(
-        TRGeneratedTextStyles.bodySm.copyWith(
-          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+        side: const WidgetStatePropertyAll(
+          BorderSide(color: Colors.transparent),
         ),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        textStyle: WidgetStatePropertyAll(
+          TRGeneratedTextStyles.bodySm.copyWith(
+            fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+            fontSize: TRControlMetrics.fontSizeOf(size),
+          ),
+        ),
+        visualDensity: VisualDensity.standard,
       ),
-      visualDensity: VisualDensity.standard,
-    ),
-    child: trigger,
-  );
+      child: trigger,
+    );
+  }
 }
 
 // @tinyrack-preview menubar
 /// A horizontal group of menus with Material arrow-key coordination.
 class TRMenubar extends StatelessWidget {
-  const TRMenubar({required this.menus, this.semanticLabel, super.key});
+  const TRMenubar({
+    required this.menus,
+    this.semanticLabel,
+    this.uiSize = TRUiSize.md,
+    super.key,
+  });
 
   final List<TRMenubarMenu> menus;
   final String? semanticLabel;
+
+  /// Control size every [TRMenubarMenu] in this bar resolves by default.
+  final TRUiSize uiSize;
 
   @override
   Widget build(BuildContext context) {
@@ -107,24 +125,40 @@ class TRMenubar extends StatelessWidget {
     return Semantics(
       container: true,
       label: semanticLabel,
-      child: SizedBox(
-        height: TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs * 2,
-        child: MenuBar(
-          style: MenuStyle(
-            backgroundColor: WidgetStatePropertyAll(colors.surface),
-            elevation: const WidgetStatePropertyAll(0),
-            padding: const WidgetStatePropertyAll(
-              EdgeInsets.all(TRGeneratedSpacing.xs),
-            ),
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(TRGeneratedRadii.lg),
+      child: _TRMenubarScope(
+        uiSize: uiSize,
+        child: SizedBox(
+          height: TRControlMetrics.heightOf(uiSize) + TRGeneratedSpacing.xs * 2,
+          child: MenuBar(
+            style: MenuStyle(
+              backgroundColor: WidgetStatePropertyAll(colors.surface),
+              elevation: const WidgetStatePropertyAll(0),
+              padding: const WidgetStatePropertyAll(
+                EdgeInsets.all(TRGeneratedSpacing.xs),
+              ),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.lg),
+                ),
               ),
             ),
+            children: menus,
           ),
-          children: menus,
         ),
       ),
     );
   }
+}
+
+class _TRMenubarScope extends InheritedWidget {
+  const _TRMenubarScope({required this.uiSize, required super.child});
+
+  final TRUiSize uiSize;
+
+  static _TRMenubarScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<_TRMenubarScope>();
+
+  @override
+  bool updateShouldNotify(_TRMenubarScope oldWidget) =>
+      uiSize != oldWidget.uiSize;
 }

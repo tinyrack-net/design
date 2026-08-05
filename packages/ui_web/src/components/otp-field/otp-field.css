@@ -15,6 +15,11 @@
     padding: 0;
   }
 
+  .tr-otp-field[data-ui-size="sm"] {
+    --_tr-otp-field-height: var(--tinyrack-control-height-sm);
+    --_tr-otp-field-gap: var(--tinyrack-control-gap-sm);
+  }
+
   .tr-otp-field[data-ui-size="lg"] {
     --_tr-otp-field-height: var(--tinyrack-control-height-lg);
     --_tr-otp-field-gap: var(--tinyrack-control-gap-md);

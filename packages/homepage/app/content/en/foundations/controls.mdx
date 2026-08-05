@@ -1,6 +1,6 @@
 ---
 title: "Controls and states"
-description: "Choose a complete md or lg control recipe, align components across a task, and preserve every interaction state."
+description: "Choose a complete sm, md, or lg control recipe, align components across a task, and preserve every interaction state."
 section: foundations
 order: 6
 ---
@@ -10,9 +10,9 @@ import { TRCode } from '@tinyrack/ui/components/code';
 import { TRTable } from '@tinyrack/ui/components/table';
 import { tinyrackControlMetrics } from '@tinyrack/ui/core';
 
-## Choose md or lg
+## Choose sm, md, or lg
 
-Use `md` for the default compact operational screen and `lg` when touch comfort or task emphasis needs a larger target. Do not mix sizes in one action row merely to express visual hierarchy; use `intent` and `appearance` for that.
+Use `md` for the default compact operational screen and `lg` when touch comfort or task emphasis needs a larger target. Use `sm` for dense application chrome such as a title bar or a toolbar, where the control sits beside window furniture rather than inside the task. Do not mix sizes in one action row merely to express visual hierarchy; use `intent` and `appearance` for that.
 
 ## Apply the complete size recipe
 
@@ -24,7 +24,7 @@ A size changes height, inline padding, gap, font size, and line height together.
 
 Set the same `uiSize` on adjacent components. Field-based controls take it on `TRField.Root`, where the field recipe can coordinate label, description, error, and control.
 
-<div className="grid gap-3" role="list">{(['md', 'lg']).map((uiSize) => <div className="flex flex-wrap items-end gap-2" key={uiSize} role="listitem"><TRField.Root uiSize={uiSize}><TRField.Label>{uiSize} rack</TRField.Label><TRField.Control placeholder="rack-a" /></TRField.Root><TRButton uiSize={uiSize}>Deploy</TRButton></div>)}</div>
+<div className="grid gap-3" role="list">{(['sm', 'md', 'lg']).map((uiSize) => <div className="flex flex-wrap items-end gap-2" key={uiSize} role="listitem"><TRField.Root uiSize={uiSize}><TRField.Label>{uiSize} rack</TRField.Label><TRField.Control placeholder="rack-a" /></TRField.Root><TRButton uiSize={uiSize}>Deploy</TRButton></div>)}</div>
 
 ## Preserve interaction states
 
@@ -37,7 +37,7 @@ Use component props and state attributes rather than reproducing these states wi
 
 ## Keep touch targets usable
 
-Choose `lg` for touch-first tasks when the larger recipe fits. If a compact visual is required, add layout space around the control without shrinking its interactive box or placing targets too close together.
+Choose `lg` for touch-first tasks when the larger recipe fits. The `sm` recipe is below a comfortable touch target, so reserve it for pointer-driven chrome. If a compact visual is required elsewhere, add layout space around the control without shrinking its interactive box or placing targets too close together.
 
 ## Implementation
 

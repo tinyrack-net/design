@@ -1280,6 +1280,15 @@ class _RackFormState extends State<RackForm> {
               ja: '支援技術にアプリケーションコマンドグループの名前を伝えます。',
             },
           },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Sets the control size every menu in this bar resolves by default. Use `TRUiSize.sm` for dense application chrome such as a title bar.',
+              ko: '이 바의 모든 메뉴가 기본으로 사용할 컨트롤 크기를 정해요. 제목 표시줄처럼 밀도 높은 애플리케이션 크롬에는 `TRUiSize.sm`을 사용해요.',
+              ja: 'このバー内のすべてのメニューが既定で解決するコントロールサイズを指定します。タイトルバーのような高密度なアプリケーションクロムには `TRUiSize.sm` を使います。',
+            },
+          },
         ],
       },
       {
@@ -1341,6 +1350,15 @@ class _RackFormState extends State<RackForm> {
               en: 'Reports this menu opening and closing.',
               ko: '이 메뉴가 열리고 닫힐 때 알려 줘요.',
               ja: 'このメニューが開閉したときに通知します。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize? · null',
+            purpose: {
+              en: 'Overrides the size the enclosing bar resolves for this trigger. Leave it unset so the bar keeps one size across its menus.',
+              ko: '이 트리거에 한해 바가 정한 크기를 재정의해요. 바 전체가 한 크기를 유지하도록 보통은 설정하지 마세요.',
+              ja: 'このトリガーに限り、バーが解決したサイズを上書きします。バー全体で1つのサイズを保つため、通常は設定しないでください。',
             },
           },
         ],
@@ -4850,6 +4868,15 @@ class _AlignmentBarState extends State<AlignmentBar> {
               en: 'Chooses standard window marks or neutral expand-and-collapse corner glyphs.',
               ko: '표준 창 표시 또는 중립 확장·축소 모서리 글리프를 선택해요.',
               ja: '標準のウィンドウ記号またはニュートラルな展開・縮小コーナーグリフを選びます。',
+            },
+          },
+          {
+            name: 'TRWindowCaptionButton.uiSize',
+            type: 'TRUiSize · TRUiSize.md',
+            purpose: {
+              en: 'Sets the control size of the glyph and its hit target. Match it to the height of the row the caption buttons sit in.',
+              ko: '글리프와 클릭 영역의 컨트롤 크기를 정해요. 캡션 버튼이 놓인 행의 높이에 맞추세요.',
+              ja: 'グリフとヒット領域のコントロールサイズを指定します。キャプションボタンが並ぶ行の高さに合わせてください。',
             },
           },
           {
