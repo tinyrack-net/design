@@ -143,3 +143,36 @@ test.each([
   expect(style.minBlockSize).toBe(minBlockSize);
   expect(style.paddingInlineStart).toBe(paddingInline);
 });
+
+test('a ghost textarea drops only its resting chrome', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRTextarea aria-label="Solid notes" />
+      <TRTextarea appearance="ghost" aria-label="Ghost notes" />
+      <TRTextarea appearance="ghost" aria-invalid="true" aria-label="Ghost invalid" />
+    </div>,
+  );
+  const solid = document.querySelector<HTMLTextAreaElement>(
+    '[aria-label="Solid notes"]',
+  );
+  const ghost = document.querySelector<HTMLTextAreaElement>(
+    '[aria-label="Ghost notes"]',
+  );
+  const invalid = document.querySelector<HTMLTextAreaElement>(
+    '[aria-label="Ghost invalid"]',
+  );
+  if (!solid || !ghost || !invalid) throw new Error('textareas did not render');
+
+  const solidStyle = getComputedStyle(solid);
+  const ghostStyle = getComputedStyle(ghost);
+  expect(solidStyle.backgroundColor).toBe('rgb(255, 255, 255)');
+  expect(ghostStyle.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(ghostStyle.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+
+  // Same border box, so the appearance swap never moves the field.
+  expect(ghostStyle.borderTopWidth).toBe(solidStyle.borderTopWidth);
+
+  await expect
+    .poll(() => getComputedStyle(invalid).borderTopColor)
+    .toBe('rgb(220, 38, 38)');
+});

@@ -702,3 +702,40 @@ test('renders and hydrates the Select contract without recovery', async () => {
   await act(async () => root.unmount());
   host.remove();
 });
+
+test('a ghost select trigger drops only its resting chrome', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRSelect.Root defaultValue="alpha">
+        <TRSelect.Trigger appearance="ghost" aria-label="Ghost choice">
+          <TRSelect.Value />
+        </TRSelect.Trigger>
+        <TRSelect.Portal>
+          <TRSelect.Positioner>
+            <TRSelect.Popup>
+              <TRSelect.List>
+                <TRSelect.Item value="alpha">
+                  <TRSelect.ItemText>Alpha</TRSelect.ItemText>
+                </TRSelect.Item>
+              </TRSelect.List>
+            </TRSelect.Popup>
+          </TRSelect.Positioner>
+        </TRSelect.Portal>
+      </TRSelect.Root>
+    </div>,
+  );
+  const trigger = document.querySelector<HTMLElement>('.tr-select-trigger');
+  if (!trigger) throw new Error('trigger did not render');
+
+  expect(trigger.dataset['appearance']).toBe('ghost');
+  const resting = getComputedStyle(trigger);
+  expect(resting.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(resting.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+
+  // An open trigger stays anchored even once focus moves into the popup.
+  await userEvent.click(trigger);
+  await expect.poll(() => trigger.hasAttribute('data-popup-open')).toBe(true);
+  await expect
+    .poll(() => getComputedStyle(trigger).backgroundColor)
+    .toBe('rgb(219, 234, 254)');
+});

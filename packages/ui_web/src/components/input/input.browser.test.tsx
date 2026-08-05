@@ -276,3 +276,42 @@ test('renders and hydrates a native input without changing its form contract', a
   host.remove();
   actEnvironment.IS_REACT_ACT_ENVIRONMENT = false;
 });
+
+test('a ghost input drops only its resting chrome', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRInput aria-label="Solid rack" />
+      <TRInput appearance="ghost" aria-label="Ghost rack" />
+      <TRInput appearance="ghost" aria-invalid="true" aria-label="Ghost invalid" />
+    </div>,
+  );
+  const solid = page.getByRole('textbox', { name: 'Solid rack' }).element();
+  const ghost = page.getByRole('textbox', { name: 'Ghost rack' }).element();
+  const invalid = page.getByRole('textbox', { name: 'Ghost invalid' }).element();
+
+  const solidStyle = getComputedStyle(solid);
+  const ghostStyle = getComputedStyle(ghost);
+  expect(solidStyle.backgroundColor).toBe('rgb(255, 255, 255)');
+  expect(ghostStyle.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(ghostStyle.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+
+  // The border box is kept, so swapping appearance never moves the field.
+  expect(ghostStyle.borderTopWidth).toBe(solidStyle.borderTopWidth);
+  expect(ghostStyle.minHeight).toBe(solidStyle.minHeight);
+
+  // Invalid still reads through a ghost frame.
+  await expect
+    .poll(() => getComputedStyle(invalid).borderTopColor)
+    .toBe('rgb(220, 38, 38)');
+
+  // Focus emphasis stays the field's own job, not the host surface's. The
+  // background is polled because it transitions in.
+  await userEvent.tab();
+  expect(document.activeElement).toBe(solid);
+  await userEvent.tab();
+  expect(document.activeElement).toBe(ghost);
+  expect(getComputedStyle(ghost).outlineColor).toBe('rgb(37, 99, 235)');
+  await expect
+    .poll(() => getComputedStyle(ghost).backgroundColor)
+    .toBe('rgb(255, 255, 255)');
+});

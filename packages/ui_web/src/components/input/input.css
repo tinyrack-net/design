@@ -65,6 +65,43 @@
     opacity: var(--tinyrack-opacity-disabled);
   }
 
+  /* Ghost drops only the resting frame. Hover, focus, and invalid emphasis are
+     still painted here, and the border box is kept at its normal width so
+     swapping appearance never moves the field. */
+  .tr-input[data-appearance="ghost"] {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .tr-input[data-appearance="ghost"]:hover:not(
+    :disabled,
+    [data-disabled],
+    [readonly],
+    [aria-invalid="true"],
+    [data-invalid],
+    :invalid,
+    :focus-visible
+  ) {
+    background: var(--tinyrack-surface-hover);
+    border-color: transparent;
+  }
+
+  .tr-input[data-appearance="ghost"]:focus-visible {
+    background: var(--tinyrack-surface);
+  }
+
+  .tr-input[data-appearance="ghost"]:read-only {
+    background: transparent;
+  }
+
+  .tr-input[data-appearance="ghost"]:is(
+    [aria-invalid="true"],
+    [data-invalid],
+    :invalid
+  ) {
+    border-color: var(--tinyrack-danger-border);
+  }
+
   .tr-input-group {
     --_tr-input-group-control-height: var(
       --tr-input-group-height,
@@ -136,6 +173,40 @@
     .tr-input-group-input:is([aria-invalid="true"], [data-invalid], :invalid)
   ):focus-within {
     outline-color: var(--tinyrack-danger-border);
+  }
+
+  /* The group owns the frame, so ghost is resolved on the group rather than on
+     the input it wraps. Combobox and autocomplete reuse these rules. */
+  .tr-input-group[data-appearance="ghost"] {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .tr-input-group[data-appearance="ghost"]:hover:not(
+    :has(.tr-input-group-input:is(:disabled, [readonly])),
+    :focus-within,
+    [data-popup-open]
+  ) {
+    background: var(--tinyrack-surface-hover);
+    border-color: transparent;
+  }
+
+  .tr-input-group[data-appearance="ghost"]:focus-within {
+    background: var(--tinyrack-surface);
+  }
+
+  .tr-input-group[data-appearance="ghost"][data-popup-open] {
+    background: var(--tinyrack-surface-selected);
+  }
+
+  .tr-input-group[data-appearance="ghost"]:has(.tr-input-group-input:read-only) {
+    background: transparent;
+  }
+
+  .tr-input-group[data-appearance="ghost"]:has(
+    .tr-input-group-input:is([aria-invalid="true"], [data-invalid], :invalid)
+  ) {
+    border-color: var(--tinyrack-danger-border);
   }
 
   .tr-input-group .tr-input-group-input.tr-input {

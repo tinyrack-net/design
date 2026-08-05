@@ -9,11 +9,13 @@ import {
   useRef,
   useState,
 } from 'react';
+import type { TRFieldAppearance } from '../../core/field-appearance.js';
 import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
 export type TRNumberFieldRootProps = ComponentProps<typeof BaseNumberField.Root> & {
   uiSize?: TRControlUiSize;
+  appearance?: TRFieldAppearance;
 };
 
 function setRef<Value>(ref: Ref<Value> | undefined, value: Value | null) {
@@ -25,6 +27,7 @@ function setRef<Value>(ref: Ref<Value> | undefined, value: Value | null) {
 }
 
 export function TRNumberFieldRoot({
+  appearance = 'solid',
   className,
   defaultValue,
   inputRef,
@@ -73,6 +76,7 @@ export function TRNumberFieldRoot({
     <BaseNumberField.Root
       {...props}
       className={mergeComponentClassName('tr-number-field', className)}
+      data-appearance={appearance}
       data-ui-size={uiSize}
       inputRef={mergedInputRef}
       key={resetVersion}

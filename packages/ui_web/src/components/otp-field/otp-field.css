@@ -61,6 +61,23 @@
     outline-color: var(--tinyrack-danger-border);
   }
 
+  /* Ghost drops the resting frame on every slot. The focus-visible rule above
+     still paints the active slot's border, and the invalid rule still wins,
+     both by matching later than these. */
+  .tr-otp-field[data-appearance="ghost"] .tr-otp-field-digit {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .tr-otp-field[data-appearance="ghost"] .tr-otp-field-digit:focus-visible {
+    background: var(--tinyrack-surface);
+    border-color: var(--tr-otp-field-focus-color, var(--tinyrack-focus));
+  }
+
+  .tr-otp-field[data-appearance="ghost"][data-invalid] .tr-otp-field-digit {
+    border-color: var(--tinyrack-danger-border);
+  }
+
   .tr-otp-field-digit:disabled {
     opacity: var(--tr-otp-field-disabled-opacity, var(--tinyrack-opacity-disabled));
     cursor: not-allowed;

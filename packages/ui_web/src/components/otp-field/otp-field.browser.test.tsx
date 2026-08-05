@@ -330,3 +330,24 @@ test('forwards uiSize to the root and rescales segment height', async () => {
   const segments = document.querySelectorAll<HTMLInputElement>('.tr-otp-field-digit');
   expect(segments[0]?.getBoundingClientRect().height).toBe(32);
 });
+
+test('ghost OTP slots stay flat until they are invalid', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TROTPField.Root appearance="ghost" aria-label="Ghost code" length={2}>
+        <TROTPField.Input />
+        <TROTPField.Input />
+      </TROTPField.Root>
+    </div>,
+  );
+  const root = document.querySelector<HTMLElement>('.tr-otp-field');
+  const digits = document.querySelectorAll<HTMLElement>('.tr-otp-field-digit');
+  if (!root || digits.length === 0) throw new Error('otp field did not render');
+
+  expect(root.dataset['appearance']).toBe('ghost');
+  for (const digit of digits) {
+    const style = getComputedStyle(digit);
+    expect(style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(style.borderTopColor).toBe('rgba(0, 0, 0, 0)');
+  }
+});

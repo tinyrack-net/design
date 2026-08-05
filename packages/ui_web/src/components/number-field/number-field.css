@@ -114,4 +114,32 @@
     cursor: not-allowed;
     opacity: var(--tinyrack-opacity-disabled);
   }
+
+  /* Ghost drops the resting frame on the input and its steppers together, so
+     the control reads as one flat unit until it is hovered or focused. Placed
+     last because these descendant selectors have to outrank the state rules
+     above them. */
+  .tr-number-field[data-appearance="ghost"]
+  :is(.tr-number-field-input, .tr-number-field-increment, .tr-number-field-decrement) {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  .tr-number-field[data-appearance="ghost"]
+    :is(.tr-number-field-increment, .tr-number-field-decrement):hover:not(:disabled) {
+    background: var(--tinyrack-surface-hover);
+  }
+
+  .tr-number-field[data-appearance="ghost"] .tr-number-field-input:focus-visible {
+    background: var(--tinyrack-surface);
+  }
+
+  .tr-number-field[data-appearance="ghost"] .tr-number-field-input:read-only {
+    background: transparent;
+  }
+
+  .tr-number-field[data-appearance="ghost"]
+    .tr-number-field-input:is([aria-invalid="true"], [data-invalid], :invalid) {
+    border-color: var(--tinyrack-danger-border);
+  }
 }
