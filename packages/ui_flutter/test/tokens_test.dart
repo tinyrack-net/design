@@ -1,0 +1,88 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+void main() {
+  group('TRControlMetrics', () {
+    test('publishes the geometry of a control at every size', () {
+      for (final size in TRUiSize.values) {
+        expect(TRControlMetrics.heightOf(size), greaterThan(0));
+        expect(TRControlMetrics.iconSizeOf(size), greaterThan(0));
+        expect(TRControlMetrics.gapOf(size), greaterThan(0));
+        expect(TRControlMetrics.inlinePaddingOf(size), greaterThan(0));
+        expect(TRControlMetrics.fontSizeOf(size), greaterThan(0));
+      }
+      expect(
+        TRControlMetrics.heightOf(TRUiSize.lg),
+        greaterThan(TRControlMetrics.heightOf(TRUiSize.md)),
+      );
+      expect(TRControlMetrics.borderWidth, greaterThan(0));
+    });
+
+    testWidgets('describes the button it is published for', (tester) async {
+      for (final size in TRUiSize.values) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: TinyrackTheme.light(),
+            home: Scaffold(
+              body: Center(
+                child: TRButton(
+                  uiSize: size,
+                  onPressed: () {},
+                  child: const Text('Label'),
+                ),
+              ),
+            ),
+          ),
+        );
+
+        // A consumer laying out its own control strip needs the height to be
+        // the height, and the inline padding to account for the border the
+        // button draws, or it measures a control that does not exist.
+        final button = tester.getSize(find.byType(TRButton));
+        expect(button.height, TRControlMetrics.heightOf(size));
+
+        final label = tester.getSize(find.text('Label'));
+        expect(
+          button.width,
+          moreOrLessEquals(
+            label.width +
+                2 *
+                    (TRControlMetrics.inlinePaddingOf(size) +
+                        TRControlMetrics.borderWidth),
+            epsilon: 0.5,
+          ),
+        );
+      }
+    });
+
+    testWidgets('sizes the icon of an icon button', (tester) async {
+      for (final size in TRUiSize.values) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: TinyrackTheme.light(),
+            home: Scaffold(
+              body: Center(
+                child: TRIconButton(
+                  uiSize: size,
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                  label: 'Add',
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(
+          tester.getSize(find.byType(TRIconButton)),
+          Size.square(TRControlMetrics.heightOf(size)),
+        );
+        expect(
+          IconTheme.of(tester.element(find.byIcon(Icons.add))).size,
+          TRControlMetrics.iconSizeOf(size),
+        );
+      }
+    });
+  });
+}

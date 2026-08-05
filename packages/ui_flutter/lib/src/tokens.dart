@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'generated/tokens.g.dart';
+import 'types.dart';
 
 /// Platform-resolved spacing values in logical pixels.
 abstract final class TRSpacing {
@@ -52,6 +53,53 @@ abstract final class TRMeasurements {
   static const overlayWidthMd = TRGeneratedMeasurements.overlayWidthMd;
   static const overlayInlineInset = TRGeneratedMeasurements.overlayInlineInset;
   static const overlayClosedScale = TRGeneratedMeasurements.overlayClosedScale;
+}
+
+/// Platform-resolved geometry of a Tinyrack control at each [TRUiSize].
+///
+/// A layout that has to decide how many controls fit a width, or align its own
+/// content to a control, needs the same numbers the controls are built from.
+/// Reading them here keeps that arithmetic on the design system instead of on
+/// a measurement or a copied literal.
+abstract final class TRControlMetrics {
+  /// Outer height, and the side of a square icon control.
+  static double heightOf(TRUiSize size) => switch (size) {
+    TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
+    TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+  };
+
+  /// Inset between the control edge and its content, excluding the border.
+  static double inlinePaddingOf(TRUiSize size) => switch (size) {
+    TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
+    TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+  };
+
+  /// Space between adjacent pieces of content inside one control.
+  static double gapOf(TRUiSize size) => switch (size) {
+    TRUiSize.md => TRGeneratedControlMetrics.mdGap,
+    TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
+  };
+
+  /// Size of an icon rendered inside a control.
+  static double iconSizeOf(TRUiSize size) => switch (size) {
+    TRUiSize.md => TRGeneratedControlMetrics.mdIconSize,
+    TRUiSize.lg => TRGeneratedControlMetrics.lgIconSize,
+  };
+
+  /// Font size of the label of a control.
+  static double fontSizeOf(TRUiSize size) => switch (size) {
+    TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
+    TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
+  };
+
+  /// Line height of the label of a control.
+  static double lineHeightOf(TRUiSize size) => switch (size) {
+    TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
+    TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,
+  };
+
+  /// Width of the border a control draws, which adds to its outer width.
+  static const borderWidth = TRGeneratedBorders.defaultWidth;
 }
 
 /// Platform-resolved typography roles without semantic foreground colors.
