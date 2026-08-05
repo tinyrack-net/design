@@ -856,6 +856,50 @@ void main() {
       expect(selected, 'leaf');
     });
 
+    testWidgets('tree navigation lays out group and leaf descriptions', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(240, 400));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        _app(
+          const SizedBox(
+            width: 200,
+            child: TRTreeNav<String>(
+              items: [
+                TRTreeNavGroup(
+                  value: 'group',
+                  label: Text('Workspace'),
+                  description: Text('Remote host · /repositories/workspace'),
+                  initiallyExpanded: true,
+                  children: [
+                    TRTreeNavLeaf(
+                      value: 'leaf',
+                      label: Text('main'),
+                      description: Text('/repositories/workspace'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        tester
+            .getTopLeft(find.text('Remote host · /repositories/workspace'))
+            .dy,
+        greaterThan(tester.getTopLeft(find.text('Workspace')).dy),
+      );
+      expect(
+        tester.getTopLeft(find.text('/repositories/workspace')).dy,
+        greaterThan(tester.getTopLeft(find.text('main')).dy),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('app shell switches between desktop and mobile navigation', (
       tester,
     ) async {

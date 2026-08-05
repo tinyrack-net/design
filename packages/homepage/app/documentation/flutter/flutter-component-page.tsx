@@ -2036,9 +2036,9 @@ class _RackFormState extends State<RackForm> {
       {
         axis: { en: 'Content', ko: '콘텐츠', ja: 'コンテンツ' },
         choices: {
-          en: '`leading` and `trailing` stay aligned around wrapping labels. A group `trailing` replaces its default chevron.',
-          ko: '`leading`과 `trailing`은 여러 줄 label 주위에서 정렬을 유지해요. 그룹의 `trailing`은 기본 chevron을 대체해요.',
-          ja: '`leading` と `trailing` は折り返す label の両側で整列します。グループの `trailing` は既定の chevron を置き換えます。',
+          en: '`description` adds a muted secondary line. `leading` and `trailing` stay aligned around the complete row, and a group `trailing` replaces its default chevron.',
+          ko: '`description`은 옅은 보조 줄을 추가해요. `leading`과 `trailing`은 전체 행 주위에서 정렬을 유지하고, 그룹의 `trailing`은 기본 chevron을 대체해요.',
+          ja: '`description` は薄い補助行を追加します。`leading` と `trailing` は行全体の両側で整列し、グループの `trailing` は既定の chevron を置き換えます。',
         },
       },
     ],
@@ -2062,9 +2062,14 @@ class _DocsTreeState extends State<DocsTree> {
       TRTreeNavGroup(
         value: 'guides',
         label: Text('GUIDES'),
+        description: Text('Product documentation'),
         initiallyExpanded: true,
         children: [
-          TRTreeNavLeaf(value: 'install', label: Text('Install')),
+          TRTreeNavLeaf(
+            value: 'install',
+            label: Text('Install'),
+            description: Text('Add and configure the package'),
+          ),
           TRTreeNavGroup(
             value: 'advanced',
             label: Text('ADVANCED'),
@@ -2160,6 +2165,15 @@ class _DocsTreeState extends State<DocsTree> {
             },
           },
           {
+            name: 'description',
+            type: 'Widget? · null',
+            purpose: {
+              en: 'Adds a muted secondary line below the group label.',
+              ko: '그룹 label 아래에 옅은 보조 줄을 추가해요.',
+              ja: 'グループの label の下に薄い補助行を追加します。',
+            },
+          },
+          {
             name: 'disabled, leading, trailing',
             type: 'bool?, Widget?, Widget? · null',
             purpose: {
@@ -2184,6 +2198,15 @@ class _DocsTreeState extends State<DocsTree> {
               en: 'Identify and render a selectable destination.',
               ko: '선택할 수 있는 목적지를 식별하고 렌더링해요.',
               ja: '選択可能な移動先を識別して描画します。',
+            },
+          },
+          {
+            name: 'description',
+            type: 'Widget? · null',
+            purpose: {
+              en: 'Adds a muted secondary line below the destination label.',
+              ko: '목적지 label 아래에 옅은 보조 줄을 추가해요.',
+              ja: '移動先の label の下に薄い補助行を追加します。',
             },
           },
           {
@@ -4659,7 +4682,7 @@ class _AlignmentBarState extends State<AlignmentBar> {
       ja: 'アプリの内容を macOS またはブラウザ風の装飾フレームで囲みます。',
     },
     usage:
-      "TRWindowFrameTitleBar(\n  leading: const Text('File'),\n  actions: TRWindowCaptionButton(\n    action: TRWindowCaptionAction.close,\n    label: 'Close window',\n    onPressed: closeWindow,\n  ),\n  child: const Text('Tinyrack'),\n)",
+      "TRWindowFrameTitleBar(\n  leading: const Text('File'),\n  actions: TRWindowCaptionButton(\n    action: TRWindowCaptionAction.maximize,\n    glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,\n    label: 'Maximize window',\n    onPressed: maximizeWindow,\n  ),\n  child: const Text('Tinyrack'),\n)",
     contractRows: [
       {
         axis: { en: 'Variant', ko: '형태', ja: 'バリアント' },
@@ -4720,6 +4743,15 @@ class _AlignmentBarState extends State<AlignmentBar> {
               en: 'Selects a Lucide minimize, maximize, restore, or close glyph.',
               ko: 'Lucide 최소화, 최대화, 복원 또는 닫기 글리프를 선택해요.',
               ja: 'Lucide の最小化、最大化、復元、閉じるグリフを選択します。',
+            },
+          },
+          {
+            name: 'TRWindowCaptionButton.glyphStyle',
+            type: 'TRWindowCaptionGlyphStyle · standard',
+            purpose: {
+              en: 'Chooses standard window marks or neutral expand-and-collapse corner glyphs.',
+              ko: '표준 창 표시 또는 중립 확장·축소 모서리 글리프를 선택해요.',
+              ja: '標準のウィンドウ記号またはニュートラルな展開・縮小コーナーグリフを選びます。',
             },
           },
           {

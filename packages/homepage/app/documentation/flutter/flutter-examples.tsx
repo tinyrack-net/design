@@ -4457,11 +4457,13 @@ class _DocumentationNavigationState
       TRTreeNavGroup(
         value: 'guides',
         label: Text('GUIDES'),
+        description: Text('Product documentation'),
         initiallyExpanded: true,
         children: [
           TRTreeNavLeaf(
             value: 'install',
             label: Text('Install'),
+            description: Text('Add and configure the package'),
             leading: Icon(Icons.download_outlined, size: 16),
           ),
           TRTreeNavGroup(
@@ -4501,9 +4503,10 @@ class _DocumentationNavigationState
       dart: String.raw`TRWindowFrameTitleBar(
   leading: const Text('File'),
   actions: TRWindowCaptionButton(
-    action: TRWindowCaptionAction.close,
-    label: 'Close window',
-    onPressed: closeWindow,
+    action: TRWindowCaptionAction.maximize,
+    glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,
+    label: 'Maximize window',
+    onPressed: maximizeWindow,
   ),
   child: const Text('Tinyrack'),
 )`,

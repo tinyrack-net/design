@@ -15,6 +15,9 @@ enum TRWindowFrameControlTone { close, minimize, maximize }
 /// Native window command represented by a caption button.
 enum TRWindowCaptionAction { minimize, maximize, restore, close }
 
+/// Lucide glyph family used by native window caption actions.
+enum TRWindowCaptionGlyphStyle { standard, expandCollapse }
+
 // @tinyrack-preview window-frame
 /// Decorative desktop or browser chrome around application content.
 class TRWindowFrame extends StatelessWidget {
@@ -126,20 +129,40 @@ class TRWindowCaptionButton extends StatelessWidget {
     required this.action,
     required this.label,
     required this.onPressed,
+    this.glyphStyle = TRWindowCaptionGlyphStyle.standard,
     super.key,
   });
 
   final TRWindowCaptionAction action;
+  final TRWindowCaptionGlyphStyle glyphStyle;
   final String label;
   final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) => TRIconButton(
-    icon: Icon(switch (action) {
-      TRWindowCaptionAction.minimize => LucideIcons.minus,
-      TRWindowCaptionAction.maximize => LucideIcons.square,
-      TRWindowCaptionAction.restore => LucideIcons.copy,
-      TRWindowCaptionAction.close => LucideIcons.x,
+    icon: Icon(switch ((glyphStyle, action)) {
+      (_, TRWindowCaptionAction.close) => LucideIcons.x,
+      (TRWindowCaptionGlyphStyle.standard, TRWindowCaptionAction.minimize) =>
+        LucideIcons.minus,
+      (TRWindowCaptionGlyphStyle.standard, TRWindowCaptionAction.maximize) =>
+        LucideIcons.square,
+      (TRWindowCaptionGlyphStyle.standard, TRWindowCaptionAction.restore) =>
+        LucideIcons.copy,
+      (
+        TRWindowCaptionGlyphStyle.expandCollapse,
+        TRWindowCaptionAction.minimize,
+      ) =>
+        LucideIcons.minimize,
+      (
+        TRWindowCaptionGlyphStyle.expandCollapse,
+        TRWindowCaptionAction.maximize,
+      ) =>
+        LucideIcons.maximize,
+      (
+        TRWindowCaptionGlyphStyle.expandCollapse,
+        TRWindowCaptionAction.restore,
+      ) =>
+        LucideIcons.minimize2,
     }),
     label: label,
     onPressed: onPressed,

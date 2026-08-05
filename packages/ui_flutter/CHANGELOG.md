@@ -1,3 +1,10 @@
+## 0.6.0
+
+- Adds optional secondary descriptions to `TRTreeNavGroup` and
+  `TRTreeNavLeaf` rows.
+- Adds an expand-and-collapse Lucide glyph style for typed native window
+  caption actions.
+
 ## 0.5.0
 
 - Adds `TRTerminalView`, `TRTerminalController`, and `TRTerminalSize` for

@@ -11,11 +11,13 @@ sealed class TRTreeNavItem<T extends Object> {
   const TRTreeNavItem({
     required this.value,
     required this.label,
+    this.description,
     this.disabled,
   });
 
   final T value;
   final Widget label;
+  final Widget? description;
   final bool? disabled;
 }
 
@@ -25,6 +27,7 @@ final class TRTreeNavGroup<T extends Object> extends TRTreeNavItem<T> {
     required super.value,
     required super.label,
     required this.children,
+    super.description,
     super.disabled,
     this.initiallyExpanded = false,
     this.leading,
@@ -42,6 +45,7 @@ final class TRTreeNavLeaf<T extends Object> extends TRTreeNavItem<T> {
   const TRTreeNavLeaf({
     required super.value,
     required super.label,
+    super.description,
     super.disabled,
     this.leading,
     this.trailing,
@@ -373,15 +377,22 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
                       if (leading != null)
                         const SizedBox(width: TRGeneratedSpacing.sm),
                       Expanded(
-                        child: DefaultTextStyle.merge(
-                          style: TRGeneratedTextStyles.bodySm.copyWith(
+                        child: _TRTreeNavItemContent(
+                          description: item.description,
+                          descriptionStyle: TRGeneratedTextStyles.caption
+                              .copyWith(
+                                color: colors.textMuted,
+                                fontFamilyFallback:
+                                    TRGeneratedFontFamilies.fallback,
+                              ),
+                          label: item.label,
+                          labelStyle: TRGeneratedTextStyles.bodySm.copyWith(
                             color: selected || _hovered || _focused
                                 ? colors.text
                                 : colors.textMuted,
                             fontFamilyFallback:
                                 TRGeneratedFontFamilies.fallback,
                           ),
-                          child: item.label,
                         ),
                       ),
                       if (trailing != null) ...[
@@ -455,21 +466,29 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
                     if (leading != null)
                       const SizedBox(width: TRGeneratedSpacing.sm),
                     Expanded(
-                      child: DefaultTextStyle.merge(
-                        style: TRGeneratedTextStyles.label.copyWith(
-                          color: groupColor,
-                          fontWeight: activeBranch
-                              ? TRGeneratedFontWeights.bold
-                              : TRGeneratedFontWeights.medium,
-                          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                          height: TRGeneratedTypographyLineHeights.sm,
+                      child: Transform.translate(
+                        offset: const Offset(
+                          0,
+                          -TRGeneratedBorders.defaultWidth / 2,
                         ),
-                        child: Transform.translate(
-                          offset: const Offset(
-                            0,
-                            -TRGeneratedBorders.defaultWidth / 2,
+                        child: _TRTreeNavItemContent(
+                          description: item.description,
+                          descriptionStyle: TRGeneratedTextStyles.caption
+                              .copyWith(
+                                color: colors.textMuted,
+                                fontFamilyFallback:
+                                    TRGeneratedFontFamilies.fallback,
+                              ),
+                          label: item.label,
+                          labelStyle: TRGeneratedTextStyles.label.copyWith(
+                            color: groupColor,
+                            fontWeight: activeBranch
+                                ? TRGeneratedFontWeights.bold
+                                : TRGeneratedFontWeights.medium,
+                            fontFamilyFallback:
+                                TRGeneratedFontFamilies.fallback,
+                            height: TRGeneratedTypographyLineHeights.sm,
                           ),
-                          child: item.label,
                         ),
                       ),
                     ),
@@ -559,6 +578,41 @@ bool _containsValue<T extends Object>(
     }
   }
   return false;
+}
+
+class _TRTreeNavItemContent extends StatelessWidget {
+  const _TRTreeNavItemContent({
+    required this.description,
+    required this.descriptionStyle,
+    required this.label,
+    required this.labelStyle,
+  });
+
+  final Widget? description;
+  final TextStyle descriptionStyle;
+  final Widget label;
+  final TextStyle labelStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    final description = this.description;
+    if (description == null) {
+      return DefaultTextStyle.merge(style: labelStyle, child: label);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DefaultTextStyle.merge(style: labelStyle, child: label),
+        DefaultTextStyle.merge(
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: descriptionStyle,
+          child: description,
+        ),
+      ],
+    );
+  }
 }
 
 Set<T> _initiallyExpanded<T extends Object>(List<TRTreeNavItem<T>> items) {

@@ -329,6 +329,7 @@ void main() {
               TRTreeNavGroup(
                 value: 'group',
                 label: Text('A long group label that wraps onto another line'),
+                description: Text('A secondary group description'),
                 initiallyExpanded: true,
                 trailing: Icon(
                   Icons.more_horiz,
@@ -340,6 +341,7 @@ void main() {
                     label: Text(
                       'A long destination label that remains readable',
                     ),
+                    description: Text('A secondary destination description'),
                     leading: Icon(
                       Icons.description,
                       key: ValueKey('leaf-leading'),
