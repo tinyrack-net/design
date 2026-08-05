@@ -352,6 +352,13 @@ abstract final class TinyrackTheme {
           TargetPlatform.windows: TRPageTransitionsBuilder(),
         },
       ),
+      // Material sizes a bare icon at 24, which is not a Tinyrack measurement.
+      // Without this every icon outside a component that installs its own icon
+      // theme renders off the scale, and consumers compensate with literals.
+      iconTheme: IconThemeData(
+        color: colors.text,
+        size: TRGeneratedControlMetrics.mdIconSize,
+      ),
       // Selection is otherwise drawn with Material's default accent, which is
       // outside the token set. The highlight paints behind the glyphs, so the
       // opaque selected-surface token is the right fill for it.
