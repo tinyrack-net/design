@@ -18,6 +18,13 @@
       background-color var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
   }
 
+  .tr-textarea[data-ui-size="sm"] {
+    font-size: var(--tinyrack-control-font-size-sm);
+    line-height: var(--tinyrack-control-line-height-sm);
+    min-block-size: calc(var(--tinyrack-control-height-sm) * 2);
+    padding-inline: var(--tinyrack-control-padding-inline-sm);
+  }
+
   .tr-textarea[data-ui-size="lg"] {
     font-size: var(--tinyrack-control-font-size-lg);
     line-height: var(--tinyrack-control-line-height-lg);

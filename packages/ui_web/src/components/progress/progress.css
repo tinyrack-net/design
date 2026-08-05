@@ -15,6 +15,10 @@
     width: 100%;
   }
 
+  .tr-progress[data-ui-size="sm"] {
+    --_tr-progress-height: calc(var(--tinyrack-space-3xs) * 2);
+  }
+
   .tr-progress[data-ui-size="lg"] {
     --_tr-progress-height: var(--tinyrack-space-sm);
   }

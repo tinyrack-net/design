@@ -19,6 +19,25 @@ void main() {
       expect(TRControlMetrics.borderWidth, greaterThan(0));
     });
 
+    test('orders the compact size below the default size', () {
+      expect(TRControlMetrics.heightOf(TRUiSize.sm), 24);
+      expect(TRControlMetrics.inlinePaddingOf(TRUiSize.sm), 8);
+      expect(TRControlMetrics.gapOf(TRUiSize.sm), 4);
+      expect(TRControlMetrics.iconSizeOf(TRUiSize.sm), 14);
+      expect(TRControlMetrics.fontSizeOf(TRUiSize.sm), 12);
+      expect(TRControlMetrics.lineHeightOf(TRUiSize.sm), 16);
+      for (final metric in <double Function(TRUiSize)>[
+        TRControlMetrics.heightOf,
+        TRControlMetrics.inlinePaddingOf,
+        TRControlMetrics.gapOf,
+        TRControlMetrics.iconSizeOf,
+        TRControlMetrics.fontSizeOf,
+        TRControlMetrics.lineHeightOf,
+      ]) {
+        expect(metric(TRUiSize.sm), lessThan(metric(TRUiSize.md)));
+      }
+    });
+
     testWidgets('describes the button it is published for', (tester) async {
       for (final size in TRUiSize.values) {
         await tester.pumpWidget(

@@ -112,18 +112,22 @@ class _TRToggleState extends State<TRToggle> {
         : colors.surface;
     final borderColor = pressed ? colors.primary : generated.controlBorder;
     final height = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final paddingInline = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
     final fontSize = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };
     final lineHeight = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smLineHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,
     };

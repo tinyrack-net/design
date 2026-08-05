@@ -130,6 +130,7 @@ class TRWindowCaptionButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.glyphStyle = TRWindowCaptionGlyphStyle.standard,
+    this.uiSize = TRUiSize.md,
     super.key,
   });
 
@@ -137,6 +138,9 @@ class TRWindowCaptionButton extends StatelessWidget {
   final TRWindowCaptionGlyphStyle glyphStyle;
   final String label;
   final VoidCallback? onPressed;
+
+  /// Control size the caption glyph and its hit target are built at.
+  final TRUiSize uiSize;
 
   @override
   Widget build(BuildContext context) => TRIconButton(
@@ -170,7 +174,7 @@ class TRWindowCaptionButton extends StatelessWidget {
     intent: action == TRWindowCaptionAction.close
         ? TRIntent.danger
         : TRIntent.neutral,
-    uiSize: TRUiSize.md,
+    uiSize: uiSize,
   );
 }
 

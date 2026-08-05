@@ -106,10 +106,12 @@ class _TRRadioState extends State<TRRadio> {
         ? colors.surface
         : colors.surfaceHover;
     final size = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
     };
     final indicatorSize = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,
       TRUiSize.md => TRGeneratedSpacing.xs,
       TRUiSize.lg => TRGeneratedSpacing.sm,
     };

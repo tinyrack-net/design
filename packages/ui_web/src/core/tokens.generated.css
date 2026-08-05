@@ -71,6 +71,11 @@
   --tinyrack-layer-dialog: 1210;
   --tinyrack-layer-toast: 1300;
   --tinyrack-layer-tooltip: 1400;
+  --tinyrack-control-height-sm: 1.5rem;
+  --tinyrack-control-padding-inline-sm: 0.5rem;
+  --tinyrack-control-gap-sm: 0.25rem;
+  --tinyrack-control-font-size-sm: var(--tinyrack-text-xs);
+  --tinyrack-control-line-height-sm: 1rem;
   --tinyrack-control-height-md: 2rem;
   --tinyrack-control-padding-inline-md: 0.75rem;
   --tinyrack-control-gap-md: 0.375rem;
@@ -105,6 +110,7 @@
   --tinyrack-overlay-closed-scale: 0.98;
   --tinyrack-text-decoration-thickness: 0.08em;
   --tinyrack-text-underline-offset: 0.18em;
+  --tinyrack-spinner-size-sm: 0.75rem;
   --tinyrack-spinner-size-md: 1rem;
   --tinyrack-spinner-size-lg: 1.25rem;
   --tinyrack-spinner-stroke-width: 0.125rem;

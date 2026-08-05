@@ -107,10 +107,13 @@ class _TRCheckboxState extends State<TRCheckbox> {
         ? colors.primary
         : colors.borderStrong;
     final size = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
     };
     final indicatorFontSize = switch (widget.uiSize) {
+      TRUiSize.sm =>
+        TRGeneratedTypographySizes.size2xs - TRGeneratedSpacing.size3xs * 4,
       TRUiSize.md =>
         TRGeneratedTypographySizes.size2xs - TRGeneratedSpacing.size3xs,
       TRUiSize.lg => TRGeneratedTypographySizes.xs,

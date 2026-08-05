@@ -71,6 +71,7 @@ type DesignTokens = {
   spinnerMetrics: {
     sizeLg: string;
     sizeMd: string;
+    sizeSm: string;
     strokeWidth: string;
     trackOpacity: string;
   };
@@ -528,6 +529,7 @@ function dartOutput() {
     dartConstClass(
       'TRGeneratedSpinnerMetrics',
       {
+        sizeSm: tokens.spinnerMetrics.sizeSm,
         sizeMd: tokens.spinnerMetrics.sizeMd,
         sizeLg: tokens.spinnerMetrics.sizeLg,
         strokeWidth: tokens.spinnerMetrics.strokeWidth,

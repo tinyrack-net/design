@@ -116,6 +116,32 @@ void main() {
     expect(pressed, isTrue);
   });
 
+  testWidgets('window caption actions render at the requested control size', (
+    tester,
+  ) async {
+    for (final size in TRUiSize.values) {
+      await tester.pumpWidget(
+        _app(
+          TRWindowCaptionButton(
+            action: TRWindowCaptionAction.close,
+            label: 'Close window',
+            onPressed: () {},
+            uiSize: size,
+          ),
+        ),
+      );
+
+      expect(
+        tester.widget<TRIconButton>(find.byType(TRIconButton)).uiSize,
+        size,
+      );
+      expect(
+        tester.getSize(find.byType(TRIconButton)),
+        Size.square(TRControlMetrics.heightOf(size)),
+      );
+    }
+  });
+
   testWidgets('window caption actions offer neutral expand-collapse glyphs', (
     tester,
   ) async {

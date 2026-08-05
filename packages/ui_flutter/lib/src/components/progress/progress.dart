@@ -87,6 +87,7 @@ class _TRProgressState extends State<TRProgress>
       TRStatusVariant.danger => colors.danger,
     };
     final height = switch (widget.uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,
       TRUiSize.md => TRGeneratedSpacing.xs,
       TRUiSize.lg => TRGeneratedSpacing.sm,
     };

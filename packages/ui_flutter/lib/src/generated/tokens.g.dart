@@ -472,6 +472,12 @@ abstract final class TRGeneratedLayerMetrics {
 }
 
 abstract final class TRGeneratedControlMetrics {
+  static const double smHeight = 24.0;
+  static const double smPaddingInline = 8.0;
+  static const double smGap = 4.0;
+  static const double smFontSize = 12.0;
+  static const double smLineHeight = 16.0;
+  static const double smIconSize = 14.0;
   static const double mdHeight = 32.0;
   static const double mdPaddingInline = 12.0;
   static const double mdGap = 6.0;
@@ -487,6 +493,7 @@ abstract final class TRGeneratedControlMetrics {
 }
 
 abstract final class TRGeneratedSpinnerMetrics {
+  static const double sizeSm = 12.0;
   static const double sizeMd = 16.0;
   static const double sizeLg = 20.0;
   static const double strokeWidth = 2.0;

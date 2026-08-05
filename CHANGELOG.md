@@ -9,6 +9,7 @@
 
 ### Added
 
+- Added `sm` to the control size scale. `uiSize="sm"` is a 24px-tall recipe with 8px inline padding, 4px gap, and 12px/16px label type, sized for dense application chrome such as a title bar or a toolbar. The scale previously started at `md`, so `TRControlUiSize` accepted only `md` and `lg`; every component that reads a `uiSize` now resolves the new step, and the `--tinyrack-control-*-sm` and `--tinyrack-spinner-size-sm` tokens are available to consumer CSS.
 - Added the `TRCodeHighlighter` contract, `TRCodeHighlighterProvider`, and the `@tinyrack/ui/highlighters/shiki` and `@tinyrack/ui/highlighters/shiki-web` adapters, so grammar selection is an explicit consumer decision instead of a private build-time alias.
 - Added the `data-highlight` state attribute (`plain`, `pending`, `highlighted`, `unsupported`, `no-highlighter`, `error`) and the `onHighlightFailure` callback, replacing a silent `catch {}` that hid missing grammars.
 - Added `highlight.languages` to `DocsConfig` and published `@tinyrack/docs/highlighting`. A docs site declares its grammars and only those are built; unknown identifiers now fail the build instead of silently rendering as plain text.

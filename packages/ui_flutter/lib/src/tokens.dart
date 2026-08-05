@@ -64,36 +64,42 @@ abstract final class TRMeasurements {
 abstract final class TRControlMetrics {
   /// Outer height, and the side of a square icon control.
   static double heightOf(TRUiSize size) => switch (size) {
+    TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
     TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
     TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
   };
 
   /// Inset between the control edge and its content, excluding the border.
   static double inlinePaddingOf(TRUiSize size) => switch (size) {
+    TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
     TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
     TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
   };
 
   /// Space between adjacent pieces of content inside one control.
   static double gapOf(TRUiSize size) => switch (size) {
+    TRUiSize.sm => TRGeneratedControlMetrics.smGap,
     TRUiSize.md => TRGeneratedControlMetrics.mdGap,
     TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
   };
 
   /// Size of an icon rendered inside a control.
   static double iconSizeOf(TRUiSize size) => switch (size) {
+    TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
     TRUiSize.md => TRGeneratedControlMetrics.mdIconSize,
     TRUiSize.lg => TRGeneratedControlMetrics.lgIconSize,
   };
 
   /// Font size of the label of a control.
   static double fontSizeOf(TRUiSize size) => switch (size) {
+    TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
     TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
     TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
   };
 
   /// Line height of the label of a control.
   static double lineHeightOf(TRUiSize size) => switch (size) {
+    TRUiSize.sm => TRGeneratedControlMetrics.smLineHeight,
     TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
     TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,
   };

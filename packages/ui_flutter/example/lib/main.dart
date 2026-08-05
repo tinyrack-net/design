@@ -1201,14 +1201,8 @@ class PreviewComponent extends StatelessWidget {
   /// Splits the slot row in half with a rule, and keeps the plain gaps on the
   /// remaining seams aligned with the resolved [TRUiSize].
   TROtpSeparatorBuilder _otpSeparatorBuilder(TRUiSize uiSize, int length) {
-    final slotHeight = switch (uiSize) {
-      TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
-      TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
-    };
-    final gap = switch (uiSize) {
-      TRUiSize.md => TRGeneratedControlMetrics.mdGap,
-      TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
-    };
+    final slotHeight = TRControlMetrics.heightOf(uiSize);
+    final gap = TRControlMetrics.gapOf(uiSize);
     final middle = length ~/ 2 - 1;
     return (context, index) => index == middle
         ? SizedBox(

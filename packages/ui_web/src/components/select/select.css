@@ -17,6 +17,13 @@
     --_tr-select-control-padding-inline: var(--tinyrack-control-padding-inline-md);
   }
 
+  .tr-select-trigger[data-ui-size="sm"] {
+    --_tr-select-control-font-size: var(--tinyrack-control-font-size-sm);
+    --_tr-select-control-gap: var(--tinyrack-control-gap-sm);
+    --_tr-select-control-height: var(--tinyrack-control-height-sm);
+    --_tr-select-control-padding-inline: var(--tinyrack-control-padding-inline-sm);
+  }
+
   .tr-select-trigger[data-ui-size="lg"] {
     --_tr-select-control-font-size: var(--tinyrack-control-font-size-lg);
     --_tr-select-control-gap: var(--tinyrack-control-gap-lg);

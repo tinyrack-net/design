@@ -65,10 +65,16 @@ class TRButton extends StatelessWidget {
         : TRGeneratedColors.dark;
     final disabled = onPressed == null || loading;
     final size = switch (uiSize) {
+      TRUiSize.sm => const Size(0, TRGeneratedControlMetrics.smHeight),
       TRUiSize.md => const Size(0, TRGeneratedControlMetrics.mdHeight),
       TRUiSize.lg => const Size(0, TRGeneratedControlMetrics.lgHeight),
     };
     final padding = switch (uiSize) {
+      TRUiSize.sm => const EdgeInsets.symmetric(
+        horizontal:
+            TRGeneratedControlMetrics.smPaddingInline +
+            TRGeneratedBorders.defaultWidth,
+      ),
       TRUiSize.md => const EdgeInsets.symmetric(
         horizontal:
             TRGeneratedControlMetrics.mdPaddingInline +
@@ -81,6 +87,7 @@ class TRButton extends StatelessWidget {
       ),
     };
     final gap = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smGap,
       TRUiSize.md => TRGeneratedControlMetrics.mdGap,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
     };

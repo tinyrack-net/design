@@ -12,12 +12,14 @@ typedef TRSliderLabelBuilder = String Function(double value);
 
 /// The thumb diameter for each size on the shared control scale.
 double _sliderThumbSize(TRUiSize uiSize) => switch (uiSize) {
+  TRUiSize.sm => TRGeneratedSpacing.sm,
   TRUiSize.md => TRGeneratedSpacing.md,
   TRUiSize.lg => TRGeneratedSpacing.lg,
 };
 
 /// The cross-axis extent reserved for the track and thumb at each size.
 double _sliderControlExtent(TRUiSize uiSize) => switch (uiSize) {
+  TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
   TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
   TRUiSize.lg => TRGeneratedSpacing.xl,
 };

@@ -92,16 +92,19 @@ class TRTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     var registeredValue = controller?.text ?? initialValue ?? '';
     final controlHeight = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final horizontalPadding =
         switch (uiSize) {
+          TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
           TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
           TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
         } -
         TRGeneratedFlutterRendering.textFieldPaddingInlineCorrection;
     final fontSize = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };

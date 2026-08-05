@@ -20,6 +20,11 @@
     width: var(--tr-checkbox-size, var(--tinyrack-space-md));
   }
 
+  .tr-checkbox[data-ui-size="sm"] {
+    height: var(--tinyrack-space-sm);
+    width: var(--tinyrack-space-sm);
+  }
+
   .tr-checkbox[data-ui-size="lg"] {
     height: var(--tinyrack-space-lg);
     width: var(--tinyrack-space-lg);
@@ -36,6 +41,10 @@
     font-size: calc(var(--tinyrack-text-2xs) - var(--tinyrack-space-3xs));
     font-weight: var(--tinyrack-weight-bold);
     line-height: 1;
+  }
+
+  .tr-checkbox[data-ui-size="sm"] .tr-checkbox-indicator {
+    font-size: calc(var(--tinyrack-text-2xs) - var(--tinyrack-space-3xs) * 4);
   }
 
   .tr-checkbox[data-ui-size="lg"] .tr-checkbox-indicator {

@@ -45,6 +45,11 @@
     width: var(--tr-radio-indicator-size, var(--_tr-radio-indicator-size));
   }
 
+  .tr-radio[data-ui-size="sm"] {
+    --_tr-radio-indicator-size: calc(var(--tinyrack-space-3xs) * 2);
+    --_tr-radio-size: var(--tinyrack-space-sm);
+  }
+
   .tr-radio[data-ui-size="lg"] {
     --_tr-radio-indicator-size: var(--tinyrack-space-sm);
     --_tr-radio-size: var(--tinyrack-space-lg);
