@@ -125,6 +125,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'app-shell-docs': _appShellDocs,
   'pagination-controlled': _paginationControlled,
   'table-dense-status': _tableDenseStatus,
+  'tree-nav-navigation': _treeNavNavigation,
   'window-frame-browser': _windowFrameBrowser,
   'window-frame-caption-actions': _windowFrameCaptionActions,
   'toast-track': _toastTrack,
@@ -4109,6 +4110,55 @@ Widget _tableDenseStatus(BuildContext context, Locale locale) => const TRTable(
     TRTableRow(cells: [Text('Rack B'), Text('Degraded')]),
   ],
 );
+
+Widget _treeNavNavigation(BuildContext context, Locale locale) {
+  String? currentPage = 'theming';
+  return StatefulBuilder(
+    builder: (context, setState) => SizedBox(
+      width: 320,
+      child: TRTreeNav<String>.controlled(
+        value: currentPage,
+        onValueChange: (value) => setState(() => currentPage = value),
+        pageStorageId: 'documentation-navigation',
+        semanticLabel: _pick(locale, 'Documentation', '문서 탐색', 'ドキュメント'),
+        items: [
+          TRTreeNavGroup(
+            value: 'guides',
+            label: Text(_pick(locale, 'GUIDES', '가이드', 'ガイド')),
+            initiallyExpanded: true,
+            children: [
+              TRTreeNavLeaf(
+                value: 'install',
+                label: Text(_pick(locale, 'Install', '설치', 'インストール')),
+                leading: const Icon(Icons.download_outlined, size: 16),
+              ),
+              TRTreeNavGroup(
+                value: 'advanced',
+                label: Text(_pick(locale, 'ADVANCED', '고급', '高度な設定')),
+                initiallyExpanded: true,
+                children: [
+                  TRTreeNavLeaf(
+                    value: 'plugins',
+                    label: Text(_pick(locale, 'Plugins', '플러그인', 'プラグイン')),
+                  ),
+                  TRTreeNavLeaf(
+                    value: 'theming',
+                    label: Text(_pick(locale, 'Theming', '테마', 'テーマ')),
+                  ),
+                  TRTreeNavLeaf(
+                    value: 'labs',
+                    label: Text(_pick(locale, 'Labs', '실험실', 'ラボ')),
+                    disabled: true,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
 Widget _windowFrameBrowser(BuildContext context, Locale locale) =>
     const SizedBox(

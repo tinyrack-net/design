@@ -4,6 +4,7 @@ import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
+import '../../tokens.dart';
 
 /// Base class for tree navigation nodes.
 sealed class TRTreeNavItem<T extends Object> {
@@ -149,10 +150,7 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
     super.didChangeDependencies();
     if (_restored || widget.pageStorageId == null) return;
     _restored = true;
-    final stored = PageStorage.maybeOf(
-      context,
-    )?.readState(context, identifier: widget.pageStorageId);
-    if (stored is Set<T>) _controller.replaceExpanded(stored);
+    _restoreExpansion();
   }
 
   @override
@@ -166,6 +164,7 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
         _internalController?.dispose();
         _internalController = null;
       }
+      if (widget.pageStorageId != null) _restoreExpansion();
       _controller.addListener(_handleControllerChange);
     }
     if (oldWidget.pageStorageId != widget.pageStorageId) _restored = false;
@@ -187,6 +186,13 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
       );
     }
     if (mounted) setState(() {});
+  }
+
+  void _restoreExpansion() {
+    final stored = PageStorage.maybeOf(
+      context,
+    )?.readState(context, identifier: widget.pageStorageId);
+    if (stored is Set<T>) _controller.replaceExpanded(stored);
   }
 
   void _select(T value) {
@@ -219,7 +225,7 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
   );
 }
 
-class _TRTreeNavNode<T extends Object> extends StatelessWidget {
+class _TRTreeNavNode<T extends Object> extends StatefulWidget {
   const _TRTreeNavNode({
     required this.controller,
     required this.depth,
@@ -235,18 +241,46 @@ class _TRTreeNavNode<T extends Object> extends StatelessWidget {
   final T? selectedValue;
 
   @override
+  State<_TRTreeNavNode<T>> createState() => _TRTreeNavNodeState<T>();
+}
+
+class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
+  final FocusNode _focusNode = FocusNode();
+  bool _focused = false;
+  bool _hovered = false;
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final group = item is TRTreeNavGroup<T> ? item as TRTreeNavGroup<T> : null;
-    final leaf = item is TRTreeNavLeaf<T> ? item as TRTreeNavLeaf<T> : null;
-    final expanded = group != null && controller.expanded.contains(item.value);
-    final selected = selectedValue == item.value;
+    final item = widget.item;
+    final group = item is TRTreeNavGroup<T> ? item : null;
+    final leaf = item is TRTreeNavLeaf<T> ? item : null;
+    final expanded =
+        group != null && widget.controller.expanded.contains(item.value);
+    final selected = widget.selectedValue == item.value;
+    final activeBranch =
+        group != null && _containsValue(group.children, widget.selectedValue);
     final disabled = item.disabled ?? false;
     final leading = group?.leading ?? leaf?.leading;
     final trailing = group?.trailing ?? leaf?.trailing;
+    final showFocusRing =
+        _focused &&
+        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final colors = context.tinyrackTheme;
+    final motionDuration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : TRMotion.fast;
 
     void activate() {
       if (disabled) return;
-      group == null ? onSelect(item.value) : controller.toggle(item.value);
+      group == null
+          ? widget.onSelect(item.value)
+          : widget.controller.toggle(item.value);
     }
 
     KeyEventResult onKey(FocusNode node, KeyEvent event) {
@@ -257,11 +291,17 @@ class _TRTreeNavNode<T extends Object> extends StatelessWidget {
         return KeyEventResult.handled;
       }
       if (event.logicalKey == LogicalKeyboardKey.arrowRight && group != null) {
-        controller.setExpanded(item.value, true);
+        widget.controller.setExpanded(
+          item.value,
+          Directionality.of(context) == TextDirection.ltr,
+        );
         return KeyEventResult.handled;
       }
       if (event.logicalKey == LogicalKeyboardKey.arrowLeft && group != null) {
-        controller.setExpanded(item.value, false);
+        widget.controller.setExpanded(
+          item.value,
+          Directionality.of(context) == TextDirection.rtl,
+        );
         return KeyEventResult.handled;
       }
       if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
@@ -275,159 +315,250 @@ class _TRTreeNavNode<T extends Object> extends StatelessWidget {
       return KeyEventResult.ignored;
     }
 
-    final colors = context.tinyrackTheme;
     if (group == null) {
-      final fontSize = depth == 0
-          ? TRGeneratedTypographySizes.md
-          : TRGeneratedTypographySizes.sm;
-      final lineHeight = depth == 0
-          ? TRGeneratedFlutterRendering.normalLineMd
-          : TRGeneratedTypographySizes.sm * TRGeneratedTypographyLineHeights.md;
-      return Semantics(
-        button: true,
-        enabled: !disabled,
-        selected: selected,
-        child: Focus(
-          onKeyEvent: onKey,
-          child: InkWell(
-            onTap: disabled ? null : activate,
-            borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
-            child: Container(
-              height: lineHeight,
-              decoration: BoxDecoration(
-                color: selected ? colors.surfaceSelected : Colors.transparent,
-                borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
-              ),
-              child: Row(
-                children: [
-                  ?leading,
-                  if (leading != null)
-                    const SizedBox(width: TRGeneratedSpacing.xs),
-                  Expanded(
-                    child: DefaultTextStyle.merge(
-                      style: TextStyle(
-                        color: disabled ? colors.textMuted : colors.text,
-                        fontFamily: TRGeneratedFontFamilies.body,
-                        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                        fontSize: fontSize,
-                        height: lineHeight / fontSize,
-                      ),
-                      child: depth == 0
-                          ? item.label
-                          : Transform.translate(
-                              offset: const Offset(
-                                0,
-                                TRGeneratedBorders.defaultWidth,
-                              ),
-                              child: item.label,
-                            ),
-                    ),
+      final background = !disabled && (_hovered || _focused || selected)
+          ? colors.surfaceHover
+          : Colors.transparent;
+      return MouseRegion(
+        cursor: disabled ? MouseCursor.defer : SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: Semantics(
+          button: true,
+          enabled: !disabled,
+          selected: selected,
+          child: Focus(
+            focusNode: _focusNode,
+            canRequestFocus: !disabled,
+            skipTraversal: disabled,
+            onFocusChange: (focused) => setState(() => _focused = focused),
+            onKeyEvent: onKey,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: disabled ? null : activate,
+              child: AnimatedOpacity(
+                duration: motionDuration,
+                opacity: disabled ? TRGeneratedOpacity.disabled : 1,
+                child: AnimatedContainer(
+                  duration: motionDuration,
+                  constraints: const BoxConstraints(
+                    // Web navigation links use a 32px content box plus 4px
+                    // block padding on each side (content-box sizing).
+                    minHeight:
+                        TRGeneratedControlMetrics.smHeight +
+                        TRGeneratedSpacing.xs * 2,
                   ),
-                  ?trailing,
-                ],
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: TRGeneratedSpacing.md,
+                    vertical: TRGeneratedSpacing.xs,
+                  ),
+                  foregroundDecoration: showFocusRing
+                      ? BoxDecoration(
+                          border: Border.all(
+                            color: colors.focus,
+                            width: TRGeneratedBorders.focusWidth,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            TRGeneratedRadii.md,
+                          ),
+                        )
+                      : null,
+                  decoration: BoxDecoration(
+                    color: background,
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                  ),
+                  child: Row(
+                    children: [
+                      ?leading,
+                      if (leading != null)
+                        const SizedBox(width: TRGeneratedSpacing.sm),
+                      Expanded(
+                        child: DefaultTextStyle.merge(
+                          style: TRGeneratedTextStyles.bodySm.copyWith(
+                            color: selected || _hovered || _focused
+                                ? colors.text
+                                : colors.textMuted,
+                            fontFamilyFallback:
+                                TRGeneratedFontFamilies.fallback,
+                          ),
+                          child: item.label,
+                        ),
+                      ),
+                      if (trailing != null) ...[
+                        const SizedBox(width: TRGeneratedSpacing.sm),
+                        trailing,
+                      ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ),
       );
     }
-    final row = Semantics(
-      button: true,
-      enabled: !disabled,
-      expanded: expanded,
-      child: Focus(
-        onKeyEvent: onKey,
-        child: InkWell(
-          onTap: disabled ? null : activate,
-          borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-          child: Container(
-            height: TRGeneratedLayerMetrics.treeItemHeight,
-            padding: const EdgeInsets.symmetric(
-              horizontal: TRGeneratedSpacing.md,
-              vertical: TRGeneratedSpacing.xs,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-            ),
-            child: Row(
-              children: [
-                ?leading,
-                if (leading != null)
-                  const SizedBox(width: TRGeneratedSpacing.sm),
-                Expanded(
-                  child: DefaultTextStyle.merge(
-                    style: TRGeneratedTextStyles.label.copyWith(
-                      color: disabled ? colors.textMuted : colors.text,
-                      fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                    ),
-                    child: Builder(
-                      builder: (context) =>
-                          DefaultTextStyle.merge(child: item.label),
-                    ),
-                  ),
+    final groupBackground = !disabled && (_hovered || _focused)
+        ? colors.surfaceHover
+        : Colors.transparent;
+    final groupColor = disabled
+        ? colors.textMuted
+        : activeBranch || _hovered || _focused
+        ? colors.text
+        : colors.textMuted;
+    final row = MouseRegion(
+      cursor: disabled ? MouseCursor.defer : SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: Semantics(
+        button: true,
+        enabled: !disabled,
+        expanded: expanded,
+        child: Focus(
+          focusNode: _focusNode,
+          canRequestFocus: !disabled,
+          skipTraversal: disabled,
+          onFocusChange: (focused) => setState(() => _focused = focused),
+          onKeyEvent: onKey,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: disabled ? null : activate,
+            child: AnimatedOpacity(
+              duration: motionDuration,
+              opacity: disabled ? TRGeneratedOpacity.disabled : 1,
+              child: AnimatedContainer(
+                duration: motionDuration,
+                constraints: const BoxConstraints(
+                  minHeight: TRGeneratedLayerMetrics.treeItemHeight,
                 ),
-                trailing ??
-                    Icon(
-                      expanded
-                          ? LucideIcons.chevronDown
-                          : LucideIcons.chevronRight,
-                      color: disabled ? colors.textMuted : colors.textMuted,
-                      size: TRGeneratedSpacing.md,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: TRGeneratedSpacing.md,
+                  vertical: TRGeneratedSpacing.xs,
+                ),
+                foregroundDecoration: showFocusRing
+                    ? BoxDecoration(
+                        border: Border.all(
+                          color: colors.focus,
+                          width: TRGeneratedBorders.focusWidth,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          TRGeneratedRadii.md,
+                        ),
+                      )
+                    : null,
+                decoration: BoxDecoration(
+                  color: groupBackground,
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                ),
+                child: Row(
+                  children: [
+                    ?leading,
+                    if (leading != null)
+                      const SizedBox(width: TRGeneratedSpacing.sm),
+                    Expanded(
+                      child: DefaultTextStyle.merge(
+                        style: TRGeneratedTextStyles.label.copyWith(
+                          color: groupColor,
+                          fontWeight: activeBranch
+                              ? TRGeneratedFontWeights.bold
+                              : TRGeneratedFontWeights.medium,
+                          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+                          height: TRGeneratedTypographyLineHeights.sm,
+                        ),
+                        child: Transform.translate(
+                          offset: const Offset(
+                            0,
+                            -TRGeneratedBorders.defaultWidth / 2,
+                          ),
+                          child: item.label,
+                        ),
+                      ),
                     ),
-              ],
+                    if (trailing != null) ...[
+                      const SizedBox(width: TRGeneratedSpacing.sm),
+                      trailing,
+                    ] else
+                      AnimatedRotation(
+                        duration: motionDuration,
+                        curve: TRMotion.standard,
+                        turns: expanded ? 0.25 : 0,
+                        child: Icon(
+                          LucideIcons.chevronRight,
+                          color: groupColor,
+                          size: TRGeneratedSpacing.md,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
       ),
     );
+    final nestedList = expanded
+        ? Padding(
+            padding: const EdgeInsets.only(top: TRGeneratedSpacing.xs),
+            child: Container(
+              margin: const EdgeInsetsDirectional.only(
+                start: TRGeneratedSpacing.md,
+              ),
+              padding: const EdgeInsetsDirectional.only(
+                start: TRGeneratedSpacing.sm,
+              ),
+              decoration: BoxDecoration(
+                border: BorderDirectional(
+                  start: BorderSide(color: colors.border),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                spacing: TRGeneratedSpacing.xs,
+                children: [
+                  for (final child in group.children)
+                    _TRTreeNavNode<T>(
+                      controller: widget.controller,
+                      depth: widget.depth + 1,
+                      item: child,
+                      onSelect: widget.onSelect,
+                      selectedValue: widget.selectedValue,
+                    ),
+                ],
+              ),
+            ),
+          )
+        : const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
         row,
-        AnimatedSize(
-          duration: MediaQuery.disableAnimationsOf(context)
-              ? Duration.zero
-              : TRGeneratedMotion.fast,
-          alignment: Alignment.topCenter,
-          child: expanded
-              ? Padding(
-                  padding: const EdgeInsets.only(top: TRGeneratedSpacing.xs),
-                  child: Container(
-                    margin: const EdgeInsetsDirectional.only(
-                      start: TRGeneratedSpacing.md,
-                    ),
-                    padding: const EdgeInsetsDirectional.only(
-                      start: TRGeneratedSpacing.sm,
-                    ),
-                    decoration: BoxDecoration(
-                      border: BorderDirectional(
-                        start: BorderSide(color: colors.border),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      spacing: TRGeneratedSpacing.xs,
-                      children: [
-                        for (final child in group.children)
-                          _TRTreeNavNode<T>(
-                            controller: controller,
-                            depth: depth + 1,
-                            item: child,
-                            onSelect: onSelect,
-                            selectedValue: selectedValue,
-                          ),
-                      ],
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
+        if (motionDuration == Duration.zero)
+          nestedList
+        else
+          AnimatedSize(
+            duration: motionDuration,
+            curve: TRMotion.standard,
+            alignment: Alignment.topCenter,
+            child: nestedList,
+          ),
       ],
     );
   }
+}
+
+bool _containsValue<T extends Object>(
+  List<TRTreeNavItem<T>> items,
+  T? selectedValue,
+) {
+  if (selectedValue == null) return false;
+  for (final item in items) {
+    if (item.value == selectedValue) return true;
+    if (item case final TRTreeNavGroup<T> group) {
+      if (_containsValue(group.children, selectedValue)) return true;
+    }
+  }
+  return false;
 }
 
 Set<T> _initiallyExpanded<T extends Object>(List<TRTreeNavItem<T>> items) {

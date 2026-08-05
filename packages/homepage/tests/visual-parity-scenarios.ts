@@ -469,14 +469,18 @@ export const visualParityScenarios: VisualParityScenario[] = [
     orientation: ['horizontal', 'vertical'],
     uiSize: sizes,
   }),
-  ...(
-    ['file-tree', 'form', 'number-field', 'otp-field', 'toolbar', 'tree-nav'] as const
-  ).map((component) => ({ args: {}, component, id: component })),
+  ...(['file-tree', 'form', 'number-field', 'otp-field', 'toolbar'] as const).map(
+    (component) => ({ args: {}, component, id: component }),
+  ),
   ...[false, true].map((open) => ({
     args: { open },
     component: 'menubar' as const,
     id: `menubar-open-${open}`,
   })),
+  ...product('tree-nav', {
+    collapsed: [false, true],
+    selected: [false, true],
+  }),
   ...product('scroll-area', { autoHide: [false, true] }),
   ...withStates(
     product('collapsible', {}).map((scenario) => ({
@@ -798,7 +802,7 @@ export const motionParityScenarios: MotionParityScenario[] = [
     transition,
   })),
   ...(['hover-in', 'hover-out'] as const).map((transition) => ({
-    args: {},
+    args: { collapsed: false, selected: true },
     component: 'tree-nav' as const,
     id: `tree-nav-motion-transition-${transition}`,
     transition,

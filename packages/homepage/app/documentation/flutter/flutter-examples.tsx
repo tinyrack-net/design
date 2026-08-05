@@ -4422,6 +4422,69 @@ class _RegionAutocompleteState extends State<RegionAutocomplete> {
 )`,
     },
   ],
+  'tree-nav': [
+    {
+      id: 'tree-nav-navigation',
+      title: {
+        en: 'Controlled documentation navigation',
+        ko: '제어형 문서 탐색',
+        ja: '制御されたドキュメントナビゲーション',
+      },
+      description: {
+        en: 'Start nested groups open, update the selected destination, and keep expansion in PageStorage while the route changes.',
+        ko: '중첩 그룹을 펼친 상태로 시작하고 선택한 목적지를 갱신하며 route가 바뀌어도 PageStorage에 펼침 상태를 유지해요.',
+        ja: 'ネストされたグループを開いた状態で開始し、選択中の移動先を更新しながら、route が変わっても PageStorage に展開状態を保持します。',
+      },
+      dart: String.raw`class DocumentationNavigation extends StatefulWidget {
+  const DocumentationNavigation({super.key});
+
+  @override
+  State<DocumentationNavigation> createState() =>
+      _DocumentationNavigationState();
+}
+
+class _DocumentationNavigationState
+    extends State<DocumentationNavigation> {
+  String? currentPage = 'theming';
+
+  @override
+  Widget build(BuildContext context) => TRTreeNav<String>.controlled(
+    value: currentPage,
+    onValueChange: (value) => setState(() => currentPage = value),
+    pageStorageId: 'documentation-navigation',
+    semanticLabel: 'Documentation',
+    items: const [
+      TRTreeNavGroup(
+        value: 'guides',
+        label: Text('GUIDES'),
+        initiallyExpanded: true,
+        children: [
+          TRTreeNavLeaf(
+            value: 'install',
+            label: Text('Install'),
+            leading: Icon(Icons.download_outlined, size: 16),
+          ),
+          TRTreeNavGroup(
+            value: 'advanced',
+            label: Text('ADVANCED'),
+            initiallyExpanded: true,
+            children: [
+              TRTreeNavLeaf(value: 'plugins', label: Text('Plugins')),
+              TRTreeNavLeaf(value: 'theming', label: Text('Theming')),
+              TRTreeNavLeaf(
+                value: 'labs',
+                label: Text('Labs'),
+                disabled: true,
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}`,
+    },
+  ],
   'window-frame': [
     {
       id: 'window-frame-caption-actions',

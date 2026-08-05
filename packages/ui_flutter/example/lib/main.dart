@@ -886,6 +886,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   ],
   'scroll-area' => ['autoHide'],
   'table' => ['density', 'striped'],
+  'tree-nav' => ['collapsed', 'selected'],
   'window-frame' => ['padding', 'variant'],
   'text-field' => [
     'disabled',
@@ -978,6 +979,7 @@ Map<String, Object?>? _validateArgs(
       'autoHighlight' ||
       'checked' ||
       'clearable' ||
+      'collapsed' ||
       'disabled' ||
       'disabledItem' ||
       'disabledOption' ||
@@ -994,6 +996,7 @@ Map<String, Object?>? _validateArgs(
       'showActions' ||
       'showDescription' ||
       'showIcon' ||
+      'selected' ||
       'truncate' => value is bool,
       'wrap' => value is bool,
       'language' =>
@@ -1611,25 +1614,56 @@ class PreviewComponent extends StatelessWidget {
         key: measureKey,
         width: 320,
         child: TRTreeNav<String>(
+          key: ValueKey(
+            'tree-nav-${args['collapsed'] == true}-${args['selected'] != false}',
+          ),
+          defaultValue: args['selected'] == false ? null : 'theming',
           items: [
             TRTreeNavGroup(
-              value: 'compute',
-              label: const Text('COMPUTE'),
-              initiallyExpanded: true,
+              value: 'getting-started',
+              label: Text(switch (locale) {
+                'ko' => '시작하기',
+                'ja' => 'はじめに',
+                _ => 'GETTING STARTED',
+              }, key: _partKey('group0Label')),
+              initiallyExpanded: args['collapsed'] != true,
               children: [
                 TRTreeNavLeaf(
-                  value: 'racks',
-                  label: Text('Racks', key: _partKey('leaf0Label')),
+                  value: 'install',
+                  label: Text(switch (locale) {
+                    'ko' => '설치',
+                    'ja' => 'インストール',
+                    _ => 'Install',
+                  }, key: _partKey('leaf0Label')),
                 ),
-                TRTreeNavLeaf(
-                  value: 'jobs',
-                  label: Text('Jobs', key: _partKey('leaf1Label')),
+                TRTreeNavGroup(
+                  value: 'advanced',
+                  label: Text(switch (locale) {
+                    'ko' => '고급',
+                    'ja' => '高度な設定',
+                    _ => 'ADVANCED',
+                  }, key: _partKey('group1Label')),
+                  initiallyExpanded: true,
+                  children: [
+                    TRTreeNavLeaf(
+                      value: 'plugins',
+                      label: Text(switch (locale) {
+                        'ko' => '플러그인',
+                        'ja' => 'プラグイン',
+                        _ => 'Plugins',
+                      }, key: _partKey('leaf1Label')),
+                    ),
+                    TRTreeNavLeaf(
+                      value: 'theming',
+                      label: Text(switch (locale) {
+                        'ko' => '테마',
+                        'ja' => 'テーマ',
+                        _ => 'Theming',
+                      }, key: _partKey('leaf2Label')),
+                    ),
+                  ],
                 ),
               ],
-            ),
-            TRTreeNavLeaf(
-              value: 'settings',
-              label: Text('Settings', key: _partKey('leaf2Label')),
             ),
           ],
         ),

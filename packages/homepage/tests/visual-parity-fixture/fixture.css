@@ -184,6 +184,27 @@ body {
   width: 16px;
 }
 
+.parity-tree-nav-link {
+  align-items: center;
+  color: var(--tinyrack-text-muted);
+  display: flex;
+  font-size: var(--tinyrack-text-sm);
+  inline-size: 100%;
+  justify-content: space-between;
+  min-block-size: var(--tinyrack-control-height-sm);
+  min-inline-size: 0;
+  padding: var(--tinyrack-space-xs) var(--tinyrack-space-md);
+  transition:
+    color var(--tinyrack-duration-fast),
+    background-color var(--tinyrack-duration-fast);
+}
+
+.parity-tree-nav-link:hover,
+.parity-tree-nav-link[data-active] {
+  background: var(--tinyrack-surface-hover);
+  color: var(--tinyrack-text);
+}
+
 .parity-plus::before,
 .parity-plus::after {
   background: currentcolor;
