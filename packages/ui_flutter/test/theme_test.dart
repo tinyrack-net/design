@@ -68,6 +68,19 @@ void main() {
     }
   });
 
+  test('every platform presses with the same splash', () {
+    // Material reaches for the ink sparkle on Android and the ripple
+    // everywhere else. The sparkle also compiles a fragment shader, which a
+    // headless test environment cannot always provide, so the divergence
+    // shows up as an intermittent failure rather than a visible difference.
+    for (final theme in <ThemeData>[
+      TinyrackTheme.light(),
+      TinyrackTheme.dark(),
+    ]) {
+      expect(theme.splashFactory, same(InkRipple.splashFactory));
+    }
+  });
+
   testWidgets('a pushed page scales up into place and settles', (tester) async {
     await tester.pumpWidget(_pageTransitionApp());
     await tester.tap(find.text('open'));

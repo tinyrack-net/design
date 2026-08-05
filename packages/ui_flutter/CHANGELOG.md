@@ -1,3 +1,13 @@
+## 0.22.0
+
+- Pins `splashFactory` to `InkRipple.splashFactory`. Material picks the ink
+  sparkle on Android and the ripple on every other platform, so the same press
+  animated differently depending on where a Tinyrack app ran, for the same
+  reason the page transitions are already pinned. The sparkle also compiles a
+  fragment shader that a headless test environment cannot always provide, which
+  surfaced in consumers as an intermittent `ink_sparkle.frag` failure rather
+  than as a visible difference.
+
 ## 0.21.0
 
 - Adds `TRMeasurements.brandMarkSm`, `brandMarkMd`, and `brandMarkLg` — a 64,
