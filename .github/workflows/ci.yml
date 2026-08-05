@@ -146,6 +146,9 @@ jobs:
           flutter-version: 3.44.4
           cache: true
 
+      - name: Check generated design tokens
+        run: pnpm run tokens:check
+
       - name: Build Flutter preview
         run: pnpm run flutter:preview:build
 
@@ -357,7 +360,6 @@ jobs:
           pnpm run biome
           pnpm run scripts:check
           pnpm run ci:plan:test
-          pnpm run tokens:check
           pnpm run flutter:preview:check
 
       - name: Download Web package runtime

@@ -134,6 +134,10 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('name: ui-docs-runtime');
     expect(ci).toContain('name: docs-smoke-input');
     expect(ci).toContain('name: flutter-preview-runtime');
+    expect(ci.match(/pnpm run tokens:check/g)).toHaveLength(1);
+    expect(ci).toMatch(
+      /name: Build Homepage Flutter preview[\s\S]*pnpm run tokens:check[\s\S]*name: Homepage package/,
+    );
     expect(ci).not.toContain('name: prepared-workspace');
     expect(ci).not.toContain('name: Prepare package outputs');
     expect(ci).toMatch(
