@@ -49,6 +49,11 @@ Flutter-only editing and Form lifecycle properties remain available on
 `TRTextField`, including secure single-line fields and bounded multiline
 editors through `obscureText`, `minLines`, and `maxLines`.
 
+`TRTreeNavGroup` and `TRTreeNavLeaf` accept an optional `description` for a
+muted secondary line. Native caption buttons can opt into neutral corner
+glyphs with `TRWindowCaptionGlyphStyle.expandCollapse` while the standard
+window marks remain the default.
+
 From the repository root, verify every shared variant in light and dark themes
 and English, Korean, and Japanese with:
 

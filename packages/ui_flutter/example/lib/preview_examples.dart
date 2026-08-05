@@ -4176,8 +4176,9 @@ Widget _windowFrameCaptionActions(BuildContext context, Locale locale) =>
       child: TRWindowFrameTitleBar(
         leading: const Text('File'),
         actions: TRWindowCaptionButton(
-          action: TRWindowCaptionAction.close,
-          label: _pick(locale, 'Close window', '창 닫기', 'ウィンドウを閉じる'),
+          action: TRWindowCaptionAction.maximize,
+          glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,
+          label: _pick(locale, 'Maximize window', '창 최대화', 'ウィンドウを最大化'),
           onPressed: () {},
         ),
         child: const Text('Tinyrack'),

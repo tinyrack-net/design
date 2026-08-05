@@ -115,4 +115,32 @@ void main() {
     await tester.tap(find.bySemanticsLabel('Close window'));
     expect(pressed, isTrue);
   });
+
+  testWidgets('window caption actions offer neutral expand-collapse glyphs', (
+    tester,
+  ) async {
+    const expected = <TRWindowCaptionAction, IconData>{
+      TRWindowCaptionAction.minimize: LucideIcons.minimize,
+      TRWindowCaptionAction.maximize: LucideIcons.maximize,
+      TRWindowCaptionAction.restore: LucideIcons.minimize2,
+    };
+    for (final entry in expected.entries) {
+      await tester.pumpWidget(
+        _app(
+          TRWindowCaptionButton(
+            action: entry.key,
+            glyphStyle: TRWindowCaptionGlyphStyle.expandCollapse,
+            label: entry.key.name,
+            onPressed: () {},
+          ),
+        ),
+      );
+
+      expect(tester.widget<Icon>(find.byType(Icon)).icon, entry.value);
+      expect(
+        tester.widget<TRIconButton>(find.byType(TRIconButton)).intent,
+        TRIntent.neutral,
+      );
+    }
+  });
 }
