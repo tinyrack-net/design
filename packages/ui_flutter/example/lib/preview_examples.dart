@@ -45,6 +45,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'accordion-expansion-states': _accordionExpansionStates,
   'tabs-sizes': _tabsSizes,
   'tabs-recipe': _tabsRecipe,
+  'tabs-bar': _tabsBar,
   'fieldset-basic': _fieldsetBasic,
   'fieldset-states': _fieldsetStates,
   'fieldset-composition': _fieldsetComposition,
@@ -986,6 +987,39 @@ Widget _tabsRecipe(BuildContext context, Locale locale) {
       defaultValue: 'metrics',
       tabs: _settingsTabs(locale),
       panelBuilder: (value) => _settingsPanel(locale, value),
+    ),
+  );
+}
+
+Widget _tabsBar(BuildContext context, Locale locale) {
+  return SizedBox(
+    width: 320,
+    child: TRTabs.bar(
+      defaultValue: 'metrics',
+      semanticLabel: _pick(locale, 'Open racks', '열린 랙', '開いているラック'),
+      tabs: [
+        for (final tab in _settingsTabs(locale))
+          TRTabsTab(
+            value: tab.value,
+            label: tab.label,
+            leading: const Icon(Icons.dns),
+            onClose: () {},
+            closeLabel: _pick(
+              locale,
+              'Close ${tab.label}',
+              '${tab.label} 닫기',
+              '${tab.label}を閉じる',
+            ),
+          ),
+      ],
+      actions: [
+        TRIconButton(
+          appearance: TRAppearance.ghost,
+          icon: const Icon(Icons.add),
+          label: _pick(locale, 'New rack', '새 랙', '新しいラック'),
+          onPressed: () {},
+        ),
+      ],
     ),
   );
 }
