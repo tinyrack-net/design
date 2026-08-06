@@ -36,8 +36,8 @@
       var(--tr-alert-dialog-popup-max-width, var(--_tr-alert-dialog-popup-max-width))
     );
     display: grid;
-    gap: var(--tinyrack-space-md);
-    padding: var(--tinyrack-space-xl);
+    gap: var(--tinyrack-space-sm);
+    padding: var(--tinyrack-space-md);
     width: min(
       100%,
       var(--tr-alert-dialog-popup-max-width, var(--_tr-alert-dialog-popup-max-width))

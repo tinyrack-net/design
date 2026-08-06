@@ -80,12 +80,12 @@ class TRAlertDialog extends StatelessWidget {
                 role: SemanticsRole.dialog,
                 child: Padding(
                   padding: const EdgeInsets.all(
-                    TRGeneratedSpacing.xl + TRGeneratedBorders.defaultWidth,
+                    TRGeneratedSpacing.md + TRGeneratedBorders.defaultWidth,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
-                    spacing: TRGeneratedSpacing.md,
+                    spacing: TRGeneratedSpacing.sm,
                     children: [
                       TRLayerPartBoundary(
                         name: 'title',

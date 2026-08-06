@@ -52,8 +52,14 @@ test('applies the drawer width, box model, and disabled appearance without a DOM
   const popupStyle = getComputedStyle(popup as HTMLElement);
   const triggerStyle = getComputedStyle(trigger as HTMLElement);
 
+  const contentStyle = getComputedStyle(
+    document.querySelector('.tr-drawer-content') as HTMLElement,
+  );
+
   expect(popupStyle.boxSizing).toBe('border-box');
   expect(Number.parseFloat(popupStyle.maxWidth)).toBeGreaterThan(0);
+  expect(contentStyle.paddingTop).toBe('12px');
+  expect(contentStyle.paddingInlineStart).toBe('12px');
   expect(triggerStyle.cursor).toBe('not-allowed');
   expect(triggerStyle.opacity).toBe('0.5');
 });
@@ -583,7 +589,7 @@ test('23 keeps bottom drawer content scrollable above the safe area', async () =
   expect(getComputedStyle(content as HTMLElement).overflowY).toBe('auto');
   expect(
     Number.parseFloat(getComputedStyle(content as HTMLElement).paddingBottom),
-  ).toBeGreaterThanOrEqual(24);
+  ).toBeGreaterThanOrEqual(12);
   const closeRect = await settledRect(
     document.querySelector('.tr-drawer-close') as HTMLElement,
   );

@@ -18,7 +18,7 @@
 
   .tr-dialog-box {
     --_tr-dialog-box-max-width: var(--tinyrack-overlay-width-md);
-    --_tr-dialog-box-padding: var(--tinyrack-space-xl);
+    --_tr-dialog-box-padding: var(--tinyrack-space-md);
     --_tr-dialog-box-radius: var(--tinyrack-radius-xl);
     --_tr-dialog-box-width: calc(100% - var(--tinyrack-space-xl));
     --_tr-dialog-closed-scale: var(--tinyrack-overlay-closed-scale);
@@ -157,7 +157,7 @@
     min-height: 0;
     overflow: auto;
     overscroll-behavior: contain;
-    padding-block: var(--tinyrack-space-lg);
+    padding-block: var(--tinyrack-space-sm);
   }
 
   .tr-dialog-action {
@@ -187,7 +187,6 @@
 
   @variant max-sm {
     .tr-dialog-box {
-      --_tr-dialog-box-padding: var(--tinyrack-space-lg);
       max-height: calc(100dvh - var(--tinyrack-space-xl));
     }
   }

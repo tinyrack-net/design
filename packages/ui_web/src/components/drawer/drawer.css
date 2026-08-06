@@ -113,9 +113,9 @@
     gap: var(--tinyrack-space-md);
     max-width: none;
     overflow: auto;
-    padding: var(--tinyrack-space-xl);
+    padding: var(--tinyrack-space-md);
     padding-block-end: max(
-      var(--tinyrack-space-xl),
+      var(--tinyrack-space-md),
       calc(env(safe-area-inset-bottom) + var(--tinyrack-space-md))
     );
   }

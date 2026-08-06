@@ -38,6 +38,28 @@ test('uses Base UI dialog focus and dismissal behavior', async () => {
   await expect.poll(() => popup?.hasAttribute('data-closed')).toBe(true);
 });
 
+test('insets the dialog box and its body with the compact spacing scale', async () => {
+  await render(
+    <TRDialog.Root defaultOpen>
+      <TRDialog.Portal>
+        <TRDialog.Backdrop />
+        <TRDialog.Popup placement="middle">
+          <TRDialog.Title>Rename workspace</TRDialog.Title>
+          <div className="tr-dialog-body">Pick a new name.</div>
+          <div className="tr-dialog-action">
+            <TRDialog.Close>Save</TRDialog.Close>
+          </div>
+        </TRDialog.Popup>
+      </TRDialog.Portal>
+    </TRDialog.Root>,
+  );
+
+  const box = document.querySelector<HTMLElement>('.tr-dialog-box');
+  const body = document.querySelector<HTMLElement>('.tr-dialog-body');
+  expect(getComputedStyle(box as HTMLElement).padding).toBe('12px');
+  expect(getComputedStyle(body as HTMLElement).paddingBlock).toBe('8px');
+});
+
 test('opens from its trigger and restores focus after close', async () => {
   await render(
     <TRDialog.Root>

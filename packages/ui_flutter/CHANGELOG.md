@@ -1,3 +1,19 @@
+## 0.32.0
+
+- `TRDialog`, `TRAlertDialog`, and `TRDrawer` now inset their slots by
+  `TRSpacing.medium` instead of `TRSpacing.extraLarge`, so an overlay box is
+  padded 12 logical pixels rather than 24. A dialog is a focused surface holding
+  one short decision, and a quarter of its width was going to chrome; the delete
+  confirmations and pickers that make up most overlay traffic read as oversized
+  boxes around two lines of text. `TRDialog`'s content block drops from
+  `TRSpacing.large` to `TRSpacing.small`, and `TRAlertDialog` stacks its slots at
+  `TRSpacing.small` instead of `TRSpacing.medium`, so the interior rhythm shrinks
+  with the box rather than leaving the content block looking detached. The
+  matching React surfaces changed with it, so visual parity is unaffected. No
+  token values changed. A consumer that sized overlay content against the old
+  24px inset — a fixed `maxWidth` on content meant to fill the box, say — gets
+  24 logical pixels more room than it asked for.
+
 ## 0.31.1
 
 - Completes the `TRTreeNav` keyboard-trap fix. 0.30.1 made the focus ring
