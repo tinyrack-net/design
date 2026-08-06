@@ -60,6 +60,37 @@ test('renders the Tinyrack TRAutocomplete wrapper', async () => {
   expect(inputNode).toBe(document.querySelector('.tr-autocomplete-input'));
 });
 
+test('decorates its list separator without exposing it to the listbox', async () => {
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
+  await render(
+    <TRAutocomplete.Root defaultOpen items={['Alpha', 'Beta']}>
+      <TRAutocomplete.Input aria-label="Separated rack" />
+      <TRAutocomplete.Portal>
+        <TRAutocomplete.Positioner>
+          <TRAutocomplete.Popup>
+            <TRAutocomplete.List>
+              <TRAutocomplete.Item value="Alpha">Alpha</TRAutocomplete.Item>
+              <TRAutocomplete.Separator data-testid="autocomplete-separator" />
+              <TRAutocomplete.Item value="Beta">Beta</TRAutocomplete.Item>
+            </TRAutocomplete.List>
+          </TRAutocomplete.Popup>
+        </TRAutocomplete.Positioner>
+      </TRAutocomplete.Portal>
+    </TRAutocomplete.Root>,
+  );
+
+  const separator = document.querySelector<HTMLElement>(
+    '[data-testid="autocomplete-separator"]',
+  );
+  expect(separator).not.toBeNull();
+  expect(separator?.classList.contains('tr-separator')).toBe(true);
+  // A separator is not a valid child of a listbox, so the list decorates it
+  // rather than exposing it to assistive technology.
+  expect(separator?.getAttribute('role')).toBe('presentation');
+  expect(separator?.dataset['orientation']).toBe('horizontal');
+  expect(getComputedStyle(separator as HTMLElement).height).not.toBe('0px');
+});
+
 test('centers an input adornment and supports the end side', async () => {
   const adornmentRef = createRef<HTMLSpanElement>();
   await render(
