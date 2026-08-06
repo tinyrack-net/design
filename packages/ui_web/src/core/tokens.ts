@@ -68,6 +68,8 @@ export const tinyrackMeasurements = {
   "brand-mark-sm": "4rem",
   "brand-mark-md": "6rem",
   "brand-mark-lg": "8rem",
+  "pane-sm": "15rem",
+  "pane-md": "18rem",
   "page-width-sm": "64rem",
   "page-width-md": "72rem",
   "page-width-lg": "76rem",

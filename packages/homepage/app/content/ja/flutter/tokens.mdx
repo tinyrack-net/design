@@ -25,3 +25,29 @@ Padding(
 各プラットフォーム向けに変換した値が入ります。CSS固有の単位と
 シャドウ構文はジェネレーターが変換し、未対応の変換がある場合は
 生成トークンの検証が失敗します。
+
+## レイアウトの幅
+
+`TRBreakpoints`にはレイアウトの形が変わるビューポート幅が、
+`TRMeasurements`にはその中に置く領域の幅が入ります。どちらもトークンから
+読むことで、同じアプリの2つの画面が異なる幅で再配置されるのを防げます。
+
+```dart
+LayoutBuilder(
+  builder: (context, constraints) => constraints.maxWidth < TRBreakpoints.medium
+      ? detail
+      : Row(
+          children: [
+            SizedBox(width: TRMeasurements.paneMd, child: list),
+            Expanded(child: detail),
+          ],
+        ),
+);
+```
+
+何の大きさを決めるのかに合った値を選んでください。`paneSm`と`paneMd`は、
+ナビゲーションレールやリスト詳細レイアウトのリスト側のような、構造を
+なす領域の幅です。`readingWidthSm`から`readingWidthLg`までは
+コンテンツ列の最大幅を制限し、広いウィンドウでも説明とコントロールが
+離れないようにします。`measure`スケールはテキスト1領域の幅で、
+`TRControlMetrics`はコントロール1つの大きさです。

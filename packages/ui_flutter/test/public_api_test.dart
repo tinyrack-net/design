@@ -48,6 +48,7 @@ const publicTypes = <Type>[
   TRBadge,
   TRBreadcrumbs,
   TRBreadcrumbsItem,
+  TRBreakpoints,
   TRButton,
   TRCard,
   TRCardContent,
