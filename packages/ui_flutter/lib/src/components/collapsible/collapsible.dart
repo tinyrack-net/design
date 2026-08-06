@@ -5,6 +5,22 @@ import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 
+/// The edge of an adjacent surface a [TRCollapsible] visually attaches to.
+///
+/// An attached edge squares its corners and drops its border side, so the
+/// collapsible reads as one surface with the neighbor that provides that
+/// border — a drawer sitting on top of a card, for instance.
+enum TRCollapsibleAttachedEdge {
+  /// Free-standing: all four corners rounded, border on every side.
+  none,
+
+  /// Flush against a surface above: square top corners, no top border.
+  top,
+
+  /// Flush against a surface below: square bottom corners, no bottom border.
+  bottom,
+}
+
 // @tinyrack-preview collapsible
 /// A single disclosure panel that expands to reveal its content.
 class TRCollapsible extends StatefulWidget {
@@ -15,6 +31,7 @@ class TRCollapsible extends StatefulWidget {
     this.defaultOpen = false,
     this.onOpenChange,
     this.disabled = false,
+    this.attachedEdge = TRCollapsibleAttachedEdge.none,
     super.key,
   });
 
@@ -24,6 +41,9 @@ class TRCollapsible extends StatefulWidget {
   final bool defaultOpen;
   final ValueChanged<bool>? onOpenChange;
   final bool disabled;
+
+  /// The adjacent-surface edge this panel sits flush against.
+  final TRCollapsibleAttachedEdge attachedEdge;
 
   @override
   State<TRCollapsible> createState() => _TRCollapsibleState();
@@ -88,12 +108,15 @@ class _TRCollapsibleState extends State<TRCollapsible> {
             ),
             child: Padding(
               // The divider and the root border paint inside; widen
-              // the insets they overlap.
-              padding: const EdgeInsets.fromLTRB(
+              // the insets they overlap. An attached edge has no border,
+              // so its inset stays at the plain token.
+              padding: EdgeInsets.fromLTRB(
                 TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
                 TRGeneratedSpacing.lg,
                 TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
-                TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
+                widget.attachedEdge == TRCollapsibleAttachedEdge.bottom
+                    ? TRGeneratedSpacing.lg
+                    : TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
               ),
               child: DefaultTextStyle.merge(
                 style: TextStyle(
@@ -108,14 +131,27 @@ class _TRCollapsibleState extends State<TRCollapsible> {
           )
         : const SizedBox(width: double.infinity);
 
+    final borderSide = BorderSide(
+      color: generated.controlBorder,
+      width: TRGeneratedBorders.defaultWidth,
+    );
+    const cornerRadius = Radius.circular(TRGeneratedRadii.md);
+    final attachedTop = widget.attachedEdge == TRCollapsibleAttachedEdge.top;
+    final attachedBottom =
+        widget.attachedEdge == TRCollapsibleAttachedEdge.bottom;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colors.surface,
-        border: Border.all(
-          color: generated.controlBorder,
-          width: TRGeneratedBorders.defaultWidth,
+        border: Border(
+          top: attachedTop ? BorderSide.none : borderSide,
+          left: borderSide,
+          right: borderSide,
+          bottom: attachedBottom ? BorderSide.none : borderSide,
         ),
-        borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+        borderRadius: BorderRadius.vertical(
+          top: attachedTop ? Radius.zero : cornerRadius,
+          bottom: attachedBottom ? Radius.zero : cornerRadius,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -163,12 +199,19 @@ class _TRCollapsibleState extends State<TRCollapsible> {
                             padding: EdgeInsets.fromLTRB(
                               TRGeneratedSpacing.lg +
                                   TRGeneratedBorders.defaultWidth,
-                              TRGeneratedSpacing.md +
-                                  TRGeneratedBorders.defaultWidth,
+                              widget.attachedEdge ==
+                                      TRCollapsibleAttachedEdge.top
+                                  ? TRGeneratedSpacing.md
+                                  : TRGeneratedSpacing.md +
+                                        TRGeneratedBorders.defaultWidth,
                               TRGeneratedSpacing.lg +
                                   TRGeneratedBorders.defaultWidth,
-                              TRGeneratedSpacing.md +
-                                  TRGeneratedBorders.defaultWidth,
+                              open ||
+                                      widget.attachedEdge !=
+                                          TRCollapsibleAttachedEdge.bottom
+                                  ? TRGeneratedSpacing.md +
+                                        TRGeneratedBorders.defaultWidth
+                                  : TRGeneratedSpacing.md,
                             ),
                             child: Row(
                               children: [

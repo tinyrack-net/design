@@ -68,6 +68,7 @@ const publicTypes = <Type>[
   TRCodeHighlightResult,
   TRCodeHighlighterProvider,
   TRCollapsible,
+  TRCollapsibleAttachedEdge,
   TRCombobox,
   TRComboboxController,
   TRComboboxFilterMode,

@@ -1770,6 +1770,70 @@ void main() {
     },
   );
 
+  testWidgets('collapsible attaches flush to an adjacent surface edge', (
+    tester,
+  ) async {
+    BoxDecoration decorationOf(Finder finder) =>
+        (tester.widget<DecoratedBox>(finder).decoration as BoxDecoration);
+    Finder rootBox() => find
+        .descendant(
+          of: find.byType(TRCollapsible),
+          matching: find.byType(DecoratedBox),
+        )
+        .first;
+
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRCollapsible(
+          trigger: Text('Details'),
+          content: Text('Panel body'),
+        ),
+      ),
+    );
+    final detached = decorationOf(rootBox());
+    final detachedBorder = detached.border! as Border;
+    expect(detachedBorder.bottom, isNot(BorderSide.none));
+    expect(
+      (detached.borderRadius! as BorderRadius).bottomLeft,
+      isNot(Radius.zero),
+    );
+
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRCollapsible(
+          attachedEdge: TRCollapsibleAttachedEdge.bottom,
+          trigger: Text('Details'),
+          content: Text('Panel body'),
+        ),
+      ),
+    );
+    final bottomAttached = decorationOf(rootBox());
+    final bottomBorder = bottomAttached.border! as Border;
+    expect(bottomBorder.bottom, BorderSide.none);
+    expect(bottomBorder.top, isNot(BorderSide.none));
+    final bottomRadius = bottomAttached.borderRadius! as BorderRadius;
+    expect(bottomRadius.bottomLeft, Radius.zero);
+    expect(bottomRadius.bottomRight, Radius.zero);
+    expect(bottomRadius.topLeft, isNot(Radius.zero));
+
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRCollapsible(
+          attachedEdge: TRCollapsibleAttachedEdge.top,
+          trigger: Text('Details'),
+          content: Text('Panel body'),
+        ),
+      ),
+    );
+    final topAttached = decorationOf(rootBox());
+    final topBorder = topAttached.border! as Border;
+    expect(topBorder.top, BorderSide.none);
+    expect(topBorder.bottom, isNot(BorderSide.none));
+    final topRadius = topAttached.borderRadius! as BorderRadius;
+    expect(topRadius.topLeft, Radius.zero);
+    expect(topRadius.bottomLeft, isNot(Radius.zero));
+  });
+
   testWidgets('collapsible does not toggle when disabled', (tester) async {
     var calls = 0;
     await tester.pumpWidget(
