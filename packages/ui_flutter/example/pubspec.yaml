@@ -7,12 +7,12 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.9
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.20.2
+  intl: ^0.20.3
   tinyrack_ui:
     path: ..
   web: ^1.1.1

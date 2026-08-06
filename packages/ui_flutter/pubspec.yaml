@@ -17,8 +17,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.20.2
-  lucide_flutter: ^1.25.0
+  intl: ^0.20.3
+  lucide_flutter: ^1.28.0
   xterm: ^4.0.0
 
 dev_dependencies:
