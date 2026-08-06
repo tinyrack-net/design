@@ -284,107 +284,112 @@ test.each([
   ['up', 'flex-start', 'center', '0px', '0px'],
   ['left', 'stretch', 'flex-start', '0px', '0px'],
   ['right', 'stretch', 'flex-end', '0px', '0px'],
-] as const)('anchors %s drawers to the matching viewport edge and squares the attached corners', async (direction, alignItems, justifyContent, firstRadius, secondRadius) => {
-  const view = await render(
-    <TRDrawer.Root defaultOpen swipeDirection={direction}>
-      <TRDrawer.Portal>
-        <TRDrawer.Viewport>
-          <TRDrawer.Popup aria-label={`${direction} drawer`}>
-            <TRDrawer.Content>Directional content</TRDrawer.Content>
-          </TRDrawer.Popup>
-        </TRDrawer.Viewport>
-      </TRDrawer.Portal>
-    </TRDrawer.Root>,
-  );
-  const viewport = document.querySelector<HTMLElement>('.tr-drawer-viewport');
-  const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
-  await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
-  expect(getComputedStyle(viewport as HTMLElement).alignItems).toBe(alignItems);
-  expect(getComputedStyle(viewport as HTMLElement).justifyContent).toBe(justifyContent);
+] as const)(
+  'anchors %s drawers to the matching viewport edge and squares the attached corners',
+  async (direction, alignItems, justifyContent, firstRadius, secondRadius) => {
+    const view = await render(
+      <TRDrawer.Root defaultOpen swipeDirection={direction}>
+        <TRDrawer.Portal>
+          <TRDrawer.Viewport>
+            <TRDrawer.Popup aria-label={`${direction} drawer`}>
+              <TRDrawer.Content>Directional content</TRDrawer.Content>
+            </TRDrawer.Popup>
+          </TRDrawer.Viewport>
+        </TRDrawer.Portal>
+      </TRDrawer.Root>,
+    );
+    const viewport = document.querySelector<HTMLElement>('.tr-drawer-viewport');
+    const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
+    await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
+    expect(getComputedStyle(viewport as HTMLElement).alignItems).toBe(alignItems);
+    expect(getComputedStyle(viewport as HTMLElement).justifyContent).toBe(
+      justifyContent,
+    );
 
-  const style = getComputedStyle(popup as HTMLElement);
-  const attachedRadii =
-    direction === 'down'
-      ? [style.borderBottomLeftRadius, style.borderBottomRightRadius]
-      : direction === 'up'
-        ? [style.borderTopLeftRadius, style.borderTopRightRadius]
-        : direction === 'left'
-          ? [style.borderTopLeftRadius, style.borderBottomLeftRadius]
-          : [style.borderTopRightRadius, style.borderBottomRightRadius];
-  expect(attachedRadii).toEqual([firstRadius, secondRadius]);
-  await view.unmount();
-});
+    const style = getComputedStyle(popup as HTMLElement);
+    const attachedRadii =
+      direction === 'down'
+        ? [style.borderBottomLeftRadius, style.borderBottomRightRadius]
+        : direction === 'up'
+          ? [style.borderTopLeftRadius, style.borderTopRightRadius]
+          : direction === 'left'
+            ? [style.borderTopLeftRadius, style.borderBottomLeftRadius]
+            : [style.borderTopRightRadius, style.borderBottomRightRadius];
+    expect(attachedRadii).toEqual([firstRadius, secondRadius]);
+    await view.unmount();
+  },
+);
 
-test.each([
-  'left',
-  'right',
-] as const)('renders the %s drawer as a borderless edge surface', async (direction) => {
-  const originalTheme = document.documentElement.dataset['theme'];
-  document.documentElement.dataset['theme'] = 'tinyrack-light';
-  const view = await render(
-    <TRDrawer.Root defaultOpen swipeDirection={direction}>
-      <TRDrawer.Portal>
-        <TRDrawer.Viewport>
-          <TRDrawer.Popup aria-label={`${direction} edge drawer`}>
-            <TRDrawer.Content>Edge content</TRDrawer.Content>
-          </TRDrawer.Popup>
-        </TRDrawer.Viewport>
-      </TRDrawer.Portal>
-    </TRDrawer.Root>,
-  );
-  const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
-  await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
+test.each(['left', 'right'] as const)(
+  'renders the %s drawer as a borderless edge surface',
+  async (direction) => {
+    const originalTheme = document.documentElement.dataset['theme'];
+    document.documentElement.dataset['theme'] = 'tinyrack-light';
+    const view = await render(
+      <TRDrawer.Root defaultOpen swipeDirection={direction}>
+        <TRDrawer.Portal>
+          <TRDrawer.Viewport>
+            <TRDrawer.Popup aria-label={`${direction} edge drawer`}>
+              <TRDrawer.Content>Edge content</TRDrawer.Content>
+            </TRDrawer.Popup>
+          </TRDrawer.Viewport>
+        </TRDrawer.Portal>
+      </TRDrawer.Root>,
+    );
+    const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
+    await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
 
-  const style = getComputedStyle(popup as HTMLElement);
-  expect([
-    style.borderTopWidth,
-    style.borderRightWidth,
-    style.borderBottomWidth,
-    style.borderLeftWidth,
-  ]).toEqual(['0px', '0px', '0px', '0px']);
-  expect(style.boxShadow).not.toBe('none');
-  await view.unmount();
-  if (originalTheme === undefined) {
-    delete document.documentElement.dataset['theme'];
-  } else {
-    document.documentElement.dataset['theme'] = originalTheme;
-  }
-});
+    const style = getComputedStyle(popup as HTMLElement);
+    expect([
+      style.borderTopWidth,
+      style.borderRightWidth,
+      style.borderBottomWidth,
+      style.borderLeftWidth,
+    ]).toEqual(['0px', '0px', '0px', '0px']);
+    expect(style.boxShadow).not.toBe('none');
+    await view.unmount();
+    if (originalTheme === undefined) {
+      delete document.documentElement.dataset['theme'];
+    } else {
+      document.documentElement.dataset['theme'] = originalTheme;
+    }
+  },
+);
 
-test.each([
-  'up',
-  'down',
-] as const)('retains the outlined overlay surface for the %s drawer', async (direction) => {
-  const originalTheme = document.documentElement.dataset['theme'];
-  document.documentElement.dataset['theme'] = 'tinyrack-light';
-  const view = await render(
-    <TRDrawer.Root defaultOpen swipeDirection={direction}>
-      <TRDrawer.Portal>
-        <TRDrawer.Viewport>
-          <TRDrawer.Popup aria-label={`${direction} overlay drawer`}>
-            <TRDrawer.Content>Overlay content</TRDrawer.Content>
-          </TRDrawer.Popup>
-        </TRDrawer.Viewport>
-      </TRDrawer.Portal>
-    </TRDrawer.Root>,
-  );
-  const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
-  await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
+test.each(['up', 'down'] as const)(
+  'retains the outlined overlay surface for the %s drawer',
+  async (direction) => {
+    const originalTheme = document.documentElement.dataset['theme'];
+    document.documentElement.dataset['theme'] = 'tinyrack-light';
+    const view = await render(
+      <TRDrawer.Root defaultOpen swipeDirection={direction}>
+        <TRDrawer.Portal>
+          <TRDrawer.Viewport>
+            <TRDrawer.Popup aria-label={`${direction} overlay drawer`}>
+              <TRDrawer.Content>Overlay content</TRDrawer.Content>
+            </TRDrawer.Popup>
+          </TRDrawer.Viewport>
+        </TRDrawer.Portal>
+      </TRDrawer.Root>,
+    );
+    const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
+    await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
 
-  const style = getComputedStyle(popup as HTMLElement);
-  expect([
-    style.borderTopWidth,
-    style.borderRightWidth,
-    style.borderBottomWidth,
-    style.borderLeftWidth,
-  ]).toEqual(['1px', '1px', '1px', '1px']);
-  await view.unmount();
-  if (originalTheme === undefined) {
-    delete document.documentElement.dataset['theme'];
-  } else {
-    document.documentElement.dataset['theme'] = originalTheme;
-  }
-});
+    const style = getComputedStyle(popup as HTMLElement);
+    expect([
+      style.borderTopWidth,
+      style.borderRightWidth,
+      style.borderBottomWidth,
+      style.borderLeftWidth,
+    ]).toEqual(['1px', '1px', '1px', '1px']);
+    await view.unmount();
+    if (originalTheme === undefined) {
+      delete document.documentElement.dataset['theme'];
+    } else {
+      document.documentElement.dataset['theme'] = originalTheme;
+    }
+  },
+);
 
 test('covers the reserved scrollbar gutter from the default body portal', async () => {
   const originalScrollbarGutter = document.documentElement.style.scrollbarGutter;

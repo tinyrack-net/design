@@ -154,51 +154,57 @@ test('supports Base UI polymorphism without adding native button attributes', as
   expect(onClick).toHaveBeenCalledOnce();
 });
 
-test.each([
-  'tinyrack-light',
-  'tinyrack-dark',
-] as const)('distinguishes neutral and primary non-solid actions in %s', async (theme) => {
-  document.documentElement.dataset['theme'] = theme;
-  const screen = await render(
-    <>
-      <TRButton appearance="outline" data-testid="neutral-outline">
-        Neutral outline
-      </TRButton>
-      <TRButton appearance="outline" data-testid="primary-outline" intent="primary">
-        Primary outline
-      </TRButton>
-      <TRButton appearance="ghost" data-testid="neutral-ghost">
-        Neutral ghost
-      </TRButton>
-      <TRButton appearance="ghost" data-testid="primary-ghost" intent="primary">
-        Primary ghost
-      </TRButton>
-      <TRButton data-testid="neutral-solid">Neutral solid</TRButton>
-    </>,
-  );
-  const neutralOutline = getComputedStyle(
-    screen.getByTestId('neutral-outline').element(),
-  );
-  const primaryOutline = getComputedStyle(
-    screen.getByTestId('primary-outline').element(),
-  );
-  const neutralGhost = getComputedStyle(screen.getByTestId('neutral-ghost').element());
-  const primaryGhost = getComputedStyle(screen.getByTestId('primary-ghost').element());
-  const neutralSolid = getComputedStyle(screen.getByTestId('neutral-solid').element());
-  const surface = getComputedStyle(document.documentElement)
-    .getPropertyValue('--tinyrack-surface')
-    .trim();
+test.each(['tinyrack-light', 'tinyrack-dark'] as const)(
+  'distinguishes neutral and primary non-solid actions in %s',
+  async (theme) => {
+    document.documentElement.dataset['theme'] = theme;
+    const screen = await render(
+      <>
+        <TRButton appearance="outline" data-testid="neutral-outline">
+          Neutral outline
+        </TRButton>
+        <TRButton appearance="outline" data-testid="primary-outline" intent="primary">
+          Primary outline
+        </TRButton>
+        <TRButton appearance="ghost" data-testid="neutral-ghost">
+          Neutral ghost
+        </TRButton>
+        <TRButton appearance="ghost" data-testid="primary-ghost" intent="primary">
+          Primary ghost
+        </TRButton>
+        <TRButton data-testid="neutral-solid">Neutral solid</TRButton>
+      </>,
+    );
+    const neutralOutline = getComputedStyle(
+      screen.getByTestId('neutral-outline').element(),
+    );
+    const primaryOutline = getComputedStyle(
+      screen.getByTestId('primary-outline').element(),
+    );
+    const neutralGhost = getComputedStyle(
+      screen.getByTestId('neutral-ghost').element(),
+    );
+    const primaryGhost = getComputedStyle(
+      screen.getByTestId('primary-ghost').element(),
+    );
+    const neutralSolid = getComputedStyle(
+      screen.getByTestId('neutral-solid').element(),
+    );
+    const surface = getComputedStyle(document.documentElement)
+      .getPropertyValue('--tinyrack-surface')
+      .trim();
 
-  expect(neutralOutline.color).toBe(neutralGhost.color);
-  expect(primaryOutline.color).toBe(primaryGhost.color);
-  expect(neutralOutline.color).not.toBe(primaryOutline.color);
-  expect(neutralSolid.color).not.toBe(primaryOutline.color);
-  expect(primaryOutline.color).toBe(
-    theme === 'tinyrack-light' ? 'rgb(29, 78, 216)' : 'rgb(96, 165, 250)',
-  );
-  expect(contrastRatio(neutralOutline.color, surface)).toBeGreaterThanOrEqual(4.5);
-  expect(contrastRatio(primaryOutline.color, surface)).toBeGreaterThanOrEqual(4.5);
-});
+    expect(neutralOutline.color).toBe(neutralGhost.color);
+    expect(primaryOutline.color).toBe(primaryGhost.color);
+    expect(neutralOutline.color).not.toBe(primaryOutline.color);
+    expect(neutralSolid.color).not.toBe(primaryOutline.color);
+    expect(primaryOutline.color).toBe(
+      theme === 'tinyrack-light' ? 'rgb(29, 78, 216)' : 'rgb(96, 165, 250)',
+    );
+    expect(contrastRatio(neutralOutline.color, surface)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(primaryOutline.color, surface)).toBeGreaterThanOrEqual(4.5);
+  },
+);
 
 test('defaults to a non-submit button', async () => {
   const onDefaultSubmit = vi.fn((event: FormEvent<HTMLFormElement>) =>
@@ -276,64 +282,67 @@ test('suppresses pointer and keyboard activation while loading', async () => {
 test.each([
   ['md', '32px', '12px', '14px'],
   ['lg', '40px', '16px', '14px'],
-] as const)('computes the %s control recipe', async (uiSize, height, padding, fontSize) => {
-  const screen = await render(<TRButton uiSize={uiSize}>{uiSize}</TRButton>);
-  const styles = getComputedStyle(screen.getByRole('button').element());
+] as const)(
+  'computes the %s control recipe',
+  async (uiSize, height, padding, fontSize) => {
+    const screen = await render(<TRButton uiSize={uiSize}>{uiSize}</TRButton>);
+    const styles = getComputedStyle(screen.getByRole('button').element());
 
-  expect(styles.height).toBe(height);
-  expect(styles.paddingLeft).toBe(padding);
-  expect(styles.paddingRight).toBe(padding);
-  expect(styles.fontSize).toBe(fontSize);
-});
+    expect(styles.height).toBe(height);
+    expect(styles.paddingLeft).toBe(padding);
+    expect(styles.paddingRight).toBe(padding);
+    expect(styles.fontSize).toBe(fontSize);
+  },
+);
 
-test.each([
-  'tinyrack-light',
-  'tinyrack-dark',
-] as const)('computes variant and appearance colors in %s', async (theme) => {
-  document.documentElement.dataset['theme'] = theme;
-  const screen = await render(
-    <div>
-      <TRButton data-testid="solid" variant="primary">
-        Solid
-      </TRButton>
-      <TRButton appearance="outline" data-testid="outline" variant="danger">
-        Outline
-      </TRButton>
-      <TRButton appearance="ghost" data-testid="ghost" variant="secondary">
-        Ghost
-      </TRButton>
-    </div>,
-  );
-  const solid = getComputedStyle(screen.getByTestId('solid').element());
-  const outline = getComputedStyle(screen.getByTestId('outline').element());
-  const ghost = getComputedStyle(screen.getByTestId('ghost').element());
-  const expected =
-    theme === 'tinyrack-light'
-      ? {
-          danger: 'rgb(185, 28, 28)',
-          dangerBorder: 'rgb(220, 38, 38)',
-          onPrimary: 'rgb(255, 255, 255)',
-          primary: 'rgb(29, 78, 216)',
-          textMuted: 'rgb(82, 82, 82)',
-        }
-      : {
-          danger: 'rgb(248, 113, 113)',
-          dangerBorder: 'rgb(248, 113, 113)',
-          onPrimary: 'rgb(23, 37, 84)',
-          primary: 'rgb(96, 165, 250)',
-          textMuted: 'rgb(163, 163, 163)',
-        };
+test.each(['tinyrack-light', 'tinyrack-dark'] as const)(
+  'computes variant and appearance colors in %s',
+  async (theme) => {
+    document.documentElement.dataset['theme'] = theme;
+    const screen = await render(
+      <div>
+        <TRButton data-testid="solid" variant="primary">
+          Solid
+        </TRButton>
+        <TRButton appearance="outline" data-testid="outline" variant="danger">
+          Outline
+        </TRButton>
+        <TRButton appearance="ghost" data-testid="ghost" variant="secondary">
+          Ghost
+        </TRButton>
+      </div>,
+    );
+    const solid = getComputedStyle(screen.getByTestId('solid').element());
+    const outline = getComputedStyle(screen.getByTestId('outline').element());
+    const ghost = getComputedStyle(screen.getByTestId('ghost').element());
+    const expected =
+      theme === 'tinyrack-light'
+        ? {
+            danger: 'rgb(185, 28, 28)',
+            dangerBorder: 'rgb(220, 38, 38)',
+            onPrimary: 'rgb(255, 255, 255)',
+            primary: 'rgb(29, 78, 216)',
+            textMuted: 'rgb(82, 82, 82)',
+          }
+        : {
+            danger: 'rgb(248, 113, 113)',
+            dangerBorder: 'rgb(248, 113, 113)',
+            onPrimary: 'rgb(23, 37, 84)',
+            primary: 'rgb(96, 165, 250)',
+            textMuted: 'rgb(163, 163, 163)',
+          };
 
-  expect(solid.backgroundColor).toBe(expected.primary);
-  expect(solid.borderColor).toBe(expected.primary);
-  expect(solid.color).toBe(expected.onPrimary);
-  expect(outline.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-  expect(outline.borderColor).toBe(expected.dangerBorder);
-  expect(outline.color).toBe(expected.danger);
-  expect(ghost.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-  expect(ghost.borderColor).toBe('rgba(0, 0, 0, 0)');
-  expect(ghost.color).toBe(expected.textMuted);
-});
+    expect(solid.backgroundColor).toBe(expected.primary);
+    expect(solid.borderColor).toBe(expected.primary);
+    expect(solid.color).toBe(expected.onPrimary);
+    expect(outline.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(outline.borderColor).toBe(expected.dangerBorder);
+    expect(outline.color).toBe(expected.danger);
+    expect(ghost.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(ghost.borderColor).toBe('rgba(0, 0, 0, 0)');
+    expect(ghost.color).toBe(expected.textMuted);
+  },
+);
 
 test('computes hover, keyboard focus, disabled, and consumer override states', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';

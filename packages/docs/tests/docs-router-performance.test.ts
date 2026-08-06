@@ -30,12 +30,12 @@ describe('portable documentation worker budgeting', () => {
     { parallelism: 4, expected: 3 },
     { parallelism: 8, expected: 7 },
     { parallelism: 32, expected: 8 },
-  ])('uses $expected workers on $parallelism available CPUs', ({
-    parallelism,
-    expected,
-  }) => {
-    expect(buildWorkerBudget({ maxWorkers: 8, parallelism })).toBe(expected);
-  });
+  ])(
+    'uses $expected workers on $parallelism available CPUs',
+    ({ parallelism, expected }) => {
+      expect(buildWorkerBudget({ maxWorkers: 8, parallelism })).toBe(expected);
+    },
+  );
 
   it('accepts valid overrides and safely ignores invalid values', () => {
     expect(buildWorkerBudget({ maxWorkers: 4, override: '6', parallelism: 8 })).toBe(6);

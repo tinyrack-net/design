@@ -54,95 +54,96 @@ describe('built Flutter Web component preview', () => {
     await runtime.stop();
   });
 
-  it.each(
-    browserAuditShardCases(flutterPreviewComponents),
-  )('loads the %s playground without a preview contract error', async (component) => {
-    const page = await browser.newPage({
-      viewport: { height: 900, width: 1280 },
-    });
-    await page.addInitScript(() => {
-      const messages: unknown[] = [];
-      Object.defineProperty(window, '__flutterPreviewMessages', {
-        value: messages,
+  it.each(browserAuditShardCases(flutterPreviewComponents))(
+    'loads the %s playground without a preview contract error',
+    async (component) => {
+      const page = await browser.newPage({
+        viewport: { height: 900, width: 1280 },
       });
-      window.addEventListener('message', (event) => messages.push(event.data));
-    });
+      await page.addInitScript(() => {
+        const messages: unknown[] = [];
+        Object.defineProperty(window, '__flutterPreviewMessages', {
+          value: messages,
+        });
+        window.addEventListener('message', (event) => messages.push(event.data));
+      });
 
-    try {
-      await gotoHydrated(page, `${origin}/en/flutter/components/${component}`);
-      const preview = page.locator(`[data-flutter-preview="${component}"]`);
-      await preview.scrollIntoViewIfNeeded();
-      const frame = preview.locator('[data-flutter-preview-frame]');
-      await frame.waitFor();
-      await expect
-        .poll(() => preview.locator('[aria-live="polite"]').count(), {
-          timeout: 60_000,
-        })
-        .toBe(0);
-      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
-
-      if (component === 'icon-button') {
-        const intent = page
-          .locator('[data-playground-control="intent"]')
-          .getByRole('combobox');
-        await intent.click();
-        await page.getByRole('option', { exact: true, name: 'danger' }).click();
+      try {
+        await gotoHydrated(page, `${origin}/en/flutter/components/${component}`);
+        const preview = page.locator(`[data-flutter-preview="${component}"]`);
+        await preview.scrollIntoViewIfNeeded();
+        const frame = preview.locator('[data-flutter-preview-frame]');
+        await frame.waitFor();
         await expect
-          .poll(
-            () =>
-              page.evaluate(() => {
-                const messages = (
-                  window as Window & { __flutterPreviewMessages?: unknown[] }
-                ).__flutterPreviewMessages;
-                return (messages ?? []).some(
-                  (message) =>
-                    typeof message === 'object' &&
-                    message !== null &&
-                    (message as { type?: string }).type === 'stateChanged' &&
-                    (
-                      message as {
-                        payload?: { args?: { intent?: string } };
-                      }
-                    ).payload?.args?.intent === 'danger',
-                );
-              }),
-            { timeout: 60_000 },
-          )
-          .toBe(true);
+          .poll(() => preview.locator('[aria-live="polite"]').count(), {
+            timeout: 60_000,
+          })
+          .toBe(0);
+        await expect(preview.getByRole('alert').count()).resolves.toBe(0);
 
-        const uiSize = page
-          .locator('[data-playground-control="uiSize"]')
-          .getByRole('combobox');
-        await uiSize.click();
-        await page.getByRole('option', { exact: true, name: 'lg' }).click();
+        if (component === 'icon-button') {
+          const intent = page
+            .locator('[data-playground-control="intent"]')
+            .getByRole('combobox');
+          await intent.click();
+          await page.getByRole('option', { exact: true, name: 'danger' }).click();
+          await expect
+            .poll(
+              () =>
+                page.evaluate(() => {
+                  const messages = (
+                    window as Window & { __flutterPreviewMessages?: unknown[] }
+                  ).__flutterPreviewMessages;
+                  return (messages ?? []).some(
+                    (message) =>
+                      typeof message === 'object' &&
+                      message !== null &&
+                      (message as { type?: string }).type === 'stateChanged' &&
+                      (
+                        message as {
+                          payload?: { args?: { intent?: string } };
+                        }
+                      ).payload?.args?.intent === 'danger',
+                  );
+                }),
+              { timeout: 60_000 },
+            )
+            .toBe(true);
 
-        await expect
-          .poll(
-            () =>
-              page.evaluate(() => {
-                const messages = (
-                  window as Window & { __flutterPreviewMessages?: unknown[] }
-                ).__flutterPreviewMessages;
-                return (messages ?? []).some(
-                  (message) =>
-                    typeof message === 'object' &&
-                    message !== null &&
-                    (message as { type?: string }).type === 'stateChanged' &&
-                    (
-                      message as {
-                        payload?: { args?: { uiSize?: string } };
-                      }
-                    ).payload?.args?.uiSize === 'lg',
-                );
-              }),
-            { timeout: 60_000 },
-          )
-          .toBe(true);
+          const uiSize = page
+            .locator('[data-playground-control="uiSize"]')
+            .getByRole('combobox');
+          await uiSize.click();
+          await page.getByRole('option', { exact: true, name: 'lg' }).click();
+
+          await expect
+            .poll(
+              () =>
+                page.evaluate(() => {
+                  const messages = (
+                    window as Window & { __flutterPreviewMessages?: unknown[] }
+                  ).__flutterPreviewMessages;
+                  return (messages ?? []).some(
+                    (message) =>
+                      typeof message === 'object' &&
+                      message !== null &&
+                      (message as { type?: string }).type === 'stateChanged' &&
+                      (
+                        message as {
+                          payload?: { args?: { uiSize?: string } };
+                        }
+                      ).payload?.args?.uiSize === 'lg',
+                  );
+                }),
+              { timeout: 60_000 },
+            )
+            .toBe(true);
+        }
+      } finally {
+        await page.close();
       }
-    } finally {
-      await page.close();
-    }
-  });
+    },
+  );
 
   t0('updates Accordion content, multiple selection, and disabled items', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
@@ -823,51 +824,55 @@ describe('built Flutter Web component preview', () => {
     }
   });
 
-  it.each(
-    browserAuditShardCases(['en', 'ko', 'ja'] as const),
-  )('keeps the %s Checkbox playground interactive and synchronized', async (locale) => {
-    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
-    try {
-      await gotoHydrated(page, `${origin}/${locale}/flutter/components/checkbox`);
-      const preview = page.locator('[data-flutter-preview="checkbox"]');
-      await preview.scrollIntoViewIfNeeded();
-      await expect
-        .poll(() => preview.locator('[aria-live="polite"]').count(), {
-          timeout: 60_000,
-        })
-        .toBe(0);
-      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+  it.each(browserAuditShardCases(['en', 'ko', 'ja'] as const))(
+    'keeps the %s Checkbox playground interactive and synchronized',
+    async (locale) => {
+      const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+      try {
+        await gotoHydrated(page, `${origin}/${locale}/flutter/components/checkbox`);
+        const preview = page.locator('[data-flutter-preview="checkbox"]');
+        await preview.scrollIntoViewIfNeeded();
+        await expect
+          .poll(() => preview.locator('[aria-live="polite"]').count(), {
+            timeout: 60_000,
+          })
+          .toBe(0);
+        await expect(preview.getByRole('alert').count()).resolves.toBe(0);
 
-      const checkedControl = page
-        .locator('[data-playground-control="checked"]')
-        .getByRole('checkbox');
-      const mixedControl = page
-        .locator('[data-playground-control="indeterminate"]')
-        .getByRole('checkbox');
-      await expect(checkedControl.isChecked()).resolves.toBe(true);
-      await mixedControl.check();
+        const checkedControl = page
+          .locator('[data-playground-control="checked"]')
+          .getByRole('checkbox');
+        const mixedControl = page
+          .locator('[data-playground-control="indeterminate"]')
+          .getByRole('checkbox');
+        await expect(checkedControl.isChecked()).resolves.toBe(true);
+        await mixedControl.check();
 
-      const frame = preview.locator('[data-flutter-preview-frame]');
-      const bounds = await frame.boundingBox();
-      expect(bounds).not.toBeNull();
-      if (bounds === null) return;
-      await page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        const frame = preview.locator('[data-flutter-preview-frame]');
+        const bounds = await frame.boundingBox();
+        expect(bounds).not.toBeNull();
+        if (bounds === null) return;
+        await page.mouse.click(
+          bounds.x + bounds.width / 2,
+          bounds.y + bounds.height / 2,
+        );
 
-      await expect.poll(() => checkedControl.isChecked()).toBe(false);
-      await expect.poll(() => mixedControl.isChecked()).toBe(false);
+        await expect.poll(() => checkedControl.isChecked()).toBe(false);
+        await expect.poll(() => mixedControl.isChecked()).toBe(false);
 
-      await page
-        .locator('[data-component-playground]')
-        .getByRole('button', {
-          exact: true,
-          name: { en: 'Reset', ja: 'リセット', ko: '초기화' }[locale],
-        })
-        .click();
-      await expect.poll(() => checkedControl.isChecked()).toBe(true);
-    } finally {
-      await page.close();
-    }
-  });
+        await page
+          .locator('[data-component-playground]')
+          .getByRole('button', {
+            exact: true,
+            name: { en: 'Reset', ja: 'リセット', ko: '초기화' }[locale],
+          })
+          .click();
+        await expect.poll(() => checkedControl.isChecked()).toBe(true);
+      } finally {
+        await page.close();
+      }
+    },
+  );
 
   it.each(
     browserAuditShardCases([
@@ -893,24 +898,27 @@ describe('built Flutter Web component preview', () => {
       ['app-shell', 'app-shell-controls'],
       ['app-shell', 'app-shell-docs'],
     ] as const),
-  )('renders the %s docs example %s without a preview error', async (component, example) => {
-    const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
-    try {
-      await gotoHydrated(page, `${origin}/en/flutter/components/${component}`);
-      const example_ = page.locator(`#${example}`);
-      await example_.scrollIntoViewIfNeeded();
-      const preview = example_.locator(`[data-flutter-example="${component}"]`);
-      await preview.locator('[data-flutter-example-frame]').waitFor();
-      await expect
-        .poll(() => preview.locator('[aria-live="polite"]').count(), {
-          timeout: 60_000,
-        })
-        .toBe(0);
-      await expect(preview.getByRole('alert').count()).resolves.toBe(0);
-    } finally {
-      await page.close();
-    }
-  });
+  )(
+    'renders the %s docs example %s without a preview error',
+    async (component, example) => {
+      const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+      try {
+        await gotoHydrated(page, `${origin}/en/flutter/components/${component}`);
+        const example_ = page.locator(`#${example}`);
+        await example_.scrollIntoViewIfNeeded();
+        const preview = example_.locator(`[data-flutter-example="${component}"]`);
+        await preview.locator('[data-flutter-example-frame]').waitFor();
+        await expect
+          .poll(() => preview.locator('[aria-live="polite"]').count(), {
+            timeout: 60_000,
+          })
+          .toBe(0);
+        await expect(preview.getByRole('alert').count()).resolves.toBe(0);
+      } finally {
+        await page.close();
+      }
+    },
+  );
 
   t3('rejects an invalid payload and surfaces an error alert', async () => {
     const page = await browser.newPage({ viewport: { height: 800, width: 1000 } });

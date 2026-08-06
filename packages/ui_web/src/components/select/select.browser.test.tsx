@@ -492,7 +492,9 @@ test('exports Select-specific separator anatomy with standalone styling', async 
 
   const separator = document.querySelector<HTMLElement>('.tr-select-separator');
   expect(separator).not.toBeNull();
-  expect(separator?.getAttribute('role')).toBe('separator');
+  // A separator is not a valid child of a listbox, so the list decorates it
+  // rather than exposing it to assistive technology.
+  expect(separator?.getAttribute('role')).toBe('presentation');
   expect(separator?.dataset['orientation']).toBe('horizontal');
   expect(getComputedStyle(separator as HTMLElement).height).not.toBe('0px');
 });

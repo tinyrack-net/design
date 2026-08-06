@@ -1,0 +1,65 @@
+version: 2
+
+updates:
+  # The pnpm workspace is covered from the root, so packages/docs, packages/ui_web
+  # and packages/homepage all flow through this one entry.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Patch and minor releases land together; a single PR is enough to see
+      # whether the whole workspace still builds.
+      npm-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Base UI ships rendered-semantics changes in minor releases, so its
+      # upgrades are reviewed by hand against the browser and parity suites
+      # rather than opened automatically.
+      - dependency-name: "@base-ui/react"
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
+      # The Node types track the runtime, which is pinned to 24 by .node-version
+      # and the engines field.
+      - dependency-name: "@types/node"
+        update-types:
+          - version-update:semver-major
+
+  - package-ecosystem: pub
+    directory: /packages/ui_flutter
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    ignore:
+      # lucide_flutter is kept in lockstep with lucide-react by hand so that
+      # component-owned glyphs match across the two renderers.
+      - dependency-name: lucide_flutter
+      # flutter_localizations pins intl to an exact version from the Flutter
+      # SDK, so raising this floor past that pin makes the package unsolvable
+      # for any consumer that localizes.
+      - dependency-name: intl
+
+  # The example app resolves tinyrack_ui by path but carries its own
+  # dependencies, which pub covers per directory.
+  - package-ecosystem: pub
+    directory: /packages/ui_flutter/example
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: intl
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns:
+          - "*"

@@ -200,54 +200,57 @@ test.each([
     'warning',
     ['rgb(252, 211, 77)', 'rgb(251, 191, 36)', 'rgb(120, 53, 15)'],
   ],
-] as const)('gives the %s %s alert action matching semantic resting and hover states', async (theme, variant, expectedColors) => {
-  document.documentElement.dataset['theme'] = theme;
-  const screen = await render(
-    <TRAlert.Root variant={variant}>
-      <TRAlert.Title>{variant}</TRAlert.Title>
-      <TRAlert.Description>{variant} details</TRAlert.Description>
-      <TRAlert.Actions>
-        <TRButton appearance="outline" intent={variant}>
-          {variant} action
-        </TRButton>
-      </TRAlert.Actions>
-    </TRAlert.Root>,
-  );
+] as const)(
+  'gives the %s %s alert action matching semantic resting and hover states',
+  async (theme, variant, expectedColors) => {
+    document.documentElement.dataset['theme'] = theme;
+    const screen = await render(
+      <TRAlert.Root variant={variant}>
+        <TRAlert.Title>{variant}</TRAlert.Title>
+        <TRAlert.Description>{variant} details</TRAlert.Description>
+        <TRAlert.Actions>
+          <TRButton appearance="outline" intent={variant}>
+            {variant} action
+          </TRButton>
+        </TRAlert.Actions>
+      </TRAlert.Root>,
+    );
 
-  const button = screen.getByRole('button', { name: `${variant} action` });
-  const alert = button.element().closest<HTMLElement>('.tr-alert');
-  const title = alert?.querySelector<HTMLElement>('.tr-alert-title');
-  const description = alert?.querySelector<HTMLElement>('.tr-alert-description');
-  const [color, border, hover] = expectedColors;
-  const restingStyles = getComputedStyle(button.element());
-  const alertStyles = getComputedStyle(alert as HTMLElement);
-  expect(restingStyles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
-  expect(restingStyles.color).toBe(color);
-  expect(restingStyles.borderColor).toBe(border);
-  expect(
-    contrastRatio(
-      getComputedStyle(title as HTMLElement).color,
-      alertStyles.backgroundColor,
-    ),
-  ).toBeGreaterThanOrEqual(4.5);
-  expect(
-    contrastRatio(
-      getComputedStyle(description as HTMLElement).color,
-      alertStyles.backgroundColor,
-    ),
-  ).toBeGreaterThanOrEqual(4.5);
-  expect(
-    contrastRatio(restingStyles.color, alertStyles.backgroundColor),
-  ).toBeGreaterThanOrEqual(4.5);
-  expect(
-    contrastRatio(alertStyles.borderTopColor, alertStyles.backgroundColor),
-  ).toBeGreaterThanOrEqual(3);
+    const button = screen.getByRole('button', { name: `${variant} action` });
+    const alert = button.element().closest<HTMLElement>('.tr-alert');
+    const title = alert?.querySelector<HTMLElement>('.tr-alert-title');
+    const description = alert?.querySelector<HTMLElement>('.tr-alert-description');
+    const [color, border, hover] = expectedColors;
+    const restingStyles = getComputedStyle(button.element());
+    const alertStyles = getComputedStyle(alert as HTMLElement);
+    expect(restingStyles.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+    expect(restingStyles.color).toBe(color);
+    expect(restingStyles.borderColor).toBe(border);
+    expect(
+      contrastRatio(
+        getComputedStyle(title as HTMLElement).color,
+        alertStyles.backgroundColor,
+      ),
+    ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(
+        getComputedStyle(description as HTMLElement).color,
+        alertStyles.backgroundColor,
+      ),
+    ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(restingStyles.color, alertStyles.backgroundColor),
+    ).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(alertStyles.borderTopColor, alertStyles.backgroundColor),
+    ).toBeGreaterThanOrEqual(3);
 
-  await button.hover();
-  await expect
-    .poll(() => getComputedStyle(button.element()).backgroundColor)
-    .toBe(hover);
-});
+    await button.hover();
+    await expect
+      .poll(() => getComputedStyle(button.element()).backgroundColor)
+      .toBe(hover);
+  },
+);
 
 test('uses a neutral title by default and supports a contextual heading', async () => {
   const titleRef = createRef<HTMLHeadingElement>();

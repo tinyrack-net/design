@@ -132,17 +132,20 @@ test('associates with a TRField.Label without manual id wiring', async () => {
 test.each([
   ['md', '14px', '20px', '64px', '12px'],
   ['lg', '14px', '20px', '80px', '16px'],
-] as const)('applies %s control size tokens', async (uiSize, fontSize, lineHeight, minBlockSize, paddingInline) => {
-  await render(<TRTextarea aria-label={`${uiSize} notes`} uiSize={uiSize} />);
-  const textarea = document.querySelector<HTMLTextAreaElement>('.tr-textarea');
-  const style = getComputedStyle(textarea as HTMLTextAreaElement);
+] as const)(
+  'applies %s control size tokens',
+  async (uiSize, fontSize, lineHeight, minBlockSize, paddingInline) => {
+    await render(<TRTextarea aria-label={`${uiSize} notes`} uiSize={uiSize} />);
+    const textarea = document.querySelector<HTMLTextAreaElement>('.tr-textarea');
+    const style = getComputedStyle(textarea as HTMLTextAreaElement);
 
-  expect(textarea?.dataset['uiSize']).toBe(uiSize);
-  expect(style.fontSize).toBe(fontSize);
-  expect(style.lineHeight).toBe(lineHeight);
-  expect(style.minBlockSize).toBe(minBlockSize);
-  expect(style.paddingInlineStart).toBe(paddingInline);
-});
+    expect(textarea?.dataset['uiSize']).toBe(uiSize);
+    expect(style.fontSize).toBe(fontSize);
+    expect(style.lineHeight).toBe(lineHeight);
+    expect(style.minBlockSize).toBe(minBlockSize);
+    expect(style.paddingInlineStart).toBe(paddingInline);
+  },
+);
 
 test('a ghost textarea drops only its resting chrome', async () => {
   await render(

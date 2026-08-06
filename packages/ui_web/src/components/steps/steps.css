@@ -43,6 +43,7 @@
     position: absolute;
   }
   .tr-steps-item > :first-child {
+    /* biome-ignore lint/complexity/noImportantStyles: the marker must align with the first line of prose whose line-height MDX typography sets at equal specificity. */
     line-height: var(--tr-steps-marker-size, var(--tinyrack-space-xl)) !important;
     margin-block-start: 0;
   }

@@ -125,49 +125,49 @@ function HydratedTooltipFixture() {
   );
 }
 
-test.each([
-  'tinyrack-light',
-  'tinyrack-dark',
-] as const)('renders token-backed arrow geometry and colors in %s', async (theme) => {
-  document.documentElement.dataset['theme'] = theme;
+test.each(['tinyrack-light', 'tinyrack-dark'] as const)(
+  'renders token-backed arrow geometry and colors in %s',
+  async (theme) => {
+    document.documentElement.dataset['theme'] = theme;
 
-  for (const side of tooltipSides) {
-    const view = await render(
-      <TRTooltip.Provider>
-        <TRTooltip.Root defaultOpen>
-          <TRTooltip.Trigger>{side} info</TRTooltip.Trigger>
-          <TRTooltip.Portal>
-            <TRTooltip.Positioner
-              collisionAvoidance={{ align: 'none', side: 'none' }}
-              side={side}
-            >
-              <TRTooltip.Popup>
-                Details
-                <TRTooltip.Arrow />
-              </TRTooltip.Popup>
-            </TRTooltip.Positioner>
-          </TRTooltip.Portal>
-        </TRTooltip.Root>
-      </TRTooltip.Provider>,
-    );
+    for (const side of tooltipSides) {
+      const view = await render(
+        <TRTooltip.Provider>
+          <TRTooltip.Root defaultOpen>
+            <TRTooltip.Trigger>{side} info</TRTooltip.Trigger>
+            <TRTooltip.Portal>
+              <TRTooltip.Positioner
+                collisionAvoidance={{ align: 'none', side: 'none' }}
+                side={side}
+              >
+                <TRTooltip.Popup>
+                  Details
+                  <TRTooltip.Arrow />
+                </TRTooltip.Popup>
+              </TRTooltip.Positioner>
+            </TRTooltip.Portal>
+          </TRTooltip.Root>
+        </TRTooltip.Provider>,
+      );
 
-    const popup = document.querySelector<HTMLElement>('.tr-tooltip-content');
-    const arrow = document.querySelector<HTMLElement>('.tr-tooltip-arrow');
-    await expect.poll(() => arrow?.dataset['side']).toBe(side);
-    const popupStyle = getComputedStyle(popup as HTMLElement);
-    const arrowStyle = getComputedStyle(arrow as HTMLElement);
+      const popup = document.querySelector<HTMLElement>('.tr-tooltip-content');
+      const arrow = document.querySelector<HTMLElement>('.tr-tooltip-arrow');
+      await expect.poll(() => arrow?.dataset['side']).toBe(side);
+      const popupStyle = getComputedStyle(popup as HTMLElement);
+      const arrowStyle = getComputedStyle(arrow as HTMLElement);
 
-    expect(arrowStyle.width).not.toBe('0px');
-    expect(arrowStyle.height).not.toBe('0px');
-    expect(arrowStyle.backgroundColor).toBe(popupStyle.backgroundColor);
-    expect(arrowStyle.borderColor).toBe(popupStyle.borderColor);
-    for (const edge of borderedArrowEdges[side]) {
-      expect(Number.parseFloat(arrowStyle[edge])).toBeGreaterThan(0);
+      expect(arrowStyle.width).not.toBe('0px');
+      expect(arrowStyle.height).not.toBe('0px');
+      expect(arrowStyle.backgroundColor).toBe(popupStyle.backgroundColor);
+      expect(arrowStyle.borderColor).toBe(popupStyle.borderColor);
+      for (const edge of borderedArrowEdges[side]) {
+        expect(Number.parseFloat(arrowStyle[edge])).toBeGreaterThan(0);
+      }
+
+      await view.unmount();
     }
-
-    await view.unmount();
-  }
-});
+  },
+);
 
 test('uses Base UI tooltip semantics and positioning', async () => {
   expect(TRTooltip.Root).toBe(TRTooltipRoot);

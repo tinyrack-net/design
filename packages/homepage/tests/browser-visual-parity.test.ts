@@ -3322,22 +3322,20 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
       )
     : [];
 
-  it.concurrent.each(
-    motionGroups,
-  )('$component motion [$shard/$shards] matches in $theme', async ({
-    component,
-    scenarios: componentScenarios,
-    theme,
-  }) => {
-    const pages = await acquirePages(component, 'en', theme);
-    try {
-      for (const scenario of componentScenarios) {
-        await profiler.measure('motionScenario', () =>
-          compareMotionScenario(pages, scenario, theme),
-        );
+  it.concurrent.each(motionGroups)(
+    '$component motion [$shard/$shards] matches in $theme',
+    async ({ component, scenarios: componentScenarios, theme }) => {
+      const pages = await acquirePages(component, 'en', theme);
+      try {
+        for (const scenario of componentScenarios) {
+          await profiler.measure('motionScenario', () =>
+            compareMotionScenario(pages, scenario, theme),
+          );
+        }
+      } finally {
+        await releasePages(pages);
       }
-    } finally {
-      await releasePages(pages);
-    }
-  }, 2_700_000);
+    },
+    2_700_000,
+  );
 });

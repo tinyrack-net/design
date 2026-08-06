@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import sharp from 'sharp';
+import sharp, { type Metadata } from 'sharp';
 
 const brandRoot = join(process.cwd(), 'src/brand');
 const assetRoot = join(brandRoot, 'apps');
@@ -65,7 +65,7 @@ async function assertRasterMatches(
 ): Promise<void> {
   if (!existsSync(path)) throw new Error(`Missing generated raster: ${path}`);
 
-  const metadata: sharp.Metadata = await sharp(path).metadata();
+  const metadata: Metadata = await sharp(path).metadata();
   if (
     metadata.format !== 'png' ||
     metadata.width !== width ||

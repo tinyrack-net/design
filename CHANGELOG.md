@@ -21,6 +21,7 @@
 
 ### Changed
 
+- The list separators of `TRSelect`, `TRCombobox`, and `TRAutocomplete` now render `role="presentation"` instead of `role="separator"`. A separator is not a valid child of a `listbox`, so assistive technology was being handed an element the role does not permit there; axe DevTools and ARC Toolkit both flag it. The rendered class names, `orientation`, `data-orientation`, and the painted line are unchanged, so styling and layout are unaffected. `TRCombobox.Separator` and `TRAutocomplete.Separator` previously delegated to `TRSeparator` and so accepted its props, including `role`; they now wrap the corresponding Base UI part, which means the `role` escape hatch is gone. `TRMenu`, `TRContextMenu`, and `TRToolbar` separators keep `role="separator"`, which is valid inside a menu or a toolbar.
 - `TRAppShell` sidebar sizing moved from the root's `grid-template-columns` onto `inline-size` on `.tr-app-shell-sidebar`, so the sidebar animates its own width and keeps that width when it is composed inside a flex row instead of the shell's grid area. `--tr-app-shell-sidebar-width` and `--tr-app-shell-sidebar-rail-width` keep their meaning and their defaults; a consumer that overrode `grid-template-columns` on `.tr-app-shell` directly must move that override to the sidebar. Switching between the expanded width and the rail is now animated as well.
 
 ## 0.19.0

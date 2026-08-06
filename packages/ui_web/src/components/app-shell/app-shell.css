@@ -387,7 +387,8 @@
      * tall, so only the viewport-relative values change. `100%` resolved
      * against the article height and never produced a usable scroll bound.
      */
-    .tr-app-shell[data-page-scroll="document"][data-chrome="docs"] .tr-app-shell-outline {
+    .tr-app-shell[data-page-scroll="document"][data-chrome="docs"]
+      .tr-app-shell-outline {
       inset-block-start: var(
         --tr-app-shell-header-block-size,
         var(--tinyrack-space-3xl)

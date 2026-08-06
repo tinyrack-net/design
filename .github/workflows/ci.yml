@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Check out repository history
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -64,7 +64,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -128,7 +128,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -140,10 +140,10 @@ jobs:
         uses: ./.github/actions/setup-js
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.21.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.4
+          flutter-version: 3.44.8
           cache: true
 
       - name: Check generated design tokens
@@ -179,7 +179,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -225,7 +225,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -279,7 +279,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
@@ -303,7 +303,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
@@ -337,7 +337,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -416,7 +416,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -428,10 +428,10 @@ jobs:
         uses: ./.github/actions/setup-js
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.21.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.4
+          flutter-version: 3.44.8
           cache: true
 
       - name: Install parity dependencies
@@ -474,7 +474,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -522,11 +522,11 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Set up Java
         if: matrix.target == 'android'
-        uses: actions/setup-java@v5.1.0
+        uses: actions/setup-java@v5.7.0
         with:
           distribution: temurin
           java-version: "17"
@@ -540,10 +540,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.21.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.4
+          flutter-version: 3.44.8
           cache: true
 
       - name: Build example
@@ -561,7 +561,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
@@ -573,10 +573,10 @@ jobs:
         uses: ./.github/actions/setup-js
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.21.0
+        uses: subosito/flutter-action@v2.23.0
         with:
           channel: stable
-          flutter-version: 3.44.4
+          flutter-version: 3.44.8
           cache: true
 
       - name: Install Homepage dependencies
@@ -701,7 +701,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.1
 
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js

@@ -144,7 +144,8 @@ test('preserves the typed filter contract and semantic separator anatomy', async
   expect(page.getByTestId('filtered-items').element()).toHaveTextContent(
     'true:Alpha,Beta',
   );
-  expect(page.getByTestId('combobox-separator').element()).toHaveClass(
+  const separator = page.getByTestId('combobox-separator').element();
+  expect(separator).toHaveClass(
     'tr-separator',
     'tr-combobox-separator',
     'custom-separator',
@@ -153,6 +154,11 @@ test('preserves the typed filter contract and semantic separator anatomy', async
     'tr-combobox-separator',
     'static-separator',
   );
+  // A separator is not a valid child of a listbox, so the list decorates it
+  // rather than exposing it to assistive technology.
+  expect(separator.getAttribute('role')).toBe('presentation');
+  expect((separator as HTMLElement).dataset['orientation']).toBe('horizontal');
+  expect(getComputedStyle(separator as HTMLElement).height).not.toBe('0px');
   expect(inputRef).toHaveBeenCalledWith(expect.any(HTMLInputElement));
 });
 

@@ -2,7 +2,7 @@
   "name": "tinyrack-ui-workspace",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@11.10.0",
+  "packageManager": "pnpm@11.20.0",
   "engines": {
     "node": ">=24.0.0"
   },
@@ -36,10 +36,10 @@
     "*.{ts,tsx,js,jsx,cjs,mjs,css,json}": "node node_modules/@biomejs/biome/bin/biome check --write --error-on-warnings"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.2",
+    "@biomejs/biome": "^2.5.7",
     "@types/node": "24.13.3",
     "husky": "^9.1.7",
-    "lint-staged": "^17.2.0",
+    "lint-staged": "^17.3.0",
     "typescript": "7.0.2"
   }
 }

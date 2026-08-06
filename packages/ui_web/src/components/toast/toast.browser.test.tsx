@@ -128,7 +128,7 @@ test('assembles Base UI toast management and parts', async () => {
   expect(closeStyle.justifyContent).toBe('center');
   expect(closeRect.width).toBe(closeRect.height);
   const toastRect = (
-    closeButtons[0]?.closest('.tr-toast') as HTMLElement
+    (closeButtons[0] as HTMLButtonElement).closest('.tr-toast') as HTMLElement
   ).getBoundingClientRect();
   expect(Math.round(toastRect.right - closeRect.right)).toBe(8);
 });
@@ -292,7 +292,7 @@ test('preserves action props, portal ownership, live-region semantics, and focus
     await userEvent.click(actionButton as HTMLButtonElement);
     expect(action).toHaveBeenCalledOnce();
 
-    (viewport?.querySelector('.tr-toast') as HTMLElement).focus();
+    ((viewport as HTMLElement).querySelector('.tr-toast') as HTMLElement).focus();
     await userEvent.keyboard('{Escape}');
     await expect.poll(() => viewport?.querySelector('.tr-toast')).toBeNull();
   } finally {
@@ -475,34 +475,39 @@ test.each([
   ['block-end-inline-start', 'end', 'start'],
   ['block-end-center', 'end', 'center'],
   ['block-end-inline-end', 'end', 'end'],
-] as const)('places the viewport at %s with logical insets', async (position, block, inline) => {
-  const view = await render(
-    <TRToast.Provider>
-      <TRToast.Portal>
-        <TRToast.Viewport
-          aria-label={`${position} notifications`}
-          position={position}
-        />
-      </TRToast.Portal>
-    </TRToast.Provider>,
-  );
-  const viewport = document.querySelector<HTMLElement>('.tr-toast-viewport');
-  await expect.poll(() => viewport).not.toBeNull();
-  const rect = (viewport as HTMLElement).getBoundingClientRect();
-  const viewportWidth = document.documentElement.clientWidth;
-  const viewportHeight = document.documentElement.clientHeight;
-  expect(Math.round(block === 'start' ? rect.top : viewportHeight - rect.bottom)).toBe(
-    12,
-  );
-  if (inline === 'center') {
-    expect(Math.round(rect.left + rect.width / 2)).toBe(Math.round(viewportWidth / 2));
-  } else {
+] as const)(
+  'places the viewport at %s with logical insets',
+  async (position, block, inline) => {
+    const view = await render(
+      <TRToast.Provider>
+        <TRToast.Portal>
+          <TRToast.Viewport
+            aria-label={`${position} notifications`}
+            position={position}
+          />
+        </TRToast.Portal>
+      </TRToast.Provider>,
+    );
+    const viewport = document.querySelector<HTMLElement>('.tr-toast-viewport');
+    await expect.poll(() => viewport).not.toBeNull();
+    const rect = (viewport as HTMLElement).getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    const viewportHeight = document.documentElement.clientHeight;
     expect(
-      Math.round(inline === 'start' ? rect.left : viewportWidth - rect.right),
+      Math.round(block === 'start' ? rect.top : viewportHeight - rect.bottom),
     ).toBe(12);
-  }
-  await view.unmount();
-});
+    if (inline === 'center') {
+      expect(Math.round(rect.left + rect.width / 2)).toBe(
+        Math.round(viewportWidth / 2),
+      );
+    } else {
+      expect(
+        Math.round(inline === 'start' ? rect.left : viewportWidth - rect.right),
+      ).toBe(12);
+    }
+    await view.unmount();
+  },
+);
 
 test('positions an anchored toast with the complete viewport and arrow anatomy', async () => {
   function AnchoredFixture() {
