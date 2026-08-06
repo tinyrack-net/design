@@ -1,3 +1,21 @@
+## 0.26.1
+
+- Stops `TRTerminalView` repeating a whole committed word once more when a
+  sticky input method — Hangul or Kana, for instance — ends its composition
+  session by reporting the unchanged buffer again. An identical
+  single-character report is still sent, because a platform that resets the
+  buffer reports one keystroke at a time. A continuation report is also no
+  longer split in the middle of a surrogate pair, which used to put a lone
+  surrogate on the wire as invalid bytes.
+- Makes `TRContextMenu` dismissable and intentional. The menu now closes when
+  a pointer presses its own child — the anchor shares the menu's tap region,
+  so that press never counted as an outside tap — and on Escape wherever
+  focus is; a terminal closes it before Escape can reach the program. A held
+  primary mouse button no longer opens it, because a long press means
+  "context menu" only for touch and stylus pointers, and Enter or Space on a
+  focused child no longer opens it either, because the keyboard trigger now
+  listens only for the context-menu key and Shift+F10.
+
 ## 0.26.0
 
 - Adds `TRMenu.icon`, for a menu that opens from a glyph. The trigger was

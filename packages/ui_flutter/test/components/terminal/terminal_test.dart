@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
@@ -127,6 +128,63 @@ void main() {
     }
 
     expect(input.join(), '반갑다');
+  });
+
+  testWidgets('terminal sends a sticky buffer that repeats its commit once', (
+    tester,
+  ) async {
+    final input = <String>[];
+    final controller = TRTerminalController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: SizedBox(
+          width: 640,
+          height: 360,
+          child: TRTerminalView(
+            controller: controller,
+            autofocus: true,
+            onInput: input.add,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+
+    // A sticky input method ends a composition session by reporting the same
+    // committed buffer one more time, without any new character.
+    const session = <TextEditingValue>[
+      TextEditingValue(
+        text: '한',
+        selection: TextSelection.collapsed(offset: 1),
+        composing: TextRange(start: 0, end: 1),
+      ),
+      TextEditingValue(
+        text: '한',
+        selection: TextSelection.collapsed(offset: 1),
+      ),
+      TextEditingValue(
+        text: '한솔',
+        selection: TextSelection.collapsed(offset: 2),
+        composing: TextRange(start: 1, end: 2),
+      ),
+      TextEditingValue(
+        text: '한솔',
+        selection: TextSelection.collapsed(offset: 2),
+      ),
+      TextEditingValue(
+        text: '한솔',
+        selection: TextSelection.collapsed(offset: 2),
+      ),
+    ];
+    for (final value in session) {
+      tester.testTextInput.updateEditingValue(value);
+      await tester.pump();
+    }
+
+    expect(input.join(), '한솔');
   });
 
   testWidgets('terminal sends repeated characters when the buffer resets', (
@@ -301,6 +359,118 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(copied, 1);
+  });
+
+  testWidgets('terminal closes its context menu at a primary tap on itself', (
+    tester,
+  ) async {
+    final controller = TRTerminalController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: SizedBox(
+          width: 640,
+          height: 360,
+          child: TRTerminalView(
+            controller: controller,
+            autofocus: true,
+            contextMenuBuilder: (context) => [
+              TRMenuItem(
+                key: const ValueKey<String>('terminal-copy'),
+                onPressed: () {},
+                child: const Text('Copy'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    controller.write('output');
+    await tester.pump();
+
+    final surface = find.byKey(const ValueKey<String>('tr-terminal-surface'));
+    final origin = tester.getTopLeft(surface) + const Offset(24, 24);
+    final gesture = await tester.startGesture(
+      origin,
+      kind: PointerDeviceKind.mouse,
+      buttons: kSecondaryButton,
+    );
+    await tester.pump(const Duration(milliseconds: 50));
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    final copy = find.byKey(const ValueKey<String>('terminal-copy'));
+    expect(copy, findsOneWidget);
+
+    // The terminal anchors its own menu, so a tap on the terminal is not an
+    // outside tap for the anchor and must close the menu explicitly.
+    await tester.tapAt(tester.getBottomRight(surface) - const Offset(24, 24));
+    await tester.pumpAndSettle();
+
+    expect(copy, findsNothing);
+
+    // Let the terminal's double-tap recognition window expire.
+    await tester.pump(const Duration(milliseconds: 350));
+  });
+
+  testWidgets('terminal closes its context menu on Escape and keeps it', (
+    tester,
+  ) async {
+    final input = <String>[];
+    final controller = TRTerminalController();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: SizedBox(
+          width: 640,
+          height: 360,
+          child: TRTerminalView(
+            controller: controller,
+            autofocus: true,
+            onInput: input.add,
+            contextMenuBuilder: (context) => [
+              TRMenuItem(
+                key: const ValueKey<String>('terminal-copy'),
+                onPressed: () {},
+                child: const Text('Copy'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    controller.write('output');
+    await tester.pump();
+
+    final surface = find.byKey(const ValueKey<String>('tr-terminal-surface'));
+    final origin = tester.getTopLeft(surface) + const Offset(24, 24);
+    final gesture = await tester.startGesture(
+      origin,
+      kind: PointerDeviceKind.mouse,
+      buttons: kSecondaryButton,
+    );
+    await tester.pump(const Duration(milliseconds: 50));
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    final copy = find.byKey(const ValueKey<String>('terminal-copy'));
+    expect(copy, findsOneWidget);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+
+    expect(copy, findsNothing);
+    expect(input.join(), isNot(contains('\x1b')));
+
+    // With the menu closed again, Escape belongs to the program.
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pump();
+
+    expect(input.join(), contains('\x1b'));
   });
 
   testWidgets('terminal without a context menu builder ignores right clicks', (

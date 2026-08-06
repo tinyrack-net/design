@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:xterm/xterm.dart' as xterm;
 
 import '../../theme.dart';
@@ -21,8 +22,11 @@ final class TRTerminalSize {
 /// report starts empty. Input methods that compose multiple characters, such as
 /// Hangul and Kana ones, keep their own buffer for the length of a composition
 /// session and ignore that reset, so every commit repeats everything committed
-/// so far. Sending only what the report added avoids the repetition without
-/// changing behaviour on platforms that do honour the reset.
+/// so far, and ending the session repeats the final buffer once more without
+/// adding anything. Sending only what a report added, and nothing for a report
+/// identical to the previous one, avoids the repetition. A platform that does
+/// honour the reset reports one character at a time, so an identical
+/// single-character report stays a distinct keystroke.
 final class _TRTerminal extends xterm.Terminal {
   _TRTerminal({required super.maxLines});
 
@@ -31,10 +35,23 @@ final class _TRTerminal extends xterm.Terminal {
   @override
   void textInput(String text) {
     final previous = _lastEditingBuffer;
-    final isContinuation =
-        text.length > previous.length && text.startsWith(previous);
     _lastEditingBuffer = text;
-    super.textInput(isContinuation ? text.substring(previous.length) : text);
+    if (text == previous && text.runes.length > 1) return;
+    if (text.length > previous.length &&
+        text.startsWith(previous) &&
+        !_splitsSurrogatePair(text, previous.length)) {
+      super.textInput(text.substring(previous.length));
+      return;
+    }
+    super.textInput(text);
+  }
+
+  /// Whether cutting [text] at [index] would separate a surrogate pair, which
+  /// would put a lone surrogate on the wire as invalid bytes.
+  static bool _splitsSurrogatePair(String text, int index) {
+    if (index <= 0 || index >= text.length) return false;
+    final unit = text.codeUnitAt(index);
+    return unit >= 0xDC00 && unit <= 0xDFFF;
   }
 
   /// Sends [text] without treating it as part of an editing buffer.
@@ -173,6 +190,18 @@ final class _TRTerminalViewState extends State<TRTerminalView> {
     _menuController.open(position: anchor.globalToLocal(globalPosition));
   }
 
+  /// Closes the context menu on Escape before the emulator can send the key
+  /// to the program, which keeps focus on the terminal the whole time.
+  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    if (_menuController.isOpen &&
+        event is KeyDownEvent &&
+        event.logicalKey == LogicalKeyboardKey.escape) {
+      _menuController.close();
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
@@ -214,6 +243,7 @@ final class _TRTerminalViewState extends State<TRTerminalView> {
       onSecondaryTapDown: contextMenuBuilder == null
           ? null
           : (details, _) => _openContextMenu(details.globalPosition),
+      onKeyEvent: contextMenuBuilder == null ? null : _handleKeyEvent,
     );
     return ColoredBox(
       key: const ValueKey<String>('tr-terminal-surface'),
