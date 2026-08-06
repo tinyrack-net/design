@@ -557,7 +557,9 @@ class TRMenuSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
+    // A separator reads as a group boundary, so it holds more space than the
+    // gap between two rows of the same group.
+    padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.sm),
     child: ColoredBox(
       color: context.tinyrackTheme.border,
       child: const SizedBox(height: TRGeneratedBorders.defaultWidth),

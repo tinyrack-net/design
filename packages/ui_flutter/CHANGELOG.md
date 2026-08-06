@@ -1,3 +1,28 @@
+## 0.33.0
+
+- Quiets the border every popup layer draws. A menu, select popup, context
+  menu, popover, tooltip, or preview card framed itself with `borderStrong`,
+  the same weight a resting control uses to claim space in the page. A layer
+  already separates itself with a shadow, so the strong edge read as a second
+  frame around content that was only two shades away from it. Every layer now
+  closes its shape with `border`, and `TRLayerSurface` no longer takes a strong
+  variant.
+- Lowers layer rows to the `sm` control height. A menu row carried an extra
+  `spacing.xs` that an option row did not, so the two densities disagreed by
+  4px inside the same product and a menu of six commands stood 24px taller than
+  it had to. `layerComponents.menuItemHeight` and `optionItemHeight` are both
+  `1.75rem` now, and the components that had copied their own arithmetic —
+  the autocomplete scroll estimate, the inline-suggestion row extent, the
+  combobox option grid — read those tokens instead.
+- Gives `TRMenuSeparator` a `spacing.sm` gap. At `spacing.xs` the rule sat as
+  close to its neighbours as two rows of one group sit to each other, so it
+  divided nothing.
+- Fixes a `TRMenubar` trigger drawing no focus ring. Its border side was a
+  fixed transparent line rather than a state-resolved one, so keyboard focus
+  moved along the bar invisibly.
+- Fixes the `TRTooltip` border taking Flutter's default width instead of
+  `borders.width.default`.
+
 ## 0.32.0
 
 - `TRDialog`, `TRAlertDialog`, and `TRDrawer` now inset their slots by

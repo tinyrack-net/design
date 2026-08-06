@@ -75,7 +75,105 @@ void main() {
       );
       final decoration = surface.decoration! as BoxDecoration;
       expect(decoration.border, isA<Border>());
-      expect((decoration.border! as Border).top.style, BorderStyle.solid);
+      final border = decoration.border! as Border;
+      expect(border.top.style, BorderStyle.solid);
+      expect(
+        border.top.color,
+        TinyrackTheme.light().extension<TinyrackThemeData>()!.border,
+      );
+      expect(border.top.width, TRGeneratedBorders.defaultWidth);
+    });
+
+    testWidgets('draws every layer surface with the same quiet hairline', (
+      tester,
+    ) async {
+      for (final brightness in Brightness.values) {
+        final theme = brightness == Brightness.light
+            ? TinyrackTheme.light()
+            : TinyrackTheme.dark();
+        final colors = theme.extension<TinyrackThemeData>()!;
+        await tester.pumpWidget(
+          MaterialApp(
+            key: ValueKey(brightness),
+            theme: theme,
+            home: Scaffold(
+              body: TRMenu(
+                trigger: const Text('Actions'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+                ],
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Actions'));
+        await tester.pumpAndSettle();
+
+        final surface = tester.widget<Container>(
+          find
+              .descendant(
+                of: _layerBoundary(TRLayerBoundaryKind.menu),
+                matching: find.byType(Container),
+              )
+              .first,
+        );
+        final border = (surface.decoration! as BoxDecoration).border! as Border;
+        expect(border.top.color, colors.border, reason: '$brightness');
+        expect(
+          border.top.width,
+          TRGeneratedBorders.defaultWidth,
+          reason: '$brightness',
+        );
+      }
+    });
+
+    testWidgets('renders menu rows at the layer row height', (tester) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenu(
+            trigger: const Text('Actions'),
+            menuChildren: [
+              TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSize(find.widgetWithText(MenuItemButton, 'Duplicate')).height,
+        TRGeneratedLayerMetrics.menuItemHeight,
+      );
+      expect(
+        TRGeneratedLayerMetrics.menuItemHeight,
+        TRControlMetrics.heightOf(TRUiSize.sm),
+      );
+    });
+
+    testWidgets('separates grouped rows with a token gap', (tester) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenu(
+            trigger: const Text('Actions'),
+            menuChildren: [
+              TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+              const TRMenuSeparator(),
+              TRMenuItem(onPressed: () {}, child: const Text('Delete')),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSize(find.byType(TRMenuSeparator)).height,
+        TRGeneratedSpacing.sm * 2 + TRGeneratedBorders.defaultWidth,
+      );
     });
 
     testWidgets('sizes its trigger like every other control', (tester) async {
@@ -442,7 +540,7 @@ void main() {
       expect(find.text('Command'), findsNothing);
     });
 
-    testWidgets('matches the canonical 192 by 104 layer geometry', (
+    testWidgets('matches the canonical 192 by 96 layer geometry', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -471,8 +569,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester.getSize(_layerBoundary(TRLayerBoundaryKind.menu)),
-        // 104 = group label 30 + two sm rows at 32 + surface padding 8 + border 2.
-        const Size(192, 104),
+        // 96 = group label 30 + two sm rows at 28 + surface padding 8 + border 2.
+        const Size(192, 96),
       );
     });
   });

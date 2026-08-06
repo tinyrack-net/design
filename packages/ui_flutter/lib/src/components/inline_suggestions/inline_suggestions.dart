@@ -460,8 +460,7 @@ class _TRInlineSuggestionsState<T extends Object>
   }
 
   Widget _rows(BuildContext context) {
-    final rowExtent =
-        TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs;
+    const rowExtent = TRGeneratedLayerMetrics.optionItemHeight;
     final maxHeight =
         MediaQuery.textScalerOf(context).scale(rowExtent) *
         widget.maxVisibleItems;

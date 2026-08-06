@@ -457,8 +457,8 @@ abstract final class TRGeneratedLayers {
 abstract final class TRGeneratedLayerMetrics {
   static const double anchorGap = 8.0;
   static const double popupPadding = 8.0;
-  static const double menuItemHeight = 36.0;
-  static const double optionItemHeight = 32.0;
+  static const double menuItemHeight = 28.0;
+  static const double optionItemHeight = 28.0;
   static const double arrowSize = 8.0;
   static const double toastWidth = 384.0;
   static const double drawerWidth = 512.0;
