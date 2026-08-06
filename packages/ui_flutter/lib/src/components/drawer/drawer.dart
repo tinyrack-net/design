@@ -170,10 +170,10 @@ class _TRDrawerState extends State<TRDrawer> {
           bottom: widget.placement != TRDrawerPlacement.bottom,
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-              TRGeneratedSpacing.xl,
-              TRGeneratedSpacing.xl,
-              TRGeneratedSpacing.xl,
-              TRGeneratedSpacing.xl + media.viewInsets.bottom,
+              TRGeneratedSpacing.md,
+              TRGeneratedSpacing.md,
+              TRGeneratedSpacing.md,
+              TRGeneratedSpacing.md + media.viewInsets.bottom,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

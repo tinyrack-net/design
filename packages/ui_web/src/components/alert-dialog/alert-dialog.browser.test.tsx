@@ -77,6 +77,9 @@ test('opens an alert task, dismisses with Escape, and restores focus', async () 
   const actionButtons = actions?.querySelectorAll<HTMLButtonElement>(
     '.tr-alert-dialog-close',
   );
+  const popupStyle = getComputedStyle(popup as HTMLElement);
+  expect(popupStyle.padding).toBe('12px');
+  expect(popupStyle.gap).toBe('8px');
   expect(actionStyle.display).toBe('flex');
   expect(actionStyle.flexDirection).toBe('row');
   expect(actionStyle.flexWrap).toBe('wrap');

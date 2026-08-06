@@ -138,7 +138,7 @@ class TRDialog extends StatelessWidget {
                     TRGeneratedBorders.defaultWidth,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(TRGeneratedSpacing.xl),
+                    padding: const EdgeInsets.all(TRGeneratedSpacing.md),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: isVerticalSheet
@@ -199,7 +199,7 @@ class TRDialog extends StatelessWidget {
                                 : FlexFit.loose,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
-                                vertical: TRGeneratedSpacing.lg,
+                                vertical: TRGeneratedSpacing.sm,
                               ),
                               child: TRLayerPartBoundary(
                                 name: 'body',
