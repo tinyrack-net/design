@@ -5,7 +5,7 @@
   .tr-context-menu-popup {
     --_tr-context-menu-popup-max-height: calc(var(--tinyrack-control-height-md) * 8);
     --_tr-context-menu-popup-max-width: var(--tinyrack-overlay-width-md);
-    --_tr-context-menu-popup-min-width: calc(var(--tinyrack-control-height-md) * 5);
+    --_tr-context-menu-popup-min-width: calc(var(--tinyrack-control-height-sm) * 5);
     box-sizing: border-box;
     color: var(--tr-context-menu-color, var(--tinyrack-text));
     font-family: var(--tinyrack-font-body);
@@ -52,10 +52,14 @@
     color: var(--tinyrack-text);
     cursor: pointer;
     display: flex;
-    font: inherit;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tinyrack-control-font-size-sm);
+    font-weight: var(--tinyrack-weight-medium);
     gap: var(--tinyrack-space-sm);
-    min-height: var(--tinyrack-control-height-md);
-    padding: var(--tinyrack-space-sm) var(--tinyrack-space-md);
+    line-height: var(--tinyrack-leading-sm);
+    min-height: calc(var(--tinyrack-control-height-sm) + var(--tinyrack-space-xs));
+    padding-block: 0;
+    padding-inline: var(--tinyrack-control-padding-inline-sm);
     text-align: start;
     text-decoration: none;
     width: 100%;
@@ -99,7 +103,8 @@
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-strong);
-    padding: var(--tinyrack-space-sm) var(--tinyrack-space-md) var(--tinyrack-space-xs);
+    padding: var(--tinyrack-space-sm) var(--tinyrack-control-padding-inline-sm)
+      var(--tinyrack-space-xs);
   }
 
   .tr-context-menu-checkbox-item-indicator,

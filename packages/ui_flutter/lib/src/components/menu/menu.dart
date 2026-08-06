@@ -492,10 +492,10 @@ class TRMenuGroupLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(
-      TRGeneratedControlMetrics.mdPaddingInline,
+    padding: EdgeInsets.fromLTRB(
+      TRControlMetrics.inlinePaddingOf(TRLayerStyles.rowSize),
       TRGeneratedSpacing.sm,
-      TRGeneratedControlMetrics.mdPaddingInline,
+      TRControlMetrics.inlinePaddingOf(TRLayerStyles.rowSize),
       TRGeneratedSpacing.xs,
     ),
     child: DefaultTextStyle.merge(

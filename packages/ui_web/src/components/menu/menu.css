@@ -86,7 +86,7 @@
 
   .tr-menu-item {
     --_tr-menu-item-min-height: calc(
-      var(--tinyrack-control-height-md) +
+      var(--tinyrack-control-height-sm) +
       var(--tinyrack-space-xs)
     );
     box-sizing: border-box;
@@ -96,12 +96,15 @@
     min-height: var(--tr-menu-item-min-height, var(--_tr-menu-item-min-height));
     align-items: center;
     gap: var(--tinyrack-space-sm);
-    padding-inline: var(--tinyrack-space-md);
+    padding-inline: var(--tinyrack-control-padding-inline-sm);
     border: 0;
     border-radius: var(--tinyrack-radius-sm);
     background: transparent;
     color: var(--tinyrack-text);
-    font: inherit;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tinyrack-control-font-size-sm);
+    font-weight: var(--tinyrack-weight-medium);
+    line-height: var(--tinyrack-leading-sm);
     text-align: start;
     text-decoration: none;
     cursor: pointer;
@@ -144,7 +147,8 @@
       var(--tinyrack-border-width-default) -
       var(--tinyrack-border-width-default)
     );
-    padding: var(--tinyrack-space-sm) var(--tinyrack-space-md) var(--tinyrack-space-xs);
+    padding: var(--tinyrack-space-sm) var(--tinyrack-control-padding-inline-sm)
+      var(--tinyrack-space-xs);
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);
     font-weight: var(--tinyrack-weight-strong);

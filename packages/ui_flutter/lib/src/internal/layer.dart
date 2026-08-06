@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../generated/tokens.g.dart';
 import '../theme.dart';
+import '../tokens.dart';
 import '../types.dart';
 
 /// Internal render-tree marker used by the preview parity harness.
@@ -101,6 +102,14 @@ class RenderTRLayerPartBoundary extends RenderProxyBox {
 /// Shared layer chrome for package components. This file is intentionally not
 /// exported from the public package library.
 abstract final class TRLayerStyles {
+  /// Density every popup layer renders its rows at.
+  ///
+  /// A layer row is a target inside an already-open surface, not a control the
+  /// page has to make room for, so it reads at a tighter size than the trigger
+  /// that opened it. Naming it once keeps every layer in this file, and the
+  /// components that copy these metrics, on the same scale.
+  static const TRUiSize rowSize = TRUiSize.sm;
+
   static MenuStyle menu(
     BuildContext context, {
     AlignmentGeometry alignment = AlignmentDirectional.bottomStart,
@@ -167,18 +176,19 @@ abstract final class TRLayerStyles {
             ? colors.textMuted
             : colors.text,
       ),
-      minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs),
+      iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(rowSize)),
+      minimumSize: WidgetStatePropertyAll(
+        Size(0, TRControlMetrics.heightOf(rowSize) + TRGeneratedSpacing.xs),
       ),
-      maximumSize: const WidgetStatePropertyAll(
+      maximumSize: WidgetStatePropertyAll(
         Size(
           double.infinity,
-          TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs,
+          TRControlMetrics.heightOf(rowSize) + TRGeneratedSpacing.xs,
         ),
       ),
-      padding: const WidgetStatePropertyAll(
+      padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
-          horizontal: TRGeneratedControlMetrics.mdPaddingInline,
+          horizontal: TRControlMetrics.inlinePaddingOf(rowSize),
         ),
       ),
       shape: WidgetStatePropertyAll(
@@ -197,11 +207,7 @@ abstract final class TRLayerStyles {
         ),
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textStyle: WidgetStatePropertyAll(
-        TRGeneratedTextStyles.bodySm.copyWith(
-          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-        ),
-      ),
+      textStyle: WidgetStatePropertyAll(TRControlMetrics.labelStyleOf(rowSize)),
       visualDensity: VisualDensity.standard,
     );
   }
@@ -231,15 +237,16 @@ abstract final class TRLayerStyles {
             ? colors.textMuted
             : colors.text,
       ),
-      minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.mdHeight),
+      iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(rowSize)),
+      minimumSize: WidgetStatePropertyAll(
+        Size(0, TRControlMetrics.heightOf(rowSize)),
       ),
-      maximumSize: const WidgetStatePropertyAll(
-        Size(double.infinity, TRGeneratedControlMetrics.mdHeight),
+      maximumSize: WidgetStatePropertyAll(
+        Size(double.infinity, TRControlMetrics.heightOf(rowSize)),
       ),
-      padding: const WidgetStatePropertyAll(
+      padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
-          horizontal: TRGeneratedControlMetrics.mdPaddingInline,
+          horizontal: TRControlMetrics.inlinePaddingOf(rowSize),
         ),
       ),
       shape: WidgetStatePropertyAll(
@@ -256,11 +263,7 @@ abstract final class TRLayerStyles {
         ),
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textStyle: WidgetStatePropertyAll(
-        TRGeneratedTextStyles.bodySm.copyWith(
-          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-        ),
-      ),
+      textStyle: WidgetStatePropertyAll(TRControlMetrics.labelStyleOf(rowSize)),
       visualDensity: VisualDensity.standard,
     );
   }
