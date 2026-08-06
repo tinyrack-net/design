@@ -1,3 +1,25 @@
+## 0.27.0
+
+- Renders every popup layer row at `sm` instead of `md`. A menu item, a select
+  option, an autocomplete or combobox suggestion, and a toolbar link all sat at
+  the same height as the control that opened them, so an open menu of five
+  commands was as tall as five buttons stacked on the page. A row inside an
+  already-open surface is not a control the page has to make room for, and
+  reading it at the trigger's size made short command lists feel oversized.
+- Menu rows are now 32px instead of 36, select and combobox options 28 instead
+  of 32, inline padding 8 instead of 12, and row text is the `sm` control label
+  style instead of `bodySm`, which also brings a menu item's type in line with a
+  `TRButton` of the same size. Row icons are now sized explicitly at the `sm`
+  icon size; they previously inherited the ambient 16px icon theme and stayed
+  large while everything around them shrank.
+- The context menu surface follows: its minimum width is five `sm` rows instead
+  of five `md` ones and its padding is the `sm` gap. Popup widths are otherwise
+  unchanged, because `measure-md` is a layout scale shared with things that are
+  not controls.
+- No token values changed. The `sm` control metrics already existed; the layer
+  chrome simply reads them now, from one named constant so the Flutter and web
+  packages cannot drift apart again.
+
 ## 0.26.1
 
 - Stops `TRTerminalView` repeating a whole committed word once more when a

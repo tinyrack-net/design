@@ -9,6 +9,7 @@ import '../../internal/field_chrome.dart';
 import '../../internal/layer.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
+import '../../tokens.dart';
 import '../../types.dart';
 
 part 'select_chevron.dart';
@@ -338,16 +339,19 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
             ? colors.textMuted
             : colors.text,
       ),
-      minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.mdHeight),
+      iconSize: WidgetStatePropertyAll(
+        TRControlMetrics.iconSizeOf(TRLayerStyles.rowSize),
       ),
-      maximumSize: const WidgetStatePropertyAll(
-        Size(double.infinity, TRGeneratedControlMetrics.mdHeight),
+      minimumSize: WidgetStatePropertyAll(
+        Size(0, TRControlMetrics.heightOf(TRLayerStyles.rowSize)),
+      ),
+      maximumSize: WidgetStatePropertyAll(
+        Size(double.infinity, TRControlMetrics.heightOf(TRLayerStyles.rowSize)),
       ),
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-      padding: const WidgetStatePropertyAll(
+      padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
-          horizontal: TRGeneratedControlMetrics.mdPaddingInline,
+          horizontal: TRControlMetrics.inlinePaddingOf(TRLayerStyles.rowSize),
         ),
       ),
       shape: WidgetStatePropertyAll(
@@ -367,9 +371,7 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
       }),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: WidgetStatePropertyAll(
-        TRGeneratedTextStyles.bodySm.copyWith(
-          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-        ),
+        TRControlMetrics.labelStyleOf(TRLayerStyles.rowSize),
       ),
       visualDensity: VisualDensity.standard,
     );

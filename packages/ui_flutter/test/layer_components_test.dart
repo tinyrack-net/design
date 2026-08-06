@@ -401,7 +401,7 @@ void main() {
       expect(find.text('Command'), findsNothing);
     });
 
-    testWidgets('matches the canonical 192 by 112 layer geometry', (
+    testWidgets('matches the canonical 192 by 104 layer geometry', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -430,7 +430,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester.getSize(_layerBoundary(TRLayerBoundaryKind.menu)),
-        const Size(192, 112),
+        // 104 = group label 30 + two sm rows at 32 + surface padding 8 + border 2.
+        const Size(192, 104),
       );
     });
   });
@@ -682,7 +683,8 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester.getSize(_layerBoundary(TRLayerBoundaryKind.select)),
-        const Size(320, 86),
+        // 78 = two sm options at 28 + row gap 4 + surface padding 16 + border 2.
+        const Size(320, 78),
       );
       final layerRect = tester.getRect(
         _layerBoundary(TRLayerBoundaryKind.select),

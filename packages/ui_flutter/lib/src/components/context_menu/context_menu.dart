@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../tokens.dart';
 
 // @tinyrack-preview context-menu
 /// Opens Tinyrack menu items at a pointer or keyboard context-menu position.
@@ -92,9 +93,9 @@ class _TRContextMenuState extends State<TRContextMenu> {
     menuChildren: [
       TRLayerSurface(
         kind: TRLayerBoundaryKind.contextMenu,
-        minWidth: TRGeneratedControlMetrics.mdHeight * 5,
+        minWidth: TRControlMetrics.heightOf(TRLayerStyles.rowSize) * 5,
         maxWidth: TRGeneratedMeasurements.overlayWidthMd,
-        padding: const EdgeInsets.all(TRGeneratedControlMetrics.mdGap),
+        padding: EdgeInsets.all(TRControlMetrics.gapOf(TRLayerStyles.rowSize)),
         child: SingleChildScrollView(
           primary: false,
           child: Column(
@@ -115,7 +116,7 @@ class _TRContextMenuState extends State<TRContextMenu> {
     },
     style: TRLayerStyles.menu(
       context,
-      minWidth: TRGeneratedControlMetrics.mdHeight * 5,
+      minWidth: TRControlMetrics.heightOf(TRLayerStyles.rowSize) * 5,
       maxWidth: TRGeneratedMeasurements.overlayWidthMd,
     ),
     useRootOverlay: widget.useRootOverlay,

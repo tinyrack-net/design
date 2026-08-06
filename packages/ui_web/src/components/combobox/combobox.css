@@ -82,10 +82,14 @@
     color: var(--tinyrack-text);
     cursor: pointer;
     display: flex;
-    gap: var(--tinyrack-control-gap-md);
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--tinyrack-control-font-size-sm);
+    font-weight: var(--tinyrack-weight-medium);
+    gap: var(--tinyrack-control-gap-sm);
     justify-content: space-between;
-    min-height: var(--tr-combobox-option-min-height, var(--tinyrack-control-height-md));
-    padding-inline: var(--tinyrack-control-padding-inline-md);
+    line-height: var(--tinyrack-leading-sm);
+    min-height: var(--tr-combobox-option-min-height, var(--tinyrack-control-height-sm));
+    padding-inline: var(--tinyrack-control-padding-inline-sm);
   }
 
   .tr-combobox-option:hover {
