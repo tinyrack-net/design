@@ -383,63 +383,65 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it.each(
-    componentDocsManifest,
-  )('$title keeps the required page sections, examples, and exact controls', (entry) => {
-    const docs = readText(entry.file);
-    const demoPath = `app/documentation/components/${entry.id}.demo.tsx`;
-    const demo = readText(demoPath);
-    const sections = ['Contract', 'Install', 'Usage', 'Examples', 'API'];
-    const hasPlayground = !('hasPlayground' in entry) || entry.hasPlayground !== false;
-    if (hasPlayground) sections.splice(2, 0, 'Playground');
-    const sectionOffsets = sections.map((section) => docs.indexOf(`## ${section}`));
+  it.each(componentDocsManifest)(
+    '$title keeps the required page sections, examples, and exact controls',
+    (entry) => {
+      const docs = readText(entry.file);
+      const demoPath = `app/documentation/components/${entry.id}.demo.tsx`;
+      const demo = readText(demoPath);
+      const sections = ['Contract', 'Install', 'Usage', 'Examples', 'API'];
+      const hasPlayground =
+        !('hasPlayground' in entry) || entry.hasPlayground !== false;
+      if (hasPlayground) sections.splice(2, 0, 'Playground');
+      const sectionOffsets = sections.map((section) => docs.indexOf(`## ${section}`));
 
-    expect(sectionOffsets.every((offset) => offset >= 0)).toBe(true);
-    expect(sectionOffsets).toEqual([...sectionOffsets].sort((a, b) => a - b));
-    if (hasPlayground) {
-      expect(entry.controls.length).toBeGreaterThan(0);
-      expect(docs).toContain('ComponentPlayground');
-      expect(docs).toContain('definition={Stories.playground}');
-      expect(demo).toContain('definePlayground(meta)');
-    } else {
-      expect(entry.controls).toEqual([]);
-      expect(docs).not.toContain('ComponentPlayground');
-      expect(docs).not.toContain('Stories.playground');
-      expect(demo).not.toContain('definePlayground(meta)');
-    }
-    expect(docs).toContain(`@tinyrack/ui/components/${entry.id}`);
-    expect(docs).toContain(`@tinyrack/ui/components/${entry.id}.css`);
-    expect(demo).toContain(`@tinyrack/ui/components/${entry.id}`);
-
-    expect(demoControlNames(demoPath).sort()).toEqual([...entry.controls].sort());
-    for (const example of entry.requiredExamples) {
-      expect(docs).toContain(`id="${example}"`);
-    }
-
-    if ('exampleGroups' in entry && entry.exampleGroups !== undefined) {
-      expect(entry.exampleGroups.map((group) => group.id)).toEqual(
-        entry.requiredExamples,
-      );
-      expect(entry.exampleGroups.filter((group) => group.section === 'usage')).toEqual([
-        expect.objectContaining({ kind: 'basic' }),
-      ]);
-
-      const examplesOffset = docs.indexOf('## Examples');
-      for (const group of entry.exampleGroups) {
-        const idOffset = docs.indexOf(`id="${group.id}"`);
-        const itemCount = componentExampleItemCount(docs, group.id);
-
-        expect(idOffset, group.id).toBeGreaterThanOrEqual(0);
-        expect(
-          group.section === 'usage'
-            ? idOffset < examplesOffset
-            : idOffset > examplesOffset,
-        ).toBe(true);
-        expect(itemCount, group.id).toBeGreaterThanOrEqual(group.minItems);
-        expect(itemCount, group.id).toBeLessThanOrEqual(group.maxItems);
+      expect(sectionOffsets.every((offset) => offset >= 0)).toBe(true);
+      expect(sectionOffsets).toEqual([...sectionOffsets].sort((a, b) => a - b));
+      if (hasPlayground) {
+        expect(entry.controls.length).toBeGreaterThan(0);
+        expect(docs).toContain('ComponentPlayground');
+        expect(docs).toContain('definition={Stories.playground}');
+        expect(demo).toContain('definePlayground(meta)');
+      } else {
+        expect(entry.controls).toEqual([]);
+        expect(docs).not.toContain('ComponentPlayground');
+        expect(docs).not.toContain('Stories.playground');
+        expect(demo).not.toContain('definePlayground(meta)');
       }
-    }
-  });
+      expect(docs).toContain(`@tinyrack/ui/components/${entry.id}`);
+      expect(docs).toContain(`@tinyrack/ui/components/${entry.id}.css`);
+      expect(demo).toContain(`@tinyrack/ui/components/${entry.id}`);
+
+      expect(demoControlNames(demoPath).sort()).toEqual([...entry.controls].sort());
+      for (const example of entry.requiredExamples) {
+        expect(docs).toContain(`id="${example}"`);
+      }
+
+      if ('exampleGroups' in entry && entry.exampleGroups !== undefined) {
+        expect(entry.exampleGroups.map((group) => group.id)).toEqual(
+          entry.requiredExamples,
+        );
+        expect(
+          entry.exampleGroups.filter((group) => group.section === 'usage'),
+        ).toEqual([expect.objectContaining({ kind: 'basic' })]);
+
+        const examplesOffset = docs.indexOf('## Examples');
+        for (const group of entry.exampleGroups) {
+          const idOffset = docs.indexOf(`id="${group.id}"`);
+          const itemCount = componentExampleItemCount(docs, group.id);
+
+          expect(idOffset, group.id).toBeGreaterThanOrEqual(0);
+          expect(
+            group.section === 'usage'
+              ? idOffset < examplesOffset
+              : idOffset > examplesOffset,
+          ).toBe(true);
+          expect(itemCount, group.id).toBeGreaterThanOrEqual(group.minItems);
+          expect(itemCount, group.id).toBeLessThanOrEqual(group.maxItems);
+        }
+      }
+    },
+  );
 
   it('keeps component installation guidance scoped to the UI package and component', () => {
     for (const entry of componentDocsManifest) {

@@ -8,20 +8,19 @@ describe('TRColorSchemeToggle', () => {
     ['auto', 'Use light color scheme', 'lucide-sun'],
     ['light', 'Use dark color scheme', 'lucide-moon'],
     ['dark', 'Use automatic color scheme', 'lucide-monitor'],
-  ] satisfies readonly [
-    TRColorScheme,
-    string,
-    string,
-  ][])('renders the next action after %s', (value, label, iconClass) => {
-    const markup = renderToStaticMarkup(
-      createElement(TRColorSchemeToggle, {
-        onValueChange() {},
-        value,
-      }),
-    );
+  ] satisfies readonly [TRColorScheme, string, string][])(
+    'renders the next action after %s',
+    (value, label, iconClass) => {
+      const markup = renderToStaticMarkup(
+        createElement(TRColorSchemeToggle, {
+          onValueChange() {},
+          value,
+        }),
+      );
 
-    expect(markup).toContain(`aria-label="${label}"`);
-    expect(markup).toContain(iconClass);
-    expect(markup).not.toContain('aria-pressed');
-  });
+      expect(markup).toContain(`aria-label="${label}"`);
+      expect(markup).toContain(iconClass);
+      expect(markup).not.toContain('aria-pressed');
+    },
+  );
 });

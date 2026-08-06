@@ -81,19 +81,13 @@ test('wraps long tokens without overflowing a narrow content context', async () 
   const widths = [96, 104, 112, 120, 128, 136, 144, 152, 160];
 
   await render(
-    <>
-      {widths.map((width) => (
-        <div
-          data-testid={`context-${width}`}
-          key={width}
-          style={{ width: `${width}px` }}
-        >
-          <TRCode data-testid={`long-token-${width}`}>
-            very-long-rack-identifier-with-overflow-safe-wrapping-01
-          </TRCode>
-        </div>
-      ))}
-    </>,
+    widths.map((width) => (
+      <div data-testid={`context-${width}`} key={width} style={{ width: `${width}px` }}>
+        <TRCode data-testid={`long-token-${width}`}>
+          very-long-rack-identifier-with-overflow-safe-wrapping-01
+        </TRCode>
+      </div>
+    )),
   );
 
   for (const width of widths) {

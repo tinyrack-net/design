@@ -186,31 +186,30 @@ test('retargets an active width animation and cancels an active count on unmount
   await countView.unmount();
 });
 
-test.each([
-  'auto',
-  'up',
-  'down',
-] as const)('does not expose interpolation-only decimals when an active %s roll is retargeted', async (rollDirection) => {
-  const view = await render(
-    <TRAnimatedNumber duration={1_000} rollDirection={rollDirection} value={1248} />,
-  );
-  await view.rerender(
-    <TRAnimatedNumber duration={1_000} rollDirection={rollDirection} value={1373} />,
-  );
-  await waitForAnimationFrames();
-  await view.rerender(
-    <TRAnimatedNumber duration={1_000} rollDirection={rollDirection} value={1498} />,
-  );
+test.each(['auto', 'up', 'down'] as const)(
+  'does not expose interpolation-only decimals when an active %s roll is retargeted',
+  async (rollDirection) => {
+    const view = await render(
+      <TRAnimatedNumber duration={1_000} rollDirection={rollDirection} value={1248} />,
+    );
+    await view.rerender(
+      <TRAnimatedNumber duration={1_000} rollDirection={rollDirection} value={1373} />,
+    );
+    await waitForAnimationFrames();
+    await view.rerender(
+      <TRAnimatedNumber duration={1_000} rollDirection={rollDirection} value={1498} />,
+    );
 
-  const presentation = document.querySelector('.tr-animated-number-presentation');
-  expect(presentation?.textContent).not.toContain('.');
-  expect(
-    Array.from(
-      document.querySelectorAll('.tr-animated-number-departing'),
-      (element) => element.textContent,
-    ),
-  ).not.toContain('.');
-});
+    const presentation = document.querySelector('.tr-animated-number-presentation');
+    expect(presentation?.textContent).not.toContain('.');
+    expect(
+      Array.from(
+        document.querySelectorAll('.tr-animated-number-departing'),
+        (element) => element.textContent,
+      ),
+    ).not.toContain('.');
+  },
+);
 
 test('keeps unit precision and suffix placement stable when an active roll is retargeted', async () => {
   const format = {

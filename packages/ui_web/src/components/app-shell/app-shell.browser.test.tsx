@@ -328,45 +328,45 @@ test('preserves the public Trigger ref contract', async () => {
   vi.restoreAllMocks();
 });
 
-test.each([
-  false,
-  true,
-])('toggles the %s sidebar mode while preserving accessibility and refs', async (controlled) => {
-  setMobileMatch(false);
-  const callback = vi.fn();
-  const toggleRef = createRef<HTMLButtonElement>();
-  const screen = await render(
-    <TRAppShell.Root
-      mobileSidebar="rail"
-      onSidebarModeChange={callback}
-      {...(controlled ? { sidebarMode: 'expanded' as const } : {})}
-    >
-      <TRAppShell.Sidebar aria-label="Mode navigation">
-        <TRAppShell.SidebarToggle aria-label="Toggle mode" ref={toggleRef}>
-          <MenuIcon />
-        </TRAppShell.SidebarToggle>
-      </TRAppShell.Sidebar>
-      <TRAppShell.Main>Content</TRAppShell.Main>
-    </TRAppShell.Root>,
-  );
-  const root = document.querySelector('.tr-app-shell');
-  const toggleControl = screen.getByRole('button', { name: 'Toggle mode' });
-  const toggle = toggleControl.element();
-  expect(toggle).toBeInstanceOf(HTMLButtonElement);
-  expect(toggleRef.current).toBe(toggle);
-  expect(toggle.getAttribute('aria-expanded')).toBe('true');
-  await userEvent.type(toggleControl, '{Enter}');
-  await expect.element(toggleControl).toHaveFocus();
-  await expect.poll(() => callback.mock.calls.length, { timeout: 5_000 }).toBe(1);
-  expect(callback).toHaveBeenCalledWith('rail');
-  if (controlled) {
-    expect(root?.getAttribute('data-sidebar-mode')).toBe('expanded');
-  } else {
-    expect(root?.getAttribute('data-sidebar-mode')).toBe('rail');
-    expect(toggle.getAttribute('aria-expanded')).toBe('false');
-  }
-  vi.restoreAllMocks();
-});
+test.each([false, true])(
+  'toggles the %s sidebar mode while preserving accessibility and refs',
+  async (controlled) => {
+    setMobileMatch(false);
+    const callback = vi.fn();
+    const toggleRef = createRef<HTMLButtonElement>();
+    const screen = await render(
+      <TRAppShell.Root
+        mobileSidebar="rail"
+        onSidebarModeChange={callback}
+        {...(controlled ? { sidebarMode: 'expanded' as const } : {})}
+      >
+        <TRAppShell.Sidebar aria-label="Mode navigation">
+          <TRAppShell.SidebarToggle aria-label="Toggle mode" ref={toggleRef}>
+            <MenuIcon />
+          </TRAppShell.SidebarToggle>
+        </TRAppShell.Sidebar>
+        <TRAppShell.Main>Content</TRAppShell.Main>
+      </TRAppShell.Root>,
+    );
+    const root = document.querySelector('.tr-app-shell');
+    const toggleControl = screen.getByRole('button', { name: 'Toggle mode' });
+    const toggle = toggleControl.element();
+    expect(toggle).toBeInstanceOf(HTMLButtonElement);
+    expect(toggleRef.current).toBe(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    await userEvent.type(toggleControl, '{Enter}');
+    await expect.element(toggleControl).toHaveFocus();
+    await expect.poll(() => callback.mock.calls.length, { timeout: 5_000 }).toBe(1);
+    expect(callback).toHaveBeenCalledWith('rail');
+    if (controlled) {
+      expect(root?.getAttribute('data-sidebar-mode')).toBe('expanded');
+    } else {
+      expect(root?.getAttribute('data-sidebar-mode')).toBe('rail');
+      expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    }
+    vi.restoreAllMocks();
+  },
+);
 
 test('does not toggle the sidebar mode when the consumer prevents the click', async () => {
   setMobileMatch(false);

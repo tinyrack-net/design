@@ -58,15 +58,18 @@ test('short-circuits a language outside the declared set without calling Shiki',
 test.each([
   'Language `brainfuck` not found, you may need to load it first',
   'Language `brainfuck` is not included in this bundle. You may want to load it from external source.',
-])('translates the Shiki unknown-language error %# into an unsupported result', async (message) => {
-  const highlight = createTRShikiHighlighter({
-    codeToTokens: async () => {
-      throw new Error(message);
-    },
-  });
+])(
+  'translates the Shiki unknown-language error %# into an unsupported result',
+  async (message) => {
+    const highlight = createTRShikiHighlighter({
+      codeToTokens: async () => {
+        throw new Error(message);
+      },
+    });
 
-  expect(await highlight({ code: 'x', language: 'brainfuck' })).toBeNull();
-});
+    expect(await highlight({ code: 'x', language: 'brainfuck' })).toBeNull();
+  },
+);
 
 test('omits root colors when Shiki reports none', async () => {
   const highlight = createTRShikiHighlighter({
