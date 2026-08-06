@@ -12,6 +12,12 @@ Finder get _selectTriggers => find.descendant(
   matching: find.byType(TextButton),
 );
 
+/// The annotation a [TRMenu] wraps its trigger in. It carries the button role
+/// and the expanded state, which the inner [TextButton] node does not.
+Finder get _menuTriggerAnnotation => find
+    .ancestor(of: find.byType(TextButton), matching: find.byType(Semantics))
+    .first;
+
 Finder _layerBoundary(TRLayerBoundaryKind kind) => find.byWidgetPredicate(
   (widget) => widget is TRLayerBoundary && widget.kind == kind,
 );
@@ -102,6 +108,77 @@ void main() {
           reason: '$size',
         );
       }
+    });
+
+    testWidgets('squares an icon trigger at every size', (tester) async {
+      for (final size in TRUiSize.values) {
+        await tester.pumpWidget(
+          _app(
+            TRMenu.icon(
+              uiSize: size,
+              icon: const Icon(Icons.add),
+              label: 'New tab',
+              menuChildren: [
+                TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+              ],
+            ),
+          ),
+        );
+
+        expect(
+          tester.getSize(find.byType(TextButton)),
+          Size.square(TRControlMetrics.heightOf(size)),
+          reason: '$size',
+        );
+        expect(
+          IconTheme.of(tester.element(find.byType(Icon))).size,
+          TRControlMetrics.iconSizeOf(size),
+          reason: '$size',
+        );
+      }
+    });
+
+    testWidgets('names an icon trigger and reports its expanded state', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _app(
+          TRMenu.icon(
+            icon: const Icon(Icons.add),
+            label: 'New tab',
+            menuChildren: [
+              TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+            ],
+          ),
+        ),
+      );
+
+      expect(
+        tester.getSemantics(_menuTriggerAnnotation),
+        isSemantics(
+          hasExpandedState: true,
+          isButton: true,
+          isEnabled: true,
+          isExpanded: false,
+          label: 'New tab',
+        ),
+      );
+
+      await tester.tap(find.byType(TextButton));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSemantics(_menuTriggerAnnotation),
+        isSemantics(
+          hasExpandedState: true,
+          isButton: true,
+          isEnabled: true,
+          isExpanded: true,
+          label: 'New tab',
+        ),
+      );
+      handle.dispose();
     });
 
     testWidgets('opens its panel below the trigger', (tester) async {

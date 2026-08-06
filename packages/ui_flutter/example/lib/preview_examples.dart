@@ -95,6 +95,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'textarea-validation': _textareaValidation,
   'menu-settings': _menuSettings,
   'menu-submenu': _menuSubmenu,
+  'menu-icon-trigger': _menuIconTrigger,
   'menubar-nested-layers': _menubarNestedLayers,
   'menubar-menu-states': _menubarMenuStates,
   'select-controlled': _selectControlled,
@@ -3099,6 +3100,36 @@ Widget _menuSubmenu(BuildContext context, Locale locale) => TRMenu(
         ),
       ],
       child: Text(_pick(locale, 'More', '더 보기', 'その他')),
+    ),
+  ],
+);
+
+Widget _menuIconTrigger(BuildContext context, Locale locale) => Row(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    // Beside a plain icon button, so the shared square geometry is the point
+    // of the preview rather than something the reader has to measure.
+    TRIconButton(
+      appearance: TRAppearance.ghost,
+      icon: const Icon(Icons.view_sidebar_outlined),
+      label: _pick(locale, 'Toggle sidebar', '사이드바 전환', 'サイドバー切り替え'),
+      onPressed: () {},
+    ),
+    TRMenu.icon(
+      icon: const Icon(Icons.add),
+      label: _pick(locale, 'New tab', '새 탭', '新しいタブ'),
+      menuChildren: [
+        TRMenuItem(
+          leadingIcon: const Icon(Icons.chat_bubble_outline),
+          onPressed: () {},
+          child: Text(_pick(locale, 'New session', '새 세션', '新しいセッション')),
+        ),
+        TRMenuItem(
+          leadingIcon: const Icon(Icons.terminal),
+          onPressed: () {},
+          child: Text(_pick(locale, 'New terminal', '새 터미널', '新しいターミナル')),
+        ),
+      ],
     ),
   ],
 );

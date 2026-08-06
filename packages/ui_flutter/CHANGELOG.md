@@ -1,3 +1,17 @@
+## 0.26.0
+
+- Adds `TRMenu.icon`, for a menu that opens from a glyph. The trigger was
+  always laid out as a text control, so it carried `inlinePaddingOf` on both
+  sides: an `md` menu holding a 16px icon came out roughly 42x32. Standing in a
+  tab strip or toolbar beside `TRIconButton`s, the menu was the one wide
+  control in a row of squares, and there was no way to narrow it. The named
+  constructor takes the geometry `TRIconButton` already uses — a square the
+  side of the control height, with the inline padding dropped and the glyph
+  sized by `iconSizeOf`.
+- `TRMenu.icon` requires a `label`, exactly as `TRIconButton` does, because a
+  glyph alone leaves the trigger with no accessible name. Hover, pressed,
+  focus, radius, and the expanded state are unchanged from the text trigger.
+
 ## 0.25.0
 
 - Adds `TRCollapsible.attachedEdge` with `TRCollapsibleAttachedEdge`. A

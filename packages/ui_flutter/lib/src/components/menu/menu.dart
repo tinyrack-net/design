@@ -23,7 +23,33 @@ class TRMenu extends StatefulWidget {
     this.uiSize = TRUiSize.md,
     this.useRootOverlay = true,
     super.key,
-  });
+  }) : _iconLabel = null;
+
+  /// Creates a menu whose trigger is a square icon control.
+  ///
+  /// A menu that opens from a glyph stands in a row of [TRIconButton]s, and a
+  /// text trigger's inline padding would make it the one wide control in that
+  /// row. The square geometry is the same one [TRIconButton] uses, so the group
+  /// reads as one set of commands rather than a pill among buttons.
+  ///
+  /// [label] names the control for assistive technology, exactly as it does on
+  /// [TRIconButton]; a glyph alone has no accessible name.
+  const TRMenu.icon({
+    required Widget icon,
+    required String label,
+    required this.menuChildren,
+    this.alignmentOffset = const Offset(0, TRGeneratedSpacing.xs),
+    this.autofocus = false,
+    this.controller,
+    this.enabled = true,
+    this.focusNode,
+    this.onClose,
+    this.onOpen,
+    this.uiSize = TRUiSize.md,
+    this.useRootOverlay = true,
+    super.key,
+  }) : trigger = icon,
+       _iconLabel = label;
 
   final Widget trigger;
   final List<Widget> menuChildren;
@@ -42,6 +68,10 @@ class TRMenu extends StatefulWidget {
   final TRUiSize uiSize;
 
   final bool useRootOverlay;
+
+  /// Accessible name of an icon trigger, and the marker that selects the
+  /// square geometry. Null for a text trigger, which names itself.
+  final String? _iconLabel;
 
   @override
   State<TRMenu> createState() => _TRMenuState();
@@ -86,6 +116,9 @@ class _TRMenuState extends State<TRMenu> {
   Widget build(BuildContext context) {
     final controller = _controller;
     final colors = context.tinyrackTheme;
+    final height = TRControlMetrics.heightOf(widget.uiSize);
+    final iconLabel = widget._iconLabel;
+    final square = iconLabel != null;
     final triggerStyle = ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
@@ -100,14 +133,16 @@ class _TRMenuState extends State<TRMenu> {
             : colors.text,
       ),
       minimumSize: WidgetStatePropertyAll(
-        Size(0, TRControlMetrics.heightOf(widget.uiSize)),
+        square ? Size.square(height) : Size(0, height),
       ),
       padding: WidgetStatePropertyAll(
-        EdgeInsets.symmetric(
-          horizontal:
-              TRControlMetrics.inlinePaddingOf(widget.uiSize) +
-              TRControlMetrics.borderWidth,
-        ),
+        square
+            ? EdgeInsets.zero
+            : EdgeInsets.symmetric(
+                horizontal:
+                    TRControlMetrics.inlinePaddingOf(widget.uiSize) +
+                    TRControlMetrics.borderWidth,
+              ),
       ),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
@@ -140,7 +175,8 @@ class _TRMenuState extends State<TRMenu> {
     );
 
     return SizedBox(
-      height: TRControlMetrics.heightOf(widget.uiSize),
+      height: height,
+      width: square ? height : null,
       child: MenuAnchor(
         alignmentOffset: widget.alignmentOffset,
         animated: false,
@@ -168,6 +204,7 @@ class _TRMenuState extends State<TRMenu> {
           button: true,
           enabled: widget.enabled,
           expanded: menuController.isOpen,
+          label: iconLabel,
           child: TextButton(
             autofocus: widget.autofocus,
             focusNode: _focusNode,
@@ -177,7 +214,14 @@ class _TRMenuState extends State<TRMenu> {
                       : menuController.open()
                 : null,
             style: triggerStyle,
-            child: widget.trigger,
+            child: square
+                ? IconTheme.merge(
+                    data: IconThemeData(
+                      size: TRControlMetrics.iconSizeOf(widget.uiSize),
+                    ),
+                    child: widget.trigger,
+                  )
+                : widget.trigger,
           ),
         ),
       ),
