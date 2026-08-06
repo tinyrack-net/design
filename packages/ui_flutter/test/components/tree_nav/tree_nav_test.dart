@@ -405,4 +405,119 @@ void main() {
       );
     },
   );
+
+  TRTreeNavLeaf<String> menuLeaf(String value) => TRTreeNavLeaf<String>(
+    value: value,
+    label: Text(value),
+    trailing: TRMenu.icon(
+      key: ValueKey('$value-menu'),
+      icon: const Icon(Icons.more_horiz),
+      label: '$value menu',
+      menuChildren: [
+        TRMenuItem(
+          key: ValueKey('$value-menu-item'),
+          onPressed: () {},
+          child: Text('$value action'),
+        ),
+      ],
+    ),
+  );
+
+  Future<TestGesture> pressWithMouse(
+    WidgetTester tester,
+    Finder target, {
+    TestGesture? reuse,
+  }) async {
+    final mouse =
+        reuse ?? await tester.createGesture(kind: PointerDeviceKind.mouse);
+    if (reuse == null) await mouse.addPointer(location: Offset.zero);
+    // A pointer hovers a control before it presses it, and frames render while
+    // the button is held. The row must not rebuild itself out from under the
+    // press.
+    await mouse.moveTo(tester.getCenter(target));
+    await tester.pumpAndSettle();
+    await mouse.down(tester.getCenter(target));
+    await tester.pump();
+    await mouse.up();
+    await tester.pumpAndSettle();
+    return mouse;
+  }
+
+  testWidgets('a control inside a row keeps the row unfocused and pressable', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        TRTreeNav<String>(
+          items: [
+            TRTreeNavLeaf(
+              value: 'leaf',
+              label: const Text('Leaf'),
+              trailing: TRMenu.icon(
+                key: const ValueKey('row-menu'),
+                icon: const Icon(Icons.more_horiz),
+                label: 'Row menu',
+                menuChildren: [
+                  TRMenuItem(
+                    key: const ValueKey('row-menu-item'),
+                    onPressed: () {},
+                    child: const Text('Go'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final trigger = find.byKey(const ValueKey('row-menu'));
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    addTearDown(mouse.removePointer);
+
+    // A pointer hovers a control before it presses it, and frames render while
+    // the button is held. The row must not rebuild itself out from under the
+    // press.
+    await mouse.moveTo(tester.getCenter(trigger));
+    await tester.pumpAndSettle();
+    await mouse.down(tester.getCenter(trigger));
+    await tester.pump();
+    await mouse.up();
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const ValueKey('row-menu-item')), findsOneWidget);
+
+    // The control owns the focus ring; the row that hosts it does not, so the
+    // row falls back to idle once the pointer leaves it.
+    expect(_row(tester, 'Leaf').foregroundDecoration, isNull);
+    await mouse.moveTo(const Offset(1, 300));
+    await tester.pumpAndSettle();
+    expect(_background(tester, 'Leaf'), Colors.transparent);
+  });
+
+  testWidgets('one press moves an open row menu to another row', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(TRTreeNav<String>(items: [menuLeaf('Upper'), menuLeaf('Lower')])),
+    );
+
+    // A menu panel opens downwards, so pressing the row above it reaches the
+    // trigger rather than the open panel.
+    final mouse = await pressWithMouse(
+      tester,
+      find.byKey(const ValueKey('Lower-menu')),
+    );
+    expect(find.byKey(const ValueKey('Lower-menu-item')), findsOneWidget);
+
+    await pressWithMouse(
+      tester,
+      find.byKey(const ValueKey('Upper-menu')),
+      reuse: mouse,
+    );
+    expect(find.byKey(const ValueKey('Lower-menu-item')), findsNothing);
+    expect(find.byKey(const ValueKey('Upper-menu-item')), findsOneWidget);
+    await mouse.removePointer();
+  });
 }

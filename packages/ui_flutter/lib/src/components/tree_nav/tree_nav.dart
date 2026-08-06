@@ -264,9 +264,27 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
   bool _hovered = false;
 
   @override
+  void initState() {
+    super.initState();
+    // A row carries the focus surface only while it is the focused control
+    // itself. `Focus.onFocusChange` reports `hasFocus`, which a trailing button
+    // or menu trigger inside the row also satisfies; listening to the node
+    // reads the primary focus directly and reports it on every change.
+    _focusNode.addListener(_handleFocusChange);
+  }
+
+  @override
   void dispose() {
-    _focusNode.dispose();
+    _focusNode
+      ..removeListener(_handleFocusChange)
+      ..dispose();
     super.dispose();
+  }
+
+  void _handleFocusChange() {
+    final focused = _focusNode.hasPrimaryFocus;
+    if (focused == _focused || !mounted) return;
+    setState(() => _focused = focused);
   }
 
   @override
@@ -345,7 +363,6 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
             focusNode: _focusNode,
             canRequestFocus: !disabled,
             skipTraversal: disabled,
-            onFocusChange: (focused) => setState(() => _focused = focused),
             onKeyEvent: onKey,
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -438,7 +455,6 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
           focusNode: _focusNode,
           canRequestFocus: !disabled,
           skipTraversal: disabled,
-          onFocusChange: (focused) => setState(() => _focused = focused),
           onKeyEvent: onKey,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
