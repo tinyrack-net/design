@@ -1,7 +1,8 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { parse } from '@babel/parser';
+import type { Expression, Node, ObjectExpression, ObjectProperty } from '@babel/types';
 import { loadDocsManifest } from '@tinyrack/docs/config';
-import ts from 'typescript';
 import { describe, expect, it } from 'vitest';
 import { componentDocsManifest } from '../app/documentation/shared/component-docs-manifest.js';
 import {
@@ -64,57 +65,136 @@ function tailwindThemeCandidates(utility: string) {
   return [];
 }
 
-function objectLiteralFromExpression(expression: ts.Expression) {
+/** These audits read authored source structurally rather than by regex, so they
+ *  need a TS/TSX parser. TypeScript 7 is the native rewrite and publishes no
+ *  standalone parse entry point, so the AST comes from Babel instead. */
+function parseSource(source: string, jsx: boolean) {
+  // Error recovery keeps the walk best-effort the way the TypeScript parser was:
+  // copy-ready snippets are re-parsed out of string literals and need not be
+  // complete programs.
+  return parse(source, {
+    sourceType: 'module',
+    errorRecovery: true,
+    plugins: jsx ? ['typescript', 'jsx'] : ['typescript'],
+  });
+}
+
+function isNode(value: unknown): value is Node {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { type?: unknown }).type === 'string'
+  );
+}
+
+/** Attached comments carry a `type` of their own and would otherwise be walked
+ *  as if they were syntax. */
+const nonSyntaxKeys = new Set([
+  'innerComments',
+  'leadingComments',
+  'loc',
+  'trailingComments',
+]);
+
+/** Babel has no `forEachChild`, so walk every child node reachable from the
+ *  node's own properties. */
+function walk(node: Node, visit: (node: Node) => void) {
+  visit(node);
+  for (const key of Object.keys(node)) {
+    if (nonSyntaxKeys.has(key)) continue;
+    const value = (node as unknown as Record<string, unknown>)[key];
+    if (Array.isArray(value)) {
+      for (const item of value) if (isNode(item)) walk(item, visit);
+    } else if (isNode(value)) {
+      walk(value, visit);
+    }
+  }
+}
+
+/** Babel records positions rather than node text, so this stands in for the
+ *  TypeScript `node.getText(sourceFile)` the audits used to call. */
+function textOf(source: string, node: Node) {
+  return node.start === null || node.end === null
+    ? ''
+    : source.slice(node.start, node.end);
+}
+
+function objectLiteralFromExpression(
+  expression: Expression | null,
+): ObjectExpression | null {
+  if (!expression) return null;
   let current = expression;
   while (
-    ts.isAsExpression(current) ||
-    ts.isParenthesizedExpression(current) ||
-    ts.isSatisfiesExpression(current)
+    current.type === 'TSAsExpression' ||
+    current.type === 'TSSatisfiesExpression'
   ) {
     current = current.expression;
   }
-  return ts.isObjectLiteralExpression(current) ? current : null;
+  return current.type === 'ObjectExpression' ? current : null;
+}
+
+/** Object keys are written either bare or quoted across the demo files. */
+function propertyKeyName(property: ObjectProperty) {
+  if (property.computed) return undefined;
+  if (property.key.type === 'Identifier') return property.key.name;
+  if (property.key.type === 'StringLiteral') return property.key.value;
+  return undefined;
+}
+
+function namedProperty(object: ObjectExpression | null, name: string) {
+  return (
+    object?.properties.find(
+      (property): property is ObjectProperty =>
+        property.type === 'ObjectProperty' && propertyKeyName(property) === name,
+    ) ?? undefined
+  );
+}
+
+/** Declarator initializers and object property values are typed to admit
+ *  binding patterns, which only appear in destructuring. These metadata objects
+ *  never destructure, so anything that is not a pattern is an expression. */
+const patternTypes = new Set([
+  'ArrayPattern',
+  'AssignmentPattern',
+  'ObjectPattern',
+  'RestElement',
+  'VoidPattern',
+]);
+
+function asExpression(node: Node | null | undefined): Expression | null {
+  if (!node || patternTypes.has(node.type)) return null;
+  return node as Expression;
+}
+
+function propertyValue(property: ObjectProperty | undefined) {
+  return asExpression(property?.value);
 }
 
 function demoControlNames(path: string) {
   const text = readText(path);
-  const source = ts.createSourceFile(
-    path,
-    text,
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TSX,
-  );
   let controls: string[] | null = null;
 
-  function visit(node: ts.Node) {
+  walk(parseSource(text, true).program, (node) => {
     if (
-      ts.isVariableDeclaration(node) &&
-      ts.isIdentifier(node.name) &&
-      node.name.text === 'meta' &&
-      node.initializer
+      node.type !== 'VariableDeclarator' ||
+      node.id.type !== 'Identifier' ||
+      node.id.name !== 'meta' ||
+      !node.init
     ) {
-      const meta = objectLiteralFromExpression(node.initializer);
-      const argTypes = meta?.properties.find(
-        (property): property is ts.PropertyAssignment =>
-          ts.isPropertyAssignment(property) &&
-          ts.isIdentifier(property.name) &&
-          property.name.text === 'argTypes',
-      );
-      const definitions = argTypes
-        ? objectLiteralFromExpression(argTypes.initializer)
-        : null;
-      controls =
-        definitions?.properties.flatMap((property) =>
-          ts.isPropertyAssignment(property) && ts.isIdentifier(property.name)
-            ? [property.name.text]
-            : [],
-        ) ?? null;
+      return;
     }
-    ts.forEachChild(node, visit);
-  }
+    const argTypes = propertyValue(
+      namedProperty(objectLiteralFromExpression(asExpression(node.init)), 'argTypes'),
+    );
+    const definitions = argTypes ? objectLiteralFromExpression(argTypes) : null;
+    controls =
+      definitions?.properties.flatMap((property) => {
+        if (property.type !== 'ObjectProperty') return [];
+        const name = propertyKeyName(property);
+        return name === undefined ? [] : [name];
+      }) ?? null;
+  });
 
-  visit(source);
   const result = controls as string[] | null;
   if (result === null) throw new Error(`Could not read argTypes from ${path}.`);
   return result;
@@ -122,88 +202,69 @@ function demoControlNames(path: string) {
 
 function demoLiteralControlOptions(path: string) {
   const text = readText(path);
-  const source = ts.createSourceFile(
-    path,
-    text,
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TSX,
-  );
+  const program = parseSource(text, true).program;
   const literalArrays = new Map<string, string[]>();
   const options = new Map<string, string[]>();
 
-  function literalArray(expression: ts.Expression) {
+  function literalArray(expression: Expression): string[] | undefined {
     let current = expression;
     while (
-      ts.isAsExpression(current) ||
-      ts.isParenthesizedExpression(current) ||
-      ts.isSatisfiesExpression(current)
+      current.type === 'TSAsExpression' ||
+      current.type === 'TSSatisfiesExpression'
     ) {
       current = current.expression;
     }
-    if (ts.isIdentifier(current)) return literalArrays.get(current.text);
-    if (!ts.isArrayLiteralExpression(current)) return undefined;
+    if (current.type === 'Identifier') return literalArrays.get(current.name);
+    if (current.type !== 'ArrayExpression') return undefined;
     const values = current.elements.flatMap((element) => {
-      if (ts.isStringLiteralLike(element) || ts.isNumericLiteral(element)) {
-        return [element.text];
+      if (element === null) return [];
+      // The raw source keeps numeric spellings such as `1.0` intact, matching
+      // how the option is written in the demo.
+      if (element.type === 'StringLiteral') return [element.value];
+      if (element.type === 'NumericLiteral') {
+        return [
+          (element.extra?.['raw'] as string | undefined) ?? String(element.value),
+        ];
       }
-      if (element.kind === ts.SyntaxKind.TrueKeyword) return ['true'];
-      if (element.kind === ts.SyntaxKind.FalseKeyword) return ['false'];
+      if (element.type === 'BooleanLiteral') return [String(element.value)];
       return [];
     });
     return values.length === current.elements.length ? values : undefined;
   }
 
-  function visit(node: ts.Node) {
-    if (
-      ts.isVariableDeclaration(node) &&
-      ts.isIdentifier(node.name) &&
-      node.initializer
-    ) {
-      const values = literalArray(node.initializer);
-      if (values !== undefined) literalArrays.set(node.name.text, values);
-    }
-    ts.forEachChild(node, visit);
-  }
+  walk(program, (node) => {
+    if (node.type !== 'VariableDeclarator' || node.id.type !== 'Identifier') return;
+    if (!node.init) return;
+    const init = asExpression(node.init);
+    const values = init ? literalArray(init) : undefined;
+    if (values !== undefined) literalArrays.set(node.id.name, values);
+  });
 
-  visit(source);
-  for (const statement of source.statements) {
-    if (!ts.isVariableStatement(statement)) continue;
-    for (const declaration of statement.declarationList.declarations) {
+  for (const statement of program.body) {
+    if (statement.type !== 'VariableDeclaration') continue;
+    for (const declaration of statement.declarations) {
       if (
-        !ts.isIdentifier(declaration.name) ||
-        declaration.name.text !== 'meta' ||
-        !declaration.initializer
+        declaration.id.type !== 'Identifier' ||
+        declaration.id.name !== 'meta' ||
+        !declaration.init
       ) {
         continue;
       }
-      const meta = objectLiteralFromExpression(declaration.initializer);
-      const argTypes = meta?.properties.find(
-        (property): property is ts.PropertyAssignment =>
-          ts.isPropertyAssignment(property) &&
-          ts.isIdentifier(property.name) &&
-          property.name.text === 'argTypes',
+      const argTypes = propertyValue(
+        namedProperty(
+          objectLiteralFromExpression(asExpression(declaration.init)),
+          'argTypes',
+        ),
       );
-      const definitions = argTypes
-        ? objectLiteralFromExpression(argTypes.initializer)
-        : null;
+      const definitions = argTypes ? objectLiteralFromExpression(argTypes) : null;
       for (const definition of definitions?.properties ?? []) {
-        if (!ts.isPropertyAssignment(definition)) continue;
-        const name = ts.isIdentifier(definition.name)
-          ? definition.name.text
-          : ts.isStringLiteralLike(definition.name)
-            ? definition.name.text
-            : undefined;
-        const config = objectLiteralFromExpression(definition.initializer);
-        const optionsProperty = config?.properties.find(
-          (property): property is ts.PropertyAssignment =>
-            ts.isPropertyAssignment(property) &&
-            ts.isIdentifier(property.name) &&
-            property.name.text === 'options',
+        if (definition.type !== 'ObjectProperty') continue;
+        const name = propertyKeyName(definition);
+        const config = propertyValue(definition);
+        const optionsValue = propertyValue(
+          namedProperty(config ? objectLiteralFromExpression(config) : null, 'options'),
         );
-        const values = optionsProperty
-          ? literalArray(optionsProperty.initializer)
-          : undefined;
+        const values = optionsValue ? literalArray(optionsValue) : undefined;
         if (name !== undefined && values !== undefined) options.set(name, values);
       }
     }
@@ -1450,25 +1511,18 @@ describe('React Router documentation contract', () => {
         "it('opens TRContextMenu rack commands from pointer, keyboard, and touch fallback'",
       ),
     );
-    const browserAuditFile = ts.createSourceFile(
-      'browser-audits.test.ts',
-      browserAudit,
-      ts.ScriptTarget.Latest,
-      true,
-    );
     const oneShotVisibilityAssertions: string[] = [];
-    const visit = (node: ts.Node): void => {
+    walk(parseSource(browserAudit, false).program, (node) => {
+      if (node.type !== 'ExpressionStatement') return;
+      const text = textOf(browserAudit, node);
       if (
-        ts.isExpressionStatement(node) &&
         /^await expect\(\s*[\s\S]+?\.isVisible\(\),?\s*\)\.resolves\.toBe\((?:true|false)\);$/.test(
-          node.getText(browserAuditFile),
+          text,
         )
       ) {
-        oneShotVisibilityAssertions.push(node.getText(browserAuditFile));
+        oneShotVisibilityAssertions.push(text);
       }
-      ts.forEachChild(node, visit);
-    };
-    visit(browserAuditFile);
+    });
 
     expect(packageJson.scripts).not.toHaveProperty('verify');
     expect(packageJson.scripts['test:e2e']).toBe(
@@ -1509,39 +1563,43 @@ describe('React Router documentation contract', () => {
     ]);
     const violations: string[] = [];
     const inspectTsx = (source: string, label: string) => {
-      const file = ts.createSourceFile(
-        label,
-        source,
-        ts.ScriptTarget.Latest,
-        true,
-        ts.ScriptKind.TSX,
-      );
-      const visit = (node: ts.Node) => {
-        if (
-          (ts.isNoSubstitutionTemplateLiteral(node) || ts.isStringLiteral(node)) &&
-          node.text.includes('<')
-        ) {
-          inspectTsx(`<>${node.text}</>`, `${label}#copy-source`);
+      let program: ReturnType<typeof parseSource>['program'];
+      try {
+        program = parseSource(source, true).program;
+      } catch {
+        // Not every snippet lifted out of a string literal is a parsable
+        // fragment; the TypeScript parser recovered silently and so do we.
+        return;
+      }
+      walk(program, (node) => {
+        // Copy-ready examples live in string and template literals, so markup
+        // inside them is re-parsed and audited as if it were authored JSX.
+        const literalText =
+          node.type === 'StringLiteral'
+            ? node.value
+            : node.type === 'TemplateLiteral' && node.expressions.length === 0
+              ? (node.quasis[0]?.value.cooked ?? '')
+              : undefined;
+        if (literalText?.includes('<')) {
+          inspectTsx(`<>${literalText}</>`, `${label}#copy-source`);
         }
-        if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
-          const tag = node.tagName.getText(file);
-          if (disallowedTags.has(tag)) violations.push(`${label}: <${tag}>`);
-          for (const attribute of node.attributes.properties) {
-            if (
-              ts.isJsxAttribute(attribute) &&
-              attribute.name.getText(file) === 'className' &&
-              attribute.initializer &&
-              /overflow-(?:auto|scroll|[xy]-(?:auto|scroll))/.test(
-                attribute.initializer.getText(file),
-              )
-            ) {
-              violations.push(`${label}: direct scrollbar`);
-            }
+        // Babel folds self-closing elements into JSXOpeningElement.
+        if (node.type !== 'JSXOpeningElement') return;
+        const tag = textOf(source, node.name);
+        if (disallowedTags.has(tag)) violations.push(`${label}: <${tag}>`);
+        for (const attribute of node.attributes) {
+          if (
+            attribute.type === 'JSXAttribute' &&
+            textOf(source, attribute.name) === 'className' &&
+            attribute.value &&
+            /overflow-(?:auto|scroll|[xy]-(?:auto|scroll))/.test(
+              textOf(source, attribute.value),
+            )
+          ) {
+            violations.push(`${label}: direct scrollbar`);
           }
         }
-        ts.forEachChild(node, visit);
-      };
-      visit(file);
+      });
     };
 
     const authoredTsx = filesUnder(join(homepageRoot, 'app')).filter((path) =>
