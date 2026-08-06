@@ -2538,6 +2538,38 @@ Column(
   ),
 )`,
     },
+    {
+      id: 'tabs-bar',
+      title: { en: 'Document tab bar', ja: 'ドキュメントタブバー', ko: '문서 탭 바' },
+      description: {
+        en: 'TRTabs.bar scrolls closable tabs and leaves the body to you, for a window that already draws the active document from its own state.',
+        ja: 'TRTabs.bar は閉じられるタブを横スクロールし、本文は呼び出し側に任せます。アクティブなドキュメントを自前の状態から描くウィンドウ向けです。',
+        ko: 'TRTabs.bar는 닫을 수 있는 탭을 가로로 스크롤하고 본문은 호출한 쪽에 맡겨요. 활성 문서를 자체 상태로 그리는 창에 쓰세요.',
+      },
+      dart: String.raw`TRTabs.bar(
+  value: selectedId,
+  onValueChange: openDocument,
+  semanticLabel: 'Open racks',
+  tabs: [
+    for (final document in documents)
+      TRTabsTab(
+        value: document.id,
+        label: document.title,
+        leading: const Icon(Icons.dns),
+        onClose: () => closeDocument(document.id),
+        closeLabel: closeLabelFor(document),
+      ),
+  ],
+  actions: [
+    TRIconButton(
+      appearance: TRAppearance.ghost,
+      icon: const Icon(Icons.add),
+      label: 'New rack',
+      onPressed: newDocument,
+    ),
+  ],
+)`,
+    },
   ],
   checkbox: [
     {

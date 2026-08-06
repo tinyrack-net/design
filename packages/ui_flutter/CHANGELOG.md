@@ -1,3 +1,18 @@
+## 0.30.0
+
+- `TRTabs.bar` renders a document-style tab bar: a horizontally scrolling strip
+  of closable tabs that leaves the body to its caller. The card tabs own their
+  panel through `panelBuilder`, which an application cannot use when it already
+  draws the active document from its own routing state, and they had no way to
+  express a per-tab close control, a status glyph, an overflowing strip, or the
+  new-tab commands that sit beside the tabs. Every such window had to rebuild
+  the strip from list rows and separators, which put the tab height, the inset,
+  and the tone of the rule below it back in product code. The bar owns all
+  three.
+- `TRTabsTab` takes `leading`, `onClose`, and `closeLabel`. Only `TRTabs.bar`
+  renders them, and `closeLabel` is required alongside `onClose` so the close
+  control is always named for assistive technology.
+
 ## 0.29.1
 
 - Fixes `TRTreeNav` treating a focused control inside a row as a focused row. A
