@@ -383,17 +383,18 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
                     horizontal: TRGeneratedSpacing.md,
                     vertical: TRGeneratedSpacing.xs,
                   ),
-                  foregroundDecoration: showFocusRing
-                      ? BoxDecoration(
-                          border: Border.all(
-                            color: colors.focus,
-                            width: TRGeneratedBorders.focusWidth,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            TRGeneratedRadii.md,
-                          ),
-                        )
-                      : null,
+                  // The ring is always present and only changes colour.
+                  // Swapping it against null adds and removes a foreground
+                  // layer, which re-inflates the row; the trailing control's
+                  // focus node would then be destroyed as traversal steps onto
+                  // it, trapping the keyboard inside the tree.
+                  foregroundDecoration: BoxDecoration(
+                    border: Border.all(
+                      color: showFocusRing ? colors.focus : Colors.transparent,
+                      width: TRGeneratedBorders.focusWidth,
+                    ),
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                  ),
                   decoration: BoxDecoration(
                     color: background,
                     borderRadius: BorderRadius.circular(TRGeneratedRadii.md),

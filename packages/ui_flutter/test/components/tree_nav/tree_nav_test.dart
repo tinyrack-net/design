@@ -66,6 +66,12 @@ AnimatedContainer _row(WidgetTester tester, String label) =>
 Color? _background(WidgetTester tester, String label) =>
     (_row(tester, label).decoration as BoxDecoration?)?.color;
 
+Color? _ringColor(WidgetTester tester, String label) =>
+    (_row(tester, label).foregroundDecoration as BoxDecoration?)
+        ?.border
+        ?.top
+        .color;
+
 void main() {
   testWidgets('matches web row heights, nested gaps, and progressive rails', (
     tester,
@@ -490,7 +496,7 @@ void main() {
 
     // The control owns the focus ring; the row that hosts it does not, so the
     // row falls back to idle once the pointer leaves it.
-    expect(_row(tester, 'Leaf').foregroundDecoration, isNull);
+    expect(_ringColor(tester, 'Leaf'), Colors.transparent);
     await mouse.moveTo(const Offset(1, 300));
     await tester.pumpAndSettle();
     expect(_background(tester, 'Leaf'), Colors.transparent);
@@ -519,5 +525,42 @@ void main() {
     expect(find.byKey(const ValueKey('Lower-menu-item')), findsNothing);
     expect(find.byKey(const ValueKey('Upper-menu-item')), findsOneWidget);
     await mouse.removePointer();
+  });
+
+  testWidgets('Tab leaves the tree once a row with a trailing control has it', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        Column(
+          children: [
+            TRTreeNav<String>(items: [menuLeaf('Upper'), menuLeaf('Lower')]),
+            TRButton(
+              key: const ValueKey<String>('after'),
+              onPressed: () {},
+              child: const Text('After'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // Toggling the row's focus ring must not re-inflate the row, or the
+    // trailing control's focus node is destroyed as traversal steps onto it
+    // and the tree becomes a keyboard trap.
+    var reached = false;
+    for (var attempt = 0; attempt < 20 && !reached; attempt += 1) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
+        element,
+      ) {
+        if (element.widget.key == const ValueKey<String>('after')) {
+          reached = true;
+        }
+        return !reached;
+      });
+    }
+    expect(reached, isTrue, reason: 'Tab never escaped TRTreeNav');
   });
 }

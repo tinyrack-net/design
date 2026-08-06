@@ -1,5 +1,12 @@
 ## 0.30.1
 
+- Fixes `TRTreeNav` trapping the keyboard. A row's focus ring was added and
+  removed by swapping `foregroundDecoration` against null, which adds and
+  removes a foreground layer and so re-inflates the row. Once a row stopped
+  taking the ring for a control inside it, stepping from the row onto its own
+  trailing button or menu trigger toggled the ring off mid-traversal, and the
+  rebuild destroyed the focus node traversal was moving to. Tab then never left
+  the tree. The ring is now always present and only changes colour.
 - Fixes a system context menu on Linux closing itself moments after it opened,
   which under Wayland left right-clicking looking as though it did nothing at
   all. GTK measures a menu's life from the time of the event that asked for it,
