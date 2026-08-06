@@ -12,6 +12,16 @@
 struct _TinyrackUiPlugin {
   GObject parent_instance;
   FlPluginRegistrar* registrar;
+
+  // Timestamp of the most recent pointer press on this window.
+  //
+  // GTK measures a menu's lifetime from the time of the event that asked for
+  // it: a menu opened at time zero looks to GtkMenuShell as though its button
+  // was pressed arbitrarily long ago, and the next release, or under Wayland
+  // the grab itself, dismisses it. Dart cannot hand a GTK event over, so the
+  // real press is remembered here and only its time is borrowed.
+  guint32 last_press_time;
+  gulong press_hook;
 };
 
 G_DEFINE_TYPE(TinyrackUiPlugin, tinyrack_ui_plugin, g_object_get_type())
@@ -29,16 +39,27 @@ struct MenuRequest {
   GtkWidget* menu;
   gchar* chosen;
   gboolean finishing;
+  gboolean not_shown;
 };
+
+// Reported when the request was accepted but no menu reached the screen, which
+// Dart must tell apart from the person dismissing one that did.
+const char kNotShownCode[] = "menu-not-shown";
 
 gboolean finish_cb(gpointer user_data) {
   MenuRequest* request = static_cast<MenuRequest*>(user_data);
 
-  g_autoptr(FlValue) result = request->chosen == nullptr
-                                  ? fl_value_new_null()
-                                  : fl_value_new_string(request->chosen);
-  g_autoptr(FlMethodResponse) response =
-      FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  g_autoptr(FlMethodResponse) response = nullptr;
+  if (request->not_shown) {
+    response = FL_METHOD_RESPONSE(fl_method_error_response_new(
+        kNotShownCode, "this menu never reached the screen", nullptr));
+  } else {
+    g_autoptr(FlValue) result = request->chosen == nullptr
+                                    ? fl_value_new_null()
+                                    : fl_value_new_string(request->chosen);
+    response =
+        FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
   fl_method_call_respond(request->method_call, response, nullptr);
 
   gtk_widget_destroy(request->menu);
@@ -236,11 +257,15 @@ void show_context_menu(TinyrackUiPlugin* self, FlMethodCall* method_call) {
 
   // GTK derives the pointing device from the event that asked for the menu.
   // This one was asked for from Dart, which has no GTK event to hand over, so
-  // the request is described as the secondary click it stands for.
+  // the request is described as the secondary click it stands for. Its time
+  // must be the real press's, because GTK dismisses a menu whose trigger looks
+  // older than its own timeout, and a fabricated zero always does.
   GdkEvent* trigger = gdk_event_new(GDK_BUTTON_PRESS);
   trigger->button.window = GDK_WINDOW(g_object_ref(window));
   trigger->button.send_event = TRUE;
-  trigger->button.time = GDK_CURRENT_TIME;
+  trigger->button.time = self->last_press_time != GDK_CURRENT_TIME
+                             ? self->last_press_time
+                             : gtk_get_current_event_time();
   trigger->button.button = GDK_BUTTON_SECONDARY;
   gdk_event_set_device(
       trigger,
@@ -255,8 +280,44 @@ void show_context_menu(TinyrackUiPlugin* self, FlMethodCall* method_call) {
   gdk_event_free(trigger);
 
   // A menu that never made it onto the screen emits no signal at all, and Dart
-  // would wait on this call forever.
-  if (!request->finishing && !gtk_widget_get_visible(menu)) finish(request);
+  // would wait on this call forever. Report it as its own failure rather than
+  // as a dismissal, so the caller can draw a menu of its own instead of
+  // leaving the person with nothing.
+  if (!request->finishing && !gtk_widget_get_visible(menu)) {
+    request->not_shown = TRUE;
+    finish(request);
+  }
+}
+
+/// Records the time of every pointer press in this process.
+///
+/// An emission hook is used rather than a handler on the view or its window,
+/// because Flutter renders into a surface that reports pointer events as
+/// handled and so stops them from reaching either. A hook runs on the emission
+/// itself, before any handler can claim it, and cannot suppress the event.
+gboolean pointer_pressed_hook(GSignalInvocationHint* hint, guint n_values,
+                              const GValue* values, gpointer user_data) {
+  (void)hint;
+  if (n_values < 2) return TRUE;
+  GdkEvent* event = static_cast<GdkEvent*>(g_value_get_boxed(&values[1]));
+  if (event == nullptr) return TRUE;
+  const guint32 time = gdk_event_get_time(event);
+  if (time != GDK_CURRENT_TIME) {
+    static_cast<TinyrackUiPlugin*>(user_data)->last_press_time = time;
+  }
+  // Staying attached for the life of the plugin.
+  return TRUE;
+}
+
+guint pointer_press_signal() {
+  return g_signal_lookup("button-press-event", GTK_TYPE_WIDGET);
+}
+
+void watch_pointer(TinyrackUiPlugin* plugin) {
+  const guint signal_id = pointer_press_signal();
+  if (signal_id == 0) return;
+  plugin->press_hook = g_signal_add_emission_hook(
+      signal_id, 0, pointer_pressed_hook, plugin, nullptr);
 }
 
 }  // namespace
@@ -274,6 +335,10 @@ static void tinyrack_ui_plugin_handle_method_call(TinyrackUiPlugin* self,
 
 static void tinyrack_ui_plugin_dispose(GObject* object) {
   TinyrackUiPlugin* self = TINYRACK_UI_PLUGIN(object);
+  if (self->press_hook != 0) {
+    g_signal_remove_emission_hook(pointer_press_signal(), self->press_hook);
+    self->press_hook = 0;
+  }
   g_clear_object(&self->registrar);
   G_OBJECT_CLASS(tinyrack_ui_plugin_parent_class)->dispose(object);
 }
@@ -294,6 +359,7 @@ void tinyrack_ui_plugin_register_with_registrar(FlPluginRegistrar* registrar) {
   TinyrackUiPlugin* plugin =
       TINYRACK_UI_PLUGIN(g_object_new(tinyrack_ui_plugin_get_type(), nullptr));
   plugin->registrar = FL_PLUGIN_REGISTRAR(g_object_ref(registrar));
+  watch_pointer(plugin);
 
   g_autoptr(FlStandardMethodCodec) codec = fl_standard_method_codec_new();
   g_autoptr(FlMethodChannel) channel = fl_method_channel_new(

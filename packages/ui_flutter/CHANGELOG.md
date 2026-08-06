@@ -1,3 +1,23 @@
+## 0.30.1
+
+- Fixes a system context menu on Linux closing itself moments after it opened,
+  which under Wayland left right-clicking looking as though it did nothing at
+  all. GTK measures a menu's life from the time of the event that asked for it,
+  and the plugin described the request with a fabricated event stamped
+  `GDK_CURRENT_TIME`, which is zero. To GTK that menu had been waiting since the
+  beginning of the session, so the button release that followed the right-click,
+  or the popup grab itself, dismissed it immediately. The plugin now watches the
+  pointer presses the window really receives and stamps the request with the
+  time of the press that asked for the menu. Measured under Wayland with GTK
+  3.24: a menu popped up with a zero stamp took itself down within a second
+  every time, with no input at all; the same menu with a real stamp stayed.
+- Reports a menu the platform accepted but could not put on screen as a
+  `menu-not-shown` platform error instead of as an empty selection, and falls
+  back to the Tinyrack presentation when that happens. A dismissal and a menu
+  that never appeared were indistinguishable before, so a platform failure
+  silently looked like the person changing their mind. The new code is exported
+  as `trNativeContextMenuNotShown`.
+
 ## 0.30.0
 
 - `TRTabs.bar` renders a document-style tab bar: a horizontally scrolling strip

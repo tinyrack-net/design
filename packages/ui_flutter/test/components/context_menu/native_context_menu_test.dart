@@ -8,11 +8,20 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 /// Stands in for the desktop embedder, recording the menu it was handed and
 /// answering with the entry the user would have chosen.
 final class _FakeSystemMenu {
-  _FakeSystemMenu(this.channel, {this.choose, this.missing = false}) {
+  _FakeSystemMenu(
+    this.channel, {
+    this.choose,
+    this.missing = false,
+    this.failWith,
+  }) {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (call) async {
           if (missing) throw MissingPluginException(call.method);
           calls.add(call);
+          final failure = failWith;
+          if (failure != null) {
+            throw PlatformException(code: failure, message: failure);
+          }
           return choose;
         });
   }
@@ -24,6 +33,9 @@ final class _FakeSystemMenu {
 
   /// Whether to behave like a build that never registered the plugin.
   final bool missing;
+
+  /// The platform error code to report instead of a menu, if any.
+  final String? failWith;
 
   final calls = <MethodCall>[];
 
@@ -280,6 +292,51 @@ void main() {
 
         expect(find.text('Copy'), findsOneWidget);
         expect(find.byType(TRMenuItem), findsOneWidget);
+      },
+    );
+
+    _testOnPlatform(
+      'draws the Tinyrack menu when the system could not put one on screen',
+      TargetPlatform.linux,
+      (tester) async {
+        final system = _FakeSystemMenu(_channel, failWith: 'menu-not-shown');
+        addTearDown(system.dispose);
+
+        await _pumpMenu(
+          tester,
+          items: const <TRMenuElement>[
+            TRMenuActionElement(id: 'copy', title: 'Copy', onPressed: _noop),
+          ],
+        );
+        await _secondaryTap(tester);
+
+        // A system menu that never reaches the screen is not a dismissal, and
+        // leaving it silent would look to the person as if right-clicking did
+        // nothing at all.
+        expect(find.text('Copy'), findsOneWidget);
+        expect(find.byType(TRMenuItem), findsOneWidget);
+      },
+    );
+
+    _testOnPlatform(
+      'reopens after the system could not put a menu on screen',
+      TargetPlatform.linux,
+      (tester) async {
+        final system = _FakeSystemMenu(_channel, failWith: 'menu-not-shown');
+        addTearDown(system.dispose);
+
+        await _pumpMenu(
+          tester,
+          items: const <TRMenuElement>[
+            TRMenuActionElement(id: 'copy', title: 'Copy', onPressed: _noop),
+          ],
+        );
+        await _secondaryTap(tester);
+        await _secondaryTap(tester);
+
+        // The reentrancy guard must not be left standing by the failure, or
+        // every later right-click would be swallowed too.
+        expect(system.calls.length, 2);
       },
     );
   });

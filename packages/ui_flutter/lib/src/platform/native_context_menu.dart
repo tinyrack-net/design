@@ -11,6 +11,13 @@ const MethodChannel trNativeContextMenuChannel = MethodChannel(
   'net.tinyrack.ui/native_menu',
 );
 
+/// The error code an embedder reports when no menu reached the screen.
+///
+/// Distinct from a `null` reply, which means the person dismissed a menu that
+/// was drawn. A platform that cannot present one at all says so with this, and
+/// the request falls back to [TRFlutterContextMenuPresenter].
+const String trNativeContextMenuNotShown = 'menu-not-shown';
+
 /// The desktop platforms whose embedder ships a system-menu implementation.
 const _nativePlatforms = <TargetPlatform>{
   TargetPlatform.linux,
@@ -162,6 +169,15 @@ class _TRNativeMenuHostState extends State<_TRNativeMenuHost>
       );
     } on MissingPluginException {
       // A desktop build without the plugin registered still deserves a menu.
+      _isOpen = false;
+      widget.onClose?.call();
+      _fallback.openAt(globalPosition);
+      return;
+    } on PlatformException catch (error) {
+      // The platform reports this when it accepted the request but the menu
+      // never reached the screen. That is not a dismissal, so falling back
+      // keeps a menu in front of the person instead of doing nothing at all.
+      if (error.code != trNativeContextMenuNotShown) rethrow;
       _isOpen = false;
       widget.onClose?.call();
       _fallback.openAt(globalPosition);
