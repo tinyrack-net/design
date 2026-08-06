@@ -2557,7 +2557,7 @@ Column(
         label: document.title,
         leading: const Icon(Icons.dns),
         onClose: () => closeDocument(document.id),
-        closeLabel: 'Close ${document.title}',
+        closeLabel: closeLabelFor(document),
       ),
   ],
   actions: [
