@@ -12,6 +12,9 @@
 - Adds `TRMeasurements.readingWidthSm`, `readingWidthMd`, and `readingWidthLg`,
   the maximum inline size of a readable content column. An unbounded column
   pushes a label and its control to opposite edges of a wide window.
+- Adds `TRControlMetrics.focusWidth` and `TRControlMetrics.focusOffset`. Only
+  `borderWidth` was published, so a composite drawing its own focus ring had to
+  guess the width and could disagree by a pixel with the controls beside it.
 
 ## 0.30.1
 

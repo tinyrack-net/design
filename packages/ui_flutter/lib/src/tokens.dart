@@ -150,6 +150,16 @@ abstract final class TRControlMetrics {
   /// Width of the border a control draws, which adds to its outer width.
   static const borderWidth = TRGeneratedBorders.defaultWidth;
 
+  /// Width of the ring drawn around a focused control.
+  ///
+  /// Thicker than [borderWidth], so a focused control reads as focused rather
+  /// than as merely outlined. A composite drawing its own focus ring needs
+  /// this to match the ring the controls beside it draw.
+  static const focusWidth = TRGeneratedBorders.focusWidth;
+
+  /// Gap between a control's edge and its focus ring.
+  static const focusOffset = TRGeneratedBorders.focusOffset;
+
   /// Text style a control renders its label in.
   ///
   /// Measuring a label with anything else misreports its width, because the

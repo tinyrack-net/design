@@ -137,6 +137,17 @@ void main() {
       expect(TRControlMetrics.borderWidth, greaterThan(0));
     });
 
+    // A composite that draws its own focus ring — a settings row, a nav item —
+    // has to match the ring the controls beside it draw. Without these it
+    // guesses a width, and the two rings disagree by a pixel.
+    test('publishes the focus ring geometry', () {
+      expect(
+        TRControlMetrics.focusWidth,
+        greaterThan(TRControlMetrics.borderWidth),
+      );
+      expect(TRControlMetrics.focusOffset, greaterThan(0));
+    });
+
     test('orders the compact size below the default size', () {
       expect(TRControlMetrics.heightOf(TRUiSize.sm), 28);
       expect(TRControlMetrics.inlinePaddingOf(TRUiSize.sm), 8);
