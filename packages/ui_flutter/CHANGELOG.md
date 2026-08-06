@@ -1,3 +1,33 @@
+## 0.34.0
+
+- Draws a surface and the control sitting on it at one border weight. `border`
+  and `controlBorder` were different greys — a card closed at `#d4d4d4` while
+  the field inside it closed at `#737373` — so a single screen showed two
+  border weights with nothing to explain the difference. `border` now rises to
+  meet `controlBorder`: `neutral.500` in light, `neutral.400` in dark. Each
+  theme has one resting border; the two themes still differ from each other.
+- `controlBorder` is unchanged, so the 3:1 non-text contrast it is held to by
+  `status-contrast.test.ts` is untouched. Unifying downward would have meant
+  dropping control boundaries to roughly 1.5:1 and deleting that contract.
+- Moves the resting borders that had reached for `borderStrong` onto
+  `controlBorder`: `TRTextField`, `TRCheckbox`, `TROtpField`, a disabled
+  `TRSwitch`, `TRAlertDialog`, `TRToast`, the neutral status border, and the
+  Material `InputDecoration` borders. `controlBorder` and `borderStrong` held
+  the same value, so a component reaching for the wrong one was
+  pixel-identical to one reaching for the right one and the drift went
+  unnoticed: `TRTextField` rested on `borderStrong` while the web input rested
+  on `controlBorder`, and a disabled `TRSwitch` was drawn stronger than an
+  enabled one.
+- Separates `borderStrong` from the resting weight so a hover state stays
+  distinguishable: `neutral.600` in light, `neutral.300` in dark. It had been
+  the same grey the resting border now uses.
+- Surfaces are louder as a result — cards, dividers, and popup layers all close
+  at the control weight. That walks back part of the layer quieting in 0.33.0:
+  a layer now closes at the same weight as everything else rather than at its
+  own.
+- `ColorScheme.outline` still resolves to `borderStrong`. Material models two
+  outline levels and `outlineVariant` already carries the resting border.
+
 ## 0.33.0
 
 - Quiets the border every popup layer draws. A menu, select popup, context

@@ -3,7 +3,7 @@
     align-items: center;
     appearance: none;
     background: var(--tr-checkbox-background, var(--tinyrack-surface));
-    border: var(--tinyrack-border-width-strong) solid var(--tinyrack-border-strong);
+    border: var(--tinyrack-border-width-strong) solid var(--tinyrack-control-border);
     border-radius: var(--tinyrack-radius-sm);
     box-sizing: border-box;
     color: var(--tr-checkbox-color, var(--tinyrack-text));

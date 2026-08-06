@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 void main() {
@@ -18,6 +19,24 @@ void main() {
       expect(scale.first, greaterThan(0));
       for (var step = 1; step < scale.length; step++) {
         expect(scale[step], greaterThan(scale[step - 1]));
+      }
+    });
+  });
+
+  group('resting border colour', () {
+    // controlBorder and borderStrong held the same value, so a component that
+    // reached for the wrong one was pixel-identical to one that reached for
+    // the right one and nothing could tell them apart. Separating the values
+    // is what makes the distinction real: a control at rest closes its shape
+    // at the same weight as the surface around it, and borderStrong is left
+    // to mark a state.
+    test('rests at the surface weight, not the strong one', () {
+      for (final colors in <TRGeneratedColorTheme>[
+        TRGeneratedColors.light,
+        TRGeneratedColors.dark,
+      ]) {
+        expect(colors.controlBorder, colors.border);
+        expect(colors.controlBorder, isNot(colors.borderStrong));
       }
     });
   });

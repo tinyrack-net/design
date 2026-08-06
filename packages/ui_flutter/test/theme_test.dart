@@ -602,7 +602,7 @@ void main() {
     expect((solid.decoration! as BoxDecoration).color, colors.surface);
     final solidBorder =
         (solid.foregroundDecoration! as BoxDecoration).border!.top;
-    expect(solidBorder.color, colors.borderStrong);
+    expect(solidBorder.color, colors.border);
 
     // Ghost stops painting the resting frame but keeps the border box at the
     // same width, so switching appearance never moves the field's metrics.

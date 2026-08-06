@@ -318,6 +318,9 @@ class _TRTextFieldInteractionFrameState
   @override
   Widget build(BuildContext context) {
     final theme = context.tinyrackTheme;
+    final generated = Theme.of(context).brightness == Brightness.light
+        ? TRGeneratedColors.light
+        : TRGeneratedColors.dark;
     final focused = widget.enabled && _focusNode.hasFocus;
     final interactive = widget.enabled && !widget.readOnly;
     final chrome = resolveFieldChrome(
@@ -328,7 +331,7 @@ class _TRTextFieldInteractionFrameState
           ? theme.dangerBorder
           : focused
           ? theme.focus
-          : theme.borderStrong,
+          : generated.controlBorder,
       solidBorderWidth: focused
           ? TRGeneratedBorders.focusWidth
           : TRGeneratedBorders.defaultWidth,

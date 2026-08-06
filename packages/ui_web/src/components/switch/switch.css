@@ -89,7 +89,7 @@
   .tr-switch:disabled,
   .tr-switch[data-disabled] {
     background: var(--tr-switch-disabled-background, var(--tinyrack-surface-muted));
-    border-color: var(--tr-switch-disabled-border, var(--tinyrack-border-strong));
+    border-color: var(--tr-switch-disabled-border, var(--tinyrack-control-border));
     cursor: not-allowed;
   }
 

@@ -101,11 +101,14 @@ class _TRCheckboxState extends State<TRCheckbox> {
         _focused &&
         FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
     final filled = checked || widget.indeterminate;
+    final generated = Theme.of(context).brightness == Brightness.light
+        ? TRGeneratedColors.light
+        : TRGeneratedColors.dark;
     final borderColor = widget.invalid
         ? colors.dangerBorder
         : filled
         ? colors.primary
-        : colors.borderStrong;
+        : generated.controlBorder;
     final size = switch (widget.uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
