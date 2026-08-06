@@ -1297,6 +1297,39 @@ void main() {
       );
     });
 
+    testWidgets('menubar trigger shows a focus ring like every other layer '
+        'trigger', (tester) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenubar(
+            menus: [
+              TRMenubarMenu(
+                trigger: const Text('File'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('New')),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      final side = tester
+          .widget<SubmenuButton>(find.byType(SubmenuButton))
+          .style!
+          .side!;
+      final resting = side.resolve(<WidgetState>{})!;
+      expect(resting.color, Colors.transparent);
+      expect(resting.width, TRGeneratedBorders.defaultWidth);
+
+      final focused = side.resolve(<WidgetState>{WidgetState.focused})!;
+      expect(
+        focused.color,
+        TinyrackTheme.light().extension<TinyrackThemeData>()!.focus,
+      );
+      expect(focused.width, TRGeneratedBorders.focusWidth);
+    });
+
     testWidgets('menubar sizes the bar and its triggers to its uiSize', (
       tester,
     ) async {
