@@ -472,17 +472,16 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
                   horizontal: TRGeneratedSpacing.md,
                   vertical: TRGeneratedSpacing.xs,
                 ),
-                foregroundDecoration: showFocusRing
-                    ? BoxDecoration(
-                        border: Border.all(
-                          color: colors.focus,
-                          width: TRGeneratedBorders.focusWidth,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          TRGeneratedRadii.md,
-                        ),
-                      )
-                    : null,
+                // Always present, colour-only, for the reason the leaf row
+                // gives above: swapping it against null re-inflates the row and
+                // kills the trailing control's focus node mid-traversal.
+                foregroundDecoration: BoxDecoration(
+                  border: Border.all(
+                    color: showFocusRing ? colors.focus : Colors.transparent,
+                    width: TRGeneratedBorders.focusWidth,
+                  ),
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                ),
                 decoration: BoxDecoration(
                   color: groupBackground,
                   borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
