@@ -2,6 +2,7 @@ name: CI
 
 on:
   pull_request:
+  merge_group:
   push:
     branches:
       - main
@@ -11,7 +12,9 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # A cancelled merge-queue check reads as a failure and ejects the pull
+  # request from the queue, so those runs always finish.
+  cancel-in-progress: ${{ github.event_name != 'merge_group' }}
 
 jobs:
   changes:
@@ -36,8 +39,8 @@ jobs:
       - name: Check patch formatting
         shell: bash
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: |
           if [[ -n "$BASE_SHA" && ! "$BASE_SHA" =~ ^0+$ ]]; then
             git diff --check "$BASE_SHA" "$HEAD_SHA"
@@ -48,8 +51,8 @@ jobs:
       - name: Classify affected packages
         id: plan
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.event.merge_group.head_sha || github.sha }}
         run: node scripts/ci-change-plan.ts --base "$BASE_SHA" --head "$HEAD_SHA"
 
   web_packages:
