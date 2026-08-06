@@ -1,3 +1,14 @@
+## 0.25.0
+
+- Adds `TRCollapsible.attachedEdge` with `TRCollapsibleAttachedEdge`. A
+  collapsible sitting directly on another surface — a drawer docked on top of
+  a card, for instance — previously painted a full rounded border, so the two
+  surfaces could not read as one; the only workarounds were forbidden local
+  repaints. `bottom` and `top` square that edge's corners, drop its border
+  side, and keep the content box identical by no longer widening the inset the
+  removed border used to overlap. The default `none` is pixel-identical to the
+  previous rendering.
+
 ## 0.24.0
 
 - Adds `TRFieldAppearance.plain`, for a field inside a surface that frames the

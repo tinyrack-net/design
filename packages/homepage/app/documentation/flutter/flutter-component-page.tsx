@@ -2967,6 +2967,16 @@ class _BackupChoiceState extends State<BackupChoice> {
       ko: '트리거로 콘텐츠 패널 하나를 펼치거나 접어요.',
       ja: 'トリガーで 1 つのコンテンツパネルを開閉します。',
     },
+    contractRows: [
+      {
+        axis: { en: 'Attached edge', ko: '접합 모서리', ja: '接合エッジ' },
+        choices: {
+          en: '`attachedEdge` squares the corners of one edge and drops its border, so the panel reads as one surface with the neighbor that provides that border — `TRCollapsibleAttachedEdge.bottom` for a drawer sitting on a card below, `top` for the inverse, `none` (default) for a free-standing panel.',
+          ko: '`attachedEdge`는 한쪽 모서리를 직각으로 만들고 그 변의 테두리를 제거해, 그 테두리를 제공하는 이웃 표면과 하나의 표면처럼 보이게 해요. 아래 카드 위에 얹힌 서랍이면 `TRCollapsibleAttachedEdge.bottom`, 반대면 `top`, 독립 패널이면 기본값 `none`을 쓰세요.',
+          ja: '`attachedEdge` は片側の角を直角にしてその辺の枠線を外し、その枠線を提供する隣の面と 1 つの面として見せます。下のカードに載る引き出しなら `TRCollapsibleAttachedEdge.bottom`、逆なら `top`、独立したパネルなら既定の `none` を使います。',
+        },
+      },
+    ],
     usage:
       "const TRCollapsible(\n  trigger: Text('Details'),\n  content: Text('Panel body'),\n)",
   },
