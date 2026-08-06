@@ -177,14 +177,11 @@ abstract final class TRLayerStyles {
             : colors.text,
       ),
       iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(rowSize)),
-      minimumSize: WidgetStatePropertyAll(
-        Size(0, TRControlMetrics.heightOf(rowSize) + TRGeneratedSpacing.xs),
+      minimumSize: const WidgetStatePropertyAll(
+        Size(0, TRGeneratedLayerMetrics.menuItemHeight),
       ),
-      maximumSize: WidgetStatePropertyAll(
-        Size(
-          double.infinity,
-          TRControlMetrics.heightOf(rowSize) + TRGeneratedSpacing.xs,
-        ),
+      maximumSize: const WidgetStatePropertyAll(
+        Size(double.infinity, TRGeneratedLayerMetrics.menuItemHeight),
       ),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
@@ -238,11 +235,11 @@ abstract final class TRLayerStyles {
             : colors.text,
       ),
       iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(rowSize)),
-      minimumSize: WidgetStatePropertyAll(
-        Size(0, TRControlMetrics.heightOf(rowSize)),
+      minimumSize: const WidgetStatePropertyAll(
+        Size(0, TRGeneratedLayerMetrics.optionItemHeight),
       ),
-      maximumSize: WidgetStatePropertyAll(
-        Size(double.infinity, TRControlMetrics.heightOf(rowSize)),
+      maximumSize: const WidgetStatePropertyAll(
+        Size(double.infinity, TRGeneratedLayerMetrics.optionItemHeight),
       ),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
@@ -278,7 +275,6 @@ class TRLayerSurface extends StatelessWidget {
         TRGeneratedMeasurements.overlayWidthSm + TRGeneratedSpacing.size2xl,
     this.minWidth = TRGeneratedMeasurements.measureMd,
     this.padding = const EdgeInsets.all(TRGeneratedSpacing.xs),
-    this.useStrongBorder = true,
     super.key,
   });
 
@@ -287,7 +283,6 @@ class TRLayerSurface extends StatelessWidget {
   final double maxWidth;
   final double minWidth;
   final EdgeInsetsGeometry padding;
-  final bool useStrongBorder;
 
   @override
   Widget build(BuildContext context) {
@@ -298,8 +293,11 @@ class TRLayerSurface extends StatelessWidget {
         constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
         decoration: BoxDecoration(
           color: colors.surface,
+          // A layer already separates itself from the page with a shadow, so
+          // its edge only has to close the shape. The quiet border keeps that
+          // edge from reading heavier than the content it frames.
           border: Border.all(
-            color: useStrongBorder ? colors.borderStrong : colors.border,
+            color: colors.border,
             width: TRGeneratedBorders.defaultWidth,
           ),
           borderRadius: BorderRadius.circular(TRGeneratedRadii.md),

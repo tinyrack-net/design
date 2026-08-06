@@ -341,7 +341,6 @@ class _TRNavigationMenuEntryState<T> extends State<_TRNavigationMenuEntry<T>> {
         minWidth: widget.panelWidth,
         maxWidth: widget.panelWidth,
         padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
-        useStrongBorder: false,
         child: TRLayerPartBoundary(
           name: 'content',
           child: DefaultTextStyle.merge(

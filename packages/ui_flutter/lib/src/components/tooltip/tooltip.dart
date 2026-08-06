@@ -241,7 +241,10 @@ class _TRTooltipState extends State<TRTooltip> {
       final surface = DecoratedBox(
         decoration: BoxDecoration(
           color: generated.surfaceInverse,
-          border: Border.all(color: generated.borderInverse),
+          border: Border.all(
+            color: generated.borderInverse,
+            width: TRGeneratedBorders.defaultWidth,
+          ),
           borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
           boxShadow: const [TRGeneratedShadows.overlay],
         ),

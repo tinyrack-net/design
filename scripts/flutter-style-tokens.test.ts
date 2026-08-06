@@ -152,8 +152,8 @@ test('the canonical token source covers Flutter component metrics', () => {
     layerComponents: {
       anchorGap: '0.5rem',
       popupPadding: '0.5rem',
-      menuItemHeight: '2.25rem',
-      optionItemHeight: '2rem',
+      menuItemHeight: '1.75rem',
+      optionItemHeight: '1.75rem',
       arrowSize: '0.5rem',
       toastWidth: '24rem',
       drawerWidth: '32rem',

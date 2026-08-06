@@ -86,8 +86,15 @@ class TRMenubarMenu extends StatelessWidget {
             borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
           ),
         ),
-        side: const WidgetStatePropertyAll(
-          BorderSide(color: Colors.transparent),
+        side: WidgetStateProperty.resolveWith(
+          (states) => BorderSide(
+            color: states.contains(WidgetState.focused)
+                ? context.tinyrackTheme.focus
+                : Colors.transparent,
+            width: states.contains(WidgetState.focused)
+                ? TRGeneratedBorders.focusWidth
+                : TRGeneratedBorders.defaultWidth,
+          ),
         ),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textStyle: WidgetStatePropertyAll(

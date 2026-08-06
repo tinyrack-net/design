@@ -782,7 +782,7 @@ class _TRComboboxInputState<T extends Object>
                                 const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   mainAxisExtent:
-                                      TRGeneratedLayerMetrics.menuItemHeight,
+                                      TRGeneratedLayerMetrics.optionItemHeight,
                                   crossAxisSpacing: TRGeneratedSpacing.xs,
                                   mainAxisSpacing: TRGeneratedSpacing.xs,
                                 ),
