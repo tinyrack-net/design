@@ -22,6 +22,82 @@ void main() {
     });
   });
 
+  group('TRBreakpoints', () {
+    // A responsive layout has to decide where it changes shape. Without a
+    // published scale every consumer invents its own threshold, so two
+    // surfaces in the same app reflow at different widths for no reason.
+    test('publishes an ascending breakpoint scale', () {
+      const scale = <double>[
+        TRBreakpoints.extraSmall,
+        TRBreakpoints.small,
+        TRBreakpoints.medium,
+        TRBreakpoints.large,
+        TRBreakpoints.extraLarge,
+      ];
+      expect(scale.first, greaterThan(0));
+      for (var step = 1; step < scale.length; step++) {
+        expect(scale[step], greaterThan(scale[step - 1]));
+      }
+    });
+
+    // The threshold between a stacked and a side-by-side layout has to be
+    // wider than the panes it separates, or the layout switches to two panes
+    // it cannot fit.
+    test('separates a stacked layout from two panes that fit beside it', () {
+      expect(
+        TRBreakpoints.medium,
+        greaterThan(TRMeasurements.paneSm + TRMeasurements.paneMd),
+      );
+    });
+  });
+
+  group('TRMeasurements pane widths', () {
+    // A navigation rail and a list pane are structural widths, not content
+    // measures and not control widths. Borrowing `measure` or
+    // `controlWidth` for them reads as a token while meaning something else,
+    // and leaves the two panes free to drift apart across surfaces.
+    test('publishes an ascending pane scale', () {
+      expect(TRMeasurements.paneSm, greaterThan(0));
+      expect(TRMeasurements.paneMd, greaterThan(TRMeasurements.paneSm));
+    });
+
+    // A pane holds rows of labelled content, so it has to be wider than a
+    // single control sitting inside it.
+    test('fits a control at the largest size', () {
+      expect(
+        TRMeasurements.paneSm,
+        greaterThan(TRControlMetrics.heightOf(TRUiSize.lg)),
+      );
+    });
+  });
+
+  group('TRMeasurements reading widths', () {
+    // A settings or article column stops being readable past a certain
+    // inline size. Without this scale a consumer either leaves the column
+    // unbounded, stretching a label and its control to opposite edges of a
+    // wide window, or caps it with a literal.
+    test('publishes an ascending reading width scale', () {
+      const scale = <double>[
+        TRMeasurements.readingWidthSm,
+        TRMeasurements.readingWidthMd,
+        TRMeasurements.readingWidthLg,
+      ];
+      expect(scale.first, greaterThan(0));
+      for (var step = 1; step < scale.length; step++) {
+        expect(scale[step], greaterThan(scale[step - 1]));
+      }
+    });
+
+    // Wider than the widest measure step, which sizes a single text region
+    // rather than a whole content column.
+    test('exceeds the measure scale it complements', () {
+      expect(
+        TRMeasurements.readingWidthSm,
+        greaterThan(TRMeasurements.measureXl),
+      );
+    });
+  });
+
   group('TRBrandMark measurements', () {
     // A brand mark is a graphic, not a text region and not a control glyph.
     // Without its own scale a splash or an empty state has to borrow a
@@ -59,6 +135,17 @@ void main() {
         greaterThan(TRControlMetrics.heightOf(TRUiSize.md)),
       );
       expect(TRControlMetrics.borderWidth, greaterThan(0));
+    });
+
+    // A composite that draws its own focus ring — a settings row, a nav item —
+    // has to match the ring the controls beside it draw. Without these it
+    // guesses a width, and the two rings disagree by a pixel.
+    test('publishes the focus ring geometry', () {
+      expect(
+        TRControlMetrics.focusWidth,
+        greaterThan(TRControlMetrics.borderWidth),
+      );
+      expect(TRControlMetrics.focusOffset, greaterThan(0));
     });
 
     test('orders the compact size below the default size', () {

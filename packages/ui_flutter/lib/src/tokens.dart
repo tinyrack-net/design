@@ -45,6 +45,19 @@ abstract final class TRShadows {
   static const overlay = TRGeneratedShadows.overlay;
 }
 
+/// Viewport widths at which a responsive layout changes shape.
+///
+/// A layout deciding between a stacked and a side-by-side arrangement needs a
+/// threshold. Reading it here keeps every surface reflowing at the same width
+/// instead of at whichever literal each one happened to pick.
+abstract final class TRBreakpoints {
+  static const extraSmall = TRGeneratedBreakpoints.xs;
+  static const small = TRGeneratedBreakpoints.sm;
+  static const medium = TRGeneratedBreakpoints.md;
+  static const large = TRGeneratedBreakpoints.lg;
+  static const extraLarge = TRGeneratedBreakpoints.xl;
+}
+
 /// Platform-resolved measurements used by Tinyrack surfaces and overlays.
 abstract final class TRMeasurements {
   /// Square size of a brand mark, such as the one a boot splash centers.
@@ -60,6 +73,25 @@ abstract final class TRMeasurements {
   static const measureMd = TRGeneratedMeasurements.measureMd;
   static const measureLg = TRGeneratedMeasurements.measureLg;
   static const measureXl = TRGeneratedMeasurements.measureXl;
+
+  /// Inline size of a structural pane, such as a navigation rail or the list
+  /// side of a list-detail layout.
+  ///
+  /// Separate from the `measure` scale, which sizes a region of text, and from
+  /// [TRControlMetrics], which sizes one control. A pane holds rows of other
+  /// content, so sizing it from either of those states the wrong intent and
+  /// lets two panes drift apart across surfaces.
+  static const paneSm = TRGeneratedMeasurements.paneSm;
+  static const paneMd = TRGeneratedMeasurements.paneMd;
+
+  /// Maximum inline size of a readable content column.
+  ///
+  /// Wider than the `measure` scale, which constrains a single text region.
+  /// A column left unbounded pushes a label and its control to opposite edges
+  /// of a wide window, which is what this scale exists to prevent.
+  static const readingWidthSm = TRGeneratedMeasurements.readingWidthSm;
+  static const readingWidthMd = TRGeneratedMeasurements.readingWidthMd;
+  static const readingWidthLg = TRGeneratedMeasurements.readingWidthLg;
   static const overlayWidthSm = TRGeneratedMeasurements.overlayWidthSm;
   static const overlayWidthMd = TRGeneratedMeasurements.overlayWidthMd;
   static const overlayInlineInset = TRGeneratedMeasurements.overlayInlineInset;
@@ -117,6 +149,16 @@ abstract final class TRControlMetrics {
 
   /// Width of the border a control draws, which adds to its outer width.
   static const borderWidth = TRGeneratedBorders.defaultWidth;
+
+  /// Width of the ring drawn around a focused control.
+  ///
+  /// Thicker than [borderWidth], so a focused control reads as focused rather
+  /// than as merely outlined. A composite drawing its own focus ring needs
+  /// this to match the ring the controls beside it draw.
+  static const focusWidth = TRGeneratedBorders.focusWidth;
+
+  /// Gap between a control's edge and its focus ring.
+  static const focusOffset = TRGeneratedBorders.focusOffset;
 
   /// Text style a control renders its label in.
   ///

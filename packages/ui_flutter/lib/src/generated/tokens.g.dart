@@ -424,6 +424,11 @@ abstract final class TRGeneratedMeasurements {
   static const double measureMd = 192.0;
   static const double measureLg = 256.0;
   static const double measureXl = 384.0;
+  static const double paneSm = 240.0;
+  static const double paneMd = 288.0;
+  static const double readingWidthSm = 704.0;
+  static const double readingWidthMd = 768.0;
+  static const double readingWidthLg = 896.0;
   static const double overlayWidthSm = 320.0;
   static const double overlayWidthMd = 512.0;
   static const double overlayInlineInset = 24.0;

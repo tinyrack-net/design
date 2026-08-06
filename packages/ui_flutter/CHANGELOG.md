@@ -1,3 +1,21 @@
+## 0.31.0
+
+- Adds `TRBreakpoints`, which publishes the viewport widths a responsive layout
+  changes shape at. The values were already generated from the shared token
+  source but were reachable only through the generated class, so a consumer
+  deciding between a stacked and a side-by-side arrangement had to name its own
+  threshold and two surfaces in one app could reflow at different widths.
+- Adds `TRMeasurements.paneSm` and `TRMeasurements.paneMd`, the inline size of a
+  structural pane such as a navigation rail or the list side of a list-detail
+  layout. A pane holds rows of other content, so sizing it from the `measure`
+  scale or from `TRControlMetrics` stated the wrong intent.
+- Adds `TRMeasurements.readingWidthSm`, `readingWidthMd`, and `readingWidthLg`,
+  the maximum inline size of a readable content column. An unbounded column
+  pushes a label and its control to opposite edges of a wide window.
+- Adds `TRControlMetrics.focusWidth` and `TRControlMetrics.focusOffset`. Only
+  `borderWidth` was published, so a composite drawing its own focus ring had to
+  guess the width and could disagree by a pixel with the controls beside it.
+
 ## 0.30.1
 
 - Fixes `TRTreeNav` trapping the keyboard. A row's focus ring was added and
