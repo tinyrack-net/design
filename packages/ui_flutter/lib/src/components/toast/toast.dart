@@ -364,9 +364,9 @@ class _TRToastCardState extends State<_TRToastCard>
         decoration: BoxDecoration(
           color: colors.surface,
           border: BorderDirectional(
-            top: BorderSide(color: colors.borderStrong),
-            end: BorderSide(color: colors.borderStrong),
-            bottom: BorderSide(color: colors.borderStrong),
+            top: BorderSide(color: generated.controlBorder),
+            end: BorderSide(color: generated.controlBorder),
+            bottom: BorderSide(color: generated.controlBorder),
             start: BorderSide(
               color: accent,
               width: TRGeneratedBorders.strongWidth,

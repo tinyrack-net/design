@@ -185,6 +185,9 @@ class _TROtpFieldState extends State<TROtpField> {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
+    final generated = Theme.of(context).brightness == Brightness.light
+        ? TRGeneratedColors.light
+        : TRGeneratedColors.dark;
     final characters = _value.characters.toList(growable: false);
     final activeIndex = math.min(characters.length, widget.length - 1);
     // Square slots track the shared control height scale, so an OTP field lines
@@ -240,7 +243,7 @@ class _TROtpFieldState extends State<TROtpField> {
                               ? colors.dangerBorder
                               : active
                               ? colors.focus
-                              : colors.borderStrong,
+                              : generated.controlBorder,
                           solidBorderWidth: active
                               ? TRGeneratedBorders.focusWidth
                               : TRGeneratedBorders.defaultWidth,

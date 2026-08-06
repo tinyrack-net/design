@@ -105,7 +105,7 @@ class _TRSwitchState extends State<TRSwitch> {
     final borderColor = widget.invalid
         ? colors.dangerBorder
         : disabled
-        ? (checked ? colors.primary : colors.borderStrong)
+        ? (checked ? colors.primary : generated.controlBorder)
         : checked
         ? (_hovered ? generated.primaryHover : colors.primary)
         : generated.controlBorder;

@@ -10,7 +10,7 @@ describe('Tinyrack Rack Blue brand identity', () => {
       surfaceSelected: '#1e3a8a',
       text: '#fafafa',
       textMuted: '#a3a3a3',
-      border: '#404040',
+      border: '#a3a3a3',
       focus: '#60a5fa',
       primary: '#60a5fa',
       onPrimary: '#172554',

@@ -151,7 +151,7 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
 
   /// Returns the semantic border color for a status [variant].
   Color borderForStatus(TRStatusVariant variant) => switch (variant) {
-    TRStatusVariant.neutral => borderStrong,
+    TRStatusVariant.neutral => border,
     TRStatusVariant.info => infoBorder,
     TRStatusVariant.success => successBorder,
     TRStatusVariant.warning => warningBorder,
@@ -381,7 +381,7 @@ abstract final class TinyrackTheme {
             Radius.circular(TRGeneratedRadii.md),
           ),
           borderSide: BorderSide(
-            color: colors.borderStrong,
+            color: generated.controlBorder,
             width: TRGeneratedBorders.defaultWidth,
           ),
         ),
@@ -390,7 +390,7 @@ abstract final class TinyrackTheme {
             Radius.circular(TRGeneratedRadii.md),
           ),
           borderSide: BorderSide(
-            color: colors.borderStrong,
+            color: generated.controlBorder,
             width: TRGeneratedBorders.defaultWidth,
           ),
         ),

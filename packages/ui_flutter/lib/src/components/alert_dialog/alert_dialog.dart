@@ -36,6 +36,9 @@ class TRAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
+    final generated = Theme.of(context).brightness == Brightness.light
+        ? TRGeneratedColors.light
+        : TRGeneratedColors.dark;
     final locale = Localizations.localeOf(context).languageCode;
     final dialogWidth = math.max(
       0.0,
@@ -69,7 +72,7 @@ class TRAlertDialog extends StatelessWidget {
               shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(TRGeneratedRadii.lg),
-                side: BorderSide(color: colors.borderStrong),
+                side: BorderSide(color: generated.controlBorder),
               ),
               surfaceTintColor: Colors.transparent,
               type: MaterialType.card,
