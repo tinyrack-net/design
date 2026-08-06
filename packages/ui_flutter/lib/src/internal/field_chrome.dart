@@ -25,10 +25,13 @@ class TRFieldChrome {
 /// [TRFieldAppearance.solid] so every control keeps the state mapping it
 /// already had. [TRFieldAppearance.ghost] ignores them and resolves from shared
 /// tokens instead, dropping only the resting fill and border while keeping
-/// hover, focus, and invalid emphasis.
+/// hover, focus, and invalid emphasis. [TRFieldAppearance.plain] keeps only the
+/// invalid emphasis, because the surface framing the group paints its fill,
+/// hover, and focus for it.
 ///
-/// Ghost always returns a border at a real width, transparent when it should
-/// not be seen, so switching appearance never changes a field's metrics.
+/// Every appearance returns a border at a real width, transparent when it
+/// should not be seen, so switching appearance never changes a field's
+/// metrics.
 TRFieldChrome resolveFieldChrome({
   required TRFieldAppearance appearance,
   required TinyrackThemeData colors,
@@ -47,6 +50,25 @@ TRFieldChrome resolveFieldChrome({
       fill: solidFill,
       borderColor: solidBorderColor,
       borderWidth: solidBorderWidth,
+    );
+  }
+  if (appearance == TRFieldAppearance.plain) {
+    // The framing surface answers hover and focus for the whole group, so the
+    // field adds nothing there. It keeps invalid emphasis, which is the one
+    // state the surface cannot know about.
+    if (error) {
+      return TRFieldChrome(
+        fill: Colors.transparent,
+        borderColor: focused ? colors.danger : colors.dangerBorder,
+        borderWidth: focused
+            ? TRGeneratedBorders.focusWidth
+            : TRGeneratedBorders.defaultWidth,
+      );
+    }
+    return const TRFieldChrome(
+      fill: Colors.transparent,
+      borderColor: Colors.transparent,
+      borderWidth: TRGeneratedBorders.defaultWidth,
     );
   }
   if (error && focused) {

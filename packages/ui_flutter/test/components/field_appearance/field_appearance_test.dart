@@ -110,6 +110,42 @@ void main() {
       expect(invalidFocused.borderColor, colors.danger);
     });
 
+    test('plain paints no chrome of its own in any interactive state', () {
+      // The enclosing group owns the frame, so the field must not answer
+      // hover, focus, or open with a second border inside that frame.
+      for (final chrome in [
+        resolve(TRFieldAppearance.plain),
+        resolve(TRFieldAppearance.plain, hovered: true),
+        resolve(TRFieldAppearance.plain, focused: true),
+        resolve(TRFieldAppearance.plain, open: true),
+        resolve(TRFieldAppearance.plain, enabled: false),
+        resolve(TRFieldAppearance.plain, readOnly: true),
+      ]) {
+        expect(chrome.fill, Colors.transparent);
+        expect(chrome.borderColor, Colors.transparent);
+        expect(chrome.borderWidth, greaterThan(0));
+      }
+    });
+
+    test('plain still reports an invalid value', () {
+      // A group cannot know the field is invalid, so this emphasis is the one
+      // thing the field keeps.
+      final colors = _colors;
+
+      expect(
+        resolve(TRFieldAppearance.plain, error: true).borderColor,
+        colors.dangerBorder,
+      );
+      expect(
+        resolve(
+          TRFieldAppearance.plain,
+          error: true,
+          focused: true,
+        ).borderColor,
+        colors.danger,
+      );
+    });
+
     test('ghost never changes a field metric', () {
       // Every ghost state returns a real border width, so a field keeps the
       // same box whichever appearance it is given.
@@ -165,6 +201,42 @@ void main() {
 
     expect(style.backgroundColor!.resolve(<WidgetState>{}), _colors.surface);
     expect(style.side!.resolve(<WidgetState>{})!.color, _colors.border);
+  });
+
+  testWidgets('a focused plain text field leaves the frame to its group', (
+    tester,
+  ) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      _app(
+        SizedBox(
+          width: TRMeasurements.measureSm,
+          child: TRTextField(
+            appearance: TRFieldAppearance.plain,
+            focusNode: focusNode,
+          ),
+        ),
+      ),
+    );
+
+    Color border() => tester
+        .widgetList<AnimatedContainer>(find.byType(AnimatedContainer))
+        .map((container) => container.foregroundDecoration)
+        .whereType<BoxDecoration>()
+        .map((decoration) => decoration.border!.top.color)
+        .first;
+
+    expect(border(), Colors.transparent);
+
+    focusNode.requestFocus();
+    await tester.pumpAndSettle();
+
+    expect(
+      border(),
+      Colors.transparent,
+      reason: 'the surface wrapping the field paints the focus ring instead',
+    );
   });
 
   testWidgets('ghost OTP slots stay flat until they are invalid', (

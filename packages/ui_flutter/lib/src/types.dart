@@ -39,9 +39,12 @@ enum TRCardPadding { none, sm, md, lg }
 ///
 /// [ghost] drops the resting fill and border so an enclosing surface can own
 /// the frame, while the control still paints hover, focus, and invalid
-/// emphasis itself. Metrics are identical to [solid], so switching appearance
-/// never shifts layout.
-enum TRFieldAppearance { solid, ghost }
+/// emphasis itself. [plain] goes further and paints nothing but invalid
+/// emphasis, for a field placed inside a surface that frames the whole group
+/// and shows the group's focus itself; a plain field ringed by its own focus
+/// as well would show two rings for one caret. Metrics are identical to
+/// [solid], so switching appearance never shifts layout.
+enum TRFieldAppearance { solid, ghost, plain }
 
 /// The semantic color of a progress spinner.
 enum TRSpinnerVariant { current, muted, primary, danger }

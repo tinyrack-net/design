@@ -763,9 +763,11 @@ class _PreviewAppState extends State<PreviewApp> {
 
 /// Reads the field appearance a preview scenario asks for.
 TRFieldAppearance _fieldAppearance(Map<String, Object?> args) =>
-    args['appearance'] == 'ghost'
-    ? TRFieldAppearance.ghost
-    : TRFieldAppearance.solid;
+    switch (args['appearance']) {
+      'ghost' => TRFieldAppearance.ghost,
+      'plain' => TRFieldAppearance.plain,
+      _ => TRFieldAppearance.solid,
+    };
 
 List<String> _supportedArgs(String component) => switch (component) {
   'button' => [
@@ -960,7 +962,7 @@ Map<String, Object?>? _validateArgs(
             'text-field',
             'textarea',
           }.contains(component) =>
-        value is String && const {'solid', 'ghost'}.contains(value),
+        value is String && const {'solid', 'ghost', 'plain'}.contains(value),
       'appearance' =>
         value is String && const {'solid', 'outline', 'ghost'}.contains(value),
       'filterMode' when component == 'combobox' =>

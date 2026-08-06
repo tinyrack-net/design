@@ -5,6 +5,7 @@ import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
+import '../../types.dart';
 
 // @tinyrack-preview menu
 /// A Material menu anchor with Tinyrack layer styling.
@@ -19,6 +20,7 @@ class TRMenu extends StatefulWidget {
     this.focusNode,
     this.onClose,
     this.onOpen,
+    this.uiSize = TRUiSize.md,
     this.useRootOverlay = true,
     super.key,
   });
@@ -32,6 +34,13 @@ class TRMenu extends StatefulWidget {
   final FocusNode? focusNode;
   final VoidCallback? onClose;
   final VoidCallback? onOpen;
+
+  /// Control geometry of the trigger.
+  ///
+  /// A menu trigger stands in a row beside buttons and fields, so it takes the
+  /// same sizes they do rather than fixing one density.
+  final TRUiSize uiSize;
+
   final bool useRootOverlay;
 
   @override
@@ -90,14 +99,14 @@ class _TRMenuState extends State<TRMenu> {
             ? colors.textMuted
             : colors.text,
       ),
-      minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedControlMetrics.mdHeight),
+      minimumSize: WidgetStatePropertyAll(
+        Size(0, TRControlMetrics.heightOf(widget.uiSize)),
       ),
-      padding: const WidgetStatePropertyAll(
+      padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
           horizontal:
-              TRGeneratedControlMetrics.mdPaddingInline +
-              TRGeneratedBorders.defaultWidth,
+              TRControlMetrics.inlinePaddingOf(widget.uiSize) +
+              TRControlMetrics.borderWidth,
         ),
       ),
       shape: WidgetStatePropertyAll(
@@ -120,18 +129,18 @@ class _TRMenuState extends State<TRMenu> {
         TextStyle(
           fontFamily: TRGeneratedFontFamilies.body,
           fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-          fontSize: TRGeneratedControlMetrics.mdFontSize,
+          fontSize: TRControlMetrics.fontSizeOf(widget.uiSize),
           fontWeight: TRGeneratedFontWeights.medium,
           height:
-              TRGeneratedControlMetrics.mdLineHeight /
-              TRGeneratedControlMetrics.mdFontSize,
+              TRControlMetrics.lineHeightOf(widget.uiSize) /
+              TRControlMetrics.fontSizeOf(widget.uiSize),
         ),
       ),
       visualDensity: VisualDensity.standard,
     );
 
     return SizedBox(
-      height: TRGeneratedControlMetrics.mdHeight,
+      height: TRControlMetrics.heightOf(widget.uiSize),
       child: MenuAnchor(
         alignmentOffset: widget.alignmentOffset,
         animated: false,

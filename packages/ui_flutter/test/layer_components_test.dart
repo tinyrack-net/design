@@ -72,6 +72,38 @@ void main() {
       expect((decoration.border! as Border).top.style, BorderStyle.solid);
     });
 
+    testWidgets('sizes its trigger like every other control', (tester) async {
+      for (final size in TRUiSize.values) {
+        await tester.pumpWidget(
+          _app(
+            TRMenu(
+              uiSize: size,
+              trigger: const Text('Actions'),
+              menuChildren: [
+                TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+              ],
+            ),
+          ),
+        );
+
+        expect(
+          tester.getSize(find.byType(TextButton)).height,
+          TRControlMetrics.heightOf(size),
+          reason: '$size',
+        );
+        expect(
+          tester
+              .widget<TextButton>(find.byType(TextButton))
+              .style!
+              .textStyle!
+              .resolve(<WidgetState>{})!
+              .fontSize,
+          TRControlMetrics.fontSizeOf(size),
+          reason: '$size',
+        );
+      }
+    });
+
     testWidgets('opens its panel below the trigger', (tester) async {
       await tester.pumpWidget(
         _app(

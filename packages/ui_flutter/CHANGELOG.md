@@ -1,3 +1,24 @@
+## 0.24.0
+
+- Adds `TRFieldAppearance.plain`, for a field inside a surface that frames the
+  whole group and shows the group's focus itself. `ghost` still paints hover and
+  focus from the field, which is right for a lone field on a toolbar but wrong
+  inside a `TRCard` that sets `focused`: the caret then draws one ring around the
+  text and another around the card. A composer whose card holds the input, a
+  toolbar, and a send button had to choose between ringing only the text or
+  ringing it twice.
+- `plain` keeps the invalid emphasis, which is the one state the framing surface
+  cannot know about, and keeps the border box at its normal width like the other
+  appearances, so switching to it never moves the field. The web package
+  expresses the same rule structurally: an input inside `.tr-input-group` drops
+  its border and outline and the group paints `:focus-within`. Flutter has no
+  such nesting selector, so the field is told directly.
+- Adds `uiSize` to `TRMenu`. Its trigger had `md` geometry welded in, so a menu
+  standing in a row of `sm` buttons and fields was four pixels taller than every
+  control beside it and there was no way to align them. `TRButton`,
+  `TRIconButton`, `TRSelect`, and `TRMenubar` already took the size; the menu is
+  now the same, defaulting to `md`.
+
 ## 0.23.0
 
 - Adds `TRInlineSuggestions`, a suggestion layer anchored to a text field the
