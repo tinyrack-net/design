@@ -18,20 +18,20 @@ runs:
         echo "version=${pnpm_version}" >> "$GITHUB_OUTPUT"
 
     - name: Set up pnpm
-      uses: pnpm/action-setup@v6.0.9
+      uses: pnpm/action-setup@v6.0.10
       with:
         version: ${{ steps.pnpm.outputs.version }}
 
     - name: Set up Node.js
       if: inputs.registry-url == ''
-      uses: actions/setup-node@v6.4.0
+      uses: actions/setup-node@v7.0.0
       with:
         cache: pnpm
         node-version-file: .node-version
 
     - name: Set up Node.js with npm registry
       if: inputs.registry-url != ''
-      uses: actions/setup-node@v6.4.0
+      uses: actions/setup-node@v7.0.0
       with:
         cache: pnpm
         node-version-file: .node-version
