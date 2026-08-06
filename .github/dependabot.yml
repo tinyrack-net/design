@@ -40,6 +40,10 @@ updates:
       # lucide_flutter is kept in lockstep with lucide-react by hand so that
       # component-owned glyphs match across the two renderers.
       - dependency-name: lucide_flutter
+      # flutter_localizations pins intl to an exact version from the Flutter
+      # SDK, so raising this floor past that pin makes the package unsolvable
+      # for any consumer that localizes.
+      - dependency-name: intl
 
   # The example app resolves tinyrack_ui by path but carries its own
   # dependencies, which pub covers per directory.
@@ -48,6 +52,8 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: intl
 
   - package-ecosystem: github-actions
     directory: /
