@@ -1,3 +1,14 @@
+## 0.29.1
+
+- Fixes `TRTreeNav` treating a focused control inside a row as a focused row. A
+  row read `Focus.onFocusChange`, which reports `hasFocus`, so a trailing button
+  or `TRMenu` trigger lit the whole row's focus ring and hover surface. Adding
+  that ring inserted a foreground `DecoratedBox` into the row, which re-inflated
+  the row's subtree and discarded the gesture recognizer of the control being
+  pressed, so the first press on a trailing menu trigger was swallowed and the
+  menu only opened on the second press. A row now takes the focus surface only
+  while it holds the primary focus itself.
+
 ## 0.29.0
 
 - Adds `TRContextMenu.items` and `TRContextMenu.itemsBuilder`, which describe a
