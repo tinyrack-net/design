@@ -563,4 +563,62 @@ void main() {
     }
     expect(reached, isTrue, reason: 'Tab never escaped TRTreeNav');
   });
+
+  testWidgets(
+    'Tab leaves the tree once a group with a trailing control has it',
+    (tester) async {
+      await tester.pumpWidget(
+        _app(
+          Column(
+            children: [
+              TRTreeNav<String>(
+                items: [
+                  TRTreeNavGroup<String>(
+                    value: 'group',
+                    label: const Text('Group'),
+                    trailing: TRMenu.icon(
+                      key: const ValueKey('group-menu'),
+                      icon: const Icon(Icons.more_horiz),
+                      label: 'Group menu',
+                      menuChildren: [
+                        TRMenuItem(
+                          onPressed: () {},
+                          child: const Text('Action'),
+                        ),
+                      ],
+                    ),
+                    children: const [
+                      TRTreeNavLeaf(value: 'leaf', label: Text('Leaf')),
+                    ],
+                  ),
+                ],
+              ),
+              TRButton(
+                key: const ValueKey<String>('after'),
+                onPressed: () {},
+                child: const Text('After'),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      // A group row toggling its ring re-inflates the row exactly as a leaf row
+      // did, so the trailing trigger's focus node dies as traversal reaches it.
+      var reached = false;
+      for (var attempt = 0; attempt < 20 && !reached; attempt += 1) {
+        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+        await tester.pumpAndSettle();
+        FocusManager.instance.primaryFocus?.context?.visitAncestorElements((
+          element,
+        ) {
+          if (element.widget.key == const ValueKey<String>('after')) {
+            reached = true;
+          }
+          return !reached;
+        });
+      }
+      expect(reached, isTrue, reason: 'Tab never escaped a group row');
+    },
+  );
 }

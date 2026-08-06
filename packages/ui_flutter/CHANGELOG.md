@@ -1,3 +1,12 @@
+## 0.31.1
+
+- Completes the `TRTreeNav` keyboard-trap fix. 0.30.1 made the focus ring
+  colour-only on leaf rows but left the group row still swapping
+  `foregroundDecoration` against null, so a group with a trailing control —
+  a workspace header with an overflow menu, say — kept re-inflating itself and
+  kept trapping Tab. Both row kinds now hold a stable subtree across focus
+  changes.
+
 ## 0.31.0
 
 - Adds `TRBreakpoints`, which publishes the viewport widths a responsive layout
