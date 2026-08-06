@@ -383,17 +383,18 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
                     horizontal: TRGeneratedSpacing.md,
                     vertical: TRGeneratedSpacing.xs,
                   ),
-                  foregroundDecoration: showFocusRing
-                      ? BoxDecoration(
-                          border: Border.all(
-                            color: colors.focus,
-                            width: TRGeneratedBorders.focusWidth,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            TRGeneratedRadii.md,
-                          ),
-                        )
-                      : null,
+                  // The ring is always in the tree and only changes color. A
+                  // foreground decoration that appears and disappears adds and
+                  // removes a DecoratedBox, which re-inflates everything below it,
+                  // discarding the focus node and gesture recognizer of whatever
+                  // control in this row just took focus or is being pressed.
+                  foregroundDecoration: BoxDecoration(
+                    border: Border.all(
+                      color: showFocusRing ? colors.focus : Colors.transparent,
+                      width: TRGeneratedBorders.focusWidth,
+                    ),
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                  ),
                   decoration: BoxDecoration(
                     color: background,
                     borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
@@ -471,17 +472,18 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>> {
                   horizontal: TRGeneratedSpacing.md,
                   vertical: TRGeneratedSpacing.xs,
                 ),
-                foregroundDecoration: showFocusRing
-                    ? BoxDecoration(
-                        border: Border.all(
-                          color: colors.focus,
-                          width: TRGeneratedBorders.focusWidth,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          TRGeneratedRadii.md,
-                        ),
-                      )
-                    : null,
+                // The ring is always in the tree and only changes color. A
+                // foreground decoration that appears and disappears adds and
+                // removes a DecoratedBox, which re-inflates everything below it,
+                // discarding the focus node and gesture recognizer of whatever
+                // control in this row just took focus or is being pressed.
+                foregroundDecoration: BoxDecoration(
+                  border: Border.all(
+                    color: showFocusRing ? colors.focus : Colors.transparent,
+                    width: TRGeneratedBorders.focusWidth,
+                  ),
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                ),
                 decoration: BoxDecoration(
                   color: groupBackground,
                   borderRadius: BorderRadius.circular(TRGeneratedRadii.md),

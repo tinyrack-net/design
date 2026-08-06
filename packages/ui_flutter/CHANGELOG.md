@@ -1,3 +1,14 @@
+## 0.30.2
+
+- Fixes `TRTreeNav` discarding the focus node and gesture recognizer of a
+  control inside a row whenever the row's focus ring appeared or disappeared.
+  `Container` only builds a foreground `DecoratedBox` for a non-null
+  `foregroundDecoration`, so toggling the ring shifted the row's child chain by
+  one level and re-inflated everything below it. Tab traversal could not leave a
+  row that hosts a trailing control, because that control's focus node was
+  destroyed the moment traversal reached it. The ring now stays in the tree and
+  changes color, which an unfocused row draws transparent.
+
 ## 0.30.1
 
 - Fixes a system context menu on Linux closing itself moments after it opened,

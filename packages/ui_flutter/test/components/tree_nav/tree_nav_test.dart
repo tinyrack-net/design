@@ -66,6 +66,14 @@ AnimatedContainer _row(WidgetTester tester, String label) =>
 Color? _background(WidgetTester tester, String label) =>
     (_row(tester, label).decoration as BoxDecoration?)?.color;
 
+// The focus ring is always in the tree so that showing it never restructures
+// the row; an unfocused row draws it transparent.
+Color? _focusRing(WidgetTester tester, String label) =>
+    ((_row(tester, label).foregroundDecoration! as BoxDecoration).border!
+            as Border)
+        .top
+        .color;
+
 void main() {
   testWidgets('matches web row heights, nested gaps, and progressive rails', (
     tester,
@@ -490,7 +498,7 @@ void main() {
 
     // The control owns the focus ring; the row that hosts it does not, so the
     // row falls back to idle once the pointer leaves it.
-    expect(_row(tester, 'Leaf').foregroundDecoration, isNull);
+    expect(_focusRing(tester, 'Leaf'), Colors.transparent);
     await mouse.moveTo(const Offset(1, 300));
     await tester.pumpAndSettle();
     expect(_background(tester, 'Leaf'), Colors.transparent);
@@ -519,5 +527,37 @@ void main() {
     expect(find.byKey(const ValueKey('Lower-menu-item')), findsNothing);
     expect(find.byKey(const ValueKey('Upper-menu-item')), findsOneWidget);
     await mouse.removePointer();
+  });
+
+  testWidgets('tab traversal reaches every control a row hosts', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        Column(
+          children: [
+            TRTreeNav<String>(items: [menuLeaf('Upper'), menuLeaf('Lower')]),
+            TextButton(
+              key: const ValueKey('after'),
+              onPressed: () {},
+              child: const Text('After'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // Focusing a row must not restructure it, or the trailing control's focus
+    // node is discarded the moment traversal reaches it and Tab never advances.
+    final visited = <FocusNode>{};
+    for (var press = 0; press < 6; press += 1) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      final node = FocusManager.instance.primaryFocus;
+      if (node != null) visited.add(node);
+    }
+
+    // Two rows, their two menu triggers, and the button after the tree.
+    expect(visited, hasLength(5));
   });
 }
