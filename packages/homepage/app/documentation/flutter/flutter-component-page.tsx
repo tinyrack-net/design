@@ -1105,7 +1105,42 @@ const componentData: Record<
       ja: '右クリック、長押し、キーボードのコンテキストメニューキーでコマンドを開きます。',
     },
     usage:
-      "TRContextMenu(\n  menuChildren: [TRMenuItem(onPressed: open, child: const Text('Open'))],\n  child: card,\n)",
+      "TRContextMenu.items(\n  items: [TRMenuActionElement(id: 'open', title: 'Open', onPressed: open)],\n  child: card,\n)",
+    contractIntro: {
+      en: 'The default constructor takes widgets and always draws them with Flutter. `TRContextMenu.items` describes the menu as `TRMenuElement`s instead, which lets the installed `TRContextMenuPresenter` hand it to the operating system. Install `TRNativeContextMenuPresenter` through `TRContextMenuPresenterScope` at the composition root to get the platform menu on Linux, macOS, and Windows.',
+      ko: '기본 생성자는 위젯을 받아 항상 Flutter가 그려요. `TRContextMenu.items`는 메뉴를 `TRMenuElement`로 기술해서, 설치된 `TRContextMenuPresenter`가 운영체제에 넘길 수 있게 해요. 컴포지션 루트에서 `TRContextMenuPresenterScope`로 `TRNativeContextMenuPresenter`를 설치하면 Linux, macOS, Windows에서 플랫폼 메뉴가 나와요.',
+      ja: 'デフォルトのコンストラクタはウィジェットを受け取り、常に Flutter が描画します。`TRContextMenu.items` はメニューを `TRMenuElement` として記述するため、インストールされた `TRContextMenuPresenter` がオペレーティングシステムに渡せます。コンポジションルートで `TRContextMenuPresenterScope` から `TRNativeContextMenuPresenter` を設定すると、Linux、macOS、Windows でプラットフォームのメニューが表示されます。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Presentation', ko: '표시 방식', ja: '表示方法' },
+        choices: {
+          en: 'Without a scope, `TRFlutterContextMenuPresenter` draws Tinyrack menu components in the app overlay. Every platform the native presenter cannot serve — mobile, web, and a desktop build without the plugin registered — falls back to it, so no surface is left with an unstyled menu.',
+          ko: '스코프가 없으면 `TRFlutterContextMenuPresenter`가 앱 오버레이에 Tinyrack 메뉴 컴포넌트를 그려요. 네이티브 프레젠터가 처리할 수 없는 플랫폼, 즉 모바일과 웹, 플러그인이 등록되지 않은 데스크탑 빌드는 모두 여기로 폴백하므로 스타일 없는 메뉴가 남는 화면은 없어요.',
+          ja: 'スコープがない場合は `TRFlutterContextMenuPresenter` がアプリのオーバーレイに Tinyrack のメニューコンポーネントを描画します。ネイティブプレゼンターが扱えないプラットフォーム、つまりモバイル、Web、プラグインが登録されていないデスクトップビルドはすべてこれにフォールバックするため、スタイルの当たっていないメニューが残る画面はありません。',
+        },
+      },
+      {
+        axis: {
+          en: 'What a system menu drops',
+          ko: '시스템 메뉴에서 빠지는 것',
+          ja: 'システムメニューで省かれるもの',
+        },
+        choices: {
+          en: 'A system menu takes a platform bitmap rather than an `IconData`, so `TRMenuActionElement.icon` shows only in the Flutter presentation. The system also owns dismissal, so `TRContextMenuController.close` does nothing once a native menu is up. Titles, shortcuts, check marks, disabled entries, and submenus carry across both.',
+          ko: '시스템 메뉴는 `IconData`가 아니라 플랫폼 비트맵을 받기 때문에 `TRMenuActionElement.icon`은 Flutter 표시에서만 보여요. 닫기도 시스템이 소유하므로 네이티브 메뉴가 열린 뒤에는 `TRContextMenuController.close`가 아무 일도 하지 않아요. 제목, 단축키, 체크 표시, 비활성 항목, 하위 메뉴는 양쪽 모두에 그대로 전달돼요.',
+          ja: 'システムメニューは `IconData` ではなくプラットフォームのビットマップを受け取るため、`TRMenuActionElement.icon` は Flutter の表示でのみ反映されます。閉じる操作もシステムが握るため、ネイティブメニューが開いたあとの `TRContextMenuController.close` は何もしません。タイトル、ショートカット、チェックマーク、無効な項目、サブメニューは両方に引き継がれます。',
+        },
+      },
+      {
+        axis: { en: 'Opening from code', ko: '코드에서 열기', ja: 'コードから開く' },
+        choices: {
+          en: 'A surface that consumes the secondary pointer button itself, such as a terminal reporting mouse events, passes a `TRContextMenuController` and calls `openAt` with a global position. `TRTerminalView.contextMenuItems` does exactly this.',
+          ko: '마우스 이벤트를 보고하는 터미널처럼 보조 포인터 버튼을 직접 소비하는 화면은 `TRContextMenuController`를 넘기고 전역 좌표로 `openAt`을 호출해요. `TRTerminalView.contextMenuItems`가 바로 이 방식이에요.',
+          ja: 'マウスイベントを報告するターミナルのように、副ポインタボタンを自分で消費するサーフェスは `TRContextMenuController` を渡し、グローバル座標で `openAt` を呼びます。`TRTerminalView.contextMenuItems` がまさにこの方式です。',
+        },
+      },
+    ],
   },
   drawer: {
     title: 'Drawer',

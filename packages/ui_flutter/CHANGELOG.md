@@ -1,3 +1,36 @@
+## 0.29.0
+
+- Adds `TRContextMenu.items` and `TRContextMenu.itemsBuilder`, which describe a
+  context menu as `TRMenuElement`s — `TRMenuActionElement`,
+  `TRMenuSeparatorElement`, and `TRMenuSubmenuElement` — rather than as widgets.
+  An operating-system menu cannot host a Flutter widget, so a menu that may be
+  drawn by the platform has to be data. The Flutter presentation renders the
+  same model with `TRMenuItem`, `TRMenuSeparator`, `TRMenuCheckboxItem`, and
+  `TRMenuSubmenu`, and is pixel-identical to the previous rendering. The widget
+  constructor is unchanged.
+- Adds `TRContextMenuPresenter`, `TRContextMenuPresenterScope`,
+  `TRFlutterContextMenuPresenter`, `TRContextMenuController`, and
+  `TRContextMenuHost`. `TRContextMenu` keeps ownership of the gesture contract —
+  secondary tap, touch or stylus long press, the context-menu key, and
+  `Shift+F10` — and the installed presenter decides how the menu appears.
+  Nothing installed means the Flutter presentation, exactly as before, including
+  its Escape and press-on-child dismissal.
+- Adds `TRNativeContextMenuPresenter`, which hands a described menu to GTK on
+  Linux, Win32 on Windows, and AppKit on macOS through the new
+  `net.tinyrack.ui/native_menu` channel. The menu then carries the platform's
+  own appearance, keyboard navigation, and accessibility, and can paint outside
+  the window. `tinyrack_ui` is a Flutter plugin on those three desktop
+  platforms as a result; mobile and web declare no platform entry and build
+  nothing. A system menu takes a platform bitmap rather than an `IconData`, so
+  `TRMenuActionElement.icon` is dropped there, and the system owns dismissal, so
+  `TRContextMenuController.close` does nothing once a native menu is up.
+  Anything the platform cannot present falls back to the Flutter presentation,
+  including a desktop build whose embedder never registered the plugin.
+- Adds `TRTerminalView.contextMenuItems`, the described counterpart of
+  `contextMenuBuilder`. The terminal consumes secondary taps itself, so it keeps
+  opening the menu through a controller; that controller is now a
+  `TRContextMenuController`, which reaches whichever presentation is installed.
+
 ## 0.28.0
 
 - Publishes `TRMenu.label`, the accessible name given to an icon trigger. It

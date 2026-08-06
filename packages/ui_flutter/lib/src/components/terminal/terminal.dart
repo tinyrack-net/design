@@ -121,10 +121,14 @@ class TRTerminalView extends StatefulWidget {
     this.onInput,
     this.onResize,
     this.contextMenuBuilder,
+    this.contextMenuItems,
     this.autofocus = false,
     this.readOnly = false,
     super.key,
-  });
+  }) : assert(
+         contextMenuBuilder == null || contextMenuItems == null,
+         'a terminal has one context menu, described one way',
+       );
 
   final TRTerminalController controller;
   final ValueChanged<String>? onInput;
@@ -139,6 +143,11 @@ class TRTerminalView extends StatefulWidget {
   /// secondary button instead, and the menu stays closed.
   final List<Widget> Function(BuildContext context)? contextMenuBuilder;
 
+  /// Describes the same menu as [contextMenuBuilder] through [TRMenuElement]s,
+  /// which lets the installed [TRContextMenuPresenter] hand it to the operating
+  /// system. Set one of the two, never both.
+  final TRMenuElementsBuilder? contextMenuItems;
+
   final bool autofocus;
   final bool readOnly;
 
@@ -147,8 +156,7 @@ class TRTerminalView extends StatefulWidget {
 }
 
 final class _TRTerminalViewState extends State<TRTerminalView> {
-  final GlobalKey _menuAnchorKey = GlobalKey();
-  final MenuController _menuController = MenuController();
+  final TRContextMenuController _menuController = TRContextMenuController();
 
   @override
   void initState() {
@@ -184,11 +192,8 @@ final class _TRTerminalViewState extends State<TRTerminalView> {
     super.dispose();
   }
 
-  void _openContextMenu(Offset globalPosition) {
-    final anchor = _menuAnchorKey.currentContext?.findRenderObject();
-    if (anchor is! RenderBox) return;
-    _menuController.open(position: anchor.globalToLocal(globalPosition));
-  }
+  void _openContextMenu(Offset globalPosition) =>
+      _menuController.openAt(globalPosition);
 
   /// Closes the context menu on Escape before the emulator can send the key
   /// to the program, which keeps focus on the terminal the whole time.
@@ -231,6 +236,9 @@ final class _TRTerminalViewState extends State<TRTerminalView> {
       searchHitForeground: colors.text,
     );
     final contextMenuBuilder = widget.contextMenuBuilder;
+    final contextMenuItems = widget.contextMenuItems;
+    final hasContextMenu =
+        contextMenuBuilder != null || contextMenuItems != null;
     final terminal = xterm.TerminalView(
       widget.controller._terminal,
       controller: widget.controller._view,
@@ -240,22 +248,27 @@ final class _TRTerminalViewState extends State<TRTerminalView> {
       textStyle: xterm.TerminalStyle.fromTextStyle(TRTypography.code),
       textScaler: MediaQuery.textScalerOf(context),
       theme: terminalTheme,
-      onSecondaryTapDown: contextMenuBuilder == null
-          ? null
-          : (details, _) => _openContextMenu(details.globalPosition),
-      onKeyEvent: contextMenuBuilder == null ? null : _handleKeyEvent,
+      onSecondaryTapDown: hasContextMenu
+          ? (details, _) => _openContextMenu(details.globalPosition)
+          : null,
+      onKeyEvent: hasContextMenu ? _handleKeyEvent : null,
     );
     return ColoredBox(
       key: const ValueKey<String>('tr-terminal-surface'),
       color: colors.surface,
-      child: contextMenuBuilder == null
-          ? terminal
-          : TRContextMenu(
-              key: _menuAnchorKey,
-              controller: _menuController,
-              menuChildren: contextMenuBuilder(context),
-              child: terminal,
-            ),
+      child: switch ((contextMenuBuilder, contextMenuItems)) {
+        (final builder?, _) => TRContextMenu(
+          menuController: _menuController,
+          menuChildren: builder(context),
+          child: terminal,
+        ),
+        (_, final items?) => TRContextMenu.itemsBuilder(
+          menuController: _menuController,
+          itemsBuilder: items,
+          child: terminal,
+        ),
+        _ => terminal,
+      },
     );
   }
 }
