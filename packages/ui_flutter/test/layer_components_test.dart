@@ -138,6 +138,47 @@ void main() {
       }
     });
 
+    testWidgets('publishes the icon trigger label on the widget', (
+      tester,
+    ) async {
+      // A consumer identifies an icon control by the name it was given, the
+      // way it already can through TRIconButton.label. Reaching into the
+      // rendered semantics tree instead is a workaround for a private field.
+      await tester.pumpWidget(
+        _app(
+          Column(
+            children: [
+              TRMenu.icon(
+                icon: const Icon(Icons.add),
+                label: 'New tab',
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('Session')),
+                ],
+              ),
+              TRMenu(
+                trigger: const Text('Actions'),
+                menuChildren: [
+                  TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (widget) => widget is TRMenu && widget.label == 'New tab',
+        ),
+        findsOneWidget,
+      );
+      // A text trigger names itself, so it carries no separate label.
+      expect(
+        tester.widget<TRMenu>(find.widgetWithText(TRMenu, 'Actions')).label,
+        isNull,
+      );
+    });
+
     testWidgets('names an icon trigger and reports its expanded state', (
       tester,
     ) async {

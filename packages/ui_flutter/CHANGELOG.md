@@ -1,3 +1,12 @@
+## 0.28.0
+
+- Publishes `TRMenu.label`, the accessible name given to an icon trigger. It
+  was private, so a caller that rendered one could not identify it by the name
+  it had just supplied — the asymmetry with `TRIconButton.label` pushed
+  consumers into reading the rendered semantics tree instead, which also
+  matches every `TRIconButton`, because those name themselves the same way. The
+  field is null for a text trigger, which names itself.
+
 ## 0.27.0
 
 - Renders every popup layer row at `sm` instead of `md`. A menu item, a select
