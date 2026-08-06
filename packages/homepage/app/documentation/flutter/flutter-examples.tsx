@@ -3725,6 +3725,27 @@ class _MonitoringFormState extends State<MonitoringForm> {
   ],
 )`,
     },
+    {
+      id: 'menu-icon-trigger',
+      title: {
+        en: 'Icon trigger',
+        ja: 'アイコントリガー',
+        ko: '아이콘 트리거',
+      },
+      description: {
+        en: 'TRMenu.icon takes the same square geometry as TRIconButton, so a menu sits in a row of icon commands without being the one wide control. The label names the glyph for assistive technology.',
+        ja: 'TRMenu.icon は TRIconButton と同じ正方形の寸法を取るため、アイコン操作が並ぶ行でメニューだけが横に広がることはありません。label がグリフに読み上げ名を与えます。',
+        ko: 'TRMenu.icon 은 TRIconButton 과 같은 정사각형 치수를 써서, 아이콘 명령이 늘어선 행에서 메뉴만 넓어지지 않아요. label 이 글리프에 보조 기술용 이름을 붙입니다.',
+      },
+      dart: String.raw`TRMenu.icon(
+  icon: const Icon(LucideIcons.plus),
+  label: 'New tab',
+  menuChildren: [
+    TRMenuItem(onPressed: newSession, child: const Text('New session')),
+    TRMenuItem(onPressed: newTerminal, child: const Text('New terminal')),
+  ],
+)`,
+    },
   ],
   menubar: [
     {
