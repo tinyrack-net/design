@@ -160,7 +160,7 @@ export const textFieldPlayground = flutterPlayground(
     readOnly: { control: 'boolean' },
     uiSize: { control: 'select', options: sizes },
     value: { control: 'text' },
-    appearance: { control: 'select', options: ['solid', 'ghost'] },
+    appearance: { control: 'select', options: ['solid', 'ghost', 'plain'] },
   },
 );
 
