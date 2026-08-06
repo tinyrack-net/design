@@ -23,7 +23,7 @@ class TRMenu extends StatefulWidget {
     this.uiSize = TRUiSize.md,
     this.useRootOverlay = true,
     super.key,
-  }) : _iconLabel = null;
+  }) : label = null;
 
   /// Creates a menu whose trigger is a square icon control.
   ///
@@ -36,7 +36,7 @@ class TRMenu extends StatefulWidget {
   /// [TRIconButton]; a glyph alone has no accessible name.
   const TRMenu.icon({
     required Widget icon,
-    required String label,
+    required String this.label,
     required this.menuChildren,
     this.alignmentOffset = const Offset(0, TRGeneratedSpacing.xs),
     this.autofocus = false,
@@ -48,8 +48,7 @@ class TRMenu extends StatefulWidget {
     this.uiSize = TRUiSize.md,
     this.useRootOverlay = true,
     super.key,
-  }) : trigger = icon,
-       _iconLabel = label;
+  }) : trigger = icon;
 
   final Widget trigger;
   final List<Widget> menuChildren;
@@ -70,8 +69,12 @@ class TRMenu extends StatefulWidget {
   final bool useRootOverlay;
 
   /// Accessible name of an icon trigger, and the marker that selects the
-  /// square geometry. Null for a text trigger, which names itself.
-  final String? _iconLabel;
+  /// square geometry.
+  ///
+  /// Null for a text trigger, which names itself. Published for the same
+  /// reason [TRIconButton.label] is: a caller that renders an icon control
+  /// identifies it by the name it gave it.
+  final String? label;
 
   @override
   State<TRMenu> createState() => _TRMenuState();
@@ -117,7 +120,7 @@ class _TRMenuState extends State<TRMenu> {
     final controller = _controller;
     final colors = context.tinyrackTheme;
     final height = TRControlMetrics.heightOf(widget.uiSize);
-    final iconLabel = widget._iconLabel;
+    final iconLabel = widget.label;
     final square = iconLabel != null;
     final triggerStyle = ButtonStyle(
       backgroundColor: WidgetStateProperty.resolveWith((states) {
