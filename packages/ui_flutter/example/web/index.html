@@ -31,6 +31,19 @@
 
   <title>Tinyrack Flutter Preview</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    /* The engine measures its surface from the client area during boot. Fonts
+       are still loading then, and the engine's own measurement elements can
+       overflow the page, so without this the transient scrollbars shrink the
+       measured surface by their track width -- and no resize event fires when
+       they disappear, leaving a stale, narrower canvas behind. */
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
   <noscript>

@@ -33,6 +33,16 @@ final class PreviewBridge {
     web.window.removeEventListener('message', _listener);
   }
 
+  /// Paints the page behind and beyond the engine canvas.
+  ///
+  /// A screenshot clip that reaches past the viewport shows the page surface
+  /// there, not the canvas. The React page paints its themed background in that
+  /// band; without this the Flutter page shows the default white body, and a
+  /// viewport-wide overlay diverges in dark for pixels neither runtime drew.
+  void syncPageBackground(String cssColor) {
+    web.document.body?.style.backgroundColor = cssColor;
+  }
+
   void send(
     String type,
     String component, [
