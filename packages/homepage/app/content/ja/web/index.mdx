@@ -37,6 +37,10 @@ Tailwind CSS を最初に読み込んでください。次に、グローバル�
 ドキュメントのルート要素に `data-theme="tinyrack-light"` を設定してください。暗い
 インターフェースでは、組み込みの `tinyrack-dark` も利用できます。
 
+`core.css` は、選択したテーマの `--tinyrack-surface` と `--tinyrack-text` を
+`html` と `body` に適用します。ページキャンバスに別の表現が必要な場合は、
+後から読み込むアプリケーション CSS で上書きしてください。
+
 <GettingStartedCode label="テーマの選択" locale="ja" snippet="theme" />
 
 ## 5. 主要アクションを表示する

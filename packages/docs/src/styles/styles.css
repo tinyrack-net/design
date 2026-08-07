@@ -60,16 +60,12 @@
  * lock makes when an overlay opens, so nothing shifts.
  */
 html {
-  background: var(--tinyrack-surface);
-  color: var(--tinyrack-text);
   scrollbar-color: var(--tinyrack-control-border) var(--tinyrack-surface-muted);
   scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
 
 body {
-  background: var(--tinyrack-surface);
-  color: var(--tinyrack-text);
   font-family: var(--tinyrack-font-body);
   margin: 0;
   min-block-size: 100dvh;

@@ -1,5 +1,10 @@
 @import "./tokens.generated.css";
 
+:where(html, body) {
+  background-color: var(--tinyrack-surface);
+  color: var(--tinyrack-text);
+}
+
 @theme static {
   --breakpoint-xs: 24rem;
   --breakpoint-sm: 40rem;

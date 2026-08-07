@@ -37,6 +37,10 @@ Tailwind CSS를 먼저 불러오세요. 그다음 전역 진입점에서 `core.c
 문서 루트에 `data-theme="tinyrack-light"`를 설정하세요. 어두운 인터페이스에는
 기본 제공되는 `tinyrack-dark`를 사용할 수 있어요.
 
+`core.css`는 선택한 테마의 `--tinyrack-surface`와 `--tinyrack-text` 색상을
+`html`과 `body`에 적용해요. 페이지 캔버스에 다른 표현이 필요하면 나중에
+불러오는 앱 CSS 규칙으로 재정의하세요.
+
 <GettingStartedCode label="테마 선택" snippet="theme" />
 
 ## 5. 주요 동작 렌더링

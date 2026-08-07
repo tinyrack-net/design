@@ -177,7 +177,7 @@ describe('core.css source contract', () => {
     );
   });
 
-  it('is a source-owned core stylesheet with only the public token blocks', () => {
+  it('is a source-owned core stylesheet with only the public foundation blocks', () => {
     expect(coreCss).not.toContain('Generated from');
     expect(coreCss).not.toContain('.tr-btn');
     expect(coreCss).not.toContain('.tr-table');
@@ -185,11 +185,16 @@ describe('core.css source contract', () => {
     expect(coreCss).not.toContain('mantine');
     expect(coreCss).not.toContain('starlight');
     expect([...cssBlocks.keys()]).toEqual([
+      ':where(html, body)',
       '@theme static',
       ':root',
       '[data-theme="tinyrack-light"]',
       '[data-theme="tinyrack-dark"]',
     ]);
+    expect(declarationsFor(':where(html, body)')).toEqual({
+      'background-color': 'var(--tinyrack-surface)',
+      color: 'var(--tinyrack-text)',
+    });
   });
 
   it('matches every root foundation variable to its TypeScript token', () => {
