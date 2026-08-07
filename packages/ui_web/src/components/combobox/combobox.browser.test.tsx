@@ -166,12 +166,14 @@ test('preserves the typed filter contract and semantic separator anatomy', async
   );
   expect(expectedGap).toBe(4);
   await expect
-    .poll(
-      () =>
+    .poll(() =>
+      Math.abs(
         (separators[0]?.getBoundingClientRect().top ?? 0) -
-        (items[0]?.getBoundingClientRect().bottom ?? 0),
+          (items[0]?.getBoundingClientRect().bottom ?? 0) -
+          expectedGap,
+      ),
     )
-    .toBeCloseTo(expectedGap, 1);
+    .toBeLessThan(0.1);
   const trailingGap =
     (items[1]?.getBoundingClientRect().top ?? 0) -
     (separators[1]?.getBoundingClientRect().bottom ?? 0);

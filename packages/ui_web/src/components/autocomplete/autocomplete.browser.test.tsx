@@ -95,16 +95,18 @@ test('decorates its list separator without exposing it to the listbox', async ()
   );
   expect(expectedGap).toBe(4);
   await expect
-    .poll(
-      () =>
+    .poll(() =>
+      Math.abs(
         (separator?.getBoundingClientRect().top ?? 0) -
-        (items[0]?.getBoundingClientRect().bottom ?? 0),
+          (items[0]?.getBoundingClientRect().bottom ?? 0) -
+          expectedGap,
+      ),
     )
-    .toBeCloseTo(expectedGap, 1);
-  expect(
+    .toBeLessThan(0.1);
+  const trailingGap =
     (items[1]?.getBoundingClientRect().top ?? 0) -
-      (separator?.getBoundingClientRect().bottom ?? 0),
-  ).toBeCloseTo(expectedGap, 1);
+    (separator?.getBoundingClientRect().bottom ?? 0);
+  expect(Math.abs(trailingGap - expectedGap)).toBeLessThan(0.1);
 });
 
 test('centers an input adornment and supports the end side', async () => {

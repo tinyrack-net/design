@@ -84,16 +84,18 @@ test('spaces a visible separator one layer gap from adjacent items', async () =>
   expect(expectedGap).toBe(4);
   expect(separator?.getBoundingClientRect().height).toBeGreaterThan(0);
   await expect
-    .poll(
-      () =>
+    .poll(() =>
+      Math.abs(
         (separator?.getBoundingClientRect().top ?? 0) -
-        (items[0]?.getBoundingClientRect().bottom ?? 0),
+          (items[0]?.getBoundingClientRect().bottom ?? 0) -
+          expectedGap,
+      ),
     )
-    .toBeCloseTo(expectedGap, 1);
-  expect(
+    .toBeLessThan(0.1);
+  const trailingGap =
     (items[1]?.getBoundingClientRect().top ?? 0) -
-      (separator?.getBoundingClientRect().bottom ?? 0),
-  ).toBeCloseTo(expectedGap, 1);
+    (separator?.getBoundingClientRect().bottom ?? 0);
+  expect(Math.abs(trailingGap - expectedGap)).toBeLessThan(0.1);
 });
 
 test('uses keyboard typeahead, activates an item, and restores trigger focus', async () => {

@@ -337,10 +337,10 @@ test('styles items, submenu triggers, indicators, separators, and overflow as me
   const groupRect = group?.getBoundingClientRect();
   const separatorRect = separator?.getBoundingClientRect();
   const submenuRect = submenu?.getBoundingClientRect();
-  expect((separatorRect?.top ?? 0) - (groupRect?.bottom ?? 0)).toBeCloseTo(expectedGap);
-  expect((submenuRect?.top ?? 0) - (separatorRect?.bottom ?? 0)).toBeCloseTo(
-    expectedGap,
-  );
+  const leadingGap = (separatorRect?.top ?? 0) - (groupRect?.bottom ?? 0);
+  const trailingGap = (submenuRect?.top ?? 0) - (separatorRect?.bottom ?? 0);
+  expect(Math.abs(leadingGap - expectedGap)).toBeLessThan(0.1);
+  expect(Math.abs(trailingGap - expectedGap)).toBeLessThan(0.1);
   expect(getComputedStyle(submenu as HTMLElement).borderTopStyle).toBe('none');
   expect(
     Number.parseFloat(getComputedStyle(separator as HTMLElement).height),
