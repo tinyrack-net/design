@@ -28,6 +28,8 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 通常、ホバー、押下の各ロールをセットで使います。明るいテーマから暗いテーマの値を算出したり、無関係な塗りに前景色を載せたりしないでください。
 
+暗いテーマの通常時の境界には、`border`、`controlBorder`、`controlTrack` として Neutral 800 の `#262626` を使います。hover、pressed、dragged 状態のコントロールでは、操作を強調するために Neutral 700 の `#404040` である `borderStrong` を使用できます。どちらも視覚的に控えめで、標準の暗いサーフェスに対して単独では WCAG の非テキストコントラスト `3:1` を満たしません。境界が重要な場合は、フォーカス、ステータス、テキスト、表面の手掛かりも維持してください。
+
 <div className="flex flex-wrap gap-2"><TRButton intent="primary">デプロイ</TRButton><TRButton intent="info">詳細</TRButton><TRButton intent="success">承認</TRButton><TRButton intent="warning">リスク確認</TRButton><TRButton intent="danger">削除</TRButton></div>
 
 ## デフォルトの操作色を安全に上書きする
