@@ -34,7 +34,7 @@
     content: "";
     flex: none;
     height: var(--_tr-collapsible-chevron-size);
-    transform: rotate(45deg);
+    transform: rotate(var(--tinyrack-icon-rotation-diagonal));
     transition: transform var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
     width: var(--_tr-collapsible-chevron-size);
   }
@@ -42,7 +42,7 @@
   .tr-collapsible[data-open] > .tr-collapsible-summary::after,
   .tr-collapsible-summary[data-open]::after,
   .tr-collapsible-summary[aria-expanded="true"]::after {
-    transform: rotate(225deg);
+    transform: rotate(var(--tinyrack-icon-rotation-collapse-open));
   }
 
   .tr-collapsible-summary:focus-visible {

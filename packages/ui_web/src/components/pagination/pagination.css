@@ -75,7 +75,7 @@
   }
 
   .tr-pagination-step:dir(rtl) .tr-pagination-arrow {
-    transform: rotate(180deg);
+    transform: rotate(var(--tinyrack-icon-rotation-half));
   }
 
   /* The arrow alone names the control below `sm`; the accessible name comes from

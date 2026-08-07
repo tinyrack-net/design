@@ -291,6 +291,24 @@
         }
       }
     },
+    "component-raised": {
+      "$type": "number",
+      "$value": 2,
+      "$extensions": {
+        "net.tinyrack": {
+          "output": 2
+        }
+      }
+    },
+    "component-overlay": {
+      "$type": "number",
+      "$value": 3,
+      "$extensions": {
+        "net.tinyrack": {
+          "output": 3
+        }
+      }
+    },
     "chrome": {
       "$type": "number",
       "$value": 100,
@@ -2102,6 +2120,40 @@
       }
     }
   },
+  "componentColors": {
+    "scrim-base": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0, 0, 0],
+        "hex": "#000000"
+      }
+    },
+    "window-frame-control-close": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [1, 0.37254901960784315, 0.3411764705882353],
+        "hex": "#ff5f57"
+      }
+    },
+    "window-frame-control-minimize": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.996078431372549, 0.7372549019607844, 0.1803921568627451],
+        "hex": "#febc2e"
+      }
+    },
+    "window-frame-control-maximize": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [0.1568627450980392, 0.7843137254901961, 0.25098039215686274],
+        "hex": "#28c840"
+      }
+    }
+  },
   "measurements": {
     "measure-xs": {
       "$type": "dimension",
@@ -2219,6 +2271,60 @@
           "output": "0.98"
         }
       }
+    },
+    "mdx-page-width": {
+      "$type": "dimension",
+      "$value": { "value": 76, "unit": "rem" }
+    },
+    "mdx-content-width": {
+      "$type": "dimension",
+      "$value": { "value": 64, "unit": "rem" }
+    },
+    "mdx-page-padding-bottom": {
+      "$type": "dimension",
+      "$value": { "value": 4, "unit": "rem" }
+    },
+    "mdx-block-gap": {
+      "$type": "dimension",
+      "$value": { "value": 1.25, "unit": "rem" }
+    },
+    "mdx-page-padding-inline-wide": {
+      "$type": "dimension",
+      "$value": { "value": 2.5, "unit": "rem" }
+    },
+    "mdx-page-padding-bottom-wide": {
+      "$type": "dimension",
+      "$value": { "value": 5, "unit": "rem" }
+    },
+    "preview-card-max-viewport-inline-size": {
+      "$type": "number",
+      "$value": 90,
+      "$extensions": { "net.tinyrack": { "output": "90vw" } }
+    },
+    "icon-rotation-diagonal": {
+      "$type": "number",
+      "$value": 45,
+      "$extensions": { "net.tinyrack": { "output": "45deg" } }
+    },
+    "icon-rotation-quarter": {
+      "$type": "number",
+      "$value": 90,
+      "$extensions": { "net.tinyrack": { "output": "90deg" } }
+    },
+    "icon-rotation-half": {
+      "$type": "number",
+      "$value": 180,
+      "$extensions": { "net.tinyrack": { "output": "180deg" } }
+    },
+    "icon-rotation-collapse-open": {
+      "$type": "number",
+      "$value": 225,
+      "$extensions": { "net.tinyrack": { "output": "225deg" } }
+    },
+    "spinner-rotation-cycle": {
+      "$type": "number",
+      "$value": 1,
+      "$extensions": { "net.tinyrack": { "output": "1turn" } }
     }
   }
 }

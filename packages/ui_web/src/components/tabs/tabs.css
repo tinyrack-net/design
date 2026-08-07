@@ -72,7 +72,7 @@
     transition:
       left var(--tinyrack-duration-fast) var(--tinyrack-ease-standard),
       width var(--tinyrack-duration-fast) var(--tinyrack-ease-standard);
-    z-index: 2;
+    z-index: var(--tinyrack-layer-component-raised);
   }
 
   .tr-tabs-indicator[data-orientation="vertical"] {
@@ -171,7 +171,7 @@
 
   .tr-tabs[data-orientation="horizontal"] .tr-tabs-tab:focus-visible {
     outline-offset: calc(var(--tinyrack-focus-width) * -1);
-    z-index: 3;
+    z-index: var(--tinyrack-layer-component-overlay);
   }
 
   .tr-tabs-tab:disabled,

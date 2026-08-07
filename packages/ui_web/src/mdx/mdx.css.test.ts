@@ -13,8 +13,8 @@ describe('MDX CSS contract', () => {
     expect(css).toContain('.tr-mdx');
     expect(css).toContain('.tr-mdx-h1');
     expect(css).toContain('.tr-mdx-h2');
-    expect(css).toContain('--_tr-mdx-section-gap: 3rem;');
-    expect(css).toContain('--_tr-mdx-block-gap: 1.25rem;');
+    expect(css).toContain('--_tr-mdx-section-gap: var(--tinyrack-space-3xl);');
+    expect(css).toContain('--_tr-mdx-block-gap: var(--tinyrack-mdx-block-gap);');
     expect(css).toContain('var(--tr-mdx-content-width, var(--_tr-mdx-content-width))');
     // The page box must stay overridable end to end; a hard-coded min-height
     // forces a phantom scroll inside any shell that reserves space for chrome.

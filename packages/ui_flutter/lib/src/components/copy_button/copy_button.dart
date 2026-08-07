@@ -18,7 +18,7 @@ class TRCopyButton extends StatefulWidget {
     this.idleLabel = 'Copy',
     this.copiedLabel = 'Copied',
     this.onStatusChange,
-    this.resetDelay = const Duration(seconds: 2),
+    this.resetDelay = TRGeneratedMotion.feedback,
     this.appearance = TRAppearance.solid,
     this.intent = TRIntent.neutral,
     this.uiSize = TRUiSize.md,

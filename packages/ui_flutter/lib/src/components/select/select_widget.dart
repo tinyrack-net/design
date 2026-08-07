@@ -282,7 +282,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     }
     _typeaheadTimer?.cancel();
     _typeaheadBuffer += character.toLowerCase();
-    _typeaheadTimer = Timer(const Duration(milliseconds: 500), () {
+    _typeaheadTimer = Timer(TRGeneratedMotion.typeaheadDelay, () {
       _typeaheadBuffer = '';
     });
     final index = widget.items.indexWhere(

@@ -323,7 +323,8 @@ class _TRSliderFrame extends StatelessWidget {
             final height = constraints.hasBoundedHeight
                 ? constraints.maxHeight
                 : TRGeneratedMeasurements.measureMd;
-            final controlHeight = (height - TRGeneratedSpacing.sm + 4) / 2;
+            final controlHeight =
+                (height - TRGeneratedSpacing.sm + TRGeneratedSpacing.xs) / 2;
             final headingHeight =
                 height - TRGeneratedSpacing.sm - controlHeight;
             return SizedBox(

@@ -16,6 +16,7 @@ import {
   tinyrackSpinnerMetrics,
   tinyrackTypography,
 } from './index.js';
+import { tinyrackComponentColors } from './tokens.js';
 
 const repoRoot = process.cwd();
 const coreCssSource = readFileSync(join(repoRoot, 'src/core/core.css'), 'utf8');
@@ -229,6 +230,7 @@ describe('core.css source contract', () => {
       '--tinyrack-ease-linear': tinyrackMotion.easing.linear,
       ...tokenDeclarations(tinyrackOpacity, 'tinyrack-opacity'),
       ...tokenDeclarations(tinyrackLayers, 'tinyrack-layer'),
+      ...tokenDeclarations(tinyrackComponentColors, 'tinyrack'),
       ...controlDeclarations,
       ...tokenDeclarations(tinyrackMeasurements, 'tinyrack'),
       ...tokenDeclarations(tinyrackSpinnerMetrics, 'tinyrack-spinner'),
@@ -283,7 +285,10 @@ describe('core.css source contract', () => {
         (name) =>
           name !== 'overlay-closed-scale' &&
           name !== 'text-decoration-thickness' &&
-          name !== 'text-underline-offset',
+          name !== 'text-underline-offset' &&
+          /(?:px|rem)$/u.test(
+            String(tinyrackMeasurements[name as keyof typeof tinyrackMeasurements]),
+          ),
       ),
       'spacing-tinyrack',
       'tinyrack',
@@ -405,6 +410,14 @@ describe('core.css source contract', () => {
         name.startsWith('--tinyrack-'),
       ),
     ]);
+    const componentOnlyTokens = new Set([
+      ...Object.keys(tinyrackComponentColors).map(
+        (name) => `--tinyrack-${camelToKebab(name)}`,
+      ),
+      ...Object.entries(tinyrackMeasurements)
+        .filter(([, value]) => /(?:deg|turn|vw)$/u.test(String(value)))
+        .map(([name]) => `--tinyrack-${camelToKebab(name)}`),
+    ]);
     const bridgedTokens = new Set(
       Object.values(tailwindDeclarations).flatMap((value) =>
         [...value.matchAll(/var\((--tinyrack-[a-z0-9-]+)\)/g)].flatMap((match) =>
@@ -413,6 +426,8 @@ describe('core.css source contract', () => {
       ),
     );
 
-    expect([...bridgedTokens].sort()).toEqual([...runtimeTokens].sort());
+    expect([...bridgedTokens].sort()).toEqual(
+      [...runtimeTokens].filter((name) => !componentOnlyTokens.has(name)).sort(),
+    );
   });
 });

@@ -76,6 +76,9 @@ Run the narrowest checks that cover the changed contract:
   interaction states. For a visual defect, capture comparable before/after
   screenshots and measure the relevant geometry; do not judge correctness from
   source or test results alone.
+- Any Web or Flutter styling change: run `pnpm tokens:verify`. Product styling
+  must consume generated design tokens; add a named foundation token instead
+  of introducing a literal design value.
 - Page-integration layout defects: verify the exact reported route and composed
   state rather than relying only on an isolated component harness.
 - Public subpath, build, or packaging changes: run `pnpm pack:ui` and the packed

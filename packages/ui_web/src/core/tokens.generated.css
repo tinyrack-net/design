@@ -59,6 +59,8 @@
   --tinyrack-opacity-hover: 0.82;
   --tinyrack-opacity-backdrop: 0.56;
   --tinyrack-layer-base: 0;
+  --tinyrack-layer-component-raised: 2;
+  --tinyrack-layer-component-overlay: 3;
   --tinyrack-layer-chrome: 100;
   --tinyrack-layer-dropdown: 1000;
   --tinyrack-layer-popover: 1100;
@@ -66,6 +68,10 @@
   --tinyrack-layer-dialog: 1210;
   --tinyrack-layer-toast: 1300;
   --tinyrack-layer-tooltip: 1400;
+  --tinyrack-scrim-base: #000000;
+  --tinyrack-window-frame-control-close: #ff5f57;
+  --tinyrack-window-frame-control-minimize: #febc2e;
+  --tinyrack-window-frame-control-maximize: #28c840;
   --tinyrack-control-height-sm: 1.75rem;
   --tinyrack-control-padding-inline-sm: 0.5rem;
   --tinyrack-control-gap-sm: 0.25rem;
@@ -91,6 +97,18 @@
   --tinyrack-overlay-width-md: 32rem;
   --tinyrack-overlay-inline-inset: 1.5rem;
   --tinyrack-overlay-closed-scale: 0.98;
+  --tinyrack-mdx-page-width: 76rem;
+  --tinyrack-mdx-content-width: 64rem;
+  --tinyrack-mdx-page-padding-bottom: 4rem;
+  --tinyrack-mdx-block-gap: 1.25rem;
+  --tinyrack-mdx-page-padding-inline-wide: 2.5rem;
+  --tinyrack-mdx-page-padding-bottom-wide: 5rem;
+  --tinyrack-preview-card-max-viewport-inline-size: 90vw;
+  --tinyrack-icon-rotation-diagonal: 45deg;
+  --tinyrack-icon-rotation-quarter: 90deg;
+  --tinyrack-icon-rotation-half: 180deg;
+  --tinyrack-icon-rotation-collapse-open: 225deg;
+  --tinyrack-spinner-rotation-cycle: 1turn;
   --tinyrack-text-decoration-thickness: 0.08em;
   --tinyrack-text-underline-offset: 0.18em;
   --tinyrack-spinner-size-sm: 0.75rem;

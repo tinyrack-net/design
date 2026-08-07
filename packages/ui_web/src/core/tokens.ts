@@ -16,6 +16,14 @@ export const tinyrackBreakpoints = {
   sm: '40rem',
   md: '48rem',
   lg: '64rem',
+  xl: '80rem',
+} as const;
+
+export const tinyrackComponentColors = {
+  'scrim-base': '#000000',
+  'window-frame-control-close': '#ff5f57',
+  'window-frame-control-minimize': '#febc2e',
+  'window-frame-control-maximize': '#28c840',
 } as const;
 
 export const tinyrackControlMetrics = {
@@ -47,6 +55,8 @@ export const tinyrackControlMetrics = {
 
 export const tinyrackLayers = {
   base: 0,
+  'component-raised': 2,
+  'component-overlay': 3,
   chrome: 100,
   dropdown: 1000,
   popover: 1100,
@@ -67,6 +77,18 @@ export const tinyrackMeasurements = {
   'overlay-width-md': '32rem',
   'overlay-inline-inset': '1.5rem',
   'overlay-closed-scale': '0.98',
+  'mdx-page-width': '76rem',
+  'mdx-content-width': '64rem',
+  'mdx-page-padding-bottom': '4rem',
+  'mdx-block-gap': '1.25rem',
+  'mdx-page-padding-inline-wide': '2.5rem',
+  'mdx-page-padding-bottom-wide': '5rem',
+  'preview-card-max-viewport-inline-size': '90vw',
+  'icon-rotation-diagonal': '45deg',
+  'icon-rotation-quarter': '90deg',
+  'icon-rotation-half': '180deg',
+  'icon-rotation-collapse-open': '225deg',
+  'spinner-rotation-cycle': '1turn',
   'text-decoration-thickness': '0.08em',
   'text-underline-offset': '0.18em',
 } as const;

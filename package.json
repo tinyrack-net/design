@@ -13,6 +13,7 @@
     "tokens:generate": "node scripts/generate-design-tokens.ts",
     "tokens:check": "node scripts/generate-design-tokens.ts --check",
     "tokens:audit": "node scripts/audit-design-tokens.ts",
+    "tokens:verify": "pnpm tokens:check && pnpm tokens:audit && pnpm --filter @tinyrack/ui exec vitest run --project unit src/core/style-token-contract.test.ts && cd packages/ui_flutter && flutter test test/style_token_contract_test.dart",
     "flutter:analyze": "cd packages/ui_flutter && flutter analyze",
     "flutter:test": "cd packages/ui_flutter && flutter test",
     "flutter:format:check": "cd packages/ui_flutter && dart format --output=none --set-exit-if-changed lib test example/lib",
