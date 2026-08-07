@@ -65,10 +65,6 @@
     gap: var(--tinyrack-space-xs);
   }
 
-  .tr-combobox-list > .tr-separator {
-    margin-block: var(--tinyrack-space-xs);
-  }
-
   .tr-combobox-group-label {
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);

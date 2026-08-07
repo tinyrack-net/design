@@ -499,6 +499,22 @@ test('exports Select-specific separator anatomy with standalone styling', async 
   expect(separator?.getAttribute('role')).toBe('presentation');
   expect(separator?.dataset['orientation']).toBe('horizontal');
   expect(getComputedStyle(separator as HTMLElement).height).not.toBe('0px');
+  const items = document.querySelectorAll<HTMLElement>('.tr-select-item');
+  const expectedGap = Number.parseFloat(
+    getComputedStyle(separator?.parentElement as HTMLElement).rowGap,
+  );
+  expect(expectedGap).toBe(4);
+  await expect
+    .poll(
+      () =>
+        (separator?.getBoundingClientRect().top ?? 0) -
+        (items[0]?.getBoundingClientRect().bottom ?? 0),
+    )
+    .toBeCloseTo(expectedGap, 1);
+  expect(
+    (items[1]?.getBoundingClientRect().top ?? 0) -
+      (separator?.getBoundingClientRect().bottom ?? 0),
+  ).toBeCloseTo(expectedGap, 1);
 });
 
 test('sizes overflow scroll controls and keeps the collection within available space', async () => {

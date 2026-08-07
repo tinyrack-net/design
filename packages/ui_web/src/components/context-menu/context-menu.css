@@ -141,15 +141,11 @@
     gap: var(--tinyrack-space-xs);
   }
 
-  /* `.tr-separator` resets the margin, and a single class cannot outrank it,
-     so the breathing room declared here never reached the rendered rule. */
   .tr-separator.tr-context-menu-separator {
     background: var(--tinyrack-control-border);
     border: 0;
     height: var(--tinyrack-border-width-default);
-    /* Block margin matches the Flutter separator's vertical padding; the
-       negative inline margin still bleeds through the popup padding. */
-    margin: var(--tinyrack-space-sm) calc(var(--tinyrack-space-xs) * -1);
+    margin: 0 calc(var(--tinyrack-space-xs) * -1);
   }
 
   .tr-context-menu-positioner {

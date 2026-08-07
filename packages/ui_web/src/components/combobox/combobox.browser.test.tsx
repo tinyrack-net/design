@@ -159,6 +159,23 @@ test('preserves the typed filter contract and semantic separator anatomy', async
   expect(separator.getAttribute('role')).toBe('presentation');
   expect((separator as HTMLElement).dataset['orientation']).toBe('horizontal');
   expect(getComputedStyle(separator as HTMLElement).height).not.toBe('0px');
+  const items = document.querySelectorAll<HTMLElement>('.tr-combobox-option');
+  const separators = document.querySelectorAll<HTMLElement>('.tr-combobox-separator');
+  const expectedGap = Number.parseFloat(
+    getComputedStyle(separator.parentElement as HTMLElement).rowGap,
+  );
+  expect(expectedGap).toBe(4);
+  await expect
+    .poll(
+      () =>
+        (separators[0]?.getBoundingClientRect().top ?? 0) -
+        (items[0]?.getBoundingClientRect().bottom ?? 0),
+    )
+    .toBeCloseTo(expectedGap, 1);
+  const trailingGap =
+    (items[1]?.getBoundingClientRect().top ?? 0) -
+    (separators[1]?.getBoundingClientRect().bottom ?? 0);
+  expect(Math.abs(trailingGap - expectedGap)).toBeLessThan(0.1);
   expect(inputRef).toHaveBeenCalledWith(expect.any(HTMLInputElement));
 });
 

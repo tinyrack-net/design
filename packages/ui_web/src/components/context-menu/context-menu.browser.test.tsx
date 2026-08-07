@@ -329,6 +329,18 @@ test('styles items, submenu triggers, indicators, separators, and overflow as me
   expect(getComputedStyle(submenu as HTMLElement).width).toBe(
     getComputedStyle(item as HTMLElement).width,
   );
+  const group = document.querySelector<HTMLElement>('.tr-context-menu-group');
+  const expectedGap = Number.parseFloat(
+    getComputedStyle(separator?.parentElement as HTMLElement).rowGap,
+  );
+  expect(expectedGap).toBe(4);
+  const groupRect = group?.getBoundingClientRect();
+  const separatorRect = separator?.getBoundingClientRect();
+  const submenuRect = submenu?.getBoundingClientRect();
+  expect((separatorRect?.top ?? 0) - (groupRect?.bottom ?? 0)).toBeCloseTo(expectedGap);
+  expect((submenuRect?.top ?? 0) - (separatorRect?.bottom ?? 0)).toBeCloseTo(
+    expectedGap,
+  );
   expect(getComputedStyle(submenu as HTMLElement).borderTopStyle).toBe('none');
   expect(
     Number.parseFloat(getComputedStyle(separator as HTMLElement).height),
