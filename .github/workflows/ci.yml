@@ -415,7 +415,11 @@ jobs:
       needs.changes.outputs.shared == 'true'
     needs: changes
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    # The full endpoint catalog is 864 groups across 3 locales and 2 themes. It
+    # takes ~5 minutes plus a ~1 minute build on a developer machine; the ceiling
+    # is set well above that because a runner is slower, not because the suite is
+    # expected to approach it.
+    timeout-minutes: 40
 
     steps:
       - name: Check out repository
@@ -448,7 +452,7 @@ jobs:
         run: pnpm --filter @tinyrack/homepage exec playwright install chromium
 
       - name: Compare React and Flutter component pixels
-        run: pnpm --filter @tinyrack/homepage test:visual-parity:quick
+        run: pnpm --filter @tinyrack/homepage test:visual-parity:ci
 
       - name: Upload visual parity failures
         if: failure()

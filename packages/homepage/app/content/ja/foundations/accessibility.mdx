@@ -49,6 +49,20 @@ Tinyrack コンポーネントは、共通の `:focus-visible` スタイルで `
 }
 ```
 
+Tinyrack はこの表示をキーボードフォーカスにだけ描画します。テキストフィールドはフォーカスの入り方に関係なく `:focus-visible` に一致するため、そのままではマウスクリックでも Tab と同じリングが描かれます。WCAG が求めるのはキーボードフォーカスの表示なので、コンポーネントが入力方式を追跡し、`data-tr-focus-modality` としてドキュメント要素に公開し、コンポーネントの CSS がその属性を読み取ります。
+
+入力方式に依存するコンポーネントは、マウントされている間だけ追跡を実行します。それらのコンポーネントを使わずスタイルシートだけを読み込む場合や、最初のコントロールがマウントされる前から実行したい場合は、自分で開始してください。
+
+```tsx
+import { TRFocusModalityProvider } from '@tinyrack/ui/providers/focus-modality';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return <TRFocusModalityProvider>{children}</TRFocusModalityProvider>;
+}
+```
+
+追跡がない場合は属性が付かず、ポインターフォーカスでも表示が描かれます。表示を隠す方向ではなく、アクセシブルな動作を保つ方向に倒れます。
+
 ## コントラストと色以外の手掛かり
 
 `--tinyrack-surface` 上の `--tinyrack-text`、`--tinyrack-primary` 上の `--tinyrack-on-primary`、対応するステータスのテキスト・表面・境界ロールを選んでください。サポートするすべてのテーマと状態で、実際に表示された組み合わせを検査します。WCAG を基準に確認する場合は、通常テキストに `4.5:1` 以上、大きなテキストに `3:1` 以上、重要なコントロール境界と状態表示に `3:1` 以上を使ってください。

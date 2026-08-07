@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -279,7 +281,8 @@ class _TRTextFieldInteractionFrame extends StatefulWidget {
 }
 
 class _TRTextFieldInteractionFrameState
-    extends State<_TRTextFieldInteractionFrame> {
+    extends State<_TRTextFieldInteractionFrame>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   FocusNode? _internalFocusNode;
   bool _hovered = false;
 
@@ -289,6 +292,7 @@ class _TRTextFieldInteractionFrameState
   @override
   void initState() {
     super.initState();
+    initFocusSource();
     _focusNode.addListener(_handleFocusChange);
   }
 
@@ -308,6 +312,7 @@ class _TRTextFieldInteractionFrameState
 
   @override
   void dispose() {
+    disposeFocusSource();
     _focusNode.removeListener(_handleFocusChange);
     _internalFocusNode?.dispose();
     super.dispose();
@@ -321,7 +326,12 @@ class _TRTextFieldInteractionFrameState
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
-    final focused = widget.enabled && _focusNode.hasFocus;
+    // A field focused by a click paints no emphasis: `resolveFieldChrome`
+    // takes the focus-visible state, not raw focus ownership.
+    final focused = resolveFocusVisible(
+      context,
+      hasFocus: widget.enabled && _focusNode.hasFocus,
+    );
     final interactive = widget.enabled && !widget.readOnly;
     final chrome = resolveFieldChrome(
       appearance: widget.appearance,
@@ -331,6 +341,8 @@ class _TRTextFieldInteractionFrameState
           ? theme.dangerBorder
           : focused
           ? theme.focus
+          : resolveHovered(context, hovered: _hovered) && interactive
+          ? generated.borderStrong
           : generated.controlBorder,
       solidBorderWidth: focused
           ? TRGeneratedBorders.focusWidth
@@ -338,7 +350,7 @@ class _TRTextFieldInteractionFrameState
       enabled: widget.enabled,
       error: widget.error,
       focused: focused,
-      hovered: _hovered,
+      hovered: resolveHovered(context, hovered: _hovered),
       readOnly: widget.readOnly,
     );
     final duration = MediaQuery.disableAnimationsOf(context)

@@ -49,6 +49,20 @@ Tinyrack 컴포넌트는 공통 `:focus-visible` 표현에 `--tinyrack-focus`, `
 }
 ```
 
+Tinyrack은 이 표시를 키보드 포커스에만 그려요. 텍스트 필드는 포커스가 어떻게 들어왔든 `:focus-visible`에 매칭되기 때문에, 그대로 두면 마우스 클릭에도 Tab과 똑같은 링이 그려져요. WCAG가 요구하는 것은 키보드 포커스 표시이므로, 컴포넌트가 입력 방식을 추적해 문서 요소에 `data-tr-focus-modality`로 게시하고 컴포넌트 CSS가 그 속성을 읽어요.
+
+입력 방식에 의존하는 컴포넌트는 마운트되어 있는 동안 추적기를 실행해요. 해당 컴포넌트 없이 스타일시트만 쓰거나 첫 컨트롤이 마운트되기 전부터 실행해야 한다면 직접 시작하세요.
+
+```tsx
+import { TRFocusModalityProvider } from '@tinyrack/ui/providers/focus-modality';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return <TRFocusModalityProvider>{children}</TRFocusModalityProvider>;
+}
+```
+
+추적기가 없으면 속성이 없는 상태가 되고, 포커스 표시는 포인터 포커스에도 그려져요. 표시를 숨기는 쪽이 아니라 접근성 동작을 유지하는 쪽으로 떨어져요.
+
 ## 대비와 색상 이외의 단서
 
 `--tinyrack-surface` 위의 `--tinyrack-text`, `--tinyrack-primary` 위의 `--tinyrack-on-primary`, 서로 짝이 맞는 상태 텍스트·표면·테두리 역할을 선택하세요. 지원하는 모든 테마와 상태에서 렌더링된 조합을 검사하세요. WCAG 중심 검토에서는 일반 텍스트 `4.5:1` 이상, 큰 텍스트 `3:1` 이상, 핵심 컨트롤 경계와 상태 표시 `3:1` 이상을 기준으로 삼으세요.

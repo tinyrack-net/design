@@ -5,6 +5,7 @@ import type { ComponentPropsWithRef } from 'react';
 import type { TRFieldAppearance } from '../../core/field-appearance.js';
 import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
+import { useTinyrackFocusModality } from '../../providers/focus-modality/focus-modality-provider.js';
 import { useIsInsideTRInputGroup } from './input-group-context.js';
 
 export type TRInputUiSize = TRControlUiSize;
@@ -20,6 +21,9 @@ export function TRInput({
   appearance = 'solid',
   ...props
 }: TRInputProps) {
+  // The focus ring is gated on input modality, which only JavaScript can tell
+  // apart for a text field.
+  useTinyrackFocusModality();
   // Inside a Group the frame belongs to the group, so the input drops its own
   // border and background and inherits the group's height.
   const insideGroup = useIsInsideTRInputGroup();

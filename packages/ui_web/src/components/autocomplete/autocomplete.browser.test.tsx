@@ -227,7 +227,11 @@ test('filters, selects with the keyboard, and submits the native value', async (
   const highlighted = document.querySelector<HTMLElement>(
     '.tr-autocomplete-item[data-highlighted]',
   );
-  expect(getComputedStyle(highlighted as HTMLElement).outlineStyle).toBe('solid');
+  // The highlight follows the mouse, so it reads as a background rather than
+  // a focus ring.
+  const highlightedStyle = getComputedStyle(highlighted as HTMLElement);
+  expect(highlightedStyle.outlineStyle).toBe('none');
+  expect(highlightedStyle.backgroundColor).toBe('rgb(239, 246, 255)');
   await userEvent.click(beta as HTMLElement);
   await expect.poll(() => input?.value).toBe('Rack Beta');
   await expect.poll(() => input?.getAttribute('aria-expanded')).toBe('false');

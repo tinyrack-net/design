@@ -51,6 +51,8 @@ class TRMenubarMenu extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
+                    // Matches the web popup's row gap.
+                    spacing: TRGeneratedRadii.xs,
                     children: menuChildren,
                   ),
                 ),
@@ -74,6 +76,11 @@ class TRMenubarMenu extends StatelessWidget {
           return Colors.transparent;
         }),
         fixedSize: WidgetStatePropertyAll(Size.fromHeight(height)),
+        // The web trigger paints surface-hover exactly; Material would blend
+        // its default onSurface overlay on top while focused or hovered, which
+        // lightens the open trigger's tint. Buttons and select suppress the
+        // same overlay.
+        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
         minimumSize: WidgetStatePropertyAll(Size(0, height)),
         maximumSize: WidgetStatePropertyAll(Size(double.infinity, height)),
         padding: WidgetStatePropertyAll(
@@ -83,17 +90,20 @@ class TRMenubarMenu extends StatelessWidget {
         ),
         shape: WidgetStatePropertyAll(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+            // The same corner the standalone menu trigger uses on both
+            // platforms; md here rounded the open trigger's tint differently
+            // from the web, which only showed once the tint had contrast.
+            borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
           ),
         ),
-        side: WidgetStateProperty.resolveWith(
-          (states) => BorderSide(
-            color: states.contains(WidgetState.focused)
-                ? context.tinyrackTheme.focus
-                : Colors.transparent,
-            width: states.contains(WidgetState.focused)
-                ? TRGeneratedBorders.focusWidth
-                : TRGeneratedBorders.defaultWidth,
+        // The menubar trigger keeps WidgetState.focused while its menu is open,
+        // so a focus ring here paints on the open trigger -- which the web does
+        // not do, because focus has moved into the popup. The trigger stays
+        // ringless to match, in line with the suite's no-layer-ring model.
+        side: const WidgetStatePropertyAll(
+          BorderSide(
+            color: Colors.transparent,
+            width: TRGeneratedBorders.defaultWidth,
           ),
         ),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,

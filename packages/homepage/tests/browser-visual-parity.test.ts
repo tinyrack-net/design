@@ -11,8 +11,24 @@ import {
 import { VisualParityPool } from '../scripts/visual-parity-pool.ts';
 import { VisualParityProfiler } from '../scripts/visual-parity-profiler.ts';
 import { createBrowserAuditRuntime } from './browser-audit-runtime.ts';
+import type { FlutterForcedState } from './visual-parity-conditions.ts';
+import {
+  conditionFor,
+  forcedPseudosFor,
+  forceTargetSelector,
+  isRestCondition,
+} from './visual-parity-conditions.ts';
+import {
+  applyWebCondition,
+  clearForcedStates,
+  resetForcedStates,
+  setFocusModality,
+} from './visual-parity-force.ts';
+
+/** States already migrated off driven input. */
 import { type ComparisonOptions, compareParityImages } from './visual-parity-image.ts';
 import { VisualParityImagePool } from './visual-parity-image-pool.ts';
+import { parityMaskBudgets } from './visual-parity-mask-budgets.ts';
 import {
   defaultMotionParityScenarios,
   type MotionParityScenario,
@@ -25,6 +41,7 @@ import {
   type VisualParityScenario,
   visualParityScenarios,
 } from './visual-parity-scenarios.ts';
+import { geometryToleranceFor, isDeclaredInert } from './visual-parity-tolerances.ts';
 
 const enabled = process.env['TINYRACK_VISUAL_PARITY'] !== undefined;
 const full = process.env['TINYRACK_VISUAL_PARITY'] === 'full';
@@ -50,6 +67,8 @@ type FlutterMetrics = {
   args: Record<string, unknown>;
   baseline: number | null;
   bounds: Bounds;
+  /** Echo of the declared interaction state the preview actually installed. */
+  state?: string | null;
   interaction: {
     activations: number;
     enabled: boolean;
@@ -103,6 +122,61 @@ type ParitySessionKey = {
 let parityRequestId = 0;
 let imagePool: VisualParityImagePool | undefined;
 const screenshotSessions = new WeakMap<Page, CDPSession>();
+
+/**
+ * Fraction of the image the raster masks cover, overlaps counted once.
+ *
+ * A mask hides a real difference, so masking has to stay small and visible. A
+ * plain sum of rect areas would double-count overlaps and overstate coverage;
+ * this compresses the rect edges into a grid and sums each covered cell once, so
+ * the number a budget is checked against is the true masked area.
+ */
+function maskedFraction(
+  rects: ReadonlyArray<{
+    bottom: number;
+    left: number;
+    right: number;
+    top: number;
+  }>,
+  width: number,
+  height: number,
+): number {
+  if (rects.length === 0 || width <= 0 || height <= 0) return 0;
+  const clamp = (value: number, max: number) => Math.max(0, Math.min(value, max));
+  const clamped = rects
+    .map((rect) => ({
+      bottom: clamp(rect.bottom, height),
+      left: clamp(rect.left, width),
+      right: clamp(rect.right, width),
+      top: clamp(rect.top, height),
+    }))
+    .filter((rect) => rect.right > rect.left && rect.bottom > rect.top);
+  if (clamped.length === 0) return 0;
+  const xs = [...new Set(clamped.flatMap((rect) => [rect.left, rect.right]))].sort(
+    (a, b) => a - b,
+  );
+  const ys = [...new Set(clamped.flatMap((rect) => [rect.top, rect.bottom]))].sort(
+    (a, b) => a - b,
+  );
+  let covered = 0;
+  for (let xi = 0; xi < xs.length - 1; xi += 1) {
+    for (let yi = 0; yi < ys.length - 1; yi += 1) {
+      const cellLeft = xs[xi] ?? 0;
+      const cellRight = xs[xi + 1] ?? 0;
+      const cellTop = ys[yi] ?? 0;
+      const cellBottom = ys[yi + 1] ?? 0;
+      const inside = clamped.some(
+        (rect) =>
+          rect.left <= cellLeft &&
+          rect.right >= cellRight &&
+          rect.top <= cellTop &&
+          rect.bottom >= cellBottom,
+      );
+      if (inside) covered += (cellRight - cellLeft) * (cellBottom - cellTop);
+    }
+  }
+  return covered / (width * height);
+}
 
 function compareImages(
   react: Uint8Array,
@@ -268,40 +342,6 @@ function layerPartSelectors(
   )[component];
 }
 
-// Pointer states default to the component's center, but composite components
-// need the pointer on their interactive trigger instead.
-function interactionPoint(
-  scenario: VisualParityScenario,
-  bounds: Bounds,
-  parts: Record<string, Bounds>,
-): { x: number; y: number } {
-  const partTarget = (
-    {
-      accordion: 'trigger',
-      'checkbox-group': 'first',
-      'radio-group': 'first',
-      'toggle-group': 'start',
-    } as Partial<Record<VisualParityScenario['component'], string>>
-  )[scenario.component];
-  const part = partTarget === undefined ? undefined : parts[partTarget];
-  if (part !== undefined) {
-    return { x: part.x + part.width / 2, y: part.y + part.height / 2 };
-  }
-  if (scenario.component === 'tabs') {
-    const tabHeight =
-      scenario.args['uiSize'] === 'sm'
-        ? 32
-        : scenario.args['uiSize'] === 'lg'
-          ? 48
-          : 40;
-    return { x: bounds.x + 30, y: bounds.y + tabHeight / 2 };
-  }
-  if (scenario.component === 'collapsible') {
-    return { x: bounds.x + bounds.width / 2, y: bounds.y + 22 };
-  }
-  return { x: bounds.x + bounds.width / 2, y: bounds.y + bounds.height / 2 };
-}
-
 function queryFor(scenario: VisualParityScenario, locale: string, theme: string) {
   const query = new URLSearchParams({
     component: scenario.component,
@@ -316,10 +356,17 @@ function queryFor(scenario: VisualParityScenario, locale: string, theme: string)
 
 async function preparePage(page: Page, motion = false) {
   await page.emulateMedia({ reducedMotion: motion ? 'no-preference' : 'reduce' });
+  // Scrollbars are browser chrome, not component pixels, and the classic track
+  // stays white regardless of the page's dark theme. Only a viewport-wide clip
+  // (the down and up drawers) ever reaches the edge where it lives, and there
+  // it reads as a white column on the Flutter side. Hidden on both pages so the
+  // crops stay symmetric.
+  const scrollbars =
+    'html{scrollbar-width:none!important}::-webkit-scrollbar{display:none!important}';
   await page.addStyleTag({
     content: motion
-      ? '*,*::before,*::after{caret-color:transparent!important}'
-      : '*,*::before,*::after{animation:none!important;caret-color:transparent!important;transition:none!important}',
+      ? `*,*::before,*::after{caret-color:transparent!important}${scrollbars}`
+      : `*,*::before,*::after{animation:none!important;caret-color:transparent!important;transition:none!important}${scrollbars}`,
   });
   await page.evaluate(() => document.fonts.ready);
 }
@@ -352,6 +399,47 @@ async function flutterMetrics(page: Page, requestId?: number): Promise<FlutterMe
   );
   throw new Error(
     `Flutter preview did not return parity metrics: ${JSON.stringify(diagnostics)}`,
+  );
+}
+
+/**
+ * The rigid translation between two renders of the same layout.
+ *
+ * A press offset moves everything a control paints by one vector without
+ * relaying anything out, and the Flutter screenshot has to be clipped along
+ * that vector or the two images compare misaligned. When the measured parts
+ * disagree the renders differ in layout rather than in paint, and the geometry
+ * assertions below are the ones that should speak, so this reports no shift.
+ *
+ * Generalised from a hand-listed anchor part per component, which had to be
+ * extended by hand before any new component could carry a pressed state.
+ */
+function rigidDelta(
+  rest: Record<string, { x: number; y: number }>,
+  state: Record<string, { x: number; y: number }>,
+): { x: number; y: number } {
+  const deltas = Object.entries(rest).flatMap(([name, restPart]) => {
+    const statePart = state[name];
+    return statePart === undefined
+      ? []
+      : [{ x: statePart.x - restPart.x, y: statePart.y - restPart.y }];
+  });
+  const [first] = deltas;
+  if (first === undefined) return { x: 0, y: 0 };
+  const rigid = deltas.every(
+    (delta) => Math.abs(delta.x - first.x) < 0.5 && Math.abs(delta.y - first.y) < 0.5,
+  );
+  return rigid ? first : { x: 0, y: 0 };
+}
+
+function partOrigins(
+  parts: Record<string, { bounds: { x: number; y: number } }>,
+): Record<string, { x: number; y: number }> {
+  return Object.fromEntries(
+    Object.entries(parts).map(([name, part]) => [
+      name,
+      { x: part.bounds.x, y: part.bounds.y },
+    ]),
   );
 }
 
@@ -391,11 +479,13 @@ async function renderFlutterScenario(
   component: VisualParityScenario['component'],
   args: Record<string, boolean | number | string>,
   theme: string,
+  state?: FlutterForcedState,
 ) {
   const requestId = ++parityRequestId;
   await page.evaluate(
     ({
       afterFrame,
+      declaredState,
       id,
       scenarioArgs,
       selectedChannel,
@@ -409,7 +499,12 @@ async function renderFlutterScenario(
         {
           channel: selectedChannel,
           component: selectedComponent,
-          payload: { afterFrame, args: scenarioArgs, theme: selectedTheme },
+          payload: {
+            afterFrame,
+            args: scenarioArgs,
+            theme: selectedTheme,
+            ...(declaredState === undefined ? {} : { state: declaredState }),
+          },
           requestId: id,
           type: 'renderScenario',
         },
@@ -418,6 +513,7 @@ async function renderFlutterScenario(
     },
     {
       afterFrame: !motion,
+      declaredState: state,
       id: requestId,
       scenarioArgs:
         component === 'text-field' || component === 'textarea'
@@ -431,6 +527,13 @@ async function renderFlutterScenario(
   const metrics = await flutterMetrics(page, requestId);
   expect(metrics.theme).toBe(theme);
   expect(metrics.args).toMatchObject(args);
+  // A payload field the preview silently ignored is the exact failure mode a
+  // declared model has, so the echo is checked rather than assumed.
+  // The preview reports 'default' when nothing was declared, so both sides are
+  // normalised before comparing.
+  expect(metrics.state ?? 'default', `${component} declared state echo`).toBe(
+    state ?? 'default',
+  );
   return metrics;
 }
 
@@ -443,6 +546,7 @@ async function reactSnapshot(
     layerPartSelectors(component, args['open'] === true) ??
     partSelectors[component] ??
     {};
+  const forceTarget = forceTargetSelector(component);
   const rasterOnlySelectors =
     component === 'app-shell'
       ? {
@@ -479,7 +583,7 @@ async function reactSnapshot(
             : {}
         : {};
   return page.evaluate(
-    ({ rasterOnlySelectors, selectedComponent, selectors }) => {
+    ({ forceTarget, rasterOnlySelectors, selectedComponent, selectors }) => {
       const target = document.querySelector<HTMLElement>('[data-parity-target] > *');
       if (target === null) throw new Error('React parity target is missing.');
       const openLayerSelector = (
@@ -579,8 +683,61 @@ async function reactSnapshot(
         baseline,
         bounds,
         parts,
+        focusModality: document.documentElement.getAttribute('data-tr-focus-modality'),
+        // Every painted property of the target subtree, so a declared state
+        // that resolves to the same paint as rest can be told apart from a
+        // forcing call that never landed. `matches(':hover')` cannot do this:
+        // forced pseudo classes are honoured during style resolution but not
+        // in selector queries, so computed style is the only witness.
+        paintFingerprint: [
+          geometryTarget,
+          ...geometryTarget.querySelectorAll<HTMLElement>('*'),
+        ]
+          .slice(0, 400)
+          .map((element) => {
+            const elementStyle = getComputedStyle(element);
+            // `getPropertyValue` takes CSS property names, not the camel-case
+            // aliases; a camel-case name silently returns an empty string and
+            // the fingerprint goes blind.
+            return [
+              'background-color',
+              'background-image',
+              'border-bottom-color',
+              'border-bottom-width',
+              'border-left-color',
+              'border-left-width',
+              'border-right-color',
+              'border-right-width',
+              'border-top-color',
+              'border-top-width',
+              'box-shadow',
+              'color',
+              'fill',
+              'opacity',
+              'outline-color',
+              'outline-offset',
+              'outline-style',
+              'outline-width',
+              'stroke',
+              'text-decoration-color',
+              'text-decoration-line',
+              'transform',
+            ]
+              .map((property) => elementStyle.getPropertyValue(property))
+              .join('|');
+          })
+          .join('\n'),
         partText,
         rasterOnlyParts,
+        ring: (() => {
+          const ringElement = document.querySelector<HTMLElement>(forceTarget);
+          if (ringElement === null) return null;
+          const ringStyle = getComputedStyle(ringElement);
+          return {
+            outlineStyle: ringStyle.getPropertyValue('outline-style'),
+            outlineWidth: ringStyle.getPropertyValue('outline-width'),
+          };
+        })(),
         typography: {
           fontFamily: style.fontFamily,
           fontSize: style.fontSize,
@@ -591,6 +748,7 @@ async function reactSnapshot(
       };
     },
     {
+      forceTarget,
       rasterOnlySelectors,
       selectedComponent: component,
       selectors,
@@ -657,52 +815,6 @@ async function image(
       if (screenshotTimeout !== undefined) clearTimeout(screenshotTimeout);
     }
   });
-}
-
-async function applyInteraction(
-  page: Page,
-  bounds: Bounds,
-  state: VisualParityScenario['state'],
-  target?: { x: number; y: number },
-) {
-  const keyboardFocus =
-    state === 'focus-visible' ||
-    state === 'focus-visible-hover' ||
-    state === 'keyboard-pressed' ||
-    state === 'readonly-focus-visible' ||
-    state === 'invalid-focus-visible';
-  if (keyboardFocus) {
-    await page.keyboard.press('Tab');
-  }
-
-  const pointerOver =
-    state === 'hover' ||
-    state === 'pressed' ||
-    state === 'release-hover' ||
-    state === 'pointer-focused' ||
-    state === 'focus-visible-hover' ||
-    state === 'disabled-hover' ||
-    state === 'loading-hover' ||
-    state === 'invalid-hover';
-  if (pointerOver) {
-    await page.mouse.move(
-      target?.x ?? bounds.x + bounds.width / 2,
-      target?.y ?? bounds.y + bounds.height / 2,
-    );
-  }
-  if (state === 'pressed' || state === 'release-hover') await page.mouse.down();
-  if (state === 'pointer-focused') {
-    await page.mouse.down();
-    await page.mouse.up();
-  }
-  if (state === 'keyboard-pressed') await page.keyboard.down('Space');
-  if (state === 'release-hover') {
-    await page.mouse.up();
-  }
-  return async () => {
-    if (state === 'pressed') await page.mouse.up();
-    if (state === 'keyboard-pressed') await page.keyboard.up('Space');
-  };
 }
 
 async function createParityPages(
@@ -1073,6 +1185,12 @@ async function compareScenario(
   ]);
   const query = queryFor(scenario, locale, theme);
 
+  // Before the rest render, not only after the state one. A failing assertion
+  // aborts this function, and forcing that outlives it makes the *next*
+  // scenario's rest render carry the previous state -- which turns one real
+  // failure into a cascade and, worse, can make a genuinely broken pair compare
+  // equal because both of its renders were forced.
+  await clearForcedStates(reactPage);
   await Promise.all([reactPage.mouse.move(1, 1), flutterPage.mouse.move(1, 1)]);
   const [, metrics] = await Promise.all([
     reactPage.evaluate((search) => {
@@ -1089,236 +1207,94 @@ async function compareScenario(
     }, query.toString()),
     renderFlutterScenario(flutterPage, scenario.component, scenario.args, theme),
   ]);
-  const reactTarget = reactPage.locator(
-    scenario.component === 'checkbox'
-      ? '.tr-checkbox'
-      : scenario.component === 'radio'
-        ? '.tr-radio'
-        : scenario.component === 'switch'
-          ? '.tr-switch'
-          : '[data-parity-target] > *',
-  );
   const reactRest = await reactSnapshot(reactPage, scenario.component, scenario.args);
   const reactBox = reactRest.bounds;
   const reactTypography = reactRest.typography;
   const reactRestParts = reactRest.parts;
-  const flutterPartBounds = Object.fromEntries(
-    Object.entries(metrics.parts).map(([name, part]) => [name, part.bounds]),
-  );
-  const [releaseReact, releaseFlutter] = await Promise.all([
-    applyInteraction(
-      reactPage,
-      reactBox,
-      scenario.state,
-      interactionPoint(scenario, reactBox, reactRestParts),
-    ),
-    applyInteraction(
-      flutterPage,
-      metrics.bounds,
-      scenario.state,
-      interactionPoint(scenario, metrics.bounds, flutterPartBounds),
-    ),
-  ]);
-  const expectedPseudoClasses: string[] | undefined = (
-    {
-      hover: [':hover'],
-      pressed: [':hover', ':active'],
-      'release-hover': [':hover'],
-      'focus-visible': [':focus-visible'],
-      'focus-visible-hover': [':focus-visible', ':hover'],
-      'keyboard-pressed': [':focus-visible'],
-      'pointer-focused': [':focus', ':focus-visible'],
-      'readonly-focus-visible': [':focus-visible'],
-      'invalid-hover': [':hover'],
-      'invalid-focus-visible': [':focus-visible'],
-    } as Partial<Record<NonNullable<VisualParityScenario['state']>, string[]>>
-  )[scenario.state ?? 'default'];
-  if (expectedPseudoClasses !== undefined) {
-    const hasPseudoClass = (pseudoClass: string) =>
-      reactTarget.evaluate(
-        (element, selector) =>
-          element.matches(selector) || element.querySelector(selector) !== null,
-        pseudoClass,
-      );
-    for (const pseudoClass of expectedPseudoClasses) {
-      if (pseudoClass === ':focus-visible') {
-        await waitForTrue(async () => {
-          if (await hasPseudoClass(pseudoClass)) return true;
-          await reactPage.keyboard.press('Tab');
-          return hasPseudoClass(pseudoClass);
-        }, 2_000);
-      } else {
-        expect(
-          await hasPseudoClass(pseudoClass),
-          `${scenario.id} did not enter ${pseudoClass}`,
-        ).toBe(true);
-      }
-    }
-  } else if (scenario.state === 'disabled' || scenario.state === 'disabled-hover') {
-    const disabledTarget =
-      (await reactTarget.locator('button,input').count()) > 0
-        ? reactTarget.locator('button,input').first()
-        : reactTarget;
-    // Anchors have no native disabled state; they disable via aria-disabled.
-    expect(
-      (await disabledTarget.isDisabled()) ||
-        (await disabledTarget.getAttribute('aria-disabled')) === 'true',
-    ).toBe(true);
-  } else if (scenario.state === 'loading' || scenario.state === 'loading-hover') {
-    expect(await reactTarget.isDisabled()).toBe(true);
-    expect(await reactTarget.getAttribute('aria-busy')).toBe('true');
-  }
-
-  if (scenario.state === 'keyboard-pressed') {
-    // Flutter applies the keyboard press offset in the next frame. Under the
-    // full catalog load telemetry can arrive before that paint, so wait for
-    // both renderers to commit the same held-key state before measuring it.
-    await Promise.all(
-      [reactPage, flutterPage].map((page) =>
-        page.evaluate(
-          () =>
-            new Promise<void>((resolve) =>
-              requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-            ),
-        ),
-      ),
-    );
-  }
-
-  const stableWithoutInteraction =
-    scenario.state === undefined || scenario.state === 'default';
-  const [reactState, initialStateMetrics] = stableWithoutInteraction
-    ? [reactRest, metrics]
+  const condition = conditionFor(scenario);
+  // Every state is declared to both runtimes rather than driven, so there is no
+  // held pointer or held key to release afterwards, and no event pipeline to
+  // wait on. A rest condition declares nothing and re-renders nothing.
+  // A rest condition is already on screen, and re-rendering it would not be
+  // free: an open select re-runs its popup layout, which moves the highlight and
+  // the scroll offset. The modality attribute is still cleared, so a previous
+  // scenario's declaration cannot leak into this one.
+  const [, declaredStateMetrics] = isRestCondition(condition)
+    ? [await setFocusModality(reactPage, condition.modality), metrics]
     : await Promise.all([
-        reactSnapshot(reactPage, scenario.component, scenario.args),
-        measureFlutter(flutterPage, scenario.component),
+        applyWebCondition(reactPage, forceTargetSelector(scenario.component), {
+          forced: forcedPseudosFor(condition, scenario.component),
+          modality: condition.modality,
+        }),
+        renderFlutterScenario(
+          flutterPage,
+          scenario.component,
+          scenario.args,
+          theme,
+          condition.flutterState,
+        ),
       ]);
+  const [reactState, initialStateMetrics] = isRestCondition(condition)
+    ? [reactRest, metrics]
+    : [
+        await reactSnapshot(reactPage, scenario.component, scenario.args),
+        declaredStateMetrics,
+      ];
+  {
+    // The only way a declared model fails silently: forcing that never landed
+    // renders rest on both sides and the pixel comparison agrees. Computed
+    // style is the sole witness -- `matches(':hover')` cannot see a forced
+    // pseudo class, because forcing is honoured during style resolution and not
+    // in selector queries.
+    const repainted = reactRest.paintFingerprint !== reactState.paintFingerprint;
+    // A pair listed as inert flips the assertion rather than skipping it.
+    const expectsRepaint = condition.paint === 'changes' && !isDeclaredInert(scenario);
+    expect(
+      repainted,
+      expectsRepaint
+        ? `${scenario.id} declared ${scenario.state} changed no painted property; the forcing did not land`
+        : `${scenario.id} is declared visually inert in ${scenario.state} but repainted`,
+    ).toBe(expectsRepaint);
+
+    if (condition.ring !== 'unchecked' && reactState.ring !== null) {
+      const painted =
+        reactState.ring.outlineStyle !== 'none' &&
+        Number.parseFloat(reactState.ring.outlineWidth) > 0;
+      expect(
+        painted,
+        `${scenario.id} ${condition.ring === 'present' ? 'keyboard focus painted no ring' : 'pointer focus painted a ring'} (outline ${reactState.ring.outlineStyle} ${reactState.ring.outlineWidth})`,
+      ).toBe(condition.ring === 'present');
+    }
+    if (condition.modality !== undefined) {
+      expect(reactState.focusModality, `${scenario.id} focus modality`).toBe(
+        condition.modality,
+      );
+    }
+  }
+
   const reactStateBox = reactState.bounds;
   const reactParts = reactState.parts;
   const reactPartText = reactState.partText;
-  let stateMetrics = initialStateMetrics;
-  const pointerOver =
-    scenario.state === 'hover' ||
-    scenario.state === 'pressed' ||
-    scenario.state === 'release-hover' ||
-    scenario.state === 'pointer-focused' ||
-    scenario.state === 'focus-visible-hover' ||
-    scenario.state === 'disabled-hover' ||
-    scenario.state === 'loading-hover' ||
-    scenario.state === 'invalid-hover';
-  const focused =
-    scenario.state === 'pointer-focused' ||
-    scenario.state === 'focus-visible' ||
-    scenario.state === 'focus-visible-hover' ||
-    scenario.state === 'keyboard-pressed' ||
-    scenario.state === 'readonly-focus-visible' ||
-    scenario.state === 'invalid-focus-visible' ||
-    (scenario.component === 'text-field' && scenario.state === 'pressed');
-  const openLayerOwnsFocus =
-    scenario.args['open'] === true &&
-    new Set<VisualParityScenario['component']>([
-      'autocomplete',
-      'combobox',
-      'menu',
-      'navigation-menu',
-      'popover',
-      'preview-card',
-      'select',
-    ]).has(scenario.component);
-  for (
-    let attempt = 0;
-    focused && !stateMetrics.interaction.focused && attempt < 3;
-    attempt += 1
-  ) {
-    await flutterPage.keyboard.press('Tab');
-    await flutterPage.evaluate(
-      () =>
-        new Promise<void>((resolve) =>
-          requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
-        ),
-    );
-    stateMetrics = await measureFlutter(flutterPage, scenario.component);
-  }
-  // Under load the measure round-trip can overtake the CDP pointer event;
-  // re-measure until the pointer state has landed.
-  for (
-    let attempt = 0;
-    (stateMetrics.interaction.hovered !== pointerOver ||
-      stateMetrics.interaction.pressed !== (scenario.state === 'pressed')) &&
-    attempt < 5;
-    attempt += 1
-  ) {
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    stateMetrics = await measureFlutter(flutterPage, scenario.component);
-  }
-  const expectedInteraction: Partial<typeof stateMetrics.interaction> = {
-    activations: scenario.state === 'release-hover' ? 1 : 0,
-    enabled: scenario.args['disabled'] !== true && scenario.args['loading'] !== true,
-    // Programmatically opening a layer transfers focus for accessibility, but
-    // it does not imply keyboard modality or a visible focus indicator.
-    focusVisible: focused,
-    hovered: pointerOver,
-    invalid: scenario.args['errorText'] !== undefined,
-    loading: scenario.args['loading'] === true,
-    pressed: scenario.state === 'pressed',
-    readonly: scenario.args['readOnly'] === true,
-  };
-  // Pointer-down focus retention differs between the DOM and Flutter, but is
-  // intentionally invisible in both. Assert focus ownership only for explicit
-  // focus scenarios and for pointer states that do not activate the control.
-  if (scenario.state !== 'pressed' && scenario.state !== 'release-hover') {
-    expectedInteraction.focused = focused || openLayerOwnsFocus;
-  }
+  const stateMetrics = initialStateMetrics;
+  // The Flutter preview echoes back what it was asked to render. The declared
+  // interaction flags are deliberately absent: the preview seeds them from the
+  // declaration, so asserting them back would only compare the harness with its
+  // own input. That a declaration reached the paint is proved by the
+  // rest-versus-state comparison instead.
   expect(
     stateMetrics.interaction,
     `${scenario.id} Flutter interaction telemetry ${JSON.stringify(
       stateMetrics.interaction,
     )}`,
-  ).toMatchObject(expectedInteraction);
-  const interactionAnchor =
-    scenario.component === 'button' || scenario.component === 'copy-button'
-      ? 'label'
-      : scenario.component === 'icon-button'
-        ? 'icon'
-        : undefined;
+  ).toMatchObject({
+    enabled: scenario.args['disabled'] !== true && scenario.args['loading'] !== true,
+    invalid: scenario.args['errorText'] !== undefined,
+    loading: scenario.args['loading'] === true,
+    readonly: scenario.args['readOnly'] === true,
+  });
   const measureFlutterAnchorDelta = () =>
-    interactionAnchor === undefined
-      ? { x: 0, y: 0 }
-      : {
-          x:
-            (stateMetrics.parts[interactionAnchor]?.bounds.x ?? 0) -
-            (metrics.parts[interactionAnchor]?.bounds.x ?? 0),
-          y:
-            (stateMetrics.parts[interactionAnchor]?.bounds.y ?? 0) -
-            (metrics.parts[interactionAnchor]?.bounds.y ?? 0),
-        };
-  let flutterAnchorDelta = measureFlutterAnchorDelta();
-  if (scenario.state === 'keyboard-pressed' && interactionAnchor !== undefined) {
-    const reactAnchorDelta = {
-      x:
-        (reactParts[interactionAnchor]?.x ?? 0) -
-        (reactRestParts[interactionAnchor]?.x ?? 0),
-      y:
-        (reactParts[interactionAnchor]?.y ?? 0) -
-        (reactRestParts[interactionAnchor]?.y ?? 0),
-    };
-    for (
-      let attempt = 0;
-      (Math.abs(reactAnchorDelta.x - flutterAnchorDelta.x) >= 1 ||
-        Math.abs(reactAnchorDelta.y - flutterAnchorDelta.y) >= 1) &&
-      attempt < 5;
-      attempt += 1
-    ) {
-      // A saturated CanvasKit event loop can occasionally miss the initial
-      // held Space keydown. A repeated keydown is how browsers represent a
-      // physically held key and must keep the control pressed without firing
-      // activation (which occurs on keyup).
-      await flutterPage.keyboard.down('Space');
-      await new Promise((resolve) => setTimeout(resolve, 20));
-      stateMetrics = await measureFlutter(flutterPage, scenario.component);
-      flutterAnchorDelta = measureFlutterAnchorDelta();
-    }
-  }
+    rigidDelta(partOrigins(metrics.parts), partOrigins(stateMetrics.parts));
+  const flutterAnchorDelta = measureFlutterAnchorDelta();
   const flutterStateBox = {
     ...stateMetrics.bounds,
     x: stateMetrics.bounds.x + flutterAnchorDelta.x,
@@ -1326,11 +1302,11 @@ async function compareScenario(
   };
 
   for (const axis of ['x', 'y'] as const) {
+    const reactPartDelta = rigidDelta(reactRestParts, reactParts);
     const reactDelta =
-      interactionAnchor === undefined
+      Object.keys(reactRestParts).length === 0
         ? reactStateBox[axis] - reactBox[axis]
-        : (reactParts[interactionAnchor]?.[axis] ?? 0) -
-          (reactRestParts[interactionAnchor]?.[axis] ?? 0);
+        : reactPartDelta[axis];
     const flutterDelta = flutterAnchorDelta[axis];
     if (Math.abs(reactDelta - flutterDelta) >= 1) {
       await mkdir(artifactRoot, { recursive: true });
@@ -1394,10 +1370,15 @@ async function compareScenario(
     );
   }
   for (const key of ['width', 'height'] as const) {
+    // A tolerance raises the bar to its declared budget and nothing more, so a
+    // regression stacked on top of a known residue still fails.
+    const tolerance = geometryToleranceFor(scenario, key);
     expect(
       geometryDeltas[key],
-      `${scenario.id} ${locale}/${theme} ${key}`,
-    ).toBeLessThan(1);
+      tolerance === undefined
+        ? `${scenario.id} ${locale}/${theme} ${key}`
+        : `${scenario.id} ${locale}/${theme} ${key} exceeded the ${tolerance.id} budget`,
+    ).toBeLessThan(tolerance?.maxDelta ?? 1);
   }
   expect(
     new Set(Object.keys(stateMetrics.parts)),
@@ -1827,6 +1808,15 @@ async function compareScenario(
       },
     );
   }
+  // A mask hides real pixels from the comparison, so its size is a budget, not a
+  // free parameter. Freezing it at the measured maximum makes a widened rect or
+  // a mask creeping over a border fail here instead of passing green.
+  const maskPercent = maskedFraction(rasterRects, imageWidth, imageHeight) * 100;
+  const maskBudget = parityMaskBudgets[scenario.component];
+  expect(
+    maskPercent,
+    `${scenario.id} ${locale}/${theme} masks ${maskPercent.toFixed(2)}% of the image, over its ${maskBudget}% budget`,
+  ).toBeLessThanOrEqual(maskBudget);
   const {
     antialiasedPixels,
     diff,
@@ -1882,49 +1872,7 @@ async function compareScenario(
     ]);
   }
   expect(structuralPixels, `${scenario.id} ${locale}/${theme}`).toBe(0);
-  await Promise.all([releaseReact(), releaseFlutter()]);
-  const verifiesActivation =
-    scenario.state === 'release-hover' ||
-    scenario.state === 'pressed' ||
-    scenario.state === 'keyboard-pressed' ||
-    scenario.state === 'focus-visible';
-  if (
-    (scenario.component === 'button' || scenario.component === 'icon-button') &&
-    verifiesActivation
-  ) {
-    if (scenario.state === 'focus-visible') {
-      await Promise.all([
-        reactPage.keyboard.press('Enter'),
-        flutterPage.keyboard.press('Enter'),
-      ]);
-    }
-    const expectedActivations =
-      scenario.state === 'release-hover' ||
-      scenario.state === 'pressed' ||
-      scenario.state === 'keyboard-pressed' ||
-      scenario.state === 'focus-visible'
-        ? 1
-        : 0;
-    const [reactActivations, flutterActivations] = await Promise.all([
-      reactPage.evaluate(
-        () =>
-          (
-            window as Window & {
-              __parityActivations?: () => number;
-            }
-          ).__parityActivations?.() ?? 0,
-      ),
-      measureFlutter(flutterPage, scenario.component).then(
-        (currentMetrics) => currentMetrics.interaction.activations,
-      ),
-    ]);
-    expect(reactActivations, `${scenario.id} React activations`).toBe(
-      expectedActivations,
-    );
-    expect(flutterActivations, `${scenario.id} Flutter activations`).toBe(
-      expectedActivations,
-    );
-  }
+  await clearForcedStates(reactPage);
 }
 
 async function configureMotionScenario(
@@ -3136,12 +3084,16 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
         })
       : await pagesPool.acquire({ component, locale, theme });
     try {
-      await Promise.allSettled([
-        pages.reactPage.mouse.up(),
-        pages.flutterPage.mouse.up(),
-        pages.reactPage.keyboard.up('Space'),
-        pages.flutterPage.keyboard.up('Space'),
-      ]);
+      // Only the motion suite still drives real input, so only it can hand back
+      // a page with a button or a key held down.
+      if (motion) {
+        await Promise.allSettled([
+          pages.reactPage.mouse.up(),
+          pages.flutterPage.mouse.up(),
+          pages.reactPage.keyboard.up('Space'),
+          pages.flutterPage.keyboard.up('Space'),
+        ]);
+      }
       if (!isolatedSessions) {
         await profiler.measure('configure', () =>
           configureParityPages(pages, component, locale, theme),
@@ -3156,12 +3108,17 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
   }
 
   async function releasePages(pages: ParityPages) {
-    const cleanup = await Promise.allSettled([
-      pages.reactPage.mouse.up(),
-      pages.flutterPage.mouse.up(),
-      pages.reactPage.keyboard.up('Space'),
-      pages.flutterPage.keyboard.up('Space'),
-    ]);
+    // Detaching discards every forced state this page ever had, including any
+    // whose node survived a re-render under an id no longer held.
+    await resetForcedStates(pages.reactPage);
+    const cleanup = motion
+      ? await Promise.allSettled([
+          pages.reactPage.mouse.up(),
+          pages.flutterPage.mouse.up(),
+          pages.reactPage.keyboard.up('Space'),
+          pages.flutterPage.keyboard.up('Space'),
+        ])
+      : [];
     const discard =
       pages.reactPage.isClosed() ||
       pages.flutterPage.isClosed() ||
@@ -3238,12 +3195,6 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
             failures.push(
               `${scenario.id}: ${error instanceof Error ? error.message : String(error)}`,
             );
-            await Promise.allSettled([
-              pages.reactPage.mouse.up(),
-              pages.flutterPage.mouse.up(),
-              pages.reactPage.keyboard.up('Space'),
-              pages.flutterPage.keyboard.up('Space'),
-            ]);
           }
         }
       } finally {
@@ -3326,15 +3277,32 @@ describe.skipIf(!enabled)('React and Flutter pixel parity', () => {
     '$component motion [$shard/$shards] matches in $theme',
     async ({ component, scenarios: componentScenarios, theme }) => {
       const pages = await acquirePages(component, 'en', theme);
+      // Collect rather than throw, matching the endpoint loop above. Letting the
+      // first failure escape aborted the rest of the shard, so the reported
+      // count understated how many scenarios were actually broken.
+      const failures: string[] = [];
       try {
         for (const scenario of componentScenarios) {
-          await profiler.measure('motionScenario', () =>
-            compareMotionScenario(pages, scenario, theme),
-          );
+          try {
+            await profiler.measure('motionScenario', () =>
+              compareMotionScenario(pages, scenario, theme),
+            );
+          } catch (error) {
+            failures.push(
+              `${scenario.id}: ${error instanceof Error ? error.message : String(error)}`,
+            );
+            await Promise.allSettled([
+              pages.reactPage.mouse.up(),
+              pages.flutterPage.mouse.up(),
+              pages.reactPage.keyboard.up('Space'),
+              pages.flutterPage.keyboard.up('Space'),
+            ]);
+          }
         }
       } finally {
         await releasePages(pages);
       }
+      expect(failures, `${component} motion ${theme}`).toEqual([]);
     },
     2_700_000,
   );

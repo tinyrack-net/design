@@ -401,7 +401,11 @@ test('gives the highlighted option a visible focus indicator', async () => {
     '.tr-combobox-option[data-highlighted]',
   );
   expect(highlighted).not.toBeNull();
-  expect(getComputedStyle(highlighted as HTMLElement).outlineStyle).toBe('solid');
+  // The highlight follows the mouse, so it reads as a background rather than
+  // a focus ring.
+  const highlightedStyle = getComputedStyle(highlighted as HTMLElement);
+  expect(highlightedStyle.outlineStyle).toBe('none');
+  expect(highlightedStyle.backgroundColor).toBe('rgb(239, 246, 255)');
 });
 
 test('keeps the portal inside the viewport and dismisses with Escape', async () => {

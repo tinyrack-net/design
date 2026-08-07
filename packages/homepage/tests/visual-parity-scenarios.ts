@@ -170,7 +170,13 @@ export const parityStates = [
   'default',
   'hover',
   'pressed',
-  'release-hover',
+  // Under the declared-condition model a released pointer resting over a
+  // control renders exactly as `hover` does, so `release-hover` only paid for
+  // itself through an activation count -- which is behaviour and now lives in
+  // the per-platform tests. `pointer-focused` takes its place: it costs nothing
+  // to declare and extends the ring-suppression guard past the fields to every
+  // control that can hold focus.
+  'pointer-focused',
   'focus-visible',
   'focus-visible-hover',
   'keyboard-pressed',
@@ -294,6 +300,37 @@ for (let left = 0; left < textAxisEntries.length; left += 1) {
       }
     }
   }
+}
+
+/**
+ * The sizes each button-grade component carries only as representatives, not as
+ * a fully crossed axis.
+ *
+ * `sizes` (md, lg) is crossed with every intent and every state. sm is not: it
+ * appears once per appearance in the resting state, which is enough to put its
+ * control geometry under the static assertion without tripling the catalog. The
+ * contract tests read this to tell a representative extra from a coverage hole.
+ */
+export const representativeOnlySizes: Readonly<
+  Partial<Record<ParityComponent, readonly string[]>>
+> = {
+  button: ['sm'],
+  'icon-button': ['sm'],
+};
+
+function smSizeRepresentatives(
+  component: 'button' | 'icon-button',
+): VisualParityScenario[] {
+  return appearances.map((appearance, index) => ({
+    args: {
+      appearance,
+      intent: intents[index % intents.length] ?? 'primary',
+      uiSize: 'sm',
+    },
+    component,
+    id: `${component}-appearance-${appearance}-uiSize-sm`,
+    state: 'default' as ParityState,
+  }));
 }
 
 function withStates(
@@ -556,6 +593,13 @@ const baseVisualParityScenarios: VisualParityScenario[] = [
       uiSize: sizes,
     }),
   ),
+  // `sizes` is md and lg, so the sm control geometry never reached a static
+  // check -- it only existed in the motion catalog, where a constant offset
+  // reads as a transition failure rather than a size bug. One representative per
+  // appearance at sm, in the resting state, puts sm under the geometry assertion
+  // without multiplying the full intent x state grid.
+  ...smSizeRepresentatives('button'),
+  ...smSizeRepresentatives('icon-button'),
   ...product('card', {
     padding: ['none', 'sm', 'md', 'lg'],
     variant: ['default', 'outlined', 'elevated'],
@@ -597,7 +641,7 @@ const baseVisualParityScenarios: VisualParityScenario[] = [
 /// mirrored so ghost is exercised in every state solid is.
 const fieldAppearances = ['solid', 'ghost'] as const;
 
-const fieldAppearanceComponents = new Set<string>([
+export const fieldAppearanceComponents = new Set<string>([
   'autocomplete',
   'combobox',
   'number-field',

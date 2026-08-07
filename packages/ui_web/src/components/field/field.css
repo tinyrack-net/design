@@ -61,11 +61,18 @@
     border-color: var(--tr-field-control-hover-border, var(--tinyrack-border-strong));
   }
 
-  .tr-field-control:focus-visible {
+  /* Gating the whole rule, not just the outline, is deliberate: the focus border
+     tint is emphasis too, so pointer focus falls back to the resting or hover
+     border rather than keeping a focus-coloured frame. */
+  :where(html:not([data-tr-focus-modality="pointer"])) .tr-field-control:focus-visible {
     border-color: var(--tr-field-control-focus-border, var(--tinyrack-focus));
     outline: var(--tinyrack-focus-width) solid
       var(--tr-field-control-focus-ring, var(--tinyrack-focus));
     outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  html[data-tr-focus-modality="pointer"] .tr-field-control:focus-visible {
+    outline: none;
   }
 
   .tr-field-control:read-only {

@@ -214,7 +214,9 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
   expect(selectedItemStyle.backgroundColor).not.toBe(
     getComputedStyle(popup as HTMLElement).backgroundColor,
   );
-  expect(selectedItemStyle.outlineStyle).toBe('solid');
+  // The highlight follows the mouse, so it reads as a background rather than
+  // a focus ring.
+  expect(selectedItemStyle.outlineStyle).toBe('none');
 });
 
 test('keeps a select popup above an open drawer', async () => {

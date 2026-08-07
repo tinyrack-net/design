@@ -3,6 +3,7 @@
 import type { ComponentPropsWithRef } from 'react';
 import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
+import { useTinyrackFocusModality } from '../../providers/focus-modality/focus-modality-provider.js';
 import { TRInputGroupContext } from './input-group-context.js';
 
 export type TRInputGroupProps = ComponentPropsWithRef<'div'> & {
@@ -22,6 +23,11 @@ export function TRInputGroup({
   uiSize = 'md',
   ...props
 }: TRInputGroupProps) {
+  // The group's ring uses `:focus-within`, which carries no modality
+  // information, so the tracker has to be running for it to stay off on a
+  // pointer focus.
+  useTinyrackFocusModality();
+
   return (
     <div
       {...props}

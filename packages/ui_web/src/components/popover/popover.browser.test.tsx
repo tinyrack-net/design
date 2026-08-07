@@ -1,3 +1,4 @@
+import '../../core/core.css';
 import './popover.css';
 import { act, createRef, useState } from 'react';
 import { hydrateRoot } from 'react-dom/client';
@@ -292,4 +293,45 @@ test('server-renders and hydrates a default-open portaled popover', async () => 
       actEnvironment.IS_REACT_ACT_ENVIRONMENT = previousActEnvironment;
     }
   }
+});
+
+// A layer takes focus so Escape and arrow keys have somewhere to land, not
+// because it is operable. Outlining the whole popup on open reads as an error
+// state; a menu shows position with its row background instead. Popover and
+// select already behaved this way and menu and menubar did not, purely because
+// `.tr-layer:focus-visible` caught the container too.
+test('never outlines the layer container, only the controls inside it', async () => {
+  const screen = await render(
+    <div>
+      <TRPopover.Root defaultOpen>
+        <TRPopover.Trigger>Details</TRPopover.Trigger>
+        <TRPopover.Portal>
+          <TRPopover.Positioner>
+            <TRPopover.Popup>
+              <button type="button">Rename</button>
+            </TRPopover.Popup>
+          </TRPopover.Positioner>
+        </TRPopover.Portal>
+      </TRPopover.Root>
+    </div>,
+  );
+
+  // The popup is portalled to the body, so the theme has to sit above it or
+  // `--tinyrack-focus` resolves to nothing and every outline computes to `none`
+  // -- which would make this test pass for the wrong reason.
+  document.documentElement.dataset['theme'] = 'tinyrack-light';
+  const popup = document.querySelector<HTMLElement>('.tr-layer');
+  if (popup === null) throw new Error('The popover layer is missing.');
+  popup.focus();
+  await expect.poll(() => getComputedStyle(popup).outlineStyle).toBe('none');
+
+  // Tab rather than `focus()`: a programmatically focused button does not match
+  // `:focus-visible`, so calling `focus()` here would assert the ring is absent
+  // for the wrong reason and pass even if the rule were deleted outright.
+  const inside = screen.getByRole('button', { name: 'Rename' });
+  await userEvent.tab();
+  await expect
+    .poll(() => getComputedStyle(inside.element() as HTMLElement).outlineStyle)
+    .toBe('solid');
+  delete document.documentElement.dataset['theme'];
 });

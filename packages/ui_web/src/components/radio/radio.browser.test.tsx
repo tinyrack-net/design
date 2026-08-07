@@ -230,3 +230,30 @@ test('uses semantic hover tokens for available unchecked and checked states', as
     .poll(() => getComputedStyle(checked.element() as HTMLElement).borderColor)
     .toBe('rgb(147, 197, 253)');
 });
+
+// The visual parity suite used to assert this on the rendered radio, as a side
+// effect of driving a disabled scenario. That suite now declares states rather
+// than driving them, so the DOM contract lives here.
+test('marks a single disabled radio and refuses the pointer', async () => {
+  const onValueChange = vi.fn();
+  await render(
+    <TRRadioGroup aria-label="Racks" defaultValue="alpha" onValueChange={onValueChange}>
+      <TRRadio.Root aria-label="Alpha" value="alpha" />
+      <TRRadio.Root aria-label="Beta unavailable" disabled value="beta" />
+    </TRRadioGroup>,
+  );
+
+  const beta = page.getByRole('radio', { name: 'Beta unavailable' });
+  const element = beta.element() as HTMLElement;
+  expect(element).toHaveAttribute('data-disabled');
+  expect(element.getAttribute('aria-disabled')).toBe('true');
+  expect(getComputedStyle(element).cursor).toBe('not-allowed');
+
+  await beta.click({ force: true });
+  expect(onValueChange).not.toHaveBeenCalled();
+  expect(
+    (page.getByRole('radio', { name: 'Alpha' }).element() as HTMLElement).getAttribute(
+      'aria-checked',
+    ),
+  ).toBe('true');
+});

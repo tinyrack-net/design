@@ -91,10 +91,12 @@
     background: var(--tinyrack-surface-hover);
   }
 
+  /* `[data-highlighted]` follows the mouse as it moves down the list, so a
+     ring here would trail the pointer around. The background carries the
+     highlight for keyboard navigation too, which is how the menu and
+     context-menu rows already read. */
   .tr-autocomplete-item[data-highlighted] {
     background: var(--tinyrack-surface-hover);
-    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
 
   .tr-autocomplete-item[data-disabled] {

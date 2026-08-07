@@ -131,7 +131,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     this.items = const [],
     this.optionsBuilder,
     this.appearance = TRFieldAppearance.solid,
-    this.autoHighlight = true,
+    this.autoHighlight = false,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
     this.controller,
@@ -159,7 +159,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     this.items = const [],
     this.optionsBuilder,
     this.appearance = TRFieldAppearance.solid,
-    this.autoHighlight = true,
+    this.autoHighlight = false,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
     this.controller,
@@ -192,6 +192,11 @@ class TRCombobox<T extends Object> extends StatefulWidget {
   final TRFieldAppearance appearance;
 
   /// Arms the first option so Enter commits it without an arrow key first.
+  /// Whether opening the popup highlights the first option.
+  ///
+  /// Defaults to `false`, matching `@tinyrack/ui`. Highlighting on open makes
+  /// Enter commit an option the user never chose, and it shows a selection that
+  /// has not been made.
   final bool autoHighlight;
 
   /// Renders a clear button once the field holds a query or a selection.
@@ -334,7 +339,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     this.items = const [],
     this.optionsBuilder,
     this.appearance = TRFieldAppearance.solid,
-    this.autoHighlight = true,
+    this.autoHighlight = false,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
     this.controller,
@@ -361,7 +366,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     this.items = const [],
     this.optionsBuilder,
     this.appearance = TRFieldAppearance.solid,
-    this.autoHighlight = true,
+    this.autoHighlight = false,
     this.clearable = false,
     this.clearSemanticLabel = 'Clear',
     this.controller,
@@ -393,6 +398,11 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
   final TRFieldAppearance appearance;
 
   /// Arms the first option so Enter commits it without an arrow key first.
+  /// Whether opening the popup highlights the first option.
+  ///
+  /// Defaults to `false`, matching `@tinyrack/ui`. Highlighting on open makes
+  /// Enter commit an option the user never chose, and it shows a selection that
+  /// has not been made.
   final bool autoHighlight;
 
   /// Renders a clear button once the field holds a query or any selection.
@@ -573,6 +583,12 @@ class _TRComboboxInput<T extends Object> extends StatefulWidget {
   final TRFieldAppearance appearance;
   final TextEditingController controller;
   final FocusNode focusNode;
+
+  /// Whether opening the popup highlights the first option.
+  ///
+  /// Defaults to `false`, matching `@tinyrack/ui`. Highlighting on open makes
+  /// Enter commit an option the user never chose, and it shows a selection that
+  /// has not been made.
   final bool autoHighlight;
   final String clearSemanticLabel;
   final bool enabled;
@@ -883,7 +899,7 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
     required List<TRComboboxItem<T>> items,
     TRComboboxOptionsBuilder<T>? optionsBuilder,
     TRFieldAppearance appearance = TRFieldAppearance.solid,
-    bool autoHighlight = true,
+    bool autoHighlight = false,
     bool clearable = false,
     String clearSemanticLabel = 'Clear',
     super.initialValue,
@@ -932,7 +948,7 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
     required List<TRComboboxItem<T>> items,
     TRComboboxOptionsBuilder<T>? optionsBuilder,
     TRFieldAppearance appearance = TRFieldAppearance.solid,
-    bool autoHighlight = true,
+    bool autoHighlight = false,
     bool clearable = false,
     String clearSemanticLabel = 'Clear',
     List<T> initialValue = const [],

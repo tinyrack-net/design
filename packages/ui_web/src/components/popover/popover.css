@@ -56,10 +56,21 @@
     transform-origin: left center;
   }
 
-  .tr-layer:focus-visible,
+  /* Only controls inside a layer draw a ring. The layer itself takes focus to
+     host keyboard navigation, not because it is operable, and outlining the
+     whole popup on open reads as an error state rather than a position. A menu
+     shows position with the row background instead -- see the note on
+     `.tr-menu-item` in menu.css -- and `TRLayer` in Flutter paints nothing here
+     either. Popover and select already behaved this way; menu and menubar were
+     the only surfaces that outlined their container, and only because this
+     selector caught it. */
   .tr-layer :focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: var(--tinyrack-focus-offset);
+  }
+
+  .tr-layer:focus-visible {
+    outline: none;
   }
 
   @starting-style {
@@ -73,5 +84,11 @@
     .tr-layer {
       transition: none;
     }
+  }
+  /* A text field nested here matches `:focus-visible` on a plain mouse click,
+     so pointer focus drops the inherited ring. Buttons and links are
+     unaffected: the browser already excludes them on click. */
+  html[data-tr-focus-modality="pointer"] .tr-layer :focus-visible {
+    outline: none;
   }
 }

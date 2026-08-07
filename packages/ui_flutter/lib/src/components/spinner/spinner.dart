@@ -67,7 +67,7 @@ class _TRSpinnerState extends State<TRSpinner>
     final size = switch (widget.uiSize) {
       TRUiSize.sm => TRGeneratedSpinnerMetrics.sizeSm,
       TRUiSize.md => TRGeneratedSpinnerMetrics.sizeMd,
-      TRUiSize.lg => TRGeneratedSpinnerMetrics.sizeMd,
+      TRUiSize.lg => TRGeneratedSpinnerMetrics.sizeLg,
     };
     final colors = context.tinyrackTheme;
     final color = switch (widget.variant) {

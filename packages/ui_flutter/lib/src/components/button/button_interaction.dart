@@ -33,22 +33,20 @@ class _TRButtonInteractionFrame extends StatefulWidget {
       _TRButtonInteractionFrameState();
 }
 
-class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
+class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   FocusNode? _internalFocusNode;
   late final FocusNode _materialFocusNode;
   late final WidgetStatesController _statesController;
   bool _keyboardVisualPressed = false;
   bool _pointerDown = false;
-  bool _pointerFocused = false;
   bool _syncingDisabled = false;
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_internalFocusNode ??= FocusNode());
 
-  bool get _showRing =>
-      _focusNode.hasFocus &&
-      !_pointerFocused &&
-      FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+  bool _showRing(BuildContext context) =>
+      resolveFocusVisible(context, hasFocus: _focusNode.hasFocus);
 
   @override
   void initState() {
@@ -59,7 +57,7 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
     _materialFocusNode = FocusNode(canRequestFocus: false, skipTraversal: true);
     _focusNode.addListener(_handleFocusChange);
     _statesController.addListener(_handleStatesChange);
-    FocusManager.instance.addHighlightModeListener(_handleHighlightModeChange);
+    initFocusSource();
   }
 
   @override
@@ -88,24 +86,17 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
       ..removeListener(_handleStatesChange)
       ..dispose();
     _materialFocusNode.dispose();
-    FocusManager.instance.removeHighlightModeListener(
-      _handleHighlightModeChange,
-    );
+    disposeFocusSource();
     _internalFocusNode?.dispose();
     super.dispose();
   }
 
   void _handleFocusChange() {
-    if (!_focusNode.hasFocus) _pointerFocused = false;
     if (mounted) setState(() {});
   }
 
   void _handleStatesChange() {
     if (mounted && !_syncingDisabled) setState(() {});
-  }
-
-  void _handleHighlightModeChange(FocusHighlightMode _) {
-    _handleFocusChange();
   }
 
   void _handleNativeActivate() {
@@ -131,15 +122,24 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
 
   @override
   Widget build(BuildContext context) {
+    final forced = forcedStates(context);
     final statePressed =
         !widget.disabled &&
         _statesController.value.contains(WidgetState.pressed);
-    final pointerPressed = statePressed && _pointerDown;
-    final keyboardPressed = _keyboardVisualPressed;
+    // The declared press is folded in at the read, never written into
+    // `_pointerDown`: that flag has exactly one writer, the real pointer
+    // listener below, and a second one would leave the button stuck down once
+    // the declaration went away. The disabled gate is explicit so a declared
+    // press on a disabled button cannot paint one.
+    final pointerPressed =
+        !widget.disabled && (forced.pressed || (statePressed && _pointerDown));
+    final keyboardPressed =
+        !widget.disabled && (forced.keyboardPressed || _keyboardVisualPressed);
     final pressed = keyboardPressed || pointerPressed;
     final hovered =
         !widget.disabled &&
-        _statesController.value.contains(WidgetState.hovered);
+        (forced.hovered ||
+            _statesController.value.contains(WidgetState.hovered));
     final background = widget.fill(hovered: hovered, pressed: pressed);
     return Focus(
       autofocus: widget.autofocus,
@@ -150,7 +150,6 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
         onPointerDown: widget.disabled
             ? null
             : (_) {
-                _pointerFocused = true;
                 _focusNode.requestFocus();
                 setState(() => _pointerDown = true);
               },
@@ -182,7 +181,7 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame> {
                 child: CustomPaint(
                   foregroundPainter: _TRFocusRingPainter(
                     color: widget.color,
-                    visible: _showRing,
+                    visible: _showRing(context),
                   ),
                   child: widget.builder(
                     _materialFocusNode,

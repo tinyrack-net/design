@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/focus_source.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -152,16 +153,19 @@ class _TRMenuState extends State<TRMenu> {
           borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
         ),
       ),
-      side: WidgetStateProperty.resolveWith(
-        (states) => BorderSide(
-          color: states.contains(WidgetState.focused)
-              ? colors.focus
-              : Colors.transparent,
-          width: states.contains(WidgetState.focused)
+      side: WidgetStateProperty.resolveWith((states) {
+        // Material focuses rows on hover, and a menu opened with the mouse
+        // focuses its trigger, so raw focus would emphasise on pointer input.
+        final focused =
+            states.contains(WidgetState.focused) &&
+            TRFocusSource.instance.isKeyboardFocus;
+        return BorderSide(
+          color: focused ? colors.focus : Colors.transparent,
+          width: focused
               ? TRGeneratedBorders.focusWidth
               : TRGeneratedBorders.defaultWidth,
-        ),
-      ),
+        );
+      }),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: WidgetStatePropertyAll(
         TextStyle(

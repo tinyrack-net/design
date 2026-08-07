@@ -1,3 +1,5 @@
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -390,8 +392,21 @@ class _TRScalarSliderControl extends StatefulWidget {
   State<_TRScalarSliderControl> createState() => _TRScalarSliderControlState();
 }
 
-class _TRScalarSliderControlState extends State<_TRScalarSliderControl> {
+class _TRScalarSliderControlState extends State<_TRScalarSliderControl>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   bool _focused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
+  void dispose() {
+    disposeFocusSource();
+    super.dispose();
+  }
 
   double _valueFor(Offset position, Size size) {
     final raw = widget.vertical
@@ -498,7 +513,7 @@ class _TRScalarSliderControlState extends State<_TRScalarSliderControl> {
                   painter: _TRSliderPainter(
                     active: widget.invalid ? colors.danger : colors.primary,
                     inactive: colors.surfaceMuted,
-                    focused: _focused,
+                    focused: resolveFocusVisible(context, hasFocus: _focused),
                     focus: colors.focus,
                     ratios: [ratio],
                     surface: colors.surface,
@@ -544,8 +559,22 @@ class _TRRangeSliderControl extends StatefulWidget {
   State<_TRRangeSliderControl> createState() => _TRRangeSliderControlState();
 }
 
-class _TRRangeSliderControlState extends State<_TRRangeSliderControl> {
+class _TRRangeSliderControlState extends State<_TRRangeSliderControl>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   bool _focused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
+  void dispose() {
+    disposeFocusSource();
+    super.dispose();
+  }
+
   bool _movingStart = true;
 
   double _valueFor(Offset position, Size size) {
@@ -654,7 +683,7 @@ class _TRRangeSliderControlState extends State<_TRRangeSliderControl> {
                   painter: _TRSliderPainter(
                     active: widget.invalid ? colors.danger : colors.primary,
                     inactive: colors.surfaceMuted,
-                    focused: _focused,
+                    focused: resolveFocusVisible(context, hasFocus: _focused),
                     focus: colors.focus,
                     ratios: [
                       (widget.values.start - widget.min) / extent,

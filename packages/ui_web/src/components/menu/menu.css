@@ -85,10 +85,10 @@
   }
 
   .tr-menu-item {
-    --_tr-menu-item-min-height: calc(
-      var(--tinyrack-control-height-sm) +
-      var(--tinyrack-space-xs)
-    );
+    /* One tightened layer-row height across both platforms: the Flutter
+       menuItemHeight and optionItemHeight tokens resolve to control-height-sm,
+       so the web row drops the extra space-xs that made it a row taller. */
+    --_tr-menu-item-min-height: var(--tinyrack-control-height-sm);
     box-sizing: border-box;
     display: flex;
     height: var(--tr-menu-item-min-height, var(--_tr-menu-item-min-height));
@@ -114,7 +114,11 @@
     background: var(--tinyrack-surface-hover);
   }
 
-  .tr-menu-item:is(:focus-visible, [data-highlighted]) {
+  /* The `.tr-layer :focus-visible` ring in popover.css has the same specificity
+     and loads later, so a single class here lost to it and menu rows drew a ring
+     the design never asked for. Menu rows show their position with the
+     background instead, which is what the Flutter rows do. */
+  .tr-menu-content .tr-menu-item:is(:focus-visible, [data-highlighted]) {
     background: var(--tinyrack-surface-hover);
     outline: none;
   }
@@ -155,7 +159,9 @@
     line-height: var(--tinyrack-leading-md);
   }
 
-  .tr-menu-separator {
+  /* `.tr-separator` resets the margin, and a single class cannot outrank it,
+     so the breathing room declared here never reached the rendered rule. */
+  .tr-separator.tr-menu-separator {
     height: var(--tinyrack-border-width-default);
     margin: var(--tinyrack-space-xs) calc(var(--tinyrack-space-xs) * -1);
     border: 0;

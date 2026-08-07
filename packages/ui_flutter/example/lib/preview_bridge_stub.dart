@@ -5,6 +5,8 @@ final class PreviewBridge {
 
   void dispose() {}
 
+  void syncPageBackground(String cssColor) {}
+
   void send(
     String type,
     String component, [

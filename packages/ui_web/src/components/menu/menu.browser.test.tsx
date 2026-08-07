@@ -207,9 +207,9 @@ test('keeps the canonical control and popup geometry independent of cascade orde
   expect(getComputedStyle(label as HTMLElement).display).toBe('block');
   expect(getComputedStyle(label as HTMLElement).height).toBe('30px');
   expect(label?.offsetHeight).toBe(30);
-  expect(Array.from(items, (item) => item.offsetHeight)).toEqual([32, 32]);
-  // 104 = group label 30 + two sm rows at 32 + surface padding 8 + border 2.
-  expect(popup?.offsetHeight).toBe(104);
+  expect(Array.from(items, (item) => item.offsetHeight)).toEqual([28, 28]);
+  // 96 = group label 30 + two tightened rows at 28 + surface padding 8 + border 2.
+  expect(popup?.offsetHeight).toBe(96);
 });
 
 test('12-13 keeps modal backdrops behind the menu and accepts pointer commands', async () => {

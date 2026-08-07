@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 import '../../internal/layer.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
@@ -101,7 +103,8 @@ class TRSelect<T> extends StatefulWidget {
   State<TRSelect<T>> createState() => _TRSelectState<T>();
 }
 
-class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
+class _TRSelectState<T> extends State<TRSelect<T>>
+    with RestorationMixin, TRFocusSourceMixin, TRForcedStatesMixin {
   late T? _uncontrolledValue = widget.defaultValue;
   FocusNode? _internalFocusNode;
   late final MenuController _internalMenuController;
@@ -128,6 +131,7 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
   @override
   void initState() {
     super.initState();
+    initFocusSource();
     _internalMenuController = MenuController();
     _restoredLabel = RestorableStringN(_labelFor(_selectedValue));
     _syncItemFocusNodes();
@@ -154,6 +158,7 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
 
   @override
   void dispose() {
+    disposeFocusSource();
     _typeaheadTimer?.cancel();
     _restoredLabel.dispose();
     for (final focusNode in _itemFocusNodes) {
@@ -327,11 +332,14 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
     ButtonStyle itemStyle(bool selected) => ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
       backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (selected) return colors.surfaceSelected;
+        // Highlight before selection, matching the web and TRLayerStyles.option:
+        // the check indicator says which row is selected, the background says
+        // which row the keyboard or pointer is on.
         if (states.contains(WidgetState.focused) ||
             states.contains(WidgetState.hovered)) {
           return colors.surfaceHover;
         }
+        if (selected) return colors.surfaceSelected;
         return Colors.transparent;
       }),
       foregroundColor: WidgetStateProperty.resolveWith(
@@ -378,7 +386,13 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
     // Resolved from the same states for both the fill and the border so the
     // two never disagree about the trigger's appearance.
     TRFieldChrome triggerChrome(Set<WidgetState> states) {
-      final focused = states.contains(WidgetState.focused);
+      // Closing the popup restores focus to the trigger unconditionally, so
+      // raw focus ownership would light the trigger up after a mouse-driven
+      // round trip. Only keyboard focus paints emphasis.
+      final focused = resolveFocusVisible(
+        context,
+        hasFocus: states.contains(WidgetState.focused),
+      );
       final hovered = states.contains(WidgetState.hovered);
       final error = widget.errorText != null;
       return resolveFieldChrome(
@@ -413,6 +427,11 @@ class _TRSelectState<T> extends State<TRSelect<T>> with RestorationMixin {
       backgroundColor: WidgetStateProperty.resolveWith(
         (states) => triggerChrome(states).fill,
       ),
+      // Material paints its own focus and hover overlay on top of the
+      // background. The chrome above already answers both, and the web trigger
+      // has no focus fill at all, so the overlay is turned off rather than
+      // left to tint the trigger after a mouse round trip.
+      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       foregroundColor: WidgetStatePropertyAll(
         widget.enabled ? colors.text : colors.textMuted,
       ),

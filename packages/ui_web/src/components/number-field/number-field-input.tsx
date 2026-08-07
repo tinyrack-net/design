@@ -8,4 +8,5 @@ export type TRNumberFieldInputProps = ComponentProps<typeof BaseNumberField.Inpu
 export const TRNumberFieldInput = createComponentPart(
   BaseNumberField.Input,
   'tr-number-field-input',
+  { tracksFocusModality: true },
 );

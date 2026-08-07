@@ -8,4 +8,5 @@ export type TRToolbarInputProps = ComponentProps<typeof BaseToolbar.Input>;
 export const TRToolbarInput = createComponentPart(
   BaseToolbar.Input,
   'tr-toolbar-input',
+  { tracksFocusModality: true },
 );

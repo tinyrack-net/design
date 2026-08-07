@@ -35,7 +35,7 @@ type DesignTokens = {
     alert: { cjkDescriptionLineHeight: number };
     card: { blockInsetCorrection: string };
     code: { inlineLineHeight: number };
-    normalLine: { md: string; sm: string };
+    normalLine: { lg: string; md: string; sm: string };
     fontFamily: {
       body: string;
       fallbackJp: string;
@@ -588,6 +588,10 @@ function dartOutput() {
     `  static const double normalLineMd = ${dartNumber(
       flutterMetrics.normalLine.md,
       'flutterRenderingMetrics.normalLine.md',
+    )};`,
+    `  static const double normalLineLg = ${dartNumber(
+      flutterMetrics.normalLine.lg,
+      'flutterRenderingMetrics.normalLine.lg',
     )};`,
     `  static const double textFieldPaddingInlineCorrection = ${dartNumber(
       flutterMetrics.textField.paddingInlineCorrection,

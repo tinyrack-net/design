@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -39,7 +41,8 @@ class TRRadio extends StatefulWidget {
   State<TRRadio> createState() => _TRRadioState();
 }
 
-class _TRRadioState extends State<TRRadio> {
+class _TRRadioState extends State<TRRadio>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   FocusNode? _internalFocusNode;
   bool _hovered = false;
   bool _focused = false;
@@ -65,7 +68,14 @@ class _TRRadioState extends State<TRRadio> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
   void dispose() {
+    disposeFocusSource();
     _internalFocusNode?.dispose();
     super.dispose();
   }
@@ -94,15 +104,16 @@ class _TRRadioState extends State<TRRadio> {
       scope?.onSelect(widget.value);
     }
 
-    final showFocusRing =
-        _focused &&
-        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
     final borderColor = widget.invalid
         ? colors.dangerBorder
         : checked
-        ? (_hovered && interactive ? generated.primaryHover : colors.primary)
+        ? (resolveHovered(context, hovered: _hovered) && interactive
+              ? generated.primaryHover
+              : colors.primary)
         : generated.controlBorder;
-    final background = checked || !interactive || !_hovered
+    final background =
+        checked || !interactive || !resolveHovered(context, hovered: _hovered)
         ? colors.surface
         : colors.surfaceHover;
     final size = switch (widget.uiSize) {

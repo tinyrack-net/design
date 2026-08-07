@@ -8,4 +8,5 @@ export type TROTPFieldInputProps = ComponentProps<typeof BaseOTPField.Input>;
 export const TROTPFieldInput = createComponentPart(
   BaseOTPField.Input,
   'tr-otp-field-digit',
+  { tracksFocusModality: true },
 );

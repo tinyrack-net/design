@@ -21,6 +21,7 @@
     "test:visual-parity:benchmark": "node scripts/benchmark-visual-parity.ts",
     "test:visual-parity:smoke": "pnpm build:visual-parity && cross-env TINYRACK_VISUAL_PARITY=smoke vitest run --project e2e tests/browser-visual-parity.test.ts",
     "test:visual-parity:quick": "pnpm build:visual-parity && cross-env TINYRACK_VISUAL_PARITY=quick vitest run --project e2e tests/browser-visual-parity.test.ts",
+    "test:visual-parity:ci": "pnpm build:visual-parity && pnpm test:visual-parity:endpoint",
     "deploy": "wrangler deploy",
     "deploy:dry-run": "wrangler deploy --dry-run"
   },

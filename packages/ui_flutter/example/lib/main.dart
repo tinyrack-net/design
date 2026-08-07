@@ -13,6 +13,10 @@ import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 // ignore: implementation_imports
 import 'package:tinyrack_ui/src/internal/layer.dart';
 // ignore: implementation_imports
+import 'package:tinyrack_ui/src/internal/focus_source.dart';
+// ignore: implementation_imports
+import 'package:tinyrack_ui/src/internal/forced_states.dart';
+// ignore: implementation_imports
 import 'package:tinyrack_ui/src/internal/motion_boundary.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
@@ -73,6 +77,32 @@ class PreviewApp extends StatefulWidget {
   State<PreviewApp> createState() => _PreviewAppState();
 }
 
+/// Maps a declared parity state onto the states a control paints.
+///
+/// A closed enum rather than free booleans: an unknown name must fail loudly,
+/// and a boolean payload would let a scenario ask for a press without a hover,
+/// which is not a state either platform can be in.
+const _forcedStateSets = <String, TRForcedStateSet>{
+  'default': TRForcedStateSet.none,
+  'hover': TRForcedStateSet(hovered: true),
+  'pressed': TRForcedStateSet(hovered: true, pressed: true),
+  'focused': TRForcedStateSet(focused: true, focusVisible: true),
+  'focused-hover': TRForcedStateSet(
+    hovered: true,
+    focused: true,
+    focusVisible: true,
+  ),
+  'keyboard-pressed': TRForcedStateSet(
+    focused: true,
+    focusVisible: true,
+    keyboardPressed: true,
+  ),
+  // Focus without emphasis. `focusVisible` stays false while `declaresFocus`
+  // is true, so the resolver answers false without consulting the sampled
+  // modality at all.
+  'pointer-focused': TRForcedStateSet(focused: true),
+};
+
 class _PreviewAppState extends State<PreviewApp> {
   late final PreviewBridge _bridge;
   late final TextEditingController _textFieldController;
@@ -86,6 +116,8 @@ class _PreviewAppState extends State<PreviewApp> {
   late ThemeMode _themeMode;
   bool _focused = false;
   bool _focusVisible = false;
+  TRForcedStateSet _forcedStates = TRForcedStateSet.none;
+  String _declaredState = 'default';
   bool _hovered = false;
   bool _pressed = false;
   int _activations = 0;
@@ -127,6 +159,7 @@ class _PreviewAppState extends State<PreviewApp> {
             'dialog' => TRLayerBoundaryKind.dialog,
             'drawer' => TRLayerBoundaryKind.drawer,
             'menu' => TRLayerBoundaryKind.menu,
+            'menubar' => TRLayerBoundaryKind.menubar,
             'navigation-menu' => TRLayerBoundaryKind.navigationMenu,
             'popover' => TRLayerBoundaryKind.popover,
             'preview-card' => TRLayerBoundaryKind.previewCard,
@@ -213,14 +246,15 @@ class _PreviewAppState extends State<PreviewApp> {
       },
       'baseline': baseline,
       'devicePixelRatio': View.of(context).devicePixelRatio,
+      'state': _declaredState,
       'interaction': {
         'activations': _activations,
         'enabled': _args['disabled'] != true && _args['loading'] != true,
-        'focusVisible':
-            _focused &&
-            (_component == 'text-field' ||
-                _component == 'textarea' ||
-                _focusVisible),
+        // Text fields used to be exempted here, transcribing the DOM rule that
+        // `:focus-visible` always matches them. Both platforms now gate focus
+        // emphasis on the input modality instead, so the exemption would report
+        // a ring that neither of them paints.
+        'focusVisible': _focused && _focusVisible,
         'focused': _focused,
         'hovered': _hovered,
         'invalid': _args['errorText'] != null,
@@ -587,6 +621,12 @@ class _PreviewAppState extends State<PreviewApp> {
       _sendSchemaError('renderScenario');
       return;
     }
+    final declaredState = payload['state'] ?? 'default';
+    if (declaredState is! String ||
+        !_forcedStateSets.containsKey(declaredState)) {
+      _sendSchemaError('renderScenario');
+      return;
+    }
     final theme = payload['theme']! as String;
     final nextArgs = _validateArgs(
       _component,
@@ -615,13 +655,31 @@ class _PreviewAppState extends State<PreviewApp> {
       final value = nextArgs['value'];
       if (value is String) _otpFieldController.value = value;
     }
+    // The keyboard latch has to be cleared with the rest of the interaction
+    // state. Leaving it set let one keyboard scenario mark every later scenario
+    // on the same page as keyboard-focused until a pointer press cleared it.
+    FocusManager.instance.primaryFocus?.unfocus();
+    final forced = _forcedStateSets[declaredState]!;
+    // An open layer focuses a real node inside its popup, and that node decides
+    // its own emphasis from the sampled modality. Pin the modality to what the
+    // scenario declared so the decision belongs to the scenario rather than to
+    // whatever the previous one left behind.
+    // ignore: invalid_use_of_visible_for_testing_member
+    TRFocusSource.instance.debugSetKeyboardModality(
+      forced.declaresFocus ? forced.focusVisible : null,
+    );
     setState(() {
       _activations = 0;
       _args = nextArgs;
       _contentRevision += 1;
-      _focused = false;
-      _hovered = false;
-      _pressed = false;
+      _declaredState = declaredState;
+      _forcedStates = forced;
+      // Seeded from the declaration, not from the wrapper listeners: a declared
+      // scenario receives no pointer or key events for those to observe.
+      _focused = forced.declaresFocus;
+      _focusVisible = forced.focusVisible;
+      _hovered = forced.hovered;
+      _pressed = forced.pressed;
       _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
     });
     _bridge.send('scenarioRendered', _component, {
@@ -674,40 +732,43 @@ class _PreviewAppState extends State<PreviewApp> {
     if (exampleBuilder != null) {
       return Builder(builder: (context) => exampleBuilder(context, _locale));
     }
-    return MouseRegion(
-      onEnter: (_) => _updateInteraction(hovered: true),
-      onExit: (_) => _updateInteraction(hovered: false),
-      child: Listener(
-        onPointerCancel: (_) => _updateInteraction(pressed: false),
-        onPointerDown: (_) {
-          _focusVisible = false;
-          _updateInteraction(pressed: true);
-        },
-        onPointerUp: (_) => _updateInteraction(pressed: false),
-        child: Focus(
-          canRequestFocus: false,
-          onFocusChange: (focused) => _updateInteraction(focused: focused),
-          child: PreviewComponent(
-            key: ValueKey('$_component-$_contentRevision'),
-            args: _args,
-            component: _component,
-            contentRevision: _contentRevision,
-            locale: _locale.languageCode,
-            measureKey: _previewKey,
-            parityMode: widget.parityMode,
-            partKeys: _partKeys,
-            textFieldController: _textFieldController,
-            otpFieldController: _otpFieldController,
-            onStateChanged: (payload) {
-              if (payload['pressed'] == true) _activations += 1;
-              _bridge.send('stateChanged', _component, {
-                ...payload,
-                'generation': _generation,
-              });
-              WidgetsBinding.instance.addPostFrameCallback(
-                (_) => _sendMetrics(),
-              );
-            },
+    return TRForcedStates(
+      states: _forcedStates,
+      child: MouseRegion(
+        onEnter: (_) => _updateInteraction(hovered: true),
+        onExit: (_) => _updateInteraction(hovered: false),
+        child: Listener(
+          onPointerCancel: (_) => _updateInteraction(pressed: false),
+          onPointerDown: (_) {
+            _focusVisible = false;
+            _updateInteraction(pressed: true);
+          },
+          onPointerUp: (_) => _updateInteraction(pressed: false),
+          child: Focus(
+            canRequestFocus: false,
+            onFocusChange: (focused) => _updateInteraction(focused: focused),
+            child: PreviewComponent(
+              key: ValueKey('$_component-$_contentRevision'),
+              args: _args,
+              component: _component,
+              contentRevision: _contentRevision,
+              locale: _locale.languageCode,
+              measureKey: _previewKey,
+              parityMode: widget.parityMode,
+              partKeys: _partKeys,
+              textFieldController: _textFieldController,
+              otpFieldController: _otpFieldController,
+              onStateChanged: (payload) {
+                if (payload['pressed'] == true) _activations += 1;
+                _bridge.send('stateChanged', _component, {
+                  ...payload,
+                  'generation': _generation,
+                });
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) => _sendMetrics(),
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -729,6 +790,14 @@ class _PreviewAppState extends State<PreviewApp> {
         ? null
         : previewExampleScenarios[widget.example];
     final preview = _previewContent(exampleBuilder);
+    _bridge.syncPageBackground(
+      _cssColor(
+        (_themeMode == ThemeMode.dark
+                ? TRGeneratedColors.dark
+                : TRGeneratedColors.light)
+            .surface,
+      ),
+    );
     return MaterialApp(
       navigatorKey: _navigatorKey,
       builder: (context, child) => MediaQuery(
@@ -934,6 +1003,9 @@ List<String> _supportedArgs(String component) => switch (component) {
   'number-field' => ['appearance'],
   _ => const <String>[],
 };
+
+String _cssColor(Color color) =>
+    '#${(color.toARGB32() & 0xffffff).toRadixString(16).padLeft(6, '0')}';
 
 Map<String, Object?>? _validateArgs(
   String component,
@@ -1143,7 +1215,7 @@ Map<String, Object?>? _validateArgs(
               'bold',
               'strong',
             }.contains(value),
-      'uiSize' => value is String && const {'md', 'lg'}.contains(value),
+      'uiSize' => value is String && const {'sm', 'md', 'lg'}.contains(value),
       'length' when component == 'otp-field' =>
         value is num && value >= 3 && value <= 8,
       _ => false,
@@ -3517,7 +3589,7 @@ class _PreviewComboboxState extends State<_PreviewCombobox> {
       child: TRCombobox<String>(
         appearance: _fieldAppearance(widget.args),
         controller: _controller,
-        autoHighlight: args['autoHighlight'] != false,
+        autoHighlight: args['autoHighlight'] == true,
         clearable: args['clearable'] == true,
         enabled: args['disabled'] != true,
         filterMode: args['filterMode'] is String

@@ -97,7 +97,7 @@ void main() {
       );
     });
 
-    testWidgets('TRDrawer insets its slots by TRSpacing.medium', (
+    testWidgets('TRDrawer insets a bottom sheet past its border', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -111,7 +111,32 @@ void main() {
 
       expect(
         _paddingAround(tester, _surfaceColumn(TRDrawer)),
+        const EdgeInsets.all(TRSpacing.medium + TRControlMetrics.borderWidth),
+        reason:
+            'the Material shape border paints over the box without reserving '
+            'room, and the web panel is box-sizing: border-box',
+      );
+    });
+
+    testWidgets('TRDrawer insets a side drawer by the padding alone', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRDrawer(
+            placement: TRDrawerPlacement.start,
+            title: const Text('Choose a model'),
+            content: const SizedBox(key: Key('body')),
+          ),
+        ),
+      );
+
+      expect(
+        _paddingAround(tester, _surfaceColumn(TRDrawer)),
         const EdgeInsets.all(TRSpacing.medium),
+        reason:
+            'a side drawer has no border to inset past -- `.tr-drawer-popup` '
+            'drops it for the left and right swipe directions',
       );
     });
   });

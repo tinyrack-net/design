@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -30,7 +32,8 @@ class TRLink extends StatefulWidget {
   State<TRLink> createState() => _TRLinkState();
 }
 
-class _TRLinkState extends State<TRLink> {
+class _TRLinkState extends State<TRLink>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   FocusNode? _internalFocusNode;
   bool _hovered = false;
   bool _focused = false;
@@ -39,7 +42,14 @@ class _TRLinkState extends State<TRLink> {
       widget.focusNode ?? (_internalFocusNode ??= FocusNode());
 
   @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
   void dispose() {
+    disposeFocusSource();
     _internalFocusNode?.dispose();
     super.dispose();
   }
@@ -56,16 +66,14 @@ class _TRLinkState extends State<TRLink> {
     final underlineVisible = switch (widget.underline) {
       TRLinkUnderline.always => true,
       TRLinkUnderline.none => false,
-      TRLinkUnderline.hover => _hovered,
+      TRLinkUnderline.hover => resolveHovered(context, hovered: _hovered),
     };
     final opacity = disabled
         ? TRGeneratedOpacity.disabled
-        : _hovered
+        : resolveHovered(context, hovered: _hovered)
         ? TRGeneratedOpacity.hover
         : 1.0;
-    final showFocusRing =
-        _focused &&
-        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;

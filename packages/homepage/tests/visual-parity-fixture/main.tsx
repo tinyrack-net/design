@@ -1001,9 +1001,9 @@ function Fixture() {
               <TRDrawer.Viewport>
                 <TRDrawer.Popup
                   style={{
-                    height: ['down', 'up'].includes(arg('swipeDirection', 'down'))
-                      ? 190
-                      : undefined,
+                    // Every direction fits its content now that the Flutter
+                    // drawer defaults to MainAxisSize.min; forcing a height on
+                    // the horizontal sheets would make only the web taller.
                     outline: 'none',
                   }}
                 >
@@ -1058,7 +1058,8 @@ function Fixture() {
             <TRMenu.Root open={flag('open')}>
               <TRMenu.Trigger>File</TRMenu.Trigger>
               <TRMenu.Portal>
-                <TRMenu.Positioner>
+                {/* Flutter's menubar offsets its popup by space-xs (4px). */}
+                <TRMenu.Positioner sideOffset={4}>
                   <TRMenu.Popup>
                     <TRMenu.Item>New rack</TRMenu.Item>
                     <TRMenu.Item>Open</TRMenu.Item>
