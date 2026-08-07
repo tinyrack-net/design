@@ -3112,9 +3112,14 @@ class _PreviewInlineSuggestionsState extends State<_PreviewInlineSuggestions> {
         ? TRInlineSuggestionsStatus.values.byName(args['status']! as String)
         : TRInlineSuggestionsStatus.ready;
     final descriptions = switch (widget.locale) {
-      'ko' => <String>['앱 진입점', '컴포저 위젯'],
-      'ja' => <String>['アプリのエントリポイント', 'コンポーザーウィジェット'],
-      _ => <String>['Application entry point', 'Composer widget'],
+      'ko' => <String>['앱 진입점', '컴포저 위젯', '라우터 설정', '테마 설정'],
+      'ja' => <String>['アプリのエントリポイント', 'コンポーザーウィジェット', 'ルーター設定', 'テーマ設定'],
+      _ => <String>[
+        'Application entry point',
+        'Composer widget',
+        'Router configuration',
+        'Theme configuration',
+      ],
     };
     return SizedBox(
       width: 320,
@@ -3122,6 +3127,7 @@ class _PreviewInlineSuggestionsState extends State<_PreviewInlineSuggestions> {
         open: args['open'] == true,
         status: status,
         controller: _suggestions,
+        maxVisibleItems: 2,
         emptyLabel: switch (widget.locale) {
           'ko' => '일치하는 항목 없음',
           'ja' => '一致する項目がありません',
@@ -3148,10 +3154,22 @@ class _PreviewInlineSuggestionsState extends State<_PreviewInlineSuggestions> {
                 TRInlineSuggestionItem<String>(
                   value: 'lib/composer.dart',
                   label: 'lib/composer.dart',
-                  description: descriptions.last,
+                  description: descriptions[1],
                   hint: '<path>',
                   tag: 'lib',
                   enabled: !disabledOption,
+                ),
+                TRInlineSuggestionItem<String>(
+                  value: 'lib/router.dart',
+                  label: 'lib/router.dart',
+                  description: descriptions[2],
+                  tag: 'lib',
+                ),
+                TRInlineSuggestionItem<String>(
+                  value: 'lib/theme.dart',
+                  label: 'lib/theme.dart',
+                  description: descriptions[3],
+                  tag: 'lib',
                 ),
               ]
             : const <TRInlineSuggestionItem<String>>[],

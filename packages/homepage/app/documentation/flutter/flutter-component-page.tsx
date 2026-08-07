@@ -538,9 +538,9 @@ const componentData: Record<
       {
         axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
         choices: {
-          en: 'A multiline editor consumes the arrow and enter keys itself, so the host calls `controller.handleKeyEvent` first inside its own handler. Anything the list does not consume comes back as `KeyEventResult.ignored`, which leaves Enter-to-send intact. A held modifier is never consumed, so Shift+Enter and Control+Enter stay with the field.',
-          ko: '여러 줄 편집기는 화살표와 Enter 키를 스스로 소비하므로, 호스트가 자신의 핸들러 안에서 `controller.handleKeyEvent`를 먼저 호출해요. 목록이 쓰지 않은 키는 `KeyEventResult.ignored`로 돌아오기 때문에 Enter로 보내기가 그대로 살아 있어요. 수정자 키를 누른 조합은 절대 가져가지 않아서 Shift+Enter와 Control+Enter는 필드에 남아요.',
-          ja: '複数行エディタは矢印キーと Enter キーを自身で消費するため、ホストは自分のハンドラ内でまず `controller.handleKeyEvent` を呼びます。リストが消費しなかったキーは `KeyEventResult.ignored` として返るので、Enter での送信はそのまま機能します。修飾キーを伴う組み合わせは決して消費しないため、Shift+Enter と Control+Enter はフィールドに残ります。',
+          en: 'A multiline editor consumes the arrow and enter keys itself, so the host calls `controller.handleKeyEvent` first inside its own handler. Keyboard and controller navigation keep the highlighted row in view. Anything the list does not consume comes back as `KeyEventResult.ignored`, which leaves Enter-to-send intact. A held modifier is never consumed, so Shift+Enter and Control+Enter stay with the field.',
+          ko: '여러 줄 편집기는 화살표와 Enter 키를 스스로 소비하므로, 호스트가 자신의 핸들러 안에서 `controller.handleKeyEvent`를 먼저 호출해요. 키보드나 controller로 이동하면 하이라이트된 행이 계속 보이도록 스크롤해요. 목록이 쓰지 않은 키는 `KeyEventResult.ignored`로 돌아오기 때문에 Enter로 보내기가 그대로 살아 있어요. 수정자 키를 누른 조합은 절대 가져가지 않아서 Shift+Enter와 Control+Enter는 필드에 남아요.',
+          ja: '複数行エディタは矢印キーと Enter キーを自身で消費するため、ホストは自分のハンドラ内でまず `controller.handleKeyEvent` を呼びます。キーボードまたは controller で移動すると、ハイライト中の行が表示範囲内に保たれます。リストが消費しなかったキーは `KeyEventResult.ignored` として返るので、Enter での送信はそのまま機能します。修飾キーを伴う組み合わせは決して消費しないため、Shift+Enter と Control+Enter はフィールドに残ります。',
         },
       },
       {

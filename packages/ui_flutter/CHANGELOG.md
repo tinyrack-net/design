@@ -1,3 +1,8 @@
+## 0.37.1
+
+- Keeps the highlighted `TRInlineSuggestions` row visible while keyboard or
+  controller navigation moves through a scrollable suggestion list.
+
 ## 0.37.0
 
 - Adds `TRSplitView`, a controlled horizontal or vertical two-pane layout with
