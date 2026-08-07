@@ -9,8 +9,8 @@ const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
 // The 58-component Flutter preview catalog is complete; the bundle now grows
 // with the docs example builders each component page adds, at roughly 8 KB per
 // documented component. The previous 3_350_000 ceiling left 7 KB of headroom,
-// so a single parity pass overran it. Keep a regression margin wide enough for
-// the remaining pages and tighten it once the pages stop landing.
+// so one catalog expansion overran it. Keep a regression margin wide enough
+// for the remaining pages and tighten it once the pages stop landing.
 const maximumMainBytes = 3_450_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;

@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 import '../../internal/layer.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
@@ -104,7 +103,7 @@ class TRSelect<T> extends StatefulWidget {
 }
 
 class _TRSelectState<T> extends State<TRSelect<T>>
-    with RestorationMixin, TRFocusSourceMixin, TRForcedStatesMixin {
+    with RestorationMixin, TRFocusSourceMixin {
   late T? _uncontrolledValue = widget.defaultValue;
   FocusNode? _internalFocusNode;
   late final MenuController _internalMenuController;
@@ -389,8 +388,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       // Closing the popup restores focus to the trigger unconditionally, so
       // raw focus ownership would light the trigger up after a mouse-driven
       // round trip. Only keyboard focus paints emphasis.
-      final focused = resolveFocusVisible(
-        context,
+      final focused = focusVisible(
         hasFocus: states.contains(WidgetState.focused),
       );
       final hovered = states.contains(WidgetState.hovered);

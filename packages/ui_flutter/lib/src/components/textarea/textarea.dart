@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -54,8 +53,7 @@ class TRTextarea extends StatefulWidget {
   State<TRTextarea> createState() => _TRTextareaState();
 }
 
-class _TRTextareaState extends State<TRTextarea>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+class _TRTextareaState extends State<TRTextarea> with TRFocusSourceMixin {
   TextEditingController? _internalController;
   FocusNode? _internalFocusNode;
   bool _hovered = false;
@@ -112,7 +110,7 @@ class _TRTextareaState extends State<TRTextarea>
     final interactive = widget.enabled && !widget.readOnly;
     // A field focused by a click paints no emphasis: `resolveFieldChrome` takes
     // the focus-visible state, not raw focus ownership.
-    final focused = resolveFocusVisible(context, hasFocus: _focused);
+    final focused = focusVisible(hasFocus: _focused);
     final chrome = resolveFieldChrome(
       appearance: widget.appearance,
       colors: colors,
@@ -121,7 +119,7 @@ class _TRTextareaState extends State<TRTextarea>
           : colors.surface,
       solidBorderColor: focused
           ? colors.focus
-          : resolveHovered(context, hovered: _hovered) && interactive
+          : _hovered && interactive
           ? generated.borderStrong
           : generated.controlBorder,
       solidBorderWidth: focused
@@ -129,7 +127,7 @@ class _TRTextareaState extends State<TRTextarea>
           : TRGeneratedBorders.defaultWidth,
       enabled: widget.enabled,
       focused: focused,
-      hovered: resolveHovered(context, hovered: _hovered),
+      hovered: _hovered,
       readOnly: widget.readOnly,
     );
     final motionDuration = MediaQuery.disableAnimationsOf(context)

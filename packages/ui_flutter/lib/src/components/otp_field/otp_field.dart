@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 import '../../theme.dart';
 import '../../types.dart';
 
@@ -112,8 +111,7 @@ class TROtpField extends StatefulWidget {
   State<TROtpField> createState() => _TROtpFieldState();
 }
 
-class _TROtpFieldState extends State<TROtpField>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+class _TROtpFieldState extends State<TROtpField> with TRFocusSourceMixin {
   TROtpFieldController? _internalController;
   late final TextEditingController _textController;
   late final FocusNode _focusNode;
@@ -240,7 +238,7 @@ class _TROtpFieldState extends State<TROtpField>
                         // Only keyboard focus lights the active slot: a
                         // click already puts the caret where the user aimed.
                         final active =
-                            resolveFocusVisible(context, hasFocus: _focused) &&
+                            focusVisible(hasFocus: _focused) &&
                             index == activeIndex;
                         final chrome = resolveFieldChrome(
                           appearance: widget.appearance,

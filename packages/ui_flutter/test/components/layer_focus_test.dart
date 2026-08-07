@@ -8,11 +8,7 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 /// Who owns focus while a layer is open, and where it goes when it closes.
 ///
-/// The visual parity suite carried this as a hard-coded component allow-list
-/// (`openLayerOwnsFocus`) purely because its telemetry channel happened to
-/// expose a `focused` flag, and that flag came from a wrapper around the whole
-/// preview -- so trigger focus and popup focus were indistinguishable to it.
-/// Stating the contract here makes the difference visible.
+/// Direct widget coverage distinguishes trigger focus from popup focus.
 Widget _app(Widget child) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(
@@ -80,9 +76,7 @@ void main() {
       // Records today's behaviour rather than the intended one. `TRSelect`
       // focuses the selected row on open and falls back to the trigger when
       // nothing is selected, while Base UI moves focus into the popup on the
-      // web. The parity suite could not see the difference because its
-      // `focused` flag came from a wrapper around the whole preview. Change
-      // this expectation when the two platforms are aligned.
+      // web. Change this expectation if the Flutter focus contract changes.
       expect(_focusIsInsideLayer(), isFalse);
       // The popup contributes buttons of its own, so the trigger is the first.
       final trigger = tester.widget<TextButton>(find.byType(TextButton).first);

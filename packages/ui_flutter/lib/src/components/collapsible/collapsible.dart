@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -51,8 +50,7 @@ class TRCollapsible extends StatefulWidget {
   State<TRCollapsible> createState() => _TRCollapsibleState();
 }
 
-class _TRCollapsibleState extends State<TRCollapsible>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+class _TRCollapsibleState extends State<TRCollapsible> with TRFocusSourceMixin {
   late bool _uncontrolledOpen = widget.defaultOpen;
   bool _focused = false;
   bool _spaceDown = false;
@@ -101,7 +99,7 @@ class _TRCollapsibleState extends State<TRCollapsible>
       widget.onOpenChange?.call(next);
     }
 
-    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
+    final showFocusRing = focusVisible(hasFocus: _focused);
     final disableAnimations = MediaQuery.disableAnimationsOf(context);
     final motionDuration = disableAnimations ? Duration.zero : TRMotion.fast;
     final content = open

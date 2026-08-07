@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -261,7 +260,7 @@ class _TRTreeNavNode<T extends Object> extends StatefulWidget {
 }
 
 class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+    with TRFocusSourceMixin {
   final FocusNode _focusNode = FocusNode();
   bool _focused = false;
   bool _hovered = false;
@@ -305,7 +304,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     final disabled = item.disabled ?? false;
     final leading = group?.leading ?? leaf?.leading;
     final trailing = group?.trailing ?? leaf?.trailing;
-    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
+    final showFocusRing = focusVisible(hasFocus: _focused);
     final colors = context.tinyrackTheme;
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
@@ -351,11 +350,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     }
 
     if (group == null) {
-      final background =
-          !disabled &&
-              (resolveHovered(context, hovered: _hovered) ||
-                  _focused ||
-                  selected)
+      final background = !disabled && (_hovered || _focused || selected)
           ? colors.surfaceHover
           : Colors.transparent;
       return MouseRegion(
@@ -422,13 +417,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
                               ),
                           label: item.label,
                           labelStyle: TRGeneratedTextStyles.bodySm.copyWith(
-                            color:
-                                selected ||
-                                    resolveHovered(
-                                      context,
-                                      hovered: _hovered,
-                                    ) ||
-                                    _focused
+                            color: selected || _hovered || _focused
                                 ? colors.text
                                 : colors.textMuted,
                             fontFamilyFallback:
@@ -449,13 +438,12 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
         ),
       );
     }
-    final groupBackground =
-        !disabled && (resolveHovered(context, hovered: _hovered) || _focused)
+    final groupBackground = !disabled && (_hovered || _focused)
         ? colors.surfaceHover
         : Colors.transparent;
     final groupColor = disabled
         ? colors.textMuted
-        : activeBranch || resolveHovered(context, hovered: _hovered) || _focused
+        : activeBranch || _hovered || _focused
         ? colors.text
         : colors.textMuted;
     final row = MouseRegion(

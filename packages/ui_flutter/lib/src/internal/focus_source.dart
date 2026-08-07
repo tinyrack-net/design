@@ -17,8 +17,7 @@ import 'package:flutter/widgets.dart';
 /// moment focus changes.
 ///
 /// This mirrors what `@tinyrack/ui` publishes on the web as
-/// `data-tr-focus-modality`, and the two have to agree: the visual parity suite
-/// compares the two renderings pixel for pixel.
+/// `data-tr-focus-modality`, while preserving Flutter's own focus behavior.
 class TRFocusSource extends ChangeNotifier {
   TRFocusSource._();
 
@@ -98,20 +97,11 @@ class TRFocusSource extends ChangeNotifier {
       key.keyId,
   };
 
-  /// Pins the modality a test or a preview scenario declares, or restores
-  /// sampling when given null.
+  /// Pins the modality a widget test declares, or restores sampling when given
+  /// null.
   ///
-  /// Sampling answers "how did the user reach this control", which a declared
-  /// render condition already states. Two places need to say it outright: a
-  /// popup that focuses one of its own rows decides that row's emphasis from
-  /// the sampled value, and widget tests share one process and one singleton,
-  /// so without this one test's mouse press decides the next test's ring.
-  ///
-  /// Deliberately not `assert`-guarded. The parity preview is a release web
-  /// build, where asserts are stripped, so a guard would remove the override
-  /// exactly where the suite depends on it. It stays honest instead by being
-  /// unexported from `package:tinyrack_ui/tinyrack_ui.dart` and uncalled from
-  /// `lib/src/components`, both of which are asserted by tests.
+  /// Widget tests share one process and one singleton, so without an explicit
+  /// override one test's mouse press can decide the next test's focus ring.
   @visibleForTesting
   void debugSetKeyboardModality(bool? keyboard) {
     if (_modalityOverride == keyboard) return;

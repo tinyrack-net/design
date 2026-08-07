@@ -19,7 +19,7 @@ updates:
           - patch
     ignore:
       # Base UI ships rendered-semantics changes in minor releases, so its
-      # upgrades are reviewed by hand against the browser and parity suites
+      # upgrades are reviewed by hand against the browser and component suites
       # rather than opened automatically.
       - dependency-name: "@base-ui/react"
         update-types:

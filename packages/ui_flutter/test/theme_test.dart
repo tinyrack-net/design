@@ -838,7 +838,7 @@ void main() {
     expect(find.byType(TRBadge), findsOneWidget);
   });
 
-  testWidgets('card, spinner, icon button, and text expose parity variants', (
+  testWidgets('card, spinner, icon button, and text expose shared variants', (
     tester,
   ) async {
     await tester.pumpWidget(

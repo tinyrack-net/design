@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -32,8 +31,7 @@ class TRLink extends StatefulWidget {
   State<TRLink> createState() => _TRLinkState();
 }
 
-class _TRLinkState extends State<TRLink>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+class _TRLinkState extends State<TRLink> with TRFocusSourceMixin {
   FocusNode? _internalFocusNode;
   bool _hovered = false;
   bool _focused = false;
@@ -66,14 +64,14 @@ class _TRLinkState extends State<TRLink>
     final underlineVisible = switch (widget.underline) {
       TRLinkUnderline.always => true,
       TRLinkUnderline.none => false,
-      TRLinkUnderline.hover => resolveHovered(context, hovered: _hovered),
+      TRLinkUnderline.hover => _hovered,
     };
     final opacity = disabled
         ? TRGeneratedOpacity.disabled
-        : resolveHovered(context, hovered: _hovered)
+        : _hovered
         ? TRGeneratedOpacity.hover
         : 1.0;
-    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
+    final showFocusRing = focusVisible(hasFocus: _focused);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;

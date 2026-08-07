@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -303,8 +302,7 @@ class _TRTabItem extends StatefulWidget {
   State<_TRTabItem> createState() => _TRTabItemState();
 }
 
-class _TRTabItemState extends State<_TRTabItem>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
   bool _hovered = false;
   bool _focused = false;
   bool _spaceDown = false;
@@ -356,7 +354,7 @@ class _TRTabItemState extends State<_TRTabItem>
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
-    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
+    final showFocusRing = focusVisible(hasFocus: _focused);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRGeneratedMotion.fast;
@@ -392,8 +390,7 @@ class _TRTabItemState extends State<_TRTabItem>
                       decoration: BoxDecoration(
                         color: widget.selected
                             ? colors.surface
-                            : resolveHovered(context, hovered: _hovered) &&
-                                  interactive
+                            : _hovered && interactive
                             ? colors.surfaceHover
                             : null,
                         border: Border(
@@ -430,11 +427,7 @@ class _TRTabItemState extends State<_TRTabItem>
                             style: TextStyle(
                               color: widget.selected
                                   ? colors.text
-                                  : resolveHovered(
-                                          context,
-                                          hovered: _hovered,
-                                        ) &&
-                                        interactive
+                                  : _hovered && interactive
                                   ? colors.text
                                   : colors.textMuted,
                               fontFamily: TRGeneratedFontFamilies.body,
@@ -508,8 +501,7 @@ class _TRTabBarItem extends StatefulWidget {
   State<_TRTabBarItem> createState() => _TRTabBarItemState();
 }
 
-class _TRTabBarItemState extends State<_TRTabBarItem>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+class _TRTabBarItemState extends State<_TRTabBarItem> with TRFocusSourceMixin {
   bool _hovered = false;
   bool _focused = false;
   bool _spaceDown = false;
@@ -561,7 +553,7 @@ class _TRTabBarItemState extends State<_TRTabBarItem>
       TRUiSize.md => TRUiSize.sm,
       TRUiSize.lg => TRUiSize.md,
     };
-    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
+    final showFocusRing = focusVisible(hasFocus: _focused);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRGeneratedMotion.fast;
@@ -597,8 +589,7 @@ class _TRTabBarItemState extends State<_TRTabBarItem>
                       decoration: BoxDecoration(
                         color: widget.selected
                             ? colors.surfaceSelected
-                            : resolveHovered(context, hovered: _hovered) &&
-                                  interactive
+                            : _hovered && interactive
                             ? colors.surfaceHover
                             : null,
                         borderRadius: const BorderRadius.all(
@@ -639,12 +630,7 @@ class _TRTabBarItemState extends State<_TRTabBarItem>
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       style: TextStyle(
-                                        color:
-                                            widget.selected ||
-                                                resolveHovered(
-                                                  context,
-                                                  hovered: _hovered,
-                                                )
+                                        color: widget.selected || _hovered
                                             ? colors.text
                                             : colors.textMuted,
                                         fontFamily:

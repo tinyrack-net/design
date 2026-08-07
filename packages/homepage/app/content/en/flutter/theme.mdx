@@ -46,9 +46,11 @@ ThemeData theme = TinyrackTheme.light().copyWith(
 );
 ```
 
-## React parity migration
+## Cross-platform component contract
 
-Flutter uses the same public variant names as the React components.
+React and Flutter share semantic tokens and component purposes where both
+platforms provide the same concept. They do not promise identical public APIs,
+anatomy, interaction details, or rendered pixels.
 
 | Before | Now |
 | --- | --- |
@@ -58,13 +60,8 @@ Flutter uses the same public variant names as the React components.
 | Spinner inherited color only | `variant: TRSpinnerVariant.*` |
 | Text `role`, `TRTextStyle`, and arbitrary colors | `TRTextVariant` plus typed `color`, `align`, `weight`, and `truncate` |
 
-Flutter Form lifecycle properties on `TRTextField` remain available. From the
-repository root, run
-`pnpm --filter @tinyrack/homepage test:visual-parity` to compare every shared
-variant in the isolated React and Flutter fixtures. The check covers light and
-dark themes and English, Korean, and Japanese, and requires geometry deltas to
-remain below one CSS pixel. It uses real pointer and keyboard input for hover,
-pressed, focus-visible, disabled, loading, readonly, and invalid states. The
-120 ms transition is sampled at 0, 30, 60, 90, 120, and 140 ms. A failure
-writes both renders, a diff, full-screen captures, interaction telemetry, and
-geometry JSON to `packages/homepage/test-results/visual-parity`.
+Flutter Form lifecycle properties on `TRTextField` remain available. Repository
+checks classify every public component as a shared purpose, an explicit
+adaptation, or a platform-only capability. React browser tests and Flutter
+widget and golden tests enforce behavior and appearance within their own
+rendering engines.

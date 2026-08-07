@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -48,8 +47,7 @@ class TRCheckbox extends StatefulWidget {
   State<TRCheckbox> createState() => _TRCheckboxState();
 }
 
-class _TRCheckboxState extends State<TRCheckbox>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+class _TRCheckboxState extends State<TRCheckbox> with TRFocusSourceMixin {
   late bool _uncontrolledChecked = widget.defaultChecked;
   FocusNode? _internalFocusNode;
   bool _focused = false;
@@ -107,7 +105,7 @@ class _TRCheckboxState extends State<TRCheckbox>
       widget.onCheckedChange?.call(next);
     }
 
-    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
+    final showFocusRing = focusVisible(hasFocus: _focused);
     final filled = checked || widget.indeterminate;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light

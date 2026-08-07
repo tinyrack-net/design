@@ -1,7 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-/// Internal render marker used by the parity preview to read animation phase.
+/// Internal render marker used by tests and the preview to read animation phase.
 ///
 /// It is deliberately not exported from the public package barrel.
 class TRMotionBoundary extends SingleChildRenderObjectWidget {

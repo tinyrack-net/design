@@ -220,7 +220,7 @@ describe('Flutter documentation examples', () => {
 
   it('lets Toggle and ToggleGroup previews report their own interaction', () => {
     expect(previewHostSource).toContain("'args': {'pressed': next}");
-    expect(previewHostSource).toContain("'toggle-group' when parityMode");
+    expect(previewHostSource).toContain("'toggle-group' => TRToggleGroup");
     expect(previewHostSource).toContain("args['selectedValues'] is List");
     expect(previewHostSource).toContain("args['loopFocus'] != false");
   });
@@ -390,9 +390,9 @@ describe('Flutter documentation examples', () => {
   });
 
   it('lets Radio and RadioGroup previews report their own selection', () => {
-    expect(previewHostSource).toContain("'radio' when parityMode");
+    expect(previewHostSource).toContain("'radio' => TRRadioGroup");
     expect(previewHostSource).toContain("'args': {'checked': next == 'on'}");
-    expect(previewHostSource).toContain("'radio-group' when parityMode");
+    expect(previewHostSource).toContain("'radio-group' => TRRadioGroup");
     expect(previewHostSource).toContain("'args': {'selectedValue': next}");
   });
 

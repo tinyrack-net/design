@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -282,7 +281,7 @@ class _TRTextFieldInteractionFrame extends StatefulWidget {
 
 class _TRTextFieldInteractionFrameState
     extends State<_TRTextFieldInteractionFrame>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+    with TRFocusSourceMixin {
   FocusNode? _internalFocusNode;
   bool _hovered = false;
 
@@ -328,8 +327,7 @@ class _TRTextFieldInteractionFrameState
         : TRGeneratedColors.dark;
     // A field focused by a click paints no emphasis: `resolveFieldChrome`
     // takes the focus-visible state, not raw focus ownership.
-    final focused = resolveFocusVisible(
-      context,
+    final focused = focusVisible(
       hasFocus: widget.enabled && _focusNode.hasFocus,
     );
     final interactive = widget.enabled && !widget.readOnly;
@@ -341,7 +339,7 @@ class _TRTextFieldInteractionFrameState
           ? theme.dangerBorder
           : focused
           ? theme.focus
-          : resolveHovered(context, hovered: _hovered) && interactive
+          : _hovered && interactive
           ? generated.borderStrong
           : generated.controlBorder,
       solidBorderWidth: focused
@@ -350,7 +348,7 @@ class _TRTextFieldInteractionFrameState
       enabled: widget.enabled,
       error: widget.error,
       focused: focused,
-      hovered: resolveHovered(context, hovered: _hovered),
+      hovered: _hovered,
       readOnly: widget.readOnly,
     );
     final duration = MediaQuery.disableAnimationsOf(context)
