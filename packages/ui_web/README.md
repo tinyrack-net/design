@@ -153,12 +153,12 @@ Tailwind v4 responsive thresholds.
 ```ts
 import { tinyrackBreakpoints } from '@tinyrack/ui/core';
 
-// { xs: '24rem', sm: '40rem', md: '48rem', lg: '64rem', xl: '80rem' }
+// { sm: '40rem', md: '48rem', lg: '64rem' }
 ```
 
 Tinyrack styles use Tailwind's `@variant` directive for responsive rules. Import
 `@tinyrack/ui/core.css` before component styles so Tailwind can resolve the
-matching `xs` through `xl` and `max-*` variants. Published CSS is intentionally
+matching `sm`, `md`, `lg`, and their `max-*` variants. Published CSS is intentionally
 authored Tailwind CSS and must pass through the consumer's Tailwind build.
 
 Supported Base UI modules:

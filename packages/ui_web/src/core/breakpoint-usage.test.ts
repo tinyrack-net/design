@@ -39,7 +39,7 @@ describe('breakpoint token usage', () => {
       ];
 
       for (const match of source.matchAll(/@variant\s+([^\s{]+)\s*\{/g)) {
-        if (!/^(?:xs|sm|md|lg|xl|max-(?:xs|sm|md|lg|xl))$/.test(match[1] ?? '')) {
+        if (!/^(?:sm|md|lg|max-(?:sm|md|lg))$/.test(match[1] ?? '')) {
           violations.push(`${relative(packageRoot, file)}: ${match[0]}`);
         }
       }

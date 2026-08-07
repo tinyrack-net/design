@@ -305,7 +305,7 @@ body {
   }
 }
 
-@variant xl {
+@variant lg {
   .tr-app-shell[data-chrome="docs"] .tr-docs-content-layout {
     grid-template-columns:
       minmax(0, 1fr)

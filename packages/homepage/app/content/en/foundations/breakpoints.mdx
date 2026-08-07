@@ -23,13 +23,13 @@ Use a measure when one region needs a readable or predictable inline size. Use a
 </TRTable.Root>
 
 ```tsx
-<article className="max-w-tinyrack-measure-2xl">...</article>
+<article className="max-w-tinyrack-measure-xl">...</article>
 <section className="@container"><div className="grid @md:grid-cols-2">...</div></section>
 ```
 
 ## Use the shared breakpoint scale
 
-Tinyrack publishes `--breakpoint-xs` through `--breakpoint-xl` as Tailwind theme variables. TypeScript exposes the same values as `tinyrackBreakpoints`. They do not create CSS custom media rules.
+Tinyrack publishes `--breakpoint-sm`, `--breakpoint-md`, and `--breakpoint-lg` as Tailwind theme variables. TypeScript exposes the same values as `tinyrackBreakpoints`. They do not create CSS custom media rules.
 
 <BreakpointReference locale="en" />
 

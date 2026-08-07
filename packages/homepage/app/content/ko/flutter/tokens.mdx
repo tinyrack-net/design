@@ -33,19 +33,18 @@ Padding(
 
 ```dart
 LayoutBuilder(
-  builder: (context, constraints) => constraints.maxWidth < TRBreakpoints.medium
+  builder: (context, constraints) => constraints.maxWidth < TRBreakpoints.small
       ? detail
       : Row(
           children: [
-            SizedBox(width: TRMeasurements.paneMd, child: list),
+            SizedBox(width: TRMeasurements.measureXl, child: list),
             Expanded(child: detail),
           ],
         ),
 );
 ```
 
-무엇의 크기를 정하는지에 맞는 값을 고르세요. `paneSm`과 `paneMd`는 내비게이션
-레일이나 목록-상세 레이아웃의 목록 쪽처럼 구조를 이루는 영역의 폭이에요.
-`readingWidthSm`부터 `readingWidthLg`까지는 콘텐츠 열의 최대 폭을 제한해서,
-넓은 창에서도 설명과 컨트롤이 멀어지지 않게 해요. `measure` 스케일은 텍스트
-한 덩어리의 폭이고, `TRControlMetrics`는 컨트롤 하나의 크기예요.
+Flutter는 컴포넌트가 실제로 사용하는 `small`과 `extraLarge` 두 임계값을
+공개해요. 제한된 콘텐츠 영역에는 `measure` 스케일을, 컨트롤 하나에는
+`TRControlMetrics`를 사용하세요. 제품에만 필요한 pane이나 reading 폭은 공통
+토큰 API가 아니라 제품 레이아웃에서 정하세요.

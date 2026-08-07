@@ -14,7 +14,6 @@ abstract final class TRSpacing {
   static const twoExtraLarge = TRGeneratedSpacing.size2xl;
   static const threeExtraLarge = TRGeneratedSpacing.size3xl;
   static const fourExtraLarge = TRGeneratedSpacing.size4xl;
-  static const fiveExtraLarge = TRGeneratedSpacing.size5xl;
 }
 
 /// Platform-resolved corner radii in logical pixels.
@@ -51,50 +50,21 @@ abstract final class TRShadows {
 /// threshold. Reading it here keeps every surface reflowing at the same width
 /// instead of at whichever literal each one happened to pick.
 abstract final class TRBreakpoints {
-  static const extraSmall = TRGeneratedBreakpoints.xs;
   static const small = TRGeneratedBreakpoints.sm;
-  static const medium = TRGeneratedBreakpoints.md;
-  static const large = TRGeneratedBreakpoints.lg;
   static const extraLarge = TRGeneratedBreakpoints.xl;
 }
 
 /// Platform-resolved measurements used by Tinyrack surfaces and overlays.
 abstract final class TRMeasurements {
-  /// Square size of a brand mark, such as the one a boot splash centers.
-  ///
-  /// Separate from the `measure` scale, which constrains the inline size of a
-  /// content region, and from [TRControlMetrics.iconSizeOf], which sizes the
-  /// glyph inside a control.
-  static const brandMarkSm = TRGeneratedMeasurements.brandMarkSm;
-  static const brandMarkMd = TRGeneratedMeasurements.brandMarkMd;
-  static const brandMarkLg = TRGeneratedMeasurements.brandMarkLg;
   static const measureXs = TRGeneratedMeasurements.measureXs;
   static const measureSm = TRGeneratedMeasurements.measureSm;
   static const measureMd = TRGeneratedMeasurements.measureMd;
   static const measureLg = TRGeneratedMeasurements.measureLg;
   static const measureXl = TRGeneratedMeasurements.measureXl;
 
-  /// Inline size of a structural pane, such as a navigation rail or the list
-  /// side of a list-detail layout.
-  ///
-  /// Separate from the `measure` scale, which sizes a region of text, and from
-  /// [TRControlMetrics], which sizes one control. A pane holds rows of other
-  /// content, so sizing it from either of those states the wrong intent and
-  /// lets two panes drift apart across surfaces.
-  static const paneSm = TRGeneratedMeasurements.paneSm;
-  static const paneMd = TRGeneratedMeasurements.paneMd;
-
   /// Minimum usable extent of one child in a resizable split surface.
   static const splitPaneMinExtent = TRGeneratedMeasurements.splitPaneMinExtent;
 
-  /// Maximum inline size of a readable content column.
-  ///
-  /// Wider than the `measure` scale, which constrains a single text region.
-  /// A column left unbounded pushes a label and its control to opposite edges
-  /// of a wide window, which is what this scale exists to prevent.
-  static const readingWidthSm = TRGeneratedMeasurements.readingWidthSm;
-  static const readingWidthMd = TRGeneratedMeasurements.readingWidthMd;
-  static const readingWidthLg = TRGeneratedMeasurements.readingWidthLg;
   static const overlayWidthSm = TRGeneratedMeasurements.overlayWidthSm;
   static const overlayWidthMd = TRGeneratedMeasurements.overlayWidthMd;
   static const overlayInlineInset = TRGeneratedMeasurements.overlayInlineInset;

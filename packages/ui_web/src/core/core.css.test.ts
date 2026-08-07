@@ -313,7 +313,11 @@ describe('core.css source contract', () => {
 
     expect(tailwindDeclarations).toEqual({
       ...tokenDeclarations(tinyrackBreakpoints, 'breakpoint'),
-      ...tokenDeclarations(tinyrackTypography.fontFamily, 'font-tinyrack'),
+      ...tokenReferences(
+        Object.keys(tinyrackTypography.fontStack),
+        'font-tinyrack',
+        'tinyrack-font',
+      ),
       ...textDeclarations,
       ...controlTextDeclarations,
       ...tokenReferences(

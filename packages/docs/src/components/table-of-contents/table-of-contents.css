@@ -67,7 +67,7 @@
   .tr-select-item[data-depth="3"] {
     padding-inline-start: calc(var(--tinyrack-space-lg) + var(--tinyrack-space-md));
   }
-  @variant xl {
+  @variant lg {
     .tr-table-of-contents-desktop {
       display: block;
     }

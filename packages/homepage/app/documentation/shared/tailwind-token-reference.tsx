@@ -217,7 +217,7 @@ export function TailwindTokenReference({
               </TRLink>
             </div>
             <TRTable.Root
-              className="min-w-tinyrack-measure-2xl!"
+              className="min-w-tinyrack-measure-xl!"
               containerClassName="tr-mdx-table-container"
               containerProps={{
                 'aria-label': `${labels.groups[group.id]} ${labels.tableLabel}`,

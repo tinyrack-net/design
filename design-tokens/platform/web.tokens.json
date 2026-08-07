@@ -1,0 +1,49 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "breakpoints": {
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 48,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "48rem"
+        }
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "64rem"
+        }
+      }
+    }
+  },
+  "measurements": {
+    "text-decoration-thickness": {
+      "$type": "number",
+      "$value": 0.08,
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "0.08em"
+        }
+      }
+    },
+    "text-underline-offset": {
+      "$type": "number",
+      "$value": 0.18,
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "0.18em"
+        }
+      }
+    }
+  }
+}

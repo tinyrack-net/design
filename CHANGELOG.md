@@ -4,6 +4,13 @@
 
 ### Breaking
 
+- Design token sources now use the DTCG 2025.10 format and resolver. The Web
+  public token surface removes unused palette steps, the `xs` and `xl`
+  breakpoints, `4xl` and `5xl` spacing, unused typography steps, and the
+  brand-mark, pane, page-width, reading-width, page-gutter, control-width, and
+  large overlay measurements. Consumers must use the remaining semantic,
+  measure, spacing, and `sm`/`md`/`lg` breakpoint tokens or define
+  product-specific layout values locally.
 - `TRCodeBlock` no longer bundles a highlighter. `shiki` moved from a UI dependency to an optional peer, so an application that passes `language` must now supply a highlighter through the new `highlighter` prop or `TRCodeHighlighterProvider` (`@tinyrack/ui/providers/highlighter`). The two-line migration is to install `shiki` and wrap the tree with `trShikiWebHighlighter` from `@tinyrack/ui/highlighters/shiki-web`. An unconfigured block still renders readable plain text and sets `data-highlight="no-highlighter"`; pass `onHighlightFailure` to be notified.
 - Widened `TRCodeBlockProps.language` from Shiki's `BundledLanguage` union to `string`. The valid set now follows the configured highlighter rather than a union the package cannot honor at runtime.
 

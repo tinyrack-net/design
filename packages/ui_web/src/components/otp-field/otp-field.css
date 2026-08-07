@@ -99,7 +99,7 @@
     height: var(--_tr-otp-field-height);
   }
 
-  @variant max-xs {
+  @variant max-sm {
     .tr-otp-field {
       --tr-otp-field-size: var(--tinyrack-control-height-md);
       --tr-otp-field-gap: var(--tinyrack-radius-xs);

@@ -1,3 +1,12 @@
+## Unreleased
+
+- **Breaking:** removes `TRSpacing.fiveExtraLarge`,
+  `TRBreakpoints.extraSmall`, `medium`, and `large`, and the brand-mark, pane,
+  and reading-width members of `TRMeasurements`. These values had no product
+  code consumers. Use the retained `TRSpacing`, `TRMeasurements.measure*`,
+  `TRBreakpoints.small` or `extraLarge` values when they express the same
+  decision; keep product-specific layout widths in the product.
+
 ## 0.37.1
 
 - Keeps the highlighted `TRInlineSuggestions` row visible while keyboard or

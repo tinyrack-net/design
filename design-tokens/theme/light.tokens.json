@@ -1,0 +1,307 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "semanticColors": {
+    "light": {
+      "surface": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
+      },
+      "surfaceMuted": {
+        "$type": "color",
+        "$value": "{palettes.neutral.100}"
+      },
+      "surfaceHover": {
+        "$type": "color",
+        "$value": "{palettes.blue.50}"
+      },
+      "surfaceSelected": {
+        "$type": "color",
+        "$value": "{palettes.blue.100}"
+      },
+      "surfacePressed": {
+        "$type": "color",
+        "$value": "{palettes.blue.200}"
+      },
+      "text": {
+        "$type": "color",
+        "$value": "{palettes.neutral.900}"
+      },
+      "textMuted": {
+        "$type": "color",
+        "$value": "{palettes.neutral.600}"
+      },
+      "textPlaceholder": {
+        "$type": "color",
+        "$value": "{palettes.neutral.500}"
+      },
+      "border": {
+        "$type": "color",
+        "$value": "{palettes.neutral.500}"
+      },
+      "borderStrong": {
+        "$type": "color",
+        "$value": "{palettes.neutral.600}"
+      },
+      "controlBorder": {
+        "$type": "color",
+        "$value": "{palettes.neutral.500}"
+      },
+      "controlTrack": {
+        "$type": "color",
+        "$value": "{palettes.neutral.500}"
+      },
+      "focus": {
+        "$type": "color",
+        "$value": "{palettes.blue.600}"
+      },
+      "surfaceInverse": {
+        "$type": "color",
+        "$value": "{palettes.neutral.900}"
+      },
+      "textInverse": {
+        "$type": "color",
+        "$value": "{palettes.neutral.50}"
+      },
+      "borderInverse": {
+        "$type": "color",
+        "$value": "{palettes.neutral.400}"
+      },
+      "skeletonFill": {
+        "$type": "color",
+        "$value": "{palettes.neutral.300}"
+      },
+      "skeletonHighlight": {
+        "$type": "color",
+        "$value": "{palettes.neutral.100}"
+      },
+      "primary": {
+        "$type": "color",
+        "$value": "{palettes.blue.700}"
+      },
+      "primaryHover": {
+        "$type": "color",
+        "$value": "{palettes.blue.800}"
+      },
+      "primaryPressed": {
+        "$type": "color",
+        "$value": "{palettes.blue.900}"
+      },
+      "onPrimary": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
+      },
+      "info": {
+        "$type": "color",
+        "$value": "{palettes.blue.700}"
+      },
+      "infoHover": {
+        "$type": "color",
+        "$value": "{palettes.blue.800}"
+      },
+      "infoPressed": {
+        "$type": "color",
+        "$value": "{palettes.blue.900}"
+      },
+      "infoSurface": {
+        "$type": "color",
+        "$value": "{palettes.blue.50}"
+      },
+      "infoSurfaceSubtle": {
+        "$type": "color",
+        "$value": "{palettes.blue.50}"
+      },
+      "infoSurfaceHover": {
+        "$type": "color",
+        "$value": "{palettes.blue.100}"
+      },
+      "infoSurfacePressed": {
+        "$type": "color",
+        "$value": "{palettes.blue.200}"
+      },
+      "infoBorder": {
+        "$type": "color",
+        "$value": "{palettes.blue.600}"
+      },
+      "onInfo": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
+      },
+      "success": {
+        "$type": "color",
+        "$value": "{palettes.green.700}"
+      },
+      "successHover": {
+        "$type": "color",
+        "$value": "{palettes.green.800}"
+      },
+      "successPressed": {
+        "$type": "color",
+        "$value": "{palettes.green.900}"
+      },
+      "successSurface": {
+        "$type": "color",
+        "$value": "{palettes.green.50}"
+      },
+      "successSurfaceSubtle": {
+        "$type": "color",
+        "$value": "{palettes.green.50}"
+      },
+      "successSurfaceHover": {
+        "$type": "color",
+        "$value": "{palettes.green.100}"
+      },
+      "successSurfacePressed": {
+        "$type": "color",
+        "$value": "{palettes.green.200}"
+      },
+      "successBorder": {
+        "$type": "color",
+        "$value": "{palettes.green.600}"
+      },
+      "onSuccess": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "{palettes.amber.800}"
+      },
+      "warningHover": {
+        "$type": "color",
+        "$value": "{palettes.amber.900}"
+      },
+      "warningPressed": {
+        "$type": "color",
+        "$value": "{palettes.amber.950}"
+      },
+      "warningSurface": {
+        "$type": "color",
+        "$value": "{palettes.amber.50}"
+      },
+      "warningSurfaceSubtle": {
+        "$type": "color",
+        "$value": "{palettes.amber.50}"
+      },
+      "warningSurfaceHover": {
+        "$type": "color",
+        "$value": "{palettes.amber.100}"
+      },
+      "warningSurfacePressed": {
+        "$type": "color",
+        "$value": "{palettes.amber.200}"
+      },
+      "warningBorder": {
+        "$type": "color",
+        "$value": "{palettes.amber.600}"
+      },
+      "onWarning": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "{palettes.red.700}"
+      },
+      "dangerHover": {
+        "$type": "color",
+        "$value": "{palettes.red.800}"
+      },
+      "dangerPressed": {
+        "$type": "color",
+        "$value": "{palettes.red.900}"
+      },
+      "dangerSurface": {
+        "$type": "color",
+        "$value": "{palettes.red.50}"
+      },
+      "dangerSurfaceSubtle": {
+        "$type": "color",
+        "$value": "{palettes.red.50}"
+      },
+      "dangerSurfaceHover": {
+        "$type": "color",
+        "$value": "{palettes.red.100}"
+      },
+      "dangerSurfacePressed": {
+        "$type": "color",
+        "$value": "{palettes.red.200}"
+      },
+      "dangerBorder": {
+        "$type": "color",
+        "$value": "{palettes.red.600}"
+      },
+      "onDanger": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
+      },
+      "scrim": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0, 0, 0],
+          "hex": "#000000",
+          "alpha": 0.5607843137254902
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#0000008f"
+          }
+        }
+      }
+    }
+  }
+}

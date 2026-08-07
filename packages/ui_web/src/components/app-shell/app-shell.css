@@ -369,7 +369,7 @@
     }
   }
 
-  @variant xl {
+  @variant lg {
     .tr-app-shell-outline {
       order: 0;
     }
