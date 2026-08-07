@@ -30,9 +30,17 @@ Widget _select({TRFieldAppearance appearance = TRFieldAppearance.solid}) =>
 /// The border the trigger actually paints right now, resolved from the states
 /// the button is really in rather than from a hypothetical state set.
 BorderSide _paintedSide(WidgetTester tester) {
-  final button = tester.widget<TextButton>(find.byType(TextButton));
+  final button = tester.widget<TextButton>(find.byType(TextButton).first);
   final focused = button.focusNode?.hasFocus ?? false;
   return button.style!.side!.resolve(<WidgetState>{
+    if (focused) WidgetState.focused,
+  })!;
+}
+
+Color _paintedFill(WidgetTester tester) {
+  final button = tester.widget<TextButton>(find.byType(TextButton).first);
+  final focused = button.focusNode?.hasFocus ?? false;
+  return button.style!.backgroundColor!.resolve(<WidgetState>{
     if (focused) WidgetState.focused,
   })!;
 }
@@ -59,6 +67,23 @@ Future<void> _openAndDismissWithMouse(WidgetTester tester) async {
 }
 
 void main() {
+  testWidgets(
+    'a pointer-open ghost select uses selection without a focus border',
+    (tester) async {
+      await tester.pumpWidget(
+        _app(_select(appearance: TRFieldAppearance.ghost)),
+      );
+
+      await tester.tap(find.byType(TextButton), kind: PointerDeviceKind.mouse);
+      await tester.pumpAndSettle();
+
+      expect(find.widgetWithText(MenuItemButton, 'Beta'), findsOneWidget);
+      expect(_paintedFill(tester), _colors.surfaceSelected);
+      expect(_paintedSide(tester).color, Colors.transparent);
+      expect(_paintedSide(tester).width, TRGeneratedBorders.defaultWidth);
+    },
+  );
+
   for (final appearance in TRFieldAppearance.values) {
     testWidgets(
       'a mouse-driven ${appearance.name} select round trip leaves no focus border',

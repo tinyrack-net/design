@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/focus_source.dart';
 import '../../theme.dart';
 import '../../types.dart';
 
 // @tinyrack-preview card
 /// A structured Tinyrack content surface.
-class TRCard extends StatelessWidget {
+class TRCard extends StatefulWidget {
   const TRCard({
     required this.child,
     this.focused = false,
@@ -35,22 +36,39 @@ class TRCard extends StatelessWidget {
   final TRCardVariant variant;
 
   @override
+  State<TRCard> createState() => _TRCardState();
+}
+
+class _TRCardState extends State<TRCard> with TRFocusSourceMixin {
+  @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
+  void dispose() {
+    disposeFocusSource();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
-    final inset = switch (padding) {
+    final inset = switch (widget.padding) {
       TRCardPadding.none => 0.0,
       TRCardPadding.sm => TRGeneratedSpacing.sm,
       TRCardPadding.md => TRGeneratedSpacing.md,
       TRCardPadding.lg => TRGeneratedSpacing.lg,
     };
     final decoration = BoxDecoration(
-      color: switch (variant) {
+      color: switch (widget.variant) {
         TRCardVariant.defaultVariant => colors.surface,
         TRCardVariant.outlined => Colors.transparent,
         TRCardVariant.elevated => colors.surfaceMuted,
       },
       border: Border.all(
-        color: variant == TRCardVariant.elevated
+        color: widget.variant == TRCardVariant.elevated
             ? Colors.transparent
             : colors.border,
         width: TRGeneratedBorders.defaultWidth,
@@ -58,18 +76,18 @@ class TRCard extends StatelessWidget {
       borderRadius: const BorderRadius.all(
         Radius.circular(TRGeneratedRadii.lg),
       ),
-      boxShadow: variant == TRCardVariant.elevated
+      boxShadow: widget.variant == TRCardVariant.elevated
           ? const [TRGeneratedShadows.raised]
           : null,
     );
     return Semantics(
-      container: semanticContainer,
+      container: widget.semanticContainer,
       child: DecoratedBox(
         decoration: decoration,
         child: DecoratedBox(
           position: DecorationPosition.foreground,
           decoration: BoxDecoration(
-            border: focused
+            border: focusVisible(hasFocus: widget.focused)
                 ? Border.all(
                     color: colors.focus,
                     width: TRGeneratedBorders.focusWidth,
@@ -89,7 +107,7 @@ class TRCard extends StatelessWidget {
                   TRGeneratedBorders.defaultWidth +
                   TRGeneratedFlutterRendering.cardBlockInsetCorrection,
             ),
-            child: child,
+            child: widget.child,
           ),
         ),
       ),

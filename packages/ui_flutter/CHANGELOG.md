@@ -1,3 +1,15 @@
+## 0.39.0
+
+- Adds `TRFocusRing` for product-specific composite controls. It accepts raw
+  focus ownership but paints the shared ring only when focus arrived through
+  keyboard navigation, without changing the child's layout.
+- Makes `TRCard.focused` follow the same keyboard-only focus-visible contract.
+  Pointer-focused composer surfaces no longer receive a thick focus border.
+- Keeps a pointer-open ghost `TRSelect` selected with its background instead
+  of a focus border while preserving the border for keyboard navigation.
+- Adds `TRDropOverlay` and `TROpacity.dropOverlay` for accessible pane-wide
+  file-drop feedback with reduced-motion support and pointer passthrough.
+
 ## 0.38.0
 
 - **Breaking:** removes `TRSpacing.fiveExtraLarge`,

@@ -300,6 +300,18 @@ export const inlineSuggestionsPlayground = flutterPlayground(
 );
 export const contextMenuPlayground = flutterPlayground('context-menu', {}, {});
 export const drawerPlayground = flutterPlayground('drawer', {}, {});
+
+export const dropOverlayPlayground = flutterPlayground(
+  'drop-overlay',
+  { visible: true },
+  { visible: { control: 'boolean' } },
+);
+
+export const focusRingPlayground = flutterPlayground(
+  'focus-ring',
+  { focused: true },
+  { focused: { control: 'boolean' } },
+);
 export const fileTreePlayground = flutterPlayground('file-tree', {}, {});
 export const formPlayground = flutterPlayground(
   'form',
@@ -731,9 +743,11 @@ export const flutterPlaygrounds = {
   'copy-button': copyButtonPlayground,
   dialog: dialogPlayground,
   drawer: drawerPlayground,
+  'drop-overlay': dropOverlayPlayground,
   field: fieldPlayground,
   fieldset: fieldsetPlayground,
   'file-tree': fileTreePlayground,
+  'focus-ring': focusRingPlayground,
   form: formPlayground,
   'icon-button': iconButtonPlayground,
   link: linkPlayground,
