@@ -204,6 +204,59 @@ void main() {
   });
 
   group('TRTabs.bar behavior', () {
+    testWidgets('moves a tab to a target strip insertion index', (
+      tester,
+    ) async {
+      final drops = <TRTabDropDetails>[];
+      await tester.pumpWidget(
+        _app(
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: TRTabs.bar(
+                  tabs: _tabs(closable: false),
+                  dragConfiguration: TRTabsDragConfiguration(
+                    groupId: 'left',
+                    onDrop: drops.add,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TRTabs.bar(
+                  tabs: const <TRTabsTab>[
+                    TRTabsTab(value: 'target', label: 'Target'),
+                  ],
+                  dragConfiguration: TRTabsDragConfiguration(
+                    groupId: 'right',
+                    onDrop: drops.add,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.dragFrom(
+        tester.getCenter(
+          find.byKey(const ValueKey<String>('tr-tabs-tab-overview')),
+        ),
+        tester.getCenter(
+              find.byKey(const ValueKey<String>('tr-tabs-tab-target')),
+            ) -
+            tester.getCenter(
+              find.byKey(const ValueKey<String>('tr-tabs-tab-overview')),
+            ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(drops, hasLength(1));
+      expect(drops.single.value, 'overview');
+      expect(drops.single.sourceGroupId, 'left');
+      expect(drops.single.targetGroupId, 'right');
+      expect(drops.single.targetIndex, 0);
+    });
+
     testWidgets('reports the tapped tab without owning a panel', (
       tester,
     ) async {

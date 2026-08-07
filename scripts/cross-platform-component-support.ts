@@ -49,6 +49,10 @@ export const flutterPlatformOnlyComponents = {
   inline_suggestions: {
     reason: 'Inline editing suggestions are currently a Flutter-only capability.',
   },
+  split_view: {
+    reason:
+      'Flutter currently owns the resizable pane interaction used by native applications.',
+  },
 } as const satisfies Record<string, PlatformOnlyComponentSupport>;
 
 export function conventionalFlutterComponentName(reactComponent: string) {

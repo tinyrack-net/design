@@ -84,6 +84,9 @@ abstract final class TRMeasurements {
   static const paneSm = TRGeneratedMeasurements.paneSm;
   static const paneMd = TRGeneratedMeasurements.paneMd;
 
+  /// Minimum usable extent of one child in a resizable split surface.
+  static const splitPaneMinExtent = TRGeneratedMeasurements.splitPaneMinExtent;
+
   /// Maximum inline size of a readable content column.
   ///
   /// Wider than the `measure` scale, which constrains a single text region.

@@ -4145,6 +4145,21 @@ class _BackupSettingState extends State<BackupSetting> {
     },
     usage:
       "TRTabs(\n  tabs: const [\n    TRTabsTab(value: 'overview', label: 'Overview'),\n    TRTabsTab(value: 'settings', label: 'Settings'),\n  ],\n  panelBuilder: buildPanel,\n)",
+    contractIntro: {
+      en: '`TRTabs.bar` can also move document tabs within or between application-owned groups. The application remains responsible for tab ownership and persistence.',
+      ko: '`TRTabs.bar`는 앱이 소유한 그룹 안에서 또는 그룹 사이에서 문서 탭을 옮길 수도 있어요. 탭 소유권과 저장은 앱에서 관리하세요.',
+      ja: '`TRTabs.bar` は、アプリが所有するグループ内またはグループ間でドキュメントタブを移動できます。タブの所有権と永続化はアプリ側で管理してください。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Dragging', ko: '드래그', ja: 'ドラッグ' },
+        choices: {
+          en: 'Pass `TRTabsDragConfiguration` to opt in. `TRTabDropDetails` reports the source group, target group, tab value, and insertion index without mutating your list.',
+          ko: '`TRTabsDragConfiguration`을 넘겨 기능을 켜세요. `TRTabDropDetails`는 목록을 직접 바꾸지 않고 출발 그룹, 대상 그룹, 탭 값, 삽입 위치를 알려줘요.',
+          ja: '`TRTabsDragConfiguration` を渡して有効にします。`TRTabDropDetails` はリストを変更せず、移動元グループ、移動先グループ、タブ値、挿入位置を通知します。',
+        },
+      },
+    ],
   },
   textarea: {
     title: 'Textarea',

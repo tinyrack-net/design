@@ -11,6 +11,46 @@ import '../scroll_area/scroll_area.dart';
 
 const double _edgeInset = 0;
 
+/// Configures tab dragging for one [TRTabs.bar] strip.
+class TRTabsDragConfiguration {
+  const TRTabsDragConfiguration({
+    required this.groupId,
+    required this.onDrop,
+    this.canAccept,
+  });
+
+  /// Stable identity of the strip that owns the tabs.
+  final String groupId;
+
+  /// Reports an accepted drop, including its destination index.
+  final ValueChanged<TRTabDropDetails> onDrop;
+
+  /// Optionally rejects a tab before it enters this strip.
+  final bool Function(String sourceGroupId, String value)? canAccept;
+}
+
+/// One accepted tab movement between document-tab strips.
+class TRTabDropDetails {
+  const TRTabDropDetails({
+    required this.value,
+    required this.sourceGroupId,
+    required this.targetGroupId,
+    required this.targetIndex,
+  });
+
+  final String value;
+  final String sourceGroupId;
+  final String targetGroupId;
+  final int targetIndex;
+}
+
+final class _TRTabDragData {
+  const _TRTabDragData({required this.groupId, required this.value});
+
+  final String groupId;
+  final String value;
+}
+
 /// A single tab within [TRTabs].
 class TRTabsTab {
   const TRTabsTab({
@@ -59,6 +99,7 @@ class TRTabs extends StatefulWidget {
        actions = const <Widget>[],
        semanticLabel = null,
        scrollController = null,
+       dragConfiguration = null,
        _bar = false;
 
   /// A document-style tab bar: a scrollable strip of closable tabs.
@@ -77,6 +118,7 @@ class TRTabs extends StatefulWidget {
     this.actions = const <Widget>[],
     this.semanticLabel,
     this.scrollController,
+    this.dragConfiguration,
     this.uiSize = TRUiSize.md,
     super.key,
   }) : panelBuilder = null,
@@ -102,6 +144,9 @@ class TRTabs extends StatefulWidget {
   /// Drives the horizontal scroll position of the strip.
   final ScrollController? scrollController;
 
+  /// Enables reordering and cross-strip movement for document tabs.
+  final TRTabsDragConfiguration? dragConfiguration;
+
   final TRUiSize uiSize;
 
   final bool _bar;
@@ -113,6 +158,7 @@ class TRTabs extends StatefulWidget {
 class _TRTabsState extends State<TRTabs> {
   late String? _uncontrolledValue = widget.defaultValue;
   ScrollController? _internalScrollController;
+  int? _dropIndex;
 
   /// The scrollbar and the list it decorates must share one controller, so a
   /// caller that does not supply one still gets a working scrollbar.
@@ -216,31 +262,88 @@ class _TRTabsState extends State<TRTabs> {
   }
 
   Widget _buildBar(TinyrackThemeData colors, String active, double tabHeight) {
+    Widget tabStrip = TRScrollArea.forScrollable(
+      axis: Axis.horizontal,
+      autoHide: true,
+      controller: _barScrollController,
+      child: ListView(
+        controller: _barScrollController,
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (final tab in widget.tabs)
+            _TRTabBarItem(
+              key: ValueKey<String>('tr-tabs-tab-${tab.value}'),
+              tab: tab,
+              selected: tab.value == active,
+              uiSize: widget.uiSize,
+              height: tabHeight,
+              dragConfiguration: widget.dragConfiguration,
+              onSelect: () => _select(tab.value),
+            ),
+        ],
+      ),
+    );
+    if (widget.dragConfiguration case final configuration?) {
+      final undraggableStrip = tabStrip;
+      tabStrip = DragTarget<_TRTabDragData>(
+        onWillAcceptWithDetails: (details) =>
+            configuration.canAccept?.call(
+              details.data.groupId,
+              details.data.value,
+            ) ??
+            true,
+        onMove: (details) {
+          final box = context.findRenderObject()! as RenderBox;
+          final local = box.globalToLocal(details.offset);
+          final scrolled = _barScrollController.hasClients
+              ? _barScrollController.offset
+              : 0.0;
+          final index =
+              ((local.dx + scrolled) / TRGeneratedMeasurements.measureSm)
+                  .floor()
+                  .clamp(0, widget.tabs.length);
+          if (_dropIndex != index) setState(() => _dropIndex = index);
+        },
+        onLeave: (_) => setState(() => _dropIndex = null),
+        onAcceptWithDetails: (details) {
+          final index = _dropIndex ?? widget.tabs.length;
+          configuration.onDrop(
+            TRTabDropDetails(
+              value: details.data.value,
+              sourceGroupId: details.data.groupId,
+              targetGroupId: configuration.groupId,
+              targetIndex: index,
+            ),
+          );
+          setState(() => _dropIndex = null);
+        },
+        builder: (context, candidates, rejected) => Stack(
+          children: <Widget>[
+            Positioned.fill(child: undraggableStrip),
+            if (_dropIndex case final index?)
+              PositionedDirectional(
+                start:
+                    index * TRGeneratedMeasurements.measureSm -
+                    (_barScrollController.hasClients
+                        ? _barScrollController.offset
+                        : 0),
+                top: _edgeInset,
+                bottom: _edgeInset,
+                child: IgnorePointer(
+                  child: SizedBox(
+                    width: TRGeneratedBorders.strongWidth,
+                    child: ColoredBox(color: colors.primary),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
     final strip = Row(
       children: [
         ?widget.leading,
-        Expanded(
-          child: TRScrollArea.forScrollable(
-            axis: Axis.horizontal,
-            autoHide: true,
-            controller: _barScrollController,
-            child: ListView(
-              controller: _barScrollController,
-              scrollDirection: Axis.horizontal,
-              children: [
-                for (final tab in widget.tabs)
-                  _TRTabBarItem(
-                    key: ValueKey<String>('tr-tabs-tab-${tab.value}'),
-                    tab: tab,
-                    selected: tab.value == active,
-                    uiSize: widget.uiSize,
-                    height: tabHeight,
-                    onSelect: () => _select(tab.value),
-                  ),
-              ],
-            ),
-          ),
-        ),
+        Expanded(child: tabStrip),
         ...widget.actions,
       ],
     );
@@ -488,6 +591,7 @@ class _TRTabBarItem extends StatefulWidget {
     required this.uiSize,
     required this.height,
     required this.onSelect,
+    this.dragConfiguration,
     super.key,
   });
 
@@ -496,6 +600,7 @@ class _TRTabBarItem extends StatefulWidget {
   final TRUiSize uiSize;
   final double height;
   final VoidCallback onSelect;
+  final TRTabsDragConfiguration? dragConfiguration;
 
   @override
   State<_TRTabBarItem> createState() => _TRTabBarItemState();
@@ -558,6 +663,69 @@ class _TRTabBarItemState extends State<_TRTabBarItem> with TRFocusSourceMixin {
         ? Duration.zero
         : TRGeneratedMotion.fast;
 
+    final selection = GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: interactive ? widget.onSelect : null,
+      child: Row(
+        children: [
+          if (widget.tab.leading case final leading?) ...[
+            IconTheme.merge(
+              data: IconThemeData(color: colors.textMuted),
+              child: leading,
+            ),
+            const SizedBox(width: TRGeneratedSpacing.sm),
+          ],
+          Expanded(
+            child: AnimatedDefaultTextStyle(
+              curve: TRGeneratedMotion.standard,
+              duration: motionDuration,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                color: widget.selected || _hovered
+                    ? colors.text
+                    : colors.textMuted,
+                fontFamily: TRGeneratedFontFamilies.body,
+                fontSize: fontSize,
+                fontWeight: widget.selected
+                    ? TRGeneratedFontWeights.bold
+                    : TRGeneratedFontWeights.medium,
+                height: lineHeight / fontSize,
+              ),
+              child: Text(widget.tab.label),
+            ),
+          ),
+        ],
+      ),
+    );
+    final draggableSelection = widget.dragConfiguration == null || !interactive
+        ? selection
+        : Draggable<_TRTabDragData>(
+            data: _TRTabDragData(
+              groupId: widget.dragConfiguration!.groupId,
+              value: widget.tab.value,
+            ),
+            feedback: InheritedTheme.captureAll(
+              context,
+              Opacity(
+                opacity: TRGeneratedOpacity.hover,
+                child: SizedBox(
+                  width: TRGeneratedMeasurements.measureSm,
+                  height: widget.height,
+                  child: ColoredBox(
+                    color: colors.surfaceSelected,
+                    child: Center(child: Text(widget.tab.label)),
+                  ),
+                ),
+              ),
+            ),
+            childWhenDragging: Opacity(
+              opacity: TRGeneratedOpacity.disabled,
+              child: selection,
+            ),
+            child: selection,
+          );
+
     return CallbackShortcuts(
       bindings: interactive
           ? {const SingleActivator(LogicalKeyboardKey.enter): widget.onSelect}
@@ -605,49 +773,7 @@ class _TRTabBarItemState extends State<_TRTabBarItem> with TRFocusSourceMixin {
                           // close button under the same gesture would both
                           // swallow its own tap target and merge its name into
                           // the tab's for assistive technology.
-                          Expanded(
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.opaque,
-                              onTap: interactive ? widget.onSelect : null,
-                              child: Row(
-                                children: [
-                                  if (widget.tab.leading
-                                      case final leading?) ...[
-                                    IconTheme.merge(
-                                      data: IconThemeData(
-                                        color: colors.textMuted,
-                                      ),
-                                      child: leading,
-                                    ),
-                                    const SizedBox(
-                                      width: TRGeneratedSpacing.sm,
-                                    ),
-                                  ],
-                                  Expanded(
-                                    child: AnimatedDefaultTextStyle(
-                                      curve: TRGeneratedMotion.standard,
-                                      duration: motionDuration,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                      style: TextStyle(
-                                        color: widget.selected || _hovered
-                                            ? colors.text
-                                            : colors.textMuted,
-                                        fontFamily:
-                                            TRGeneratedFontFamilies.body,
-                                        fontSize: fontSize,
-                                        fontWeight: widget.selected
-                                            ? TRGeneratedFontWeights.bold
-                                            : TRGeneratedFontWeights.medium,
-                                        height: lineHeight / fontSize,
-                                      ),
-                                      child: Text(widget.tab.label),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          Expanded(child: draggableSelection),
                           // The close button sits beside the label rather than
                           // over it, so a long label ellipsizes before it
                           // reaches the glyph instead of running under it.

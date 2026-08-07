@@ -1,3 +1,15 @@
+## 0.37.0
+
+- Adds `TRSplitView`, a controlled horizontal or vertical two-pane layout with
+  pointer, keyboard, and assistive-technology resizing, minimum extents, and
+  separate live and completed ratio callbacks.
+- Adds optional document-tab dragging to `TRTabs.bar` through
+  `TRTabsDragConfiguration` and `TRTabDropDetails`. A drop reports the source
+  strip, destination strip, tab value, and insertion index while preserving
+  the existing selection, close, and scrolling contracts.
+- Adds `TRMeasurements.splitPaneMinExtent` for products that decide whether a
+  container has enough room to create another usable pane.
+
 ## 0.36.0
 
 - **Breaking:** removes `TRTerminalView`, `TRTerminalController`, and
