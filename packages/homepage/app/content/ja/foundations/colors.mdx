@@ -28,6 +28,8 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 通常、ホバー、押下の各ロールをセットで使います。明るいテーマから暗いテーマの値を算出したり、無関係な塗りに前景色を載せたりしないでください。
 
+暗いテーマでは、`border`、`borderStrong`、`controlBorder`、`controlTrack` に同じ低コントラスト色を使います。Card、コントロール、トラックの境界は視覚的に控えめになりますが、このニュートラルな境界だけでは WCAG の非テキストコントラスト `3:1` を満たしません。境界が重要な場合は、フォーカス、ステータス、テキスト、表面の手掛かりも維持してください。
+
 <div className="flex flex-wrap gap-2"><TRButton intent="primary">デプロイ</TRButton><TRButton intent="info">詳細</TRButton><TRButton intent="success">承認</TRButton><TRButton intent="warning">リスク確認</TRButton><TRButton intent="danger">削除</TRButton></div>
 
 ## デフォルトの操作色を安全に上書きする

@@ -23,21 +23,26 @@ void main() {
     });
   });
 
-  group('resting border colour', () {
-    // controlBorder and borderStrong held the same value, so a component that
-    // reached for the wrong one was pixel-identical to one that reached for
-    // the right one and nothing could tell them apart. Separating the values
-    // is what makes the distinction real: a control at rest closes its shape
-    // at the same weight as the surface around it, and borderStrong is left
-    // to mark a state.
-    test('rests at the surface weight, not the strong one', () {
-      for (final colors in <TRGeneratedColorTheme>[
-        TRGeneratedColors.light,
-        TRGeneratedColors.dark,
-      ]) {
-        expect(colors.controlBorder, colors.border);
-        expect(colors.controlBorder, isNot(colors.borderStrong));
-      }
+  group('neutral border colours', () {
+    test('keeps the light control border distinct from the strong border', () {
+      expect(
+        TRGeneratedColors.light.controlBorder,
+        TRGeneratedColors.light.border,
+      );
+      expect(
+        TRGeneratedColors.light.controlBorder,
+        isNot(TRGeneratedColors.light.borderStrong),
+      );
+    });
+
+    test('uses neutral 800 for every dark neutral boundary', () {
+      const expected = Color(0xff262626);
+      final colors = TRGeneratedColors.dark;
+
+      expect(colors.border, expected);
+      expect(colors.borderStrong, expected);
+      expect(colors.controlBorder, expected);
+      expect(colors.controlTrack, expected);
     });
   });
 

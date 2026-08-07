@@ -80,16 +80,36 @@ describe('semantic status contrast', () => {
         contrast(theme.borderInverse, theme.surfaceInverse),
         'inverse boundary',
       ).toBeGreaterThanOrEqual(3);
-      for (const surface of [theme.surface, theme.surfaceMuted]) {
-        expect(
-          contrast(theme.controlBorder, surface),
-          'control boundary',
-        ).toBeGreaterThanOrEqual(3);
-        expect(
-          contrast(theme.controlTrack, surface),
-          'graphical track',
-        ).toBeGreaterThanOrEqual(3);
-      }
     }
+
+    for (const surface of [
+      tinyrackSemanticColors.light.surface,
+      tinyrackSemanticColors.light.surfaceMuted,
+    ]) {
+      expect(
+        contrast(tinyrackSemanticColors.light.controlBorder, surface),
+        'light control boundary',
+      ).toBeGreaterThanOrEqual(3);
+      expect(
+        contrast(tinyrackSemanticColors.light.controlTrack, surface),
+        'light graphical track',
+      ).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it('uses one subtle neutral boundary in the dark theme', () => {
+    const dark = tinyrackSemanticColors.dark;
+
+    expect({
+      border: dark.border,
+      borderStrong: dark.borderStrong,
+      controlBorder: dark.controlBorder,
+      controlTrack: dark.controlTrack,
+    }).toEqual({
+      border: '#262626',
+      borderStrong: '#262626',
+      controlBorder: '#262626',
+      controlTrack: '#262626',
+    });
   });
 });

@@ -28,6 +28,8 @@ Set `data-theme="tinyrack-light"` or `data-theme="tinyrack-dark"` on an ancestor
 
 Use resting, hover, and pressed roles as a set. Do not derive dark colors from the light theme or use a foreground on an unrelated fill.
 
+Dark-theme neutral boundaries use the same low-contrast color for `border`, `borderStrong`, `controlBorder`, and `controlTrack`. This keeps cards, controls, and tracks visually quiet, but the neutral boundary does not meet the WCAG `3:1` non-text contrast threshold by itself. Keep focus, status, text, and surface cues intact when the boundary is essential.
+
 <div className="flex flex-wrap gap-2"><TRButton intent="primary">Deploy</TRButton><TRButton intent="info">Details</TRButton><TRButton intent="success">Approve</TRButton><TRButton intent="warning">Review risk</TRButton><TRButton intent="danger">Remove</TRButton></div>
 
 ## Override the default action safely
