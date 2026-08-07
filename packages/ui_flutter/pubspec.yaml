@@ -1,6 +1,6 @@
 name: tinyrack_ui
 description: Cross-platform Flutter components and design tokens for Tinyrack applications.
-version: 0.35.1
+version: 0.36.0
 homepage: https://design.tinyrack.net/en/flutter/
 repository: https://github.com/tinyrack-net/design/tree/main/packages/ui_flutter
 issue_tracker: https://github.com/tinyrack-net/design/issues
@@ -19,7 +19,6 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   lucide_flutter: ^1.28.0
-  xterm: ^4.0.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0
