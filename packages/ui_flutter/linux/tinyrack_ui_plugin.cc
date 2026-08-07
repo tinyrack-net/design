@@ -60,10 +60,14 @@ gboolean finish_cb(gpointer user_data) {
     response =
         FL_METHOD_RESPONSE(fl_method_success_response_new(result));
   }
-  fl_method_call_respond(request->method_call, response, nullptr);
-
+  // Dart may restore a text-input connection as soon as it receives the
+  // reply. Release GTK's popup grab first so that restored focus and the next
+  // pointer or keyboard event belong to the Flutter view, not this menu.
+  gtk_menu_popdown(GTK_MENU(request->menu));
   gtk_widget_destroy(request->menu);
   g_object_unref(request->menu);
+  fl_method_call_respond(request->method_call, response, nullptr);
+
   g_object_unref(request->method_call);
   g_free(request->chosen);
   g_free(request);

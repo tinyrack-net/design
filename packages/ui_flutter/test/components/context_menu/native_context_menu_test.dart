@@ -56,6 +56,8 @@ Future<void> _pumpMenu(
   WidgetTester tester, {
   required List<TRMenuElement> items,
   MethodChannel channel = _channel,
+  VoidCallback? onOpen,
+  VoidCallback? onClose,
 }) => tester.pumpWidget(
   MaterialApp(
     theme: TinyrackTheme.light(),
@@ -64,6 +66,8 @@ Future<void> _pumpMenu(
         presenter: TRNativeContextMenuPresenter(channel: channel),
         child: TRContextMenu.items(
           items: items,
+          onOpen: onOpen,
+          onClose: onClose,
           child: const SizedBox(width: 100, height: 40, child: Text('Target')),
         ),
       ),
@@ -197,7 +201,7 @@ void main() {
       (tester) async {
         final system = _FakeSystemMenu(_channel, choose: 'clear');
         addTearDown(system.dispose);
-        var cleared = 0;
+        final events = <String>[];
 
         await _pumpMenu(
           tester,
@@ -213,15 +217,17 @@ void main() {
                 TRMenuActionElement(
                   id: 'clear',
                   title: 'Clear',
-                  onPressed: () => cleared += 1,
+                  onPressed: () => events.add('action'),
                 ),
               ],
             ),
           ],
+          onOpen: () => events.add('open'),
+          onClose: () => events.add('close'),
         );
         await _secondaryTap(tester);
 
-        expect(cleared, 1);
+        expect(events, <String>['open', 'close', 'action']);
       },
     );
 
@@ -232,6 +238,7 @@ void main() {
         final system = _FakeSystemMenu(_channel);
         addTearDown(system.dispose);
         var pressed = 0;
+        var closed = 0;
 
         await _pumpMenu(
           tester,
@@ -242,10 +249,12 @@ void main() {
               onPressed: () => pressed += 1,
             ),
           ],
+          onClose: () => closed += 1,
         );
         await _secondaryTap(tester);
 
         expect(pressed, 0);
+        expect(closed, 1);
       },
     );
 
