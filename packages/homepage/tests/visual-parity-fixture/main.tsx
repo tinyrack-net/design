@@ -1502,6 +1502,10 @@ function Fixture() {
             disabled={flag('disabled')}
             placeholder={query.get('placeholder') ?? undefined}
             readOnly={flag('readOnly')}
+            // Chromium paints a native resize grip that the Flutter control has
+            // no equivalent for. Suppressing it here compares the corner instead
+            // of masking it, so a regression in that corner still fails.
+            style={{ resize: 'none' }}
             uiSize={uiSize}
           />
         );

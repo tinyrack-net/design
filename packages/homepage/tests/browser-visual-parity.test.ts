@@ -205,6 +205,23 @@ async function waitForTrue(
   throw new Error(`Condition was not met within ${timeout}ms.`);
 }
 
+/**
+ * The parts whose raster is excluded, when only some of a component's parts are
+ * ink.
+ *
+ * The derived mask covers every named part, which is right for a glyph run and
+ * wrong for a layout container: masking `.tr-card-content` hides the whole
+ * interior, so the comparison keeps only the outer border. Naming the ink parts
+ * here leaves the container's fill, padding and dividers strict while still
+ * forgiving the glyphs inside it. A component absent from this table masks all
+ * of its parts, which is correct where every part is ink.
+ */
+const inkMaskParts: Partial<
+  Record<VisualParityScenario['component'], readonly string[]>
+> = {
+  card: ['title', 'description'],
+};
+
 const partSelectors: Partial<
   Record<VisualParityScenario['component'], Record<string, string>>
 > = {
@@ -1478,6 +1495,10 @@ async function compareScenario(
   }> =
     scenario.component === 'text'
       ? [
+          // A text component is nothing but a glyph run: its family, size,
+          // weight, tracking and baseline are asserted separately, and the
+          // residue the shared-palette classifier cannot absorb is CJK edge
+          // rasterization. Every other formerly whole-box mask is gone.
           {
             bottom: 16 + normalizedDimensions.height + 1,
             left: 15,
@@ -1486,62 +1507,20 @@ async function compareScenario(
           },
         ]
       : scenario.component === 'text-field'
-        ? [
-            // CanvasKit and Chromium rasterize the same IBM Plex glyph
-            // outlines differently. Keep these exclusions bounded to the
-            // label, editable text, and supporting-copy rows so fills,
-            // borders, focus rings, and geometry remain strict.
-            { bottom: 29, left: 16, right: 336, top: 15 },
-            { bottom: 64, left: 24, right: 336, top: 44 },
-            { bottom: 102, left: 16, right: 336, top: 78 },
-          ]
+        ? []
         : scenario.component === 'collapsible' || scenario.component === 'accordion'
-          ? [
-              // Trigger copy, chevrons, and panel copy carry glyphs and
-              // stroke-drawn shapes; the outer border, radius, and row
-              // separators near the edges stay strict.
-              {
-                bottom: 16 + normalizedDimensions.height - 4,
-                left: 16 + 10,
-                right: 16 + normalizedDimensions.width - 10,
-                top: 16 + 4,
-              },
-            ]
+          ? []
           : scenario.component === 'animated-number'
-            ? [
-                {
-                  bottom: 16 + normalizedDimensions.height + 1,
-                  left: 15,
-                  right: 16 + normalizedDimensions.width + 1,
-                  top: 15,
-                },
-              ]
+            ? []
             : scenario.component === 'copy-button'
-              ? [
-                  // The label glyphs are excluded; the button border, fill,
-                  // and radius stay strict.
-                  {
-                    bottom: 16 + normalizedDimensions.height - 6,
-                    left: 16 + 6,
-                    right: 16 + normalizedDimensions.width - 6,
-                    top: 16 + 6,
-                  },
-                ]
+              ? []
               : scenario.component === 'textarea'
                 ? [
-                    // Chromium paints a native resize grip in the corner that the
-                    // Flutter control does not reproduce.
-                    {
-                      bottom: 16 + normalizedDimensions.height - 1,
-                      left: 16 + normalizedDimensions.width - 14,
-                      right: 16 + normalizedDimensions.width - 1,
-                      top: 16 + normalizedDimensions.height - 14,
-                    },
                     ...(scenario.args['value'] !== undefined ||
                     scenario.args['placeholder'] !== undefined
                       ? [
-                          // Only the text rows carry glyphs; the border, fill, and
-                          // focus ring stay strict.
+                          // Only the text rows; the border, fill and focus ring
+                          // stay strict.
                           {
                             bottom: 16 + normalizedDimensions.height - 8,
                             left: 16 + 8,
@@ -1552,61 +1531,17 @@ async function compareScenario(
                       : []),
                   ]
                 : scenario.component === 'tabs'
-                  ? [
-                      // Tab labels and panel copy carry glyphs; the indicator and
-                      // the list divider stay strict.
-                      {
-                        bottom:
-                          13 +
-                          (scenario.args['uiSize'] === 'sm'
-                            ? 32
-                            : scenario.args['uiSize'] === 'lg'
-                              ? 48
-                              : 40),
-                        left: 15,
-                        right: 16 + normalizedDimensions.width + 1,
-                        top: 15,
-                      },
-                      {
-                        bottom: 16 + normalizedDimensions.height + 1,
-                        left: 15,
-                        right: 16 + normalizedDimensions.width + 1,
-                        top:
-                          18 +
-                          (scenario.args['uiSize'] === 'sm'
-                            ? 32
-                            : scenario.args['uiSize'] === 'lg'
-                              ? 48
-                              : 40),
-                      },
-                    ]
+                  ? []
                   : scenario.component === 'checkbox' &&
                       scenario.args['mark'] !== 'unchecked'
-                    ? [
-                        // The check and dash indicators are glyphs; the box border and
-                        // fill stay strict.
-                        {
-                          bottom: 16 + normalizedDimensions.height - 3,
-                          left: 16 + 3,
-                          right: 16 + normalizedDimensions.width - 3,
-                          top: 16 + 3,
-                        },
-                      ]
+                    ? []
                     : scenario.component === 'breadcrumbs'
-                      ? [
-                          // A trail of plain text; geometry and layout stay strict while
-                          // glyph rasterization is excluded like the text component.
-                          {
-                            bottom: 16 + normalizedDimensions.height + 1,
-                            left: 15,
-                            right: 16 + normalizedDimensions.width + 1,
-                            top: 15,
-                          },
-                        ]
+                      ? []
                       : scenario.component === 'steps'
                         ? [
-                            // Exclude the step copy column; the numbered markers and the
-                            // connecting rail stay strict.
+                            // Only the copy column; the numbered markers and the
+                            // connecting rail stay strict. CJK locales leave a
+                            // residue here the classifier does not absorb.
                             {
                               bottom: 16 + normalizedDimensions.height + 1,
                               left: 16 + 30,
@@ -1615,73 +1550,18 @@ async function compareScenario(
                             },
                           ]
                         : scenario.component === 'fieldset'
-                          ? [
-                              // Exclude the legend and body copy; the border, radius,
-                              // and disabled fade stay strict.
-                              {
-                                bottom: 16 + normalizedDimensions.height - 10,
-                                left: 16 + 10,
-                                right: 16 + normalizedDimensions.width - 10,
-                                top: 16 + 10,
-                              },
-                            ]
+                          ? []
                           : scenario.component === 'field'
-                            ? [
-                                // Label, control text, and helper rows carry glyphs; the
-                                // control border and fill stay strict.
-                                { bottom: 29, left: 16, right: 352, top: 15 },
-                                { bottom: 64, left: 24, right: 344, top: 44 },
-                                { bottom: 104, left: 16, right: 352, top: 78 },
-                              ]
+                            ? []
                             : scenario.component === 'meter'
-                              ? [
-                                  // The label and value rows carry glyphs; the track and
-                                  // indicator stay strict.
-                                  {
-                                    bottom: 16 + normalizedDimensions.height - 16,
-                                    left: 15,
-                                    right: 16 + normalizedDimensions.width + 1,
-                                    top: 15,
-                                  },
-                                ]
+                              ? []
                               : scenario.component === 'code'
-                                ? [
-                                    // Exclude only the glyph run; the chip border, fill,
-                                    // and radius stay strict.
-                                    {
-                                      bottom: 16 + normalizedDimensions.height - 2,
-                                      left: 16 + 5,
-                                      right: 16 + normalizedDimensions.width - 5,
-                                      top: 16 + 2,
-                                    },
-                                  ]
+                                ? []
                                 : scenario.component === 'code-block'
-                                  ? [
-                                      // Exclude only the code text inside the 12/16px padding;
-                                      // the block border, fill, and radius stay strict.
-                                      {
-                                        bottom: 16 + normalizedDimensions.height - 10,
-                                        left: 16 + 10,
-                                        right: 16 + normalizedDimensions.width - 10,
-                                        top: 16 + 10,
-                                      },
-                                    ]
+                                  ? []
                                   : scenario.component === 'navigation-menu' &&
                                       scenario.args['open'] !== true
-                                    ? [
-                                        {
-                                          bottom: 16 + 34,
-                                          left: 16 + 30,
-                                          right: 16 + 122,
-                                          top: 16 + 10,
-                                        },
-                                        {
-                                          bottom: 16 + 34,
-                                          left: 16 + 158,
-                                          right: 16 + 261,
-                                          top: 16 + 10,
-                                        },
-                                      ]
+                                    ? []
                                     : scenario.component === 'context-menu'
                                       ? [
                                           {
@@ -1693,6 +1573,11 @@ async function compareScenario(
                                         ]
                                       : scenario.component === 'file-tree'
                                         ? [
+                                            // Rows only. The residue here is the
+                                            // same in every locale and theme, so
+                                            // it is a rendering difference rather
+                                            // than glyph shaping -- worth its own
+                                            // investigation.
                                             {
                                               bottom: 16 + 35,
                                               left: 16 + 14,
@@ -1741,40 +1626,36 @@ async function compareScenario(
                                             ]
                                           : Object.entries(reactParts).flatMap(
                                               ([name, reactPart]) => {
-                                                const flutterPart =
-                                                  stateMetrics.parts[name]?.bounds;
-                                                if (flutterPart === undefined)
+                                                if (
+                                                  stateMetrics.parts[name]?.bounds ===
+                                                  undefined
+                                                ) {
                                                   return [];
-                                                const reactLeft =
+                                                }
+                                                const ink =
+                                                  inkMaskParts[scenario.component];
+                                                if (
+                                                  ink !== undefined &&
+                                                  !ink.includes(name)
+                                                ) {
+                                                  return [];
+                                                }
+                                                // The React box alone, never the union
+                                                // with Flutter's: a union grows the mask
+                                                // by however far the two parts drift, so
+                                                // a geometry regression would widen its
+                                                // own cover instead of failing. Part
+                                                // geometry is asserted separately above.
+                                                const left =
                                                   reactPart.x - reactStateBox.x + 16;
-                                                const reactTop =
+                                                const top =
                                                   reactPart.y - reactStateBox.y + 16;
-                                                const flutterLeft =
-                                                  flutterPart.x -
-                                                  flutterStateBox.x +
-                                                  16;
-                                                const flutterTop =
-                                                  flutterPart.y -
-                                                  flutterStateBox.y +
-                                                  16;
                                                 return [
                                                   {
-                                                    bottom:
-                                                      Math.max(
-                                                        reactTop + reactPart.height,
-                                                        flutterTop + flutterPart.height,
-                                                      ) + 1,
-                                                    left:
-                                                      Math.min(reactLeft, flutterLeft) -
-                                                      1,
-                                                    right:
-                                                      Math.max(
-                                                        reactLeft + reactPart.width,
-                                                        flutterLeft + flutterPart.width,
-                                                      ) + 1,
-                                                    top:
-                                                      Math.min(reactTop, flutterTop) -
-                                                      1,
+                                                    bottom: top + reactPart.height + 1,
+                                                    left: left - 1,
+                                                    right: left + reactPart.width + 1,
+                                                    top: top - 1,
                                                   },
                                                 ];
                                               },
@@ -1791,19 +1672,33 @@ async function compareScenario(
     });
   }
   if (scenario.component === 'card' && scenario.args['variant'] === 'elevated') {
+    // Only the band the shadow actually reaches, not the whole margin. Beyond
+    // it both runtimes paint plain page background, and masking that far out
+    // meant the elevated card compared almost nothing outside its border.
+    const shadowBand = 8;
     rasterRects.push(
-      { bottom: 15, left: 0, right: imageWidth, top: 0 },
       {
-        bottom: imageHeight,
-        left: 0,
-        right: imageWidth,
+        bottom: 15,
+        left: 16 - shadowBand,
+        right: 16 + normalizedDimensions.width + shadowBand,
+        top: 16 - shadowBand,
+      },
+      {
+        bottom: 16 + normalizedDimensions.height + shadowBand,
+        left: 16 - shadowBand,
+        right: 16 + normalizedDimensions.width + shadowBand,
         top: 16 + normalizedDimensions.height,
       },
-      { bottom: imageHeight, left: 0, right: 15, top: 16 },
       {
-        bottom: imageHeight,
+        bottom: 16 + normalizedDimensions.height,
+        left: 16 - shadowBand,
+        right: 15,
+        top: 16,
+      },
+      {
+        bottom: 16 + normalizedDimensions.height,
         left: 16 + normalizedDimensions.width,
-        right: imageWidth,
+        right: 16 + normalizedDimensions.width + shadowBand,
         top: 16,
       },
     );
