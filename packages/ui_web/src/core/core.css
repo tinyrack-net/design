@@ -110,6 +110,7 @@
   --spacing-tinyrack-spinner-size-md: var(--tinyrack-spinner-size-md);
   --spacing-tinyrack-spinner-size-lg: var(--tinyrack-spinner-size-lg);
   --spacing-tinyrack-spinner-stroke-width: var(--tinyrack-spinner-stroke-width);
+  --spacing-tinyrack-split-pane-min-extent: var(--tinyrack-split-pane-min-extent);
   --container-tinyrack-measure-xs: var(--tinyrack-measure-xs);
   --container-tinyrack-measure-sm: var(--tinyrack-measure-sm);
   --container-tinyrack-measure-md: var(--tinyrack-measure-md);
