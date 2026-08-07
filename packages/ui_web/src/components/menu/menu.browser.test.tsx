@@ -60,6 +60,44 @@ test('opens from the trigger and exposes Tinyrack menu semantics', async () => {
   delete document.documentElement.dataset['theme'];
 });
 
+test('spaces a visible separator one layer gap from adjacent items', async () => {
+  await render(
+    <TRMenu.Root defaultOpen>
+      <TRMenu.Trigger>Grouped actions</TRMenu.Trigger>
+      <TRMenu.Portal>
+        <TRMenu.Positioner>
+          <TRMenu.Popup>
+            <TRMenu.Item>Duplicate</TRMenu.Item>
+            <TRMenu.Separator />
+            <TRMenu.Item>Delete</TRMenu.Item>
+          </TRMenu.Popup>
+        </TRMenu.Positioner>
+      </TRMenu.Portal>
+    </TRMenu.Root>,
+  );
+
+  const items = document.querySelectorAll<HTMLElement>('.tr-menu-item');
+  const separator = document.querySelector<HTMLElement>('.tr-menu-separator');
+  const expectedGap = Number.parseFloat(
+    getComputedStyle(separator?.parentElement as HTMLElement).rowGap,
+  );
+  expect(expectedGap).toBe(4);
+  expect(separator?.getBoundingClientRect().height).toBeGreaterThan(0);
+  await expect
+    .poll(() =>
+      Math.abs(
+        (separator?.getBoundingClientRect().top ?? 0) -
+          (items[0]?.getBoundingClientRect().bottom ?? 0) -
+          expectedGap,
+      ),
+    )
+    .toBeLessThan(0.1);
+  const trailingGap =
+    (items[1]?.getBoundingClientRect().top ?? 0) -
+    (separator?.getBoundingClientRect().bottom ?? 0);
+  expect(Math.abs(trailingGap - expectedGap)).toBeLessThan(0.1);
+});
+
 test('uses keyboard typeahead, activates an item, and restores trigger focus', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   const onRestart = vi.fn();
