@@ -369,7 +369,7 @@
     }
   }
 
-  @variant lg {
+  @media (width >= 80rem) {
     .tr-app-shell-outline {
       order: 0;
     }
