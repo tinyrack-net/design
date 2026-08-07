@@ -1,4 +1,4 @@
-## Unreleased
+## 0.38.0
 
 - **Breaking:** removes `TRSpacing.fiveExtraLarge`,
   `TRBreakpoints.extraSmall`, `medium`, and `large`, and the brand-mark, pane,
@@ -6,6 +6,9 @@
   code consumers. Use the retained `TRSpacing`, `TRMeasurements.measure*`,
   `TRBreakpoints.small` or `extraLarge` values when they express the same
   decision; keep product-specific layout widths in the product.
+- Releases the Linux native context menu and its GTK input grab before
+  reporting selection or dismissal to Flutter, so restoring terminal focus
+  cannot leave the application unresponsive after the menu closes.
 
 ## 0.37.1
 
