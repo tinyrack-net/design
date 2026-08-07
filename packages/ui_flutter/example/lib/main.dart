@@ -2229,7 +2229,7 @@ class _PreviewAccordion extends StatefulWidget {
 }
 
 class _PreviewAccordionState extends State<_PreviewAccordion> {
-  late List<String> _value = widget.open ? const ['install'] : const [];
+  List<String> _value = const ['install'];
 
   @override
   void didUpdateWidget(_PreviewAccordion oldWidget) {
