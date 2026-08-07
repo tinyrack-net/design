@@ -328,6 +328,7 @@ abstract final class TinyrackTheme {
 
     return ThemeData(
       brightness: brightness,
+      canvasColor: colors.surface,
       colorScheme: colorScheme,
       // `ThemeData` derives this from `colorScheme.outline`, which would give
       // the legacy divider path a heavier tone than the Material 3 `Divider`.

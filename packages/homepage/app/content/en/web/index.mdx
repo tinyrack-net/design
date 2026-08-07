@@ -37,6 +37,10 @@ automatically.
 Set `data-theme="tinyrack-light"` on the document root. Tinyrack UI also
 provides `tinyrack-dark` for dark interfaces.
 
+`core.css` paints `html` and `body` with the selected theme's
+`--tinyrack-surface` and `--tinyrack-text` colors. Add a later application CSS
+rule when the page canvas needs a different treatment.
+
 <GettingStartedCode label="Theme selection" snippet="theme" />
 
 ## 5. Render a primary action
