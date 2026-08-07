@@ -1472,6 +1472,7 @@ describe('React Router documentation contract', () => {
       'test:unit',
       'test:visual-parity',
       'test:visual-parity:benchmark',
+      'test:visual-parity:ci',
       'test:visual-parity:endpoint',
       'test:visual-parity:motion',
       'test:visual-parity:quick',
