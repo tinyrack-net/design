@@ -106,7 +106,7 @@ test('the canonical token source covers Flutter component metrics', () => {
     alert: { cjkDescriptionLineHeight: 1.45 },
     card: { blockInsetCorrection: '0.296875px' },
     code: { inlineLineHeight: 1.25 },
-    normalLine: { sm: '18px', md: '20px' },
+    normalLine: { sm: '18px', md: '20px', lg: '23px' },
     textField: {
       paddingInlineCorrection: '0.25rem',
       paddingBlockCorrection: '0.1875rem',

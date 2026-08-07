@@ -57,7 +57,9 @@
     font-weight: var(--tinyrack-weight-medium);
     gap: var(--tinyrack-space-sm);
     line-height: var(--tinyrack-leading-sm);
-    min-height: calc(var(--tinyrack-control-height-sm) + var(--tinyrack-space-xs));
+    /* The tightened layer row: Flutter's menuItemHeight resolves to
+       control-height-sm, the same alignment menu.css already made. */
+    min-height: var(--tinyrack-control-height-sm);
     padding-block: 0;
     padding-inline: var(--tinyrack-control-padding-inline-sm);
     text-align: start;
@@ -139,11 +141,15 @@
     gap: var(--tinyrack-space-xs);
   }
 
-  .tr-context-menu-separator {
+  /* `.tr-separator` resets the margin, and a single class cannot outrank it,
+     so the breathing room declared here never reached the rendered rule. */
+  .tr-separator.tr-context-menu-separator {
     background: var(--tinyrack-control-border);
     border: 0;
     height: var(--tinyrack-border-width-default);
-    margin: var(--tinyrack-space-xs) calc(var(--tinyrack-space-xs) * -1);
+    /* Block margin matches the Flutter separator's vertical padding; the
+       negative inline margin still bleeds through the popup padding. */
+    margin: var(--tinyrack-space-sm) calc(var(--tinyrack-space-xs) * -1);
   }
 
   .tr-context-menu-positioner {

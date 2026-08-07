@@ -1421,8 +1421,8 @@ void main() {
       );
     });
 
-    testWidgets('menubar trigger shows a focus ring like every other layer '
-        'trigger', (tester) async {
+    testWidgets('menubar trigger keeps no focus ring, even while its menu is '
+        'open', (tester) async {
       await tester.pumpWidget(
         _app(
           TRMenubar(
@@ -1446,12 +1446,12 @@ void main() {
       expect(resting.color, Colors.transparent);
       expect(resting.width, TRGeneratedBorders.defaultWidth);
 
+      // The trigger holds WidgetState.focused while its menu is open, so a ring
+      // keyed on focus would paint on the open trigger; the web keeps it bare
+      // because focus lives in the popup.
       final focused = side.resolve(<WidgetState>{WidgetState.focused})!;
-      expect(
-        focused.color,
-        TinyrackTheme.light().extension<TinyrackThemeData>()!.focus,
-      );
-      expect(focused.width, TRGeneratedBorders.focusWidth);
+      expect(focused.color, Colors.transparent);
+      expect(focused.width, TRGeneratedBorders.defaultWidth);
     });
 
     testWidgets('menubar sizes the bar and its triggers to its uiSize', (

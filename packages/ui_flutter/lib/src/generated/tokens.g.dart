@@ -527,6 +527,7 @@ abstract final class TRGeneratedFlutterRendering {
   static const double codeInlineLineHeight = 1.25;
   static const double normalLineSm = 18.0;
   static const double normalLineMd = 20.0;
+  static const double normalLineLg = 23.0;
   static const double textFieldPaddingInlineCorrection = 4.0;
   static const double textFieldPaddingBlockCorrection = 3.0;
   static const double terminalSelectionOpacity = 0.5;

@@ -139,6 +139,11 @@ class _TRDrawerState extends State<TRDrawer> {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
+    // The web drawer frames itself with `--tinyrack-control-border`, which #444
+    // separated from the surface `border` weight (dark: #a3a3a3 vs #404040).
+    final generated = Theme.of(context).brightness == Brightness.light
+        ? TRGeneratedColors.light
+        : TRGeneratedColors.dark;
     final media = MediaQuery.of(context);
     final direction = Directionality.of(context);
     final physicalStart = direction == TextDirection.ltr
@@ -167,12 +172,19 @@ class _TRDrawerState extends State<TRDrawer> {
             ),
             media.size.height,
           );
+    // A side drawer has no border on the web -- `.tr-drawer-popup` drops it for
+    // the left and right swipe directions, because the panel is flush against
+    // the viewport edge and a full-height outline there reads as a seam. Only
+    // the top and bottom sheets keep one.
+    final borderWidth = _horizontal ? TRGeneratedBorders.defaultWidth : 0.0;
     final body = Material(
       color: colors.surface,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: radius,
-        side: BorderSide(color: colors.border),
+        side: borderWidth == 0
+            ? BorderSide.none
+            : BorderSide(color: generated.controlBorder, width: borderWidth),
       ),
       clipBehavior: Clip.antiAlias,
       child: Semantics(
@@ -183,12 +195,16 @@ class _TRDrawerState extends State<TRDrawer> {
         child: SafeArea(
           top: widget.placement != TRDrawerPlacement.top,
           bottom: widget.placement != TRDrawerPlacement.bottom,
+          // The border comes from the Material shape, which paints over the box
+          // without reserving room inside it. The web panel is `box-sizing:
+          // border-box`, so its content starts one border width further in.
+          // Adding it here is what `TRDialog` does for the same reason.
           child: Padding(
             padding: EdgeInsets.fromLTRB(
-              TRGeneratedSpacing.md,
-              TRGeneratedSpacing.md,
-              TRGeneratedSpacing.md,
-              TRGeneratedSpacing.md + media.viewInsets.bottom,
+              TRGeneratedSpacing.md + borderWidth,
+              TRGeneratedSpacing.md + borderWidth,
+              TRGeneratedSpacing.md + borderWidth,
+              TRGeneratedSpacing.md + borderWidth + media.viewInsets.bottom,
             ),
             child: Column(
               mainAxisSize: _fitsContent ? MainAxisSize.min : MainAxisSize.max,
@@ -197,38 +213,35 @@ class _TRDrawerState extends State<TRDrawer> {
                 if (widget.title case final title?)
                   TRLayerPartBoundary(
                     name: 'title',
-                    child: Transform.translate(
-                      offset: _horizontal ? const Offset(1, 1) : Offset.zero,
-                      child: DefaultTextStyle.merge(
-                        style: TextStyle(
-                          color: colors.text,
-                          fontFamily: TRGeneratedFontFamilies.body,
-                          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                          fontSize: TRGeneratedTypographySizes.lg,
-                          fontWeight: TRGeneratedFontWeights.medium,
-                          height:
-                              TRGeneratedControlMetrics.lgLineHeight /
-                              TRGeneratedTypographySizes.lg,
-                        ),
-                        child: title,
+                    child: DefaultTextStyle.merge(
+                      style: TextStyle(
+                        color: colors.text,
+                        fontFamily: TRGeneratedFontFamilies.body,
+                        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+                        fontSize: TRGeneratedTypographySizes.lg,
+                        fontWeight: TRGeneratedFontWeights.medium,
+                        // `.tr-drawer-title` sets no line-height, so the web
+                        // uses `normal` and the font's own metrics decide. The
+                        // control line height is a different thing entirely --
+                        // it belongs to buttons and inputs, and at lg it is 20
+                        // against the 23 the browser actually lays out.
+                        height:
+                            TRGeneratedFlutterRendering.normalLineLg /
+                            TRGeneratedTypographySizes.lg,
                       ),
+                      child: title,
                     ),
                   ),
                 if (widget.description case final description?) ...[
                   const SizedBox(height: TRGeneratedSpacing.md),
                   TRLayerPartBoundary(
                     name: 'description',
-                    child: Transform.translate(
-                      offset: _horizontal
-                          ? const Offset(1, 0)
-                          : const Offset(0, -1),
-                      child: DefaultTextStyle.merge(
-                        style: TRGeneratedTextStyles.bodySm.copyWith(
-                          color: colors.textMuted,
-                          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                        ),
-                        child: description,
+                    child: DefaultTextStyle.merge(
+                      style: TRGeneratedTextStyles.bodySm.copyWith(
+                        color: colors.textMuted,
+                        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
                       ),
+                      child: description,
                     ),
                   ),
                 ],
@@ -248,12 +261,7 @@ class _TRDrawerState extends State<TRDrawer> {
                     child: SingleChildScrollView(
                       child: TRLayerPartBoundary(
                         name: 'content',
-                        child: Transform.translate(
-                          offset: _horizontal
-                              ? const Offset(1, 0)
-                              : const Offset(0, -1),
-                          child: widget.content,
-                        ),
+                        child: widget.content,
                       ),
                     ),
                   ),
