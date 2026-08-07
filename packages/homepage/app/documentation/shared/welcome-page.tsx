@@ -528,7 +528,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
   return (
     <div
       aria-hidden="true"
-      className="absolute start-1/2 top-tinyrack-measure-xs z-0 min-h-[63rem] w-[min(calc(100%_-_6rem),86rem)] -translate-x-1/2 overflow-hidden rounded-tinyrack-xl border-tinyrack-default border-tinyrack-border-strong bg-tinyrack-surface shadow-tinyrack-overlay max-lg:w-[calc(100%_-_2rem)] max-md:top-tinyrack-2xl max-md:min-h-[54rem]"
+      className="absolute start-1/2 top-tinyrack-measure-xs z-0 min-h-[63rem] w-[min(calc(100%_-_6rem),86rem)] -translate-x-1/2 overflow-hidden rounded-tinyrack-xl border-tinyrack-default border-tinyrack-border bg-tinyrack-surface shadow-tinyrack-overlay max-lg:w-[calc(100%_-_2rem)] max-md:top-tinyrack-2xl max-md:min-h-[54rem]"
       data-welcome-app=""
       data-welcome-simulation-running={running ? 'true' : 'false'}
       ref={root}
@@ -1061,7 +1061,7 @@ function SystemVisual({ id }: { id: 'components' | 'themes' | 'tokens' }) {
       </span>
       <span className="grid gap-tinyrack-sm">
         <span className="h-tinyrack-sm w-3/4 rounded-tinyrack-full bg-tinyrack-text" />
-        <span className="h-tinyrack-xs w-full rounded-tinyrack-full bg-tinyrack-border-strong" />
+        <span className="h-tinyrack-xs w-full rounded-tinyrack-full bg-tinyrack-skeleton-fill" />
       </span>
     </div>
   );
@@ -1320,7 +1320,7 @@ export function WelcomePage({ locale }: { locale: WelcomeLocale }) {
           <div className="grid">
             <TRText
               as="p"
-              className="m-0 mb-tinyrack-lg flex items-center gap-0 max-md:flex-wrap [&>span+span]:before:px-tinyrack-md [&>span+span]:before:text-tinyrack-border-strong [&>span+span]:before:content-['/']"
+              className="m-0 mb-tinyrack-lg flex items-center gap-0 max-md:flex-wrap [&>span+span]:before:px-tinyrack-md [&>span+span]:before:text-tinyrack-border [&>span+span]:before:content-['/']"
               color="muted"
               variant="label"
               weight="medium"

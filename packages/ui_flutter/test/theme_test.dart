@@ -169,7 +169,7 @@ void main() {
     for (final (data, tokens, inverted, isLight) in themes) {
       final scheme = data.colorScheme;
 
-      expect(scheme.outline, tokens.borderStrong);
+      expect(scheme.outline, tokens.controlBorder);
       expect(scheme.outlineVariant, tokens.border);
       expect(scheme.onSurfaceVariant, tokens.textMuted);
       expect(scheme.scrim, tokens.scrim);
@@ -642,6 +642,46 @@ void main() {
     expect(ghostDecoration.color, Colors.transparent);
     expect(ghostDecoration.border!.top.color, Colors.transparent);
     expect(ghostDecoration.border!.top.width, solidBorder.width);
+  });
+
+  testWidgets('dark solid fields strengthen their border on hover', (
+    tester,
+  ) async {
+    Future<Color> hoveredBorder(Widget field, Finder finder) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.dark(),
+          home: Scaffold(
+            body: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(width: 240, child: field),
+            ),
+          ),
+        ),
+      );
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: Offset.zero);
+      await mouse.moveTo(tester.getCenter(finder));
+      await tester.pumpAndSettle();
+
+      final frame = tester.widget<AnimatedContainer>(
+        find.descendant(of: finder, matching: find.byType(AnimatedContainer)),
+      );
+      final decoration =
+          (frame.foregroundDecoration ?? frame.decoration)! as BoxDecoration;
+      final color = decoration.border!.top.color;
+      await mouse.removePointer();
+      return color;
+    }
+
+    expect(
+      await hoveredBorder(const TRTextField(), find.byType(TRTextField)),
+      TRGeneratedColors.dark.borderStrong,
+    );
+    expect(
+      await hoveredBorder(const TRTextarea(), find.byType(TRTextarea)),
+      TRGeneratedColors.dark.borderStrong,
+    );
   });
 
   testWidgets('a focused card reflects the focus of the group it hosts', (

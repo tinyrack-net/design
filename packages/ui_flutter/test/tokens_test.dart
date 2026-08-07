@@ -35,14 +35,15 @@ void main() {
       );
     });
 
-    test('uses neutral 800 for every dark neutral boundary', () {
-      const expected = Color(0xff262626);
+    test('keeps dark resting boundaries subtle and interaction stronger', () {
+      const resting = Color(0xff262626);
+      const interaction = Color(0xff404040);
       final colors = TRGeneratedColors.dark;
 
-      expect(colors.border, expected);
-      expect(colors.borderStrong, expected);
-      expect(colors.controlBorder, expected);
-      expect(colors.controlTrack, expected);
+      expect(colors.border, resting);
+      expect(colors.controlBorder, resting);
+      expect(colors.controlTrack, resting);
+      expect(colors.borderStrong, interaction);
     });
   });
 

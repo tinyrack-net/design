@@ -1,6 +1,7 @@
 import '../components/accordion/accordion.css';
 import '../components/card/card.css';
 import '../components/checkbox/checkbox.css';
+import '../components/field/field.css';
 import '../components/input/input.css';
 import '../components/meter/meter.css';
 import '../components/pagination/pagination.css';
@@ -9,6 +10,7 @@ import '../components/select/select.css';
 import '../components/separator/separator.css';
 import '../components/table/table.css';
 import '../components/tabs/tabs.css';
+import '../components/textarea/textarea.css';
 import './core.css';
 import { afterEach, expect, test } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
@@ -18,16 +20,22 @@ afterEach(() => {
   document.documentElement.removeAttribute('data-theme');
 });
 
-function expectBorderColor(testId: string, side: 'top' | 'bottom' = 'top') {
+function borderColor(testId: string, side: 'top' | 'bottom' = 'top') {
   const styles = getComputedStyle(
     document.querySelector(`[data-testid="${testId}"]`) as Element,
   );
-  expect(side === 'top' ? styles.borderTopColor : styles.borderBottomColor).toBe(
-    'rgb(38, 38, 38)',
-  );
+  return side === 'top' ? styles.borderTopColor : styles.borderBottomColor;
 }
 
-test('dark neutral boundaries render with one subtle color', async () => {
+function expectBorderColor(
+  testId: string,
+  expected = 'rgb(38, 38, 38)',
+  side: 'top' | 'bottom' = 'top',
+) {
+  expect(borderColor(testId, side)).toBe(expected);
+}
+
+test('dark resting boundaries stay subtle and interaction borders strengthen', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-dark';
   const screen = await render(
     <div>
@@ -35,6 +43,11 @@ test('dark neutral boundaries render with one subtle color', async () => {
       <div className="tr-table-container" data-testid="table" />
       <div className="tr-tabs-list" data-testid="tabs" />
       <input className="tr-input" data-testid="input" />
+      <div className="tr-input-group" data-testid="input-group">
+        <input className="tr-input-group-input" />
+      </div>
+      <input className="tr-field-control" data-testid="field" />
+      <textarea className="tr-textarea" data-testid="textarea" />
       <button className="tr-select-trigger" data-testid="select" type="button" />
       <button className="tr-checkbox" data-testid="checkbox" type="button" />
       <button className="tr-radio" data-testid="radio" type="button" />
@@ -53,6 +66,9 @@ test('dark neutral boundaries render with one subtle color', async () => {
     'card',
     'table',
     'input',
+    'input-group',
+    'field',
+    'textarea',
     'select',
     'checkbox',
     'radio',
@@ -61,7 +77,7 @@ test('dark neutral boundaries render with one subtle color', async () => {
   ]) {
     expectBorderColor(testId);
   }
-  expectBorderColor('tabs', 'bottom');
+  expectBorderColor('tabs', 'rgb(38, 38, 38)', 'bottom');
   expect(
     getComputedStyle(document.querySelector('[data-testid="separator"]') as Element)
       .backgroundColor,
@@ -71,15 +87,10 @@ test('dark neutral boundaries render with one subtle color', async () => {
       .backgroundColor,
   ).toBe('rgb(38, 38, 38)');
 
-  await screen.getByTestId('pagination').hover();
-  await expect
-    .poll(
-      () =>
-        getComputedStyle(
-          document.querySelector('[data-testid="pagination"]') as Element,
-        ).borderTopColor,
-    )
-    .toBe('rgb(38, 38, 38)');
+  for (const testId of ['input', 'input-group', 'field', 'textarea', 'pagination']) {
+    await screen.getByTestId(testId).hover();
+    await expect.poll(() => borderColor(testId)).toBe('rgb(64, 64, 64)');
+  }
 });
 
 test('light neutral boundaries and dark semantic indicators stay unchanged', () => {
@@ -92,6 +103,7 @@ test('light neutral boundaries and dark semantic indicators stay unchanged', () 
 
   document.documentElement.dataset['theme'] = 'tinyrack-dark';
   styles = getComputedStyle(document.documentElement);
+  expect(styles.getPropertyValue('--tinyrack-border-strong').trim()).toBe('#404040');
   expect(styles.getPropertyValue('--tinyrack-border-inverse').trim()).toBe('#737373');
   expect(styles.getPropertyValue('--tinyrack-focus').trim()).toBe('#60a5fa');
   expect(styles.getPropertyValue('--tinyrack-info-border').trim()).toBe('#60a5fa');

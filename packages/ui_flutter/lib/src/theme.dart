@@ -310,10 +310,9 @@ abstract final class TinyrackTheme {
       surfaceDim: isLight ? generated.surfaceMuted : generated.surface,
       surfaceBright: isLight ? generated.surface : generated.surfaceMuted,
       onSurfaceVariant: generated.textMuted,
-      // Material 3 reserves `outline` for boundaries that carry emphasis and
-      // `outlineVariant` for decorative ones such as dividers, which is exactly
-      // the split between the two Tinyrack border tiers.
-      outline: generated.borderStrong,
+      // Material's outline is a resting control boundary. Interaction emphasis
+      // stays on Tinyrack components that explicitly resolve `borderStrong`.
+      outline: generated.controlBorder,
       outlineVariant: generated.border,
       scrim: generated.scrim,
       inverseSurface: generated.surfaceInverse,

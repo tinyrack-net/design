@@ -198,7 +198,7 @@ abstract final class TRGeneratedColors {
     textMuted: Color(0xffa3a3a3),
     textPlaceholder: Color(0xffa3a3a3),
     border: Color(0xff262626),
-    borderStrong: Color(0xff262626),
+    borderStrong: Color(0xff404040),
     controlBorder: Color(0xff262626),
     controlTrack: Color(0xff262626),
     focus: Color(0xff60a5fa),

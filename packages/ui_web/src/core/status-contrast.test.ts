@@ -97,7 +97,7 @@ describe('semantic status contrast', () => {
     }
   });
 
-  it('uses one subtle neutral boundary in the dark theme', () => {
+  it('separates dark interaction emphasis from subtle resting boundaries', () => {
     const dark = tinyrackSemanticColors.dark;
 
     expect({
@@ -107,7 +107,7 @@ describe('semantic status contrast', () => {
       controlTrack: dark.controlTrack,
     }).toEqual({
       border: '#262626',
-      borderStrong: '#262626',
+      borderStrong: '#404040',
       controlBorder: '#262626',
       controlTrack: '#262626',
     });
