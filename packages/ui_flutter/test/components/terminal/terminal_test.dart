@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
+import 'package:xterm/xterm.dart' as xterm;
 
 void main() {
   testWidgets(
@@ -526,5 +527,37 @@ void main() {
         .color;
 
     expect(light, isNot(dark));
+  });
+
+  testWidgets('terminal selection overlays content at half opacity', (
+    tester,
+  ) async {
+    final controller = TRTerminalController()..write('selectable');
+    addTearDown(controller.dispose);
+
+    for (final mode in ThemeMode.values.where(
+      (mode) => mode != ThemeMode.system,
+    )) {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          darkTheme: TinyrackTheme.dark(),
+          themeMode: mode,
+          home: TRTerminalView(controller: controller),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final colors = tester.element(find.byType(TRTerminalView)).tinyrackTheme;
+      final terminal = tester.widget<xterm.TerminalView>(
+        find.byType(xterm.TerminalView),
+      );
+
+      expect(
+        terminal.theme.selection,
+        colors.surfaceSelected.withValues(alpha: 0.5),
+        reason: '$mode selection must preserve terminal glyphs beneath it',
+      );
+    }
   });
 }
