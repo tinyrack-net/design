@@ -1,3 +1,13 @@
+## 0.35.0
+
+- Makes top and bottom `TRDrawer` surfaces fit their content by default instead
+  of reserving half the viewport and leaving growing empty space below short
+  content. A drawer now grows only until it reaches the available viewport,
+  then scrolls its content while keeping its header and actions visible.
+- Passing `snapPoints` opts back into viewport-relative sizing and drag-to-snap
+  behavior. Start and end drawers retain their existing side-panel dimensions
+  when `snapPoints` is omitted.
+
 ## 0.34.0
 
 - Draws a surface and the control sitting on it at one border weight. `border`

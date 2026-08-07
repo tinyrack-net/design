@@ -1145,10 +1145,25 @@ const componentData: Record<
   drawer: {
     title: 'Drawer',
     description: {
-      en: 'Present a swipeable modal or scaffold sheet from any logical edge.',
-      ko: '논리적 네 방향에서 스와이프할 수 있는 모달 또는 스캐폴드 시트를 표시해요.',
-      ja: '論理方向の各辺から、スワイプ可能なモーダルまたはスキャフォールドシートを表示します。',
+      en: 'Present a content-sized modal sheet or a viewport-relative, swipeable drawer from any logical edge.',
+      ko: '콘텐츠에 맞는 모달 시트나 뷰포트 비율로 스와이프하는 드로어를 논리적 네 방향에서 표시해요.',
+      ja: 'コンテンツに合うモーダルシート、またはビューポート比率でスワイプできるドロワーを論理方向の各辺から表示します。',
     },
+    contractIntro: {
+      en: 'Top and bottom drawers fit their content by default and scroll only when content exceeds the available viewport. Supply `snapPoints` to opt into viewport-relative sizing and drag-to-snap behavior. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted.',
+      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고, 콘텐츠가 사용 가능한 뷰포트를 넘을 때만 스크롤해요. 뷰포트 비율 크기와 드래그 스냅이 필요하면 `snapPoints`를 지정하세요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요.',
+      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、利用可能なビューポートを超えた場合のみスクロールします。ビューポート比率のサイズとドラッグスナップを使う場合は `snapPoints` を指定してください。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Sizing', ko: '크기', ja: 'サイズ' },
+        choices: {
+          en: 'Content-sized by default for top and bottom; viewport-relative when `snapPoints` is supplied',
+          ko: '상단과 하단은 기본적으로 콘텐츠에 맞고, `snapPoints`를 지정하면 뷰포트 비율을 사용해요',
+          ja: '上端と下端はデフォルトでコンテンツに合わせ、`snapPoints` を指定するとビューポート比率を使います',
+        },
+      },
+    ],
     usage:
       "showTRDrawer<void>(\n  context: context,\n  builder: (_) => const TRDrawer(content: Text('Settings')),\n)",
   },

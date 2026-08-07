@@ -1187,6 +1187,130 @@ void main() {
       expect(result, 'done');
     });
 
+    testWidgets(
+      'bottom drawer fits content and only scrolls when the viewport is short',
+      (tester) async {
+        Future<Size> pumpDrawer(
+          Size viewport, {
+          double contentHeight = 120,
+        }) async {
+          tester.view.devicePixelRatio = 1;
+          tester.view.physicalSize = viewport;
+          await tester.pumpWidget(
+            _app(
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: TRDrawer(
+                  title: const Text('Deploy settings'),
+                  description: const Text('Review the target.'),
+                  actions: const Text('Deploy'),
+                  content: SizedBox(
+                    key: const ValueKey('drawer-content'),
+                    height: contentHeight,
+                    child: const Text('Channel: Stable'),
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pump();
+          return tester.getSize(find.byType(TRDrawer));
+        }
+
+        addTearDown(tester.view.reset);
+
+        final medium = await pumpDrawer(const Size(600, 400));
+        final tall = await pumpDrawer(const Size(600, 600));
+        expect(tall.height, medium.height);
+        expect(tall.height, lessThan(500));
+
+        final short = await pumpDrawer(
+          const Size(600, 260),
+          contentHeight: 600,
+        );
+        expect(short.height, 260);
+        final scrollable = tester.state<ScrollableState>(
+          find.byType(Scrollable).first,
+        );
+        expect(scrollable.position.maxScrollExtent, greaterThan(0));
+      },
+    );
+
+    testWidgets('drawer preserves explicit snaps and side sizing', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(800, 600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      int? snappedIndex;
+
+      await tester.pumpWidget(
+        _app(
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: TRDrawer(
+              snapPoints: const <double>[0.5, 1],
+              onSnapChanged: (index) => snappedIndex = index,
+              content: const Text('Snapped content'),
+            ),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byType(TRDrawer)), const Size(800, 300));
+      await tester.drag(find.byType(TRDrawer), const Offset(0, -250));
+      await tester.pump();
+      expect(tester.getSize(find.byType(TRDrawer)), const Size(800, 600));
+      expect(snappedIndex, 1);
+
+      await tester.pumpWidget(
+        _app(
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TRDrawer(
+              placement: TRDrawerPlacement.start,
+              content: const Text('Side content'),
+            ),
+          ),
+        ),
+      );
+      final sideSize = tester.getSize(find.byType(TRDrawer));
+      expect(sideSize.height, 600);
+      expect(sideSize.width, lessThan(800));
+    });
+
+    testWidgets('content-sized drawer keeps actions above the keyboard', (
+      tester,
+    ) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(400, 500);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 160);
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        _app(
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: TRDrawer(
+              title: const Text('Edit deployment'),
+              actions: const Text('Save'),
+              content: SizedBox(
+                height: 600,
+                child: const Text('Long settings form'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        tester.getBottomRight(find.text('Save')).dy,
+        lessThanOrEqualTo(340),
+      );
+      final scrollable = tester.state<ScrollableState>(
+        find.byType(Scrollable).first,
+      );
+      expect(scrollable.position.maxScrollExtent, greaterThan(0));
+    });
+
     testWidgets('toast queue caps, updates, and dismisses notifications', (
       tester,
     ) async {

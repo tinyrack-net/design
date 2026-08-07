@@ -43,11 +43,16 @@ class TRDrawer extends StatefulWidget {
     this.onSnapChanged,
     this.placement = TRDrawerPlacement.bottom,
     this.semanticLabel,
-    this.snapPoints = const [0.5, 1],
+    this.snapPoints,
     this.title,
     super.key,
-  }) : assert(snapPoints.length > 0),
-       assert(initialSnapIndex >= 0 && initialSnapIndex < snapPoints.length);
+  }) : assert(snapPoints == null || snapPoints.length > 0),
+       assert(
+         initialSnapIndex >= 0 &&
+             (snapPoints == null
+                 ? initialSnapIndex == 0
+                 : initialSnapIndex < snapPoints.length),
+       );
 
   final Widget content;
   final Widget? actions;
@@ -58,7 +63,13 @@ class TRDrawer extends StatefulWidget {
   final ValueChanged<int>? onSnapChanged;
   final TRDrawerPlacement placement;
   final String? semanticLabel;
-  final List<double> snapPoints;
+
+  /// Fractions of the viewport at which the drawer snaps.
+  ///
+  /// A top or bottom drawer fits its content when this is omitted. Start and
+  /// end drawers retain their standard width. Supplying snap points opts into
+  /// viewport-relative sizing and drag-to-snap behavior.
+  final List<double>? snapPoints;
   final Widget? title;
 
   @override
@@ -68,13 +79,17 @@ class TRDrawer extends StatefulWidget {
 class _TRDrawerState extends State<TRDrawer> {
   late double _extent = _resolvedSnapPoints[widget.initialSnapIndex];
 
-  List<double> get _resolvedSnapPoints => widget.snapPoints
+  List<double> get _resolvedSnapPoints => (widget.snapPoints ?? const [0.5, 1])
       .map((point) => point.clamp(0.1, 1.0))
       .toList(growable: false);
 
   bool get _horizontal =>
       widget.placement == TRDrawerPlacement.top ||
       widget.placement == TRDrawerPlacement.bottom;
+
+  bool get _fitsContent => _horizontal && widget.snapPoints == null;
+
+  bool get _draggable => !_fitsContent;
 
   void _drag(DragUpdateDetails details) {
     final media = MediaQuery.sizeOf(context);
@@ -176,6 +191,7 @@ class _TRDrawerState extends State<TRDrawer> {
               TRGeneratedSpacing.md + media.viewInsets.bottom,
             ),
             child: Column(
+              mainAxisSize: _fitsContent ? MainAxisSize.min : MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.title case final title?)
@@ -217,7 +233,8 @@ class _TRDrawerState extends State<TRDrawer> {
                   ),
                 ],
                 const SizedBox(height: TRGeneratedSpacing.md),
-                Expanded(
+                Flexible(
+                  fit: _fitsContent ? FlexFit.loose : FlexFit.tight,
                   child: DefaultTextStyle.merge(
                     style: TextStyle(
                       color: colors.text,
@@ -252,19 +269,22 @@ class _TRDrawerState extends State<TRDrawer> {
         ),
       ),
     );
+    final interactiveBody = GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onHorizontalDragEnd: !_draggable || _horizontal ? null : _endDrag,
+      onHorizontalDragUpdate: !_draggable || _horizontal ? null : _drag,
+      onVerticalDragEnd: !_draggable || !_horizontal ? null : _endDrag,
+      onVerticalDragUpdate: !_draggable || !_horizontal ? null : _drag,
+      child: body,
+    );
     return TRLayerBoundary(
       kind: TRLayerBoundaryKind.drawer,
-      child: SizedBox.fromSize(
-        size: size,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onHorizontalDragEnd: _horizontal ? null : _endDrag,
-          onHorizontalDragUpdate: _horizontal ? null : _drag,
-          onVerticalDragEnd: _horizontal ? _endDrag : null,
-          onVerticalDragUpdate: _horizontal ? _drag : null,
-          child: body,
-        ),
-      ),
+      child: _fitsContent
+          ? ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: media.size.height),
+              child: SizedBox(width: media.size.width, child: interactiveBody),
+            )
+          : SizedBox.fromSize(size: size, child: interactiveBody),
     );
   }
 }
