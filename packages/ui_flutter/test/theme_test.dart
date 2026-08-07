@@ -193,6 +193,8 @@ void main() {
       expect(scheme.onSecondaryContainer, tokens.text);
       expect(scheme.errorContainer, tokens.dangerSurface);
       expect(scheme.onErrorContainer, tokens.danger);
+      expect(data.canvasColor, tokens.surface);
+      expect(data.scaffoldBackgroundColor, tokens.surface);
       expect(data.dividerColor, tokens.border);
 
       // Flutter resolves an unset boundary role to `onBackground`, which in
@@ -203,6 +205,29 @@ void main() {
       expect(scheme.outlineVariant, isNot(scheme.onSurface));
       expect(scheme.onSurfaceVariant, isNot(scheme.onSurface));
       expect(scheme.surfaceContainerHighest, isNot(scheme.surface));
+    }
+  });
+
+  testWidgets('a scaffold paints the theme surface', (tester) async {
+    for (final (theme, tokens) in <(ThemeData, TRGeneratedColorTheme)>[
+      (TinyrackTheme.light(), TRGeneratedColors.light),
+      (TinyrackTheme.dark(), TRGeneratedColors.dark),
+    ]) {
+      await tester.pumpWidget(
+        MaterialApp(theme: theme, home: const Scaffold()),
+      );
+      await tester.pumpAndSettle();
+
+      final scaffold = tester.widget<Scaffold>(find.byType(Scaffold));
+      final material = tester.widget<Material>(
+        find.descendant(
+          of: find.byType(Scaffold),
+          matching: find.byType(Material),
+        ),
+      );
+
+      expect(scaffold.backgroundColor, isNull);
+      expect(material.color, tokens.surface);
     }
   });
 

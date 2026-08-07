@@ -17,10 +17,12 @@ MaterialApp(
 ```
 
 どちらもMaterial 3を使い、`TinyrackThemeData`を`ThemeExtension`として
-登録します。カスタムウィジェットでTinyrackコンポーネントと同じ
-セマンティックカラーが必要な場合は、`context.tinyrackTheme`から
-取得します。フォーカス、キーボード、ジェスチャー、semantics、
-text scalingはFlutterの規約に従います。
+登録します。セマンティックな`surface`カラーをMaterialのcanvasとscaffoldの
+背景に割り当てるため、ルーティングされたページもデフォルトで同じライト・
+ダークのサーフェスを使います。カスタムウィジェットでTinyrackコンポーネントと
+同じセマンティックカラーが必要な場合は、`context.tinyrackTheme`から取得します。
+フォーカス、キーボード、ジェスチャー、semantics、text scalingはFlutterの
+規約に従います。
 
 IBM Plex Sans、Mono、韓国語、日本語のフォントファイル11個を同梱します。
 プラットフォーム向けにパッケージ化する前の合計サイズは約16.4 MBで、

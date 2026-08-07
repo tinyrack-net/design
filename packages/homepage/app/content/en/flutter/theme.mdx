@@ -17,6 +17,8 @@ MaterialApp(
 ```
 
 Both themes use Material 3 and install `TinyrackThemeData` as a `ThemeExtension`.
+They map the semantic `surface` color to Material's canvas and scaffold
+background, so routed pages use the same light or dark page surface by default.
 Read semantic colors from `context.tinyrackTheme` when a custom widget needs
 the same intent colors as Tinyrack components. Flutter focus, keyboard,
 gesture, semantics, and text scaling behavior remains native.
