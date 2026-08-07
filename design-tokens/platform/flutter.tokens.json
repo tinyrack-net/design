@@ -42,6 +42,17 @@
       }
     }
   },
+  "opacity": {
+    "drop-overlay": {
+      "$type": "number",
+      "$value": 0.7,
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "0.7"
+        }
+      }
+    }
+  },
   "flutterRenderingMetrics": {
     "accordionHeader": {
       "marginBlock": {

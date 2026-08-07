@@ -673,11 +673,6 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'opacity',
-    runtimeVariable: '--tinyrack-opacity-drop-overlay',
-    themeVariable: '--opacity-tinyrack-drop-overlay',
-  },
-  {
-    group: 'opacity',
     runtimeVariable: '--tinyrack-spinner-track-opacity',
     themeVariable: '--opacity-tinyrack-spinner-track',
   },
