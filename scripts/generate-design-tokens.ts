@@ -449,6 +449,7 @@ function dartOutput() {
     measureXl: requiredLayerMeasurement('measure-xl'),
     paneSm: requiredLayerMeasurement('pane-sm'),
     paneMd: requiredLayerMeasurement('pane-md'),
+    splitPaneMinExtent: requiredLayerMeasurement('split-pane-min-extent'),
     readingWidthSm: requiredLayerMeasurement('reading-width-sm'),
     readingWidthMd: requiredLayerMeasurement('reading-width-md'),
     readingWidthLg: requiredLayerMeasurement('reading-width-lg'),

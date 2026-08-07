@@ -25,6 +25,27 @@ MaterialApp(
 );
 ```
 
+Use `TRSplitView` when two application-owned surfaces need a controlled,
+resizable boundary. The caller owns the ratio and decides when a responsive
+layout should render the split:
+
+```dart
+TRSplitView(
+  axis: Axis.horizontal,
+  ratio: ratio,
+  separatorLabel: 'Resize editor panes',
+  onRatioChanged: (value) => setState(() => ratio = value),
+  onRatioChangeEnd: saveRatio,
+  first: const EditorPane(),
+  second: const PreviewPane(),
+)
+```
+
+`TRTabs.bar` can opt into document-tab dragging with
+`TRTabsDragConfiguration`. The drop callback receives both strip identities
+and the destination insertion index; tab ownership and persistence remain
+application state.
+
 The package bundles 11 IBM Plex Sans, Mono, Korean, and Japanese font files.
 They total about 16.4 MB before platform packaging and are included in a
 consumer application's Flutter asset bundle, so no runtime font download is

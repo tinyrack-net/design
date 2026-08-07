@@ -43,6 +43,7 @@ export 'src/components/progress/progress.dart';
 export 'src/components/radio/radio.dart';
 export 'src/components/separator/separator.dart';
 export 'src/components/skeleton/skeleton.dart';
+export 'src/components/split_view/split_view.dart';
 export 'src/components/slider/slider.dart';
 export 'src/components/spinner/spinner.dart';
 export 'src/components/steps/steps.dart';

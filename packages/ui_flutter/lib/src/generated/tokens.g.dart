@@ -426,6 +426,7 @@ abstract final class TRGeneratedMeasurements {
   static const double measureXl = 384.0;
   static const double paneSm = 240.0;
   static const double paneMd = 288.0;
+  static const double splitPaneMinExtent = 192.0;
   static const double readingWidthSm = 704.0;
   static const double readingWidthMd = 768.0;
   static const double readingWidthLg = 896.0;
