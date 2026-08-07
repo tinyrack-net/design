@@ -129,7 +129,7 @@ describe('tinyrack design tokens', () => {
     }
   });
 
-  it('provides five complete base color ramps without exposing a duplicate brand ramp', () => {
+  it('provides only palette steps consumed by functional colors', () => {
     expect(Object.keys(tinyrackPalettes)).toEqual([
       'neutral',
       'blue',
@@ -137,21 +137,65 @@ describe('tinyrack design tokens', () => {
       'amber',
       'red',
     ]);
-    for (const palette of Object.values(tinyrackPalettes)) {
-      expect(Object.keys(palette)).toEqual([
-        '50',
-        '100',
-        '200',
-        '300',
-        '400',
-        '500',
-        '600',
-        '700',
-        '800',
-        '900',
-        '950',
-      ]);
-    }
+    expect(Object.keys(tinyrackPalettes.neutral)).toEqual([
+      '50',
+      '100',
+      '300',
+      '400',
+      '500',
+      '600',
+      '700',
+      '800',
+      '900',
+      '950',
+    ]);
+    expect(Object.keys(tinyrackPalettes.blue)).toEqual([
+      '50',
+      '100',
+      '200',
+      '300',
+      '400',
+      '600',
+      '700',
+      '800',
+      '900',
+      '950',
+    ]);
+    expect(Object.keys(tinyrackPalettes.green)).toEqual([
+      '50',
+      '100',
+      '200',
+      '300',
+      '400',
+      '600',
+      '700',
+      '800',
+      '900',
+      '950',
+    ]);
+    expect(Object.keys(tinyrackPalettes.amber)).toEqual([
+      '50',
+      '100',
+      '200',
+      '300',
+      '400',
+      '600',
+      '800',
+      '900',
+      '950',
+    ]);
+    expect(Object.keys(tinyrackPalettes.red)).toEqual([
+      '50',
+      '100',
+      '200',
+      '300',
+      '400',
+      '600',
+      '700',
+      '800',
+      '900',
+      '950',
+    ]);
     expect(tinyrackPalettes).not.toHaveProperty('brand');
   });
 
@@ -210,18 +254,15 @@ describe('tinyrack design tokens', () => {
 
   it('keeps foundation token groups available from /core', () => {
     expect(tinyrackBreakpoints).toEqual({
-      xs: '24rem',
       sm: '40rem',
       md: '48rem',
       lg: '64rem',
-      xl: '80rem',
     });
     expect(tinyrackPalettes.neutral[950]).toBe('#0a0a0a');
     expect(tinyrackSpacing).toMatchObject({ md: '0.75rem', xl: '1.5rem' });
     expect(tinyrackMeasurements).toMatchObject({
       'measure-md': '12rem',
       'overlay-width-md': '32rem',
-      'control-width-md': '20rem',
     });
     expect(tinyrackSpinnerMetrics).toEqual({
       sizeSm: '0.75rem',
@@ -270,11 +311,7 @@ describe('tinyrack design tokens', () => {
       heading: '"IBM Plex Sans"',
       mono: '"IBM Plex Mono", monospace',
     });
-    expect(tinyrackTypography.fontFamily).toEqual({
-      body: 'var(--tinyrack-font-body)',
-      heading: 'var(--tinyrack-font-heading)',
-      mono: 'var(--tinyrack-font-mono)',
-    });
+    expect(tinyrackTypography).not.toHaveProperty('fontFamily');
     expect(tinyrackTypography.fontWeight).toEqual({
       regular: 400,
       medium: 600,

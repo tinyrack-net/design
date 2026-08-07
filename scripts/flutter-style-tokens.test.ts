@@ -3,6 +3,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { loadDesignTokens } from './design-token-source.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const flutterSource = resolve(root, 'packages/ui_flutter/lib/src');
@@ -59,10 +60,8 @@ test('Flutter components consume generated tokens for design values', () => {
   assert.deepEqual(violations, []);
 });
 
-test('the canonical token source covers Flutter component metrics', () => {
-  const tokens = JSON.parse(
-    readFileSync(resolve(root, 'design-tokens/tokens.json'), 'utf8'),
-  ) as {
+test('the canonical token source covers Flutter component metrics', async () => {
+  const tokens = (await loadDesignTokens(root, 'flutter')) as {
     controlMetrics: Record<string, { iconSize?: string }>;
     flutterRenderingMetrics?: {
       alert?: { cjkDescriptionLineHeight?: number };
@@ -71,7 +70,6 @@ test('the canonical token source covers Flutter component metrics', () => {
         paddingBlockCorrection?: string;
         paddingInlineCorrection?: string;
       };
-      terminal?: { selectionOpacity?: string };
     };
     spinnerMetrics?: {
       strokeWidth?: string;
@@ -111,7 +109,6 @@ test('the canonical token source covers Flutter component metrics', () => {
       paddingInlineCorrection: '0.25rem',
       paddingBlockCorrection: '0.1875rem',
     },
-    terminal: { selectionOpacity: '50%' },
     textTracking: {
       bodyRegularEn: 0.1784,
       bodyStrongEn: 0.0392,
@@ -153,20 +150,16 @@ test('the canonical token source covers Flutter component metrics', () => {
     },
     layerComponents: {
       anchorGap: '0.5rem',
-      popupPadding: '0.5rem',
       menuItemHeight: '1.75rem',
       optionItemHeight: '1.75rem',
-      arrowSize: '0.5rem',
       toastWidth: '24rem',
       drawerWidth: '32rem',
       navigationPanelWidth: '32rem',
       toolbarHeight: '2.5rem',
       treeItemHeight: '2rem',
-      otpSlotSize: '2rem',
       visuallyHiddenOpacity: 0,
       numberStepWidth: '2.75rem',
       sliderTrackThickness: '0.25rem',
-      sliderThumbSize: '1rem',
       sliderVerticalWidth: '4.6875rem',
       appShellSmBreakpoint: '48rem',
       appShellLgBreakpoint: '64rem',
@@ -176,6 +169,29 @@ test('the canonical token source covers Flutter component metrics', () => {
       appShellHeaderHeight: '3rem',
     },
   });
+});
+
+test('the resolver keeps platform-only token surfaces separate', async () => {
+  const web = (await loadDesignTokens(root, 'web')) as {
+    breakpoints: Record<string, string>;
+    spacing: Record<string, string>;
+  };
+  const flutter = (await loadDesignTokens(root, 'flutter')) as {
+    breakpoints: Record<string, string>;
+    spacing: Record<string, string>;
+  };
+
+  assert.deepEqual(web.breakpoints, {
+    sm: '40rem',
+    md: '48rem',
+    lg: '64rem',
+  });
+  assert.deepEqual(flutter.breakpoints, {
+    sm: '40rem',
+    xl: '80rem',
+  });
+  assert.equal(web.spacing['4xl'], undefined);
+  assert.equal(flutter.spacing['4xl'], '4rem');
 });
 
 test('the Dart generator exposes every Flutter style category', () => {

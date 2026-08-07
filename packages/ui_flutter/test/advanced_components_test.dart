@@ -610,7 +610,7 @@ void main() {
       tester,
     ) async {
       for (final (size, expected) in const [
-        (TRUiSize.md, TRGeneratedLayerMetrics.otpSlotSize),
+        (TRUiSize.md, TRGeneratedControlMetrics.mdHeight),
         (TRUiSize.lg, TRGeneratedControlMetrics.lgHeight),
       ]) {
         // AnimatedContainer tweens its box, so settle before measuring.
@@ -629,7 +629,7 @@ void main() {
       await tester.pump();
       expect(
         tester.getSize(find.byType(AnimatedContainer).first).width,
-        TRGeneratedLayerMetrics.otpSlotSize,
+        TRGeneratedControlMetrics.mdHeight,
       );
       final gaps = tester
           .widgetList<SizedBox>(

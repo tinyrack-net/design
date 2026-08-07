@@ -1,0 +1,55 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+  "name": "Tinyrack design tokens",
+  "version": "2025.10",
+  "sets": {
+    "common": {
+      "sources": [
+        {
+          "$ref": "common.tokens.json"
+        }
+      ]
+    }
+  },
+  "modifiers": {
+    "platform": {
+      "contexts": {
+        "web": [
+          {
+            "$ref": "platform/web.tokens.json"
+          }
+        ],
+        "flutter": [
+          {
+            "$ref": "platform/flutter.tokens.json"
+          }
+        ]
+      }
+    },
+    "theme": {
+      "contexts": {
+        "light": [
+          {
+            "$ref": "theme/light.tokens.json"
+          }
+        ],
+        "dark": [
+          {
+            "$ref": "theme/dark.tokens.json"
+          }
+        ]
+      }
+    }
+  },
+  "resolutionOrder": [
+    {
+      "$ref": "#/sets/common"
+    },
+    {
+      "$ref": "#/modifiers/platform"
+    },
+    {
+      "$ref": "#/modifiers/theme"
+    }
+  ]
+}

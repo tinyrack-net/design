@@ -261,7 +261,6 @@ abstract final class TRGeneratedSpacing {
   static const double size2xl = 32.0;
   static const double size3xl = 48.0;
   static const double size4xl = 64.0;
-  static const double size5xl = 96.0;
 }
 
 abstract final class TRGeneratedRadii {
@@ -298,15 +297,12 @@ abstract final class TRGeneratedTypographyLineHeights {
   static const double sm = 1.2;
   static const double md = 1.5;
   static const double lg = 1.65;
-  static const double xl = 1.75;
 }
 
 abstract final class TRGeneratedTypographyTracking {
   static const double none = 0.0;
-  static const double sm = 0.02;
   static const double md = 0.06;
   static const double lg = 0.08;
-  static const double xl = 0.12;
 }
 
 abstract final class TRGeneratedTextStyles {
@@ -416,20 +412,12 @@ abstract final class TRGeneratedBorders {
 abstract final class TRGeneratedMeasurements {
   static const double controlPressDistance = 1.0;
   static const double skeletonRectangleHeight = 64.0;
-  static const double brandMarkSm = 64.0;
-  static const double brandMarkMd = 96.0;
-  static const double brandMarkLg = 128.0;
   static const double measureXs = 64.0;
   static const double measureSm = 128.0;
   static const double measureMd = 192.0;
   static const double measureLg = 256.0;
   static const double measureXl = 384.0;
-  static const double paneSm = 240.0;
-  static const double paneMd = 288.0;
   static const double splitPaneMinExtent = 192.0;
-  static const double readingWidthSm = 704.0;
-  static const double readingWidthMd = 768.0;
-  static const double readingWidthLg = 896.0;
   static const double overlayWidthSm = 320.0;
   static const double overlayWidthMd = 512.0;
   static const double overlayInlineInset = 24.0;
@@ -437,10 +425,7 @@ abstract final class TRGeneratedMeasurements {
 }
 
 abstract final class TRGeneratedBreakpoints {
-  static const double xs = 384.0;
   static const double sm = 640.0;
-  static const double md = 768.0;
-  static const double lg = 1024.0;
   static const double xl = 1280.0;
 }
 
@@ -457,20 +442,16 @@ abstract final class TRGeneratedLayers {
 
 abstract final class TRGeneratedLayerMetrics {
   static const double anchorGap = 8.0;
-  static const double popupPadding = 8.0;
   static const double menuItemHeight = 28.0;
   static const double optionItemHeight = 28.0;
-  static const double arrowSize = 8.0;
   static const double toastWidth = 384.0;
   static const double drawerWidth = 512.0;
   static const double navigationPanelWidth = 512.0;
   static const double toolbarHeight = 40.0;
   static const double treeItemHeight = 32.0;
-  static const double otpSlotSize = 32.0;
   static const double visuallyHiddenOpacity = 0.0;
   static const double numberStepWidth = 44.0;
   static const double sliderTrackThickness = 4.0;
-  static const double sliderThumbSize = 16.0;
   static const double sliderVerticalWidth = 75.0;
   static const double appShellSmBreakpoint = 768.0;
   static const double appShellLgBreakpoint = 1024.0;
@@ -531,7 +512,6 @@ abstract final class TRGeneratedFlutterRendering {
   static const double normalLineLg = 23.0;
   static const double textFieldPaddingInlineCorrection = 4.0;
   static const double textFieldPaddingBlockCorrection = 3.0;
-  static const double terminalSelectionOpacity = 0.5;
   static const double textTrackingBodyRegularEn = 0.1784;
   static const double textTrackingBodyStrongEn = 0.0392;
   static const double textTrackingBodySmBoldEn = -0.1832;

@@ -1,0 +1,748 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "breakpoints": {
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 80,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "80rem"
+        }
+      }
+    }
+  },
+  "spacing": {
+    "4xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "4rem"
+        }
+      }
+    }
+  },
+  "measurements": {
+    "split-pane-min-extent": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "12rem"
+        }
+      }
+    }
+  },
+  "flutterRenderingMetrics": {
+    "accordionHeader": {
+      "marginBlock": {
+        "$type": "dimension",
+        "$value": {
+          "value": 18.72,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "18.72px"
+          }
+        }
+      }
+    },
+    "fontFamily": {
+      "body": {
+        "$type": "fontFamily",
+        "$value": "packages/tinyrack_ui/IBMPlexSans",
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "packages/tinyrack_ui/IBMPlexSans"
+          }
+        }
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": "packages/tinyrack_ui/IBMPlexMono",
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "packages/tinyrack_ui/IBMPlexMono"
+          }
+        }
+      },
+      "fallbackKr": {
+        "$type": "fontFamily",
+        "$value": "packages/tinyrack_ui/IBMPlexSansKR",
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "packages/tinyrack_ui/IBMPlexSansKR"
+          }
+        }
+      },
+      "fallbackJp": {
+        "$type": "fontFamily",
+        "$value": "packages/tinyrack_ui/IBMPlexSansJP",
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "packages/tinyrack_ui/IBMPlexSansJP"
+          }
+        }
+      }
+    },
+    "alert": {
+      "cjkDescriptionLineHeight": {
+        "$type": "number",
+        "$value": 1.45,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 1.45
+          }
+        }
+      }
+    },
+    "card": {
+      "blockInsetCorrection": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.296875,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "0.296875px"
+          }
+        }
+      }
+    },
+    "code": {
+      "inlineLineHeight": {
+        "$type": "number",
+        "$value": 1.25,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 1.25
+          }
+        }
+      }
+    },
+    "normalLine": {
+      "sm": {
+        "$type": "dimension",
+        "$value": {
+          "value": 18,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "18px"
+          }
+        }
+      },
+      "md": {
+        "$type": "dimension",
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "20px"
+          }
+        }
+      },
+      "lg": {
+        "$type": "dimension",
+        "$value": {
+          "value": 23,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "23px"
+          }
+        }
+      }
+    },
+    "textField": {
+      "paddingInlineCorrection": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.25,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "0.25rem"
+          }
+        }
+      },
+      "paddingBlockCorrection": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.1875,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "0.1875rem"
+          }
+        }
+      }
+    },
+    "textTracking": {
+      "bodyRegularEn": {
+        "$type": "number",
+        "$value": 0.1784,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.1784
+          }
+        }
+      },
+      "bodyStrongEn": {
+        "$type": "number",
+        "$value": 0.0392,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.0392
+          }
+        }
+      },
+      "bodySmBoldEn": {
+        "$type": "number",
+        "$value": -0.1832,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.1832
+          }
+        }
+      },
+      "bodySmNonStrongKo": {
+        "$type": "number",
+        "$value": -0.5893,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.5893
+          }
+        }
+      },
+      "bodySmStrongEn": {
+        "$type": "number",
+        "$value": -0.1665,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.1665
+          }
+        }
+      },
+      "bodySmStrongJa": {
+        "$type": "number",
+        "$value": 0.0001,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.0001
+          }
+        }
+      },
+      "bodySmStrongKo": {
+        "$type": "number",
+        "$value": -0.442,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.442
+          }
+        }
+      },
+      "captionBoldEn": {
+        "$type": "number",
+        "$value": 0.1144,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.1144
+          }
+        }
+      },
+      "captionNonStrongKo": {
+        "$type": "number",
+        "$value": 0.3519,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.3519
+          }
+        }
+      },
+      "captionStrongEn": {
+        "$type": "number",
+        "$value": 0.1344,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.1344
+          }
+        }
+      },
+      "captionStrongKo": {
+        "$type": "number",
+        "$value": 0.4186,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.4186
+          }
+        }
+      },
+      "codeNonStrongEn": {
+        "$type": "number",
+        "$value": -0.44,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.44
+          }
+        }
+      },
+      "codeNonStrongKo": {
+        "$type": "number",
+        "$value": -0.6213,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.6213
+          }
+        }
+      },
+      "codeStrongEn": {
+        "$type": "number",
+        "$value": -0.42,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.42
+          }
+        }
+      },
+      "codeStrongKo": {
+        "$type": "number",
+        "$value": -0.5546,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.5546
+          }
+        }
+      },
+      "displayNonStrongKo": {
+        "$type": "number",
+        "$value": -0.3759,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.3759
+          }
+        }
+      },
+      "displayMediumEn": {
+        "$type": "number",
+        "$value": 0.1181,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.1181
+          }
+        }
+      },
+      "displayRegularEn": {
+        "$type": "number",
+        "$value": -0.2844,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.2844
+          }
+        }
+      },
+      "displayStrongEn": {
+        "$type": "number",
+        "$value": 0.0729,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.0729
+          }
+        }
+      },
+      "displayLgBoldEn": {
+        "$type": "number",
+        "$value": -0.1328,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.1328
+          }
+        }
+      },
+      "headingLgRegularEn": {
+        "$type": "number",
+        "$value": 0.197,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.197
+          }
+        }
+      },
+      "headingLgStrongEn": {
+        "$type": "number",
+        "$value": -0.044,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.044
+          }
+        }
+      },
+      "headingLgStrongKo": {
+        "$type": "number",
+        "$value": 0.28,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.28
+          }
+        }
+      },
+      "headingMdRegularEn": {
+        "$type": "number",
+        "$value": 0.1176,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.1176
+          }
+        }
+      },
+      "headingMdStrongEn": {
+        "$type": "number",
+        "$value": 0.0488,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0.0488
+          }
+        }
+      },
+      "headingSmStrongEn": {
+        "$type": "number",
+        "$value": -0.0583,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": -0.0583
+          }
+        }
+      },
+      "labelBoldEn": {
+        "$type": "number",
+        "$value": 1.0746,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 1.0746
+          }
+        }
+      },
+      "labelNonStrongKo": {
+        "$type": "number",
+        "$value": 1.3132,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 1.3132
+          }
+        }
+      },
+      "labelStrongEn": {
+        "$type": "number",
+        "$value": 1.0642,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 1.0642
+          }
+        }
+      },
+      "labelStrongKo": {
+        "$type": "number",
+        "$value": 1.2249,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 1.2249
+          }
+        }
+      }
+    },
+    "windowFrame": {
+      "bodyLineHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 18.9,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "18.9px"
+          }
+        }
+      },
+      "browserTitleBarHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 41.59375,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "41.59375px"
+          }
+        }
+      },
+      "controlClose": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.37254901960784315, 0.3411764705882353],
+          "hex": "#ff5f57"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ff5f57"
+          }
+        }
+      },
+      "controlMinimize": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.996078431372549, 0.7372549019607844, 0.1803921568627451],
+          "hex": "#febc2e"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#febc2e"
+          }
+        }
+      },
+      "controlMaximize": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.1568627450980392, 0.7843137254901961, 0.25098039215686274],
+          "hex": "#28c840"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#28c840"
+          }
+        }
+      }
+    },
+    "layerComponents": {
+      "anchorGap": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.5,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "0.5rem"
+          }
+        }
+      },
+      "menuItemHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.75,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "1.75rem"
+          }
+        }
+      },
+      "optionItemHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 1.75,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "1.75rem"
+          }
+        }
+      },
+      "toastWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "24rem"
+          }
+        }
+      },
+      "drawerWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "32rem"
+          }
+        }
+      },
+      "navigationPanelWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 32,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "32rem"
+          }
+        }
+      },
+      "toolbarHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2.5,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "2.5rem"
+          }
+        }
+      },
+      "treeItemHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "2rem"
+          }
+        }
+      },
+      "visuallyHiddenOpacity": {
+        "$type": "number",
+        "$value": 0,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0
+          }
+        }
+      },
+      "numberStepWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2.75,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "2.75rem"
+          }
+        }
+      },
+      "sliderTrackThickness": {
+        "$type": "dimension",
+        "$value": {
+          "value": 0.25,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "0.25rem"
+          }
+        }
+      },
+      "sliderVerticalWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 4.6875,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "4.6875rem"
+          }
+        }
+      },
+      "appShellSmBreakpoint": {
+        "$type": "dimension",
+        "$value": {
+          "value": 48,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "48rem"
+          }
+        }
+      },
+      "appShellLgBreakpoint": {
+        "$type": "dimension",
+        "$value": {
+          "value": 64,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "64rem"
+          }
+        }
+      },
+      "appShellSidebarWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 18,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "18rem"
+          }
+        }
+      },
+      "appShellRailWidth": {
+        "$type": "dimension",
+        "$value": {
+          "value": 4,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "4rem"
+          }
+        }
+      },
+      "appShellCollapsedWidth": {
+        "$type": "number",
+        "$value": 0,
+        "$extensions": {
+          "net.tinyrack": {
+            "output": 0
+          }
+        }
+      },
+      "appShellHeaderHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 3,
+          "unit": "rem"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "3rem"
+          }
+        }
+      }
+    }
+  }
+}

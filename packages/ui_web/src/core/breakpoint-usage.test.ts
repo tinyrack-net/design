@@ -5,6 +5,10 @@ import { describe, expect, it } from 'vitest';
 const packageRoot = resolve(import.meta.dirname, '../..');
 const sourceRoots = [resolve(packageRoot, 'src')];
 const sourceExtensions = new Set(['.css', '.mdx', '.ts', '.tsx']);
+const privateResponsiveBoundaries = new Map([
+  ['src/components/app-shell/app-shell.css', new Set(['@media (width >= 80rem)'])],
+  ['src/components/otp-field/otp-field.css', new Set(['@media (width < 24rem)'])],
+]);
 
 function sourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -17,7 +21,7 @@ function sourceFiles(directory: string): string[] {
 }
 
 describe('breakpoint token usage', () => {
-  it('keeps first-party responsive conditions on named tokens', () => {
+  it('keeps responsive conditions on public tokens or explicit private boundaries', () => {
     const violations: string[] = [];
 
     for (const file of sourceRoots.flatMap(sourceFiles)) {
@@ -32,15 +36,23 @@ describe('breakpoint token usage', () => {
       const checks = [
         /@custom-media\b/g,
         /@media\s*\(\s*--tinyrack-breakpoint-/g,
-        /@media\s*\(\s*(?:width|min-width|max-width)\s*[:<>=]/g,
         /matchMedia\(\s*['"][^'"]*(?:width|min-width|max-width)[^'"]*['"]\s*\)/g,
         /(?:min|max)-\[[^\]]+\]:/g,
         /\[@media[^\]]+\]:/g,
       ];
 
       for (const match of source.matchAll(/@variant\s+([^\s{]+)\s*\{/g)) {
-        if (!/^(?:xs|sm|md|lg|xl|max-(?:xs|sm|md|lg|xl))$/.test(match[1] ?? '')) {
+        if (!/^(?:sm|md|lg|max-(?:sm|md|lg))$/.test(match[1] ?? '')) {
           violations.push(`${relative(packageRoot, file)}: ${match[0]}`);
+        }
+      }
+
+      const relativePath = relative(packageRoot, file);
+      for (const match of source.matchAll(
+        /@media\s*\(\s*(?:width|min-width|max-width)\s*[:<>=][^)]*\)/g,
+      )) {
+        if (!privateResponsiveBoundaries.get(relativePath)?.has(match[0])) {
+          violations.push(`${relativePath}: ${match[0]}`);
         }
       }
 

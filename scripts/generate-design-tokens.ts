@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadDesignTokens } from './design-token-source.ts';
 
 type TokenPrimitive = number | string;
 type TokenRecord = Record<string, TokenPrimitive>;
@@ -46,9 +47,6 @@ type DesignTokens = {
       paddingBlockCorrection: string;
       paddingInlineCorrection: string;
     };
-    terminal: {
-      selectionOpacity: string;
-    };
     textTracking: Record<string, number>;
     windowFrame: {
       bodyLineHeight: string;
@@ -87,17 +85,20 @@ type DesignTokens = {
     lineHeight: TokenRecord;
     textStyle: Record<string, TextStyleToken>;
   };
-  version: number;
 };
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const sourcePath = resolve(root, 'design-tokens/tokens.json');
 const typescriptPath = resolve(root, 'packages/ui_web/src/core/tokens.ts');
 const cssPath = resolve(root, 'packages/ui_web/src/core/tokens.generated.css');
+const coreCssPath = resolve(root, 'packages/ui_web/src/core/core.css');
+const catalogPath = resolve(
+  root,
+  'packages/homepage/app/documentation/shared/tailwind-token-catalog.ts',
+);
 const dartPath = resolve(root, 'packages/ui_flutter/lib/src/generated/tokens.g.dart');
 const check = process.argv.includes('--check');
 const webOnly = process.argv.includes('--web-only');
-const rawTokens: unknown = JSON.parse(await readFile(sourcePath, 'utf8'));
+const rawTokens: unknown = await loadDesignTokens(root, 'web');
 
 function assertRecord(
   value: unknown,
@@ -113,7 +114,6 @@ for (const key of [
   'borders',
   'breakpoints',
   'controlMetrics',
-  'flutterRenderingMetrics',
   'layers',
   'measurements',
   'motion',
@@ -129,10 +129,7 @@ for (const key of [
   assertRecord(rawTokens[key], key);
 }
 
-if (rawTokens['version'] !== 1) {
-  throw new Error(`Unsupported design token version: ${rawTokens['version']}`);
-}
-const tokens = rawTokens as DesignTokens;
+let tokens = rawTokens as DesignTokens;
 
 function kebab(value: string) {
   return value
@@ -361,6 +358,254 @@ function cssOutput() {
   ].join('\n');
 }
 
+type TailwindEntry = {
+  group: string;
+  runtimeVariable?: string;
+  themeVariable: string;
+  value?: string;
+};
+
+function tailwindEntries(): TailwindEntry[] {
+  const entries: TailwindEntry[] = [];
+  const add = (group: string, themeVariable: string, runtimeVariable: string) =>
+    entries.push({ group, runtimeVariable, themeVariable });
+  for (const [name, value] of Object.entries(tokens.breakpoints)) {
+    entries.push({
+      group: 'breakpoint',
+      themeVariable: `--breakpoint-${name}`,
+      value: String(value),
+    });
+  }
+  for (const name of Object.keys(tokens.typography.fontStack))
+    add(
+      'typography',
+      `--font-tinyrack-${kebab(name)}`,
+      `--tinyrack-font-${kebab(name)}`,
+    );
+  const leadingForSize: Record<string, string> = {
+    '2xs': 'sm',
+    xs: 'sm',
+    sm: 'md',
+    md: 'md',
+    lg: 'md',
+    xl: 'sm',
+    '2xl': 'sm',
+    '3xl': 'sm',
+    '4xl': 'sm',
+    '5xl': 'sm',
+    '6xl': 'xs',
+  };
+  for (const name of Object.keys(tokens.typography.fontSize)) {
+    add('typography', `--text-tinyrack-${name}`, `--tinyrack-text-${name}`);
+    add(
+      'typography',
+      `--text-tinyrack-${name}--line-height`,
+      `--tinyrack-leading-${leadingForSize[name]}`,
+    );
+  }
+  for (const name of Object.keys(tokens.typography.lineHeight))
+    add('typography', `--leading-tinyrack-${name}`, `--tinyrack-leading-${name}`);
+  for (const size of Object.keys(tokens.controlMetrics)) {
+    add(
+      'typography',
+      `--text-tinyrack-control-${size}`,
+      `--tinyrack-control-font-size-${size}`,
+    );
+    add(
+      'typography',
+      `--text-tinyrack-control-${size}--line-height`,
+      `--tinyrack-control-line-height-${size}`,
+    );
+    add(
+      'typography',
+      `--leading-tinyrack-control-${size}`,
+      `--tinyrack-control-line-height-${size}`,
+    );
+  }
+  for (const name of Object.keys(tokens.typography.letterSpacing))
+    add('typography', `--tracking-tinyrack-${name}`, `--tinyrack-tracking-${name}`);
+  for (const name of Object.keys(tokens.typography.fontWeight))
+    add('typography', `--font-weight-tinyrack-${name}`, `--tinyrack-weight-${name}`);
+  for (const name of Object.keys(tokens.spacing))
+    add('spacing', `--spacing-tinyrack-${name}`, `--tinyrack-space-${name}`);
+  for (const [size] of Object.entries(tokens.controlMetrics)) {
+    for (const metric of ['height', 'padding-inline', 'gap'])
+      add(
+        'spacing',
+        `--spacing-tinyrack-control-${metric}-${size}`,
+        `--tinyrack-control-${metric}-${size}`,
+      );
+  }
+  for (const name of Object.keys(tokens.measurements)) {
+    if (
+      [
+        'overlay-closed-scale',
+        'text-decoration-thickness',
+        'text-underline-offset',
+      ].includes(name)
+    )
+      continue;
+    add('spacing', `--spacing-tinyrack-${name}`, `--tinyrack-${name}`);
+    if (name.startsWith('measure-'))
+      add('container', `--container-tinyrack-${name}`, `--tinyrack-${name}`);
+    if (name.startsWith('overlay-width-'))
+      add(
+        'container',
+        `--container-tinyrack-overlay-${name.slice('overlay-width-'.length)}`,
+        `--tinyrack-${name}`,
+      );
+  }
+  for (const size of ['sm', 'md', 'lg'] as const) {
+    const key = ({ sm: 'sizeSm', md: 'sizeMd', lg: 'sizeLg' } as const)[size];
+    if (tokens.spinnerMetrics[key])
+      add(
+        'spacing',
+        `--spacing-tinyrack-spinner-size-${size}`,
+        `--tinyrack-spinner-size-${size}`,
+      );
+  }
+  add(
+    'spacing',
+    '--spacing-tinyrack-spinner-stroke-width',
+    '--tinyrack-spinner-stroke-width',
+  );
+  for (const name of Object.keys(tokens.borders.width))
+    add(
+      'border-focus',
+      `--border-width-tinyrack-${name}`,
+      `--tinyrack-border-width-${name}`,
+    );
+  add('border-focus', '--outline-width-tinyrack-focus', '--tinyrack-focus-width');
+  add('border-focus', '--outline-offset-tinyrack-focus', '--tinyrack-focus-offset');
+  for (const name of Object.keys(tokens.radii))
+    add('radius', `--radius-tinyrack-${name}`, `--tinyrack-radius-${name}`);
+  for (const name of Object.keys(tokens.shadows))
+    add('shadow', `--shadow-tinyrack-${name}`, `--tinyrack-shadow-${name}`);
+  for (const name of Object.keys(tokens.motion.duration))
+    add(
+      'motion',
+      `--transition-duration-tinyrack-${name}`,
+      `--tinyrack-duration-${name}`,
+    );
+  for (const name of Object.keys(tokens.motion.easing)) {
+    add(
+      'motion',
+      `--ease-tinyrack-${kebab(name)}`,
+      `--tinyrack-ease-${name === 'easeOut' ? 'out' : kebab(name)}`,
+    );
+  }
+  for (const name of Object.keys(tokens.opacity))
+    add('opacity', `--opacity-tinyrack-${name}`, `--tinyrack-opacity-${name}`);
+  add(
+    'opacity',
+    '--opacity-tinyrack-spinner-track',
+    '--tinyrack-spinner-track-opacity',
+  );
+  for (const name of Object.keys(tokens.layers))
+    add('layer', `--z-index-tinyrack-${name}`, `--tinyrack-layer-${name}`);
+  add('scale', '--scale-tinyrack-overlay-closed', '--tinyrack-overlay-closed-scale');
+  if (tokens.measurements['text-decoration-thickness'])
+    add(
+      'decoration',
+      '--text-decoration-thickness-tinyrack',
+      '--tinyrack-text-decoration-thickness',
+    );
+  if (tokens.measurements['text-underline-offset'])
+    add(
+      'decoration',
+      '--text-underline-offset-tinyrack',
+      '--tinyrack-text-underline-offset',
+    );
+  for (const name of Object.keys(tokens.semanticColors.light))
+    add('color', `--color-tinyrack-${kebab(name)}`, `--tinyrack-${kebab(name)}`);
+  return entries;
+}
+
+function coreCssOutput() {
+  return [
+    '/* Generated by scripts/generate-design-tokens.ts. Do not edit. */',
+    '@import "./tokens.generated.css";',
+    '',
+    ':where(html, body) {',
+    '  background-color: var(--tinyrack-surface);',
+    '  color: var(--tinyrack-text);',
+    '}',
+    '',
+    '@theme static {',
+    ...tailwindEntries().map(
+      (entry) =>
+        `  ${entry.themeVariable}: ${entry.runtimeVariable ? `var(${entry.runtimeVariable})` : entry.value};`,
+    ),
+    '}',
+    '',
+  ].join('\n');
+}
+
+function catalogOutput() {
+  const groups = [
+    ['breakpoint', 'breakpoints', 'breakpoints', 'Breakpoints', 'sm/md/lg:*'],
+    ['color', 'colors', 'colors', 'Color', 'bg/text/border-tinyrack-*'],
+    [
+      'typography',
+      'typography',
+      'typography',
+      'Typography',
+      'font/text/leading/tracking-tinyrack-*',
+    ],
+    [
+      'spacing',
+      'spacing-controls',
+      'spacing',
+      'Spacing and controls',
+      'gap/p/m/w/h-tinyrack-*',
+    ],
+    ['container', 'containers', 'breakpoints', 'Containers', 'max-w-tinyrack-*'],
+    [
+      'border-focus',
+      'borders-focus',
+      'radius',
+      'Borders and focus',
+      'border/outline/outline-offset-tinyrack-*',
+    ],
+    ['radius', 'radius', 'radius', 'Radius', 'rounded-tinyrack-*'],
+    ['shadow', 'shadows', 'elevation', 'Shadows', 'shadow-tinyrack-*'],
+    ['motion', 'motion', 'motion', 'Motion', 'duration/ease-tinyrack-*'],
+    ['opacity', 'opacity', 'colors', 'Opacity', 'opacity-tinyrack-*'],
+    ['layer', 'layers', 'elevation', 'Layers', 'z-tinyrack-*'],
+    ['scale', 'scale', 'motion', 'Scale', 'scale-tinyrack-*'],
+    [
+      'decoration',
+      'decoration',
+      'typography',
+      'Text decoration',
+      'decoration/underline-offset-tinyrack',
+    ],
+  ].map(([id, anchor, guide, label, utilityPattern]) => ({
+    id,
+    anchor,
+    guide,
+    label,
+    utilityPattern,
+  }));
+  return [
+    '// Generated by scripts/generate-design-tokens.ts. Do not edit.',
+    'export type TailwindTokenGroupId =',
+    ...groups.map(
+      (group, index) =>
+        `  ${index ? '| ' : '| '}'${group.id}'${index === groups.length - 1 ? ';' : ''}`,
+    ),
+    '',
+    'export type TailwindTokenBridgeEntry =',
+    `  | { group: Exclude<TailwindTokenGroupId, 'breakpoint'>; runtimeVariable: \`--tinyrack-\${string}\`; themeVariable: \`--\${string}\` }`,
+    `  | { group: 'breakpoint'; themeVariable: \`--breakpoint-\${string}\`; value: \`\${number}rem\` };`,
+    '',
+    `export const tailwindTokenGroups = ${JSON.stringify(groups, null, 2)} as const;`,
+    '',
+    `export const tailwindTokenBridge = ${JSON.stringify(tailwindEntries(), null, 2)} as const satisfies readonly TailwindTokenBridgeEntry[];`,
+    '',
+  ].join('\n');
+}
+
 function dartFields(names: readonly string[]) {
   return names.map((name) => `    required this.${dartName(name)},`).join('\n');
 }
@@ -439,20 +684,12 @@ function dartOutput() {
     return value;
   };
   const layerMeasurements = {
-    brandMarkSm: requiredLayerMeasurement('brand-mark-sm'),
-    brandMarkMd: requiredLayerMeasurement('brand-mark-md'),
-    brandMarkLg: requiredLayerMeasurement('brand-mark-lg'),
     measureXs: requiredLayerMeasurement('measure-xs'),
     measureSm: requiredLayerMeasurement('measure-sm'),
     measureMd: requiredLayerMeasurement('measure-md'),
     measureLg: requiredLayerMeasurement('measure-lg'),
     measureXl: requiredLayerMeasurement('measure-xl'),
-    paneSm: requiredLayerMeasurement('pane-sm'),
-    paneMd: requiredLayerMeasurement('pane-md'),
     splitPaneMinExtent: requiredLayerMeasurement('split-pane-min-extent'),
-    readingWidthSm: requiredLayerMeasurement('reading-width-sm'),
-    readingWidthMd: requiredLayerMeasurement('reading-width-md'),
-    readingWidthLg: requiredLayerMeasurement('reading-width-lg'),
     overlayWidthSm: requiredLayerMeasurement('overlay-width-sm'),
     overlayWidthMd: requiredLayerMeasurement('overlay-width-md'),
     overlayInlineInset: requiredLayerMeasurement('overlay-inline-inset'),
@@ -602,10 +839,6 @@ function dartOutput() {
       flutterMetrics.textField.paddingBlockCorrection,
       'flutterRenderingMetrics.textField.paddingBlockCorrection',
     )};`,
-    `  static const double terminalSelectionOpacity = ${dartPercentage(
-      flutterMetrics.terminal.selectionOpacity,
-      'flutterRenderingMetrics.terminal.selectionOpacity',
-    )};`,
     ...Object.entries(flutterMetrics.textTracking).map(
       ([key, value]) =>
         `  static const double textTracking${key[0]?.toUpperCase()}${key.slice(1)} = ${dartScalar(
@@ -687,8 +920,33 @@ async function formatDart(content: string) {
   }
 }
 
-const outputs = [emit(typescriptPath, typescriptOutput()), emit(cssPath, cssOutput())];
+async function formatBiome(content: string, extension: 'css' | 'ts') {
+  const directory = await mkdtemp(join(root, '.tinyrack-tokens-'));
+  const path = join(directory, `generated.${extension}`);
+  try {
+    await writeFile(path, content);
+    const executable = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+    const result = spawnSync(executable, ['exec', 'biome', 'format', '--write', path], {
+      stdio: 'ignore',
+    });
+    if (result.error) throw result.error;
+    if (result.status !== 0) {
+      throw new Error('Biome format failed for generated design tokens.');
+    }
+    return await readFile(path, 'utf8');
+  } finally {
+    await rm(directory, { force: true, recursive: true });
+  }
+}
+
+const outputs = [
+  emit(typescriptPath, await formatBiome(typescriptOutput(), 'ts')),
+  emit(cssPath, await formatBiome(cssOutput(), 'css')),
+  emit(coreCssPath, await formatBiome(coreCssOutput(), 'css')),
+  emit(catalogPath, await formatBiome(catalogOutput(), 'ts')),
+];
 if (!webOnly) {
+  tokens = (await loadDesignTokens(root, 'flutter')) as DesignTokens;
   outputs.push(emit(dartPath, await formatDart(dartOutput())));
 }
 await Promise.all(outputs);

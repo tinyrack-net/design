@@ -34,20 +34,18 @@ Padding(
 
 ```dart
 LayoutBuilder(
-  builder: (context, constraints) => constraints.maxWidth < TRBreakpoints.medium
+  builder: (context, constraints) => constraints.maxWidth < TRBreakpoints.small
       ? detail
       : Row(
           children: [
-            SizedBox(width: TRMeasurements.paneMd, child: list),
+            SizedBox(width: TRMeasurements.measureXl, child: list),
             Expanded(child: detail),
           ],
         ),
 );
 ```
 
-何の大きさを決めるのかに合った値を選んでください。`paneSm`と`paneMd`は、
-ナビゲーションレールやリスト詳細レイアウトのリスト側のような、構造を
-なす領域の幅です。`readingWidthSm`から`readingWidthLg`までは
-コンテンツ列の最大幅を制限し、広いウィンドウでも説明とコントロールが
-離れないようにします。`measure`スケールはテキスト1領域の幅で、
-`TRControlMetrics`はコントロール1つの大きさです。
+Flutterでは、コンポーネントが実際に使う`small`と`extraLarge`の2つの
+しきい値を公開します。幅を制限するコンテンツ領域には`measure`スケールを、
+1つのコントロールには`TRControlMetrics`を使ってください。製品固有の
+ペイン幅や読み物の幅は、共通トークンAPIではなく製品のレイアウトで定義します。

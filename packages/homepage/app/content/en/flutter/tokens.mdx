@@ -33,20 +33,18 @@ tokens keeps two screens in the same app from reflowing at different widths.
 
 ```dart
 LayoutBuilder(
-  builder: (context, constraints) => constraints.maxWidth < TRBreakpoints.medium
+  builder: (context, constraints) => constraints.maxWidth < TRBreakpoints.small
       ? detail
       : Row(
           children: [
-            SizedBox(width: TRMeasurements.paneMd, child: list),
+            SizedBox(width: TRMeasurements.measureXl, child: list),
             Expanded(child: detail),
           ],
         ),
 );
 ```
 
-Choose the measurement that matches what you are sizing. `paneSm` and `paneMd`
-size a structural pane such as a navigation rail or the list side of a
-list-detail layout. `readingWidthSm` through `readingWidthLg` cap a content
-column so a label and its control stay near each other in a wide window. The
-`measure` scale sizes a single region of text, and `TRControlMetrics` sizes one
-control.
+Flutter exposes the two thresholds used by its components: `small` and
+`extraLarge`. Use the `measure` scale for a bounded content region and
+`TRControlMetrics` for one control. Product-specific pane and reading widths
+belong in the product layout instead of the shared token API.
