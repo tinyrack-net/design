@@ -6,52 +6,51 @@ import type { ParityComponent } from './visual-parity-scenarios.ts';
  *
  * A raster mask excludes a region from the structural pixel comparison because
  * CanvasKit and Chromium rasterize the same glyph outlines and shadows to
- * slightly different pixels. That is legitimate, but every masked pixel is a
- * pixel the suite no longer checks, so a green result overstates coverage by
- * exactly the masked area. Freezing each component's mask at its measured size
- * turns any later growth -- a widened rect, a mask that starts covering a
- * border -- into a loud failure instead of a quieter green.
+ * slightly different pixels. Every masked pixel is a pixel the suite no longer
+ * checks, so a green result overstates coverage by exactly the masked area.
  *
- * The numbers are the observed maximum across all locales, themes and states
- * plus a small headroom for sub-pixel layout jitter. They are a ceiling to push
- * down over time, not a target: several are high because the component is mostly
- * text (`text`, `steps`, `field`) or a rasterized frame (`card`'s elevated
- * shadow), and tightening those is per-component work tracked separately.
+ * Masking is not the only forgiveness in the comparison, and it is the bluntest:
+ * a masked pixel and one the antialiasing classifier accepts are counted
+ * identically, so a mask is really a pre-emptive, unconditional version of that
+ * classifier. Most of the former whole-box masks turned out to be unnecessary
+ * once measured -- 29 components now mask nothing at all -- because
+ * `isSharedPaletteBlend` and `isShiftedRasterAntialiasing` already absorb glyph
+ * rasterization over a flat surface.
  *
  * Update an entry only to LOWER it, or to raise it with the reason in the diff.
  */
 export const parityMaskBudgets: Readonly<Record<ParityComponent, number>> = {
-  accordion: 72,
+  accordion: 2,
   alert: 38,
-  'alert-dialog': 41,
-  'animated-number': 30,
+  'alert-dialog': 40,
+  'animated-number': 2,
   'app-shell': 49,
   autocomplete: 6,
   avatar: 2,
   badge: 18,
-  breadcrumbs: 47,
+  breadcrumbs: 2,
   button: 20,
-  card: 90,
-  checkbox: 7,
+  card: 44,
+  checkbox: 2,
   'checkbox-group': 9,
-  code: 29,
-  'code-block': 33,
-  collapsible: 63,
+  code: 2,
+  'code-block': 2,
+  collapsible: 2,
   combobox: 6,
   'context-menu': 14,
-  'copy-button': 23,
+  'copy-button': 2,
   dialog: 20,
   drawer: 51,
-  field: 56,
-  fieldset: 50,
+  field: 2,
+  fieldset: 2,
   'file-tree': 21,
   form: 2,
   'icon-button': 11,
   link: 35,
   menu: 18,
   menubar: 2,
-  meter: 40,
-  'navigation-menu': 27,
+  meter: 2,
+  'navigation-menu': 17,
   'number-field': 2,
   'otp-field': 2,
   pagination: 2,
@@ -69,10 +68,10 @@ export const parityMaskBudgets: Readonly<Record<ParityComponent, number>> = {
   steps: 61,
   switch: 11,
   table: 2,
-  tabs: 69,
+  tabs: 2,
   text: 63,
+  'text-field': 2,
   textarea: 52,
-  'text-field': 52,
   toast: 29,
   toggle: 15,
   'toggle-group': 17,
@@ -82,18 +81,12 @@ export const parityMaskBudgets: Readonly<Record<ParityComponent, number>> = {
   'window-frame': 2,
 };
 
-/** Components whose mask hides most of the render, flagged for tightening. */
+/** Components whose mask still hides most of the render, flagged for tightening. */
 export const heavilyMaskedComponents: readonly ParityComponent[] = [
-  // Mostly a rasterized frame or glyph run: the elevated card's shadow fringe,
-  // and components that are almost entirely text.
-  'card',
-  'tabs',
-  'accordion',
-  'collapsible',
-  'text',
+  // Both are glyph runs by nature: `text` is nothing but type, and `steps` is a
+  // marker rail beside a copy column. Their typography and geometry are
+  // asserted separately, and the residue the classifier cannot absorb is CJK
+  // edge rasterization.
   'steps',
-  'field',
-  'textarea',
-  'text-field',
-  'fieldset',
+  'text',
 ];
