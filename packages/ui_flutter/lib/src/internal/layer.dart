@@ -10,7 +10,7 @@ import '../tokens.dart';
 import '../types.dart';
 import 'focus_source.dart';
 
-/// Internal render-tree marker used by the preview parity harness.
+/// Internal render-tree marker used by layer tests and preview diagnostics.
 ///
 /// The type is intentionally not exported from the package library.
 enum TRLayerBoundaryKind {
@@ -63,7 +63,7 @@ class RenderTRLayerBoundary extends RenderProxyBox {
   }
 }
 
-/// Internal render marker for text and icon regions measured by parity tests.
+/// Internal render marker for text and icon regions measured by diagnostics.
 class TRLayerPartBoundary extends SingleChildRenderObjectWidget {
   const TRLayerPartBoundary({
     required this.name,

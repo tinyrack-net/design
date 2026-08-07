@@ -6,16 +6,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
-// The preview harness mirrors Chromium line-box rounding with the package's
-// internal helpers; it is not a published consumer.
+// The preview reads package rendering metadata through internal helpers; it is
+// not a published consumer.
 // ignore: implementation_imports
 import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 // ignore: implementation_imports
 import 'package:tinyrack_ui/src/internal/layer.dart';
-// ignore: implementation_imports
-import 'package:tinyrack_ui/src/internal/focus_source.dart';
-// ignore: implementation_imports
-import 'package:tinyrack_ui/src/internal/forced_states.dart';
 // ignore: implementation_imports
 import 'package:tinyrack_ui/src/internal/motion_boundary.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
@@ -45,8 +41,6 @@ void main() {
           'ja' => const Locale('ja'),
           _ => const Locale('en'),
         },
-        motionMode: query['motion'] == 'true',
-        parityMode: query['parity'] == 'true',
       ),
     ),
   );
@@ -57,8 +51,6 @@ class PreviewApp extends StatefulWidget {
     required this.component,
     required this.initialTheme,
     required this.locale,
-    required this.motionMode,
-    required this.parityMode,
     this.example,
     super.key,
   });
@@ -70,38 +62,10 @@ class PreviewApp extends StatefulWidget {
   final String? example;
   final ThemeMode initialTheme;
   final Locale locale;
-  final bool motionMode;
-  final bool parityMode;
 
   @override
   State<PreviewApp> createState() => _PreviewAppState();
 }
-
-/// Maps a declared parity state onto the states a control paints.
-///
-/// A closed enum rather than free booleans: an unknown name must fail loudly,
-/// and a boolean payload would let a scenario ask for a press without a hover,
-/// which is not a state either platform can be in.
-const _forcedStateSets = <String, TRForcedStateSet>{
-  'default': TRForcedStateSet.none,
-  'hover': TRForcedStateSet(hovered: true),
-  'pressed': TRForcedStateSet(hovered: true, pressed: true),
-  'focused': TRForcedStateSet(focused: true, focusVisible: true),
-  'focused-hover': TRForcedStateSet(
-    hovered: true,
-    focused: true,
-    focusVisible: true,
-  ),
-  'keyboard-pressed': TRForcedStateSet(
-    focused: true,
-    focusVisible: true,
-    keyboardPressed: true,
-  ),
-  // Focus without emphasis. `focusVisible` stays false while `declaresFocus`
-  // is true, so the resolver answers false without consulting the sampled
-  // modality at all.
-  'pointer-focused': TRForcedStateSet(focused: true),
-};
 
 class _PreviewAppState extends State<PreviewApp> {
   late final PreviewBridge _bridge;
@@ -116,13 +80,11 @@ class _PreviewAppState extends State<PreviewApp> {
   late ThemeMode _themeMode;
   bool _focused = false;
   bool _focusVisible = false;
-  TRForcedStateSet _forcedStates = TRForcedStateSet.none;
-  String _declaredState = 'default';
   bool _hovered = false;
   bool _pressed = false;
   int _activations = 0;
   int _contentRevision = 0;
-  int _generation = 0;
+  final int _generation = 0;
 
   @override
   void initState() {
@@ -246,7 +208,6 @@ class _PreviewAppState extends State<PreviewApp> {
       },
       'baseline': baseline,
       'devicePixelRatio': View.of(context).devicePixelRatio,
-      'state': _declaredState,
       'interaction': {
         'activations': _activations,
         'enabled': _args['disabled'] != true && _args['loading'] != true,
@@ -442,18 +403,6 @@ class _PreviewAppState extends State<PreviewApp> {
     final type = message['type'];
     final payload = message['payload'];
     final requestId = message['requestId'];
-    if (type == 'configureParity' && widget.parityMode) {
-      _configureParity(payload, requestId);
-      return;
-    }
-    if (type == 'configureEnvironment' && widget.parityMode) {
-      _configureEnvironment(payload, requestId);
-      return;
-    }
-    if (type == 'renderScenario' && widget.parityMode) {
-      _renderScenario(payload, requestId);
-      return;
-    }
     if (message['component'] != _component) return;
     if (type == 'ready' ||
         type == 'configured' ||
@@ -537,178 +486,6 @@ class _PreviewAppState extends State<PreviewApp> {
     );
   }
 
-  void _configureParity(Object? payload, Object? requestId) {
-    if (payload is! Map) {
-      _sendSchemaError('configureParity');
-      return;
-    }
-    final component = payload['component'];
-    final locale = payload['locale'];
-    final theme = payload['theme'];
-    if (component is! String ||
-        !supportedPreviewComponents.contains(component) ||
-        locale is! String ||
-        !const {'en', 'ko', 'ja'}.contains(locale) ||
-        theme is! String ||
-        !const {'light', 'dark'}.contains(theme)) {
-      _sendSchemaError('configureParity');
-      return;
-    }
-
-    FocusManager.instance.primaryFocus?.unfocus();
-    _navigatorKey.currentState?.popUntil((route) => route.isFirst);
-    _textFieldController.clear();
-    _otpFieldController.clear();
-    setState(() {
-      _component = component;
-      _locale = Locale(locale);
-      _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
-      _args = const {};
-      _activations = 0;
-      _focused = false;
-      _focusVisible = false;
-      _hovered = false;
-      _pressed = false;
-      _contentRevision += 1;
-      _generation += 1;
-      _partKeys.clear();
-    });
-    _bridge.send('configured', _component, {
-      'args': _args,
-      'generation': _generation,
-      if (requestId is num) 'requestId': requestId,
-      'supportedArgs': _supportedArgs(_component),
-      'theme': _themeMode.name,
-    });
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _sendMetrics(requestId: requestId),
-    );
-  }
-
-  void _configureEnvironment(Object? payload, Object? requestId) {
-    if (payload is! Map) {
-      _sendSchemaError('configureEnvironment');
-      return;
-    }
-    final locale = payload['locale'];
-    final theme = payload['theme'];
-    if (locale is! String ||
-        !const {'en', 'ko', 'ja'}.contains(locale) ||
-        theme is! String ||
-        !const {'light', 'dark'}.contains(theme)) {
-      _sendSchemaError('configureEnvironment');
-      return;
-    }
-    setState(() {
-      _locale = Locale(locale);
-      _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
-    });
-    _bridge.send('environmentConfigured', _component, {
-      'generation': _generation,
-      'locale': _locale.languageCode,
-      if (requestId is num) 'requestId': requestId,
-      'theme': _themeMode.name,
-    });
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => _sendMetrics(requestId: requestId),
-    );
-  }
-
-  void _renderScenario(Object? payload, Object? requestId) {
-    if (payload is! Map ||
-        payload['args'] is! Map ||
-        payload['theme'] is! String) {
-      _sendSchemaError('renderScenario');
-      return;
-    }
-    final declaredState = payload['state'] ?? 'default';
-    if (declaredState is! String ||
-        !_forcedStateSets.containsKey(declaredState)) {
-      _sendSchemaError('renderScenario');
-      return;
-    }
-    final theme = payload['theme']! as String;
-    final nextArgs = _validateArgs(
-      _component,
-      payload['args']! as Map<Object?, Object?>,
-    );
-    if (nextArgs == null || !const {'light', 'dark'}.contains(theme)) {
-      _sendSchemaError('renderScenario');
-      return;
-    }
-    if (_args['open'] == true && nextArgs['open'] != true) {
-      _navigatorKey.currentState?.popUntil((route) => route.isFirst);
-    }
-    FocusManager.instance.primaryFocus?.unfocus();
-    _textFieldController.clear();
-    _otpFieldController.clear();
-    if (_component == 'text-field') {
-      final value = nextArgs['value'];
-      if (value is String) {
-        _textFieldController.value = TextEditingValue(
-          text: value,
-          selection: TextSelection.collapsed(offset: value.length),
-        );
-      }
-    }
-    if (_component == 'otp-field') {
-      final value = nextArgs['value'];
-      if (value is String) _otpFieldController.value = value;
-    }
-    // The keyboard latch has to be cleared with the rest of the interaction
-    // state. Leaving it set let one keyboard scenario mark every later scenario
-    // on the same page as keyboard-focused until a pointer press cleared it.
-    FocusManager.instance.primaryFocus?.unfocus();
-    final forced = _forcedStateSets[declaredState]!;
-    // An open layer focuses a real node inside its popup, and that node decides
-    // its own emphasis from the sampled modality. Pin the modality to what the
-    // scenario declared so the decision belongs to the scenario rather than to
-    // whatever the previous one left behind.
-    // ignore: invalid_use_of_visible_for_testing_member
-    TRFocusSource.instance.debugSetKeyboardModality(
-      forced.declaresFocus ? forced.focusVisible : null,
-    );
-    setState(() {
-      _activations = 0;
-      _args = nextArgs;
-      _contentRevision += 1;
-      _declaredState = declaredState;
-      _forcedStates = forced;
-      // Seeded from the declaration, not from the wrapper listeners: a declared
-      // scenario receives no pointer or key events for those to observe.
-      _focused = forced.declaresFocus;
-      _focusVisible = forced.focusVisible;
-      _hovered = forced.hovered;
-      _pressed = forced.pressed;
-      _themeMode = theme == 'dark' ? ThemeMode.dark : ThemeMode.light;
-    });
-    _bridge.send('scenarioRendered', _component, {
-      'args': _args,
-      'generation': _generation,
-      if (requestId is num) 'requestId': requestId,
-      'theme': _themeMode.name,
-    });
-    if (payload['afterFrame'] == false) {
-      _sendMetrics(requestId: requestId);
-    } else if (nextArgs['open'] == true ||
-        const {'menu', 'select', 'dialog'}.contains(_component)) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          WidgetsBinding.instance.addPostFrameCallback(
-            (_) => _sendMetrics(requestId: requestId),
-          );
-          WidgetsBinding.instance.ensureVisualUpdate();
-        });
-        WidgetsBinding.instance.ensureVisualUpdate();
-      });
-      WidgetsBinding.instance.ensureVisualUpdate();
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) => _sendMetrics(requestId: requestId),
-      );
-    }
-  }
-
   void _sendSchemaError(Object? type) {
     _bridge.send('error', _component, {
       'code': 'invalid-message',
@@ -732,43 +509,39 @@ class _PreviewAppState extends State<PreviewApp> {
     if (exampleBuilder != null) {
       return Builder(builder: (context) => exampleBuilder(context, _locale));
     }
-    return TRForcedStates(
-      states: _forcedStates,
-      child: MouseRegion(
-        onEnter: (_) => _updateInteraction(hovered: true),
-        onExit: (_) => _updateInteraction(hovered: false),
-        child: Listener(
-          onPointerCancel: (_) => _updateInteraction(pressed: false),
-          onPointerDown: (_) {
-            _focusVisible = false;
-            _updateInteraction(pressed: true);
-          },
-          onPointerUp: (_) => _updateInteraction(pressed: false),
-          child: Focus(
-            canRequestFocus: false,
-            onFocusChange: (focused) => _updateInteraction(focused: focused),
-            child: PreviewComponent(
-              key: ValueKey('$_component-$_contentRevision'),
-              args: _args,
-              component: _component,
-              contentRevision: _contentRevision,
-              locale: _locale.languageCode,
-              measureKey: _previewKey,
-              parityMode: widget.parityMode,
-              partKeys: _partKeys,
-              textFieldController: _textFieldController,
-              otpFieldController: _otpFieldController,
-              onStateChanged: (payload) {
-                if (payload['pressed'] == true) _activations += 1;
-                _bridge.send('stateChanged', _component, {
-                  ...payload,
-                  'generation': _generation,
-                });
-                WidgetsBinding.instance.addPostFrameCallback(
-                  (_) => _sendMetrics(),
-                );
-              },
-            ),
+    return MouseRegion(
+      onEnter: (_) => _updateInteraction(hovered: true),
+      onExit: (_) => _updateInteraction(hovered: false),
+      child: Listener(
+        onPointerCancel: (_) => _updateInteraction(pressed: false),
+        onPointerDown: (_) {
+          _focusVisible = false;
+          _updateInteraction(pressed: true);
+        },
+        onPointerUp: (_) => _updateInteraction(pressed: false),
+        child: Focus(
+          canRequestFocus: false,
+          onFocusChange: (focused) => _updateInteraction(focused: focused),
+          child: PreviewComponent(
+            key: ValueKey('$_component-$_contentRevision'),
+            args: _args,
+            component: _component,
+            contentRevision: _contentRevision,
+            locale: _locale.languageCode,
+            measureKey: _previewKey,
+            partKeys: _partKeys,
+            textFieldController: _textFieldController,
+            otpFieldController: _otpFieldController,
+            onStateChanged: (payload) {
+              if (payload['pressed'] == true) _activations += 1;
+              _bridge.send('stateChanged', _component, {
+                ...payload,
+                'generation': _generation,
+              });
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) => _sendMetrics(),
+              );
+            },
           ),
         ),
       ),
@@ -800,12 +573,6 @@ class _PreviewAppState extends State<PreviewApp> {
     );
     return MaterialApp(
       navigatorKey: _navigatorKey,
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(
-          context,
-        ).copyWith(disableAnimations: widget.parityMode && !widget.motionMode),
-        child: child!,
-      ),
       debugShowCheckedModeBanner: false,
       locale: _locale,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
@@ -962,7 +729,6 @@ List<String> _supportedArgs(String component) => switch (component) {
   'textarea' => [
     'appearance',
     'disabled',
-    'parity',
     'placeholder',
     'readOnly',
     'uiSize',
@@ -983,7 +749,6 @@ List<String> _supportedArgs(String component) => switch (component) {
     'appearance',
     'disabled',
     'errorText',
-    'parity',
     'placeholder',
     'readOnly',
     'uiSize',
@@ -1103,7 +868,6 @@ Map<String, Object?>? _validateArgs(
       'loopFocus' ||
       'multiple' ||
       'obscureText' ||
-      'parity' ||
       'pressed' ||
       'readOnly' ||
       'showActions' ||
@@ -1274,7 +1038,6 @@ class PreviewComponent extends StatelessWidget {
     this.contentRevision = 0,
     required this.locale,
     required this.measureKey,
-    this.parityMode = false,
     required this.partKeys,
     required this.textFieldController,
     required this.otpFieldController,
@@ -1287,7 +1050,6 @@ class PreviewComponent extends StatelessWidget {
   final int contentRevision;
   final String locale;
   final Key measureKey;
-  final bool parityMode;
   final Map<String, GlobalKey> partKeys;
   final TextEditingController textFieldController;
   final TROtpFieldController otpFieldController;
@@ -1402,35 +1164,29 @@ class PreviewComponent extends StatelessWidget {
       'text-field' => SizedBox(
         key: measureKey,
         width: 320,
-        child: TextSelectionTheme(
-          data: TextSelectionTheme.of(context).copyWith(
-            cursorColor: args['parity'] == true ? Colors.transparent : null,
-            selectionColor: args['parity'] == true ? Colors.transparent : null,
-          ),
-          child: TRTextField(
-            controller: textFieldController,
-            enabled: args['disabled'] != true,
-            errorText: args['errorText'] is String
-                ? args['errorText']! as String
-                : null,
-            label: switch (locale) {
-              'ko' => '랙 이름',
-              'ja' => 'ラック名',
-              _ => 'Rack name',
-            },
-            placeholder: args['placeholder'] is String
-                ? args['placeholder']! as String
-                : 'Rack alpha',
-            readOnly: args['readOnly'] == true,
-            onChanged: (value) => onStateChanged({
-              'args': {'value': value},
-            }),
-            uiSize: size,
-            appearance: TRFieldAppearance.values.byName(
-              args['appearance'] is String
-                  ? args['appearance']! as String
-                  : 'solid',
-            ),
+        child: TRTextField(
+          controller: textFieldController,
+          enabled: args['disabled'] != true,
+          errorText: args['errorText'] is String
+              ? args['errorText']! as String
+              : null,
+          label: switch (locale) {
+            'ko' => '랙 이름',
+            'ja' => 'ラック名',
+            _ => 'Rack name',
+          },
+          placeholder: args['placeholder'] is String
+              ? args['placeholder']! as String
+              : 'Rack alpha',
+          readOnly: args['readOnly'] == true,
+          onChanged: (value) => onStateChanged({
+            'args': {'value': value},
+          }),
+          uiSize: size,
+          appearance: TRFieldAppearance.values.byName(
+            args['appearance'] is String
+                ? args['appearance']! as String
+                : 'solid',
           ),
         ),
       ),
@@ -1530,14 +1286,6 @@ class PreviewComponent extends StatelessWidget {
         key: measureKey,
         locale: locale,
       ),
-      // The parity fixture pairs one 320px labelled field against the React
-      // page, so the playground composition must not replace it.
-      'combobox' when parityMode => _PreviewCombobox(
-        args: args,
-        key: measureKey,
-        locale: locale,
-        parity: true,
-      ),
       'combobox' => _PreviewCombobox(
         args: args,
         key: measureKey,
@@ -1572,21 +1320,6 @@ class PreviewComponent extends StatelessWidget {
           ],
         ),
       ),
-      // The parity fixture pairs two labelled fields against the React page, so
-      // the playground composition must not replace it.
-      'form' when parityMode => SizedBox(
-        key: measureKey,
-        width: 320,
-        child: const TRForm(
-          child: Column(
-            spacing: 12,
-            children: [
-              TRTextField(name: 'rack', label: 'Rack name'),
-              TRTextField(name: 'region', label: 'Region'),
-            ],
-          ),
-        ),
-      ),
       'form' => _PreviewForm(args: args, key: measureKey, locale: locale),
       'menubar' => _PreviewMenubar(
         args: args,
@@ -1604,27 +1337,6 @@ class PreviewComponent extends StatelessWidget {
           min: 0,
           max: 100,
         ),
-      ),
-      // Parity screenshots need a fixed, already-filled code; the docs
-      // playground needs an empty field the reader can actually type into.
-      'otp-field' when parityMode => TROtpField(
-        appearance: _fieldAppearance(args),
-        key: measureKey,
-        defaultValue: '2048',
-        length: 4,
-        label: _otpLabel,
-        separatorBuilder: (context, index) => index == 1
-            ? SizedBox(
-                width: 13,
-                child: Center(
-                  child: Container(
-                    width: TRGeneratedBorders.defaultWidth,
-                    height: TRGeneratedControlMetrics.mdHeight,
-                    color: context.tinyrackTheme.border,
-                  ),
-                ),
-              )
-            : const SizedBox(width: TRGeneratedControlMetrics.mdGap),
       ),
       'otp-field' => TROtpField(
         key: measureKey,
@@ -2170,20 +1882,6 @@ class PreviewComponent extends StatelessWidget {
           'args': {'checked': checked, 'indeterminate': false},
         }),
       ),
-      // An empty controlled value keeps the radio unchecked across scenario
-      // activations, matching the controlled React fixture.
-      'radio' when parityMode => TRRadioGroup(
-        key: measureKey,
-        value: args['checked'] == true ? 'on' : '',
-        onValueChange: (_) => onStateChanged({'pressed': true}),
-        children: [
-          TRRadio(
-            value: 'on',
-            disabled: args['disabled'] == true,
-            uiSize: size,
-          ),
-        ],
-      ),
       'radio' => TRRadioGroup(
         key: measureKey,
         value: args['checked'] == true ? 'on' : '',
@@ -2250,13 +1948,10 @@ class PreviewComponent extends StatelessWidget {
           disabledItem: args['disabledItem'] == true,
           installTriggerKey: _partKey('trigger'),
           configureContentKey: _partKey('configureContent'),
-          configureTriggerKey: parityMode
-              ? const ValueKey('accordion-configure-trigger')
-              : _partKey('configureTrigger'),
+          configureTriggerKey: _partKey('configureTrigger'),
           locale: locale,
           multiple: args['multiple'] == true,
           open: args['open'] == true,
-          parityMode: parityMode,
           onStateChanged: onStateChanged,
         ),
       ),
@@ -2304,33 +1999,6 @@ class PreviewComponent extends StatelessWidget {
                 _ => 'Copied',
               },
       ),
-      'toggle-group' when parityMode => TRToggleGroup(
-        key: measureKey,
-        disabled: args['disabled'] == true,
-        multiple: args['multiple'] == true,
-        onValueChange: (_) => onStateChanged({'pressed': true}),
-        // The selection stays controlled so parity screenshots keep a stable
-        // pressed item across platforms.
-        value: const ['start'],
-        children: [
-          TRToggle(
-            value: 'start',
-            child: Text(switch (locale) {
-              'ko' => '시작',
-              'ja' => '先頭',
-              _ => 'Start',
-            }, key: _partKey('start')),
-          ),
-          TRToggle(
-            value: 'end',
-            child: Text(switch (locale) {
-              'ko' => '끝',
-              'ja' => '末尾',
-              _ => 'End',
-            }, key: _partKey('end')),
-          ),
-        ],
-      ),
       'toggle-group' => TRToggleGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
@@ -2372,16 +2040,6 @@ class PreviewComponent extends StatelessWidget {
               _ => 'End',
             }, key: _partKey('end')),
           ),
-        ],
-      ),
-      'checkbox-group' when parityMode => TRCheckboxGroup(
-        key: measureKey,
-        disabled: args['disabled'] == true,
-        onValueChange: (_) => onStateChanged({'pressed': true}),
-        value: const ['terms'],
-        children: [
-          TRCheckbox(key: _partKey('first'), value: 'terms'),
-          const TRCheckbox(value: 'newsletter'),
         ],
       ),
       'checkbox-group' => Column(
@@ -2456,18 +2114,6 @@ class PreviewComponent extends StatelessWidget {
           ),
         ],
       ),
-      // Bare glyphs keep the parity fixture's measured geometry; the
-      // playground adds labels so the options can be read and clicked.
-      'radio-group' when parityMode => TRRadioGroup(
-        key: measureKey,
-        disabled: args['disabled'] == true,
-        onValueChange: (_) => onStateChanged({'pressed': true}),
-        value: 'start',
-        children: [
-          TRRadio(key: _partKey('first'), value: 'start'),
-          const TRRadio(value: 'end'),
-        ],
-      ),
       'radio-group' => TRRadioGroup(
         key: measureKey,
         disabled: args['disabled'] == true,
@@ -2502,26 +2148,20 @@ class PreviewComponent extends StatelessWidget {
       'textarea' => SizedBox(
         key: measureKey,
         width: 320,
-        child: TextSelectionTheme(
-          data: TextSelectionTheme.of(context).copyWith(
-            cursorColor: args['parity'] == true ? Colors.transparent : null,
-            selectionColor: args['parity'] == true ? Colors.transparent : null,
-          ),
-          child: TRTextarea(
-            enabled: args['disabled'] != true,
-            initialValue: args['value'] is String
-                ? args['value']! as String
-                : null,
-            placeholder: args['placeholder'] is String
-                ? args['placeholder']! as String
-                : null,
-            readOnly: args['readOnly'] == true,
-            uiSize: size,
-            appearance: TRFieldAppearance.values.byName(
-              args['appearance'] is String
-                  ? args['appearance']! as String
-                  : 'solid',
-            ),
+        child: TRTextarea(
+          enabled: args['disabled'] != true,
+          initialValue: args['value'] is String
+              ? args['value']! as String
+              : null,
+          placeholder: args['placeholder'] is String
+              ? args['placeholder']! as String
+              : null,
+          readOnly: args['readOnly'] == true,
+          uiSize: size,
+          appearance: TRFieldAppearance.values.byName(
+            args['appearance'] is String
+                ? args['appearance']! as String
+                : 'solid',
           ),
         ),
       ),
@@ -2571,7 +2211,6 @@ class _PreviewAccordion extends StatefulWidget {
     required this.locale,
     required this.multiple,
     required this.open,
-    required this.parityMode,
     required this.onStateChanged,
     super.key,
   });
@@ -2583,7 +2222,6 @@ class _PreviewAccordion extends StatefulWidget {
   final String locale;
   final bool multiple;
   final bool open;
-  final bool parityMode;
   final ValueChanged<Map<String, Object?>> onStateChanged;
 
   @override
@@ -2596,6 +2234,9 @@ class _PreviewAccordionState extends State<_PreviewAccordion> {
   @override
   void didUpdateWidget(_PreviewAccordion oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.open != widget.open) {
+      _value = widget.open ? const ['install'] : const [];
+    }
     final next = widget.disabledItem
         ? _value.where((value) => value != 'configure').toList()
         : [..._value];
@@ -2610,7 +2251,7 @@ class _PreviewAccordionState extends State<_PreviewAccordion> {
   };
 
   void _handleValueChange(List<String> value) {
-    if (!widget.parityMode) setState(() => _value = value);
+    setState(() => _value = value);
     widget.onStateChanged({'pressed': true, 'value': value.join(',')});
   }
 
@@ -2618,9 +2259,7 @@ class _PreviewAccordionState extends State<_PreviewAccordion> {
   Widget build(BuildContext context) => TRAccordion(
     multiple: widget.multiple,
     onValueChange: _handleValueChange,
-    value: widget.parityMode
-        ? (widget.open ? const ['install'] : const [])
-        : _value,
+    value: _value,
     items: [
       TRAccordionItem(
         value: 'install',
@@ -3532,18 +3171,10 @@ class _PreviewInlineSuggestionsState extends State<_PreviewInlineSuggestions> {
 }
 
 class _PreviewCombobox extends StatefulWidget {
-  const _PreviewCombobox({
-    required this.args,
-    required this.locale,
-    this.parity = false,
-    super.key,
-  });
+  const _PreviewCombobox({required this.args, required this.locale, super.key});
 
   final Map<String, Object?> args;
   final String locale;
-
-  /// Pins the composition the visual parity fixture measures against React.
-  final bool parity;
 
   @override
   State<_PreviewCombobox> createState() => _PreviewComboboxState();
@@ -3582,7 +3213,7 @@ class _PreviewComboboxState extends State<_PreviewCombobox> {
 
   @override
   Widget build(BuildContext context) {
-    final args = widget.parity ? const <String, Object?>{} : widget.args;
+    final args = widget.args;
     final disabledOption = args['disabledOption'] == true;
     return SizedBox(
       width: 320,

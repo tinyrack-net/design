@@ -7,10 +7,7 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 /// Activation semantics for the shared button interaction frame.
 ///
-/// The visual parity suite used to be the only cover for these: it drove real
-/// input on both runtimes and cross-checked an activation counter. Comparing
-/// two event pipelines is not what a visual suite is for, so the contract lives
-/// here, where it can be stated directly.
+/// Direct widget coverage keeps event failures separate from rendering checks.
 Widget _app(Widget child) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(

@@ -36,10 +36,12 @@ Terminal emulation lives in the style-neutral `termworld` package at
 `TerminalView` with public Tinyrack tokens and components; `tinyrack_ui` does
 not ship a terminal engine or compatibility adapter.
 
-## React parity migration
+## Cross-platform component contract
 
-The Flutter component variants use the same names and value sets as the
-canonical React components.
+React and Flutter share semantic tokens and component purposes where both
+platforms provide the same concept. They do not promise identical public APIs,
+anatomy, interaction details, or rendered pixels. Platform-specific components
+and adaptations are explicit repository contracts rather than parity exceptions.
 
 | Before | Now |
 | --- | --- |
@@ -58,17 +60,16 @@ editors through `obscureText`, `minLines`, and `maxLines`.
 muted secondary line. `TRWindowFrameTitleBar` takes any widget in its `leading`
 and `actions` slots, so window commands are composed from `TRIconButton`.
 
-From the repository root, verify every shared variant in light and dark themes
-and English, Korean, and Japanese with:
+From the repository root, verify the cross-platform inventory and each
+platform's own behavior and rendering baselines with:
 
 ```sh
-pnpm --filter @tinyrack/homepage test:visual-parity
+pnpm scripts:check
+pnpm --filter @tinyrack/ui test:e2e
+pnpm flutter:test
 ```
 
-The command builds isolated 480 × 320 React and Flutter fixtures, requires
-every measured edge, baseline, and internal spacing delta to stay below one CSS
-pixel, and exercises hover, pointer press and release, keyboard focus and
-activation, disabled, loading, readonly, and invalid states. Motion checks
-sample the shared 120 ms transition at 0, 30, 60, 90, 120, and 140 ms. Failures
-write React, Flutter, diff, full-screen, interaction telemetry, and geometry
-artifacts under `packages/homepage/test-results/visual-parity`.
+The inventory check requires every public component to resolve to a shared
+purpose, an explicit adaptation, or a platform-only capability. React browser
+tests and Flutter widget and golden tests then enforce the behavior and visual
+contract of their own rendering engines.

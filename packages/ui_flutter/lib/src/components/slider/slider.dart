@@ -1,5 +1,4 @@
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -393,7 +392,7 @@ class _TRScalarSliderControl extends StatefulWidget {
 }
 
 class _TRScalarSliderControlState extends State<_TRScalarSliderControl>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+    with TRFocusSourceMixin {
   bool _focused = false;
 
   @override
@@ -513,7 +512,7 @@ class _TRScalarSliderControlState extends State<_TRScalarSliderControl>
                   painter: _TRSliderPainter(
                     active: widget.invalid ? colors.danger : colors.primary,
                     inactive: colors.surfaceMuted,
-                    focused: resolveFocusVisible(context, hasFocus: _focused),
+                    focused: focusVisible(hasFocus: _focused),
                     focus: colors.focus,
                     ratios: [ratio],
                     surface: colors.surface,
@@ -560,7 +559,7 @@ class _TRRangeSliderControl extends StatefulWidget {
 }
 
 class _TRRangeSliderControlState extends State<_TRRangeSliderControl>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+    with TRFocusSourceMixin {
   bool _focused = false;
 
   @override
@@ -683,7 +682,7 @@ class _TRRangeSliderControlState extends State<_TRRangeSliderControl>
                   painter: _TRSliderPainter(
                     active: widget.invalid ? colors.danger : colors.primary,
                     inactive: colors.surfaceMuted,
-                    focused: resolveFocusVisible(context, hasFocus: _focused),
+                    focused: focusVisible(hasFocus: _focused),
                     focus: colors.focus,
                     ratios: [
                       (widget.values.start - widget.min) / extent,

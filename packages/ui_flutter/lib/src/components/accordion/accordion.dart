@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
-import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -119,7 +118,7 @@ class _TRAccordionItemView extends StatefulWidget {
 }
 
 class _TRAccordionItemViewState extends State<_TRAccordionItemView>
-    with TRFocusSourceMixin, TRForcedStatesMixin {
+    with TRFocusSourceMixin {
   bool _focused = false;
   bool _spaceDown = false;
   final _focusNode = FocusNode();
@@ -158,7 +157,7 @@ class _TRAccordionItemViewState extends State<_TRAccordionItemView>
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
     final interactive = !widget.item.disabled;
-    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
+    final showFocusRing = focusVisible(hasFocus: _focused);
     final disableAnimations = MediaQuery.disableAnimationsOf(context);
     final motionDuration = disableAnimations ? Duration.zero : TRMotion.fast;
     final sizeDuration = disableAnimations ? Duration.zero : TRMotion.normal;

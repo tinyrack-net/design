@@ -407,69 +407,6 @@ jobs:
           label: Homepage package
           phase: finish
 
-  visual_parity:
-    name: React and Flutter pixel parity
-    if: >-
-      needs.changes.outputs.homepage == 'true' ||
-      needs.changes.outputs.flutter == 'true' ||
-      needs.changes.outputs.shared == 'true'
-    needs: changes
-    runs-on: ubuntu-latest
-    # The full endpoint catalog is 864 groups across 3 locales and 2 themes. It
-    # takes ~5 minutes plus a ~1 minute build on a developer machine; the ceiling
-    # is set well above that because a runner is slower, not because the suite is
-    # expected to approach it.
-    timeout-minutes: 40
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v7.0.1
-
-      - name: Start job metrics
-        uses: ./.github/actions/job-metrics
-        with:
-          label: React and Flutter pixel parity
-          phase: start
-
-      - name: Set up JavaScript runtime
-        uses: ./.github/actions/setup-js
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2.23.0
-        with:
-          channel: stable
-          flutter-version: 3.44.8
-          cache: true
-
-      - name: Install parity dependencies
-        run: >-
-          pnpm
-          --filter tinyrack-ui-workspace
-          --filter @tinyrack/homepage...
-          install --frozen-lockfile
-
-      - name: Install Chromium
-        run: pnpm --filter @tinyrack/homepage exec playwright install chromium
-
-      - name: Compare React and Flutter component pixels
-        run: pnpm --filter @tinyrack/homepage test:visual-parity:ci
-
-      - name: Upload visual parity failures
-        if: failure()
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: visual-parity-failures
-          path: packages/homepage/test-results/visual-parity
-          if-no-files-found: ignore
-          retention-days: 7
-
-      - name: Finish job metrics
-        if: always()
-        uses: ./.github/actions/job-metrics
-        with:
-          label: React and Flutter pixel parity
-          phase: finish
-
   flutter:
     name: Flutter package
     if: >-
@@ -616,7 +553,6 @@ jobs:
       - docs_contract
       - docs
       - homepage
-      - visual_parity
       - flutter
       - flutter_platforms
       - flutter_preview
@@ -651,11 +587,6 @@ jobs:
             ${{ needs.changes.outputs.homepage == 'true' ||
                 needs.changes.outputs.shared == 'true' }}
           HOMEPAGE_RESULT: ${{ needs.homepage.result }}
-          PARITY_SELECTED: >-
-            ${{ needs.changes.outputs.homepage == 'true' ||
-                needs.changes.outputs.flutter == 'true' ||
-                needs.changes.outputs.shared == 'true' }}
-          PARITY_RESULT: ${{ needs.visual_parity.result }}
           FLUTTER_SELECTED: >-
             ${{ needs.changes.outputs.flutter == 'true' ||
                 needs.changes.outputs.shared == 'true' }}
@@ -685,7 +616,6 @@ jobs:
           require_success "$CONTRACT_SELECTED" "$CONTRACT_RESULT" "UI documentation contracts"
           require_success "$DOCS_SELECTED" "$DOCS_RESULT" "Docs package"
           require_success "$HOMEPAGE_SELECTED" "$HOMEPAGE_RESULT" "Homepage package"
-          require_success "$PARITY_SELECTED" "$PARITY_RESULT" "React and Flutter pixel parity"
           require_success "$FLUTTER_SELECTED" "$FLUTTER_RESULT" "Flutter package"
           require_success "$FLUTTER_SELECTED" "$FLUTTER_PLATFORMS_RESULT" "Flutter platforms"
           require_success "$PREVIEW_SELECTED" "$PREVIEW_RESULT" "Flutter preview development"

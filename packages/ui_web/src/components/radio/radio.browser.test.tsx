@@ -231,9 +231,7 @@ test('uses semantic hover tokens for available unchecked and checked states', as
     .toBe('rgb(147, 197, 253)');
 });
 
-// The visual parity suite used to assert this on the rendered radio, as a side
-// effect of driving a disabled scenario. That suite now declares states rather
-// than driving them, so the DOM contract lives here.
+// Keep the disabled DOM contract under direct browser coverage.
 test('marks a single disabled radio and refuses the pointer', async () => {
   const onValueChange = vi.fn();
   await render(

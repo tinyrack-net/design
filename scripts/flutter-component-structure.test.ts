@@ -3,6 +3,11 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
+import {
+  flutterPlatformOnlyComponents,
+  reactComponentAdaptations,
+  supportedFlutterComponentName,
+} from './cross-platform-component-support.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const componentsRoot = join(root, 'packages/ui_flutter/lib/src/components');
@@ -107,27 +112,67 @@ test('cross-component imports use facades and remain acyclic', () => {
   for (const component of dependencies.keys()) visit(component, []);
 });
 
-test('every React component has an explicit Flutter functional counterpart', () => {
-  const aliases = new Map([
-    ['input', 'text_field'],
-    ['link-button', 'button'],
-    ['icon-button', 'button'],
-    ['checkbox-group', 'checkbox'],
-    ['radio-group', 'radio'],
-    ['toggle-group', 'toggle'],
-  ]);
+test('every public component has an explicit cross-platform support classification', () => {
+  const reactComponents = readdirSync(reactComponentsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  const flutterComponents = readdirSync(componentsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
+  const flutterInventory = new Set(flutterComponents);
+  const missingFlutterPurpose = reactComponents.filter(
+    (component) => !flutterInventory.has(supportedFlutterComponentName(component)),
+  );
+
+  assert.deepEqual(missingFlutterPurpose, []);
+
+  const coveredFlutterComponents = new Set(
+    reactComponents.map(supportedFlutterComponentName),
+  );
+  const unclassifiedFlutterComponents = flutterComponents.filter(
+    (component) =>
+      !coveredFlutterComponents.has(component) &&
+      !(component in flutterPlatformOnlyComponents),
+  );
+
+  assert.deepEqual(unclassifiedFlutterComponents, []);
+
+  for (const [reactComponent, adaptation] of Object.entries(
+    reactComponentAdaptations,
+  )) {
+    assert.ok(
+      reactComponents.includes(reactComponent),
+      `stale React adaptation: ${reactComponent}`,
+    );
+    assert.ok(
+      flutterInventory.has(adaptation.flutter),
+      `${reactComponent} maps to missing Flutter component ${adaptation.flutter}`,
+    );
+    assert.ok(adaptation.reason.trim().length > 0);
+  }
+
+  for (const [flutterComponent, support] of Object.entries(
+    flutterPlatformOnlyComponents,
+  )) {
+    assert.ok(
+      flutterInventory.has(flutterComponent),
+      `stale Flutter-only classification: ${flutterComponent}`,
+    );
+    assert.ok(support.reason.trim().length > 0);
+  }
+});
+
+test('cross-platform support does not require one-to-one component APIs', () => {
   const flutterComponents = new Set(
     readdirSync(componentsRoot, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name),
   );
-  const missing = readdirSync(reactComponentsRoot, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .filter((component) => {
-      const counterpart = aliases.get(component) ?? component.replaceAll('-', '_');
-      return !flutterComponents.has(counterpart);
-    });
 
-  assert.deepEqual(missing, []);
+  assert.equal(supportedFlutterComponentName('input'), 'text_field');
+  assert.equal(supportedFlutterComponentName('link-button'), 'button');
+  assert.ok(flutterComponents.has('inline_suggestions'));
+  assert.ok('inline_suggestions' in flutterPlatformOnlyComponents);
 });
