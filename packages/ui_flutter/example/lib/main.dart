@@ -3671,11 +3671,10 @@ class _PreviewDrawerState extends State<_PreviewDrawer> {
       placement: _placement,
       builder: (context) => TRDrawer(
         placement: _placement,
-        snapPoints:
-            _placement == TRDrawerPlacement.top ||
-                _placement == TRDrawerPlacement.bottom
-            ? const [0.59375]
-            : const [1],
+        snapPoints: switch (_placement) {
+          TRDrawerPlacement.top || TRDrawerPlacement.bottom => null,
+          TRDrawerPlacement.start || TRDrawerPlacement.end => const [1],
+        },
         title: const Text('Deploy settings'),
         description: const Text('Review the target before deploying.'),
         content: const Text('Channel: Stable\nRegion: Seoul'),
