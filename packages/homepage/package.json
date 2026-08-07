@@ -36,7 +36,7 @@
     "react-router": "8.3.0"
   },
   "devDependencies": {
-    "@babel/parser": "^7.29.7",
+    "@babel/parser": "^8.0.4",
     "@babel/types": "^7.29.7",
     "@mdx-js/rollup": "3.1.1",
     "@react-router/dev": "8.3.0",
