@@ -19,3 +19,11 @@ IBM Plex Sans、Mono、韓国語、日本語のフォントアセットを同梱
 サンプルアプリはAndroid、iOS、web、Windows、macOS、Linuxに対応します。
 パッケージを使うアプリで`flutter run`を実行すると、Flutterで選択した
 プラットフォーム上で確認できます。
+
+## ターミナルアプリケーション
+
+`tinyrack_ui` 0.36.0以降はターミナルエミュレーターを提供しません。
+`tinyrack-net/flutter-packages/packages/termworld`の`termworld`を正確なコミットに
+固定して直接追加してください。プロダクト層でTinyrackのカラー、タイポグラフィ、
+スペーシング、カーソル、フォーカス、選択トークンを`TerminalView`に渡します。
+`TRTerminalView`互換アダプターは提供しません。

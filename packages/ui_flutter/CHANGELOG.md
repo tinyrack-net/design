@@ -1,3 +1,14 @@
+## 0.36.0
+
+- **Breaking:** removes `TRTerminalView`, `TRTerminalController`, and
+  `TRTerminalSize`, together with the `xterm` dependency. Terminal emulation is
+  now owned by the style-neutral `termworld` Flutter package. Depend directly
+  on `tinyrack-net/flutter-packages/packages/termworld`, create a
+  `TerminalEmulator` and `TerminalViewController`, and inject Tinyrack colors,
+  typography, spacing, focus, cursor, and selection tokens into `TerminalView`
+  from the product composite. No compatibility adapter remains in
+  `tinyrack_ui`.
+
 ## 0.35.1
 
 - Draws `TRTerminalView` selections as a 50% `surfaceSelected` overlay so the

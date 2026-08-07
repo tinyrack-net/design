@@ -31,6 +31,11 @@ consumer application's Flutter asset bundle, so no runtime font download is
 required. The fonts are distributed under the SIL Open Font License. See
 `assets/fonts/OFL.txt`.
 
+Terminal emulation lives in the style-neutral `termworld` package at
+`tinyrack-net/flutter-packages/packages/termworld`. Products compose its
+`TerminalView` with public Tinyrack tokens and components; `tinyrack_ui` does
+not ship a terminal engine or compatibility adapter.
+
 ## React parity migration
 
 The Flutter component variants use the same names and value sets as the

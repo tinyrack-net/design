@@ -354,50 +354,6 @@ void main() {
       expect(presenter.openings, isEmpty);
     });
   });
-
-  group('TRTerminalView.contextMenuItems', () {
-    testWidgets('routes the terminal menu through the installed presenter', (
-      tester,
-    ) async {
-      final presenter = _RecordingPresenter();
-      final controller = TRTerminalController();
-      addTearDown(controller.dispose);
-
-      await tester.pumpWidget(
-        _app(
-          TRContextMenuPresenterScope(
-            presenter: presenter,
-            child: SizedBox(
-              width: 640,
-              height: 360,
-              child: TRTerminalView(
-                controller: controller,
-                contextMenuItems: (context) => const <TRMenuElement>[
-                  TRMenuActionElement(
-                    id: 'copy',
-                    title: 'Copy',
-                    onPressed: _noop,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-
-      await tester.tapAt(
-        tester.getCenter(find.byType(TRTerminalView)),
-        buttons: kSecondaryMouseButton,
-      );
-      await tester.pumpAndSettle();
-
-      expect(presenter.openings, hasLength(1));
-      expect(
-        (presenter.openings.single.single as TRMenuActionElement).id,
-        'copy',
-      );
-    });
-  });
 }
 
 void _noop() {}

@@ -19,3 +19,11 @@ runtime font download is required.
 The example application supports Android, iOS, web, Windows, macOS, and Linux.
 Run `flutter run` from the application that consumes the package to use the
 platform selected by Flutter.
+
+## Terminal applications
+
+`tinyrack_ui` 0.36.0 no longer includes a terminal emulator. Add `termworld`
+directly from `tinyrack-net/flutter-packages/packages/termworld`, pinned to an
+exact commit, then supply Tinyrack colors, typography, spacing, cursor, focus,
+and selection tokens to `TerminalView` in the product layer. There is no
+`TRTerminalView` compatibility adapter.
