@@ -32,9 +32,17 @@
     padding-inline: var(--tinyrack-control-padding-inline-lg);
   }
 
-  .tr-textarea:focus-visible {
+  /* `:focus-visible` always matches a text field however focus arrived, so the
+     ring is gated on the modality the focus-modality provider publishes.
+     Turning the outline off for pointer focus is what stops the user agent
+     painting its own ring in place of ours. */
+  :where(html:not([data-tr-focus-modality="pointer"])) .tr-textarea:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  html[data-tr-focus-modality="pointer"] .tr-textarea:focus-visible {
+    outline: none;
   }
 
   .tr-textarea::placeholder {
@@ -70,18 +78,22 @@
     border-color: transparent;
   }
 
+  /* Only ring-showing focus outranks hover. A pointer-focused ghost field draws
+     no ring, so it keeps reading as hovered, matching what the Flutter field
+     chrome resolves for the same state. */
   .tr-textarea[data-appearance="ghost"]:hover:not(
     :disabled,
     [readonly],
     [aria-invalid="true"],
     :invalid,
-    :focus-visible
+    :where(html:not([data-tr-focus-modality="pointer"]) *):focus-visible
   ) {
     background: var(--tinyrack-surface-hover);
     border-color: transparent;
   }
 
-  .tr-textarea[data-appearance="ghost"]:focus-visible {
+  :where(html:not([data-tr-focus-modality="pointer"]))
+    .tr-textarea[data-appearance="ghost"]:focus-visible {
     background: var(--tinyrack-surface);
   }
 

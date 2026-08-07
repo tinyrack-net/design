@@ -46,7 +46,9 @@
     text-decoration-color: transparent;
   }
 
-  .tr-link[data-underline="hover"]:hover {
+  /* A disabled link does not respond to the pointer at all; Flutter resolves
+     disabled before hover for the same reason. */
+  .tr-link[data-underline="hover"]:hover:not([data-disabled]) {
     text-decoration-color: currentcolor;
   }
 
@@ -54,7 +56,7 @@
     text-decoration-line: underline;
   }
 
-  .tr-link:hover {
+  .tr-link:hover:not([data-disabled]) {
     opacity: var(--tr-link-hover-opacity, var(--tinyrack-opacity-hover));
   }
 

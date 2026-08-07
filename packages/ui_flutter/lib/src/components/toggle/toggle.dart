@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -39,7 +41,8 @@ class TRToggle extends StatefulWidget {
   State<TRToggle> createState() => _TRToggleState();
 }
 
-class _TRToggleState extends State<TRToggle> {
+class _TRToggleState extends State<TRToggle>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   late bool _uncontrolledPressed = widget.defaultPressed;
   FocusNode? _internalFocusNode;
   bool _hovered = false;
@@ -66,7 +69,14 @@ class _TRToggleState extends State<TRToggle> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
   void dispose() {
+    disposeFocusSource();
     _internalFocusNode?.dispose();
     super.dispose();
   }
@@ -100,12 +110,10 @@ class _TRToggleState extends State<TRToggle> {
       widget.onPressedChange?.call(next);
     }
 
-    final showFocusRing =
-        _focused &&
-        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
     // The web hover rule outranks the pressed rule by selector specificity,
     // so a hovered toggle shows the hover fill even while pressed.
-    final background = _hovered && !disabled
+    final background = resolveHovered(context, hovered: _hovered) && !disabled
         ? colors.surfaceHover
         : pressed
         ? generated.surfaceSelected

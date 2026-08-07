@@ -10,6 +10,7 @@ import {
   useRef,
 } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
+import { useTinyrackFocusModality } from '../../providers/focus-modality/focus-modality-provider.js';
 import { AutocompleteResetContext } from './autocomplete-form-context.js';
 
 export type TRAutocompleteInputProps = ComponentProps<typeof BaseAutocomplete.Input>;
@@ -19,6 +20,9 @@ export function TRAutocompleteInput({
   ref,
   ...props
 }: TRAutocompleteInputProps) {
+  // The group's ring is gated on input modality, and popup close restores focus
+  // here, so the tracker has to be running.
+  useTinyrackFocusModality();
   const handleReset = useContext(AutocompleteResetContext);
   const inputRef = useRef<HTMLInputElement>(null);
   const mergedRef = useCallback(

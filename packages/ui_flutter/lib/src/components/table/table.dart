@@ -49,29 +49,34 @@ class TRTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
-    final vertical = switch (density) {
-      TRTableDensity.compact => TRGeneratedSpacing.xs,
-      TRTableDensity.comfortable => TRGeneratedSpacing.sm,
-      TRTableDensity.spacious => TRGeneratedSpacing.md,
+    // Derived from the same cell model as `@tinyrack/ui`: a row is its vertical
+    // padding twice, plus the line box, plus the bottom border. These used to be
+    // hand-fitted constants, which drifted from the web at every density except
+    // compact.
+    final paddingY = switch (density) {
+      TRTableDensity.compact => TRGeneratedControlMetrics.mdGap,
+      TRTableDensity.comfortable => TRGeneratedSpacing.lg,
+      TRTableDensity.spacious =>
+        TRGeneratedSpacing.sm + TRGeneratedControlMetrics.mdGap,
     };
-    final rowHeight = switch (density) {
-      TRTableDensity.compact =>
-        TRGeneratedControlMetrics.mdHeight -
-            TRGeneratedBorders.defaultWidth * 2,
-      TRTableDensity.comfortable => TRGeneratedControlMetrics.lgHeight,
-      TRTableDensity.spacious => TRGeneratedSpacing.size3xl,
-    };
-    final horizontalMargin = switch (density) {
-      TRTableDensity.compact => TRGeneratedSpacing.md,
+    final lineHeight = switch (density) {
+      TRTableDensity.compact => TRGeneratedControlMetrics.mdLineHeight,
       TRTableDensity.comfortable =>
-        TRGeneratedSpacing.lg + TRGeneratedSpacing.xs,
-      TRTableDensity.spacious => TRGeneratedSpacing.xl + TRGeneratedSpacing.xs,
+        TRGeneratedControlMetrics.mdLineHeight + TRGeneratedSpacing.size3xs * 2,
+      TRTableDensity.spacious => TRGeneratedSpacing.xl,
     };
-    final headingCorrection = switch (density) {
-      TRTableDensity.compact => TRGeneratedTypographyTracking.none,
-      TRTableDensity.comfortable => TRGeneratedBorders.strongWidth,
-      TRTableDensity.spacious => TRGeneratedSpacing.sm,
+    final paddingX = switch (density) {
+      TRTableDensity.compact => TRGeneratedSpacing.md,
+      TRTableDensity.comfortable => TRGeneratedSpacing.lg,
+      TRTableDensity.spacious => TRGeneratedSpacing.xl,
     };
+    // `border-collapse: collapse` keeps the row box at padding + line box; the
+    // shared border sits between rows, which is what `horizontalInside` draws.
+    final rowHeight = paddingY * 2 + lineHeight;
+    // CSS puts the inline padding on every cell, so neighbouring cells add up to
+    // twice it between columns while the outer edge only gets it once.
+    final horizontalMargin = paddingX;
+    final columnSpacing = paddingX * 2;
     final dataRows = rows.indexed.map((entry) {
       final (index, row) = entry;
       return DataRow(
@@ -92,16 +97,35 @@ class TRTable extends StatelessWidget {
     }
     final table = DataTable(
       headingRowColor: WidgetStatePropertyAll(colors.surfaceMuted),
-      border: TableBorder(horizontalInside: BorderSide(color: colors.border)),
-      dataRowMinHeight: rowHeight,
+      // Without these, Material's 14px defaults apply to both rows, so heading
+      // text measured wider than the web's 12px and pushed every column out.
+      headingTextStyle: TextStyle(
+        color: colors.textMuted,
+        fontFamily: TRGeneratedFontFamilies.body,
+        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+        fontSize: TRGeneratedTypographySizes.xs,
+        fontWeight: TRGeneratedFontWeights.strong,
+        letterSpacing:
+            TRGeneratedTypographyTracking.md * TRGeneratedTypographySizes.xs,
+      ),
+      dataTextStyle: TextStyle(
+        color: colors.text,
+        fontFamily: TRGeneratedFontFamilies.body,
+        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+        fontSize: TRGeneratedTypographySizes.sm,
+      ),
+      // `dividerThickness` is the Material-native row rule and, unlike a
+      // TableBorder, it takes part in layout the way the collapsed CSS border
+      // between rows does.
+      dividerThickness: TRGeneratedBorders.defaultWidth,
+      // `dividerThickness` paints the rule but does not reserve space for it, so
+      // each data row carries the collapsed border that sits above it. Heading +
+      // N data rows then measures the same as the web's N+1 collapsed rows.
+      dataRowMinHeight: rowHeight + TRGeneratedBorders.defaultWidth,
       dataRowMaxHeight: double.infinity,
-      headingRowHeight:
-          TRGeneratedControlMetrics.lgHeight -
-          TRGeneratedBorders.strongWidth +
-          vertical * 2 +
-          headingCorrection,
+      headingRowHeight: rowHeight,
       horizontalMargin: horizontalMargin,
-      columnSpacing: TRGeneratedSpacing.sm + TRGeneratedBorders.defaultWidth,
+      columnSpacing: columnSpacing,
       columns: [
         for (final column in columns)
           DataColumn(
@@ -116,20 +140,45 @@ class TRTable extends StatelessWidget {
     return Semantics(
       container: true,
       label: scrollLabel,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (caption != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: TRGeneratedSpacing.sm),
-              child: DefaultTextStyle.merge(
-                style: Theme.of(context).textTheme.titleSmall,
-                child: caption!,
+      // Mirrors `.tr-table-container`: the web frames the caption and the rows
+      // together in a bordered, rounded surface.
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: colors.border),
+          borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+          color: colors.surface,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (caption != null)
+              Padding(
+                // The web caption is padded on both sides and rides the same line
+                // box as a control label; Material's titleSmall is neither.
+                padding: EdgeInsets.symmetric(
+                  horizontal: paddingX,
+                  vertical: TRGeneratedSpacing.sm,
+                ),
+                child: DefaultTextStyle.merge(
+                  style: TextStyle(
+                    color: colors.textMuted,
+                    fontFamily: TRGeneratedFontFamilies.body,
+                    fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+                    fontSize: TRGeneratedTypographySizes.sm,
+                    height:
+                        TRGeneratedControlMetrics.mdLineHeight /
+                        TRGeneratedTypographySizes.sm,
+                  ),
+                  child: caption!,
+                ),
               ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: table,
             ),
-          SingleChildScrollView(scrollDirection: Axis.horizontal, child: table),
-        ],
+          ],
+        ),
       ),
     );
   }

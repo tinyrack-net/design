@@ -23,4 +23,10 @@
   .tr-toggle-group[data-disabled] {
     cursor: not-allowed;
   }
+  /* A text field nested here matches `:focus-visible` on a plain mouse click,
+     so pointer focus drops the inherited ring. Buttons and links are
+     unaffected: the browser already excludes them on click. */
+  html[data-tr-focus-modality="pointer"] .tr-toggle-group :focus-visible {
+    outline: none;
+  }
 }

@@ -450,6 +450,8 @@ class _TRFlutterMenuHostState extends State<_TRFlutterMenuHost>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
+            // Matches the web popup's row gap.
+            spacing: TRGeneratedSpacing.xs,
             children: widget.menuChildren(context),
           ),
         ),

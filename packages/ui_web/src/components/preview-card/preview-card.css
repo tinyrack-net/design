@@ -82,4 +82,10 @@
       animation: none;
     }
   }
+  /* A text field nested here matches `:focus-visible` on a plain mouse click,
+     so pointer focus drops the inherited ring. Buttons and links are
+     unaffected: the browser already excludes them on click. */
+  html[data-tr-focus-modality="pointer"] .tr-preview-card-popup :focus-visible {
+    outline: none;
+  }
 }

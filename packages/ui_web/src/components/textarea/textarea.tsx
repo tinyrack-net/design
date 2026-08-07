@@ -5,6 +5,7 @@ import type { ComponentPropsWithRef } from 'react';
 import type { TRFieldAppearance } from '../../core/field-appearance.js';
 import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeClassNames } from '../../internal/component-class-name.js';
+import { useTinyrackFocusModality } from '../../providers/focus-modality/focus-modality-provider.js';
 
 export type TRTextareaUiSize = TRControlUiSize;
 export type TRTextareaAppearance = TRFieldAppearance;
@@ -21,6 +22,10 @@ export function TRTextarea({
   appearance = 'solid',
   ...props
 }: TRTextareaProps) {
+  // The focus ring is gated on input modality, which only JavaScript can tell
+  // apart for a text field.
+  useTinyrackFocusModality();
+
   return (
     <BaseField.Control
       {...(props as BaseFieldControlProps)}

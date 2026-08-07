@@ -43,6 +43,10 @@
     text-align: center;
   }
 
+  /* Gated on input modality: `:focus-visible` matches these slots on a plain
+     mouse click, and the border tint is emphasis just as much as the ring, so
+     both drop together for pointer focus. */
+  :where(html:not([data-tr-focus-modality="pointer"]))
   .tr-otp-field-digit:focus-visible {
     border-color: var(--tr-otp-field-focus-color, var(--tinyrack-focus));
     outline: var(--tr-otp-field-focus-width, var(--tinyrack-focus-width)) solid
@@ -51,6 +55,10 @@
       --tr-otp-field-focus-offset,
       calc(var(--tr-otp-field-focus-width, var(--tinyrack-focus-width)) * -1)
     );
+  }
+
+  html[data-tr-focus-modality="pointer"] .tr-otp-field-digit:focus-visible {
+    outline: none;
   }
 
   .tr-otp-field[data-invalid] .tr-otp-field-digit {
@@ -69,7 +77,9 @@
     border-color: transparent;
   }
 
-  .tr-otp-field[data-appearance="ghost"] .tr-otp-field-digit:focus-visible {
+  :where(html:not([data-tr-focus-modality="pointer"]))
+    .tr-otp-field[data-appearance="ghost"]
+    .tr-otp-field-digit:focus-visible {
     background: var(--tinyrack-surface);
     border-color: var(--tr-otp-field-focus-color, var(--tinyrack-focus));
   }

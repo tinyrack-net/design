@@ -8,6 +8,7 @@ import '../generated/tokens.g.dart';
 import '../theme.dart';
 import '../tokens.dart';
 import '../types.dart';
+import 'focus_source.dart';
 
 /// Internal render-tree marker used by the preview parity harness.
 ///
@@ -193,16 +194,20 @@ abstract final class TRLayerStyles {
           borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
         ),
       ),
-      side: WidgetStateProperty.resolveWith(
-        (states) => BorderSide(
-          color: showFocusBorder && states.contains(WidgetState.focused)
-              ? colors.focus
-              : Colors.transparent,
-          width: showFocusBorder && states.contains(WidgetState.focused)
+      side: WidgetStateProperty.resolveWith((states) {
+        // Material focuses rows on hover, and a menu opened with the mouse
+        // focuses its trigger, so raw focus would emphasise on pointer input.
+        final focused =
+            showFocusBorder &&
+            states.contains(WidgetState.focused) &&
+            TRFocusSource.instance.isKeyboardFocus;
+        return BorderSide(
+          color: focused ? colors.focus : Colors.transparent,
+          width: focused
               ? TRGeneratedBorders.focusWidth
               : TRGeneratedBorders.defaultWidth,
-        ),
-      ),
+        );
+      }),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       textStyle: WidgetStatePropertyAll(TRControlMetrics.labelStyleOf(rowSize)),
       visualDensity: VisualDensity.standard,

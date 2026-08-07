@@ -49,6 +49,20 @@ Focus placement follows the control boundary. Text inputs, textareas, select tri
 }
 ```
 
+Tinyrack paints that indicator for keyboard focus, not for pointer focus. A text field matches `:focus-visible` however focus arrived, so a plain mouse click would draw the same ring as a Tab press. WCAG asks for a visible indicator on keyboard focus, so components track the input modality and publish it as `data-tr-focus-modality` on the document element, and the component CSS reads that attribute.
+
+The components that depend on the modality start the tracker while they are mounted. Start it yourself when you use the stylesheets without those components, or when it should run before the first control mounts:
+
+```tsx
+import { TRFocusModalityProvider } from '@tinyrack/ui/providers/focus-modality';
+
+export function App({ children }: { children: React.ReactNode }) {
+  return <TRFocusModalityProvider>{children}</TRFocusModalityProvider>;
+}
+```
+
+Without the tracker the attribute is absent and the indicator shows for pointer focus as well, which keeps the accessible behavior rather than hiding it.
+
 ## Contrast and non-color cues
 
 Choose semantic pairs such as `--tinyrack-text` on `--tinyrack-surface`, `--tinyrack-on-primary` on `--tinyrack-primary`, and the matching status text, surface, and border roles. Test the rendered pair in every supported theme and state. For WCAG-oriented review, use at least `4.5:1` for normal text, `3:1` for large text, and `3:1` for essential control boundaries and state indicators.

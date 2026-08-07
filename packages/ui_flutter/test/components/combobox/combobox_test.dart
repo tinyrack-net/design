@@ -114,6 +114,7 @@ void main() {
     await tester.pumpWidget(
       _app(
         TRCombobox<String>(
+          autoHighlight: true,
           items: _channels,
           onValueChange: (value) => selected = value,
         ),

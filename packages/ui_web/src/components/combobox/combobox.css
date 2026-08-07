@@ -96,13 +96,21 @@
     background: var(--tinyrack-surface-hover);
   }
 
+  /* `[data-highlighted]` follows the mouse as it moves down the list, so a
+     ring here would trail the pointer around. The background carries the
+     highlight for keyboard navigation too, which is how the menu and
+     context-menu rows already read. */
   .tr-combobox-option[data-highlighted] {
     background: var(--tinyrack-surface-hover);
-    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
-    outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
 
-  .tr-combobox-option:is([aria-selected="true"], [data-selected]) {
+  /* Selection is carried by the check indicator, so the highlight -- which
+     tracks where the keyboard or pointer is right now -- outranks it. Without
+     the `:not()` these two have equal specificity and the later rule wins,
+     which left the highlight invisible on the already-selected row. */
+  .tr-combobox-option:is([aria-selected="true"], [data-selected]):not(
+    [data-highlighted]
+  ) {
     background: var(--tinyrack-surface-selected);
     font-weight: var(--tinyrack-weight-strong);
   }

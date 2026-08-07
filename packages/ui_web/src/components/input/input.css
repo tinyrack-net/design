@@ -27,9 +27,21 @@
     padding-inline: var(--tinyrack-control-padding-inline-lg);
   }
 
-  .tr-input:focus-visible {
+  /* `:focus-visible` always matches a text field, by spec, no matter how focus
+     arrived, so a plain mouse click would paint the ring. WCAG only asks for a
+     visible keyboard focus indicator, so the emphasis is gated on the modality
+     the focus-modality provider publishes. `:where()` contributes no
+     specificity, so this rule keeps the weight it had before the gate, and a
+     missing attribute (no JavaScript) still paints the ring. */
+  :where(html:not([data-tr-focus-modality="pointer"])) .tr-input:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  /* Dropping our ring is not enough on its own: the user agent paints its own
+     focus ring in the space we leave, so pointer focus turns the outline off. */
+  html[data-tr-focus-modality="pointer"] .tr-input:focus-visible {
+    outline: none;
   }
 
   .tr-input::placeholder {
@@ -73,6 +85,10 @@
     border-color: transparent;
   }
 
+  /* Only ring-showing focus outranks hover. A pointer-focused ghost field draws
+     no ring, so it keeps reading as hovered, which is also what the Flutter
+     field chrome resolves for the same state. The `:where()` wrapper keeps this
+     `:not()` argument at the weight a bare `:focus-visible` had. */
   .tr-input[data-appearance="ghost"]:hover:not(
     :disabled,
     [data-disabled],
@@ -80,13 +96,14 @@
     [aria-invalid="true"],
     [data-invalid],
     :invalid,
-    :focus-visible
+    :where(html:not([data-tr-focus-modality="pointer"]) *):focus-visible
   ) {
     background: var(--tinyrack-surface-hover);
     border-color: transparent;
   }
 
-  .tr-input[data-appearance="ghost"]:focus-visible {
+  :where(html:not([data-tr-focus-modality="pointer"]))
+    .tr-input[data-appearance="ghost"]:focus-visible {
     background: var(--tinyrack-surface);
   }
 
@@ -149,9 +166,16 @@
     border-color: var(--tinyrack-border-strong);
   }
 
-  .tr-input-group:focus-within {
+  /* `:focus-within` carries no modality information at all, so without the gate
+     the group repaints its ring every time focus is restored to the input it
+     wraps -- which combobox and autocomplete do on every popup close. */
+  :where(html:not([data-tr-focus-modality="pointer"])) .tr-input-group:focus-within {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  html[data-tr-focus-modality="pointer"] .tr-input-group:focus-within {
+    outline: none;
   }
 
   .tr-input-group:has(.tr-input-group-input:read-only) {
@@ -184,13 +208,14 @@
 
   .tr-input-group[data-appearance="ghost"]:hover:not(
     :has(.tr-input-group-input:is(:disabled, [readonly])),
-    :focus-within
+    :where(html:not([data-tr-focus-modality="pointer"]) *):focus-within
   ) {
     background: var(--tinyrack-surface-hover);
     border-color: transparent;
   }
 
-  .tr-input-group[data-appearance="ghost"]:focus-within {
+  :where(html:not([data-tr-focus-modality="pointer"]))
+    .tr-input-group[data-appearance="ghost"]:focus-within {
     background: var(--tinyrack-surface);
   }
 

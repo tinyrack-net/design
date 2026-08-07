@@ -8,4 +8,5 @@ export type TRComboboxInputProps = ComponentProps<typeof BaseCombobox.Input>;
 export const TRComboboxInput = createComponentPart(
   BaseCombobox.Input,
   'tr-input tr-input-group-input tr-combobox',
+  { tracksFocusModality: true },
 );

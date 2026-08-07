@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -42,7 +44,8 @@ class TRSwitch extends StatefulWidget {
   State<TRSwitch> createState() => _TRSwitchState();
 }
 
-class _TRSwitchState extends State<TRSwitch> {
+class _TRSwitchState extends State<TRSwitch>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   late bool _uncontrolledChecked = widget.defaultChecked;
   FocusNode? _internalFocusNode;
   bool _hovered = false;
@@ -67,7 +70,14 @@ class _TRSwitchState extends State<TRSwitch> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
   void dispose() {
+    disposeFocusSource();
     _internalFocusNode?.dispose();
     super.dispose();
   }
@@ -94,20 +104,24 @@ class _TRSwitchState extends State<TRSwitch> {
       widget.onCheckedChange?.call(next);
     }
 
-    final showFocusRing =
-        _focused &&
-        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
     final background = disabled
         ? (checked ? generated.surfaceSelected : colors.surfaceMuted)
         : checked
-        ? (_hovered ? generated.primaryHover : colors.primary)
-        : (_hovered ? colors.surfaceHover : colors.surfaceMuted);
+        ? (resolveHovered(context, hovered: _hovered)
+              ? generated.primaryHover
+              : colors.primary)
+        : (resolveHovered(context, hovered: _hovered)
+              ? colors.surfaceHover
+              : colors.surfaceMuted);
     final borderColor = widget.invalid
         ? colors.dangerBorder
         : disabled
         ? (checked ? colors.primary : generated.controlBorder)
         : checked
-        ? (_hovered ? generated.primaryHover : colors.primary)
+        ? (resolveHovered(context, hovered: _hovered)
+              ? generated.primaryHover
+              : colors.primary)
         : generated.controlBorder;
     final thumbColor = checked
         ? (disabled ? colors.primary : colors.onPrimary)

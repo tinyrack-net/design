@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 import '../../theme.dart';
 import '../../types.dart';
 
@@ -110,7 +112,8 @@ class TROtpField extends StatefulWidget {
   State<TROtpField> createState() => _TROtpFieldState();
 }
 
-class _TROtpFieldState extends State<TROtpField> {
+class _TROtpFieldState extends State<TROtpField>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   TROtpFieldController? _internalController;
   late final TextEditingController _textController;
   late final FocusNode _focusNode;
@@ -127,6 +130,7 @@ class _TROtpFieldState extends State<TROtpField> {
   @override
   void initState() {
     super.initState();
+    initFocusSource();
     _textController = TextEditingController(text: _value);
     _focusNode = FocusNode()..addListener(_handleFocusChange);
     _controller.addListener(_handleControllerChange);
@@ -150,6 +154,7 @@ class _TROtpFieldState extends State<TROtpField> {
 
   @override
   void dispose() {
+    disposeFocusSource();
     _focusNode.removeListener(_handleFocusChange);
     _focusNode.dispose();
     _textController.dispose();
@@ -232,7 +237,11 @@ class _TROtpFieldState extends State<TROtpField> {
                       height: slotSize,
                       alignment: Alignment.center,
                       decoration: () {
-                        final active = _focused && index == activeIndex;
+                        // Only keyboard focus lights the active slot: a
+                        // click already puts the caret where the user aimed.
+                        final active =
+                            resolveFocusVisible(context, hasFocus: _focused) &&
+                            index == activeIndex;
                         final chrome = resolveFieldChrome(
                           appearance: widget.appearance,
                           colors: colors,

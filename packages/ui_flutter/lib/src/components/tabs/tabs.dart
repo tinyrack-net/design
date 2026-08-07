@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -301,7 +303,8 @@ class _TRTabItem extends StatefulWidget {
   State<_TRTabItem> createState() => _TRTabItemState();
 }
 
-class _TRTabItemState extends State<_TRTabItem> {
+class _TRTabItemState extends State<_TRTabItem>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   bool _hovered = false;
   bool _focused = false;
   bool _spaceDown = false;
@@ -322,7 +325,14 @@ class _TRTabItemState extends State<_TRTabItem> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
   void dispose() {
+    disposeFocusSource();
     _focusNode.dispose();
     super.dispose();
   }
@@ -346,9 +356,7 @@ class _TRTabItemState extends State<_TRTabItem> {
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
-    final showFocusRing =
-        _focused &&
-        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRGeneratedMotion.fast;
@@ -384,7 +392,8 @@ class _TRTabItemState extends State<_TRTabItem> {
                       decoration: BoxDecoration(
                         color: widget.selected
                             ? colors.surface
-                            : _hovered && interactive
+                            : resolveHovered(context, hovered: _hovered) &&
+                                  interactive
                             ? colors.surfaceHover
                             : null,
                         border: Border(
@@ -421,7 +430,11 @@ class _TRTabItemState extends State<_TRTabItem> {
                             style: TextStyle(
                               color: widget.selected
                                   ? colors.text
-                                  : _hovered && interactive
+                                  : resolveHovered(
+                                          context,
+                                          hovered: _hovered,
+                                        ) &&
+                                        interactive
                                   ? colors.text
                                   : colors.textMuted,
                               fontFamily: TRGeneratedFontFamilies.body,
@@ -495,7 +508,8 @@ class _TRTabBarItem extends StatefulWidget {
   State<_TRTabBarItem> createState() => _TRTabBarItemState();
 }
 
-class _TRTabBarItemState extends State<_TRTabBarItem> {
+class _TRTabBarItemState extends State<_TRTabBarItem>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   bool _hovered = false;
   bool _focused = false;
   bool _spaceDown = false;
@@ -516,7 +530,14 @@ class _TRTabBarItemState extends State<_TRTabBarItem> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
   void dispose() {
+    disposeFocusSource();
     _focusNode.dispose();
     super.dispose();
   }
@@ -540,9 +561,7 @@ class _TRTabBarItemState extends State<_TRTabBarItem> {
       TRUiSize.md => TRUiSize.sm,
       TRUiSize.lg => TRUiSize.md,
     };
-    final showFocusRing =
-        _focused &&
-        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRGeneratedMotion.fast;
@@ -578,7 +597,8 @@ class _TRTabBarItemState extends State<_TRTabBarItem> {
                       decoration: BoxDecoration(
                         color: widget.selected
                             ? colors.surfaceSelected
-                            : _hovered && interactive
+                            : resolveHovered(context, hovered: _hovered) &&
+                                  interactive
                             ? colors.surfaceHover
                             : null,
                         borderRadius: const BorderRadius.all(
@@ -619,7 +639,12 @@ class _TRTabBarItemState extends State<_TRTabBarItem> {
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       style: TextStyle(
-                                        color: widget.selected || _hovered
+                                        color:
+                                            widget.selected ||
+                                                resolveHovered(
+                                                  context,
+                                                  hovered: _hovered,
+                                                )
                                             ? colors.text
                                             : colors.textMuted,
                                         fontFamily:

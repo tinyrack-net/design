@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../internal/focus_source.dart';
+import '../../internal/forced_states.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -116,7 +118,8 @@ class _TRAccordionItemView extends StatefulWidget {
   State<_TRAccordionItemView> createState() => _TRAccordionItemViewState();
 }
 
-class _TRAccordionItemViewState extends State<_TRAccordionItemView> {
+class _TRAccordionItemViewState extends State<_TRAccordionItemView>
+    with TRFocusSourceMixin, TRForcedStatesMixin {
   bool _focused = false;
   bool _spaceDown = false;
   final _focusNode = FocusNode();
@@ -136,7 +139,14 @@ class _TRAccordionItemViewState extends State<_TRAccordionItemView> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    initFocusSource();
+  }
+
+  @override
   void dispose() {
+    disposeFocusSource();
     _focusNode.dispose();
     super.dispose();
   }
@@ -148,9 +158,7 @@ class _TRAccordionItemViewState extends State<_TRAccordionItemView> {
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
     final interactive = !widget.item.disabled;
-    final showFocusRing =
-        _focused &&
-        FocusManager.instance.highlightMode == FocusHighlightMode.traditional;
+    final showFocusRing = resolveFocusVisible(context, hasFocus: _focused);
     final disableAnimations = MediaQuery.disableAnimationsOf(context);
     final motionDuration = disableAnimations ? Duration.zero : TRMotion.fast;
     final sizeDuration = disableAnimations ? Duration.zero : TRMotion.normal;
