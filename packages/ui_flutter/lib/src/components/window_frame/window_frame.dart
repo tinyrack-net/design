@@ -168,7 +168,9 @@ class TRWindowFrameAddressBar extends StatelessWidget {
   final Widget child;
   @override
   Widget build(BuildContext context) => Container(
-    constraints: const BoxConstraints(maxWidth: 320),
+    constraints: const BoxConstraints(
+      maxWidth: TRGeneratedMeasurements.overlayWidthSm,
+    ),
     padding: const EdgeInsets.symmetric(
       horizontal: TRGeneratedSpacing.md,
       vertical: TRGeneratedSpacing.xs,

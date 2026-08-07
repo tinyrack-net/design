@@ -293,7 +293,12 @@ class _RollCharacter extends StatelessWidget {
             opacity: outgoingOpacity,
             child: Transform.translate(
               offset: rollsVertically
-                  ? Offset(0, -sign * progress * (style.fontSize ?? 16))
+                  ? Offset(
+                      0,
+                      -sign *
+                          progress *
+                          (style.fontSize ?? TRGeneratedTypographySizes.md),
+                    )
                   : Offset.zero,
               child: previousText,
             ),
@@ -302,7 +307,12 @@ class _RollCharacter extends StatelessWidget {
             opacity: progress,
             child: Transform.translate(
               offset: rollsVertically
-                  ? Offset(0, sign * (1 - progress) * (style.fontSize ?? 16))
+                  ? Offset(
+                      0,
+                      sign *
+                          (1 - progress) *
+                          (style.fontSize ?? TRGeneratedTypographySizes.md),
+                    )
                   : Offset.zero,
               child: nextText,
             ),

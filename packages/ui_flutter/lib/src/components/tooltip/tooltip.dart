@@ -12,8 +12,8 @@ import '../../types.dart';
 class TRTooltipProvider extends InheritedWidget {
   const TRTooltipProvider({
     required super.child,
-    this.openDelay = const Duration(milliseconds: 600),
-    this.closeDelay = const Duration(milliseconds: 100),
+    this.openDelay = TRGeneratedMotion.number,
+    this.closeDelay = TRGeneratedMotion.closeDelay,
     super.key,
   });
 
@@ -145,12 +145,10 @@ class _TRTooltipState extends State<TRTooltip> {
     _timer?.cancel();
     final provider = TRTooltipProvider.maybeOf(context);
     final delay = value
-        ? widget.openDelay ??
-              provider?.openDelay ??
-              const Duration(milliseconds: 600)
+        ? widget.openDelay ?? provider?.openDelay ?? TRGeneratedMotion.number
         : widget.closeDelay ??
               provider?.closeDelay ??
-              const Duration(milliseconds: 100);
+              TRGeneratedMotion.closeDelay;
     void update() {
       if (!mounted || _open == value) return;
       if (widget.open == null) {

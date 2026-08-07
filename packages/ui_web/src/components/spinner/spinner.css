@@ -47,7 +47,7 @@
 
   @keyframes tr-spinner-rotate {
     to {
-      transform: rotate(1turn);
+      transform: rotate(var(--tinyrack-spinner-rotation-cycle));
     }
   }
 

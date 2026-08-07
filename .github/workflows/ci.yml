@@ -363,6 +363,7 @@ jobs:
           pnpm run biome
           pnpm run scripts:check
           pnpm run ci:plan:test
+          pnpm run tokens:audit
           pnpm run flutter:preview:check
 
       - name: Download Web package runtime

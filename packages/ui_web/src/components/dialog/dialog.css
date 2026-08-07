@@ -3,7 +3,10 @@
 
 @layer components {
   .tr-dialog-backdrop {
-    --_tr-dialog-backdrop-color: rgb(0 0 0 / var(--tinyrack-opacity-backdrop));
+    --_tr-dialog-backdrop-color: rgb(
+      from var(--tinyrack-scrim-base) r g b /
+      var(--tinyrack-opacity-backdrop)
+    );
     background-color: var(--tr-dialog-backdrop-color, var(--_tr-dialog-backdrop-color));
     inset: 0;
     opacity: 0;

@@ -30,7 +30,7 @@
     box-shadow: var(--tinyrack-shadow-overlay);
     color: var(--tinyrack-text);
     max-width: min(
-      90vw,
+      var(--tinyrack-preview-card-max-viewport-inline-size),
       var(--tr-preview-card-popup-max-width, var(--_tr-preview-card-popup-max-width))
     );
     overflow-wrap: anywhere;

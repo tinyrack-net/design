@@ -24,6 +24,18 @@
           "output": "64rem"
         }
       }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 80,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "80rem"
+        }
+      }
     }
   },
   "measurements": {

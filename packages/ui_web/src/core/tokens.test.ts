@@ -15,6 +15,7 @@ import {
   tinyrackSpinnerMetrics,
   tinyrackTypography,
 } from './index.js';
+import { tinyrackComponentColors } from './tokens.js';
 
 const cssColorPattern = /^(#[0-9a-f]{6}|#[0-9a-f]{8}|var\(--[a-z0-9-]+\))$/i;
 const minimumContrastRatio = 4.5;
@@ -257,12 +258,17 @@ describe('tinyrack design tokens', () => {
       sm: '40rem',
       md: '48rem',
       lg: '64rem',
+      xl: '80rem',
     });
     expect(tinyrackPalettes.neutral[950]).toBe('#0a0a0a');
     expect(tinyrackSpacing).toMatchObject({ md: '0.75rem', xl: '1.5rem' });
     expect(tinyrackMeasurements).toMatchObject({
       'measure-md': '12rem',
       'overlay-width-md': '32rem',
+    });
+    expect(tinyrackComponentColors).toMatchObject({
+      'scrim-base': '#000000',
+      'window-frame-control-close': '#ff5f57',
     });
     expect(tinyrackSpinnerMetrics).toEqual({
       sizeSm: '0.75rem',

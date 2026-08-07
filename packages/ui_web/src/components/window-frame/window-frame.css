@@ -51,15 +51,24 @@
   }
 
   .tr-window-frame-control[data-tone="close"] {
-    --_tr-window-frame-control-color: var(--tr-window-frame-control-close, #ff5f57);
+    --_tr-window-frame-control-color: var(
+      --tr-window-frame-control-close,
+      var(--tinyrack-window-frame-control-close)
+    );
   }
 
   .tr-window-frame-control[data-tone="minimize"] {
-    --_tr-window-frame-control-color: var(--tr-window-frame-control-minimize, #febc2e);
+    --_tr-window-frame-control-color: var(
+      --tr-window-frame-control-minimize,
+      var(--tinyrack-window-frame-control-minimize)
+    );
   }
 
   .tr-window-frame-control[data-tone="maximize"] {
-    --_tr-window-frame-control-color: var(--tr-window-frame-control-maximize, #28c840);
+    --_tr-window-frame-control-color: var(
+      --tr-window-frame-control-maximize,
+      var(--tinyrack-window-frame-control-maximize)
+    );
   }
 
   .tr-window-frame-title {

@@ -29,7 +29,7 @@
     position: absolute;
     inset: 0;
     background-image: linear-gradient(
-      90deg,
+      var(--tinyrack-icon-rotation-quarter),
       transparent,
       var(--tr-skeleton-highlight, var(--_tr-skeleton-highlight)),
       transparent

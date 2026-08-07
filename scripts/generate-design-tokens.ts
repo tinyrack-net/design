@@ -30,6 +30,7 @@ type DesignTokens = {
     width: TokenRecord;
   };
   breakpoints: TokenRecord;
+  componentColors: TokenRecord;
   controlMetrics: Record<string, ControlMetrics>;
   flutterRenderingMetrics: {
     accordionHeader: { marginBlock: string };
@@ -113,6 +114,7 @@ assertRecord(rawTokens, 'tokens');
 for (const key of [
   'borders',
   'breakpoints',
+  'componentColors',
   'controlMetrics',
   'layers',
   'measurements',
@@ -262,6 +264,7 @@ function typescriptOutput() {
   const exports: readonly (readonly [string, keyof DesignTokens])[] = [
     ['tinyrackBorders', 'borders'],
     ['tinyrackBreakpoints', 'breakpoints'],
+    ['tinyrackComponentColors', 'componentColors'],
     ['tinyrackControlMetrics', 'controlMetrics'],
     ['tinyrackLayers', 'layers'],
     ['tinyrackMeasurements', 'measurements'],
@@ -312,6 +315,7 @@ function cssOutput() {
     `  --tinyrack-ease-linear: ${tokens.motion.easing.linear};`,
     ...declarations(tokens.opacity, 'opacity-'),
     ...declarations(tokens.layers, 'layer-'),
+    ...declarations(tokens.componentColors, ''),
   ];
 
   for (const [size, metrics] of Object.entries(tokens.controlMetrics)) {
@@ -437,12 +441,14 @@ function tailwindEntries(): TailwindEntry[] {
       );
   }
   for (const name of Object.keys(tokens.measurements)) {
+    const value = String(tokens.measurements[name]);
     if (
       [
         'overlay-closed-scale',
         'text-decoration-thickness',
         'text-underline-offset',
-      ].includes(name)
+      ].includes(name) ||
+      !/(?:px|rem)$/u.test(value)
     )
       continue;
     add('spacing', `--spacing-tinyrack-${name}`, `--tinyrack-${name}`);

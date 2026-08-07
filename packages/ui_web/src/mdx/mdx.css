@@ -1,14 +1,14 @@
 @reference "@tinyrack/ui/core.css";
 
 .tr-mdx {
-  --_tr-mdx-page-width: 76rem;
+  --_tr-mdx-page-width: var(--tinyrack-mdx-page-width);
   --_tr-mdx-page-min-height: 100vh;
-  --_tr-mdx-content-width: 64rem;
+  --_tr-mdx-content-width: var(--tinyrack-mdx-content-width);
   --_tr-mdx-page-padding-top: var(--tinyrack-space-2xl);
   --_tr-mdx-page-padding-inline: var(--tinyrack-space-xl);
-  --_tr-mdx-page-padding-bottom: 4rem;
-  --_tr-mdx-section-gap: 3rem;
-  --_tr-mdx-block-gap: 1.25rem;
+  --_tr-mdx-page-padding-bottom: var(--tinyrack-mdx-page-padding-bottom);
+  --_tr-mdx-section-gap: var(--tinyrack-space-3xl);
+  --_tr-mdx-block-gap: var(--tinyrack-mdx-block-gap);
   box-sizing: border-box;
   width: min(100%, var(--tr-mdx-page-width, var(--_tr-mdx-page-width)));
   min-height: var(--tr-mdx-page-min-height, var(--_tr-mdx-page-min-height));
@@ -347,17 +347,17 @@
 
 @variant md {
   .tr-mdx {
-    --_tr-mdx-page-padding-top: 3rem;
-    --_tr-mdx-page-padding-inline: 2.5rem;
-    --_tr-mdx-page-padding-bottom: 5rem;
+    --_tr-mdx-page-padding-top: var(--tinyrack-space-3xl);
+    --_tr-mdx-page-padding-inline: var(--tinyrack-mdx-page-padding-inline-wide);
+    --_tr-mdx-page-padding-bottom: var(--tinyrack-mdx-page-padding-bottom-wide);
   }
 }
 
 @variant max-sm {
   .tr-mdx {
-    --_tr-mdx-page-padding-top: 1.25rem;
+    --_tr-mdx-page-padding-top: var(--tinyrack-mdx-block-gap);
     --_tr-mdx-page-padding-inline: var(--tinyrack-space-lg);
-    --_tr-mdx-page-padding-bottom: 3rem;
+    --_tr-mdx-page-padding-bottom: var(--tinyrack-space-3xl);
   }
 
   .tr-mdx-h1,

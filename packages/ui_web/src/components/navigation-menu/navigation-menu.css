@@ -57,7 +57,7 @@
 
   .tr-navigation-menu-trigger:is([aria-expanded="true"], [data-popup-open])
     .tr-navigation-menu-icon {
-    transform: rotate(180deg);
+    transform: rotate(var(--tinyrack-icon-rotation-half));
   }
 
   .tr-navigation-menu-list {
