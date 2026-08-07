@@ -104,7 +104,7 @@
   }
 
   .tr-tree-nav-group-trigger[data-panel-open] .tr-tree-nav-chevron {
-    rotate: 90deg;
+    rotate: var(--tinyrack-icon-rotation-quarter);
   }
 
   @media (prefers-reduced-motion: reduce) {

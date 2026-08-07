@@ -75,7 +75,7 @@ class TRToastHandle {
 /// Queues, updates, tracks, and dismisses toast notifications.
 class TRToastController extends ChangeNotifier {
   TRToastController({
-    this.defaultDuration = const Duration(seconds: 5),
+    this.defaultDuration = TRGeneratedMotion.toast,
     this.maxVisible = 3,
   }) : assert(maxVisible > 0);
 
@@ -360,7 +360,9 @@ class _TRToastCardState extends State<_TRToastCard>
       kind: TRLayerBoundaryKind.toast,
       child: Container(
         width: TRGeneratedLayerMetrics.toastWidth,
-        constraints: const BoxConstraints(minHeight: 105),
+        constraints: const BoxConstraints(
+          minHeight: TRGeneratedLayerMetrics.toastMinHeight,
+        ),
         decoration: BoxDecoration(
           color: colors.surface,
           border: BorderDirectional(

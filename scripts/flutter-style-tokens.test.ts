@@ -153,6 +153,7 @@ test('the canonical token source covers Flutter component metrics', async () => 
       menuItemHeight: '1.75rem',
       optionItemHeight: '1.75rem',
       toastWidth: '24rem',
+      toastMinHeight: '105px',
       drawerWidth: '32rem',
       navigationPanelWidth: '32rem',
       toolbarHeight: '2.5rem',
@@ -185,6 +186,7 @@ test('the resolver keeps platform-only token surfaces separate', async () => {
     sm: '40rem',
     md: '48rem',
     lg: '64rem',
+    xl: '80rem',
   });
   assert.deepEqual(flutter.breakpoints, {
     sm: '40rem',

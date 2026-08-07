@@ -432,6 +432,8 @@ abstract final class TRGeneratedBreakpoints {
 
 abstract final class TRGeneratedLayers {
   static const double base = 0.0;
+  static const double componentRaised = 2.0;
+  static const double componentOverlay = 3.0;
   static const double chrome = 100.0;
   static const double dropdown = 1000.0;
   static const double popover = 1100.0;
@@ -446,6 +448,7 @@ abstract final class TRGeneratedLayerMetrics {
   static const double menuItemHeight = 28.0;
   static const double optionItemHeight = 28.0;
   static const double toastWidth = 384.0;
+  static const double toastMinHeight = 105.0;
   static const double drawerWidth = 512.0;
   static const double navigationPanelWidth = 512.0;
   static const double toolbarHeight = 40.0;
@@ -556,6 +559,12 @@ abstract final class TRGeneratedMotion {
   static const Duration slow = Duration(milliseconds: 180);
   static const Duration number = Duration(milliseconds: 600);
   static const Duration loading = Duration(milliseconds: 2400);
+  static const Duration immediate = Duration(milliseconds: 50);
+  static const Duration closeDelay = Duration(milliseconds: 100);
+  static const Duration previewCloseDelay = Duration(milliseconds: 300);
+  static const Duration typeaheadDelay = Duration(milliseconds: 500);
+  static const Duration feedback = Duration(milliseconds: 2000);
+  static const Duration toast = Duration(milliseconds: 5000);
   static const Curve standard = Curves.ease;
   static const Curve easeOut = Curves.easeOut;
   static const Curve linear = Curves.linear;

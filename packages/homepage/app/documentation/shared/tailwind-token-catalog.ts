@@ -137,6 +137,11 @@ export const tailwindTokenBridge = [
     value: '64rem',
   },
   {
+    group: 'breakpoint',
+    themeVariable: '--breakpoint-xl',
+    value: '80rem',
+  },
+  {
     group: 'typography',
     runtimeVariable: '--tinyrack-font-body',
     themeVariable: '--font-tinyrack-body',
@@ -533,6 +538,36 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'spacing',
+    runtimeVariable: '--tinyrack-mdx-page-width',
+    themeVariable: '--spacing-tinyrack-mdx-page-width',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-mdx-content-width',
+    themeVariable: '--spacing-tinyrack-mdx-content-width',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-mdx-page-padding-bottom',
+    themeVariable: '--spacing-tinyrack-mdx-page-padding-bottom',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-mdx-block-gap',
+    themeVariable: '--spacing-tinyrack-mdx-block-gap',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-mdx-page-padding-inline-wide',
+    themeVariable: '--spacing-tinyrack-mdx-page-padding-inline-wide',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-mdx-page-padding-bottom-wide',
+    themeVariable: '--spacing-tinyrack-mdx-page-padding-bottom-wide',
+  },
+  {
+    group: 'spacing',
     runtimeVariable: '--tinyrack-spinner-size-sm',
     themeVariable: '--spacing-tinyrack-spinner-size-sm',
   },
@@ -680,6 +715,16 @@ export const tailwindTokenBridge = [
     group: 'layer',
     runtimeVariable: '--tinyrack-layer-base',
     themeVariable: '--z-index-tinyrack-base',
+  },
+  {
+    group: 'layer',
+    runtimeVariable: '--tinyrack-layer-component-raised',
+    themeVariable: '--z-index-tinyrack-component-raised',
+  },
+  {
+    group: 'layer',
+    runtimeVariable: '--tinyrack-layer-component-overlay',
+    themeVariable: '--z-index-tinyrack-component-overlay',
   },
   {
     group: 'layer',

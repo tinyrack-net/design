@@ -10,6 +10,7 @@
   --breakpoint-sm: 40rem;
   --breakpoint-md: 48rem;
   --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
   --font-tinyrack-body: var(--tinyrack-font-body);
   --font-tinyrack-heading: var(--tinyrack-font-heading);
   --font-tinyrack-mono: var(--tinyrack-font-mono);
@@ -95,6 +96,16 @@
   --spacing-tinyrack-overlay-width-md: var(--tinyrack-overlay-width-md);
   --container-tinyrack-overlay-md: var(--tinyrack-overlay-width-md);
   --spacing-tinyrack-overlay-inline-inset: var(--tinyrack-overlay-inline-inset);
+  --spacing-tinyrack-mdx-page-width: var(--tinyrack-mdx-page-width);
+  --spacing-tinyrack-mdx-content-width: var(--tinyrack-mdx-content-width);
+  --spacing-tinyrack-mdx-page-padding-bottom: var(--tinyrack-mdx-page-padding-bottom);
+  --spacing-tinyrack-mdx-block-gap: var(--tinyrack-mdx-block-gap);
+  --spacing-tinyrack-mdx-page-padding-inline-wide: var(
+    --tinyrack-mdx-page-padding-inline-wide
+  );
+  --spacing-tinyrack-mdx-page-padding-bottom-wide: var(
+    --tinyrack-mdx-page-padding-bottom-wide
+  );
   --spacing-tinyrack-spinner-size-sm: var(--tinyrack-spinner-size-sm);
   --spacing-tinyrack-spinner-size-md: var(--tinyrack-spinner-size-md);
   --spacing-tinyrack-spinner-size-lg: var(--tinyrack-spinner-size-lg);
@@ -125,6 +136,8 @@
   --opacity-tinyrack-backdrop: var(--tinyrack-opacity-backdrop);
   --opacity-tinyrack-spinner-track: var(--tinyrack-spinner-track-opacity);
   --z-index-tinyrack-base: var(--tinyrack-layer-base);
+  --z-index-tinyrack-component-raised: var(--tinyrack-layer-component-raised);
+  --z-index-tinyrack-component-overlay: var(--tinyrack-layer-component-overlay);
   --z-index-tinyrack-chrome: var(--tinyrack-layer-chrome);
   --z-index-tinyrack-dropdown: var(--tinyrack-layer-dropdown);
   --z-index-tinyrack-popover: var(--tinyrack-layer-popover);

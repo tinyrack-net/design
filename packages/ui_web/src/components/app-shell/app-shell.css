@@ -170,7 +170,7 @@
   .tr-drawer-content.tr-app-shell-drawer-content .tr-app-shell-sidebar {
     /* A percentage already resolves against the content box, so discounting
        the border again would leave the scroll area short of the edge. */
-    --tr-app-shell-sidebar-border-inline-size: 0px;
+    --tr-app-shell-sidebar-border-inline-size: 0;
     --tr-app-shell-sidebar-content-inline-size: 100%;
     block-size: 100%;
     inline-size: 100%;
@@ -232,7 +232,7 @@
   }
 
   .tr-app-shell:not([data-chrome="app"]) > .tr-app-shell-sidebar {
-    --tr-app-shell-sidebar-border-inline-size: 0px;
+    --tr-app-shell-sidebar-border-inline-size: 0;
     border-inline-end: 0;
     position: relative;
   }

@@ -61,10 +61,6 @@
     gap: var(--tinyrack-space-xs);
   }
 
-  .tr-autocomplete-list > .tr-separator {
-    margin-block: var(--tinyrack-space-xs);
-  }
-
   .tr-autocomplete-group-label {
     color: var(--tinyrack-text-muted);
     font-size: var(--tinyrack-text-xs);

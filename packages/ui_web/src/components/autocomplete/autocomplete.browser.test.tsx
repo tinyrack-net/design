@@ -89,6 +89,24 @@ test('decorates its list separator without exposing it to the listbox', async ()
   expect(separator?.getAttribute('role')).toBe('presentation');
   expect(separator?.dataset['orientation']).toBe('horizontal');
   expect(getComputedStyle(separator as HTMLElement).height).not.toBe('0px');
+  const items = document.querySelectorAll<HTMLElement>('.tr-autocomplete-item');
+  const expectedGap = Number.parseFloat(
+    getComputedStyle(separator?.parentElement as HTMLElement).rowGap,
+  );
+  expect(expectedGap).toBe(4);
+  await expect
+    .poll(() =>
+      Math.abs(
+        (separator?.getBoundingClientRect().top ?? 0) -
+          (items[0]?.getBoundingClientRect().bottom ?? 0) -
+          expectedGap,
+      ),
+    )
+    .toBeLessThan(0.1);
+  const trailingGap =
+    (items[1]?.getBoundingClientRect().top ?? 0) -
+    (separator?.getBoundingClientRect().bottom ?? 0);
+  expect(Math.abs(trailingGap - expectedGap)).toBeLessThan(0.1);
 });
 
 test('centers an input adornment and supports the end side', async () => {

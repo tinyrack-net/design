@@ -119,6 +119,8 @@ function CompactMenubar({
             <TRMenu.Positioner>
               <TRMenu.Popup>
                 <TRMenu.Item>{text.newRack}</TRMenu.Item>
+                <TRMenu.Separator />
+                <TRMenu.Item>{text.open}</TRMenu.Item>
               </TRMenu.Popup>
             </TRMenu.Positioner>
           </TRMenu.Portal>
@@ -245,6 +247,7 @@ export function MenubarPreview({ disabled, loopFocus, orientation }: StoryArgs) 
                 <TRMenu.Item onClick={() => setResult(text.newRack)}>
                   {text.newRack}
                 </TRMenu.Item>
+                <TRMenu.Separator />
                 <TRMenu.Item onClick={() => setResult(text.open)}>
                   {text.open}
                 </TRMenu.Item>
@@ -349,6 +352,7 @@ export function BasicMenubar() {
         <TRMenu.Positioner>
           <TRMenu.Popup>
             <TRMenu.Item>New</TRMenu.Item>
+            <TRMenu.Separator />
             <TRMenu.Item>Open</TRMenu.Item>
           </TRMenu.Popup>
         </TRMenu.Positioner>
@@ -371,6 +375,7 @@ export function ApplicationMenu() {
         <TRMenu.Trigger>File</TRMenu.Trigger>
         <TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup>
           <TRMenu.Item onClick={() => setResult('New rack selected')}>New</TRMenu.Item>
+          <TRMenu.Separator />
           <TRMenu.Item onClick={() => setResult('Open selected')}>Open</TRMenu.Item>
         </TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal>
       </TRMenu.Root>
@@ -464,11 +469,11 @@ const menubarNestedLayersSourceJa = menubarNestedLayersSourceEn
 const menubarBasicSourceKo = `import '@tinyrack/ui/components/menubar.css';
 import { TRMenu } from '@tinyrack/ui/components/menu';
 import { TRMenubar } from '@tinyrack/ui/components/menubar';
-export function BasicMenubar() { return <TRMenubar aria-label="애플리케이션 메뉴"><TRMenu.Root><TRMenu.Trigger>파일</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>새 랙</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>; }`;
+export function BasicMenubar() { return <TRMenubar aria-label="애플리케이션 메뉴"><TRMenu.Root><TRMenu.Trigger>파일</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>새 랙</TRMenu.Item><TRMenu.Separator /><TRMenu.Item>열기</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>; }`;
 const menubarBasicSourceJa = `import '@tinyrack/ui/components/menubar.css';
 import { TRMenu } from '@tinyrack/ui/components/menu';
 import { TRMenubar } from '@tinyrack/ui/components/menubar';
-export function BasicMenubar() { return <TRMenubar aria-label="アプリケーションメニュー"><TRMenu.Root><TRMenu.Trigger>ファイル</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>新規</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>; }`;
+export function BasicMenubar() { return <TRMenubar aria-label="アプリケーションメニュー"><TRMenu.Root><TRMenu.Trigger>ファイル</TRMenu.Trigger><TRMenu.Portal><TRMenu.Positioner><TRMenu.Popup><TRMenu.Item>新規</TRMenu.Item><TRMenu.Separator /><TRMenu.Item>開く</TRMenu.Item></TRMenu.Popup></TRMenu.Positioner></TRMenu.Portal></TRMenu.Root></TRMenubar>; }`;
 const menubarApplicationSourceKo = menubarBasicSourceKo;
 const menubarApplicationSourceJa = menubarBasicSourceJa;
 const menubarConfigurationsSourceKo = `import '@tinyrack/ui/components/menubar.css';

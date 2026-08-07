@@ -53,6 +53,34 @@
       }
     }
   },
+  "motion": {
+    "duration": {
+      "immediate": {
+        "$type": "duration",
+        "$value": { "value": 50, "unit": "ms" }
+      },
+      "close-delay": {
+        "$type": "duration",
+        "$value": { "value": 100, "unit": "ms" }
+      },
+      "preview-close-delay": {
+        "$type": "duration",
+        "$value": { "value": 300, "unit": "ms" }
+      },
+      "typeahead-delay": {
+        "$type": "duration",
+        "$value": { "value": 500, "unit": "ms" }
+      },
+      "feedback": {
+        "$type": "duration",
+        "$value": { "value": 2, "unit": "s" }
+      },
+      "toast": {
+        "$type": "duration",
+        "$value": { "value": 5, "unit": "s" }
+      }
+    }
+  },
   "flutterRenderingMetrics": {
     "accordionHeader": {
       "marginBlock": {
@@ -589,6 +617,18 @@
         "$extensions": {
           "net.tinyrack": {
             "output": "24rem"
+          }
+        }
+      },
+      "toastMinHeight": {
+        "$type": "dimension",
+        "$value": {
+          "value": 105,
+          "unit": "px"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "105px"
           }
         }
       },

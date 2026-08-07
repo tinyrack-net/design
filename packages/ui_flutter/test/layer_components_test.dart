@@ -172,7 +172,7 @@ void main() {
 
       expect(
         tester.getSize(find.byType(TRMenuSeparator)).height,
-        TRGeneratedSpacing.sm * 2 + TRGeneratedBorders.defaultWidth,
+        TRGeneratedSpacing.xs * 2 + TRGeneratedBorders.defaultWidth,
       );
     });
 
