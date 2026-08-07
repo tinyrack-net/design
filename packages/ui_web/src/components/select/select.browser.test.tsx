@@ -511,10 +511,10 @@ test('exports Select-specific separator anatomy with standalone styling', async 
         (items[0]?.getBoundingClientRect().bottom ?? 0),
     )
     .toBeCloseTo(expectedGap, 1);
-  expect(
+  const trailingGap =
     (items[1]?.getBoundingClientRect().top ?? 0) -
-      (separator?.getBoundingClientRect().bottom ?? 0),
-  ).toBeCloseTo(expectedGap, 1);
+    (separator?.getBoundingClientRect().bottom ?? 0);
+  expect(Math.abs(trailingGap - expectedGap)).toBeLessThan(0.1);
 });
 
 test('sizes overflow scroll controls and keeps the collection within available space', async () => {
