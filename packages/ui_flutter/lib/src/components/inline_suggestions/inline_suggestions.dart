@@ -363,6 +363,9 @@ class _TRInlineSuggestionsState<T extends Object>
   List<GlobalKey> _rowKeys = const <GlobalKey>[];
   Object? _session;
   bool _sessionSeen = false;
+  Object? _lastScrollSession;
+  bool? _lastScrollOpen;
+  int? _lastScrollIndex;
 
   TRInlineSuggestionsController<T> get _controller =>
       widget.controller ??
@@ -373,12 +376,6 @@ class _TRInlineSuggestionsState<T extends Object>
     _internalController?.dispose();
     _scrollController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant TRInlineSuggestions<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.items.length != widget.items.length) _scrollToHighlight();
   }
 
   void _sync() {
@@ -414,6 +411,20 @@ class _TRInlineSuggestionsState<T extends Object>
     });
   }
 
+  void _scrollToHighlightIfNeeded() {
+    final open = _controller.isOpen;
+    final index = _controller.highlightIndex;
+    if (_lastScrollSession == _session &&
+        _lastScrollOpen == open &&
+        _lastScrollIndex == index) {
+      return;
+    }
+    _lastScrollSession = _session;
+    _lastScrollOpen = open;
+    _lastScrollIndex = index;
+    if (index >= 0) _scrollToHighlight();
+  }
+
   @override
   Widget build(BuildContext context) {
     _sync();
@@ -421,6 +432,7 @@ class _TRInlineSuggestionsState<T extends Object>
       listenable: _controller,
       builder: (context, _) {
         _sync();
+        _scrollToHighlightIfNeeded();
         return TRAnchoredLayer(
           open: _controller.isOpen,
           onOpenChange: (open) {

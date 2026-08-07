@@ -9,6 +9,14 @@ const _paths = [
   TRInlineSuggestionItem(value: 'README.md', label: 'README.md'),
 ];
 
+const _scrollingPaths = [
+  TRInlineSuggestionItem(value: 'one', label: 'one'),
+  TRInlineSuggestionItem(value: 'two', label: 'two'),
+  TRInlineSuggestionItem(value: 'three', label: 'three'),
+  TRInlineSuggestionItem(value: 'four', label: 'four'),
+  TRInlineSuggestionItem(value: 'five', label: 'five'),
+];
+
 /// A host that owns its field exactly the way a real caller does.
 class _Host extends StatefulWidget {
   const _Host({
@@ -23,6 +31,7 @@ class _Host extends StatefulWidget {
     this.onSelected,
     this.onDismissed,
     this.onHighlightChange,
+    this.maxVisibleItems = 8,
     this.width = 320,
   });
 
@@ -37,6 +46,7 @@ class _Host extends StatefulWidget {
   final ValueChanged<TRInlineSuggestionItem<String>>? onSelected;
   final VoidCallback? onDismissed;
   final ValueChanged<int>? onHighlightChange;
+  final int maxVisibleItems;
   final double width;
 
   @override
@@ -71,6 +81,7 @@ class _HostState extends State<_Host> {
     autoHighlight: widget.autoHighlight,
     acceptOnEnter: widget.acceptOnEnter,
     acceptOnTab: widget.acceptOnTab,
+    maxVisibleItems: widget.maxVisibleItems,
     onSelected: widget.onSelected ?? (_) {},
     onDismissed: widget.onDismissed,
     onHighlightChange: widget.onHighlightChange,
@@ -173,6 +184,109 @@ void main() {
     await _press(tester, LogicalKeyboardKey.arrowUp);
 
     expect(highlights.last, _paths.length - 1);
+  });
+
+  testWidgets('keyboard and controller highlights scroll into view', (
+    tester,
+  ) async {
+    final controller = TRInlineSuggestionsController<String>();
+    addTearDown(controller.dispose);
+    await _pump(
+      tester,
+      _Host(items: _scrollingPaths, maxVisibleItems: 2, controller: controller),
+    );
+
+    Rect viewport() => tester.getRect(_scrollArea());
+    Rect row(String label) => tester.getRect(_row(label));
+    bool isVisible(String label) {
+      final bounds = row(label);
+      final visibleBounds = viewport();
+      return bounds.top >= visibleBounds.top &&
+          bounds.bottom <= visibleBounds.bottom;
+    }
+
+    expect(isVisible('one'), isTrue);
+    expect(isVisible('five'), isFalse);
+
+    await _press(tester, LogicalKeyboardKey.end);
+    expect(controller.highlightedItem?.value, 'five');
+    expect(isVisible('five'), isTrue);
+
+    controller.highlightFirst();
+    await tester.pumpAndSettle();
+    expect(isVisible('one'), isTrue);
+
+    await _press(tester, LogicalKeyboardKey.arrowUp);
+    expect(controller.highlightedItem?.value, 'five');
+    expect(isVisible('five'), isTrue);
+  });
+
+  testWidgets('session resets and reordered results scroll into view', (
+    tester,
+  ) async {
+    final controller = TRInlineSuggestionsController<String>();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _app(
+        _Host(
+          items: _scrollingPaths,
+          maxVisibleItems: 2,
+          sessionKey: 'first',
+          controller: controller,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(TRTextField));
+    await tester.pumpAndSettle();
+
+    Rect viewport() => tester.getRect(_scrollArea());
+    bool isVisible(String label) {
+      final bounds = tester.getRect(_row(label));
+      final visibleBounds = viewport();
+      return bounds.top >= visibleBounds.top &&
+          bounds.bottom <= visibleBounds.bottom;
+    }
+
+    controller.highlightLast();
+    await tester.pumpAndSettle();
+    expect(isVisible('five'), isTrue);
+
+    await tester.pumpWidget(
+      _app(
+        _Host(
+          items: const <TRInlineSuggestionItem<String>>[
+            TRInlineSuggestionItem(value: 'five', label: 'five'),
+            TRInlineSuggestionItem(value: 'one', label: 'one'),
+            TRInlineSuggestionItem(value: 'two', label: 'two'),
+            TRInlineSuggestionItem(value: 'three', label: 'three'),
+            TRInlineSuggestionItem(value: 'four', label: 'four'),
+          ],
+          maxVisibleItems: 2,
+          sessionKey: 'first',
+          controller: controller,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(controller.highlightedItem?.value, 'five');
+    expect(isVisible('five'), isTrue);
+
+    controller.highlightLast();
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      _app(
+        _Host(
+          items: _scrollingPaths,
+          maxVisibleItems: 2,
+          sessionKey: 'second',
+          controller: controller,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(controller.highlightedItem?.value, 'one');
+    expect(isVisible('one'), isTrue);
   });
 
   testWidgets('Tab commits the highlighted item', (tester) async {
