@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:xterm/xterm.dart' as xterm;
 
+import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../context_menu/context_menu.dart';
@@ -212,7 +213,9 @@ final class _TRTerminalViewState extends State<TRTerminalView> {
     final colors = context.tinyrackTheme;
     final terminalTheme = xterm.TerminalTheme(
       cursor: colors.focus,
-      selection: colors.surfaceSelected,
+      selection: colors.surfaceSelected.withValues(
+        alpha: TRGeneratedFlutterRendering.terminalSelectionOpacity,
+      ),
       foreground: colors.text,
       background: colors.surface,
       black: colors.surface,

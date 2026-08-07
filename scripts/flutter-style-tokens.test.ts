@@ -71,6 +71,7 @@ test('the canonical token source covers Flutter component metrics', () => {
         paddingBlockCorrection?: string;
         paddingInlineCorrection?: string;
       };
+      terminal?: { selectionOpacity?: string };
     };
     spinnerMetrics?: {
       strokeWidth?: string;
@@ -110,6 +111,7 @@ test('the canonical token source covers Flutter component metrics', () => {
       paddingInlineCorrection: '0.25rem',
       paddingBlockCorrection: '0.1875rem',
     },
+    terminal: { selectionOpacity: '50%' },
     textTracking: {
       bodyRegularEn: 0.1784,
       bodyStrongEn: 0.0392,

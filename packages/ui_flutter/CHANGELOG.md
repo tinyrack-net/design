@@ -1,3 +1,8 @@
+## 0.35.1
+
+- Draws `TRTerminalView` selections as a 50% `surfaceSelected` overlay so the
+  selected glyphs and ANSI colors remain visible beneath the highlight.
+
 ## 0.35.0
 
 - Makes top and bottom `TRDrawer` surfaces fit their content by default instead

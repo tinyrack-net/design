@@ -46,6 +46,9 @@ type DesignTokens = {
       paddingBlockCorrection: string;
       paddingInlineCorrection: string;
     };
+    terminal: {
+      selectionOpacity: string;
+    };
     textTracking: Record<string, number>;
     windowFrame: {
       bodyLineHeight: string;
@@ -593,6 +596,10 @@ function dartOutput() {
     `  static const double textFieldPaddingBlockCorrection = ${dartNumber(
       flutterMetrics.textField.paddingBlockCorrection,
       'flutterRenderingMetrics.textField.paddingBlockCorrection',
+    )};`,
+    `  static const double terminalSelectionOpacity = ${dartPercentage(
+      flutterMetrics.terminal.selectionOpacity,
+      'flutterRenderingMetrics.terminal.selectionOpacity',
     )};`,
     ...Object.entries(flutterMetrics.textTracking).map(
       ([key, value]) =>
