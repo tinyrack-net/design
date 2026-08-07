@@ -46,6 +46,14 @@ export const flutterPlatformOnlyComponents = {
   code_block_highlighter: {
     reason: 'Flutter owns its code-highlighting widget implementation.',
   },
+  drop_overlay: {
+    reason:
+      'Flutter native applications own pane-wide file-drop targets and their drag lifecycle.',
+  },
+  focus_ring: {
+    reason:
+      'Flutter product composites use a painter that follows the package input-modality source.',
+  },
   inline_suggestions: {
     reason: 'Inline editing suggestions are currently a Flutter-only capability.',
   },

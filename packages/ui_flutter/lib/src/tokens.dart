@@ -38,6 +38,12 @@ abstract final class TRMotion {
   static const linear = TRGeneratedMotion.linear;
 }
 
+/// Platform-resolved opacity values for product-owned effects.
+abstract final class TROpacity {
+  /// Opacity of the surface covering an active file-drop target.
+  static const dropOverlay = TRGeneratedOpacity.dropOverlay;
+}
+
 /// Platform-resolved elevation shadows.
 abstract final class TRShadows {
   static const raised = TRGeneratedShadows.raised;

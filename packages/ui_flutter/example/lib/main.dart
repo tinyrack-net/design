@@ -618,6 +618,8 @@ List<String> _supportedArgs(String component) => switch (component) {
   'alert' => ['showActions', 'showDescription', 'showIcon', 'variant'],
   'badge' => ['uiSize', 'variant'],
   'card' => ['focused', 'padding', 'variant'],
+  'drop-overlay' => ['visible'],
+  'focus-ring' => ['focused'],
   'code-block' => ['code', 'language', 'wrap'],
   'dialog' => ['open', 'placement'],
   'autocomplete' => [
@@ -875,7 +877,8 @@ Map<String, Object?>? _validateArgs(
       'showIcon' ||
       'sidebarCollapsed' ||
       'selected' ||
-      'truncate' => value is bool,
+      'truncate' ||
+      'visible' => value is bool,
       'wrap' => value is bool,
       'language' =>
         value is String && const {'plain', 'dart', 'json'}.contains(value),
@@ -1239,6 +1242,31 @@ class PreviewComponent extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+      'focus-ring' => SizedBox(
+        key: measureKey,
+        width: 320,
+        child: TRFocusRing(
+          focused: args['focused'] == true,
+          child: const SizedBox(
+            height: 88,
+            child: Center(child: Text('Composite control')),
+          ),
+        ),
+      ),
+      'drop-overlay' => SizedBox(
+        key: measureKey,
+        width: 320,
+        height: 200,
+        child: TRDropOverlay(
+          visible: args['visible'] != false,
+          label: switch (locale) {
+            'ko' => '여기에 파일을 놓으세요',
+            'ja' => 'ここにファイルをドロップ',
+            _ => 'Drop files here',
+          },
+          child: const Center(child: Text('Conversation pane')),
         ),
       ),
       'menu' => _PreviewMenu(

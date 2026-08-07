@@ -90,6 +90,7 @@ export const tinyrackOpacity = {
   disabled: '0.5',
   hover: '0.82',
   backdrop: '0.56',
+  'drop-overlay': '0.7',
 } as const;
 
 export const tinyrackPalettes = {

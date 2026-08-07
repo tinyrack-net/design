@@ -3879,6 +3879,16 @@ class _DeploymentRackState extends State<DeploymentRack> {
     },
     usage:
       "TRSelect<String>.controlled(\n  value: channel,\n  items: const [\n    TRSelectItem(value: 'stable', label: 'Stable'),\n    TRSelectItem(value: 'beta', label: 'Beta'),\n  ],\n  onValueChange: setChannel,\n)",
+    contractRows: [
+      {
+        axis: { en: 'Open state', ko: '열린 상태', ja: '展開状態' },
+        choices: {
+          en: 'A pointer-open ghost select uses the selected surface without a focus border. Keyboard navigation keeps the focus border.',
+          ko: '포인터로 연 ghost Select는 포커스 테두리 없이 선택 표면을 사용해요. 키보드 탐색에서는 포커스 테두리를 유지해요.',
+          ja: 'ポインターで開いた ghost Select はフォーカス枠を付けず、選択サーフェスを使います。キーボード操作ではフォーカス枠を維持します。',
+        },
+      },
+    ],
   },
   skeleton: {
     title: 'Skeleton',
@@ -4803,10 +4813,133 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'Focus', ko: '포커스', ja: 'フォーカス' },
         choices: {
-          en: 'A card that only groups content leaves `focused` off. Set it while a focusable child holds focus so a group of controls reads as one, and give the field inside it `TRFieldAppearance.plain` so the ring is painted once rather than twice. A `TRFieldAppearance.ghost` field already paints its own focus, so a card wrapping just that field should leave this off. The ring paints over the card, so it never changes the card size.',
-          ko: '콘텐츠만 묶는 카드는 `focused`를 끈 채로 두세요. 포커스 가능한 자식이 포커스를 가질 때 켜면 여러 컨트롤이 하나로 읽혀요. 이때 안쪽 필드에는 `TRFieldAppearance.plain`을 주어 링이 두 번이 아니라 한 번만 그려지게 하세요. `TRFieldAppearance.ghost` 필드는 포커스를 직접 그리니, 그 필드만 감싸는 카드는 꺼 두세요. 링은 카드 위에 그려져서 카드 크기를 바꾸지 않아요.',
-          ja: 'コンテンツをまとめるだけのカードでは `focused` をオフのままにします。フォーカス可能な子がフォーカスを持つ間にオンにすると、複数のコントロールがひとつにまとまって読めます。その場合、内側のフィールドには `TRFieldAppearance.plain` を指定して、リングが 2 本ではなく 1 本だけ描かれるようにします。`TRFieldAppearance.ghost` のフィールドは自身でフォーカスを描くため、そのフィールドだけを囲むカードではオフのままにしてください。リングはカードの上に描画されるため、カードの寸法は変わりません。',
+          en: 'A card that only groups content leaves `focused` off. Pass raw descendant focus while a group of controls should read as one, and give the field inside it `TRFieldAppearance.plain` so the ring is painted once rather than twice. The card shows that ring only for keyboard navigation. A `TRFieldAppearance.ghost` field already paints its own focus, so a card wrapping just that field should leave this off. The ring paints over the card, so it never changes the card size.',
+          ko: '콘텐츠만 묶는 카드는 `focused`를 끈 채로 두세요. 여러 컨트롤이 하나로 읽혀야 한다면 자식의 원시 포커스를 넘기고, 안쪽 필드에는 `TRFieldAppearance.plain`을 주어 링이 두 번이 아니라 한 번만 그려지게 하세요. 카드는 키보드 탐색일 때만 링을 표시해요. `TRFieldAppearance.ghost` 필드는 포커스를 직접 그리니, 그 필드만 감싸는 카드는 꺼 두세요. 링은 카드 위에 그려져서 카드 크기를 바꾸지 않아요.',
+          ja: 'コンテンツをまとめるだけのカードでは `focused` をオフのままにします。複数のコントロールをひとつとして扱う場合は子の生のフォーカス状態を渡し、内側のフィールドに `TRFieldAppearance.plain` を指定してリングが 2 本ではなく 1 本だけ描かれるようにしてください。カードはキーボード操作のときだけリングを表示します。`TRFieldAppearance.ghost` のフィールドは自身でフォーカスを描くため、そのフィールドだけを囲むカードではオフのままにしてください。リングはカードの上に描画されるため、カードの寸法は変わりません。',
         },
+      },
+    ],
+  },
+  'focus-ring': {
+    title: 'FocusRing',
+    description: {
+      en: 'Give a product-specific composite the same keyboard-only focus indicator as Tinyrack controls.',
+      ko: '제품 전용 복합 컨트롤에 Tinyrack 컨트롤과 같은 키보드 전용 포커스 표시를 적용해요.',
+      ja: '製品固有の複合コントロールに、Tinyrack コントロールと同じキーボード専用のフォーカス表示を適用します。',
+    },
+    usage:
+      'TRFocusRing(\n  focused: focusNode.hasFocus,\n  child: const CompositeControl(),\n)',
+    contractRows: [
+      {
+        axis: { en: 'Input modality', ko: '입력 방식', ja: '入力方法' },
+        choices: {
+          en: 'Pass raw focus through `focused`. The ring appears for keyboard navigation and stays hidden for pointer focus.',
+          ko: '원시 포커스를 `focused`에 넘기세요. 키보드 탐색에는 링이 나타나고 포인터로 받은 포커스에는 나타나지 않아요.',
+          ja: '生のフォーカス状態を `focused` に渡してください。キーボード操作ではリングが表示され、ポインターで得たフォーカスでは表示されません。',
+        },
+      },
+      {
+        axis: { en: 'Layout', ko: '레이아웃', ja: 'レイアウト' },
+        choices: {
+          en: 'The ring paints inside the child bounds without changing its size or position.',
+          ko: '링은 자식 경계 안에 그려지며 크기나 위치를 바꾸지 않아요.',
+          ja: 'リングは子の境界内に描画され、サイズや位置を変えません。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRFocusRing properties',
+          ko: 'TRFocusRing 속성',
+          ja: 'TRFocusRing のプロパティ',
+        },
+        rows: [
+          {
+            name: 'focused',
+            type: 'bool · required',
+            purpose: {
+              en: 'Reports whether the composite currently owns focus.',
+              ko: '복합 컨트롤이 현재 포커스를 소유하는지 알려 줘요.',
+              ja: '複合コントロールが現在フォーカスを持っているかを伝えます。',
+            },
+          },
+          {
+            name: 'child',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Supplies the composite whose bounds receive the ring.',
+              ko: '링을 표시할 경계를 가진 복합 컨트롤을 제공해요.',
+              ja: 'リングを表示する境界を持つ複合コントロールを指定します。',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  'drop-overlay': {
+    title: 'DropOverlay',
+    description: {
+      en: 'Cover a file-drop target with a shared, accessible drag-active state.',
+      ko: '파일 드롭 대상 전체에 공통 접근성 드래그 활성 상태를 표시해요.',
+      ja: 'ファイルのドロップ対象全体に、共通のアクセシブルなドラッグ中表示を重ねます。',
+    },
+    usage:
+      "TRDropOverlay(\n  visible: dragging,\n  label: 'Drop files here',\n  child: conversationPane,\n)",
+    contractRows: [
+      {
+        axis: { en: 'Ownership', ko: '소유 범위', ja: '対象範囲' },
+        choices: {
+          en: 'Wrap the complete product-owned drop target. The product still validates payloads and handles the drop.',
+          ko: '제품이 소유한 드롭 대상 전체를 감싸세요. payload 검증과 drop 처리는 제품이 계속 맡아요.',
+          ja: '製品が所有するドロップ対象全体を囲んでください。ペイロードの検証とドロップ処理は引き続き製品側が担当します。',
+        },
+      },
+      {
+        axis: { en: 'Interaction', ko: '상호작용', ja: '操作' },
+        choices: {
+          en: 'The overlay ignores pointer events, announces the localized label while visible, and removes motion when reduced motion is enabled.',
+          ko: '오버레이는 포인터 이벤트를 통과시키고, 보이는 동안 현지화된 레이블을 알리며, 모션 감소 설정에서는 애니메이션을 제거해요.',
+          ja: 'オーバーレイはポインターイベントを通過させ、表示中はローカライズしたラベルを通知し、視差効果を減らす設定ではアニメーションを無効にします。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRDropOverlay properties',
+          ko: 'TRDropOverlay 속성',
+          ja: 'TRDropOverlay のプロパティ',
+        },
+        rows: [
+          {
+            name: 'visible',
+            type: 'bool · required',
+            purpose: {
+              en: 'Shows or hides the drag-active layer.',
+              ko: '드래그 활성 레이어를 표시하거나 숨겨요.',
+              ja: 'ドラッグ中のレイヤーを表示または非表示にします。',
+            },
+          },
+          {
+            name: 'label',
+            type: 'String · required',
+            purpose: {
+              en: 'Provides the localized visible and semantic instruction.',
+              ko: '화면과 시맨틱에 사용할 현지화된 안내 문구를 제공해요.',
+              ja: '画面表示とセマンティクスに使うローカライズ済みの案内文を指定します。',
+            },
+          },
+          {
+            name: 'child',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Supplies the complete surface covered by the overlay.',
+              ko: '오버레이가 덮을 전체 표면을 제공해요.',
+              ja: 'オーバーレイで覆うサーフェス全体を指定します。',
+            },
+          },
+        ],
       },
     ],
   },

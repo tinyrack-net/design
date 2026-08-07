@@ -58,6 +58,7 @@
   --tinyrack-opacity-disabled: 0.5;
   --tinyrack-opacity-hover: 0.82;
   --tinyrack-opacity-backdrop: 0.56;
+  --tinyrack-opacity-drop-overlay: 0.7;
   --tinyrack-layer-base: 0;
   --tinyrack-layer-chrome: 100;
   --tinyrack-layer-dropdown: 1000;

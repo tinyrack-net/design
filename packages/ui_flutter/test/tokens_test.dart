@@ -4,6 +4,12 @@ import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 void main() {
+  group('TROpacity', () {
+    test('publishes the file-drop overlay opacity', () {
+      expect(TROpacity.dropOverlay, 0.7);
+    });
+  });
+
   group('TRMeasurements', () {
     // A layout sizing content to the measure scale needs every step of it.
     // Publishing only two forces a consumer to approximate the rest with a

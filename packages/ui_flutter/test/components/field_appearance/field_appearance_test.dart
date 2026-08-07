@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/src/internal/field_chrome.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
@@ -97,7 +98,8 @@ void main() {
 
       final open = resolve(TRFieldAppearance.ghost, open: true);
       expect(open.fill, colors.surfaceSelected);
-      expect(open.borderColor, colors.focus);
+      expect(open.borderColor, Colors.transparent);
+      expect(open.borderWidth, TRGeneratedBorders.defaultWidth);
 
       final invalid = resolve(TRFieldAppearance.ghost, error: true);
       expect(invalid.borderColor, colors.dangerBorder);

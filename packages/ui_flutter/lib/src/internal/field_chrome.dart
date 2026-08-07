@@ -88,8 +88,8 @@ TRFieldChrome resolveFieldChrome({
   if (open) {
     return TRFieldChrome(
       fill: colors.surfaceSelected,
-      borderColor: colors.focus,
-      borderWidth: TRGeneratedBorders.focusWidth,
+      borderColor: Colors.transparent,
+      borderWidth: TRGeneratedBorders.defaultWidth,
     );
   }
   if (error) {

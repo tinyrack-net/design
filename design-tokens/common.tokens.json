@@ -475,6 +475,15 @@
           "output": "0.56"
         }
       }
+    },
+    "drop-overlay": {
+      "$type": "number",
+      "$value": 0.7,
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "0.7"
+        }
+      }
     }
   },
   "palettes": {

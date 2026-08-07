@@ -276,6 +276,7 @@ abstract final class TRGeneratedOpacity {
   static const double disabled = 0.5;
   static const double hover = 0.82;
   static const double backdrop = 0.56;
+  static const double dropOverlay = 0.7;
 }
 
 abstract final class TRGeneratedTypographySizes {
