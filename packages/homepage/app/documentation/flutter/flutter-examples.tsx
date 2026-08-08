@@ -2576,13 +2576,17 @@ Column(
     },
     {
       id: 'tabs-bar',
-      title: { en: 'Document tab bar', ja: 'ドキュメントタブバー', ko: '문서 탭 바' },
-      description: {
-        en: 'TRTabs.bar scrolls closable tabs and leaves the body to you, for a window that already draws the active document from its own state.',
-        ja: 'TRTabs.bar は閉じられるタブを横スクロールし、本文は呼び出し側に任せます。アクティブなドキュメントを自前の状態から描くウィンドウ向けです。',
-        ko: 'TRTabs.bar는 닫을 수 있는 탭을 가로로 스크롤하고 본문은 호출한 쪽에 맡겨요. 활성 문서를 자체 상태로 그리는 창에 쓰세요.',
+      title: {
+        en: 'Composable tab strip',
+        ja: '組み合わせ可能なタブストリップ',
+        ko: '조합 가능한 탭 스트립',
       },
-      dart: String.raw`TRTabs.bar(
+      description: {
+        en: 'Omit panelBuilder when the window owns its active document, then add closing, leading icons, actions, or dragging only where needed.',
+        ja: 'ウィンドウがアクティブなドキュメントを管理する場合は panelBuilder を省略し、閉じる操作、先頭アイコン、アクション、ドラッグを必要な場合だけ追加します。',
+        ko: '창에서 활성 문서를 관리한다면 panelBuilder를 생략하고 닫기, 선행 아이콘, 액션, 드래그를 필요한 경우에만 추가하세요.',
+      },
+      dart: String.raw`TRTabs(
   value: selectedId,
   onValueChange: openDocument,
   semanticLabel: 'Open racks',

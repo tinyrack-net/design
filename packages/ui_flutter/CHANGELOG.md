@@ -1,3 +1,17 @@
+## 0.42.0
+
+- **Breaking:** removes the separate `TRTabs.bar` constructor. Use `TRTabs`
+  for every tab strip, omit `panelBuilder` when the application owns the
+  active body, and opt into leading controls, actions, closing, and dragging
+  through their existing optional properties.
+- Gives every tab strip one full-width visual contract: tabs divide the
+  available width until they reach their minimum scrollable extent, touch the
+  strip edges without a ghost inset, and mark selection with a primary top
+  rule instead of a rounded selected fill.
+- Keeps optional panels on the same strip anatomy while preserving controlled
+  and uncontrolled selection, keyboard focus, assistive semantics, disabled
+  tabs, close controls, and same- or cross-group drag insertion.
+
 ## 0.41.0
 
 - Adds `TRChatMessageRow`, `TRChatUserBubble`, `TRChatToolDisclosure`, and

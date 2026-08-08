@@ -1039,7 +1039,7 @@ Widget _tabsRecipe(BuildContext context, Locale locale) {
 Widget _tabsBar(BuildContext context, Locale locale) {
   return SizedBox(
     width: 320,
-    child: TRTabs.bar(
+    child: TRTabs(
       defaultValue: 'metrics',
       semanticLabel: _pick(locale, 'Open racks', '열린 랙', '開いているラック'),
       tabs: [

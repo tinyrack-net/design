@@ -52,93 +52,84 @@ List<TRTabsTab> _tabs({
   ),
 ];
 
-TinyrackThemeData _theme(WidgetTester tester) => Theme.of(
-  tester.element(find.byType(TRTabs)),
-).extension<TinyrackThemeData>()!;
-
-Color? _fill(WidgetTester tester, String value) =>
-    (tester
-                .widget<AnimatedContainer>(
-                  find
-                      .descendant(
-                        of: find.byKey(ValueKey<String>('tr-tabs-tab-$value')),
-                        matching: find.byType(AnimatedContainer),
-                      )
-                      .first,
-                )
-                .decoration
-            as BoxDecoration?)
-        ?.color;
+Finder _indicator(String value) =>
+    find.byKey(ValueKey<String>('tr-tabs-indicator-$value'));
 
 void main() {
-  group('TRTabs.bar layout', () {
-    testWidgets('is one control tall inside its own inset', (tester) async {
-      await tester.pumpWidget(_app(TRTabs.bar(tabs: _tabs())));
+  group('TRTabs layout', () {
+    testWidgets('fills its strip and divides the available width', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_app(TRTabs(tabs: _tabs())));
 
       final rule = tester.getSize(
-        find.byKey(const ValueKey<String>('tr-tabs-bar-rule')),
+        find.byKey(const ValueKey<String>('tr-tabs-rule')),
       );
       expect(
         tester.getSize(find.byType(TRTabs)).height,
-        TRControlMetrics.heightOf(TRUiSize.md) +
-            TRSpacing.small * 2 +
-            rule.height,
+        TRControlMetrics.heightOf(TRUiSize.md) + rule.height,
       );
 
       final tab = find.byKey(const ValueKey<String>('tr-tabs-tab-overview'));
       final origin = tester.getTopLeft(find.byType(TRTabs));
       final offset = tester.getTopLeft(tab).translate(-origin.dx, -origin.dy);
-      expect(offset.dx, TRSpacing.medium);
-      expect(offset.dy, TRSpacing.small);
+      expect(offset, Offset.zero);
       expect(
         tester.getSize(tab).height,
         TRControlMetrics.heightOf(TRUiSize.md),
       );
-      expect(tester.getSize(tab).width, TRMeasurements.measureSm);
+      expect(tester.getSize(tab).width, 320);
+      expect(
+        tester
+            .getSize(
+              find.byKey(const ValueKey<String>('tr-tabs-indicator-overview')),
+            )
+            .height,
+        greaterThan(rule.height),
+      );
     });
 
     testWidgets('closes the strip with a hairline rule', (tester) async {
-      await tester.pumpWidget(_app(TRTabs.bar(tabs: _tabs())));
+      await tester.pumpWidget(_app(TRTabs(tabs: _tabs())));
 
       final theme = Theme.of(
         tester.element(find.byType(TRTabs)),
       ).extension<TinyrackThemeData>()!;
       final rule = tester.widget<ColoredBox>(
-        find.byKey(const ValueKey<String>('tr-tabs-bar-rule')),
+        find.byKey(const ValueKey<String>('tr-tabs-rule')),
       );
       expect(rule.color, theme.border);
     });
 
     testWidgets('keeps the rule in the dark palette', (tester) async {
       await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs()), brightness: Brightness.dark),
+        _app(TRTabs(tabs: _tabs()), brightness: Brightness.dark),
       );
 
       final theme = Theme.of(
         tester.element(find.byType(TRTabs)),
       ).extension<TinyrackThemeData>()!;
       final rule = tester.widget<ColoredBox>(
-        find.byKey(const ValueKey<String>('tr-tabs-bar-rule')),
+        find.byKey(const ValueKey<String>('tr-tabs-rule')),
       );
       expect(rule.color, theme.border);
     });
 
-    testWidgets('mirrors its inset under right-to-left text', (tester) async {
+    testWidgets('fills from the leading edge under right-to-left text', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs()), textDirection: TextDirection.rtl),
+        _app(TRTabs(tabs: _tabs()), textDirection: TextDirection.rtl),
       );
 
       final strip = find.byType(TRTabs);
       final tab = find.byKey(const ValueKey<String>('tr-tabs-tab-overview'));
-      expect(
-        tester.getTopRight(strip).dx - tester.getTopRight(tab).dx,
-        TRSpacing.medium,
-      );
+      expect(tester.getTopRight(strip).dx - tester.getTopRight(tab).dx, 0);
     });
 
     testWidgets('holds its height when text scales up', (tester) async {
       await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs()), textScaler: const TextScaler.linear(2)),
+        _app(TRTabs(tabs: _tabs()), textScaler: const TextScaler.linear(2)),
       );
 
       expect(tester.takeException(), isNull);
@@ -155,7 +146,7 @@ void main() {
     ) async {
       await tester.pumpWidget(
         _app(
-          TRTabs.bar(
+          TRTabs(
             tabs: <TRTabsTab>[
               for (var index = 0; index < 12; index++)
                 TRTabsTab(value: 'tab-$index', label: 'Tab $index'),
@@ -171,12 +162,12 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('seats leading and action slots inside the inset', (
+    testWidgets('seats leading and action slots at the strip edges', (
       tester,
     ) async {
       await tester.pumpWidget(
         _app(
-          TRTabs.bar(
+          TRTabs(
             tabs: _tabs(),
             leading: const Icon(
               Icons.arrow_back,
@@ -193,17 +184,88 @@ void main() {
       expect(
         tester.getTopLeft(find.byKey(const ValueKey<String>('back'))).dx -
             origin.dx,
-        TRSpacing.medium,
+        0,
       );
       expect(
         tester.getTopRight(find.byType(TRTabs)).dx -
             tester.getTopRight(find.byKey(const ValueKey<String>('add'))).dx,
-        TRSpacing.medium,
+        0,
       );
     });
   });
 
-  group('TRTabs.bar behavior', () {
+  group('TRTabs behavior', () {
+    testWidgets('composes an optional panel with every strip capability', (
+      tester,
+    ) async {
+      final closed = <String>[];
+      await tester.pumpWidget(
+        _app(
+          TRTabs(
+            tabs: _tabs(onClose: () => closed.add('closed')),
+            leading: const Icon(
+              Icons.arrow_back,
+              key: ValueKey<String>('back'),
+            ),
+            actions: const <Widget>[
+              Icon(Icons.add, key: ValueKey<String>('add')),
+            ],
+            dragConfiguration: TRTabsDragConfiguration(
+              groupId: 'panels',
+              onDrop: (_) {},
+            ),
+            panelBuilder: (value) => Text('Panel: $value'),
+          ),
+        ),
+      );
+
+      expect(find.text('Panel: overview'), findsOneWidget);
+      expect(find.byKey(const ValueKey<String>('back')), findsOneWidget);
+      expect(find.byKey(const ValueKey<String>('add')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey<String>('tr-tabs-close-overview')),
+        findsOneWidget,
+      );
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('tr-tabs-tab-metrics')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Panel: metrics'), findsOneWidget);
+
+      await tester.tap(
+        find.byKey(const ValueKey<String>('tr-tabs-close-metrics')),
+      );
+      await tester.pumpAndSettle();
+      expect(closed, <String>['closed']);
+    });
+
+    testWidgets('uses the expanded tab extent for same-strip insertion', (
+      tester,
+    ) async {
+      final drops = <TRTabDropDetails>[];
+      await tester.pumpWidget(
+        _app(
+          TRTabs(
+            tabs: _tabs(closable: false),
+            dragConfiguration: TRTabsDragConfiguration(
+              groupId: 'same',
+              onDrop: drops.add,
+            ),
+          ),
+        ),
+      );
+
+      final first = find.byKey(const ValueKey<String>('tr-tabs-tab-overview'));
+      await tester.dragFrom(tester.getCenter(first), const Offset(340, 0));
+      await tester.pumpAndSettle();
+
+      expect(drops, hasLength(1));
+      expect(drops.single.sourceGroupId, 'same');
+      expect(drops.single.targetGroupId, 'same');
+      expect(drops.single.targetIndex, 1);
+    });
+
     testWidgets('moves a tab to a target strip insertion index', (
       tester,
     ) async {
@@ -213,7 +275,7 @@ void main() {
           Row(
             children: <Widget>[
               Expanded(
-                child: TRTabs.bar(
+                child: TRTabs(
                   tabs: _tabs(closable: false),
                   dragConfiguration: TRTabsDragConfiguration(
                     groupId: 'left',
@@ -222,7 +284,7 @@ void main() {
                 ),
               ),
               Expanded(
-                child: TRTabs.bar(
+                child: TRTabs(
                   tabs: const <TRTabsTab>[
                     TRTabsTab(value: 'target', label: 'Target'),
                   ],
@@ -262,7 +324,7 @@ void main() {
     ) async {
       final selected = <String>[];
       await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs(), onValueChange: selected.add)),
+        _app(TRTabs(tabs: _tabs(), onValueChange: selected.add)),
       );
 
       await tester.tap(
@@ -278,7 +340,7 @@ void main() {
       final selected = <String>[];
       await tester.pumpWidget(
         _app(
-          TRTabs.bar(
+          TRTabs(
             tabs: <TRTabsTab>[
               TRTabsTab(
                 value: 'overview',
@@ -304,7 +366,7 @@ void main() {
     testWidgets('omits the close control when a tab cannot close', (
       tester,
     ) async {
-      await tester.pumpWidget(_app(TRTabs.bar(tabs: _tabs(closable: false))));
+      await tester.pumpWidget(_app(TRTabs(tabs: _tabs(closable: false))));
 
       expect(
         find.byKey(const ValueKey<String>('tr-tabs-close-overview')),
@@ -315,7 +377,7 @@ void main() {
     testWidgets('activates on Enter and on Space release', (tester) async {
       final selected = <String>[];
       await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs(), onValueChange: selected.add)),
+        _app(TRTabs(tabs: _tabs(), onValueChange: selected.add)),
       );
 
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
@@ -337,9 +399,7 @@ void main() {
     testWidgets('ignores a disabled tab', (tester) async {
       final selected = <String>[];
       await tester.pumpWidget(
-        _app(
-          TRTabs.bar(tabs: _tabs(disabled: true), onValueChange: selected.add),
-        ),
+        _app(TRTabs(tabs: _tabs(disabled: true), onValueChange: selected.add)),
       );
 
       await tester.tap(
@@ -351,40 +411,38 @@ void main() {
     });
 
     testWidgets('keeps a controlled value fixed', (tester) async {
-      await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs(), value: 'overview')),
-      );
+      await tester.pumpWidget(_app(TRTabs(tabs: _tabs(), value: 'overview')));
 
       await tester.tap(
         find.byKey(const ValueKey<String>('tr-tabs-tab-metrics')),
       );
       await tester.pumpAndSettle();
 
-      // Uncontrolled state would have moved the fill to Metrics.
-      expect(_fill(tester, 'overview'), _theme(tester).surfaceSelected);
-      expect(_fill(tester, 'metrics'), isNot(_theme(tester).surfaceSelected));
+      expect(_indicator('overview'), findsOneWidget);
+      expect(_indicator('metrics'), findsNothing);
     });
 
     testWidgets('tracks an uncontrolled default', (tester) async {
       await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs(), defaultValue: 'metrics')),
+        _app(TRTabs(tabs: _tabs(), defaultValue: 'metrics')),
       );
 
-      expect(_fill(tester, 'metrics'), _theme(tester).surfaceSelected);
+      expect(_indicator('metrics'), findsOneWidget);
 
       await tester.tap(
         find.byKey(const ValueKey<String>('tr-tabs-tab-overview')),
       );
       await tester.pumpAndSettle();
 
-      expect(_fill(tester, 'overview'), _theme(tester).surfaceSelected);
+      expect(_indicator('overview'), findsOneWidget);
+      expect(_indicator('metrics'), findsNothing);
     });
 
     testWidgets('names the close control for assistive technology', (
       tester,
     ) async {
       final semantics = tester.ensureSemantics();
-      await tester.pumpWidget(_app(TRTabs.bar(tabs: _tabs())));
+      await tester.pumpWidget(_app(TRTabs(tabs: _tabs())));
 
       expect(find.bySemanticsLabel('Close Overview'), findsOneWidget);
       semantics.dispose();
@@ -393,7 +451,7 @@ void main() {
     testWidgets('labels the strip when a caller names it', (tester) async {
       final semantics = tester.ensureSemantics();
       await tester.pumpWidget(
-        _app(TRTabs.bar(tabs: _tabs(), semanticLabel: 'Open sessions')),
+        _app(TRTabs(tabs: _tabs(), semanticLabel: 'Open sessions')),
       );
 
       expect(find.bySemanticsLabel('Open sessions'), findsOneWidget);
