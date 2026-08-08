@@ -35,8 +35,116 @@ void main() {
       ),
     );
 
-    expect(tester.getSize(find.byKey(const ValueKey('first'))).width, 148);
-    expect(tester.getSize(find.byKey(const ValueKey('second'))).width, 444);
+    final available = 600 - TRControlMetrics.borderWidth;
+    expect(
+      tester.getSize(find.byKey(const ValueKey('first'))).width,
+      available * 0.25,
+    );
+    expect(
+      tester.getSize(find.byKey(const ValueKey('second'))).width,
+      available * 0.75,
+    );
+    expect(
+      tester
+          .getSize(
+            find.byKey(const ValueKey<String>('tr-split-view-separator')),
+          )
+          .width,
+      TRSpacing.small,
+    );
+    final separator = find.byKey(
+      const ValueKey<String>('tr-split-view-separator'),
+    );
+    final divider = find.descendant(
+      of: separator,
+      matching: find.byType(ColoredBox),
+    );
+    expect(tester.getSize(divider).width, TRControlMetrics.borderWidth);
+    expect(
+      tester.getRect(divider).left,
+      tester.getRect(find.byKey(const ValueKey('first'))).right,
+    );
+    expect(
+      tester.widget<ColoredBox>(divider).color,
+      Theme.of(tester.element(divider)).extension<TinyrackThemeData>()!.border,
+    );
+  });
+
+  testWidgets('draws a one-border divider between vertical panes', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        TRSplitView(
+          axis: Axis.vertical,
+          ratio: 0.5,
+          minFirstExtent: 0,
+          minSecondExtent: 0,
+          separatorLabel: 'Resize panes',
+          onRatioChanged: (_) {},
+          first: const SizedBox.expand(key: ValueKey<String>('first')),
+          second: const SizedBox.expand(key: ValueKey<String>('second')),
+        ),
+      ),
+    );
+
+    final available = 400 - TRControlMetrics.borderWidth;
+    expect(
+      tester.getSize(find.byKey(const ValueKey('first'))).height,
+      available * 0.5,
+    );
+    expect(
+      tester.getSize(find.byKey(const ValueKey('second'))).height,
+      available * 0.5,
+    );
+    expect(
+      tester
+          .getSize(
+            find.byKey(const ValueKey<String>('tr-split-view-separator')),
+          )
+          .height,
+      TRSpacing.small,
+    );
+    final separator = find.byKey(
+      const ValueKey<String>('tr-split-view-separator'),
+    );
+    final divider = find.descendant(
+      of: separator,
+      matching: find.byType(ColoredBox),
+    );
+    expect(tester.getSize(divider).height, TRControlMetrics.borderWidth);
+    expect(
+      tester.getRect(divider).top,
+      tester.getRect(find.byKey(const ValueKey('first'))).bottom,
+    );
+  });
+
+  testWidgets('keeps the divider attached to the first pane in RTL', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        TRSplitView(
+          ratio: 0.25,
+          minFirstExtent: 0,
+          minSecondExtent: 0,
+          separatorLabel: 'Resize panes',
+          onRatioChanged: (_) {},
+          first: const SizedBox.expand(key: ValueKey<String>('first')),
+          second: const SizedBox.expand(key: ValueKey<String>('second')),
+        ),
+        direction: TextDirection.rtl,
+      ),
+    );
+
+    final divider = find.descendant(
+      of: find.byKey(const ValueKey<String>('tr-split-view-separator')),
+      matching: find.byType(ColoredBox),
+    );
+    expect(
+      tester.getRect(divider).right,
+      tester.getRect(find.byKey(const ValueKey('first'))).left,
+    );
   });
 
   testWidgets('reports pointer changes and the final ratio', (tester) async {
