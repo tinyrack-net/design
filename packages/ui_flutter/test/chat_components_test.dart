@@ -138,6 +138,26 @@ void main() {
     expect(find.byType(TRSpinner), findsOneWidget);
     expect(find.bySemanticsLabel('Running'), findsOneWidget);
   });
+
+  testWidgets('running rows settle to a static icon with reduced motion', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const MediaQuery(
+          data: MediaQueryData(disableAnimations: true),
+          child: TRChatStatusRow(
+            label: 'Running',
+            status: TRChatToolStatus.running,
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+    expect(find.byType(TRSpinner), findsNothing);
+    expect(find.byIcon(LucideIcons.loaderCircle), findsOneWidget);
+  });
 }
 
 Widget _app(Widget child) => MaterialApp(
