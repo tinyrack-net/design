@@ -3400,6 +3400,16 @@ class _InstallCommandState extends State<InstallCommand> {
     },
     usage: 'const TRProgress(value: 60)',
   },
+  'qr-code': {
+    title: 'QrCode',
+    description: {
+      en: 'Render a token-sized QR image with a safe assistive description.',
+      ko: '안전한 보조 기술 설명과 함께 토큰 크기의 QR 이미지를 렌더링해요.',
+      ja: '安全な支援技術向け説明とともに、トークンサイズの QR 画像を表示します。',
+    },
+    usage:
+      "const TRQrCode(\n  data: pairingUrl,\n  semanticLabel: 'Device pairing code',\n)",
+  },
   radio: {
     title: 'Radio',
     description: {

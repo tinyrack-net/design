@@ -57,6 +57,10 @@ export const flutterPlatformOnlyComponents = {
   inline_suggestions: {
     reason: 'Inline editing suggestions are currently a Flutter-only capability.',
   },
+  qr_code: {
+    reason:
+      'Flutter native applications render pairing QR codes without a React surface.',
+  },
   split_view: {
     reason:
       'Flutter currently owns the resizable pane interaction used by native applications.',

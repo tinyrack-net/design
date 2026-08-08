@@ -358,6 +358,14 @@ export const otpFieldPlayground = flutterPlayground(
 );
 export const popoverPlayground = flutterPlayground('popover', {}, {});
 export const previewCardPlayground = flutterPlayground('preview-card', {}, {});
+export const qrCodePlayground = flutterPlayground(
+  'qr-code',
+  { data: 'https://tinyrack.net', uiSize: 'md' },
+  {
+    data: { control: 'text' },
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+  },
+);
 export const scrollAreaPlayground = flutterPlayground(
   'scroll-area',
   { autoHide: false },
@@ -761,6 +769,7 @@ export const flutterPlaygrounds = {
   popover: popoverPlayground,
   'preview-card': previewCardPlayground,
   progress: progressPlayground,
+  'qr-code': qrCodePlayground,
   radio: radioPlayground,
   'radio-group': radioGroupPlayground,
   'scroll-area': scrollAreaPlayground,

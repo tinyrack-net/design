@@ -42,6 +42,7 @@ const supportedPreviewComponents = <String>{
   'popover',
   'preview-card',
   'progress',
+  'qr-code',
   'radio',
   'radio-group',
   'scroll-area',
