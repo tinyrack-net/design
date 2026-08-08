@@ -7,6 +7,8 @@ class TRIconButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.appearance = TRAppearance.solid,
+    this.autofocus = false,
+    this.focusNode,
     this.intent = TRIntent.neutral,
     this.loading = false,
     this.loadingLabel,
@@ -18,6 +20,8 @@ class TRIconButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final TRAppearance appearance;
+  final bool autofocus;
+  final FocusNode? focusNode;
   final TRIntent intent;
   final bool loading;
   final String? loadingLabel;
@@ -42,6 +46,8 @@ class TRIconButton extends StatelessWidget {
         EdgeInsets.zero,
         label,
         appearance: appearance,
+        autofocus: autofocus,
+        focusNode: focusNode,
         intent: intent,
         loading: loading,
         loadingLabel: loadingLabel ?? label,

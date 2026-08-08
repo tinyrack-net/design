@@ -41,8 +41,9 @@ class TRButton extends StatelessWidget {
     required this.loading,
     required this.loadingLabel,
     required this.uiSize,
-  }) : autofocus = false,
-       focusNode = null;
+    this.autofocus = false,
+    this.focusNode,
+  });
 
   final Widget child;
   final VoidCallback? onPressed;
