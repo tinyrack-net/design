@@ -338,6 +338,39 @@ void main() {
       await tester.pump(const Duration(milliseconds: 120));
       expect(find.text('Healthy services'), findsOneWidget);
     });
+
+    testWidgets('preview card stays open while its trigger keeps focus', (
+      tester,
+    ) async {
+      final controller = TRPreviewCardController();
+      final focusNode = FocusNode();
+      addTearDown(controller.dispose);
+      addTearDown(focusNode.dispose);
+      await tester.pumpWidget(
+        _app(
+          TRPreviewCard(
+            controller: controller,
+            openDelay: Duration.zero,
+            closeDelay: const Duration(milliseconds: 100),
+            trigger: TRIconButton(
+              focusNode: focusNode,
+              icon: const Icon(Icons.info_outline),
+              label: 'Rack health',
+              onPressed: () {},
+            ),
+            content: const Text('Healthy services'),
+          ),
+        ),
+      );
+
+      focusNode.requestFocus();
+      controller.open();
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 150));
+
+      expect(focusNode.hasFocus, isTrue);
+      expect(find.text('Healthy services'), findsOneWidget);
+    });
   });
 
   group('typed inputs', () {

@@ -150,6 +150,7 @@ class _TRPreviewCardState extends State<TRPreviewCard> {
     placement: widget.placement,
     motionDuration: TRGeneratedMotion.slow,
     motionScale: false,
+    requestFocus: false,
     useRootOverlay: widget.useRootOverlay,
     triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
         MouseRegion(
