@@ -952,6 +952,31 @@ void main() {
     expect(text.textAlign, TextAlign.center);
   });
 
+  testWidgets('icon button accepts an externally owned focus node', (
+    tester,
+  ) async {
+    final focusNode = FocusNode();
+    addTearDown(focusNode.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Scaffold(
+          body: TRIconButton(
+            focusNode: focusNode,
+            icon: const Icon(Icons.info_outline),
+            label: 'Usage details',
+            onPressed: () {},
+          ),
+        ),
+      ),
+    );
+
+    focusNode.requestFocus();
+    await tester.pump();
+
+    expect(focusNode.hasFocus, isTrue);
+  });
+
   testWidgets('horizontal separator spans the container width', (tester) async {
     await tester.pumpWidget(_wrapNarrow(const TRSeparator()));
     final size = tester.getSize(find.byType(TRSeparator));

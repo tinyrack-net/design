@@ -790,23 +790,23 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 438 localized content routes as static route modules', () => {
+  it('defines all 441 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(60);
-    expect(staticDocumentRoutes).toHaveLength(438);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(438);
+    expect(staticDocumentRoutes).toHaveLength(441);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(441);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      438,
+      441,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      146,
+      147,
     );
     const expectedSectionCounts = {
       brand: 2,
       components: 60,
       docs: 1,
       foundations: 11,
-      'flutter-components': 62,
+      'flutter-components': 63,
       'flutter-start': 4,
       home: 1,
       integrations: 4,
@@ -1086,7 +1086,7 @@ describe('React Router documentation contract', () => {
     const flutterRoutes = staticDocumentRoutes.filter(
       (route) => route.locale === 'en' && route.section === 'flutter-components',
     );
-    expect(flutterRoutes).toHaveLength(62);
+    expect(flutterRoutes).toHaveLength(63);
     const webRoutes = staticDocumentRoutes.filter(
       (route) => route.locale === 'en' && route.section === 'components',
     );
@@ -1141,8 +1141,8 @@ describe('React Router documentation contract', () => {
         pageCounts.push(labels.length);
         expect([...labels].sort(collator.compare), child.label).toEqual(labels);
       }
-      expect(pageCounts).toEqual([6, 8, 8, 10, 9, 6, 6, 7, 2]);
-      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(62);
+      expect(pageCounts).toEqual([6, 8, 8, 10, 9, 7, 6, 7, 2]);
+      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(63);
     }
   });
 
@@ -1337,7 +1337,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(435);
+    expect(mdxFiles).toHaveLength(438);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);

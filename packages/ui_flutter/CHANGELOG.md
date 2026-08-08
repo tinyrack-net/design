@@ -1,3 +1,13 @@
+## 0.40.0
+
+- Adds `TRRadialMeter`, a token-sized circular measurement with status colors,
+  range clamping, reduced-motion support, and a required assistive label.
+- Lets `TRIconButton` accept externally owned focus and autofocus so composite
+  controls can coordinate keyboard-triggered overlays without private wrappers.
+- Keeps `TRPreviewCard` focus on its trigger while showing non-modal details.
+- Adds `TRQrCode`, an accessible token-sized QR image for short-lived links and
+  identifiers.
+
 ## 0.39.0
 
 - Adds `TRFocusRing` for product-specific composite controls. It accepts raw
