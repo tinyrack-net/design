@@ -338,10 +338,9 @@ class _TRTabsState extends State<TRTabs> {
                     (_scrollController.hasClients
                         ? _scrollController.offset
                         : 0),
-                top: 0,
-                bottom: 0,
                 child: IgnorePointer(
                   child: SizedBox(
+                    height: tabHeight,
                     width: TRGeneratedBorders.strongWidth,
                     child: ColoredBox(color: colors.primary),
                   ),
@@ -516,6 +515,64 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
             child: selection,
           );
 
+    final tabContent = SizedBox(
+      height: widget.height,
+      child: Stack(
+        children: <Widget>[
+          AnimatedContainer(
+            curve: TRGeneratedMotion.standard,
+            duration: motionDuration,
+            decoration: BoxDecoration(
+              color: _hovered && interactive ? colors.surfaceHover : null,
+              border: BorderDirectional(end: BorderSide(color: colors.border)),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: TRGeneratedSpacing.sm,
+            ),
+            child: Row(
+              children: <Widget>[
+                Expanded(child: draggableSelection),
+                if (widget.tab.onClose case final onClose?) ...<Widget>[
+                  const SizedBox(width: TRGeneratedSpacing.xs),
+                  TRIconButton(
+                    key: ValueKey<String>('tr-tabs-close-${widget.tab.value}'),
+                    appearance: TRAppearance.ghost,
+                    uiSize: closeSize,
+                    label: widget.tab.closeLabel!,
+                    onPressed: interactive ? onClose : null,
+                    icon: const Icon(LucideIcons.x),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (widget.selected)
+            PositionedDirectional(
+              start: 0,
+              end: 0,
+              child: SizedBox(
+                key: ValueKey<String>('tr-tabs-indicator-${widget.tab.value}'),
+                height: TRGeneratedBorders.strongWidth,
+                child: ColoredBox(color: colors.primary),
+              ),
+            ),
+          if (showFocusRing)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: colors.focus,
+                      width: TRGeneratedBorders.focusWidth,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+
     return CallbackShortcuts(
       bindings: interactive
           ? <ShortcutActivator, VoidCallback>{
@@ -536,76 +593,12 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
             button: true,
             enabled: interactive,
             selected: widget.selected,
-            child: Opacity(
-              opacity: widget.tab.disabled ? TRGeneratedOpacity.disabled : 1,
-              child: SizedBox(
-                height: widget.height,
-                child: Stack(
-                  children: <Widget>[
-                    AnimatedContainer(
-                      curve: TRGeneratedMotion.standard,
-                      duration: motionDuration,
-                      decoration: BoxDecoration(
-                        color: _hovered && interactive
-                            ? colors.surfaceHover
-                            : null,
-                        border: BorderDirectional(
-                          end: BorderSide(color: colors.border),
-                        ),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: TRGeneratedSpacing.sm,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(child: draggableSelection),
-                          if (widget.tab.onClose
-                              case final onClose?) ...<Widget>[
-                            const SizedBox(width: TRGeneratedSpacing.xs),
-                            TRIconButton(
-                              key: ValueKey<String>(
-                                'tr-tabs-close-${widget.tab.value}',
-                              ),
-                              appearance: TRAppearance.ghost,
-                              uiSize: closeSize,
-                              label: widget.tab.closeLabel!,
-                              onPressed: interactive ? onClose : null,
-                              icon: const Icon(LucideIcons.x),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    if (widget.selected)
-                      PositionedDirectional(
-                        top: 0,
-                        start: 0,
-                        end: 0,
-                        child: SizedBox(
-                          key: ValueKey<String>(
-                            'tr-tabs-indicator-${widget.tab.value}',
-                          ),
-                          height: TRGeneratedBorders.strongWidth,
-                          child: ColoredBox(color: colors.primary),
-                        ),
-                      ),
-                    if (showFocusRing)
-                      Positioned.fill(
-                        child: IgnorePointer(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: colors.focus,
-                                width: TRGeneratedBorders.focusWidth,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
+            child: widget.tab.disabled
+                ? Opacity(
+                    opacity: TRGeneratedOpacity.disabled,
+                    child: tabContent,
+                  )
+                : tabContent,
           ),
         ),
       ),
