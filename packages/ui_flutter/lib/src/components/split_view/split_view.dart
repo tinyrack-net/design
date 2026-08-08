@@ -116,16 +116,14 @@ class _TRSplitViewState extends State<TRSplitView> {
           if (widget.axis == Axis.horizontal)
             PositionedDirectional(
               start: interactionOffset,
-              top: 0,
-              bottom: 0,
               width: interactionExtent,
+              height: constraints.maxHeight,
               child: separator,
             )
           else
             Positioned(
-              left: 0,
-              right: 0,
               top: interactionOffset,
+              width: constraints.maxWidth,
               height: interactionExtent,
               child: separator,
             ),
