@@ -1,3 +1,10 @@
+## 0.40.0
+
+- Adds `TRRadialMeter`, a token-sized circular measurement with status colors,
+  range clamping, reduced-motion support, and a required assistive label.
+- Adds `TRQrCode`, an accessible token-sized QR image for short-lived links and
+  identifiers.
+
 ## 0.39.0
 
 - Adds `TRFocusRing` for product-specific composite controls. It accepts raw

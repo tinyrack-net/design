@@ -3410,6 +3410,15 @@ class _InstallCommandState extends State<InstallCommand> {
     usage:
       "const TRQrCode(\n  data: pairingUrl,\n  semanticLabel: 'Device pairing code',\n)",
   },
+  'radial-meter': {
+    title: 'RadialMeter',
+    description: {
+      en: 'Show a compact circular measurement in an icon-sized space.',
+      ko: '아이콘 크기의 공간에 측정값을 작은 원형 표시로 보여줘요.',
+      ja: 'アイコンサイズの領域に測定値をコンパクトな円形表示で示します。',
+    },
+    usage: "const TRRadialMeter(\n  value: 72,\n  semanticLabel: 'Context usage',\n)",
+  },
   radio: {
     title: 'Radio',
     description: {

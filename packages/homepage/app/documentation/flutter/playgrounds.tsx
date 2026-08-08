@@ -366,6 +366,18 @@ export const qrCodePlayground = flutterPlayground(
     uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
   },
 );
+export const radialMeterPlayground = flutterPlayground(
+  'radial-meter',
+  { uiSize: 'md', value: 72, variant: 'neutral' },
+  {
+    uiSize: { control: 'select', options: ['sm', 'md', 'lg'] },
+    value: { control: { max: 100, min: 0, step: 1, type: 'range' } },
+    variant: {
+      control: 'select',
+      options: ['neutral', 'info', 'success', 'warning', 'danger'],
+    },
+  },
+);
 export const scrollAreaPlayground = flutterPlayground(
   'scroll-area',
   { autoHide: false },
@@ -770,6 +782,7 @@ export const flutterPlaygrounds = {
   'preview-card': previewCardPlayground,
   progress: progressPlayground,
   'qr-code': qrCodePlayground,
+  'radial-meter': radialMeterPlayground,
   radio: radioPlayground,
   'radio-group': radioGroupPlayground,
   'scroll-area': scrollAreaPlayground,

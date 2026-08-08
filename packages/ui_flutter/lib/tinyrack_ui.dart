@@ -43,6 +43,7 @@ export 'src/components/select/select.dart';
 export 'src/components/scroll_area/scroll_area.dart';
 export 'src/components/progress/progress.dart';
 export 'src/components/qr_code/qr_code.dart';
+export 'src/components/radial_meter/radial_meter.dart';
 export 'src/components/radio/radio.dart';
 export 'src/components/separator/separator.dart';
 export 'src/components/skeleton/skeleton.dart';

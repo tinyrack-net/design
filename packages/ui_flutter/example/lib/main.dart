@@ -694,6 +694,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'meter' => ['value', 'variant'],
   'progress' => ['uiSize', 'value', 'variant'],
   'qr-code' => ['data', 'uiSize'],
+  'radial-meter' => ['uiSize', 'value', 'variant'],
   'link' => ['disabled', 'underline', 'variant'],
   'toggle' => ['disabled', 'pressed', 'uiSize'],
   'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
@@ -1858,6 +1859,17 @@ class PreviewComponent extends StatelessWidget {
           'ja' => 'プレビュー QR コード',
           _ => 'Preview QR code',
         },
+        uiSize: size,
+      ),
+      'radial-meter' => TRRadialMeter(
+        key: measureKey,
+        value: (args['value'] as num?)?.toDouble() ?? 72,
+        semanticLabel: switch (locale) {
+          'ko' => '컨텍스트 사용량',
+          'ja' => 'コンテキスト使用量',
+          _ => 'Context usage',
+        },
+        variant: statusVariant,
         uiSize: size,
       ),
       'link' => TRLink(

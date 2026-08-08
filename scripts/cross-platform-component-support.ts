@@ -61,6 +61,10 @@ export const flutterPlatformOnlyComponents = {
     reason:
       'Flutter native applications render pairing QR codes without a React surface.',
   },
+  radial_meter: {
+    reason:
+      'Flutter native applications use a compact circular measurement in icon toolbars.',
+  },
   split_view: {
     reason:
       'Flutter currently owns the resizable pane interaction used by native applications.',
