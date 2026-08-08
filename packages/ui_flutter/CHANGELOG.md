@@ -1,3 +1,8 @@
+## 0.42.2
+
+- Uses a static running-status icon in chat rows when reduced motion is
+  requested, allowing the UI and widget test frame queues to settle.
+
 ## 0.42.1
 
 - Keeps `TRSplitView` divider lines expanded across the panes while their wider

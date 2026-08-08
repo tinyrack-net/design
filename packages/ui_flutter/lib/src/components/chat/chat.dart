@@ -209,11 +209,18 @@ class _TRChatToolDisclosureState extends State<TRChatToolDisclosure> {
                       Expanded(child: TRText(widget.label, truncate: true)),
                       const SizedBox(width: TRGeneratedSpacing.sm),
                       if (widget.status == TRChatToolStatus.running) ...[
-                        TRSpinner(
-                          label: widget.statusLabel,
-                          uiSize: TRUiSize.sm,
-                          variant: TRSpinnerVariant.primary,
-                        ),
+                        if (MediaQuery.disableAnimationsOf(context))
+                          Icon(
+                            _statusIcon(widget.status),
+                            size: TRGeneratedControlMetrics.smIconSize,
+                            color: statusColor,
+                          )
+                        else
+                          TRSpinner(
+                            label: widget.statusLabel,
+                            uiSize: TRUiSize.sm,
+                            variant: TRSpinnerVariant.primary,
+                          ),
                         const SizedBox(width: TRGeneratedSpacing.xs),
                       ],
                       TRText(
@@ -284,10 +291,16 @@ class TRChatStatusRow extends StatelessWidget {
           SizedBox(
             width: TRGeneratedControlMetrics.mdIconSize,
             child: status == TRChatToolStatus.running
-                ? TRSpinner(
-                    uiSize: TRUiSize.sm,
-                    variant: TRSpinnerVariant.primary,
-                  )
+                ? MediaQuery.disableAnimationsOf(context)
+                      ? Icon(
+                          _statusIcon(status),
+                          size: TRGeneratedControlMetrics.smIconSize,
+                          color: _statusColor(context.tinyrackTheme, status),
+                        )
+                      : TRSpinner(
+                          uiSize: TRUiSize.sm,
+                          variant: TRSpinnerVariant.primary,
+                        )
                 : Icon(
                     icon ?? _statusIcon(status),
                     size: TRGeneratedControlMetrics.smIconSize,
