@@ -378,6 +378,17 @@ export const radialMeterPlayground = flutterPlayground(
     },
   },
 );
+export const chatPlayground = flutterPlayground(
+  'chat',
+  { open: false, status: 'succeeded' },
+  {
+    open: { control: 'boolean' },
+    status: {
+      control: 'select',
+      options: ['running', 'succeeded', 'failed', 'denied'],
+    },
+  },
+);
 export const scrollAreaPlayground = flutterPlayground(
   'scroll-area',
   { autoHide: false },
@@ -752,6 +763,7 @@ export const flutterPlaygrounds = {
   breadcrumbs: breadcrumbsPlayground,
   button: buttonPlayground,
   card: cardPlayground,
+  chat: chatPlayground,
   checkbox: checkboxPlayground,
   'checkbox-group': checkboxGroupPlayground,
   code: codePlayground,

@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 // The preview reads package rendering metadata through internal helpers; it is
 // not a published consumer.
 // ignore: implementation_imports
@@ -709,6 +710,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'selectedValues',
   ],
   'collapsible' => ['disabled', 'open'],
+  'chat' => ['open', 'status'],
   'accordion' => ['disabledItem', 'multiple', 'open'],
   'animated-number' => [
     'animation',
@@ -1989,6 +1991,70 @@ class PreviewComponent extends StatelessWidget {
             variant: TRTextVariant.bodySm,
             color: TRTextColor.muted,
           ),
+        ),
+      ),
+      'chat' => SizedBox(
+        key: measureKey,
+        width: TRMeasurements.measureXl,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TRChatUserBubble(
+              child: Text(switch (locale) {
+                'ko' => '테스트를 실행해 주세요.',
+                'ja' => 'テストを実行してください。',
+                _ => 'Please run the tests.',
+              }),
+            ),
+            TRChatMessageRow(
+              icon: LucideIcons.bot,
+              tone: TRChatMessageTone.primary,
+              child: Text(switch (locale) {
+                'ko' => '변경 사항을 확인하고 있어요.',
+                'ja' => '変更内容を確認しています。',
+                _ => 'I am checking the changes.',
+              }),
+            ),
+            TRChatToolDisclosure(
+              icon: LucideIcons.terminal,
+              label: switch (locale) {
+                'ko' => '명령 실행',
+                'ja' => 'コマンドを実行',
+                _ => 'Run command',
+              },
+              status: switch (args['status']) {
+                'running' => TRChatToolStatus.running,
+                'failed' => TRChatToolStatus.failed,
+                'denied' => TRChatToolStatus.denied,
+                _ => TRChatToolStatus.succeeded,
+              },
+              statusLabel: switch (args['status']) {
+                'running' => switch (locale) {
+                  'ko' => '실행 중',
+                  'ja' => '実行中',
+                  _ => 'Running',
+                },
+                'failed' => switch (locale) {
+                  'ko' => '실패',
+                  'ja' => '失敗',
+                  _ => 'Failed',
+                },
+                'denied' => switch (locale) {
+                  'ko' => '거부됨',
+                  'ja' => '拒否',
+                  _ => 'Denied',
+                },
+                _ => switch (locale) {
+                  'ko' => '완료',
+                  'ja' => '完了',
+                  _ => 'Done',
+                },
+              },
+              open: args['open'] == true,
+              onOpenChange: (_) => onStateChanged({'pressed': true}),
+              details: const TRCodeBlock(code: r'$ flutter test'),
+            ),
+          ],
         ),
       ),
       // The web accordion keeps content-box sizing: 320px of content plus

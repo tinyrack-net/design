@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 import 'code_highlighter.dart';
@@ -41,6 +42,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'animated-number-direction': _animatedNumberDirection,
   'card-variants': _cardVariants,
   'card-recipe': _cardRecipe,
+  'chat-composition': _chatComposition,
   'accordion-controlled': _accordionControlled,
   'accordion-expansion-states': _accordionExpansionStates,
   'tabs-sizes': _tabsSizes,
@@ -779,6 +781,49 @@ Widget _cardRecipe(BuildContext context, Locale locale) {
     ),
   );
 }
+
+Widget _chatComposition(BuildContext context, Locale locale) => SizedBox(
+  width: TRMeasurements.measureXl,
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      TRChatUserBubble(
+        child: Text(
+          _pick(
+            locale,
+            'Please run the tests.',
+            '테스트를 실행해 주세요.',
+            'テストを実行してください。',
+          ),
+        ),
+      ),
+      TRChatMessageRow(
+        icon: LucideIcons.bot,
+        tone: TRChatMessageTone.primary,
+        child: Text(
+          _pick(
+            locale,
+            'I am checking the changes.',
+            '변경 사항을 확인하고 있어요.',
+            '変更内容を確認しています。',
+          ),
+        ),
+      ),
+      TRChatToolDisclosure(
+        icon: LucideIcons.terminal,
+        label: _pick(locale, 'Run command', '명령 실행', 'コマンドを実行'),
+        status: TRChatToolStatus.succeeded,
+        statusLabel: _pick(locale, 'Done', '완료', '完了'),
+        defaultOpen: true,
+        details: const TRCodeBlock(code: r'$ flutter test'),
+      ),
+      TRChatStatusRow(
+        label: _pick(locale, 'Running', '실행 중', '実行中'),
+        status: TRChatToolStatus.running,
+      ),
+    ],
+  ),
+);
 
 Widget _accordionControlled(BuildContext context, Locale locale) =>
     _AccordionControlledExample(locale: locale);

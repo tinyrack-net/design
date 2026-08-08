@@ -13,6 +13,7 @@ const supportedPreviewComponents = <String>{
   'breadcrumbs',
   'button',
   'card',
+  'chat',
   'checkbox',
   'checkbox-group',
   'code',

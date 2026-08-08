@@ -1,8 +1,15 @@
+## 0.41.0
+
+- Adds `TRChatMessageRow`, `TRChatUserBubble`, `TRChatToolDisclosure`, and
+  `TRChatStatusRow` for consistently aligned chat transcripts with accessible
+  tool detail disclosure and typed activity states.
+- Adds English, Korean, and Japanese Chat documentation with interactive and
+  composed transcript examples.
+
 ## 0.40.1
 
 - Draws `TRSplitView` boundaries at the shared border width without turning the
   resize hit target into an empty gutter between panes.
-
 ## 0.40.0
 
 - Adds `TRRadialMeter`, a token-sized circular measurement with status colors,
