@@ -42,6 +42,7 @@ export const flutterPreviewComponents = [
   'popover',
   'preview-card',
   'progress',
+  'qr-code',
   'radio',
   'radio-group',
   'scroll-area',
