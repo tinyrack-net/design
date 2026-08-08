@@ -41,10 +41,12 @@ TRSplitView(
 )
 ```
 
-`TRTabs.bar` can opt into document-tab dragging with
-`TRTabsDragConfiguration`. The drop callback receives both strip identities
-and the destination insertion index; tab ownership and persistence remain
-application state.
+`TRTabs` composes one full-width tab strip from optional capabilities. Provide
+`panelBuilder` when the component should draw the active panel, add `onClose`
+to individual tabs when they can close, and pass `TRTabsDragConfiguration` to
+move tabs within or between application-owned groups. The drop callback
+receives both strip identities and the destination insertion index; tab
+ownership and persistence remain application state.
 
 The package bundles 11 IBM Plex Sans, Mono, Korean, and Japanese font files.
 They total about 16.4 MB before platform packaging and are included in a

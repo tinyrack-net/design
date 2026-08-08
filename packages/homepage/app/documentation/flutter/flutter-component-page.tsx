@@ -4175,9 +4175,9 @@ class _BackupSettingState extends State<BackupSetting> {
     usage:
       "TRTabs(\n  tabs: const [\n    TRTabsTab(value: 'overview', label: 'Overview'),\n    TRTabsTab(value: 'settings', label: 'Settings'),\n  ],\n  panelBuilder: buildPanel,\n)",
     contractIntro: {
-      en: '`TRTabs.bar` can also move document tabs within or between application-owned groups. The application remains responsible for tab ownership and persistence.',
-      ko: '`TRTabs.bar`는 앱이 소유한 그룹 안에서 또는 그룹 사이에서 문서 탭을 옮길 수도 있어요. 탭 소유권과 저장은 앱에서 관리하세요.',
-      ja: '`TRTabs.bar` は、アプリが所有するグループ内またはグループ間でドキュメントタブを移動できます。タブの所有権と永続化はアプリ側で管理してください。',
+      en: '`TRTabs` uses one full-width strip with optional panels, closing, actions, and dragging. The application remains responsible for tab ownership and persistence.',
+      ko: '`TRTabs`는 하나의 전체 너비 스트립에서 패널, 닫기, 액션, 드래그 기능을 선택적으로 조합해요. 탭 소유권과 저장은 앱에서 관리하세요.',
+      ja: '`TRTabs` は、1つの全幅ストリップにパネル、閉じる操作、アクション、ドラッグを必要に応じて組み合わせます。タブの所有権と永続化はアプリ側で管理してください。',
     },
     contractRows: [
       {
