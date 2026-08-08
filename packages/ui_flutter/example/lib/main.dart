@@ -693,6 +693,7 @@ List<String> _supportedArgs(String component) => switch (component) {
   'form' => ['label', 'required', 'submitLabel'],
   'meter' => ['value', 'variant'],
   'progress' => ['uiSize', 'value', 'variant'],
+  'qr-code' => ['data', 'uiSize'],
   'link' => ['disabled', 'underline', 'variant'],
   'toggle' => ['disabled', 'pressed', 'uiSize'],
   'checkbox' => ['checked', 'disabled', 'indeterminate', 'mark', 'uiSize'],
@@ -1846,6 +1847,18 @@ class PreviewComponent extends StatelessWidget {
               : (args['value'] as num?)?.toDouble() ?? 60,
           variant: statusVariant,
         ),
+      ),
+      'qr-code' => TRQrCode(
+        key: measureKey,
+        data: args['data'] is String && (args['data']! as String).isNotEmpty
+            ? args['data']! as String
+            : 'https://tinyrack.net',
+        semanticLabel: switch (locale) {
+          'ko' => '미리보기 QR 코드',
+          'ja' => 'プレビュー QR コード',
+          _ => 'Preview QR code',
+        },
+        uiSize: size,
       ),
       'link' => TRLink(
         key: measureKey,
