@@ -1,3 +1,8 @@
+## 0.42.1
+
+- Keeps `TRSplitView` divider lines expanded across the panes while their wider
+  resize targets remain overlaid on the boundary.
+
 ## 0.42.0
 
 - **Breaking:** removes the separate `TRTabs.bar` constructor. Use `TRTabs`
@@ -11,7 +16,6 @@
 - Keeps optional panels on the same strip anatomy while preserving controlled
   and uncontrolled selection, keyboard focus, assistive semantics, disabled
   tabs, close controls, and same- or cross-group drag insertion.
-
 ## 0.41.0
 
 - Adds `TRChatMessageRow`, `TRChatUserBubble`, `TRChatToolDisclosure`, and
@@ -19,7 +23,6 @@
   tool detail disclosure and typed activity states.
 - Adds English, Korean, and Japanese Chat documentation with interactive and
   composed transcript examples.
-
 ## 0.40.1
 
 - Draws `TRSplitView` boundaries at the shared border width without turning the

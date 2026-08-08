@@ -160,8 +160,8 @@ class _TRSplitViewState extends State<TRSplitView> {
 
     final line = Center(
       child: SizedBox(
-        width: horizontal ? TRGeneratedBorders.defaultWidth : null,
-        height: horizontal ? null : TRGeneratedBorders.defaultWidth,
+        width: horizontal ? TRGeneratedBorders.defaultWidth : double.infinity,
+        height: horizontal ? double.infinity : TRGeneratedBorders.defaultWidth,
         child: ColoredBox(color: colors.border),
       ),
     );
