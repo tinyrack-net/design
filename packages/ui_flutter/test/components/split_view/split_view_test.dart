@@ -60,6 +60,7 @@ void main() {
       matching: find.byType(ColoredBox),
     );
     expect(tester.getSize(divider).width, TRControlMetrics.borderWidth);
+    expect(tester.getSize(divider).height, 400);
     expect(
       tester.getRect(divider).left,
       tester.getRect(find.byKey(const ValueKey('first'))).right,
@@ -113,6 +114,7 @@ void main() {
       matching: find.byType(ColoredBox),
     );
     expect(tester.getSize(divider).height, TRControlMetrics.borderWidth);
+    expect(tester.getSize(divider).width, 600);
     expect(
       tester.getRect(divider).top,
       tester.getRect(find.byKey(const ValueKey('first'))).bottom,
