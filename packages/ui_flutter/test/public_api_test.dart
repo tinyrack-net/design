@@ -150,6 +150,7 @@ const publicTypes = <Type>[
   TRPreviewCard,
   TRPreviewCardController,
   TRProgress,
+  TRQrCode,
   TRRadii,
   TRRadio,
   TRRadioGroup,
