@@ -66,7 +66,8 @@ class _TRSplitViewState extends State<TRSplitView> {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
-      final dividerExtent = TRGeneratedSpacing.sm;
+      final dividerExtent = TRGeneratedBorders.defaultWidth;
+      final interactionExtent = TRGeneratedSpacing.sm;
       final total = widget.axis == Axis.horizontal
           ? constraints.maxWidth
           : constraints.maxHeight;
@@ -90,11 +91,44 @@ class _TRSplitViewState extends State<TRSplitView> {
         available: available,
         ratio: ratio,
         direction: direction,
-        extent: dividerExtent,
       );
-      return widget.axis == Axis.horizontal
-          ? Row(children: <Widget>[first, separator, second])
-          : Column(children: <Widget>[first, separator, second]);
+      final layout = widget.axis == Axis.horizontal
+          ? Row(
+              children: <Widget>[
+                first,
+                SizedBox(width: dividerExtent),
+                second,
+              ],
+            )
+          : Column(
+              children: <Widget>[
+                first,
+                SizedBox(height: dividerExtent),
+                second,
+              ],
+            );
+      final interactionOffset =
+          firstExtent - (interactionExtent - dividerExtent) / 2;
+      return Stack(
+        fit: StackFit.passthrough,
+        children: <Widget>[
+          layout,
+          if (widget.axis == Axis.horizontal)
+            PositionedDirectional(
+              start: interactionOffset,
+              width: interactionExtent,
+              height: constraints.maxHeight,
+              child: separator,
+            )
+          else
+            Positioned(
+              top: interactionOffset,
+              width: constraints.maxWidth,
+              height: interactionExtent,
+              child: separator,
+            ),
+        ],
+      );
     },
   );
 
@@ -103,7 +137,6 @@ class _TRSplitViewState extends State<TRSplitView> {
     required double available,
     required double ratio,
     required TextDirection direction,
-    required double extent,
   }) {
     final colors = context.tinyrackTheme;
     final horizontal = widget.axis == Axis.horizontal;
@@ -132,7 +165,7 @@ class _TRSplitViewState extends State<TRSplitView> {
         child: ColoredBox(color: colors.border),
       ),
     );
-    final interactive = Semantics(
+    return Semantics(
       label: widget.separatorLabel,
       slider: true,
       value: '${(ratio * 100).round()}%',
@@ -179,11 +212,6 @@ class _TRSplitViewState extends State<TRSplitView> {
           ),
         ),
       ),
-    );
-    return SizedBox(
-      width: horizontal ? extent : null,
-      height: horizontal ? null : extent,
-      child: interactive,
     );
   }
 }

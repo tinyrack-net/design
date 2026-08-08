@@ -1,3 +1,8 @@
+## 0.40.1
+
+- Draws `TRSplitView` boundaries at the shared border width without turning the
+  resize hit target into an empty gutter between panes.
+
 ## 0.40.0
 
 - Adds `TRRadialMeter`, a token-sized circular measurement with status colors,
