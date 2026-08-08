@@ -43,6 +43,10 @@ export const reactComponentAdaptations = {
 
 /** Flutter surfaces with no public React component of the same purpose. */
 export const flutterPlatformOnlyComponents = {
+  chat: {
+    reason:
+      'Flutter native applications compose chat transcripts from shared message, tool, and status primitives.',
+  },
   code_block_highlighter: {
     reason: 'Flutter owns its code-highlighting widget implementation.',
   },

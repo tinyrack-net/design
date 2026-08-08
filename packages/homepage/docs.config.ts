@@ -160,6 +160,10 @@ export default defineDocsConfig({
     {
       groups: [
         {
+          id: 'chat',
+          label: { en: 'Chat', ko: '채팅', ja: 'チャット' },
+        },
+        {
           id: 'actions',
           label: { en: 'Actions', ko: '액션', ja: 'アクション' },
         },

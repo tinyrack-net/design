@@ -1,0 +1,326 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
+
+import '../../generated/tokens.g.dart';
+import '../../theme.dart';
+import '../../tokens.dart';
+import '../../types.dart';
+import '../focus_ring/focus_ring.dart';
+import '../spinner/spinner.dart';
+import '../text/text.dart';
+
+/// Visual state of a tool or status entry in a chat transcript.
+enum TRChatToolStatus { running, succeeded, failed, denied }
+
+/// Semantic emphasis of a leading visual in a chat message row.
+enum TRChatMessageTone { defaultTone, muted, primary, danger }
+
+// @tinyrack-preview chat
+/// A start-aligned chat row with a shared leading icon rail.
+class TRChatMessageRow extends StatelessWidget {
+  const TRChatMessageRow({
+    required this.icon,
+    required this.child,
+    this.tone = TRChatMessageTone.muted,
+    this.semanticLabel,
+    super.key,
+  });
+
+  final IconData icon;
+  final Widget child;
+  final TRChatMessageTone tone;
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final row = Padding(
+      padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: TRGeneratedControlMetrics.mdIconSize,
+            child: Padding(
+              padding: const EdgeInsets.only(top: TRGeneratedSpacing.size3xs),
+              child: Icon(
+                icon,
+                size: TRGeneratedControlMetrics.smIconSize,
+                color: switch (tone) {
+                  TRChatMessageTone.defaultTone => context.tinyrackTheme.text,
+                  TRChatMessageTone.muted => context.tinyrackTheme.textMuted,
+                  TRChatMessageTone.primary => context.tinyrackTheme.primary,
+                  TRChatMessageTone.danger => context.tinyrackTheme.danger,
+                },
+              ),
+            ),
+          ),
+          const SizedBox(width: TRGeneratedSpacing.sm),
+          Expanded(child: child),
+        ],
+      ),
+    );
+    final label = semanticLabel;
+    return label == null
+        ? row
+        : Semantics(
+            container: true,
+            label: label,
+            excludeSemantics: true,
+            child: row,
+          );
+  }
+}
+
+/// An end-aligned bubble for user-authored chat content.
+class TRChatUserBubble extends StatelessWidget {
+  const TRChatUserBubble({required this.child, this.semanticLabel, super.key});
+
+  final Widget child;
+  final String? semanticLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final bubble = Align(
+      alignment: AlignmentDirectional.centerEnd,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: TRGeneratedMeasurements.measureLg,
+        ),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: context.tinyrackTheme.surfaceMuted,
+            borderRadius: const BorderRadiusDirectional.only(
+              topStart: TRRadii.extraLarge,
+              topEnd: TRRadii.small,
+              bottomStart: TRRadii.extraLarge,
+              bottomEnd: TRRadii.extraLarge,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: TRGeneratedSpacing.lg,
+              vertical: TRGeneratedSpacing.md,
+            ),
+            child: child,
+          ),
+        ),
+      ),
+    );
+    final label = semanticLabel;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
+      child: label == null
+          ? bubble
+          : Semantics(container: true, label: label, child: bubble),
+    );
+  }
+}
+
+/// An expandable chat tool row with a compact action and status summary.
+class TRChatToolDisclosure extends StatefulWidget {
+  const TRChatToolDisclosure({
+    required this.icon,
+    required this.label,
+    required this.status,
+    required this.statusLabel,
+    required this.details,
+    this.open,
+    this.defaultOpen = false,
+    this.onOpenChange,
+    super.key,
+  });
+
+  final IconData icon;
+  final String label;
+  final TRChatToolStatus status;
+  final String statusLabel;
+  final Widget details;
+  final bool? open;
+  final bool defaultOpen;
+  final ValueChanged<bool>? onOpenChange;
+
+  @override
+  State<TRChatToolDisclosure> createState() => _TRChatToolDisclosureState();
+}
+
+class _TRChatToolDisclosureState extends State<TRChatToolDisclosure> {
+  late bool _uncontrolledOpen = widget.defaultOpen;
+  bool _focused = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final open = widget.open ?? _uncontrolledOpen;
+    final colors = context.tinyrackTheme;
+    final statusColor = _statusColor(colors, widget.status);
+
+    void toggle() {
+      final next = !open;
+      if (widget.open == null) setState(() => _uncontrolledOpen = next);
+      widget.onOpenChange?.call(next);
+    }
+
+    return Semantics(
+      container: true,
+      button: true,
+      expanded: open,
+      label: '${widget.label}, ${widget.statusLabel}',
+      excludeSemantics: true,
+      onTap: toggle,
+      child: FocusableActionDetector(
+        mouseCursor: SystemMouseCursors.click,
+        onFocusChange: (value) => setState(() => _focused = value),
+        shortcuts: const {
+          SingleActivator(LogicalKeyboardKey.enter): ActivateIntent(),
+          SingleActivator(LogicalKeyboardKey.space): ActivateIntent(),
+        },
+        actions: {
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) {
+              toggle();
+              return null;
+            },
+          ),
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: toggle,
+          child: TRFocusRing(
+            focused: _focused,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: TRGeneratedSpacing.xs,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: TRGeneratedControlMetrics.mdIconSize,
+                        child: Icon(
+                          widget.icon,
+                          size: TRGeneratedControlMetrics.smIconSize,
+                          color: statusColor,
+                        ),
+                      ),
+                      const SizedBox(width: TRGeneratedSpacing.sm),
+                      Expanded(child: TRText(widget.label, truncate: true)),
+                      const SizedBox(width: TRGeneratedSpacing.sm),
+                      if (widget.status == TRChatToolStatus.running) ...[
+                        TRSpinner(
+                          label: widget.statusLabel,
+                          uiSize: TRUiSize.sm,
+                          variant: TRSpinnerVariant.primary,
+                        ),
+                        const SizedBox(width: TRGeneratedSpacing.xs),
+                      ],
+                      TRText(
+                        widget.statusLabel,
+                        variant: TRTextVariant.bodySm,
+                        color: widget.status == TRChatToolStatus.failed
+                            ? TRTextColor.danger
+                            : TRTextColor.muted,
+                      ),
+                      const SizedBox(width: TRGeneratedSpacing.xs),
+                      AnimatedRotation(
+                        turns: open ? 0.25 : 0,
+                        duration: MediaQuery.disableAnimationsOf(context)
+                            ? Duration.zero
+                            : TRMotion.fast,
+                        curve: TRMotion.standard,
+                        child: Icon(
+                          LucideIcons.chevronRight,
+                          size: TRGeneratedControlMetrics.smIconSize,
+                          color: colors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (open) ...[
+                    const SizedBox(height: TRGeneratedSpacing.sm),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start:
+                            TRGeneratedControlMetrics.mdIconSize +
+                            TRGeneratedSpacing.sm,
+                      ),
+                      child: widget.details,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A compact non-interactive status entry in a chat transcript.
+class TRChatStatusRow extends StatelessWidget {
+  const TRChatStatusRow({
+    required this.label,
+    required this.status,
+    this.icon,
+    super.key,
+  });
+
+  final String label;
+  final TRChatToolStatus status;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+    container: true,
+    label: label,
+    excludeSemantics: true,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
+      child: Row(
+        children: [
+          SizedBox(
+            width: TRGeneratedControlMetrics.mdIconSize,
+            child: status == TRChatToolStatus.running
+                ? TRSpinner(
+                    uiSize: TRUiSize.sm,
+                    variant: TRSpinnerVariant.primary,
+                  )
+                : Icon(
+                    icon ?? _statusIcon(status),
+                    size: TRGeneratedControlMetrics.smIconSize,
+                    color: _statusColor(context.tinyrackTheme, status),
+                  ),
+          ),
+          const SizedBox(width: TRGeneratedSpacing.sm),
+          Expanded(
+            child: TRText(
+              label,
+              variant: TRTextVariant.bodySm,
+              color: status == TRChatToolStatus.failed
+                  ? TRTextColor.danger
+                  : TRTextColor.muted,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Color _statusColor(TinyrackThemeData colors, TRChatToolStatus status) =>
+    switch (status) {
+      TRChatToolStatus.running => colors.primary,
+      TRChatToolStatus.succeeded => colors.success,
+      TRChatToolStatus.failed => colors.danger,
+      TRChatToolStatus.denied => colors.textMuted,
+    };
+
+IconData _statusIcon(TRChatToolStatus status) => switch (status) {
+  TRChatToolStatus.running => LucideIcons.loaderCircle,
+  TRChatToolStatus.succeeded => LucideIcons.circleCheck,
+  TRChatToolStatus.failed => LucideIcons.circleX,
+  TRChatToolStatus.denied => LucideIcons.ban,
+};

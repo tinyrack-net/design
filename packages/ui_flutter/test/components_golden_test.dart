@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 const _goldenPrecisionTolerance = 0.005;
@@ -78,6 +79,67 @@ void main() {
       matchesGoldenFile('goldens/core-components-light.png'),
     );
   });
+
+  for (final themeCase in <(String, ThemeData)>[
+    ('light', TinyrackTheme.light()),
+    ('dark', TinyrackTheme.dark()),
+  ]) {
+    for (final localeCase in _chatLocales.entries) {
+      testWidgets(
+        'chat primitives preserve ${themeCase.$1} ${localeCase.key} appearance',
+        (tester) async {
+          await _loadPackageFontAliases();
+          _useTolerantGoldenComparator();
+          await tester.binding.setSurfaceSize(const Size(480, 360));
+          addTearDown(() => tester.binding.setSurfaceSize(null));
+          final strings = localeCase.value;
+
+          await tester.pumpWidget(
+            MaterialApp(
+              debugShowCheckedModeBanner: false,
+              locale: Locale(localeCase.key),
+              theme: themeCase.$2,
+              home: Scaffold(
+                body: Padding(
+                  padding: const EdgeInsets.all(TRSpacing.large),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TRChatUserBubble(child: Text(strings.user)),
+                      TRChatMessageRow(
+                        icon: LucideIcons.bot,
+                        tone: TRChatMessageTone.primary,
+                        child: Text(strings.assistant),
+                      ),
+                      TRChatToolDisclosure(
+                        icon: LucideIcons.terminal,
+                        label: strings.tool,
+                        status: TRChatToolStatus.failed,
+                        statusLabel: strings.failed,
+                        defaultOpen: true,
+                        details: TRCodeBlock(code: strings.detail),
+                      ),
+                      TRChatStatusRow(
+                        label: strings.running,
+                        status: TRChatToolStatus.running,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pump();
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile(
+              'goldens/chat-${localeCase.key}-${themeCase.$1}.png',
+            ),
+          );
+        },
+      );
+    }
+  }
 
   for (final themeCase in <(String, ThemeData)>[
     ('light', TinyrackTheme.light()),
@@ -218,6 +280,9 @@ Future<void> _loadPackageFontAliases() async {
     }
     await loader.load();
   }
+  final lucideLoader = FontLoader('packages/lucide_flutter/LucideIcons')
+    ..addFont(rootBundle.load('packages/lucide_flutter/assets/lucide.ttf'));
+  await lucideLoader.load();
   _packageFontAliasesLoaded = true;
 }
 
@@ -236,6 +301,57 @@ void _useTolerantGoldenComparator() {
     precisionTolerance: _goldenPrecisionTolerance,
   );
   addTearDown(() => goldenFileComparator = previousGoldenFileComparator);
+}
+
+const _chatLocales = <String, _ChatStrings>{
+  'en': _ChatStrings(
+    user: 'Please run the tests.',
+    assistant: 'I am checking the changes.',
+    tool: 'Run command',
+    failed: 'Failed',
+    detail:
+        r'$ flutter test'
+        '\nOne test failed.',
+    running: 'Running',
+  ),
+  'ko': _ChatStrings(
+    user: '테스트를 실행해 주세요.',
+    assistant: '변경 사항을 확인하고 있어요.',
+    tool: '명령 실행',
+    failed: '실패',
+    detail:
+        r'$ flutter test'
+        '\n테스트 하나가 실패했어요.',
+    running: '실행 중',
+  ),
+  'ja': _ChatStrings(
+    user: 'テストを実行してください。',
+    assistant: '変更内容を確認しています。',
+    tool: 'コマンドを実行',
+    failed: '失敗',
+    detail:
+        r'$ flutter test'
+        '\nテストが 1 件失敗しました。',
+    running: '実行中',
+  ),
+};
+
+final class _ChatStrings {
+  const _ChatStrings({
+    required this.user,
+    required this.assistant,
+    required this.tool,
+    required this.failed,
+    required this.detail,
+    required this.running,
+  });
+
+  final String user;
+  final String assistant;
+  final String tool;
+  final String failed;
+  final String detail;
+  final String running;
 }
 
 const _layerLocales = <String, _LayerStrings>{

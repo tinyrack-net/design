@@ -4839,6 +4839,184 @@ class _AlignmentBarState extends State<AlignmentBar> {
       },
     ],
   },
+  chat: {
+    title: 'Chat',
+    description: {
+      en: 'Compose readable chat transcripts from aligned messages, user bubbles, tool disclosures, and status rows.',
+      ko: '정렬된 메시지, 사용자 말풍선, 도구 디스클로저, 상태 행으로 읽기 쉬운 채팅 기록을 조립해요.',
+      ja: '整列したメッセージ、ユーザーバブル、ツールの開閉行、ステータス行から読みやすいチャット履歴を構成します。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Authorship', ko: '작성 주체', ja: '発言者' },
+        choices: {
+          en: 'Use `TRChatUserBubble` for user-authored content and `TRChatMessageRow` for start-aligned assistant content.',
+          ko: '사용자가 작성한 콘텐츠에는 `TRChatUserBubble`, 시작 쪽에 놓는 어시스턴트 콘텐츠에는 `TRChatMessageRow`를 사용해요.',
+          ja: 'ユーザーが入力した内容には `TRChatUserBubble`、先頭側に配置するアシスタント内容には `TRChatMessageRow` を使います。',
+        },
+      },
+      {
+        axis: { en: 'Disclosure', ko: '상세 공개', ja: '詳細表示' },
+        choices: {
+          en: '`TRChatToolDisclosure` keeps technical arguments and results out of the transcript until the reader opens the row.',
+          ko: '`TRChatToolDisclosure`는 독자가 행을 열기 전까지 기술 인자와 결과를 채팅 기록에서 숨겨요.',
+          ja: '`TRChatToolDisclosure` は、読者が行を開くまで技術的な引数と結果を履歴から隠します。',
+        },
+      },
+      {
+        axis: { en: 'State', ko: '상태', ja: '状態' },
+        choices: {
+          en: '`TRChatToolStatus` controls semantic color, icon, progress, and assistive state; pass localized visible labels separately.',
+          ko: '`TRChatToolStatus`가 시맨틱 색상, 아이콘, 진행 상태를 정하고 표시 레이블은 현지화해서 따로 전달해요.',
+          ja: '`TRChatToolStatus` がセマンティックカラー、アイコン、進行状態を決め、表示ラベルはローカライズして別に渡します。',
+        },
+      },
+      {
+        axis: { en: 'Keyboard', ko: '키보드', ja: 'キーボード' },
+        choices: {
+          en: 'Tool disclosures follow normal Tab order and toggle with Enter or Space while exposing expanded semantics.',
+          ko: '도구 디스클로저는 일반 Tab 순서를 따르고 Enter나 Space로 열고 닫으며 확장 상태를 시맨틱으로 알려 줘요.',
+          ja: 'ツールの開閉行は通常の Tab 順序に従い、Enter または Space で切り替わり、展開状態をセマンティクスで通知します。',
+        },
+      },
+    ],
+    usage: {
+      en: String.raw`Column(
+  children: [
+    const TRChatUserBubble(child: Text('Run the tests.')),
+    const TRChatMessageRow(
+      icon: LucideIcons.bot,
+      tone: TRChatMessageTone.primary,
+      child: Text('I am checking the changes.'),
+    ),
+    TRChatToolDisclosure(
+      icon: LucideIcons.terminal,
+      label: 'Run command',
+      status: TRChatToolStatus.running,
+      statusLabel: 'Running',
+      details: const TRCodeBlock(code: r'$ flutter test'),
+    ),
+  ],
+)`,
+      ko: String.raw`Column(
+  children: [
+    const TRChatUserBubble(child: Text('테스트를 실행해 주세요.')),
+    const TRChatMessageRow(
+      icon: LucideIcons.bot,
+      tone: TRChatMessageTone.primary,
+      child: Text('변경 사항을 확인하고 있어요.'),
+    ),
+    TRChatToolDisclosure(
+      icon: LucideIcons.terminal,
+      label: '명령 실행',
+      status: TRChatToolStatus.running,
+      statusLabel: '실행 중',
+      details: const TRCodeBlock(code: r'$ flutter test'),
+    ),
+  ],
+)`,
+      ja: String.raw`Column(
+  children: [
+    const TRChatUserBubble(child: Text('テストを実行してください。')),
+    const TRChatMessageRow(
+      icon: LucideIcons.bot,
+      tone: TRChatMessageTone.primary,
+      child: Text('変更内容を確認しています。'),
+    ),
+    TRChatToolDisclosure(
+      icon: LucideIcons.terminal,
+      label: 'コマンドを実行',
+      status: TRChatToolStatus.running,
+      statusLabel: '実行中',
+      details: const TRCodeBlock(code: r'$ flutter test'),
+    ),
+  ],
+)`,
+    },
+    apiGroups: [
+      {
+        title: {
+          en: 'Message primitives',
+          ko: '메시지 프리미티브',
+          ja: 'メッセージプリミティブ',
+        },
+        rows: [
+          {
+            name: 'TRChatMessageRow',
+            type: 'icon, child, tone, semanticLabel',
+            purpose: {
+              en: 'Aligns an assistant or activity icon with a shared content rail.',
+              ko: '어시스턴트 또는 활동 아이콘을 공통 콘텐츠 rail에 맞춰요.',
+              ja: 'アシスタントまたはアクティビティのアイコンを共通のコンテンツレールに揃えます。',
+            },
+          },
+          {
+            name: 'TRChatUserBubble',
+            type: 'child, semanticLabel',
+            purpose: {
+              en: 'Places user-authored text or attachments at the inline end.',
+              ko: '사용자가 작성한 텍스트나 첨부 파일을 inline 끝에 배치해요.',
+              ja: 'ユーザーが入力したテキストや添付ファイルをインライン末尾に配置します。',
+            },
+          },
+          {
+            name: 'TRChatStatusRow',
+            type: 'label, status, icon',
+            purpose: {
+              en: 'Shows compact transcript metadata or live progress.',
+              ko: '간결한 채팅 메타데이터나 실시간 진행 상태를 보여 줘요.',
+              ja: 'コンパクトな履歴メタデータや進行中の状態を表示します。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'Tool disclosure',
+          ko: '도구 디스클로저',
+          ja: 'ツールの開閉行',
+        },
+        rows: [
+          {
+            name: 'icon, label, statusLabel',
+            type: 'IconData, String, String · required',
+            purpose: {
+              en: 'Define the compact human-readable summary.',
+              ko: '사람이 읽기 쉬운 간결한 요약을 정의해요.',
+              ja: '人が読みやすいコンパクトな要約を定義します。',
+            },
+          },
+          {
+            name: 'status',
+            type: 'TRChatToolStatus · required',
+            purpose: {
+              en: 'Selects running, succeeded, failed, or denied presentation.',
+              ko: '실행 중, 성공, 실패, 거부 표현을 선택해요.',
+              ja: '実行中、成功、失敗、拒否の表示を選びます。',
+            },
+          },
+          {
+            name: 'details',
+            type: 'Widget · required',
+            purpose: {
+              en: 'Provides technical content mounted only while open.',
+              ko: '열려 있을 때만 위젯 트리에 추가할 기술 콘텐츠를 제공해요.',
+              ja: '開いている間だけウィジェットツリーに追加する技術的な内容を指定します。',
+            },
+          },
+          {
+            name: 'open, defaultOpen, onOpenChange',
+            type: 'bool?, bool, ValueChanged<bool>?',
+            purpose: {
+              en: 'Control the disclosure or let it own its initial state.',
+              ko: '열림 상태를 제어하거나 초기 상태만 지정해요.',
+              ja: '開閉状態を制御するか、初期状態だけを指定します。',
+            },
+          },
+        ],
+      },
+    ],
+  },
   'focus-ring': {
     title: 'FocusRing',
     description: {

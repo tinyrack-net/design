@@ -790,23 +790,23 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 441 localized content routes as static route modules', () => {
+  it('defines all 444 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(60);
-    expect(staticDocumentRoutes).toHaveLength(441);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(441);
+    expect(staticDocumentRoutes).toHaveLength(444);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(444);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      441,
+      444,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      147,
+      148,
     );
     const expectedSectionCounts = {
       brand: 2,
       components: 60,
       docs: 1,
       foundations: 11,
-      'flutter-components': 63,
+      'flutter-components': 64,
       'flutter-start': 4,
       home: 1,
       integrations: 4,
@@ -1074,19 +1074,23 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('mirrors the web component categories in the flutter navigation', () => {
+  it('adds a dedicated chat category to the mirrored flutter navigation', () => {
     const flutterSection = config.sections.find(
       (section) => section.id === 'flutter-components',
     );
     const groups = flutterSection?.groups ?? [];
     const webGroups =
       config.sections.find((section) => section.id === 'components')?.groups ?? [];
-    expect(groups).toEqual(webGroups);
+    expect(groups[0]).toEqual({
+      id: 'chat',
+      label: { en: 'Chat', ko: '채팅', ja: 'チャット' },
+    });
+    expect(groups.slice(1)).toEqual(webGroups);
 
     const flutterRoutes = staticDocumentRoutes.filter(
       (route) => route.locale === 'en' && route.section === 'flutter-components',
     );
-    expect(flutterRoutes).toHaveLength(63);
+    expect(flutterRoutes).toHaveLength(64);
     const webRoutes = staticDocumentRoutes.filter(
       (route) => route.locale === 'en' && route.section === 'components',
     );
@@ -1126,7 +1130,7 @@ describe('React Router documentation contract', () => {
         { en: 'Components', ko: '컴포넌트', ja: 'コンポーネント' }[locale],
       );
       expect(sectionNav.children.map((child) => child.type)).toEqual(
-        Array.from({ length: 9 }, () => 'group'),
+        Array.from({ length: 10 }, () => 'group'),
       );
       const collator = new Intl.Collator(locale, {
         numeric: true,
@@ -1141,8 +1145,8 @@ describe('React Router documentation contract', () => {
         pageCounts.push(labels.length);
         expect([...labels].sort(collator.compare), child.label).toEqual(labels);
       }
-      expect(pageCounts).toEqual([6, 8, 8, 10, 9, 7, 6, 7, 2]);
-      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(63);
+      expect(pageCounts).toEqual([1, 6, 8, 8, 10, 9, 7, 6, 7, 2]);
+      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(64);
     }
   });
 
@@ -1337,7 +1341,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(438);
+    expect(mdxFiles).toHaveLength(441);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);

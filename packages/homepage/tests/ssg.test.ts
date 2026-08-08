@@ -37,7 +37,7 @@ describe('static documentation output', () => {
   });
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
-    expect(staticDocumentRoutes).toHaveLength(441);
+    expect(staticDocumentRoutes).toHaveLength(444);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();

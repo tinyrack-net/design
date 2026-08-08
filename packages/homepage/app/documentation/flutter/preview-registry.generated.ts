@@ -13,6 +13,7 @@ export const flutterPreviewComponents = [
   'breadcrumbs',
   'button',
   'card',
+  'chat',
   'checkbox',
   'checkbox-group',
   'code',

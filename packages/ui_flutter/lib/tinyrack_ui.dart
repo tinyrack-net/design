@@ -12,6 +12,7 @@ export 'src/components/badge/badge.dart';
 export 'src/components/breadcrumbs/breadcrumbs.dart';
 export 'src/components/button/button.dart';
 export 'src/components/card/card.dart';
+export 'src/components/chat/chat.dart';
 export 'src/components/checkbox/checkbox.dart';
 export 'src/components/code/code.dart';
 export 'src/components/code_block/code_block.dart';
