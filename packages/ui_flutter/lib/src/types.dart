@@ -7,6 +7,9 @@ enum TRAppearance { solid, outline, ghost }
 /// The shared control size scale.
 enum TRUiSize { sm, md, lg }
 
+/// Controls how [TRTabs] distributes the width of its tab items.
+enum TRTabsWidth { fill, fixed }
+
 /// Logical placement of an anchored Tinyrack layer.
 ///
 /// `start` and `end` follow the ambient [TextDirection] when they describe the

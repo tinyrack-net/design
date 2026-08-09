@@ -94,6 +94,7 @@ class TRTabs extends StatefulWidget {
     this.semanticLabel,
     this.scrollController,
     this.dragConfiguration,
+    this.tabWidth = TRTabsWidth.fill,
     this.uiSize = TRUiSize.md,
     super.key,
   });
@@ -122,6 +123,12 @@ class TRTabs extends StatefulWidget {
 
   /// Enables reordering and cross-strip movement.
   final TRTabsDragConfiguration? dragConfiguration;
+
+  /// Controls whether tabs divide the available width or use a fixed width.
+  ///
+  /// [TRTabsWidth.fixed] gives every tab `TRMeasurements.measureSm` logical
+  /// pixels and lets the strip scroll when the tabs do not fit.
+  final TRTabsWidth tabWidth;
 
   final TRUiSize uiSize;
 
@@ -164,7 +171,8 @@ class _TRTabsState extends State<TRTabs> {
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
-    final strip = _buildStrip(colors, active, tabHeight);
+    final stripHeight = tabHeight + TRGeneratedBorders.defaultWidth;
+    final strip = _buildStrip(colors, active, tabHeight, stripHeight);
     final panelBuilder = widget.panelBuilder;
     if (panelBuilder == null) return strip;
 
@@ -201,6 +209,7 @@ class _TRTabsState extends State<TRTabs> {
     TinyrackThemeData colors,
     String active,
     double tabHeight,
+    double stripHeight,
   ) {
     final strip = Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -214,13 +223,23 @@ class _TRTabsState extends State<TRTabs> {
           child: LayoutBuilder(
             builder: (context, constraints) {
               final availableWidth = constraints.maxWidth;
-              final tabExtent = widget.tabs.isEmpty
-                  ? TRGeneratedMeasurements.measureSm
-                  : math.max(
-                      TRGeneratedMeasurements.measureSm,
-                      availableWidth / widget.tabs.length,
-                    );
-              return _buildTabViewport(colors, active, tabHeight, tabExtent);
+              final tabExtent = switch (widget.tabWidth) {
+                TRTabsWidth.fixed => TRGeneratedMeasurements.measureSm,
+                TRTabsWidth.fill =>
+                  widget.tabs.isEmpty
+                      ? TRGeneratedMeasurements.measureSm
+                      : math.max(
+                          TRGeneratedMeasurements.measureSm,
+                          availableWidth / widget.tabs.length,
+                        ),
+              };
+              return _buildTabViewport(
+                colors,
+                active,
+                tabHeight,
+                stripHeight,
+                tabExtent,
+              );
             },
           ),
         ),
@@ -242,19 +261,25 @@ class _TRTabsState extends State<TRTabs> {
               child: strip,
             ),
     );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        SizedBox(height: tabHeight, child: accessibleStrip),
-        SizedBox(
-          height: TRGeneratedBorders.defaultWidth,
-          child: ColoredBox(
-            key: const ValueKey<String>('tr-tabs-rule'),
-            color: colors.border,
+    return SizedBox(
+      height: stripHeight,
+      child: Stack(
+        children: <Widget>[
+          PositionedDirectional(
+            top: tabHeight,
+            start: 0,
+            end: 0,
+            child: SizedBox(
+              height: TRGeneratedBorders.defaultWidth,
+              child: ColoredBox(
+                key: const ValueKey<String>('tr-tabs-rule'),
+                color: colors.border,
+              ),
+            ),
           ),
-        ),
-      ],
+          Positioned.fill(child: accessibleStrip),
+        ],
+      ),
     );
   }
 
@@ -262,6 +287,7 @@ class _TRTabsState extends State<TRTabs> {
     TinyrackThemeData colors,
     String active,
     double tabHeight,
+    double stripHeight,
     double tabExtent,
   ) {
     Widget tabStrip = TRScrollArea.forScrollable(
@@ -281,6 +307,7 @@ class _TRTabsState extends State<TRTabs> {
             selected: tab.value == active,
             uiSize: widget.uiSize,
             height: tabHeight,
+            stripHeight: stripHeight,
             width: tabExtent,
             dragConfiguration: widget.dragConfiguration,
             onSelect: () => _select(tab.value),
@@ -340,7 +367,7 @@ class _TRTabsState extends State<TRTabs> {
                         : 0),
                 child: IgnorePointer(
                   child: SizedBox(
-                    height: tabHeight,
+                    height: stripHeight,
                     width: TRGeneratedBorders.strongWidth,
                     child: ColoredBox(color: colors.primary),
                   ),
@@ -373,6 +400,7 @@ class _TRTabItem extends StatefulWidget {
     required this.selected,
     required this.uiSize,
     required this.height,
+    required this.stripHeight,
     required this.width,
     required this.onSelect,
     this.dragConfiguration,
@@ -383,6 +411,7 @@ class _TRTabItem extends StatefulWidget {
   final bool selected;
   final TRUiSize uiSize;
   final double height;
+  final double stripHeight;
   final double width;
   final VoidCallback onSelect;
   final TRTabsDragConfiguration? dragConfiguration;
@@ -500,7 +529,7 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
                 opacity: TRGeneratedOpacity.hover,
                 child: SizedBox(
                   width: widget.width,
-                  height: widget.height,
+                  height: widget.stripHeight,
                   child: ColoredBox(
                     color: colors.surfaceSelected,
                     child: Center(child: Text(widget.tab.label)),
@@ -516,12 +545,13 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
           );
 
     final tabContent = SizedBox(
-      height: widget.height,
+      height: widget.stripHeight,
       child: Stack(
         children: <Widget>[
           AnimatedContainer(
             curve: TRGeneratedMotion.standard,
             duration: motionDuration,
+            height: widget.stripHeight,
             decoration: BoxDecoration(
               color: _hovered && interactive ? colors.surfaceHover : null,
               border: BorderDirectional(end: BorderSide(color: colors.border)),
@@ -529,21 +559,26 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
             padding: const EdgeInsets.symmetric(
               horizontal: TRGeneratedSpacing.sm,
             ),
-            child: Row(
-              children: <Widget>[
-                Expanded(child: draggableSelection),
-                if (widget.tab.onClose case final onClose?) ...<Widget>[
-                  const SizedBox(width: TRGeneratedSpacing.xs),
-                  TRIconButton(
-                    key: ValueKey<String>('tr-tabs-close-${widget.tab.value}'),
-                    appearance: TRAppearance.ghost,
-                    uiSize: closeSize,
-                    label: widget.tab.closeLabel!,
-                    onPressed: interactive ? onClose : null,
-                    icon: const Icon(LucideIcons.x),
-                  ),
+            child: SizedBox(
+              height: widget.height,
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: draggableSelection),
+                  if (widget.tab.onClose case final onClose?) ...<Widget>[
+                    const SizedBox(width: TRGeneratedSpacing.xs),
+                    TRIconButton(
+                      key: ValueKey<String>(
+                        'tr-tabs-close-${widget.tab.value}',
+                      ),
+                      appearance: TRAppearance.ghost,
+                      uiSize: closeSize,
+                      label: widget.tab.closeLabel!,
+                      onPressed: interactive ? onClose : null,
+                      icon: const Icon(LucideIcons.x),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
           if (widget.selected)

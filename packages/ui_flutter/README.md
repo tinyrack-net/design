@@ -48,6 +48,11 @@ move tabs within or between application-owned groups. The drop callback
 receives both strip identities and the destination insertion index; tab
 ownership and persistence remain application state.
 
+Use `tabWidth: TRTabsWidth.fixed` when each document tab should keep the
+`TRMeasurements.measureSm` width and the strip should scroll once the tabs no
+longer fit. The default `TRTabsWidth.fill` policy divides the available strip
+between its tabs.
+
 The package bundles 11 IBM Plex Sans, Mono, Korean, and Japanese font files.
 They total about 16.4 MB before platform packaging and are included in a
 consumer application's Flutter asset bundle, so no runtime font download is
