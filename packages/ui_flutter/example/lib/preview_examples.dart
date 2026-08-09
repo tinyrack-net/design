@@ -809,6 +809,22 @@ Widget _chatComposition(BuildContext context, Locale locale) => SizedBox(
           ),
         ),
       ),
+      TRChatMessageRow(
+        icon: LucideIcons.image,
+        alignment: TRChatMessageAlignment.center,
+        child: TRCard(
+          padding: TRCardPadding.sm,
+          child: TRText(
+            _pick(
+              locale,
+              'Result image\npreview.png',
+              '결과 이미지\npreview.png',
+              '結果画像\npreview.png',
+            ),
+            variant: TRTextVariant.bodySm,
+          ),
+        ),
+      ),
       TRChatToolDisclosure(
         icon: LucideIcons.terminal,
         label: _pick(locale, 'Run command', '명령 실행', 'コマンドを実行'),

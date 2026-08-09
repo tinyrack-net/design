@@ -1613,6 +1613,81 @@ void main() {
     expect(lastValue, 'end');
   });
 
+  testWidgets('radio glyph aligns with the first line of a compound label', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRRadioGroup(
+          value: 'compact',
+          children: [
+            TRRadio(
+              value: 'compact',
+              label: Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TRText('Compact', key: ValueKey('radio-title')),
+                    TRText(
+                      'Keeps status rows easy to scan.',
+                      variant: TRTextVariant.caption,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final glyph = tester.getRect(
+      find.descendant(
+        of: find.byType(TRRadio),
+        matching: find.byType(AnimatedContainer),
+      ),
+    );
+    final title = tester.getRect(find.byKey(const ValueKey('radio-title')));
+    final firstLineHeight =
+        TRTypography.body.fontSize! * TRTypography.body.height!;
+    expect(
+      glyph.center.dy,
+      moreOrLessEquals(title.top + firstLineHeight / 2, epsilon: 0.5),
+    );
+  });
+
+  testWidgets('radio can center its glyph on non-text compound content', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrapNarrow(
+        const TRRadioGroup(
+          value: 'preview',
+          children: [
+            TRRadio(
+              value: 'preview',
+              labelAlignment: TRRadioLabelAlignment.center,
+              label: SizedBox(
+                key: ValueKey('radio-preview'),
+                height: TRSpacing.fourExtraLarge,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    final glyph = tester.getRect(
+      find.descendant(
+        of: find.byType(TRRadio),
+        matching: find.byType(AnimatedContainer),
+      ),
+    );
+    final preview = tester.getRect(find.byKey(const ValueKey('radio-preview')));
+    expect(glyph.center.dy, moreOrLessEquals(preview.center.dy, epsilon: 0.5));
+  });
+
   testWidgets(
     'radio group moves selection with arrow keys and skips disabled',
     (tester) async {

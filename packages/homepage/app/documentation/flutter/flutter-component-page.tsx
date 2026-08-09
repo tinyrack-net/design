@@ -3443,9 +3443,9 @@ class _InstallCommandState extends State<InstallCommand> {
       {
         axis: { en: 'Label', ko: '레이블', ja: 'ラベル' },
         choices: {
-          en: '`label` renders beside the glyph as one tappable target and one semantic node. Style it with `TRText`; the radio applies no text style of its own.',
-          ko: '`label`은 글리프 옆에 그려지고, 탭 영역과 시맨틱 노드를 하나로 묶어요. 텍스트 스타일은 `TRText`로 지정하세요. 라디오는 자체 텍스트 스타일을 적용하지 않아요.',
-          ja: '`label` はグリフの隣に描画され、タップ領域とセマンティックノードを 1 つにまとめます。文字スタイルは `TRText` で指定してください。ラジオ自体は文字スタイルを適用しません。',
+          en: '`label` renders beside the glyph as one tappable target and one semantic node. Compound labels align the glyph with their first body line by default; choose `TRRadioLabelAlignment.center` for non-text content. Style text with `TRText`.',
+          ko: '`label`은 글리프 옆에 그려지고 탭 영역과 시맨틱 노드를 하나로 묶어요. 복합 레이블은 기본적으로 글리프를 본문 첫 줄에 맞춰요. 텍스트가 아닌 콘텐츠에는 `TRRadioLabelAlignment.center`를 선택하고, 텍스트 스타일은 `TRText`로 지정하세요.',
+          ja: '`label` はグリフの隣に描画され、タップ領域とセマンティクスノードを 1 つにまとめます。複合ラベルでは、グリフが既定で本文の最初の行に揃います。テキスト以外の内容には `TRRadioLabelAlignment.center` を選び、文字スタイルは `TRText` で指定してください。',
         },
       },
       {
@@ -4861,6 +4861,14 @@ class _AlignmentBarState extends State<AlignmentBar> {
           en: 'Use `TRChatUserBubble` for user-authored content and `TRChatMessageRow` for start-aligned assistant content.',
           ko: '사용자가 작성한 콘텐츠에는 `TRChatUserBubble`, 시작 쪽에 놓는 어시스턴트 콘텐츠에는 `TRChatMessageRow`를 사용해요.',
           ja: 'ユーザーが入力した内容には `TRChatUserBubble`、先頭側に配置するアシスタント内容には `TRChatMessageRow` を使います。',
+        },
+      },
+      {
+        axis: { en: 'Alignment', ko: '정렬', ja: '配置' },
+        choices: {
+          en: '`TRChatMessageAlignment.firstLine` keeps the leading icon on the first line at every text scale. Use `center` when the child is a compound surface such as an attachment card, and set `textVariant` when prose does not use the body role.',
+          ko: '`TRChatMessageAlignment.firstLine`은 텍스트 배율이 달라져도 선행 아이콘을 첫 줄에 맞춰요. 첨부 카드 같은 복합 표면에는 `center`를 사용하고, 본문 역할이 아닌 글에는 `textVariant`를 지정하세요.',
+          ja: '`TRChatMessageAlignment.firstLine` は、文字の拡大率が変わっても先頭アイコンを最初の行に揃えます。添付カードなどの複合サーフェスには `center` を使い、本文以外の文字には `textVariant` を指定してください。',
         },
       },
       {

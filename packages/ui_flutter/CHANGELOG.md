@@ -1,3 +1,11 @@
+## 0.44.0
+
+- Adds typed first-line and center alignment to `TRChatMessageRow`, keeping
+  leading icons aligned with prose at every text scale while allowing compound
+  surfaces such as attachment cards to opt into full-height centering.
+- Aligns `TRRadio` glyphs with the first line of compound labels by default and
+  adds an explicit centered option for non-text label content.
+
 ## 0.43.1
 
 - Keeps the native context menu from freezing the window: the Linux popup no
@@ -10,7 +18,6 @@
 - Resets the native presenter and surfaces the error when the platform fails
   unexpectedly, instead of leaking an unhandled asynchronous error and
   ignoring every later request.
-
 ## 0.43.0
 
 - Adds `TRTabsWidth` and `TRTabs.tabWidth` so document-style strips can keep
