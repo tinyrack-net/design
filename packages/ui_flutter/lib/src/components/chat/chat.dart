@@ -335,22 +335,24 @@ class TRChatStatusRow extends StatelessWidget {
         children: [
           SizedBox(
             width: TRGeneratedControlMetrics.mdIconSize,
-            child: status == TRChatToolStatus.running
-                ? MediaQuery.disableAnimationsOf(context)
-                      ? Icon(
-                          _statusIcon(status),
-                          size: TRGeneratedControlMetrics.smIconSize,
-                          color: _statusColor(context.tinyrackTheme, status),
-                        )
-                      : TRSpinner(
-                          uiSize: TRUiSize.sm,
-                          variant: TRSpinnerVariant.primary,
-                        )
-                : Icon(
-                    icon ?? _statusIcon(status),
-                    size: TRGeneratedControlMetrics.smIconSize,
-                    color: _statusColor(context.tinyrackTheme, status),
-                  ),
+            child: Center(
+              child: status == TRChatToolStatus.running
+                  ? MediaQuery.disableAnimationsOf(context)
+                        ? Icon(
+                            _statusIcon(status),
+                            size: TRGeneratedControlMetrics.smIconSize,
+                            color: _statusColor(context.tinyrackTheme, status),
+                          )
+                        : TRSpinner(
+                            uiSize: TRUiSize.sm,
+                            variant: TRSpinnerVariant.primary,
+                          )
+                  : Icon(
+                      icon ?? _statusIcon(status),
+                      size: TRGeneratedControlMetrics.smIconSize,
+                      color: _statusColor(context.tinyrackTheme, status),
+                    ),
+            ),
           ),
           const SizedBox(width: TRGeneratedSpacing.sm),
           Expanded(
