@@ -4175,11 +4175,19 @@ class _BackupSettingState extends State<BackupSetting> {
     usage:
       "TRTabs(\n  tabs: const [\n    TRTabsTab(value: 'overview', label: 'Overview'),\n    TRTabsTab(value: 'settings', label: 'Settings'),\n  ],\n  panelBuilder: buildPanel,\n)",
     contractIntro: {
-      en: '`TRTabs` uses one full-width strip with optional panels, closing, actions, and dragging. The application remains responsible for tab ownership and persistence.',
-      ko: '`TRTabs`는 하나의 전체 너비 스트립에서 패널, 닫기, 액션, 드래그 기능을 선택적으로 조합해요. 탭 소유권과 저장은 앱에서 관리하세요.',
-      ja: '`TRTabs` は、1つの全幅ストリップにパネル、閉じる操作、アクション、ドラッグを必要に応じて組み合わせます。タブの所有権と永続化はアプリ側で管理してください。',
+      en: '`TRTabs` uses one full-width strip with optional panels, closing, actions, and dragging. Use `tabWidth: TRTabsWidth.fixed` for document tabs that keep a measure-sm width; the default fills the strip. The application remains responsible for tab ownership and persistence.',
+      ko: '`TRTabs`는 하나의 전체 너비 스트립에서 패널, 닫기, 액션, 드래그 기능을 선택적으로 조합해요. 문서 탭을 measure-sm 너비로 유지하려면 `tabWidth: TRTabsWidth.fixed`를 사용하고, 기본값은 스트립을 채워요. 탭 소유권과 저장은 앱에서 관리하세요.',
+      ja: '`TRTabs` は、1つの全幅ストリップにパネル、閉じる操作、アクション、ドラッグを必要に応じて組み合わせます。ドキュメントタブを measure-sm 幅に保つ場合は `tabWidth: TRTabsWidth.fixed` を使い、既定ではストリップを埋めます。タブの所有権と永続化はアプリ側で管理してください。',
     },
     contractRows: [
+      {
+        axis: { en: 'Width', ko: '너비', ja: '幅' },
+        choices: {
+          en: '`TRTabsWidth.fill` is the default and divides the available strip. `TRTabsWidth.fixed` gives each tab `TRMeasurements.measureSm` logical pixels and scrolls when the tabs do not fit.',
+          ko: '`TRTabsWidth.fill`이 기본값이며 사용할 수 있는 스트립 너비를 탭마다 나눠요. `TRTabsWidth.fixed`는 각 탭에 `TRMeasurements.measureSm` 논리 픽셀을 사용하고 탭이 넘치면 가로로 스크롤해요.',
+          ja: '`TRTabsWidth.fill` が既定値で、使用可能なストリップ幅をタブごとに分けます。`TRTabsWidth.fixed` は各タブに `TRMeasurements.measureSm` 論理ピクセルを使い、収まらない場合は横スクロールします。',
+        },
+      },
       {
         axis: { en: 'Dragging', ko: '드래그', ja: 'ドラッグ' },
         choices: {

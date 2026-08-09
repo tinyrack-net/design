@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -79,6 +81,54 @@ void main() {
       matchesGoldenFile('goldens/core-components-light.png'),
     );
   });
+
+  for (final themeCase in <(String, ThemeData)>[
+    ('light', TinyrackTheme.light()),
+    ('dark', TinyrackTheme.dark()),
+  ]) {
+    testWidgets('fixed tabs preserve their ${themeCase.$1} hovered seam', (
+      tester,
+    ) async {
+      await _loadPackageFontAliases();
+      _useTolerantGoldenComparator();
+      await tester.binding.setSurfaceSize(const Size(520, 100));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _goldenApp(
+          theme: themeCase.$2,
+          child: MediaQuery(
+            data: const MediaQueryData(disableAnimations: true),
+            child: SizedBox(
+              width: 520,
+              child: TRTabs(
+                tabWidth: TRTabsWidth.fixed,
+                tabs: const <TRTabsTab>[
+                  TRTabsTab(value: 'overview', label: 'Overview'),
+                  TRTabsTab(value: 'settings', label: 'Settings'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      addTearDown(mouse.removePointer);
+      await mouse.addPointer(location: Offset.zero);
+      await mouse.moveTo(
+        tester.getCenter(
+          find.byKey(const ValueKey<String>('tr-tabs-tab-overview')),
+        ),
+      );
+      await tester.pump();
+
+      await expectLater(
+        find.byType(MaterialApp),
+        matchesGoldenFile('goldens/tabs-${themeCase.$1}-hover.png'),
+      );
+    });
+  }
 
   for (final themeCase in <(String, ThemeData)>[
     ('light', TinyrackTheme.light()),

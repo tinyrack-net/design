@@ -2582,13 +2582,14 @@ Column(
         ko: '조합 가능한 탭 스트립',
       },
       description: {
-        en: 'Omit panelBuilder when the window owns its active document, then add closing, leading icons, actions, or dragging only where needed.',
-        ja: 'ウィンドウがアクティブなドキュメントを管理する場合は panelBuilder を省略し、閉じる操作、先頭アイコン、アクション、ドラッグを必要な場合だけ追加します。',
-        ko: '창에서 활성 문서를 관리한다면 panelBuilder를 생략하고 닫기, 선행 아이콘, 액션, 드래그를 필요한 경우에만 추가하세요.',
+        en: 'Omit panelBuilder when the window owns its active document, keep document tabs at measure-sm width, then add closing, leading icons, actions, or dragging only where needed.',
+        ja: 'ウィンドウがアクティブなドキュメントを管理する場合は panelBuilder を省略し、ドキュメントタブを measure-sm 幅に保ちながら、閉じる操作、先頭アイコン、アクション、ドラッグを必要な場合だけ追加します。',
+        ko: '창에서 활성 문서를 관리한다면 panelBuilder를 생략하고 문서 탭을 measure-sm 너비로 유지하면서 닫기, 선행 아이콘, 액션, 드래그를 필요한 경우에만 추가하세요.',
       },
       dart: String.raw`TRTabs(
   value: selectedId,
   onValueChange: openDocument,
+  tabWidth: TRTabsWidth.fixed,
   semanticLabel: 'Open racks',
   tabs: [
     for (final document in documents)

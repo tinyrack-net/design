@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -55,6 +57,11 @@ List<TRTabsTab> _tabs({
 Finder _indicator(String value) =>
     find.byKey(ValueKey<String>('tr-tabs-indicator-$value'));
 
+Finder _tabHoverSurface(String value) => find.descendant(
+  of: find.byKey(ValueKey<String>('tr-tabs-tab-$value')),
+  matching: find.byType(AnimatedContainer),
+);
+
 void main() {
   group('TRTabs layout', () {
     testWidgets('fills its strip and divides the available width', (
@@ -62,6 +69,10 @@ void main() {
     ) async {
       await tester.pumpWidget(_app(TRTabs(tabs: _tabs())));
 
+      expect(
+        tester.widget<TRTabs>(find.byType(TRTabs)).tabWidth,
+        TRTabsWidth.fill,
+      );
       final rule = tester.getSize(
         find.byKey(const ValueKey<String>('tr-tabs-rule')),
       );
@@ -76,7 +87,7 @@ void main() {
       expect(offset, Offset.zero);
       expect(
         tester.getSize(tab).height,
-        TRControlMetrics.heightOf(TRUiSize.md),
+        TRControlMetrics.heightOf(TRUiSize.md) + TRControlMetrics.borderWidth,
       );
       expect(tester.getSize(tab).width, 320);
       expect(
@@ -88,6 +99,99 @@ void main() {
         greaterThan(rule.height),
       );
     });
+
+    testWidgets('fixed tabs use measureSm without filling the strip', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(TRTabs(tabWidth: TRTabsWidth.fixed, tabs: _tabs(closable: false))),
+      );
+
+      final tabs = tester.widget<TRTabs>(find.byType(TRTabs));
+      expect(tabs.tabWidth, TRTabsWidth.fixed);
+      expect(
+        tester
+            .getSize(find.byKey(const ValueKey<String>('tr-tabs-tab-overview')))
+            .width,
+        TRMeasurements.measureSm,
+      );
+      expect(
+        tester
+            .getSize(find.byKey(const ValueKey<String>('tr-tabs-tab-metrics')))
+            .width,
+        TRMeasurements.measureSm,
+      );
+      expect(tester.getSize(find.byType(TRTabs)).width, 640);
+    });
+
+    testWidgets(
+      'fixed tabs scroll when their measure widths exceed the strip',
+      (tester) async {
+        await tester.pumpWidget(
+          _app(
+            TRTabs(
+              tabWidth: TRTabsWidth.fixed,
+              tabs: <TRTabsTab>[
+                for (var index = 0; index < 12; index++)
+                  TRTabsTab(value: 'tab-$index', label: 'Tab $index'),
+              ],
+            ),
+            width: 320,
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
+        expect(
+          tester
+              .getSize(find.byKey(const ValueKey<String>('tr-tabs-tab-tab-0')))
+              .width,
+          TRMeasurements.measureSm,
+        );
+        await tester.drag(find.byType(TRTabs), const Offset(-400, 0));
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    for (final brightness in Brightness.values) {
+      testWidgets('hover surface covers the rule seam in $brightness mode', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _app(
+            TRTabs(tabWidth: TRTabsWidth.fixed, tabs: _tabs(closable: false)),
+            brightness: brightness,
+          ),
+        );
+
+        final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        addTearDown(mouse.removePointer);
+        await mouse.addPointer(location: Offset.zero);
+        await mouse.moveTo(
+          tester.getCenter(
+            find.byKey(const ValueKey<String>('tr-tabs-tab-overview')),
+          ),
+        );
+        await tester.pump();
+
+        final theme = Theme.of(
+          tester.element(find.byType(TRTabs)),
+        ).extension<TinyrackThemeData>()!;
+        final hoverSurface = _tabHoverSurface('overview');
+        expect(
+          tester.widget<AnimatedContainer>(hoverSurface).decoration,
+          isA<BoxDecoration>().having(
+            (decoration) => decoration.color,
+            'color',
+            theme.surfaceHover,
+          ),
+        );
+        expect(
+          tester.getSize(hoverSurface).height,
+          TRControlMetrics.heightOf(TRUiSize.md) + TRControlMetrics.borderWidth,
+        );
+      });
+    }
 
     testWidgets('closes the strip with a hairline rule', (tester) async {
       await tester.pumpWidget(_app(TRTabs(tabs: _tabs())));
@@ -137,7 +241,7 @@ void main() {
         tester
             .getSize(find.byKey(const ValueKey<String>('tr-tabs-tab-overview')))
             .height,
-        TRControlMetrics.heightOf(TRUiSize.md),
+        TRControlMetrics.heightOf(TRUiSize.md) + TRControlMetrics.borderWidth,
       );
     });
 

@@ -1041,6 +1041,7 @@ Widget _tabsBar(BuildContext context, Locale locale) {
     width: 320,
     child: TRTabs(
       defaultValue: 'metrics',
+      tabWidth: TRTabsWidth.fixed,
       semanticLabel: _pick(locale, 'Open racks', '열린 랙', '開いているラック'),
       tabs: [
         for (final tab in _settingsTabs(locale))

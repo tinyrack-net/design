@@ -192,6 +192,7 @@ const publicTypes = <Type>[
   TRTabDropDetails,
   TRTabsDragConfiguration,
   TRTabsTab,
+  TRTabsWidth,
   TRText,
   TRTextAlign,
   TRTextColor,

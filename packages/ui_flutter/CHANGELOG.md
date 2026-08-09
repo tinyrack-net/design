@@ -1,3 +1,10 @@
+## 0.43.0
+
+- Adds `TRTabsWidth` and `TRTabs.tabWidth` so document-style strips can keep
+  each tab at `TRMeasurements.measureSm` while the default continues to fill
+  the available width.
+- Extends a hovered tab's surface through the border seam below the strip.
+
 ## 0.42.2
 
 - Uses a static running-status icon in chat rows when reduced motion is
