@@ -16,6 +16,9 @@ enum TRChatToolStatus { running, succeeded, failed, denied }
 /// Semantic emphasis of a leading visual in a chat message row.
 enum TRChatMessageTone { defaultTone, muted, primary, danger }
 
+/// How a chat message's leading visual aligns with its content.
+enum TRChatMessageAlignment { firstLine, center }
+
 // @tinyrack-preview chat
 /// A start-aligned chat row with a shared leading icon rail.
 class TRChatMessageRow extends StatelessWidget {
@@ -23,6 +26,8 @@ class TRChatMessageRow extends StatelessWidget {
     required this.icon,
     required this.child,
     this.tone = TRChatMessageTone.muted,
+    this.alignment = TRChatMessageAlignment.firstLine,
+    this.textVariant = TRTextVariant.body,
     this.semanticLabel,
     super.key,
   });
@@ -30,22 +35,40 @@ class TRChatMessageRow extends StatelessWidget {
   final IconData icon;
   final Widget child;
   final TRChatMessageTone tone;
+
+  /// Aligns the leading icon to the first text line by default. Use [TRChatMessageAlignment.center]
+  /// when [child] is a compound surface rather than prose.
+  final TRChatMessageAlignment alignment;
+
+  /// Typography role that defines the first-line extent.
+  final TRTextVariant textVariant;
   final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = TRGeneratedControlMetrics.smIconSize;
+    final lineExtent = _scaledLineExtent(context, textVariant);
+    final firstLine = alignment == TRChatMessageAlignment.firstLine;
+    final leadingInset = firstLine && lineExtent > iconSize
+        ? (lineExtent - iconSize) / 2
+        : 0.0;
+    final contentInset = firstLine && iconSize > lineExtent
+        ? (iconSize - lineExtent) / 2
+        : 0.0;
     final row = Padding(
       padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: firstLine
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: [
-          SizedBox(
-            width: TRGeneratedControlMetrics.mdIconSize,
-            child: Padding(
-              padding: const EdgeInsets.only(top: TRGeneratedSpacing.size3xs),
+          Padding(
+            padding: EdgeInsets.only(top: leadingInset),
+            child: SizedBox(
+              width: TRGeneratedControlMetrics.mdIconSize,
               child: Icon(
                 icon,
-                size: TRGeneratedControlMetrics.smIconSize,
+                size: iconSize,
                 color: switch (tone) {
                   TRChatMessageTone.defaultTone => context.tinyrackTheme.text,
                   TRChatMessageTone.muted => context.tinyrackTheme.textMuted,
@@ -56,7 +79,12 @@ class TRChatMessageRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: TRGeneratedSpacing.sm),
-          Expanded(child: child),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: contentInset),
+              child: child,
+            ),
+          ),
         ],
       ),
     );
@@ -70,6 +98,23 @@ class TRChatMessageRow extends StatelessWidget {
             child: row,
           );
   }
+}
+
+double _scaledLineExtent(BuildContext context, TRTextVariant variant) {
+  final style = switch (variant) {
+    TRTextVariant.caption => TRGeneratedTextStyles.caption,
+    TRTextVariant.label => TRGeneratedTextStyles.label,
+    TRTextVariant.body => TRGeneratedTextStyles.body,
+    TRTextVariant.bodySm => TRGeneratedTextStyles.bodySm,
+    TRTextVariant.code => TRGeneratedTextStyles.code,
+    TRTextVariant.headingSm => TRGeneratedTextStyles.headingSm,
+    TRTextVariant.headingMd => TRGeneratedTextStyles.headingMd,
+    TRTextVariant.headingLg => TRGeneratedTextStyles.headingLg,
+    TRTextVariant.display => TRGeneratedTextStyles.display,
+    TRTextVariant.displayLg => TRGeneratedTextStyles.displayLg,
+  };
+  return MediaQuery.textScalerOf(context).scale(style.fontSize!) *
+      style.height!;
 }
 
 /// An end-aligned bubble for user-authored chat content.

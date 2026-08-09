@@ -8,6 +8,9 @@ import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
 
+/// How a radio glyph aligns with its label.
+enum TRRadioLabelAlignment { firstLine, center }
+
 // @tinyrack-preview radio
 /// A single option within a [TRRadioGroup].
 class TRRadio extends StatefulWidget {
@@ -18,6 +21,7 @@ class TRRadio extends StatefulWidget {
     this.readOnly = false,
     this.invalid = false,
     this.uiSize = TRUiSize.md,
+    this.labelAlignment = TRRadioLabelAlignment.firstLine,
     this.focusNode,
     this.autofocus = false,
     super.key,
@@ -33,6 +37,9 @@ class TRRadio extends StatefulWidget {
   final bool readOnly;
   final bool invalid;
   final TRUiSize uiSize;
+
+  /// Aligns the glyph to a compound label's first body line by default.
+  final TRRadioLabelAlignment labelAlignment;
   final FocusNode? focusNode;
   final bool autofocus;
 
@@ -158,6 +165,15 @@ class _TRRadioState extends State<TRRadio> with TRFocusSourceMixin {
       ),
     );
     final label = widget.label;
+    final lineExtent =
+        MediaQuery.textScalerOf(
+          context,
+        ).scale(TRGeneratedTextStyles.body.fontSize!) *
+        TRGeneratedTextStyles.body.height!;
+    final firstLine = widget.labelAlignment == TRRadioLabelAlignment.firstLine;
+    final glyphInset = firstLine && lineExtent > size
+        ? (lineExtent - size) / 2
+        : 0.0;
 
     return MouseRegion(
       cursor: interactive ? SystemMouseCursors.click : MouseCursor.defer,
@@ -195,8 +211,17 @@ class _TRRadioState extends State<TRRadio> with TRFocusSourceMixin {
                     ? glyph
                     : Row(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: firstLine
+                            ? CrossAxisAlignment.start
+                            : CrossAxisAlignment.center,
                         spacing: TRGeneratedSpacing.sm,
-                        children: [glyph, label],
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: glyphInset),
+                            child: glyph,
+                          ),
+                          label,
+                        ],
                       ),
               ),
             ),

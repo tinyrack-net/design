@@ -2015,6 +2015,18 @@ class PreviewComponent extends StatelessWidget {
                 _ => 'I am checking the changes.',
               }),
             ),
+            TRChatMessageRow(
+              icon: LucideIcons.image,
+              alignment: TRChatMessageAlignment.center,
+              child: TRCard(
+                padding: TRCardPadding.sm,
+                child: TRText(switch (locale) {
+                  'ko' => '결과 이미지\npreview.png',
+                  'ja' => '結果画像\npreview.png',
+                  _ => 'Result image\npreview.png',
+                }, variant: TRTextVariant.bodySm),
+              ),
+            ),
             TRChatToolDisclosure(
               icon: LucideIcons.terminal,
               label: switch (locale) {

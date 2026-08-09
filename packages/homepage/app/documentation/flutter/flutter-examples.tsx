@@ -2508,6 +2508,14 @@ Column(
       tone: TRChatMessageTone.primary,
       child: Text('I am checking the changes.'),
     ),
+    const TRChatMessageRow(
+      icon: LucideIcons.image,
+      alignment: TRChatMessageAlignment.center,
+      child: TRCard(
+        padding: TRCardPadding.sm,
+        child: TRText('Result image\\npreview.png'),
+      ),
+    ),
     const TRChatToolDisclosure(
       icon: LucideIcons.terminal,
       label: 'Run command',

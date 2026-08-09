@@ -34,6 +34,93 @@ void main() {
       tester.getTopLeft(find.text('First line\nSecond line')).dx,
       tester.getTopLeft(find.text('Tool activity')).dx,
     );
+    final firstIcon = tester.getRect(find.byType(Icon).first);
+    final firstText = tester.getRect(find.text('First line\nSecond line'));
+    final firstLineHeight =
+        TRTypography.body.fontSize! * TRTypography.body.height!;
+    expect(
+      firstIcon.center.dy,
+      moreOrLessEquals(firstText.top + firstLineHeight / 2, epsilon: 0.5),
+    );
+  });
+
+  testWidgets('message leading stays on the first line at large text scale', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const MediaQuery(
+          data: MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: TRChatMessageRow(
+            icon: LucideIcons.bot,
+            child: Text('이미지를 보냈어요! 🖼️\n두 번째 줄'),
+          ),
+        ),
+      ),
+    );
+
+    final icon = tester.getRect(find.byType(Icon));
+    final text = tester.getRect(find.text('이미지를 보냈어요! 🖼️\n두 번째 줄'));
+    final firstLineHeight =
+        TRTypography.body.fontSize! * 2 * TRTypography.body.height!;
+    expect(
+      icon.center.dy,
+      moreOrLessEquals(text.top + firstLineHeight / 2, epsilon: 0.5),
+    );
+  });
+
+  testWidgets('message leading can center on a compound surface', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const TRChatMessageRow(
+          icon: LucideIcons.image,
+          alignment: TRChatMessageAlignment.center,
+          child: SizedBox(
+            key: ValueKey('compound-surface'),
+            height: TRSpacing.fourExtraLarge,
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester.getRect(find.byType(Icon)).center.dy,
+      moreOrLessEquals(
+        tester
+            .getRect(find.byKey(const ValueKey('compound-surface')))
+            .center
+            .dy,
+        epsilon: 0.5,
+      ),
+    );
+  });
+
+  testWidgets('message rail follows RTL while keeping first-line alignment', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const Directionality(
+          textDirection: TextDirection.rtl,
+          child: TRChatMessageRow(
+            icon: LucideIcons.bot,
+            child: Text('画像を送りました。\n次の行'),
+          ),
+        ),
+      ),
+    );
+
+    final icon = tester.getRect(find.byType(Icon));
+    final text = tester.getRect(find.text('画像を送りました。\n次の行'));
+    expect(icon.left, greaterThan(text.right));
+    final firstLineHeight =
+        TRTypography.body.fontSize! * TRTypography.body.height!;
+    expect(
+      icon.center.dy,
+      moreOrLessEquals(text.top + firstLineHeight / 2, epsilon: 0.5),
+    );
   });
 
   testWidgets('user bubble aligns to the inline end and constrains long text', (
