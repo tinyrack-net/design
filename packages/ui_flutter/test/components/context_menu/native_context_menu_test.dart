@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -324,6 +326,145 @@ void main() {
         // nothing at all.
         expect(find.text('Copy'), findsOneWidget);
         expect(find.byType(TRMenuItem), findsOneWidget);
+      },
+    );
+
+    _testOnPlatform(
+      'the fallback menu reports the same open and close the system one would',
+      TargetPlatform.linux,
+      (tester) async {
+        final system = _FakeSystemMenu(_channel, failWith: 'menu-not-shown');
+        addTearDown(system.dispose);
+        final events = <String>[];
+
+        await _pumpMenu(
+          tester,
+          items: const <TRMenuElement>[
+            TRMenuActionElement(id: 'copy', title: 'Copy', onPressed: _noop),
+          ],
+          onOpen: () => events.add('open'),
+          onClose: () => events.add('close'),
+        );
+        await _secondaryTap(tester);
+
+        expect(find.byType(TRMenuItem), findsOneWidget);
+        expect(
+          events,
+          <String>['open'],
+          reason:
+              'the menu interaction continues in the fallback, so its close '
+              'has not happened yet',
+        );
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(TRMenuItem), findsNothing);
+        expect(
+          events,
+          <String>['open', 'close'],
+          reason:
+              'a caller that returns keyboard focus on close must hear about '
+              'the fallback menu closing too',
+        );
+      },
+    );
+
+    _testOnPlatform(
+      'the fallback for an unregistered plugin reports its close',
+      TargetPlatform.linux,
+      (tester) async {
+        final system = _FakeSystemMenu(_channel, missing: true);
+        addTearDown(system.dispose);
+        final events = <String>[];
+
+        await _pumpMenu(
+          tester,
+          items: const <TRMenuElement>[
+            TRMenuActionElement(id: 'copy', title: 'Copy', onPressed: _noop),
+          ],
+          onOpen: () => events.add('open'),
+          onClose: () => events.add('close'),
+        );
+        await _secondaryTap(tester);
+        expect(events, <String>['open']);
+
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await tester.pumpAndSettle();
+
+        expect(events, <String>['open', 'close']);
+      },
+    );
+
+    _testOnPlatform(
+      'a right-click after a lost reply supersedes the silent request',
+      TargetPlatform.linux,
+      (tester) async {
+        // A platform whose popup wedged never replies at all. Every later
+        // right-click used to be swallowed by the reentrancy guard, leaving
+        // the person with a dead application.
+        final calls = <MethodCall>[];
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(_channel, (call) {
+              calls.add(call);
+              return Completer<String?>().future;
+            });
+        addTearDown(
+          () => TestDefaultBinaryMessengerBinding
+              .instance
+              .defaultBinaryMessenger
+              .setMockMethodCallHandler(_channel, null),
+        );
+
+        await _pumpMenu(
+          tester,
+          items: const <TRMenuElement>[
+            TRMenuActionElement(id: 'copy', title: 'Copy', onPressed: _noop),
+          ],
+        );
+        await _secondaryTap(tester);
+        expect(calls, hasLength(1));
+
+        await _secondaryTap(tester);
+        expect(
+          calls,
+          hasLength(2),
+          reason: 'a lost reply must not swallow every later right-click',
+        );
+      },
+    );
+
+    _testOnPlatform(
+      'an unexpected platform failure resets the menu and surfaces the error',
+      TargetPlatform.linux,
+      (tester) async {
+        final system = _FakeSystemMenu(_channel, failWith: 'boom');
+        addTearDown(system.dispose);
+        var closed = 0;
+
+        final reported = <FlutterErrorDetails>[];
+        final previousOnError = FlutterError.onError;
+        FlutterError.onError = reported.add;
+        addTearDown(() => FlutterError.onError = previousOnError);
+
+        await _pumpMenu(
+          tester,
+          items: const <TRMenuElement>[
+            TRMenuActionElement(id: 'copy', title: 'Copy', onPressed: _noop),
+          ],
+          onClose: () => closed += 1,
+        );
+        await _secondaryTap(tester);
+
+        expect(reported.single.exception, isA<PlatformException>());
+        expect(closed, 1, reason: 'the failed request is over');
+
+        await _secondaryTap(tester);
+        expect(
+          system.calls,
+          hasLength(2),
+          reason: 'the failure must not wedge',
+        );
       },
     );
 

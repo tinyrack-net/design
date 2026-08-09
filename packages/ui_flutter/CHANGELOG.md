@@ -1,3 +1,16 @@
+## 0.43.1
+
+- Keeps the native context menu from freezing the window: the Linux popup no
+  longer borrows a stale press timestamp, tears itself down when it never maps
+  or leaves the screen without deactivating, and a wedged popup is superseded
+  by the next request instead of swallowing it.
+- Reports the Flutter fallback menu's open and close through the native
+  presenter's callbacks, so a caller that restores keyboard focus on close
+  hears about the fallback dismissal too.
+- Resets the native presenter and surfaces the error when the platform fails
+  unexpectedly, instead of leaking an unhandled asynchronous error and
+  ignoring every later request.
+
 ## 0.43.0
 
 - Adds `TRTabsWidth` and `TRTabs.tabWidth` so document-style strips can keep

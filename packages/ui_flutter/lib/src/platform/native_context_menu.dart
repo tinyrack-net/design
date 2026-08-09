@@ -115,6 +115,20 @@ class _TRNativeMenuHostState extends State<_TRNativeMenuHost>
 
   bool _isOpen = false;
 
+  /// Whether [_TRNativeMenuHost.onOpen] has fired without its matching close.
+  ///
+  /// One request may travel from the system attempt to the Flutter fallback.
+  /// The caller hears one open and one close for that whole journey, so a
+  /// terminal that returns keyboard focus on close does so exactly once, when
+  /// the interaction is really over.
+  bool _notifiedOpen = false;
+
+  /// Identifies the newest native request; replies to older ones are stale.
+  ///
+  /// A platform that loses a popup without ever replying would otherwise
+  /// leave [_isOpen] standing and swallow every later request.
+  int _generation = 0;
+
   @override
   void initState() {
     super.initState();
@@ -142,9 +156,11 @@ class _TRNativeMenuHostState extends State<_TRNativeMenuHost>
       _fallback.openAt(globalPosition);
       return;
     }
-    // A second request while the system menu is up would leave the first one
-    // waiting on a reply the platform will never send twice.
-    if (_isOpen) return;
+    // A request while the system menu is up cannot come from the person,
+    // because the system menu owns the pointer. One that arrives anyway means
+    // the previous popup is gone without a reply — wedged, or lost by the
+    // platform — so it supersedes that silent request instead of being
+    // swallowed by it.
     unawaited(_openNative(globalPosition));
   }
 
@@ -154,8 +170,9 @@ class _TRNativeMenuHostState extends State<_TRNativeMenuHost>
     final actions = <String, TRMenuActionElement>{};
     _indexActions(elements, actions);
 
+    final generation = ++_generation;
     _isOpen = true;
-    widget.onOpen?.call();
+    _notifyOpen();
     String? selected;
     try {
       selected = await widget.presenter.channel.invokeMethod<String>(
@@ -168,29 +185,54 @@ class _TRNativeMenuHostState extends State<_TRNativeMenuHost>
         },
       );
     } on MissingPluginException {
+      if (generation != _generation) return;
       // A desktop build without the plugin registered still deserves a menu.
       _isOpen = false;
-      widget.onClose?.call();
       _fallback.openAt(globalPosition);
       return;
-    } on PlatformException catch (error) {
-      // The platform reports this when it accepted the request but the menu
-      // never reached the screen. That is not a dismissal, so falling back
-      // keeps a menu in front of the person instead of doing nothing at all.
-      if (error.code != trNativeContextMenuNotShown) rethrow;
+    } on PlatformException catch (error, stackTrace) {
+      if (generation != _generation) return;
       _isOpen = false;
-      widget.onClose?.call();
-      _fallback.openAt(globalPosition);
-      return;
-    } finally {
-      if (_isOpen) {
-        _isOpen = false;
-        widget.onClose?.call();
+      if (error.code == trNativeContextMenuNotShown) {
+        // The platform accepted the request but the menu never reached the
+        // screen. That is not a dismissal, so falling back keeps a menu in
+        // front of the person instead of doing nothing at all. The fallback
+        // host reports the close when that menu is dismissed.
+        _fallback.openAt(globalPosition);
+        return;
       }
+      // Anything else ends the request too. Reported rather than rethrown,
+      // because nothing awaits this future, and a request left half-open
+      // would swallow every later right-click.
+      _notifyClose();
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'tinyrack_ui',
+          context: ErrorDescription('while showing a system context menu'),
+        ),
+      );
+      return;
     }
+    if (generation != _generation) return;
+    _isOpen = false;
+    _notifyClose();
 
     final action = selected == null ? null : actions[selected];
     if (action != null && action.enabled) action.onPressed();
+  }
+
+  void _notifyOpen() {
+    if (_notifiedOpen) return;
+    _notifiedOpen = true;
+    widget.onOpen?.call();
+  }
+
+  void _notifyClose() {
+    if (!_notifiedOpen) return;
+    _notifiedOpen = false;
+    widget.onClose?.call();
   }
 
   @override
@@ -210,6 +252,8 @@ class _TRNativeMenuHostState extends State<_TRNativeMenuHost>
         controller: _fallback,
         enabled: true,
         useRootOverlay: widget.useRootOverlay,
+        onOpen: _notifyOpen,
+        onClose: _notifyClose,
       );
 }
 
