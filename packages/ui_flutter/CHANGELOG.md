@@ -1,3 +1,8 @@
+## 0.44.1
+
+- Keeps the running spinner in `TRChatStatusRow` square inside its fixed
+  leading rail.
+
 ## 0.44.0
 
 - Adds typed first-line and center alignment to `TRChatMessageRow`, keeping

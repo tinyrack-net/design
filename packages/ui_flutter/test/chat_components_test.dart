@@ -226,6 +226,24 @@ void main() {
     expect(find.bySemanticsLabel('Running'), findsOneWidget);
   });
 
+  testWidgets('status row keeps a running spinner square', (tester) async {
+    await tester.pumpWidget(
+      _app(
+        const TRChatStatusRow(
+          label: 'Running',
+          status: TRChatToolStatus.running,
+        ),
+      ),
+    );
+
+    final spinner = find.descendant(
+      of: find.byType(TRChatStatusRow),
+      matching: find.byType(TRSpinner),
+    );
+    final size = tester.getSize(spinner);
+    expect(size.width, closeTo(size.height, 0.001));
+  });
+
   testWidgets('running rows settle to a static icon with reduced motion', (
     tester,
   ) async {
