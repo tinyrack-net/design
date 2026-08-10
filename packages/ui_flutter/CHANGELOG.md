@@ -1,3 +1,34 @@
+## 0.45.0
+
+- Fixes `TRToastRegion` painting: the card drew a rounded rectangle over a
+  border whose leading side carried the variant colour at a heavier width, which
+  Flutter cannot stroke. Every paint threw in a debug build, and a release build
+  dropped the corner radius instead. The variant now reads as a leading bar
+  inside a uniformly bordered card, so the radius survives.
+- Clamps a toast title to two lines and a description to three. A caller
+  forwarding a caught exception could otherwise grow one card past the height of
+  the viewport and overflow the stack.
+- Animates a toast out instead of removing it between frames, so dismissing one
+  from the middle of the stack no longer makes its neighbours jump. Cards are
+  keyed by their own identity, and an id shown again while it is still leaving
+  reclaims its card rather than stacking a second one.
+- Holds the auto-dismiss countdown while a pointer rests on the stack or focus
+  is inside it, and adds `TRToastController.pauseAutoDismiss`,
+  `resumeAutoDismiss`, and `isPaused` for callers that need the same control.
+- Scopes the toast region's escape shortcut to the stack. A region with nothing
+  to dismiss previously consumed escape anywhere in the application.
+- Keeps `TRToastController.track` sticky while its future is in flight. The
+  loading toast had been pinned to a finite duration far past the 32-bit
+  millisecond argument a browser timer accepts, which dismissed it immediately
+  on the web.
+- Mirrors the toast dismiss button's inset under right-to-left text, where a
+  fixed offset had pushed it into the leading border.
+- Announces each toast as its own live region; the surrounding container's label
+  never changes, so a screen reader had nothing to report on arrival.
+- Adds `TRMotion.toast`, the dwell time a toast uses before dismissing itself.
+- **Breaking:** removes `TRToastAnchor`, which wrapped its child in a
+  `KeyedSubtree` and did nothing else.
+
 ## 0.44.1
 
 - Keeps the running spinner in `TRChatStatusRow` square inside its fixed

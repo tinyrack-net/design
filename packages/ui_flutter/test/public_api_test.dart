@@ -202,7 +202,6 @@ const publicTypes = <Type>[
   TRTextVariant,
   TRTextWeight,
   TRTextarea,
-  TRToastAnchor,
   TRToastController,
   TRToastData,
   TRToastHandle,

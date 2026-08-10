@@ -1348,22 +1348,26 @@ void main() {
       tester,
     ) async {
       final controller = TRToastController(maxVisible: 2);
-      addTearDown(controller.dispose);
       await tester.pumpWidget(
         _app(TRToastRegion(controller: controller, child: const Text('Page'))),
       );
       controller.show(const TRToastData(title: Text('One')));
       final handle = controller.show(const TRToastData(title: Text('Two')));
       controller.show(const TRToastData(title: Text('Three')));
-      await tester.pump();
+      // A dropped card stays mounted until its exit finishes, so settling is
+      // what separates "evicted" from "still leaving".
+      await tester.pumpAndSettle();
       expect(find.text('One'), findsNothing);
       expect(find.text('Three'), findsOneWidget);
       handle.update(const TRToastData(title: Text('Updated')));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(find.text('Updated'), findsOneWidget);
       controller.dismissAll();
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(find.text('Updated'), findsNothing);
+      // Disposed here rather than through addTearDown: the binding checks for
+      // pending timers before tear-down callbacks run.
+      controller.dispose();
     });
 
     testWidgets('context menu, menubar, toolbar, and scroll area compose', (
