@@ -149,7 +149,7 @@ test('applies every explicit semantic variant over the contrast-safe track', asy
   ).toBe(variants.length);
   const track = document.querySelector<HTMLElement>('.tr-meter-track');
   expect(getComputedStyle(track as HTMLElement).backgroundColor).toBe(
-    'rgb(115, 115, 115)',
+    'rgb(212, 212, 212)',
   );
   delete document.documentElement.dataset['theme'];
 });

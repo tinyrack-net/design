@@ -86,15 +86,41 @@ describe('semantic status contrast', () => {
       tinyrackSemanticColors.light.surface,
       tinyrackSemanticColors.light.surfaceMuted,
     ]) {
+      // Light neutral boundaries are deliberately quiet so both themes carry the
+      // same visual weight, which puts them under the 3:1 that WCAG 1.4.11 asks
+      // of control boundaries. The floor here only guarantees the edge stays
+      // perceptible; the focus ring above still clears 3:1, so keyboard users
+      // keep an unambiguous indicator.
       expect(
         contrast(tinyrackSemanticColors.light.controlBorder, surface),
         'light control boundary',
-      ).toBeGreaterThanOrEqual(3);
+      ).toBeGreaterThanOrEqual(1.2);
       expect(
         contrast(tinyrackSemanticColors.light.controlTrack, surface),
         'light graphical track',
-      ).toBeGreaterThanOrEqual(3);
+      ).toBeGreaterThanOrEqual(1.2);
     }
+  });
+
+  it('separates light interaction emphasis from subtle resting boundaries', () => {
+    const light = tinyrackSemanticColors.light;
+
+    expect({
+      border: light.border,
+      borderStrong: light.borderStrong,
+      controlBorder: light.controlBorder,
+      controlTrack: light.controlTrack,
+    }).toEqual({
+      border: '#d4d4d4',
+      borderStrong: '#a3a3a3',
+      controlBorder: '#d4d4d4',
+      controlTrack: '#d4d4d4',
+    });
+
+    expect(
+      contrast(light.borderStrong, light.surface),
+      'light interaction boundary',
+    ).toBeGreaterThan(contrast(light.border, light.surface));
   });
 
   it('separates dark interaction emphasis from subtle resting boundaries', () => {
