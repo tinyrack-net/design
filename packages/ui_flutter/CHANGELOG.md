@@ -1,3 +1,18 @@
+## 0.46.0
+
+- Renders `TRNumberField`'s label and supporting text around the whole control
+  instead of inside its numeric input. The input sits in a fixed
+  `TRMeasurements.measureSm` box between the two step buttons, so a
+  `helperText` or `errorText` handed to it wrapped at that width and grew a
+  column tall enough to drag the centered `−` and `+` buttons off the input's
+  row and down beside the wrapped text. Every consumer that explained its
+  number field got that layout; the field now reads as one row with its
+  message beneath, and the message is free to use the control's full width.
+- Adds `TRTextField.invalid`, which paints the field's invalid emphasis
+  without giving it a message to render. `errorText` still implies it. This is
+  what lets a component that owns the message — `TRNumberField` above — keep
+  the frame and the explanation from having to share one width.
+
 ## 0.45.1
 
 - Reports an unavailable `TRSwitch` by fading the whole control at

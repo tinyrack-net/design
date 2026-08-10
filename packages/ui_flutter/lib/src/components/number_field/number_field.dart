@@ -298,13 +298,15 @@ class _TRNumberFieldState extends State<TRNumberField> {
           width: TRGeneratedMeasurements.measureSm,
           child: Focus(
             onKeyEvent: _handleKey,
+            // The label and the supporting text belong to the whole control,
+            // not to the numeric input: rendered here they would wrap at the
+            // input's width and push the steppers off its row.
             child: TRTextField(
               appearance: widget.appearance,
               controller: _textController,
               enabled: widget.enabled,
-              errorText: widget.errorText,
               focusNode: _focusNode,
-              helperText: widget.helperText,
+              invalid: widget.errorText != null,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
                 signed: true,
@@ -329,46 +331,73 @@ class _TRNumberFieldState extends State<TRNumberField> {
         ),
       ],
     );
-    if (widget.label == null) return control;
+    final supportingText = widget.errorText ?? widget.helperText;
+    if (widget.label == null && supportingText == null) return control;
+    final labelled = widget.label == null
+        ? control
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            spacing: TRGeneratedSpacing.sm,
+            children: [_label(colors), control],
+          );
+    if (supportingText == null) return labelled;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      spacing: TRGeneratedSpacing.sm,
+      spacing: TRGeneratedControlMetrics.mdGap,
       children: [
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onHorizontalDragEnd: (_) => _scrubRemainder = 0,
-          onHorizontalDragUpdate: _scrub,
-          child: MouseRegion(
-            cursor: widget.scrubbable && widget.enabled && !widget.readOnly
-                ? SystemMouseCursors.resizeLeftRight
-                : MouseCursor.defer,
-            child: SizedBox(
-              height: TRGeneratedFlutterRendering.normalLineSm,
-              child: Align(
-                alignment: AlignmentDirectional.topStart,
-                child: Text(
-                  widget.label!.toUpperCase(),
-                  strutStyle: const StrutStyle(
-                    fontFamily: TRGeneratedFontFamilies.body,
-                    fontSize: TRGeneratedTypographySizes.xs,
-                    fontWeight: TRGeneratedFontWeights.strong,
-                    forceStrutHeight: true,
-                    height: TRGeneratedTypographyLineHeights.xs,
-                  ),
-                  style: TRGeneratedTextStyles.label.copyWith(
-                    color: widget.enabled ? colors.text : colors.textMuted,
-                    fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                  ),
-                ),
-              ),
-            ),
+        labelled,
+        Text(
+          supportingText,
+          strutStyle: const StrutStyle(
+            fontFamily: TRGeneratedFontFamilies.body,
+            fontSize: TRGeneratedTypographySizes.xs,
+            forceStrutHeight: true,
+            height: TRGeneratedTypographyLineHeights.md,
+          ),
+          style: TextStyle(
+            color: widget.errorText == null ? colors.textMuted : colors.danger,
+            fontFamily: TRGeneratedFontFamilies.body,
+            fontSize: TRGeneratedTypographySizes.xs,
+            height: TRGeneratedTypographyLineHeights.md,
           ),
         ),
-        control,
       ],
     );
   }
+
+  /// The label, which doubles as the scrub handle.
+  Widget _label(TinyrackThemeData colors) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
+    onHorizontalDragEnd: (_) => _scrubRemainder = 0,
+    onHorizontalDragUpdate: _scrub,
+    child: MouseRegion(
+      cursor: widget.scrubbable && widget.enabled && !widget.readOnly
+          ? SystemMouseCursors.resizeLeftRight
+          : MouseCursor.defer,
+      child: SizedBox(
+        height: TRGeneratedFlutterRendering.normalLineSm,
+        child: Align(
+          alignment: AlignmentDirectional.topStart,
+          child: Text(
+            widget.label!.toUpperCase(),
+            strutStyle: const StrutStyle(
+              fontFamily: TRGeneratedFontFamilies.body,
+              fontSize: TRGeneratedTypographySizes.xs,
+              fontWeight: TRGeneratedFontWeights.strong,
+              forceStrutHeight: true,
+              height: TRGeneratedTypographyLineHeights.xs,
+            ),
+            style: TRGeneratedTextStyles.label.copyWith(
+              color: widget.enabled ? colors.text : colors.textMuted,
+              fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _TRNumberStepButton extends StatelessWidget {

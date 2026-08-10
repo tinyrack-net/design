@@ -22,6 +22,7 @@ class TRTextField extends StatelessWidget {
     this.focusNode,
     this.helperText,
     this.initialValue,
+    this.invalid = false,
     this.keyboardType,
     this.label,
     this.maxLines = 1,
@@ -69,6 +70,13 @@ class TRTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final String? helperText;
   final String? initialValue;
+
+  /// Whether the field paints its invalid emphasis without owning a message.
+  ///
+  /// [errorText] already implies this. Set it directly when an enclosing
+  /// component renders the message instead, so the frame and the explanation
+  /// do not have to live at the same width.
+  final bool invalid;
   final TextInputType? keyboardType;
   final String? label;
   final int? maxLines;
@@ -119,7 +127,7 @@ class TRTextField extends StatelessWidget {
     final textField = _TRTextFieldInteractionFrame(
       appearance: appearance,
       enabled: enabled != false,
-      error: errorText != null,
+      error: errorText != null || invalid,
       fillColor: fillColor,
       focusNode: focusNode,
       readOnly: readOnly,

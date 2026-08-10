@@ -625,6 +625,68 @@ void main() {
       expect(value, 1235.5);
     });
 
+    testWidgets('number field supporting text spans the whole control', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          const SizedBox(
+            width: 400,
+            child: TRNumberField(
+              defaultValue: 7337,
+              helperText:
+                  'Choose a port from 1 to 65535. Applying restarts '
+                  'the embedded daemon when it is running.',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The supporting text belongs to the number field, not to the numeric
+      // input inside it: trapped at the input's width it wraps into a column
+      // tall enough to push the steppers off the input's row.
+      final decrement = tester.getRect(find.byType(TextButton).first);
+      final increment = tester.getRect(find.byType(TextButton).last);
+      final input = tester.getRect(find.byType(TextField));
+      final supporting = tester.getRect(
+        find.text(
+          'Choose a port from 1 to 65535. Applying restarts the embedded '
+          'daemon when it is running.',
+        ),
+      );
+
+      expect(decrement.center.dy, closeTo(input.center.dy, 0.5));
+      expect(increment.center.dy, closeTo(input.center.dy, 0.5));
+      expect(supporting.left, closeTo(decrement.left, 0.5));
+      expect(supporting.top, greaterThan(input.bottom));
+      expect(supporting.width, greaterThan(input.width));
+    });
+
+    testWidgets('number field marks its input invalid without repeating the '
+        'message', (tester) async {
+      await tester.pumpWidget(
+        _app(
+          const TRNumberField(
+            defaultValue: 70000,
+            errorText: 'Enter a whole number from 1 to 65535.',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('Enter a whole number from 1 to 65535.'),
+        findsOneWidget,
+      );
+      final border = tester
+          .widgetList<AnimatedContainer>(find.byType(AnimatedContainer))
+          .map((container) => container.foregroundDecoration)
+          .whereType<BoxDecoration>()
+          .map((decoration) => decoration.border!.top.color);
+      expect(border, contains(_colors.dangerBorder));
+    });
+
     testWidgets('OTP paste is filtered, limited, and completes once full', (
       tester,
     ) async {
@@ -1724,3 +1786,6 @@ Widget _app(Widget child, {Locale locale = const Locale('en')}) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(body: Center(child: child)),
 );
+
+TinyrackThemeData get _colors =>
+    TinyrackTheme.light().extension<TinyrackThemeData>()!;
