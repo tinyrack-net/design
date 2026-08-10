@@ -240,14 +240,58 @@ test('preserves controlled and disabled state boundaries', async () => {
   expect(disabledElement.tabIndex).toBe(-1);
   expect(disabledInput?.disabled).toBe(true);
   expect(onDisabledChange).not.toHaveBeenCalled();
-  expect(getComputedStyle(disabledElement).opacity).toBe('1');
-  expect(
-    getComputedStyle(
-      disabledElement.querySelector<HTMLElement>('.tr-switch-thumb') as HTMLElement,
-    ).opacity,
-  ).toBe('1');
+  expect(getComputedStyle(disabledElement).cursor).toBe('not-allowed');
   expect(getComputedStyle(disabledElement).backgroundColor).not.toBe(
     getComputedStyle(document.documentElement).backgroundColor,
+  );
+});
+
+test('fades an unavailable switch whole and keeps its on and off palettes', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRSwitch.Root aria-label="Editable on" defaultChecked>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+      <TRSwitch.Root aria-label="Editable off">
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+      <TRSwitch.Root aria-label="Unavailable on" defaultChecked disabled>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+      <TRSwitch.Root aria-label="Unavailable off" disabled>
+        <TRSwitch.Thumb />
+      </TRSwitch.Root>
+    </div>,
+  );
+
+  const read = (name: string) => {
+    const root = page.getByRole('switch', { name }).element() as HTMLElement;
+    const thumb = root.querySelector<HTMLElement>('.tr-switch-thumb') as HTMLElement;
+    return {
+      opacity: getComputedStyle(root).opacity,
+      background: getComputedStyle(root).backgroundColor,
+      borderColor: getComputedStyle(root).borderColor,
+      thumbOpacity: getComputedStyle(thumb).opacity,
+      thumbBackground: getComputedStyle(thumb).backgroundColor,
+    };
+  };
+
+  for (const state of ['on', 'off'] as const) {
+    const editable = read(`Editable ${state}`);
+    const unavailable = read(`Unavailable ${state}`);
+
+    // The whole control reports unavailability, so a switch that is on still
+    // reads as the same switch rather than swapping to another palette.
+    expect(editable.opacity).toBe('1');
+    expect(unavailable.opacity).toBe('0.5');
+    expect(unavailable.thumbOpacity).toBe('1');
+    expect(unavailable.background).toBe(editable.background);
+    expect(unavailable.borderColor).toBe(editable.borderColor);
+    expect(unavailable.thumbBackground).toBe(editable.thumbBackground);
+  }
+
+  expect(read('Unavailable on').background).not.toBe(
+    read('Unavailable off').background,
   );
 });
 

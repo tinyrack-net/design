@@ -103,21 +103,18 @@ class _TRSwitchState extends State<TRSwitch> with TRFocusSourceMixin {
     }
 
     final showFocusRing = focusVisible(hasFocus: _focused);
-    final background = disabled
-        ? (checked ? generated.surfaceSelected : colors.surfaceMuted)
-        : checked
-        ? (_hovered ? generated.primaryHover : colors.primary)
-        : (_hovered ? colors.surfaceHover : colors.surfaceMuted);
+    // Only an interactive switch answers the pointer, so a disabled or
+    // read-only one keeps its resting colors while the cursor is over it.
+    final hovered = _hovered && interactive;
+    final background = checked
+        ? (hovered ? generated.primaryHover : colors.primary)
+        : (hovered ? colors.surfaceHover : colors.surfaceMuted);
     final borderColor = widget.invalid
         ? colors.dangerBorder
-        : disabled
-        ? (checked ? colors.primary : generated.controlBorder)
         : checked
-        ? (_hovered ? generated.primaryHover : colors.primary)
+        ? (hovered ? generated.primaryHover : colors.primary)
         : generated.controlBorder;
-    final thumbColor = checked
-        ? (disabled ? colors.primary : colors.onPrimary)
-        : colors.text;
+    final thumbColor = checked ? colors.onPrimary : colors.text;
     final disableAnimations = MediaQuery.disableAnimationsOf(context);
     final motionDuration = disableAnimations ? Duration.zero : TRMotion.fast;
     final travelDuration = disableAnimations ? Duration.zero : TRMotion.normal;
@@ -140,48 +137,48 @@ class _TRSwitchState extends State<TRSwitch> with TRFocusSourceMixin {
             enabled: !disabled,
             label: widget.semanticLabel,
             toggled: checked,
-            child: CustomPaint(
-              foregroundPainter: _TRSwitchFocusRingPainter(
-                color: colors.focus,
-                visible: showFocusRing,
-              ),
-              child: AnimatedContainer(
-                curve: TRMotion.standard,
-                duration: motionDuration,
-                width: _width,
-                height: _height,
-                padding: const EdgeInsets.all(_padding),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(TRGeneratedRadii.full),
-                  border: Border.all(
-                    color: borderColor,
-                    width: TRGeneratedBorders.defaultWidth,
-                  ),
-                  color: background,
+            // Fading the whole control keeps on and off reading as the same
+            // switch the user just lost access to, and matches the checkbox.
+            child: AnimatedOpacity(
+              curve: TRMotion.standard,
+              duration: motionDuration,
+              opacity: disabled ? TRGeneratedOpacity.disabled : 1,
+              child: CustomPaint(
+                foregroundPainter: _TRSwitchFocusRingPainter(
+                  color: colors.focus,
+                  visible: showFocusRing,
                 ),
-                child: AnimatedAlign(
-                  curve: TRMotion.easeOut,
-                  duration: travelDuration,
-                  alignment: checked
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: SizedBox(
-                    width: _thumbSize,
-                    height:
-                        _height -
-                        (_padding * 2) -
-                        (TRGeneratedBorders.defaultWidth * 2),
-                    child: OverflowBox(
-                      minWidth: _thumbSize,
-                      maxWidth: _thumbSize,
-                      minHeight: _thumbSize,
-                      maxHeight: _thumbSize,
-                      child: AnimatedOpacity(
-                        curve: TRMotion.standard,
-                        duration: motionDuration,
-                        opacity: disabled && !checked
-                            ? TRGeneratedOpacity.disabled
-                            : 1,
+                child: AnimatedContainer(
+                  curve: TRMotion.standard,
+                  duration: motionDuration,
+                  width: _width,
+                  height: _height,
+                  padding: const EdgeInsets.all(_padding),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.full),
+                    border: Border.all(
+                      color: borderColor,
+                      width: TRGeneratedBorders.defaultWidth,
+                    ),
+                    color: background,
+                  ),
+                  child: AnimatedAlign(
+                    curve: TRMotion.easeOut,
+                    duration: travelDuration,
+                    alignment: checked
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: SizedBox(
+                      width: _thumbSize,
+                      height:
+                          _height -
+                          (_padding * 2) -
+                          (TRGeneratedBorders.defaultWidth * 2),
+                      child: OverflowBox(
+                        minWidth: _thumbSize,
+                        maxWidth: _thumbSize,
+                        minHeight: _thumbSize,
+                        maxHeight: _thumbSize,
                         child: AnimatedContainer(
                           key: widget.thumbKey,
                           curve: TRMotion.standard,

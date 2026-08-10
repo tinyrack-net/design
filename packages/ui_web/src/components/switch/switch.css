@@ -86,32 +86,12 @@
     border-color: var(--tr-switch-invalid-border, var(--tinyrack-danger-border));
   }
 
+  /* Fading the whole control keeps on and off reading as the same switch the
+     user just lost access to, and matches how checkbox and field report it. */
   .tr-switch:disabled,
   .tr-switch[data-disabled] {
-    background: var(--tr-switch-disabled-background, var(--tinyrack-surface-muted));
-    border-color: var(--tr-switch-disabled-border, var(--tinyrack-control-border));
     cursor: not-allowed;
-  }
-
-  .tr-switch:disabled .tr-switch-thumb,
-  .tr-switch[data-disabled] .tr-switch-thumb {
     opacity: var(--tinyrack-opacity-disabled);
-  }
-
-  .tr-switch[data-checked]:is(:disabled, [data-disabled]) {
-    background: var(
-      --tr-switch-checked-disabled-background,
-      var(--tinyrack-surface-selected)
-    );
-    border-color: var(--tr-switch-checked-disabled-border, var(--tinyrack-primary));
-  }
-
-  .tr-switch[data-checked]:is(:disabled, [data-disabled]) .tr-switch-thumb {
-    background: var(
-      --tr-switch-checked-disabled-thumb-background,
-      var(--tinyrack-primary)
-    );
-    opacity: 1;
   }
 
   .tr-switch[data-readonly] {
