@@ -45,19 +45,19 @@
       },
       "border": {
         "$type": "color",
-        "$value": "{palettes.neutral.500}"
+        "$value": "{palettes.neutral.300}"
       },
       "borderStrong": {
         "$type": "color",
-        "$value": "{palettes.neutral.600}"
+        "$value": "{palettes.neutral.400}"
       },
       "controlBorder": {
         "$type": "color",
-        "$value": "{palettes.neutral.500}"
+        "$value": "{palettes.neutral.300}"
       },
       "controlTrack": {
         "$type": "color",
-        "$value": "{palettes.neutral.500}"
+        "$value": "{palettes.neutral.300}"
       },
       "focus": {
         "$type": "color",

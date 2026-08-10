@@ -128,10 +128,10 @@
   --tinyrack-text: #171717;
   --tinyrack-text-muted: #525252;
   --tinyrack-text-placeholder: #737373;
-  --tinyrack-border: #737373;
-  --tinyrack-border-strong: #525252;
-  --tinyrack-control-border: #737373;
-  --tinyrack-control-track: #737373;
+  --tinyrack-border: #d4d4d4;
+  --tinyrack-border-strong: #a3a3a3;
+  --tinyrack-control-border: #d4d4d4;
+  --tinyrack-control-track: #d4d4d4;
   --tinyrack-focus: #2563eb;
   --tinyrack-surface-inverse: #171717;
   --tinyrack-text-inverse: #fafafa;

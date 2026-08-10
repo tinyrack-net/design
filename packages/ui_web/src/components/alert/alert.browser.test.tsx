@@ -163,7 +163,7 @@ test.each([
   [
     'tinyrack-light',
     'neutral',
-    ['rgb(82, 82, 82)', 'rgb(115, 115, 115)', 'rgb(239, 246, 255)'],
+    ['rgb(82, 82, 82)', 'rgb(212, 212, 212)', 'rgb(239, 246, 255)'],
   ],
   [
     'tinyrack-light',

@@ -96,10 +96,10 @@ test('dark resting boundaries stay subtle and interaction borders strengthen', a
 test('light neutral boundaries and dark semantic indicators stay unchanged', () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   let styles = getComputedStyle(document.documentElement);
-  expect(styles.getPropertyValue('--tinyrack-border').trim()).toBe('#737373');
-  expect(styles.getPropertyValue('--tinyrack-border-strong').trim()).toBe('#525252');
-  expect(styles.getPropertyValue('--tinyrack-control-border').trim()).toBe('#737373');
-  expect(styles.getPropertyValue('--tinyrack-control-track').trim()).toBe('#737373');
+  expect(styles.getPropertyValue('--tinyrack-border').trim()).toBe('#d4d4d4');
+  expect(styles.getPropertyValue('--tinyrack-border-strong').trim()).toBe('#a3a3a3');
+  expect(styles.getPropertyValue('--tinyrack-control-border').trim()).toBe('#d4d4d4');
+  expect(styles.getPropertyValue('--tinyrack-control-track').trim()).toBe('#d4d4d4');
 
   document.documentElement.dataset['theme'] = 'tinyrack-dark';
   styles = getComputedStyle(document.documentElement);
