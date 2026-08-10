@@ -76,6 +76,11 @@ test('emphasises keyboard focus with the selection fill instead of an outline', 
   const focusStyle = getComputedStyle(trigger);
   expect(focusStyle.backgroundColor).toBe('rgb(219, 234, 254)');
   expect(focusStyle.outlineStyle).toBe('none');
+
+  // Focus and hover are both a fill now, so the two have to be ordered: a
+  // pointer resting on a focused trigger must not wash the focus out.
+  await userEvent.hover(trigger);
+  expect(getComputedStyle(trigger).backgroundColor).toBe('rgb(219, 234, 254)');
 });
 
 test('uses the danger border and inset focus ring when its field is invalid', async () => {

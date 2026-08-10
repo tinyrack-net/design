@@ -156,6 +156,25 @@ void main() {
     );
   });
 
+  testWidgets('a focused trigger keeps its emphasis under the pointer', (
+    tester,
+  ) async {
+    // Focus and hover are both a fill now, so the two have to be ordered:
+    // a pointer resting on a focused trigger must not wash the focus out.
+    await tester.pumpWidget(_app(_select()));
+
+    await focusWithKeyboard(tester);
+    final button = tester.widget<TextButton>(find.byType(TextButton).first);
+
+    expect(
+      button.style!.backgroundColor!.resolve({
+        WidgetState.focused,
+        WidgetState.hovered,
+      }),
+      _colors.surfaceSelected,
+    );
+  });
+
   testWidgets('a keyboard-focused ghost trigger emphasises its fill', (
     tester,
   ) async {

@@ -142,7 +142,10 @@
     --tr-layer-z-index: var(--tinyrack-layer-tooltip);
   }
 
-  .tr-select-trigger:hover:not(:disabled, [data-disabled]) {
+  /* Focus outranks hover, the way the ghost appearance already resolved it.
+     Both are a fill now, so a pointer resting on a focused trigger would
+     otherwise wash the focus emphasis out. */
+  .tr-select-trigger:hover:not(:disabled, [data-disabled], :focus-visible) {
     background: var(--tinyrack-surface-hover);
   }
 
