@@ -241,6 +241,22 @@ void main() {
     );
   });
 
+  testWidgets('an invalid text field paints the error border without a '
+      'message', (tester) async {
+    // A field whose message is owned by an enclosing component still has to
+    // read as invalid on its own frame.
+    await tester.pumpWidget(_app(const TRTextField(invalid: true)));
+    await tester.pumpAndSettle();
+
+    final border = tester
+        .widgetList<AnimatedContainer>(find.byType(AnimatedContainer))
+        .map((container) => container.foregroundDecoration)
+        .whereType<BoxDecoration>()
+        .map((decoration) => decoration.border!.top.color);
+    expect(border, contains(_colors.dangerBorder));
+    expect(find.byType(Text), findsNothing);
+  });
+
   testWidgets('ghost OTP slots stay flat until they are invalid', (
     tester,
   ) async {
