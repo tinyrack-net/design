@@ -632,18 +632,6 @@
           }
         }
       },
-      "toastMinHeight": {
-        "$type": "dimension",
-        "$value": {
-          "value": 105,
-          "unit": "px"
-        },
-        "$extensions": {
-          "net.tinyrack": {
-            "output": "105px"
-          }
-        }
-      },
       "drawerWidth": {
         "$type": "dimension",
         "$value": {

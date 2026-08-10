@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
@@ -34,6 +35,21 @@ Widget _app(
   ),
 );
 
+/// Mounts a region the way an application shell does, above the navigator.
+///
+/// [_app] puts the region inside a [Scaffold], which hands every descendant a
+/// [DefaultTextStyle] of its own. A shell that wants a report to outlive the
+/// route that produced it has to mount the region above the navigator instead,
+/// where the only ambient style left is the one [MaterialApp] paints unstyled
+/// text with. Only this placement can show whether the toast styles its own
+/// text completely.
+Widget _shellApp(Widget Function(Widget child) region) => MaterialApp(
+  debugShowCheckedModeBanner: false,
+  theme: TinyrackTheme.light(),
+  builder: (context, child) => region(child ?? const SizedBox.shrink()),
+  home: const Center(child: Text('Page')),
+);
+
 /// Mounts a full-size region and returns the controller driving it.
 ///
 /// The controller is returned rather than torn down here because the binding
@@ -64,6 +80,17 @@ Future<TRToastController> _mount(
 
 double _cardHeight(WidgetTester tester) =>
     tester.getSize(find.byType(Dismissible).first).height;
+
+/// How far through its entry animation the newest card has travelled.
+double _entryProgress(WidgetTester tester) => tester
+    .widgetList<Opacity>(
+      find.descendant(
+        of: find.byType(TRToastRegion),
+        matching: find.byType(Opacity),
+      ),
+    )
+    .first
+    .opacity;
 
 void main() {
   group('painting', () {
@@ -125,6 +152,49 @@ void main() {
       controller.dispose();
     });
 
+    testWidgets('a card above the navigator still styles its own text', (
+      tester,
+    ) async {
+      final controller = TRToastController();
+      await tester.binding.setSurfaceSize(const Size(900, 640));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        _shellApp(
+          (child) => TRToastRegion(controller: controller, child: child),
+        ),
+      );
+      controller.show(
+        const TRToastData(
+          title: Text('Saved'),
+          description: Text('The workspace was written to disk.'),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Text with no [Material] over it inherits the fallback style MaterialApp
+      // paints unstyled text with, which carries a yellow double underline. The
+      // card's own merge sets colour and metrics but never clears a decoration,
+      // so the card has to bring the surface that style belongs to.
+      for (final label in <String>[
+        'Saved',
+        'The workspace was written to disk.',
+      ]) {
+        final painted = tester
+            .renderObject<RenderParagraph>(find.text(label))
+            .text
+            .style;
+        expect(
+          painted?.decoration ?? TextDecoration.none,
+          TextDecoration.none,
+          reason: '"$label" must not be painted with the fallback style',
+        );
+      }
+
+      controller.dismissAll();
+      await tester.pumpAndSettle();
+      controller.dispose();
+    });
+
     testWidgets('a rounded card keeps its border uniform', (tester) async {
       final controller = await _mount(tester);
       controller.show(const TRToastData(title: Text('Saved')));
@@ -155,6 +225,31 @@ void main() {
   });
 
   group('size', () {
+    testWidgets('a card with one line of title is only as tall as it needs', (
+      tester,
+    ) async {
+      final controller = await _mount(tester);
+      controller.show(const TRToastData(title: Text('Saved')));
+      await tester.pumpAndSettle();
+
+      // The dismiss button is the tallest thing in the row, so a report of a
+      // single line is exactly that button between the card's own padding.
+      // Anything more is dead space the reader has to look past.
+      expect(
+        _cardHeight(tester),
+        closeTo(
+          TRControlMetrics.heightOf(TRUiSize.md) +
+              TRSpacing.medium * 2 +
+              TRControlMetrics.borderWidth * 2,
+          1,
+        ),
+      );
+
+      controller.dismissAll();
+      await tester.pumpAndSettle();
+      controller.dispose();
+    });
+
     testWidgets('a long description cannot grow the card without bound', (
       tester,
     ) async {
@@ -341,6 +436,90 @@ void main() {
       expect(find.text('Deployed'), findsNothing);
 
       controller.dispose();
+    });
+  });
+
+  group('repeat', () {
+    testWidgets('an id shown again plays its entry over rather than sitting', (
+      tester,
+    ) async {
+      final controller = await _mount(tester);
+      controller.show(const TRToastData(id: 'save', title: Text('Saved')));
+      await tester.pumpAndSettle();
+      expect(_entryProgress(tester), 1, reason: 'the first report has settled');
+
+      controller.show(const TRToastData(id: 'save', title: Text('Saved')));
+      await tester.pump();
+      await tester.pump(TRMotion.fast ~/ 2);
+      // Replacing a report in place looks exactly like ignoring the action that
+      // asked for it, so the card has to arrive again for the second attempt to
+      // read as an answer at all.
+      expect(_entryProgress(tester), lessThan(1));
+      expect(find.text('Saved'), findsOneWidget);
+
+      await tester.pumpAndSettle();
+      expect(_entryProgress(tester), 1);
+
+      controller.dismissAll();
+      await tester.pumpAndSettle();
+      controller.dispose();
+    });
+
+    testWidgets('an id shown again takes the newest place in the stack', (
+      tester,
+    ) async {
+      final controller = await _mount(tester);
+      controller.show(const TRToastData(id: 'a', title: Text('Alpha')));
+      controller.show(const TRToastData(id: 'b', title: Text('Bravo')));
+      await tester.pumpAndSettle();
+
+      controller.show(const TRToastData(id: 'a', title: Text('Alpha again')));
+      await tester.pumpAndSettle();
+
+      expect(controller.toasts.map((toast) => toast.id), <String>['b', 'a']);
+      expect(find.text('Alpha again'), findsOneWidget);
+      // The newest report leads a bottom-anchored stack, so a refreshed one has
+      // to travel there rather than keeping the place it first took.
+      expect(
+        tester.getCenter(find.text('Alpha again')).dy,
+        lessThan(tester.getCenter(find.text('Bravo')).dy),
+      );
+
+      controller.dismissAll();
+      await tester.pumpAndSettle();
+      controller.dispose();
+    });
+
+    testWidgets('an id shown again is announced and given its dwell back', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      final controller = await _mount(tester);
+      controller.show(const TRToastData(id: 'save', title: Text('Saved')));
+      await tester.pumpAndSettle();
+      final announced = tester.getSemantics(find.text('Saved')).id;
+
+      await tester.pump(TRMotion.toast ~/ 2);
+      controller.show(const TRToastData(id: 'save', title: Text('Saved')));
+      await tester.pumpAndSettle();
+
+      // A live region only reports a label that changed, and a repeat says the
+      // same thing twice, so the node itself has to be new for a reader to hear
+      // the second answer at all.
+      expect(tester.getSemantics(find.text('Saved')).id, isNot(announced));
+
+      await tester.pump(TRMotion.toast ~/ 2);
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Saved'),
+        findsOneWidget,
+        reason: 'the countdown started over with the second report',
+      );
+
+      controller.dismissAll();
+      await tester.pumpAndSettle();
+      controller.dispose();
+      semantics.dispose();
     });
   });
 

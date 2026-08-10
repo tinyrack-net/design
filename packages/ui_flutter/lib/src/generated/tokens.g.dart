@@ -449,7 +449,6 @@ abstract final class TRGeneratedLayerMetrics {
   static const double menuItemHeight = 28.0;
   static const double optionItemHeight = 28.0;
   static const double toastWidth = 384.0;
-  static const double toastMinHeight = 105.0;
   static const double drawerWidth = 512.0;
   static const double navigationPanelWidth = 512.0;
   static const double toolbarHeight = 40.0;

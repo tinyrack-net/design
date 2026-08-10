@@ -153,7 +153,6 @@ test('the canonical token source covers Flutter component metrics', async () => 
       menuItemHeight: '1.75rem',
       optionItemHeight: '1.75rem',
       toastWidth: '24rem',
-      toastMinHeight: '105px',
       drawerWidth: '32rem',
       navigationPanelWidth: '32rem',
       toolbarHeight: '2.5rem',
