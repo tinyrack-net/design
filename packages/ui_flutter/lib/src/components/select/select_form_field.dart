@@ -20,6 +20,11 @@ class TRSelectFormField<T> extends FormField<T> {
     VoidCallback? onClose,
     ValueChanged<T?>? onValueChange,
     double? width,
+    bool searchable = false,
+    String searchPlaceholder = 'Search',
+    String noResultsText = 'No results',
+    TRSelectFilter<T>? filter,
+    TRSelectSurface surface = TRSelectSurface.auto,
     super.onSaved,
     super.validator,
     super.autovalidateMode,
@@ -52,6 +57,11 @@ class TRSelectFormField<T> extends FormField<T> {
                onValueChange?.call(value);
              },
              width: width,
+             searchable: searchable,
+             searchPlaceholder: searchPlaceholder,
+             noResultsText: noResultsText,
+             filter: filter,
+             surface: surface,
            ),
          ),
        );

@@ -9,12 +9,17 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 /// Who owns focus while a layer is open, and where it goes when it closes.
 ///
 /// Direct widget coverage distinguishes trigger focus from popup focus.
+/// Animations are turned off through a copy rather than a fresh
+/// [MediaQueryData] so the viewport size survives: a select reads it to decide
+/// between its dropdown and its sheet, and a zero-width viewport is a sheet.
 Widget _app(Widget child) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(
-    body: MediaQuery(
-      data: const MediaQueryData(disableAnimations: true),
-      child: Align(alignment: Alignment.topLeft, child: child),
+    body: Builder(
+      builder: (context) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(disableAnimations: true),
+        child: Align(alignment: Alignment.topLeft, child: child),
+      ),
     ),
   ),
 );

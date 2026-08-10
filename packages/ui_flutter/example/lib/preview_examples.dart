@@ -103,6 +103,8 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'menubar-menu-states': _menubarMenuStates,
   'select-controlled': _selectControlled,
   'select-form': _selectForm,
+  'select-searchable': _selectSearchable,
+  'select-surface': _selectSurface,
   'dialog-result': _dialogResult,
   'dialog-nested-layers': _dialogNestedLayers,
   'alert-dialog-result': _alertDialogResult,
@@ -3352,6 +3354,58 @@ Widget _selectForm(BuildContext context, Locale locale) => SizedBox(
           ? _pick(locale, 'Choose an environment', '환경을 선택하세요', '環境を選択してください')
           : null,
     ),
+  ),
+);
+
+Widget _selectSearchable(BuildContext context, Locale locale) {
+  const regions = <(String, String, String, String)>[
+    ('seoul', 'Seoul', '서울', 'ソウル'),
+    ('busan', 'Busan', '부산', '釜山'),
+    ('tokyo', 'Tokyo', '도쿄', '東京'),
+    ('osaka', 'Osaka', '오사카', '大阪'),
+    ('singapore', 'Singapore', '싱가포르', 'シンガポール'),
+    ('sydney', 'Sydney', '시드니', 'シドニー'),
+  ];
+  String? region = 'seoul';
+  return StatefulBuilder(
+    builder: (context, setState) => SizedBox(
+      width: 320,
+      child: TRSelect<String>.controlled(
+        value: region,
+        label: _pick(locale, 'Region', '지역', '地域'),
+        searchable: true,
+        searchPlaceholder: _pick(locale, 'Search regions', '지역 검색', '地域を検索'),
+        noResultsText: _pick(
+          locale,
+          'No matching region',
+          '일치하는 지역이 없습니다',
+          '一致する地域がありません',
+        ),
+        items: [
+          for (final (value, en, ko, ja) in regions)
+            TRSelectItem(value: value, label: _pick(locale, en, ko, ja)),
+        ],
+        onValueChange: (value) => setState(() => region = value),
+      ),
+    ),
+  );
+}
+
+Widget _selectSurface(BuildContext context, Locale locale) => SizedBox(
+  width: 320,
+  child: TRSelect<String>(
+    label: _pick(locale, 'Release channel', '릴리스 채널', 'リリースチャンネル'),
+    defaultValue: 'stable',
+    // Pinned so the example reads the same at every preview width; leaving it
+    // at TRSelectSurface.auto is what a product screen wants.
+    surface: TRSelectSurface.menu,
+    items: [
+      TRSelectItem(
+        value: 'stable',
+        label: _pick(locale, 'Stable', '안정', '安定版'),
+      ),
+      TRSelectItem(value: 'beta', label: _pick(locale, 'Beta', '베타', 'ベータ')),
+    ],
   ),
 );
 

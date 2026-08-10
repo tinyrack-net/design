@@ -1,3 +1,24 @@
+## 0.47.0
+
+- Adds `TRSelect.searchable`, which opens a filter field above the options and
+  gives it focus. It matches the item label case-insensitively unless
+  `filter` supplies a predicate, explains an empty result with
+  `noResultsText`, moves focus to the first enabled match on arrow down, and
+  commits on Enter once one match is left. A select without it keeps the
+  existing prefix typeahead; a searchable one spends those keystrokes on the
+  query instead, because jumping between rows is what the query already does.
+- Opens the options in a bottom sheet on a viewport narrower than
+  `TRBreakpoints.small`, and in the anchored dropdown at or above it. A
+  dropdown on a phone had to share the viewport with the trigger and the
+  keyboard, which left a long list a few rows tall. **This changes every
+  existing select on a narrow viewport**, searchable or not. `TRSelect.surface`
+  pins one of the two when a layout needs to decide for itself. The surface is
+  resolved when the select opens, so a resize cannot swap it out from under an
+  open list.
+- Scrolls the dropdown's options at `TRMeasurements.measureXl` instead of
+  letting them grow past the viewport. A select with more options than fit had
+  no way to reach the ones below the fold.
+
 ## 0.46.0
 
 - Renders `TRNumberField`'s label and supporting text around the whole control

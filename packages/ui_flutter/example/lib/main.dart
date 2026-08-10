@@ -673,6 +673,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'errorText',
     'open',
     'readOnly',
+    'searchable',
     'uiSize',
     'value',
   ],
@@ -880,6 +881,7 @@ Map<String, Object?>? _validateArgs(
       'showDescription' ||
       'showIcon' ||
       'sidebarCollapsed' ||
+      'searchable' ||
       'selected' ||
       'truncate' ||
       'visible' => value is bool,
@@ -4074,6 +4076,12 @@ class _PreviewSelectState extends State<_PreviewSelect> {
       },
       placeholder: _pick('Choose a channel', '채널 선택', 'チャンネルを選択'),
       readOnly: widget.args['readOnly'] == true,
+      searchable: widget.args['searchable'] == true,
+      searchPlaceholder: _pick('Search channels', '채널 검색', 'チャンネルを検索'),
+      // The playground drives `open` through a MenuController, which only the
+      // dropdown answers, so the surface is pinned rather than left to the
+      // preview frame's width.
+      surface: TRSelectSurface.menu,
       uiSize: widget.size,
       width: 320,
     ),

@@ -4014,6 +4014,48 @@ class _MonitoringFormState extends State<MonitoringForm> {
   onSaved: saveEnvironment,
 )`,
     },
+    {
+      id: 'select-searchable',
+      title: {
+        en: 'Searchable options',
+        ja: '検索できる選択肢',
+        ko: '검색 가능한 선택지',
+      },
+      description: {
+        en: 'Set searchable when the list is long enough that reading it is slower than typing. A filter field opens above the options and takes focus, arrow down moves into the first enabled match, and Enter commits a match once only one is left. Pass filter to match on something other than the label.',
+        ja: 'リストを読むより入力する方が速いほど選択肢が多いときは searchable を設定します。選択肢の上にフィルターフィールドが開いてフォーカスを受け取り、下矢印で最初の有効な一致に移動し、一致が 1 件になると Enter で確定できます。ラベル以外で照合するときは filter を渡します。',
+        ko: '목록을 읽는 것보다 입력하는 편이 빠를 만큼 선택지가 많다면 searchable을 설정하세요. 선택지 위에 필터 필드가 열리면서 포커스를 받고, 아래 방향키로 첫 번째 활성 일치 항목으로 이동하며, 일치 항목이 하나만 남으면 Enter로 확정해요. 레이블이 아닌 값으로 맞추려면 filter를 넘기세요.',
+      },
+      dart: String.raw`TRSelect<String>.controlled(
+  value: region,
+  label: 'Region',
+  searchable: true,
+  searchPlaceholder: 'Search regions',
+  noResultsText: 'No matching region',
+  items: regions,
+  filter: (item, query) =>
+      item.label.toLowerCase().startsWith(query.toLowerCase()),
+  onValueChange: setRegion,
+)`,
+    },
+    {
+      id: 'select-surface',
+      title: {
+        en: 'Dropdown or sheet',
+        ja: 'ドロップダウンとシート',
+        ko: '드롭다운과 시트',
+      },
+      description: {
+        en: 'A select opens as an anchored dropdown on a viewport at least TRBreakpoints.small wide and as a bottom sheet below it, which gives the options room and a touch-sized target on a phone. The surface is resolved when the select opens, so a resize cannot swap it mid-selection. Pass surface to pin one of the two, as a playground or a fixed-width panel might need.',
+        ja: 'Select はビューポートが TRBreakpoints.small 以上ならアンカーされたドロップダウンとして開き、それより狭ければボトムシートとして開くので、スマートフォンでも選択肢に十分な領域とタッチしやすいターゲットを確保できます。サーフェスは開いた時点で決まるため、選択の途中でリサイズしても入れ替わりません。どちらかに固定するときは surface を渡します。',
+        ko: 'Select는 뷰포트가 TRBreakpoints.small 이상이면 트리거에 붙는 드롭다운으로, 그보다 좁으면 바텀 시트로 열려요. 덕분에 휴대폰에서도 선택지가 놓일 공간과 터치하기 좋은 크기를 확보해요. 표면은 select를 열 때 결정되므로 선택 도중에 크기가 바뀌어도 교체되지 않아요. 둘 중 하나로 고정하려면 surface를 넘기세요.',
+      },
+      dart: String.raw`TRSelect<String>(
+  items: channels,
+  defaultValue: 'stable',
+  surface: TRSelectSurface.menu,
+)`,
+    },
   ],
   dialog: [
     {
