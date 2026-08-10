@@ -89,6 +89,14 @@ class TRToastController extends ChangeNotifier {
   final int maxVisible;
   final List<TRToastData> _toasts = [];
   final Map<String, Timer> _timers = {};
+
+  /// How many times each queued toast has been shown under its own id.
+  ///
+  /// The region watches this so that a report which replaced an identical one
+  /// still arrives visibly. Nothing outside the queue needs it, which is why it
+  /// is not part of [TRToastData]: a caller describes what to say, not how many
+  /// times it has already been said.
+  final Map<String, int> _revisions = {};
   var _nextId = 0;
   var _paused = false;
 
@@ -126,9 +134,17 @@ class TRToastController extends ChangeNotifier {
     final existing = _toasts.indexWhere((toast) => toast.id == id);
     final resolved = data.copyWith(id: id);
     if (existing >= 0) {
-      _toasts[existing] = resolved;
+      // Repeating an action reports it again rather than stacking a second card
+      // for it, so the refreshed report takes the newest place in the queue.
+      // Left where it was, and identical to what it replaced, it would look for
+      // all the world like the action had been ignored.
+      _toasts
+        ..removeAt(existing)
+        ..add(resolved);
+      _revisions[id] = (_revisions[id] ?? 0) + 1;
     } else {
       _toasts.add(resolved);
+      _revisions[id] = 0;
     }
     while (_toasts.length > maxVisible) {
       _remove(_toasts.first.id!);
@@ -158,6 +174,7 @@ class TRToastController extends ChangeNotifier {
     }
     _timers.clear();
     _toasts.clear();
+    _revisions.clear();
     notifyListeners();
   }
 
@@ -183,10 +200,14 @@ class TRToastController extends ChangeNotifier {
 
   bool _remove(String id) {
     _timers.remove(id)?.cancel();
+    _revisions.remove(id);
     final before = _toasts.length;
     _toasts.removeWhere((toast) => toast.id == id);
     return before != _toasts.length;
   }
+
+  /// How many times the toast under [id] has been shown again over itself.
+  int _revisionOf(String id) => _revisions[id] ?? 0;
 
   void _schedule(TRToastData toast) {
     final id = toast.id!;
@@ -211,7 +232,7 @@ class TRToastController extends ChangeNotifier {
 /// The controller drops a toast the moment it is dismissed, but the card has to
 /// stay mounted long enough to animate away, so the region keeps its own list.
 class _TRToastEntry {
-  _TRToastEntry(this.data, this.key);
+  _TRToastEntry(this.data, this.key, this.revision);
 
   /// Identity for the widget tree, unique within the region.
   ///
@@ -221,6 +242,10 @@ class _TRToastEntry {
   final Key key;
 
   TRToastData data;
+
+  /// How many times the queue has shown this toast under its own id.
+  int revision;
+
   bool exiting = false;
 }
 
@@ -295,17 +320,37 @@ class _TRToastRegionState extends State<TRToastRegion> {
         entry.exiting = true;
       }
     }
+    // The cards the queue still wants, in the order it wants them.
+    final live = <_TRToastEntry>[];
     for (final toast in queued) {
       // A toast re-shown under an id that is still animating out takes its slot
       // back rather than stacking a second card for the same notification.
       final index = _entries.indexWhere((entry) => entry.data.id == toast.id);
+      final revision = _controller._revisionOf(toast.id!);
       if (index >= 0) {
-        _entries[index]
-          ..data = toast
-          ..exiting = false;
+        live.add(
+          _entries[index]
+            ..data = toast
+            ..revision = revision
+            ..exiting = false,
+        );
       } else {
-        _entries.add(_TRToastEntry(toast, ValueKey<int>(_nextEntryKey++)));
+        final entry = _TRToastEntry(
+          toast,
+          ValueKey<int>(_nextEntryKey++),
+          revision,
+        );
+        _entries.add(entry);
+        live.add(entry);
       }
+    }
+    // A card that has been shown again moves to the newest place, but one that
+    // is playing its exit keeps the slot it is animating in, so the stack
+    // around it does not jump before it has finished leaving.
+    var next = 0;
+    for (var slot = 0; slot < _entries.length; slot += 1) {
+      if (_entries[slot].exiting) continue;
+      _entries[slot] = live[next++];
     }
   }
 
@@ -336,65 +381,79 @@ class _TRToastRegionState extends State<TRToastRegion> {
         children: [
           widget.child,
           Positioned.fill(
-            child: SafeArea(
-              minimum: const EdgeInsets.all(TRGeneratedSpacing.lg),
-              child: IgnorePointer(
-                ignoring: _entries.isEmpty,
-                child: Align(
-                  alignment: _alignment(widget.placement),
-                  child: MouseRegion(
-                    // A pointer resting on the stack means the reader is still
-                    // there, so the countdown waits for them.
-                    onEnter: (_) => _controller.pauseAutoDismiss(),
-                    onExit: (_) => _controller.resumeAutoDismiss(),
-                    child: Shortcuts(
-                      shortcuts: const {
-                        SingleActivator(LogicalKeyboardKey.escape):
-                            _TRDismissToastIntent(),
-                      },
-                      child: Actions(
-                        actions: {
-                          _TRDismissToastIntent:
-                              CallbackAction<_TRDismissToastIntent>(
-                                onInvoke: (_) {
-                                  final toasts = _controller.toasts;
-                                  if (toasts.isNotEmpty) {
-                                    _controller.dismiss(toasts.last.id!);
-                                  }
-                                  return null;
-                                },
-                              ),
+            // The stack is mounted above the navigator so that a report can
+            // outlive the route that asked for it, which also puts it outside
+            // every [Scaffold] in the application. Unstyled text there inherits
+            // the fallback style [MaterialApp] paints with — a yellow double
+            // underline — because the cards draw their own surface rather than
+            // standing on one. Carrying a transparent [Material] keeps that
+            // surface out of the painting while still answering for the text
+            // style and the ink its controls splash onto.
+            child: Material(
+              type: MaterialType.transparency,
+              child: SafeArea(
+                minimum: const EdgeInsets.all(TRGeneratedSpacing.lg),
+                child: IgnorePointer(
+                  ignoring: _entries.isEmpty,
+                  child: Align(
+                    alignment: _alignment(widget.placement),
+                    child: MouseRegion(
+                      // A pointer resting on the stack means the reader is still
+                      // there, so the countdown waits for them.
+                      onEnter: (_) => _controller.pauseAutoDismiss(),
+                      onExit: (_) => _controller.resumeAutoDismiss(),
+                      child: Shortcuts(
+                        shortcuts: const {
+                          SingleActivator(LogicalKeyboardKey.escape):
+                              _TRDismissToastIntent(),
                         },
-                        child: Focus(
-                          focusNode: _regionFocusNode,
-                          onFocusChange: (focused) => focused
-                              ? _controller.pauseAutoDismiss()
-                              : _controller.resumeAutoDismiss(),
-                          child: Semantics(
-                            container: true,
-                            label: widget.semanticLabel,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: _crossAxis(widget.placement),
-                              children: [
-                                for (final entry in _orderedEntries)
-                                  Padding(
-                                    // Keyed by identity so that removing a card
-                                    // from the middle of the stack does not hand
-                                    // its animation state to its neighbour.
-                                    key: entry.key,
-                                    padding: const EdgeInsets.only(
-                                      top: TRGeneratedSpacing.sm,
+                        child: Actions(
+                          actions: {
+                            _TRDismissToastIntent:
+                                CallbackAction<_TRDismissToastIntent>(
+                                  onInvoke: (_) {
+                                    final toasts = _controller.toasts;
+                                    if (toasts.isNotEmpty) {
+                                      _controller.dismiss(toasts.last.id!);
+                                    }
+                                    return null;
+                                  },
+                                ),
+                          },
+                          child: Focus(
+                            focusNode: _regionFocusNode,
+                            onFocusChange: (focused) => focused
+                                ? _controller.pauseAutoDismiss()
+                                : _controller.resumeAutoDismiss(),
+                            child: Semantics(
+                              container: true,
+                              label: widget.semanticLabel,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: _crossAxis(
+                                  widget.placement,
+                                ),
+                                children: [
+                                  for (final entry in _orderedEntries)
+                                    Padding(
+                                      // Keyed by identity so that removing a card
+                                      // from the middle of the stack does not hand
+                                      // its animation state to its neighbour.
+                                      key: entry.key,
+                                      padding: const EdgeInsets.only(
+                                        top: TRGeneratedSpacing.sm,
+                                      ),
+                                      child: _TRToastCard(
+                                        data: entry.data,
+                                        exiting: entry.exiting,
+                                        revision: entry.revision,
+                                        onDismiss: () =>
+                                            _controller.dismiss(entry.data.id!),
+                                        onExited: () => _retire(entry),
+                                      ),
                                     ),
-                                    child: _TRToastCard(
-                                      data: entry.data,
-                                      exiting: entry.exiting,
-                                      onDismiss: () =>
-                                          _controller.dismiss(entry.data.id!),
-                                      onExited: () => _retire(entry),
-                                    ),
-                                  ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -422,11 +481,15 @@ class _TRToastCard extends StatefulWidget {
   const _TRToastCard({
     required this.data,
     required this.exiting,
+    required this.revision,
     required this.onDismiss,
     required this.onExited,
   });
 
   final TRToastData data;
+
+  /// How many times this toast has been shown again over itself.
+  final int revision;
 
   /// Whether this card has been dismissed and is playing its exit.
   final bool exiting;
@@ -465,17 +528,28 @@ class _TRToastCardState extends State<_TRToastCard>
   @override
   void didUpdateWidget(_TRToastCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.exiting == oldWidget.exiting) return;
-    if (!widget.exiting) {
-      // Re-shown while it was leaving: play the entry again from wherever the
-      // exit had got to rather than snapping back.
-      _controller.forward();
+    if (widget.exiting != oldWidget.exiting) {
+      if (!widget.exiting) {
+        // Re-shown while it was leaving: play the entry again from wherever the
+        // exit had got to rather than snapping back.
+        _controller.forward();
+      } else if (MediaQuery.disableAnimationsOf(context)) {
+        _retireAfterFrame();
+      } else {
+        _exit();
+      }
       return;
     }
+    if (widget.revision == oldWidget.revision || widget.exiting) return;
+    // The same report, asked for again. Arriving a second time is the only
+    // thing that separates an answer from a card that has simply been sitting
+    // there since the first attempt.
     if (MediaQuery.disableAnimationsOf(context)) {
-      _retireAfterFrame();
+      _controller.value = 1;
     } else {
-      _exit();
+      _controller
+        ..value = 0
+        ..forward();
     }
   }
 
@@ -519,10 +593,10 @@ class _TRToastCardState extends State<_TRToastCard>
     final card = TRLayerBoundary(
       kind: TRLayerBoundaryKind.toast,
       child: Container(
+        // Width is fixed so a stack of reports reads as one column, but height
+        // is left to the content: a floor tall enough for a description would
+        // otherwise pad every one-line report with dead space.
         width: TRGeneratedLayerMetrics.toastWidth,
-        constraints: const BoxConstraints(
-          minHeight: TRGeneratedLayerMetrics.toastMinHeight,
-        ),
         decoration: BoxDecoration(
           color: colors.surface,
           border: Border.all(color: generated.controlBorder),
@@ -655,6 +729,11 @@ class _TRToastCardState extends State<_TRToastCard>
     // label never changes, so a screen reader watching only the container has
     // nothing to report when a toast arrives.
     final announced = Semantics(
+      // Keyed by revision so a repeat builds a new node. A live region only
+      // reports a label that changed, and a report shown again says exactly
+      // what it said the first time, so reusing the node would leave a reader
+      // with no answer at all to the second attempt.
+      key: ValueKey<int>(widget.revision),
       container: true,
       liveRegion: !widget.exiting,
       child: card,

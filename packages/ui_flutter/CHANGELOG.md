@@ -1,3 +1,24 @@
+## 0.47.3
+
+- Gives a toast the height of what it says. The card carried a floor tall
+  enough for a title, a description, and an action, so a one-line report — the
+  common case — sat in nearly twice the space it needed. The floor is gone
+  along with the `toastMinHeight` metric behind it; the card is still a fixed
+  width so a stack reads as one column.
+- Stops a toast from painting its text with Flutter's fallback style. A region
+  mounted above the navigator, which is where a report has to live to outlast
+  the route that asked for it, stands outside every `Scaffold`, and the cards
+  draw their own surface rather than standing on one. Text there inherited the
+  yellow double underline `MaterialApp` marks unstyled text with. The stack now
+  carries a transparent `Material`, which also gives its controls the ink
+  surface they splash onto.
+- Reports an action asked for a second time. Showing a toast under an id that
+  is already queued replaces it rather than stacking a second card, but the
+  replacement was silent: the card sat exactly where it was, saying exactly
+  what it said, which read as the second attempt having been ignored. A repeat
+  now plays its entry again, moves to the newest place in the stack, and builds
+  a fresh live region so a screen reader announces it too.
+
 ## 0.47.2
 
 - Emphasises a keyboard-focused `TRSelect` trigger with the selection fill
