@@ -881,6 +881,7 @@ Map<String, Object?>? _validateArgs(
       'showDescription' ||
       'showIcon' ||
       'sidebarCollapsed' ||
+      'searchable' ||
       'selected' ||
       'truncate' ||
       'visible' => value is bool,
