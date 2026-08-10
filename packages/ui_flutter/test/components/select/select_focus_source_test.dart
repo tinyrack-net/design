@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/src/generated/tokens.g.dart';
+import 'package:tinyrack_ui/src/internal/focus_source.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 TinyrackThemeData get _colors =>
@@ -25,14 +26,17 @@ Widget _app(Widget child) => MaterialApp(
   ),
 );
 
-Widget _select({TRFieldAppearance appearance = TRFieldAppearance.solid}) =>
-    TRSelect<String>(
-      appearance: appearance,
-      items: const [
-        TRSelectItem<String>(value: 'a', label: 'Alpha'),
-        TRSelectItem<String>(value: 'b', label: 'Beta'),
-      ],
-    );
+Widget _select({
+  TRFieldAppearance appearance = TRFieldAppearance.solid,
+  String? errorText,
+}) => TRSelect<String>(
+  appearance: appearance,
+  errorText: errorText,
+  items: const [
+    TRSelectItem<String>(value: 'a', label: 'Alpha'),
+    TRSelectItem<String>(value: 'b', label: 'Beta'),
+  ],
+);
 
 /// The border the trigger actually paints right now, resolved from the states
 /// the button is really in rather than from a hypothetical state set.
@@ -74,6 +78,9 @@ Future<void> _openAndDismissWithMouse(WidgetTester tester) async {
 }
 
 void main() {
+  setUp(TRFocusSource.instance.debugReset);
+  tearDown(TRFocusSource.instance.debugReset);
+
   testWidgets(
     'a pointer-open ghost select uses selection without a focus border',
     (tester) async {
@@ -112,20 +119,103 @@ void main() {
     );
   }
 
-  testWidgets('a keyboard-driven select round trip keeps the focus border', (
+  /// Gives the trigger keyboard focus.
+  ///
+  /// Tab is not enough on its own here: the harness wraps the select in a
+  /// scope that takes the first stop, so the trigger's own node is focused
+  /// directly and the modality is pinned, because the singleton would
+  /// otherwise carry the mouse presses of the cases above into this one.
+  Future<void> focusWithKeyboard(WidgetTester tester) async {
+    TRFocusSource.instance.debugSetKeyboardModality(true);
+    tester
+        .widget<TextButton>(find.byType(TextButton).first)
+        .focusNode!
+        .requestFocus();
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('a keyboard-focused solid trigger emphasises its fill', (
     tester,
   ) async {
     await tester.pumpWidget(_app(_select()));
 
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-    await tester.pumpAndSettle();
+    await focusWithKeyboard(tester);
+
+    expect(_paintedFill(tester), _colors.surfaceSelected);
+    final side = _paintedSide(tester);
+    expect(
+      side.color,
+      isNot(_colors.focus),
+      reason: 'focus reads as a selected fill, not as an accent outline',
+    );
+    expect(side.color, _colors.border);
+    expect(
+      side.width,
+      TRGeneratedBorders.defaultWidth,
+      reason: 'the border never thickens, so the trigger cannot shift on focus',
+    );
+  });
+
+  testWidgets('a focused trigger keeps its emphasis under the pointer', (
+    tester,
+  ) async {
+    // Focus and hover are both a fill now, so the two have to be ordered:
+    // a pointer resting on a focused trigger must not wash the focus out.
+    await tester.pumpWidget(_app(_select()));
+
+    await focusWithKeyboard(tester);
+    final button = tester.widget<TextButton>(find.byType(TextButton).first);
+
+    expect(
+      button.style!.backgroundColor!.resolve({
+        WidgetState.focused,
+        WidgetState.hovered,
+      }),
+      _colors.surfaceSelected,
+    );
+  });
+
+  testWidgets('a keyboard-focused ghost trigger emphasises its fill', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(_select(appearance: TRFieldAppearance.ghost)));
+
+    await focusWithKeyboard(tester);
+
+    expect(_paintedFill(tester), _colors.surfaceSelected);
+    final side = _paintedSide(tester);
+    expect(side.color, Colors.transparent);
+    expect(side.width, TRGeneratedBorders.defaultWidth);
+  });
+
+  testWidgets('a keyboard-driven select round trip emphasises its fill', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(_select()));
+
+    await focusWithKeyboard(tester);
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
 
+    expect(_paintedFill(tester), _colors.surfaceSelected);
+    expect(_paintedSide(tester).color, isNot(_colors.focus));
+  });
+
+  testWidgets('an invalid trigger keeps its danger emphasis while focused', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(_select(errorText: 'Pick one')));
+
+    await focusWithKeyboard(tester);
+
     final side = _paintedSide(tester);
-    expect(side.color, _colors.focus);
+    expect(
+      side.color,
+      _colors.danger,
+      reason: 'invalid emphasis is not what this change removes',
+    );
     expect(side.width, TRGeneratedBorders.focusWidth);
   });
 }

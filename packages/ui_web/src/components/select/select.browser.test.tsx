@@ -56,8 +56,31 @@ test('supports compact ui size on the root and trigger', async () => {
   const trigger = document.querySelector<HTMLElement>('.tr-select-trigger');
   expect(trigger?.dataset['uiSize']).toBe('md');
   expect(getComputedStyle(trigger as HTMLElement).minHeight).toBe('32px');
-  trigger?.focus();
-  expect(getComputedStyle(trigger as HTMLElement).outlineOffset).toBe('-2px');
+});
+
+test('emphasises keyboard focus with the selection fill instead of an outline', async () => {
+  await render(
+    <div data-theme="tinyrack-light">
+      <TRSelect.Root>
+        <TRSelect.Trigger aria-label="Rack">
+          <TRSelect.Value placeholder="Choose a rack" />
+        </TRSelect.Trigger>
+      </TRSelect.Root>
+    </div>,
+  );
+
+  const trigger = page.getByRole('combobox', { name: 'Rack' }).element();
+  await userEvent.tab();
+
+  expect(trigger).toHaveFocus();
+  const focusStyle = getComputedStyle(trigger);
+  expect(focusStyle.backgroundColor).toBe('rgb(219, 234, 254)');
+  expect(focusStyle.outlineStyle).toBe('none');
+
+  // Focus and hover are both a fill now, so the two have to be ordered: a
+  // pointer resting on a focused trigger must not wash the focus out.
+  await userEvent.hover(trigger);
+  expect(getComputedStyle(trigger).backgroundColor).toBe('rgb(219, 234, 254)');
 });
 
 test('uses the danger border and inset focus ring when its field is invalid', async () => {

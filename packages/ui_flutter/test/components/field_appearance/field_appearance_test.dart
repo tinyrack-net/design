@@ -183,9 +183,13 @@ void main() {
       colors.surfaceHover,
     );
     expect(
+      style.backgroundColor!.resolve({WidgetState.focused}),
+      colors.surfaceSelected,
+      reason: 'a ghost trigger still has to show keyboard focus, as a fill',
+    );
+    expect(
       style.side!.resolve({WidgetState.focused})!.color,
-      colors.focus,
-      reason: 'a ghost trigger still has to show keyboard focus',
+      Colors.transparent,
     );
   });
 
