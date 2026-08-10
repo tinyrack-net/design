@@ -534,26 +534,35 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       );
       final hovered = states.contains(WidgetState.hovered);
       final error = widget.errorText != null;
+      // A valid trigger answers keyboard focus with the selection fill rather
+      // than an accent outline, which is the same emphasis a pointer-opened
+      // trigger already carries. Invalid keeps its danger outline: that is the
+      // one state the fill alone cannot say.
       return resolveFieldChrome(
         appearance: widget.appearance,
         colors: colors,
         solidFill: !interactive
             ? colors.surfaceMuted
+            : focused
+            ? colors.surfaceSelected
             : hovered
             ? colors.surfaceHover
             : colors.surface,
-        solidBorderColor: focused
-            ? error
+        solidBorderColor: error
+            ? focused
                   ? colors.danger
-                  : colors.focus
-            : error
-            ? colors.dangerBorder
+                  : colors.dangerBorder
             : colors.border,
-        solidBorderWidth: focused
+        solidBorderWidth: focused && error
             ? TRGeneratedBorders.focusWidth
             : TRGeneratedBorders.defaultWidth,
         enabled: widget.enabled,
         error: error,
+        focusChrome: TRFieldChrome(
+          fill: colors.surfaceSelected,
+          borderColor: Colors.transparent,
+          borderWidth: TRGeneratedBorders.defaultWidth,
+        ),
         focused: focused,
         hovered: hovered,
         open: _reportedOpen,

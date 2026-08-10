@@ -1,3 +1,15 @@
+## 0.47.2
+
+- Emphasises a keyboard-focused `TRSelect` trigger with the selection fill
+  instead of the accent focus outline. The blue border read as an error or a
+  validation state on a control that was merely focused, and it thickened the
+  trigger's border, so the box shifted as focus arrived. Focus now carries the
+  same fill an open trigger already had, in both the solid and the ghost
+  appearance, and it outranks hover. An invalid trigger keeps its danger
+  outline, which is the one state the fill on its own cannot say, and the
+  highlight inside the option list is unchanged. `@tinyrack/ui` moves with it,
+  so the two packages keep the same focus treatment.
+
 ## 0.47.1
 
 - Selects a draggable tab on an ordinary click again. `Draggable` claims the
