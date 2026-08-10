@@ -33,6 +33,12 @@ abstract final class TRMotion {
   static const slow = TRGeneratedMotion.slow;
   static const number = TRGeneratedMotion.number;
   static const loading = TRGeneratedMotion.loading;
+
+  /// How long a toast stays on screen before it dismisses itself.
+  ///
+  /// A test that waits out a toast, or a surface that schedules work alongside
+  /// one, needs the same dwell time the component uses.
+  static const toast = TRGeneratedMotion.toast;
   static const standard = TRGeneratedMotion.standard;
   static const easeOut = TRGeneratedMotion.easeOut;
   static const linear = TRGeneratedMotion.linear;
