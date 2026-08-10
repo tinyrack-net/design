@@ -528,30 +528,28 @@ class _TRToastCardState extends State<_TRToastCard>
   @override
   void didUpdateWidget(_TRToastCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.revision != oldWidget.revision && !widget.exiting) {
-      // The same report, asked for again. Arriving a second time is the only
-      // thing that separates an answer from a card that has simply been sitting
-      // there since the first attempt.
-      if (MediaQuery.disableAnimationsOf(context)) {
-        _controller.value = 1;
+    if (widget.exiting != oldWidget.exiting) {
+      if (!widget.exiting) {
+        // Re-shown while it was leaving: play the entry again from wherever the
+        // exit had got to rather than snapping back.
+        _controller.forward();
+      } else if (MediaQuery.disableAnimationsOf(context)) {
+        _retireAfterFrame();
       } else {
-        _controller
-          ..value = 0
-          ..forward();
+        _exit();
       }
       return;
     }
-    if (widget.exiting == oldWidget.exiting) return;
-    if (!widget.exiting) {
-      // Re-shown while it was leaving: play the entry again from wherever the
-      // exit had got to rather than snapping back.
-      _controller.forward();
-      return;
-    }
+    if (widget.revision == oldWidget.revision || widget.exiting) return;
+    // The same report, asked for again. Arriving a second time is the only
+    // thing that separates an answer from a card that has simply been sitting
+    // there since the first attempt.
     if (MediaQuery.disableAnimationsOf(context)) {
-      _retireAfterFrame();
+      _controller.value = 1;
     } else {
-      _exit();
+      _controller
+        ..value = 0
+        ..forward();
     }
   }
 
