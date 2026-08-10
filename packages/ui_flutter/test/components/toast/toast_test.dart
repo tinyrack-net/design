@@ -89,6 +89,42 @@ void main() {
       }
     });
 
+    testWidgets('the variant bar spans the leading edge of the card', (
+      tester,
+    ) async {
+      final controller = await _mount(tester);
+      controller.show(
+        const TRToastData(
+          title: Text('Could not save'),
+          description: Text(_longDescription),
+          variant: TRStatusVariant.danger,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final card = tester.getRect(find.byType(Dismissible).first);
+      final bar = tester.getRect(
+        find
+            .descendant(
+              of: find.byType(TRToastRegion),
+              matching: find.byType(ColoredBox),
+            )
+            .first,
+      );
+
+      expect(bar.width, TRControlMetrics.borderWidth * 2);
+      expect(
+        bar.height,
+        closeTo(card.height - TRControlMetrics.borderWidth * 2, 1),
+        reason: 'the bar runs the full inner height however tall the card is',
+      );
+      expect(bar.left, closeTo(card.left + TRControlMetrics.borderWidth, 1));
+
+      controller.dismissAll();
+      await tester.pumpAndSettle();
+      controller.dispose();
+    });
+
     testWidgets('a rounded card keeps its border uniform', (tester) async {
       final controller = await _mount(tester);
       controller.show(const TRToastData(title: Text('Saved')));

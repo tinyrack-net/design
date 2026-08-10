@@ -538,107 +538,115 @@ class _TRToastCardState extends State<_TRToastCard>
           borderRadius: BorderRadius.circular(
             TRGeneratedRadii.md - TRGeneratedBorders.defaultWidth,
           ),
-          child: Stack(
-            children: [
-              PositionedDirectional(
-                start: 0,
-                top: 0,
-                bottom: 0,
-                width: TRGeneratedBorders.strongWidth,
-                child: ColoredBox(color: accent),
-              ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  TRGeneratedSpacing.md,
-                  TRGeneratedSpacing.md,
-                  TRGeneratedSpacing.sm,
-                  TRGeneratedSpacing.md,
+          // Intrinsic height so the accent bar can stretch to whatever the
+          // content ends up being, without the bar itself having any say in how
+          // tall the card is.
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  width: TRGeneratedBorders.strongWidth,
+                  child: ColoredBox(color: accent),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        spacing: TRGeneratedSpacing.xs,
-                        children: [
-                          TRLayerPartBoundary(
-                            name: 'title',
-                            child: DefaultTextStyle.merge(
-                              // A toast reports an outcome; it is not where a
-                              // stack trace is read. Clamping keeps the card a
-                              // predictable height whatever a caller passes,
-                              // so a long message cannot push the stack past
-                              // the viewport.
-                              maxLines: _titleMaxLines,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: colors.text,
-                                fontFamily: TRGeneratedFontFamilies.body,
-                                fontFamilyFallback:
-                                    TRGeneratedFontFamilies.fallback,
-                                fontSize: TRGeneratedTypographySizes.sm,
-                                fontWeight: TRGeneratedFontWeights.strong,
-                                height:
-                                    TRGeneratedFlutterRendering.normalLineMd /
-                                    TRGeneratedTypographySizes.sm,
-                              ),
-                              child: widget.data.title,
-                            ),
-                          ),
-                          if (widget.data.description case final description?)
-                            TRLayerPartBoundary(
-                              name: 'description',
-                              child: DefaultTextStyle.merge(
-                                maxLines: _descriptionMaxLines,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: colors.textMuted,
-                                  fontFamily: TRGeneratedFontFamilies.body,
-                                  fontFamilyFallback:
-                                      TRGeneratedFontFamilies.fallback,
-                                  fontSize: TRGeneratedTypographySizes.xs,
-                                  height:
-                                      TRGeneratedFlutterRendering.normalLineMd /
-                                      TRGeneratedTypographySizes.xs,
-                                ),
-                                child: description,
-                              ),
-                            ),
-                          ?widget.data.action,
-                        ],
-                      ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                      TRGeneratedSpacing.md,
+                      TRGeneratedSpacing.md,
+                      TRGeneratedSpacing.sm,
+                      TRGeneratedSpacing.md,
                     ),
-                    if (widget.data.dismissible)
-                      Transform.translate(
-                        // Pulls the ghost button's optical bounds back toward
-                        // the trailing edge. The sign follows the reading
-                        // direction; a fixed negative offset pushed the button
-                        // into the leading border under right-to-left text.
-                        offset: Offset(
-                          Directionality.of(context) == TextDirection.rtl
-                              ? TRGeneratedSpacing.sm
-                              : -TRGeneratedSpacing.sm,
-                          0,
-                        ),
-                        child: TRLayerPartBoundary(
-                          name: 'dismissIcon',
-                          child: TRIconButton(
-                            icon: const Icon(LucideIcons.x),
-                            label: MaterialLocalizations.of(
-                              context,
-                            ).closeButtonTooltip,
-                            onPressed: widget.onDismiss,
-                            appearance: TRAppearance.ghost,
-                            uiSize: TRUiSize.md,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            spacing: TRGeneratedSpacing.xs,
+                            children: [
+                              TRLayerPartBoundary(
+                                name: 'title',
+                                child: DefaultTextStyle.merge(
+                                  // A toast reports an outcome; it is not where a
+                                  // stack trace is read. Clamping keeps the card a
+                                  // predictable height whatever a caller passes,
+                                  // so a long message cannot push the stack past
+                                  // the viewport.
+                                  maxLines: _titleMaxLines,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: colors.text,
+                                    fontFamily: TRGeneratedFontFamilies.body,
+                                    fontFamilyFallback:
+                                        TRGeneratedFontFamilies.fallback,
+                                    fontSize: TRGeneratedTypographySizes.sm,
+                                    fontWeight: TRGeneratedFontWeights.strong,
+                                    height:
+                                        TRGeneratedFlutterRendering
+                                            .normalLineMd /
+                                        TRGeneratedTypographySizes.sm,
+                                  ),
+                                  child: widget.data.title,
+                                ),
+                              ),
+                              if (widget.data.description
+                                  case final description?)
+                                TRLayerPartBoundary(
+                                  name: 'description',
+                                  child: DefaultTextStyle.merge(
+                                    maxLines: _descriptionMaxLines,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: colors.textMuted,
+                                      fontFamily: TRGeneratedFontFamilies.body,
+                                      fontFamilyFallback:
+                                          TRGeneratedFontFamilies.fallback,
+                                      fontSize: TRGeneratedTypographySizes.xs,
+                                      height:
+                                          TRGeneratedFlutterRendering
+                                              .normalLineMd /
+                                          TRGeneratedTypographySizes.xs,
+                                    ),
+                                    child: description,
+                                  ),
+                                ),
+                              ?widget.data.action,
+                            ],
                           ),
                         ),
-                      ),
-                  ],
+                        if (widget.data.dismissible)
+                          Transform.translate(
+                            // Pulls the ghost button's optical bounds back toward
+                            // the trailing edge. The sign follows the reading
+                            // direction; a fixed negative offset pushed the button
+                            // into the leading border under right-to-left text.
+                            offset: Offset(
+                              Directionality.of(context) == TextDirection.rtl
+                                  ? TRGeneratedSpacing.sm
+                                  : -TRGeneratedSpacing.sm,
+                              0,
+                            ),
+                            child: TRLayerPartBoundary(
+                              name: 'dismissIcon',
+                              child: TRIconButton(
+                                icon: const Icon(LucideIcons.x),
+                                label: MaterialLocalizations.of(
+                                  context,
+                                ).closeButtonTooltip,
+                                onPressed: widget.onDismiss,
+                                appearance: TRAppearance.ghost,
+                                uiSize: TRUiSize.md,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
