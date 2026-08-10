@@ -8,10 +8,10 @@ const previewRoot = resolve(clientRoot, 'flutter-preview');
 const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
 // The Flutter preview catalog grows with each public component and the docs
 // example builder its page adds, at roughly 8 KB per
-// documented component. Typed first-line alignment and its chat/radio examples
-// bring the compiled bundle to 3,460,270 bytes. Keep a narrow regression margin
-// while allowing those public catalog variants.
-const maximumMainBytes = 3_470_000;
+// documented component. The select's sheet surface and its two searchable and
+// surface examples bring the compiled bundle to 3,470,378 bytes. Keep a narrow
+// regression margin while allowing those public catalog variants.
+const maximumMainBytes = 3_480_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;
 const expectedFlutterFonts = [
