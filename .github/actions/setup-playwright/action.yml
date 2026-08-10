@@ -1,0 +1,64 @@
+name: Set up Playwright browsers
+description: >-
+  Restore Playwright browsers from cache, downloading them only on a miss, then
+  smoke launch each one. The launch check runs on every path so a cache entry
+  that restored a broken browser fails here rather than inside a test suite.
+
+inputs:
+  filter:
+    description: pnpm filter selecting the package that owns the Playwright dependency.
+    required: true
+  browsers:
+    description: Space separated Playwright browser names to install.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve the Playwright browser directory
+      shell: bash
+      run: echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/ms-playwright" >> "$GITHUB_ENV"
+
+    - name: Read the Playwright version
+      id: playwright
+      shell: bash
+      env:
+        PACKAGE_FILTER: ${{ inputs.filter }}
+      run: |
+        # `playwright --version` prints "Version 1.62.1", and the browser
+        # revisions are pinned to that version, so it is the whole cache key.
+        version="$(pnpm --filter "$PACKAGE_FILTER" exec playwright --version | awk '{print $2}')"
+        if [[ -z "$version" ]]; then
+          echo "::error::Could not resolve the Playwright version for $PACKAGE_FILTER"
+          exit 1
+        fi
+        echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+    - name: Restore Playwright browsers
+      id: cache
+      uses: actions/cache@v6.1.0
+      with:
+        path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+        key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-${{ inputs.browsers }}
+
+    - name: Install Playwright browsers
+      if: steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        PACKAGE_FILTER: ${{ inputs.filter }}
+        PLAYWRIGHT_BROWSERS: ${{ inputs.browsers }}
+      run: pnpm --filter "$PACKAGE_FILTER" exec playwright install $PLAYWRIGHT_BROWSERS
+
+    - name: Smoke launch Playwright browsers
+      shell: bash
+      env:
+        PACKAGE_FILTER: ${{ inputs.filter }}
+        PLAYWRIGHT_BROWSERS: ${{ inputs.browsers }}
+      run: |
+        for browser in $PLAYWRIGHT_BROWSERS; do
+          pnpm --filter "$PACKAGE_FILTER" exec node --input-type=module -e "
+            const playwright = await import('playwright');
+            const browser = await playwright['${browser}'].launch({ headless: true });
+            await browser.close();
+          "
+        done

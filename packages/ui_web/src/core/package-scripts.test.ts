@@ -113,6 +113,37 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('pnpm --filter @tinyrack/homepage test:prepared');
   });
 
+  it('caches Playwright browsers and the pub cache behind shared actions', () => {
+    const repositoryRoot = resolve(import.meta.dirname, '../../../..');
+    const ci = readFileSync(
+      resolve(repositoryRoot, '.github/workflows/ci.yml'),
+      'utf8',
+    );
+    const playwrightAction = readFileSync(
+      resolve(repositoryRoot, '.github/actions/setup-playwright/action.yml'),
+      'utf8',
+    );
+    const flutterAction = readFileSync(
+      resolve(repositoryRoot, '.github/actions/setup-flutter/action.yml'),
+      'utf8',
+    );
+
+    // Browser and SDK setup live in one action each so a cache key or a
+    // pinned SDK version cannot drift between the jobs that use them.
+    expect(ci).not.toContain('playwright install');
+    expect(ci).not.toContain('subosito/flutter-action');
+    expect(playwrightAction).not.toContain('playwright install --with-deps');
+    expect(flutterAction).toContain('path: ~/.pub-cache');
+
+    // The smoke launch has to run on a cache hit too. It is the only thing
+    // that catches a restored browser that cannot actually start, and on a
+    // hit the install step it used to follow is skipped.
+    expect(playwrightAction).toContain('Smoke launch Playwright browsers');
+    expect(playwrightAction).not.toMatch(
+      /Smoke launch Playwright browsers[\s\S]*?cache-hit/,
+    );
+  });
+
   it('keeps CI package-scoped behind one stable gate', () => {
     const repositoryRoot = resolve(import.meta.dirname, '../../../..');
     const ci = readFileSync(
