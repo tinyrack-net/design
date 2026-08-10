@@ -439,6 +439,95 @@ void main() {
       expect(selected, <String>['metrics']);
     });
 
+    testWidgets('selects a draggable tab despite pointer drift', (
+      tester,
+    ) async {
+      final selected = <String>[];
+      await tester.pumpWidget(
+        _app(
+          TRTabs(
+            tabs: _tabs(closable: false),
+            onValueChange: selected.add,
+            dragConfiguration: TRTabsDragConfiguration(
+              groupId: 'panes',
+              onDrop: (_) {},
+            ),
+          ),
+        ),
+      );
+
+      final gesture = await tester.startGesture(
+        tester.getCenter(
+          find.byKey(const ValueKey<String>('tr-tabs-tab-metrics')),
+        ),
+        kind: PointerDeviceKind.mouse,
+      );
+      await gesture.moveBy(Offset(TRMeasurements.dragStartDistance / 2, 0));
+      await gesture.up();
+      await tester.pumpAndSettle();
+
+      expect(selected, <String>['metrics']);
+    });
+
+    testWidgets('drags a tab once the pointer passes the start distance', (
+      tester,
+    ) async {
+      final drops = <TRTabDropDetails>[];
+      final selected = <String>[];
+      await tester.pumpWidget(
+        _app(
+          TRTabs(
+            tabs: _tabs(closable: false),
+            onValueChange: selected.add,
+            dragConfiguration: TRTabsDragConfiguration(
+              groupId: 'panes',
+              onDrop: drops.add,
+            ),
+          ),
+        ),
+      );
+
+      final gesture = await tester.startGesture(
+        tester.getCenter(
+          find.byKey(const ValueKey<String>('tr-tabs-tab-overview')),
+        ),
+        kind: PointerDeviceKind.mouse,
+      );
+      await gesture.moveBy(const Offset(340, 0));
+      await gesture.up();
+      await tester.pumpAndSettle();
+
+      expect(selected, isEmpty);
+      expect(drops, hasLength(1));
+      expect(drops.single.targetIndex, 1);
+    });
+
+    testWidgets('selects from the padded edges of a tab', (tester) async {
+      final selected = <String>[];
+      await tester.pumpWidget(
+        _app(
+          TRTabs(
+            tabs: _tabs(closable: false),
+            onValueChange: selected.add,
+            dragConfiguration: TRTabsDragConfiguration(
+              groupId: 'panes',
+              onDrop: (_) {},
+            ),
+          ),
+        ),
+      );
+
+      final rect = tester.getRect(
+        find.byKey(const ValueKey<String>('tr-tabs-tab-metrics')),
+      );
+      await tester.tapAt(Offset(rect.left + 1, rect.center.dy));
+      await tester.pumpAndSettle();
+      await tester.tapAt(Offset(rect.center.dx, rect.top + 1));
+      await tester.pumpAndSettle();
+
+      expect(selected, <String>['metrics', 'metrics']);
+    });
+
     testWidgets('closes a tab without selecting it', (tester) async {
       final closed = <String>[];
       final selected = <String>[];
@@ -549,6 +638,40 @@ void main() {
       await tester.pumpWidget(_app(TRTabs(tabs: _tabs())));
 
       expect(find.bySemanticsLabel('Close Overview'), findsOneWidget);
+      semantics.dispose();
+    });
+
+    testWidgets('offers the tab itself as an activatable button', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await tester.pumpWidget(
+        _app(
+          TRTabs(
+            tabs: _tabs(),
+            dragConfiguration: TRTabsDragConfiguration(
+              groupId: 'panes',
+              onDrop: (_) {},
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        tester.getSemantics(
+          find.byKey(const ValueKey<String>('tr-tabs-tab-metrics')),
+        ),
+        matchesSemantics(
+          label: 'Metrics',
+          isButton: true,
+          isEnabled: true,
+          hasEnabledState: true,
+          hasSelectedState: true,
+          isFocusable: true,
+          hasTapAction: true,
+          hasFocusAction: true,
+        ),
+      );
       semantics.dispose();
     });
 

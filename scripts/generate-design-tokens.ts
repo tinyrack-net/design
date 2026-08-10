@@ -696,6 +696,7 @@ function dartOutput() {
     measureLg: requiredLayerMeasurement('measure-lg'),
     measureXl: requiredLayerMeasurement('measure-xl'),
     splitPaneMinExtent: requiredLayerMeasurement('split-pane-min-extent'),
+    dragStartDistance: requiredLayerMeasurement('drag-start-distance'),
     overlayWidthSm: requiredLayerMeasurement('overlay-width-sm'),
     overlayWidthMd: requiredLayerMeasurement('overlay-width-md'),
     overlayInlineInset: requiredLayerMeasurement('overlay-inline-inset'),

@@ -77,6 +77,15 @@ abstract final class TRMeasurements {
   /// Minimum usable extent of one child in a resizable split surface.
   static const splitPaneMinExtent = TRGeneratedMeasurements.splitPaneMinExtent;
 
+  /// Distance a pointer travels before a press turns into a drag.
+  ///
+  /// Flutter starts a drag once a pointer passes its device hit slop, which is
+  /// a single logical pixel for a mouse. A draggable control would then lose
+  /// an ordinary click to the drag whenever the pointer drifted while the
+  /// button was down, so a draggable surface raises the start distance to this
+  /// value for precise pointers.
+  static const dragStartDistance = TRGeneratedMeasurements.dragStartDistance;
+
   static const overlayWidthSm = TRGeneratedMeasurements.overlayWidthSm;
   static const overlayWidthMd = TRGeneratedMeasurements.overlayWidthMd;
   static const overlayInlineInset = TRGeneratedMeasurements.overlayInlineInset;

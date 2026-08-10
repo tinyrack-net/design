@@ -1,3 +1,21 @@
+## 0.47.1
+
+- Selects a draggable tab on an ordinary click again. `Draggable` claims the
+  gesture as soon as the pointer passes its device hit slop, which is a single
+  logical pixel for a mouse, so a click that drifted while the button was down
+  started a drag and the strip reported nothing. A tab now waits for
+  `TRMeasurements.dragStartDistance` before the drag takes over, and keeps the
+  platform slop on touch. A strip built with `dragConfiguration` needed several
+  clicks to switch tabs.
+- Selects from the whole tab, not only from its label. The tap surface sat
+  inside the tab's padding, so a click on the padding, the strip rule, or the
+  band above and below the label landed on nothing while the hover surface
+  still reacted to it. The close control keeps its own tap target and its own
+  node in the semantics tree, and a tab now reports its label and a tap action
+  to assistive technology instead of leaving activation to the keyboard.
+- Adds `TRMeasurements.dragStartDistance`, the distance a pointer travels
+  before a press on a draggable surface turns into a drag.
+
 ## 0.47.0
 
 - Adds `TRSelect.searchable`, which opens a filter field above the options and
