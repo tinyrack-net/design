@@ -1,3 +1,15 @@
+## 0.45.1
+
+- Reports an unavailable `TRSwitch` by fading the whole control at
+  `TRGeneratedOpacity.disabled`, the way `TRCheckbox` already does, instead of
+  swapping the palette. A disabled switch that was on used to paint a
+  `surfaceSelected` track with a full-opacity `primary` thumb, which inverted
+  the enabled on state and read as a different control rather than as the same
+  switch the reader had just lost access to.
+- Keeps a disabled or read-only `TRSwitch` at its resting colors while the
+  pointer is over it. Hover was still repainting the track, which the Web
+  package has always excluded.
+
 ## 0.45.0
 
 - Fixes `TRToastRegion` painting: the card drew a rounded rectangle over a
