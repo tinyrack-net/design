@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
@@ -49,6 +50,65 @@ final class _TRTabDragData {
 
   final String groupId;
   final String value;
+}
+
+/// Claims a tab only once the pointer has travelled a deliberate distance.
+///
+/// A plain [Draggable] wins the gesture arena as soon as the pointer passes
+/// its device hit slop, which is a single logical pixel for a mouse. A click
+/// that drifts by a pixel would then start a drag and the tab would never
+/// report a selection, so the press has to travel the drag start distance
+/// before the drag takes over. Touch keeps the platform slop, which is already
+/// coarse enough to click through.
+class _TRTabDragPointerState extends MultiDragPointerState {
+  _TRTabDragPointerState(
+    super.initialPosition,
+    super.kind,
+    super.gestureSettings,
+  );
+
+  @override
+  void checkForResolutionAfterMove() {
+    final delta = pendingDelta;
+    if (delta == null) return;
+    final slop = math.max(
+      computeHitSlop(kind, gestureSettings),
+      TRGeneratedMeasurements.dragStartDistance,
+    );
+    if (delta.distance > slop) resolve(GestureDisposition.accepted);
+  }
+
+  @override
+  void accepted(GestureMultiDragStartCallback starter) =>
+      starter(initialPosition);
+}
+
+class _TRTabDragGestureRecognizer extends MultiDragGestureRecognizer {
+  _TRTabDragGestureRecognizer({super.debugOwner, super.allowedButtonsFilter});
+
+  @override
+  MultiDragPointerState createNewPointerState(PointerDownEvent event) =>
+      _TRTabDragPointerState(event.position, event.kind, gestureSettings);
+
+  @override
+  String get debugDescription => 'tab drag';
+}
+
+class _TRTabDraggable extends Draggable<_TRTabDragData> {
+  const _TRTabDraggable({
+    required super.data,
+    required super.feedback,
+    required super.child,
+    super.childWhenDragging,
+  });
+
+  @override
+  MultiDragGestureRecognizer createRecognizer(
+    GestureMultiDragStartCallback onStart,
+  ) => _TRTabDragGestureRecognizer(
+    debugOwner: this,
+    allowedButtonsFilter: allowedButtonsFilter,
+  )..onStart = onStart;
 }
 
 /// A single tab within [TRTabs].
@@ -477,72 +537,41 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
         ? Duration.zero
         : TRGeneratedMotion.fast;
 
-    final selection = GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: interactive ? widget.onSelect : null,
-      child: Row(
-        children: <Widget>[
-          if (widget.tab.leading case final leading?) ...<Widget>[
-            IconTheme.merge(
-              data: IconThemeData(
-                color: widget.selected || _hovered
-                    ? colors.text
-                    : colors.textMuted,
-              ),
-              child: leading,
+    final label = Row(
+      children: <Widget>[
+        if (widget.tab.leading case final leading?) ...<Widget>[
+          IconTheme.merge(
+            data: IconThemeData(
+              color: widget.selected || _hovered
+                  ? colors.text
+                  : colors.textMuted,
             ),
-            const SizedBox(width: TRGeneratedSpacing.sm),
-          ],
-          Expanded(
-            child: AnimatedDefaultTextStyle(
-              curve: TRGeneratedMotion.standard,
-              duration: motionDuration,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: TextStyle(
-                color: widget.selected || _hovered
-                    ? colors.text
-                    : colors.textMuted,
-                fontFamily: TRGeneratedFontFamilies.body,
-                fontSize: fontSize,
-                fontWeight: widget.selected
-                    ? TRGeneratedFontWeights.bold
-                    : TRGeneratedFontWeights.medium,
-                height: lineHeight / fontSize,
-              ),
-              child: Text(widget.tab.label),
-            ),
+            child: leading,
           ),
+          const SizedBox(width: TRGeneratedSpacing.sm),
         ],
-      ),
+        Expanded(
+          child: AnimatedDefaultTextStyle(
+            curve: TRGeneratedMotion.standard,
+            duration: motionDuration,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+              color: widget.selected || _hovered
+                  ? colors.text
+                  : colors.textMuted,
+              fontFamily: TRGeneratedFontFamilies.body,
+              fontSize: fontSize,
+              fontWeight: widget.selected
+                  ? TRGeneratedFontWeights.bold
+                  : TRGeneratedFontWeights.medium,
+              height: lineHeight / fontSize,
+            ),
+            child: Text(widget.tab.label),
+          ),
+        ),
+      ],
     );
-    final draggableSelection = widget.dragConfiguration == null || !interactive
-        ? selection
-        : Draggable<_TRTabDragData>(
-            data: _TRTabDragData(
-              groupId: widget.dragConfiguration!.groupId,
-              value: widget.tab.value,
-            ),
-            feedback: InheritedTheme.captureAll(
-              context,
-              Opacity(
-                opacity: TRGeneratedOpacity.hover,
-                child: SizedBox(
-                  width: widget.width,
-                  height: widget.stripHeight,
-                  child: ColoredBox(
-                    color: colors.surfaceSelected,
-                    child: Center(child: Text(widget.tab.label)),
-                  ),
-                ),
-              ),
-            ),
-            childWhenDragging: Opacity(
-              opacity: TRGeneratedOpacity.disabled,
-              child: selection,
-            ),
-            child: selection,
-          );
 
     final tabContent = SizedBox(
       height: widget.stripHeight,
@@ -563,7 +592,7 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
               height: widget.height,
               child: Row(
                 children: <Widget>[
-                  Expanded(child: draggableSelection),
+                  Expanded(child: label),
                   if (widget.tab.onClose case final onClose?) ...<Widget>[
                     const SizedBox(width: TRGeneratedSpacing.xs),
                     TRIconButton(
@@ -608,6 +637,45 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
       ),
     );
 
+    // The whole cell selects, including its padding and the strip rule beneath
+    // it, so a click anywhere the hover surface reacts to also switches tabs.
+    // The close control sits deeper in the tree and still wins the arena.
+    // The pointer surface stays out of the semantics tree so it cannot absorb
+    // the close control's node; the tab reports its own tap action below.
+    final selection = GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
+      onTap: interactive ? widget.onSelect : null,
+      child: tabContent,
+    );
+    final tabSurface = widget.dragConfiguration == null || !interactive
+        ? selection
+        : _TRTabDraggable(
+            data: _TRTabDragData(
+              groupId: widget.dragConfiguration!.groupId,
+              value: widget.tab.value,
+            ),
+            feedback: InheritedTheme.captureAll(
+              context,
+              Opacity(
+                opacity: TRGeneratedOpacity.hover,
+                child: SizedBox(
+                  width: widget.width,
+                  height: widget.stripHeight,
+                  child: ColoredBox(
+                    color: colors.surfaceSelected,
+                    child: Center(child: Text(widget.tab.label)),
+                  ),
+                ),
+              ),
+            ),
+            childWhenDragging: Opacity(
+              opacity: TRGeneratedOpacity.disabled,
+              child: tabContent,
+            ),
+            child: selection,
+          );
+
     return CallbackShortcuts(
       bindings: interactive
           ? <ShortcutActivator, VoidCallback>{
@@ -628,12 +696,13 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
             button: true,
             enabled: interactive,
             selected: widget.selected,
+            onTap: interactive ? widget.onSelect : null,
             child: widget.tab.disabled
                 ? Opacity(
                     opacity: TRGeneratedOpacity.disabled,
-                    child: tabContent,
+                    child: tabSurface,
                   )
-                : tabContent,
+                : tabSurface,
           ),
         ),
       ),

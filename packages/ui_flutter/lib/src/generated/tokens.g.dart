@@ -419,6 +419,7 @@ abstract final class TRGeneratedMeasurements {
   static const double measureLg = 256.0;
   static const double measureXl = 384.0;
   static const double splitPaneMinExtent = 192.0;
+  static const double dragStartDistance = 6.0;
   static const double overlayWidthSm = 320.0;
   static const double overlayWidthMd = 512.0;
   static const double overlayInlineInset = 24.0;
