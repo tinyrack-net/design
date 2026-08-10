@@ -169,6 +169,7 @@ const publicTypes = <Type>[
   TRSelect,
   TRSelectFormField,
   TRSelectItem,
+  TRSelectSurface,
   TRSeparator,
   TRSeparatorOrientation,
   TRSeparatorVariant,
@@ -250,6 +251,7 @@ const publicTypedefNames = <String>{
   'TRMenuElementsBuilder',
   'TROtpSeparatorBuilder',
   'TRPaginationRangeItem',
+  'TRSelectFilter',
   'TRSliderLabelBuilder',
 };
 

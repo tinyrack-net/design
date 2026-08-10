@@ -269,6 +269,42 @@ void main() {
           await tester.pumpWidget(
             _goldenApp(
               theme: themeCase.$2,
+              child: Center(
+                child: SizedBox(
+                  width: 280,
+                  // A distinct key retires the previous scene's select instead
+                  // of handing this one a state that is already open, which a
+                  // tap would then close.
+                  child: TRSelect<String>(
+                    key: const ValueKey('searchable-select'),
+                    label: strings.selectLabel,
+                    placeholder: strings.selectPlaceholder,
+                    searchable: true,
+                    searchPlaceholder: strings.selectSearch,
+                    items: [
+                      TRSelectItem(value: 'first', label: strings.selectFirst),
+                      TRSelectItem(
+                        value: 'second',
+                        label: strings.selectSecond,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.tap(find.text(strings.selectPlaceholder));
+          await tester.pumpAndSettle();
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile(
+              'goldens/layers-$language-${themeCase.$1}-select-search.png',
+            ),
+          );
+
+          await tester.pumpWidget(
+            _goldenApp(
+              theme: themeCase.$2,
               child: Builder(
                 builder: (context) => TRButton(
                   onPressed: () => showTRDialog<void>(
@@ -293,6 +329,57 @@ void main() {
             find.byType(MaterialApp),
             matchesGoldenFile(
               'goldens/layers-$language-${themeCase.$1}-dialog-open.png',
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  // The sheet surface needs a viewport a select would actually pick it for, and
+  // that is the view's own metrics rather than the render surface: `MediaQuery`
+  // is built from the view, so `setSurfaceSize` alone would leave the select
+  // reading the default 800 logical pixels and opening a dropdown.
+  for (final themeCase in <(String, ThemeData)>[
+    ('light', TinyrackTheme.light()),
+    ('dark', TinyrackTheme.dark()),
+  ]) {
+    for (final localeCase in _layerLocales.entries) {
+      testWidgets(
+        'a select sheet preserves ${themeCase.$1} ${localeCase.key} appearance',
+        (tester) async {
+          await _loadPackageFontAliases();
+          _useTolerantGoldenComparator();
+          tester.view.devicePixelRatio = 1;
+          tester.view.physicalSize = const Size(360, 520);
+          addTearDown(tester.view.reset);
+
+          final language = localeCase.key;
+          final strings = localeCase.value;
+          await tester.pumpWidget(
+            _goldenApp(
+              theme: themeCase.$2,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: TRSelect<String>(
+                  label: strings.selectLabel,
+                  placeholder: strings.selectPlaceholder,
+                  searchable: true,
+                  searchPlaceholder: strings.selectSearch,
+                  items: [
+                    TRSelectItem(value: 'first', label: strings.selectFirst),
+                    TRSelectItem(value: 'second', label: strings.selectSecond),
+                  ],
+                ),
+              ),
+            ),
+          );
+          await tester.tap(find.text(strings.selectPlaceholder));
+          await tester.pumpAndSettle();
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile(
+              'goldens/layers-$language-${themeCase.$1}-select-sheet.png',
             ),
           );
         },
@@ -413,6 +500,7 @@ const _layerLocales = <String, _LayerStrings>{
     selectPlaceholder: 'Choose a region',
     selectFirst: 'Korea',
     selectSecond: 'Japan',
+    selectSearch: 'Search regions',
     dialogTrigger: 'Review changes',
     dialogTitle: 'Deploy changes?',
     dialogDescription: 'The latest settings will be applied.',
@@ -426,6 +514,7 @@ const _layerLocales = <String, _LayerStrings>{
     selectPlaceholder: '지역 선택',
     selectFirst: '한국',
     selectSecond: '일본',
+    selectSearch: '지역 검색',
     dialogTrigger: '변경 사항 검토',
     dialogTitle: '변경 사항을 배포할까요?',
     dialogDescription: '최신 설정이 적용됩니다.',
@@ -439,6 +528,7 @@ const _layerLocales = <String, _LayerStrings>{
     selectPlaceholder: '地域を選択',
     selectFirst: '韓国',
     selectSecond: '日本',
+    selectSearch: '地域を検索',
     dialogTrigger: '変更を確認',
     dialogTitle: '変更をデプロイしますか？',
     dialogDescription: '最新の設定が適用されます。',
@@ -455,6 +545,7 @@ final class _LayerStrings {
     required this.selectPlaceholder,
     required this.selectFirst,
     required this.selectSecond,
+    required this.selectSearch,
     required this.dialogTrigger,
     required this.dialogTitle,
     required this.dialogDescription,
@@ -468,6 +559,7 @@ final class _LayerStrings {
   final String selectPlaceholder;
   final String selectFirst;
   final String selectSecond;
+  final String selectSearch;
   final String dialogTrigger;
   final String dialogTitle;
   final String dialogDescription;

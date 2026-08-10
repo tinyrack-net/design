@@ -8,12 +8,19 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 TinyrackThemeData get _colors =>
     TinyrackTheme.light().extension<TinyrackThemeData>()!;
 
+/// Turns animations off without discarding the rest of the media data.
+///
+/// The viewport size is load-bearing now that a select picks its surface from
+/// it, so replacing the whole [MediaQueryData] would silently move these cases
+/// onto the sheet.
 Widget _app(Widget child) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(
-    body: MediaQuery(
-      data: const MediaQueryData(disableAnimations: true),
-      child: Align(alignment: Alignment.topLeft, child: child),
+    body: Builder(
+      builder: (context) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(disableAnimations: true),
+        child: Align(alignment: Alignment.topLeft, child: child),
+      ),
     ),
   ),
 );

@@ -12,10 +12,30 @@ import '../../internal/form_registry.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
+import '../drawer/drawer.dart';
+import '../text_field/text_field.dart';
 
 part 'select_chevron.dart';
 part 'select_form_field.dart';
 part 'select_item.dart';
+part 'select_options.dart';
+part 'select_sheet.dart';
+
+/// Surface a [TRSelect] presents its options on.
+enum TRSelectSurface {
+  /// A dropdown on a viewport at least [TRBreakpoints.small] wide, and a
+  /// bottom sheet below it.
+  auto,
+
+  /// Always an anchored dropdown.
+  menu,
+
+  /// Always a bottom sheet.
+  sheet,
+}
+
+/// Matches an option against the current query.
+typedef TRSelectFilter<T> = bool Function(TRSelectItem<T> item, String query);
 
 // @tinyrack-preview select
 /// A Material-native, single-value select with controlled and uncontrolled APIs.
@@ -39,6 +59,11 @@ class TRSelect<T> extends StatefulWidget {
     this.onValueChange,
     this.width,
     this.restorationId,
+    this.searchable = false,
+    this.searchPlaceholder = 'Search',
+    this.noResultsText = 'No results',
+    this.filter,
+    this.surface = TRSelectSurface.auto,
     super.key,
   }) : value = null,
        _controlled = false;
@@ -66,6 +91,11 @@ class TRSelect<T> extends StatefulWidget {
     this.onValueChange,
     this.width,
     this.restorationId,
+    this.searchable = false,
+    this.searchPlaceholder = 'Search',
+    this.noResultsText = 'No results',
+    this.filter,
+    this.surface = TRSelectSurface.auto,
     super.key,
   }) : defaultValue = null,
        _controlled = true;
@@ -96,6 +126,25 @@ class TRSelect<T> extends StatefulWidget {
   final ValueChanged<T?>? onValueChange;
   final double? width;
   final String? restorationId;
+
+  /// Whether the open surface offers a field that filters the options.
+  ///
+  /// A short list is faster to read than to type against, so this stays off
+  /// until a call site says its list is long enough to be worth searching.
+  final bool searchable;
+
+  /// Placeholder of the filter field.
+  final String searchPlaceholder;
+
+  /// Shown in place of the rows when the filter matches nothing.
+  final String noResultsText;
+
+  /// Replaces the default case-insensitive substring match on the item label.
+  final TRSelectFilter<T>? filter;
+
+  /// Whether the options open in a dropdown, a sheet, or whichever suits the
+  /// viewport.
+  final TRSelectSurface surface;
   final bool _controlled;
 
   @override
@@ -114,9 +163,47 @@ class _TRSelectState<T> extends State<TRSelect<T>>
   String _typeaheadBuffer = '';
   double? _anchorWidth;
   bool _reportedOpen = false;
+  TextEditingController? _searchController;
+  FocusNode? _searchFocusNode;
+  String _query = '';
+
+  /// The surface the currently open options are on, or null while closed.
+  ///
+  /// Resolved once at open time so a resize cannot swap the surface out from
+  /// under a list the user is already reading.
+  TRSelectSurface? _openSurface;
 
   T? get _selectedValue =>
       widget._controlled ? widget.value : _uncontrolledValue;
+
+  TextEditingController get _searchTextController =>
+      _searchController ??= TextEditingController(text: _query);
+
+  FocusNode get _searchFocus =>
+      _searchFocusNode ??= FocusNode(onKeyEvent: _handleSearchKey);
+
+  /// Options matching the current query, paired with their focus nodes.
+  ///
+  /// The nodes stay indexed by the item's position in [TRSelect.items] so a
+  /// filter change cannot leave arrow-key focus pointing at another row.
+  ({List<TRSelectItem<T>> items, List<FocusNode> focusNodes}) get _visible {
+    final items = <TRSelectItem<T>>[];
+    final focusNodes = <FocusNode>[];
+    for (var index = 0; index < widget.items.length; index += 1) {
+      final item = widget.items[index];
+      if (!_matches(item)) continue;
+      items.add(item);
+      focusNodes.add(_itemFocusNodes[index]);
+    }
+    return (items: items, focusNodes: focusNodes);
+  }
+
+  bool _matches(TRSelectItem<T> item) {
+    if (!widget.searchable || _query.isEmpty) return true;
+    final filter = widget.filter;
+    if (filter != null) return filter(item, _query);
+    return item.label.toLowerCase().contains(_query.toLowerCase());
+  }
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_internalFocusNode ??= FocusNode());
@@ -163,6 +250,8 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     for (final focusNode in _itemFocusNodes) {
       focusNode.dispose();
     }
+    _searchController?.dispose();
+    _searchFocusNode?.dispose();
     _internalFocusNode?.dispose();
     super.dispose();
   }
@@ -201,7 +290,14 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     if (mounted) setState(() {});
     widget.onOpen?.call();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_menuController.isOpen) return;
+      if (!mounted || _openSurface != TRSelectSurface.menu) return;
+      if (!_menuController.isOpen) return;
+      // A searchable select is opened to be typed into, so the query field
+      // takes focus rather than the row the value already sits on.
+      if (widget.searchable) {
+        _searchFocus.requestFocus();
+        return;
+      }
       final selectedIndex = widget.items.indexWhere(
         (item) => item.enabled && item.value == _selectedValue,
       );
@@ -216,6 +312,9 @@ class _TRSelectState<T> extends State<TRSelect<T>>
   void _handleClose() {
     if (!_reportedOpen) return;
     _reportedOpen = false;
+    _openSurface = null;
+    _query = '';
+    _searchController?.clear();
     if (mounted) setState(() {});
     widget.onClose?.call();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -229,20 +328,99 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     }
     _restoredLabel.value = _labelFor(value);
     widget.onValueChange?.call(value);
-    _menuController.close();
+    // The sheet has already popped itself with the chosen value; only the
+    // dropdown still needs dismissing.
+    if (_openSurface == TRSelectSurface.menu) _menuController.close();
   }
 
+  TRSelectSurface _resolveSurface() => switch (widget.surface) {
+    TRSelectSurface.auto =>
+      MediaQuery.sizeOf(context).width < TRBreakpoints.small
+          ? TRSelectSurface.sheet
+          : TRSelectSurface.menu,
+    final surface => surface,
+  };
+
   void _toggleMenu() {
-    if (_menuController.isOpen) {
-      _menuController.close();
+    if (_reportedOpen) {
+      if (_openSurface == TRSelectSurface.menu) _menuController.close();
       return;
     }
     final renderObject = _anchorKey.currentContext?.findRenderObject();
     if (renderObject is RenderBox && renderObject.hasSize) {
       _anchorWidth = renderObject.size.width;
     }
+    _query = '';
+    _searchController?.clear();
+    _openSurface = _resolveSurface();
+    if (_openSurface == TRSelectSurface.sheet) {
+      unawaited(_openSheet());
+      return;
+    }
     setState(() {});
     _menuController.open();
+  }
+
+  Future<void> _openSheet() async {
+    _handleOpen();
+    final choice = await showTRDrawer<_TRSelectChoice<T>>(
+      context: context,
+      builder: (_) => _TRSelectSheet<T>(
+        items: widget.items,
+        selectedValue: _selectedValue,
+        searchable: widget.searchable,
+        initialQuery: _query,
+        matches: (item, query) {
+          final filter = widget.filter;
+          if (filter != null) return filter(item, query);
+          return item.label.toLowerCase().contains(query.toLowerCase());
+        },
+        noResultsText: widget.noResultsText,
+        searchPlaceholder: widget.searchPlaceholder,
+        uiSize: widget.uiSize,
+        label: widget.label,
+      ),
+    );
+    if (!mounted) return;
+    if (choice != null) _handleSelected(choice.value);
+    _handleClose();
+  }
+
+  void _setQuery(String query) {
+    if (_query == query) return;
+    setState(() => _query = query);
+    final controller = _searchController;
+    if (controller != null && controller.text != query) {
+      controller.value = TextEditingValue(
+        text: query,
+        selection: TextSelection.collapsed(offset: query.length),
+      );
+    }
+  }
+
+  /// Commits the only remaining match, so Enter finishes a query that has
+  /// already narrowed the list to one answer.
+  void _commitSoleMatch() {
+    final visible = _visible.items;
+    if (visible.length != 1) return;
+    final item = visible.single;
+    if (!item.enabled) return;
+    _handleSelected(item.value);
+  }
+
+  KeyEventResult _handleSearchKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final key = event.logicalKey;
+    if (key == LogicalKeyboardKey.escape) {
+      _menuController.close();
+      return KeyEventResult.handled;
+    }
+    if (key != LogicalKeyboardKey.arrowDown) return KeyEventResult.ignored;
+    final visible = _visible;
+    final index = visible.items.indexWhere((item) => item.enabled);
+    if (index < 0) return KeyEventResult.handled;
+    visible.focusNodes[index].requestFocus();
+    return KeyEventResult.handled;
   }
 
   KeyEventResult _handleTriggerKey(FocusNode node, KeyEvent event) {
@@ -255,8 +433,10 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       return KeyEventResult.handled;
     }
     if (key == LogicalKeyboardKey.arrowDown) {
-      if (!_menuController.isOpen) {
+      if (!_reportedOpen) {
         _toggleMenu();
+      } else if (widget.searchable) {
+        _searchFocus.requestFocus();
       } else {
         final firstEnabled = widget.items.indexWhere((item) => item.enabled);
         if (firstEnabled >= 0) {
@@ -269,7 +449,21 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       _menuController.close();
       return KeyEventResult.handled;
     }
-    return _handleTypeahead(event);
+    // Typeahead jumps between rows, which a query field already does better,
+    // so a searchable select spends the same keystroke on the query instead.
+    return widget.searchable ? _seedQuery(event) : _handleTypeahead(event);
+  }
+
+  KeyEventResult _seedQuery(KeyEvent event) {
+    final character = event.character;
+    if (character == null ||
+        character.runes.length != 1 ||
+        character.trim().isEmpty) {
+      return KeyEventResult.ignored;
+    }
+    if (!_reportedOpen) _toggleMenu();
+    _setQuery(_query + character);
+    return KeyEventResult.handled;
   }
 
   KeyEventResult _handleTypeahead(KeyEvent event) {
@@ -320,6 +514,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     final selectedValue = _selectedValue;
     final interactive = widget.enabled && !widget.readOnly;
     final selectedLabel = _labelFor(selectedValue);
+    final visible = _visible;
     final popupWidth = math.min(
       _anchorWidth ?? widget.width ?? TRGeneratedMeasurements.measureMd,
       math.max(
@@ -327,60 +522,6 @@ class _TRSelectState<T> extends State<TRSelect<T>>
         MediaQuery.sizeOf(context).width -
             TRGeneratedMeasurements.overlayInlineInset,
       ),
-    );
-    ButtonStyle itemStyle(bool selected) => ButtonStyle(
-      alignment: AlignmentDirectional.centerStart,
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        // Highlight before selection, matching the web and TRLayerStyles.option:
-        // the check indicator says which row is selected, the background says
-        // which row the keyboard or pointer is on.
-        if (states.contains(WidgetState.focused) ||
-            states.contains(WidgetState.hovered)) {
-          return colors.surfaceHover;
-        }
-        if (selected) return colors.surfaceSelected;
-        return Colors.transparent;
-      }),
-      foregroundColor: WidgetStateProperty.resolveWith(
-        (states) => states.contains(WidgetState.disabled)
-            ? colors.textMuted
-            : colors.text,
-      ),
-      iconSize: WidgetStatePropertyAll(
-        TRControlMetrics.iconSizeOf(TRLayerStyles.rowSize),
-      ),
-      minimumSize: WidgetStatePropertyAll(
-        Size(0, TRControlMetrics.heightOf(TRLayerStyles.rowSize)),
-      ),
-      maximumSize: WidgetStatePropertyAll(
-        Size(double.infinity, TRControlMetrics.heightOf(TRLayerStyles.rowSize)),
-      ),
-      overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-      padding: WidgetStatePropertyAll(
-        EdgeInsets.symmetric(
-          horizontal: TRControlMetrics.inlinePaddingOf(TRLayerStyles.rowSize),
-        ),
-      ),
-      shape: WidgetStatePropertyAll(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
-        ),
-      ),
-      side: WidgetStateProperty.resolveWith((states) {
-        final highlighted =
-            states.contains(WidgetState.focused) || (selected && _reportedOpen);
-        return BorderSide(
-          color: highlighted ? colors.focus : Colors.transparent,
-          width: highlighted
-              ? TRGeneratedBorders.focusWidth
-              : TRGeneratedBorders.defaultWidth,
-        );
-      }),
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textStyle: WidgetStatePropertyAll(
-        TRControlMetrics.labelStyleOf(TRLayerStyles.rowSize),
-      ),
-      visualDensity: VisualDensity.standard,
     );
     // Resolved from the same states for both the fill and the border so the
     // two never disagree about the trigger's appearance.
@@ -415,7 +556,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
         error: error,
         focused: focused,
         hovered: hovered,
-        open: _menuController.isOpen,
+        open: _reportedOpen,
         readOnly: widget.readOnly,
       );
     }
@@ -526,31 +667,37 @@ class _TRSelectState<T> extends State<TRSelect<T>>
             mainAxisSize: MainAxisSize.min,
             spacing: TRGeneratedSpacing.xs,
             children: [
-              for (var index = 0; index < widget.items.length; index += 1)
-                Focus(
-                  onKeyEvent: (_, event) => _handleTypeahead(event),
-                  child: MenuItemButton(
-                    closeOnActivate: true,
-                    focusNode: _itemFocusNodes[index],
-                    leadingIcon: widget.items[index].leading,
-                    onPressed: interactive && widget.items[index].enabled
-                        ? () => _handleSelected(widget.items[index].value)
-                        : null,
-                    style: itemStyle(
-                      widget.items[index].value == selectedValue,
-                    ),
-                    trailingIcon: widget.items[index].trailing == null
-                        ? null
-                        : TRLayerPartBoundary(
-                            name: 'item${index}Indicator',
-                            child: widget.items[index].trailing!,
-                          ),
-                    child: TRLayerPartBoundary(
-                      name: 'item${index}Label',
-                      child: Text(widget.items[index].label),
-                    ),
+              if (widget.searchable)
+                TRTextField(
+                  controller: _searchTextController,
+                  focusNode: _searchFocus,
+                  onChanged: _setQuery,
+                  onSubmitted: (_) => _commitSoleMatch(),
+                  placeholder: widget.searchPlaceholder,
+                  uiSize: TRLayerStyles.rowSize,
+                ),
+              // A long list has to scroll inside the layer rather than grow
+              // past the viewport it is anchored in.
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: TRGeneratedMeasurements.measureXl,
+                ),
+                child: SingleChildScrollView(
+                  // The menu panel already owns the primary controller, and a
+                  // scrollbar cannot be shared between two positions.
+                  primary: false,
+                  child: _TRSelectOptions<T>(
+                    items: visible.items,
+                    selectedValue: selectedValue,
+                    interactive: interactive,
+                    highlightSelected: _reportedOpen,
+                    noResultsText: widget.noResultsText,
+                    onSelected: _handleSelected,
+                    focusNodes: visible.focusNodes,
+                    onRowKeyEvent: widget.searchable ? null : _handleTypeahead,
                   ),
                 ),
+              ),
             ],
           ),
         ),
@@ -569,7 +716,9 @@ class _TRSelectState<T> extends State<TRSelect<T>>
         child: Semantics(
           button: true,
           enabled: widget.enabled,
-          expanded: controller.isOpen,
+          // Both surfaces answer this, so it tracks the select's own open
+          // state rather than the menu controller the sheet never uses.
+          expanded: _reportedOpen,
           readOnly: widget.readOnly,
           value: selectedLabel.isEmpty ? null : selectedLabel,
           child: SizedBox(
