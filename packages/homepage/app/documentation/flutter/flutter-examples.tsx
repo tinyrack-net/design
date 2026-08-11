@@ -4626,6 +4626,7 @@ class _DocumentationNavigationState
         initiallyExpanded: true,
         children: [
           TRTreeNavLeaf(
+            key: ValueKey('install-row'),
             value: 'install',
             label: Text('Install'),
             description: Text('Add and configure the package'),

@@ -2507,6 +2507,15 @@ class _DocsTreeState extends State<DocsTree> {
             },
           },
           {
+            name: 'key',
+            type: 'Key? · null',
+            purpose: {
+              en: 'Identifies the rendered group row for state restoration and precise interaction.',
+              ko: '상태 복원과 정확한 상호작용을 위해 렌더링된 그룹 행을 식별해요.',
+              ja: '状態の復元と正確な操作のために、描画されたグループ行を識別します。',
+            },
+          },
+          {
             name: 'description',
             type: 'Widget? · null',
             purpose: {
@@ -2549,6 +2558,15 @@ class _DocsTreeState extends State<DocsTree> {
               en: 'Adds a muted secondary line below the destination label.',
               ko: '목적지 label 아래에 옅은 보조 줄을 추가해요.',
               ja: '移動先の label の下に薄い補助行を追加します。',
+            },
+          },
+          {
+            name: 'key',
+            type: 'Key? · null',
+            purpose: {
+              en: 'Identifies the rendered destination row even when labels repeat.',
+              ko: 'label이 반복되어도 렌더링된 목적지 행을 식별해요.',
+              ja: 'label が重複しても、描画された移動先の行を識別します。',
             },
           },
           {

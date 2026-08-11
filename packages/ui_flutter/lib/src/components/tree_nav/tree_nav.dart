@@ -12,10 +12,13 @@ sealed class TRTreeNavItem<T extends Object> {
   const TRTreeNavItem({
     required this.value,
     required this.label,
+    this.key,
     this.description,
     this.disabled,
   });
 
+  /// Identifies the rendered navigation row.
+  final Key? key;
   final T value;
   final Widget label;
   final Widget? description;
@@ -28,6 +31,7 @@ final class TRTreeNavGroup<T extends Object> extends TRTreeNavItem<T> {
     required super.value,
     required super.label,
     required this.children,
+    super.key,
     super.description,
     super.disabled,
     this.initiallyExpanded = false,
@@ -46,6 +50,7 @@ final class TRTreeNavLeaf<T extends Object> extends TRTreeNavItem<T> {
   const TRTreeNavLeaf({
     required super.value,
     required super.label,
+    super.key,
     super.description,
     super.disabled,
     this.leading,
@@ -228,6 +233,7 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
         children: [
           for (final item in widget.items)
             _TRTreeNavNode<T>(
+              key: item.key,
               controller: _controller,
               depth: 0,
               item: item,
@@ -247,6 +253,7 @@ class _TRTreeNavNode<T extends Object> extends StatefulWidget {
     required this.item,
     required this.onSelect,
     required this.selectedValue,
+    super.key,
   });
 
   final TRTreeNavController<T> controller;
@@ -564,6 +571,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
                 children: [
                   for (final child in group.children)
                     _TRTreeNavNode<T>(
+                      key: child.key,
                       controller: widget.controller,
                       depth: widget.depth + 1,
                       item: child,
