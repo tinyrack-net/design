@@ -5,6 +5,8 @@
   Flutter application source.
 - Supports analyzer 12 as well as analyzer 13 so applications pinned by the
   Flutter SDK can install the compliance checker.
+- Runs against both analyzer AST contracts and accepts normalized relative
+  project roots such as `--root .`.
 
 ## 0.49.0
 

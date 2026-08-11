@@ -333,7 +333,7 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
     );
   }
 
-  void _checkExpression(Expression expression) {
+  void _checkExpression(AstNode expression) {
     if (expression is InstanceCreationExpression &&
         _styleConstructors.contains(
           expression.constructorName.type.toSource(),
@@ -356,6 +356,14 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
       'Visual expression is not backed by a public Tinyrack token: $value',
       'Use a public TR token or an expression derived from one.',
     );
+  }
+
+  void _checkArgument(AstNode argument) {
+    final source = argument.toSource();
+    final name = RegExp(r'^\s*([A-Za-z_]\w*)\s*:').firstMatch(source)?.group(1);
+    if (name == null || _styleArguments.contains(name)) {
+      _checkExpression(argument);
+    }
   }
 
   @override
@@ -386,13 +394,7 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
     }
     if (_styleConstructors.contains(constructor)) {
       for (final argument in node.argumentList.arguments) {
-        if (argument is NamedArgument) {
-          if (_styleArguments.contains(argument.name.lexeme)) {
-            _checkExpression(argument.argumentExpression);
-          }
-        } else {
-          _checkExpression(argument.argumentExpression);
-        }
+        _checkArgument(argument);
       }
     }
     super.visitInstanceCreationExpression(node);
@@ -420,13 +422,7 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
     final target = node.target?.toSource() ?? name;
     if (_styleConstructors.contains(target)) {
       for (final argument in node.argumentList.arguments) {
-        if (argument is NamedArgument) {
-          if (_styleArguments.contains(argument.name.lexeme)) {
-            _checkExpression(argument.argumentExpression);
-          }
-        } else {
-          _checkExpression(argument.argumentExpression);
-        }
+        _checkArgument(argument);
       }
     }
     super.visitMethodInvocation(node);
@@ -484,10 +480,14 @@ String? _dartSdkPath() {
 Future<TinyrackCheckResult> checkTinyrackProject([
   TinyrackCheckOptions options = const TinyrackCheckOptions(),
 ]) async {
-  final root = Directory(options.root).absolute;
-  if (!root.existsSync()) {
-    throw FileSystemException('Project root does not exist', root.path);
+  final requestedRoot = Directory(options.root).absolute;
+  if (!requestedRoot.existsSync()) {
+    throw FileSystemException(
+      'Project root does not exist',
+      requestedRoot.path,
+    );
   }
+  final root = Directory(requestedRoot.resolveSymbolicLinksSync());
   final files = _sourceFiles(root, _config(root, options.configPath)).toList()
     ..sort((left, right) => left.path.compareTo(right.path));
   final contexts = AnalysisContextCollection(
