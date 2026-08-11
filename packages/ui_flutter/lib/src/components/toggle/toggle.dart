@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -31,7 +31,7 @@ class TRToggle extends StatefulWidget {
   final ValueChanged<bool>? onPressedChange;
   final bool disabled;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -84,7 +84,7 @@ class _TRToggleState extends State<TRToggle> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -125,21 +125,25 @@ class _TRToggleState extends State<TRToggle> with TRFocusSourceMixin {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final paddingInline = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlPaddingInline,
     };
     final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlFontSize,
     };
     final lineHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smLineHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlLineHeight,
     };
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero

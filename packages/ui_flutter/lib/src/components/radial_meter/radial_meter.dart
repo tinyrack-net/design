@@ -6,6 +6,7 @@ import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 
 // @tinyrack-preview radial-meter
 /// A compact circular measurement against a known range.
@@ -17,7 +18,7 @@ class TRRadialMeter extends StatelessWidget {
     this.min = 0,
     this.max = 100,
     this.variant = TRStatusVariant.neutral,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   });
 
@@ -37,7 +38,7 @@ class TRRadialMeter extends StatelessWidget {
   final TRStatusVariant variant;
 
   /// Token-backed glyph size.
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   double get _fraction {
     if (!value.isFinite || !min.isFinite || !max.isFinite || max <= min) {
@@ -48,6 +49,7 @@ class TRRadialMeter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRUiDensityScope.resolveSize(context, this.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -63,7 +65,9 @@ class TRRadialMeter extends StatelessWidget {
     final size = TRControlMetrics.iconSizeOf(uiSize);
     final strokeWidth = switch (uiSize) {
       TRUiSize.sm => TRGeneratedBorders.defaultWidth,
-      TRUiSize.md || TRUiSize.lg => TRGeneratedBorders.strongWidth,
+      TRUiSize.md ||
+      TRUiSize.lg ||
+      TRUiSize.xl => TRGeneratedBorders.strongWidth,
     };
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero

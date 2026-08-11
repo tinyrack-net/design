@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 
 // @tinyrack-preview badge
 /// A compact semantic status label.
@@ -10,32 +11,36 @@ class TRBadge extends StatelessWidget {
   const TRBadge({
     required this.child,
     this.variant = TRStatusVariant.neutral,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   });
 
   final Widget child;
   final TRStatusVariant variant;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRUiDensityScope.resolveSize(context, this.uiSize);
     final colors = context.tinyrackTheme;
     final borderWidth = TRGeneratedBorders.defaultWidth;
     final vertical = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.size3xs * 2 + borderWidth,
       TRUiSize.md => TRGeneratedSpacing.size3xs * 3 + borderWidth,
       TRUiSize.lg => TRGeneratedSpacing.xs + borderWidth,
+      TRUiSize.xl => TRGeneratedSpacing.sm + borderWidth,
     };
     final horizontal = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.xs + borderWidth,
       TRUiSize.md => TRGeneratedSpacing.sm + borderWidth,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap + borderWidth,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlGap + borderWidth,
     };
     final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedTypographySizes.size2xs,
       TRUiSize.md => TRGeneratedTypographySizes.xs,
       TRUiSize.lg => TRGeneratedTypographySizes.sm,
+      TRUiSize.xl => TRGeneratedTypographySizes.md,
     };
     final locale = Localizations.localeOf(context).languageCode;
     final letterSpacing = switch ((uiSize, locale)) {
@@ -46,6 +51,7 @@ class TRBadge extends StatelessWidget {
       (TRUiSize.lg, 'ko') =>
         -TRGeneratedBorders.defaultWidth +
             TRGeneratedBorders.defaultWidth / TRGeneratedSpacing.md,
+      (TRUiSize.xl, 'en' || 'ko') => TRGeneratedTypographyTracking.none,
       _ =>
         TRGeneratedBorders.defaultWidth /
             (TRGeneratedSpacing.sm - TRGeneratedBorders.defaultWidth),

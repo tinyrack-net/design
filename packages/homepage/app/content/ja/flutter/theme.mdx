@@ -29,28 +29,28 @@ IBM Plex Sans、Mono、韓国語、日本語のフォントファイル11個を�
 アプリケーションのFlutterアセットバンドルに含まれます。実行時に
 フォントをダウンロードする必要はありません。
 
-## コントロール密度
+## UI密度
 
-狭い画面やタッチ操作を優先する画面で、デフォルトの操作領域を大きくするには
-`TRControlDensityScope`を使ってください。レスポンシブ条件は製品側で決め、
-スコープは`uiSize`を省略したインタラクティブなコントロールに対してのみ、
-`standard`を`TRUiSize.md`、`comfortable`を`TRUiSize.lg`に割り当てます。
+狭い画面やタッチ操作を優先する画面で、UI全体を読みやすく操作しやすくするには
+`TRUiDensityScope`を使ってください。レスポンシブ条件は製品側で決めます。
+スコープは`standard`で既存のデフォルトを維持し、`comfortable`では48pxの
+`TRUiSize.xl`コントロール、1段階大きいタイポグラフィ、広めのデフォルトの
+カード余白とステータス表示を使います。
 
 ```dart
 LayoutBuilder(
-  builder: (context, constraints) => TRControlDensityScope(
+  builder: (context, constraints) => TRUiDensityScope(
     density: constraints.maxWidth < TRBreakpoints.small
-        ? TRControlDensity.comfortable
-        : TRControlDensity.standard,
+        ? TRUiDensity.comfortable
+        : TRUiDensity.standard,
     child: const AppContent(),
   ),
 );
 ```
 
-サイズを固定するコントロールには`uiSize`を直接指定してください。明示した
-`sm`、`md`、`lg`はスコープより優先されます。このスコープはタイポグラフィ、
-spacingトークン、badge、spinner、avatarなどの表示専用コンポーネントを
-拡大しません。
+サイズを固定するコンポーネントには`uiSize`またはカード余白を直接指定して
+ください。明示した`sm`、`md`、`lg`、`xl`はスコープより優先されます。
+システムのtext scalingは、密度で選ばれたタイポグラフィに引き続き適用されます。
 
 ## ページ遷移
 

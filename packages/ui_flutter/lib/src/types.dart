@@ -5,10 +5,10 @@ enum TRIntent { neutral, primary, info, success, warning, danger }
 enum TRAppearance { solid, outline, ghost }
 
 /// The shared control size scale.
-enum TRUiSize { sm, md, lg }
+enum TRUiSize { sm, md, lg, xl }
 
-/// The default geometry used by interactive controls in a subtree.
-enum TRControlDensity { standard, comfortable }
+/// The default visual scale used by an interface subtree.
+enum TRUiDensity { standard, comfortable }
 
 /// Controls how [TRTabs] distributes the width of its tab items.
 enum TRTabsWidth { fill, fixed }

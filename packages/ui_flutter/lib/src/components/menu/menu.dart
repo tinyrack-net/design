@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/layer.dart';
@@ -119,7 +119,7 @@ class _TRMenuState extends State<TRMenu> {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final controller = _controller;
     final colors = context.tinyrackTheme;
     final height = TRControlMetrics.heightOf(uiSize);

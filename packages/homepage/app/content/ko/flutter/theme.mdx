@@ -27,27 +27,28 @@ IBM Plex Sans, Mono, 한국어, 일본어 글꼴 파일 11개를 패키지에 �
 플랫폼 패키징 전 크기는 약 16.4MB이며 앱의 Flutter 에셋 번들에 함께
 들어가요. 실행 중에 글꼴을 따로 내려받지는 않아요.
 
-## 컨트롤 밀도
+## UI 밀도
 
-좁거나 터치를 우선하는 화면에서 기본 터치 영역을 키우려면
-`TRControlDensityScope`를 사용하세요. 반응형 조건은 제품에서 정하고, scope는
-`uiSize`를 생략한 인터랙티브 컨트롤에만 `standard`를 `TRUiSize.md`로,
-`comfortable`을 `TRUiSize.lg`로 연결해요.
+좁거나 터치를 우선하는 화면에서 UI 전체를 더 편하게 읽고 조작하려면
+`TRUiDensityScope`를 사용하세요. 반응형 조건은 제품에서 정해요. scope는
+`standard`에서 기존 기본값을 유지하고, `comfortable`에서 48px
+`TRUiSize.xl` 컨트롤, 한 단계 큰 타이포그래피, 넉넉한 기본 카드 여백과 상태
+표시를 사용해요.
 
 ```dart
 LayoutBuilder(
-  builder: (context, constraints) => TRControlDensityScope(
+  builder: (context, constraints) => TRUiDensityScope(
     density: constraints.maxWidth < TRBreakpoints.small
-        ? TRControlDensity.comfortable
-        : TRControlDensity.standard,
+        ? TRUiDensity.comfortable
+        : TRUiDensity.standard,
     child: const AppContent(),
   ),
 );
 ```
 
-크기를 고정해야 하는 컨트롤에는 `uiSize`를 직접 지정하세요. 명시한 `sm`, `md`,
-`lg`는 scope보다 우선해요. 이 scope는 타이포그래피, spacing 토큰, badge,
-spinner, avatar 같은 표시 전용 컴포넌트를 확대하지 않아요.
+크기를 고정해야 하는 컴포넌트에는 `uiSize`나 카드 여백을 직접 지정하세요.
+명시한 `sm`, `md`, `lg`, `xl`은 scope보다 우선해요. 시스템 text scaling은
+밀도에서 고른 타이포그래피 위에 그대로 적용돼요.
 
 ## 페이지 전환
 

@@ -6,20 +6,21 @@ import '../../generated/tokens.g.dart';
 import '../../internal/motion_boundary.dart';
 import '../../theme.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 
 // @tinyrack-preview spinner
 /// A progress indicator sized for Tinyrack controls.
 class TRSpinner extends StatefulWidget {
   const TRSpinner({
     this.label,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.value,
     this.variant = TRSpinnerVariant.current,
     super.key,
   });
 
   final String? label;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final double? value;
   final TRSpinnerVariant variant;
 
@@ -64,10 +65,12 @@ class _TRSpinnerState extends State<TRSpinner>
 
   @override
   Widget build(BuildContext context) {
-    final size = switch (widget.uiSize) {
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
+    final size = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpinnerMetrics.sizeSm,
       TRUiSize.md => TRGeneratedSpinnerMetrics.sizeMd,
       TRUiSize.lg => TRGeneratedSpinnerMetrics.sizeLg,
+      TRUiSize.xl => TRGeneratedSpinnerMetrics.sizeXl,
     };
     final colors = context.tinyrackTheme;
     final color = switch (widget.variant) {

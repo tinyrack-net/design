@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../theme.dart';
+import '../../tokens.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 
 // @tinyrack-preview card
 /// A structured Tinyrack content surface.
@@ -11,7 +13,7 @@ class TRCard extends StatefulWidget {
   const TRCard({
     required this.child,
     this.focused = false,
-    this.padding = TRCardPadding.md,
+    this.padding,
     this.semanticContainer = true,
     this.variant = TRCardVariant.defaultVariant,
     super.key,
@@ -31,7 +33,7 @@ class TRCard extends StatefulWidget {
   /// never changes the card's size or layout.
   final bool focused;
 
-  final TRCardPadding padding;
+  final TRCardPadding? padding;
   final bool semanticContainer;
   final TRCardVariant variant;
 
@@ -55,7 +57,11 @@ class _TRCardState extends State<TRCard> with TRFocusSourceMixin {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
-    final inset = switch (widget.padding) {
+    final padding = TRUiDensityScope.resolveCardPadding(
+      context,
+      widget.padding,
+    );
+    final inset = switch (padding) {
       TRCardPadding.none => 0.0,
       TRCardPadding.sm => TRGeneratedSpacing.sm,
       TRCardPadding.md => TRGeneratedSpacing.md,
@@ -138,7 +144,7 @@ class TRCardTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DefaultTextStyle.merge(
-    style: Theme.of(context).textTheme.titleSmall,
+    style: TRTypography.resolve(context, TRTextVariant.headingSm),
     child: child,
   );
 }
@@ -151,9 +157,10 @@ class TRCardDescription extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DefaultTextStyle.merge(
-    style: Theme.of(
+    style: TRTypography.resolve(
       context,
-    ).textTheme.bodySmall?.copyWith(color: context.tinyrackTheme.textMuted),
+      TRTextVariant.bodySm,
+    ).copyWith(color: context.tinyrackTheme.textMuted),
     child: child,
   );
 }

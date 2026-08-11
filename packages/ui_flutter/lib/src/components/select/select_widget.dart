@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -116,7 +116,7 @@ class TRSelect<T> extends StatefulWidget {
   /// focus, open, and invalid emphasis.
   final TRFieldAppearance appearance;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
   final bool enabled;
   final bool readOnly;
@@ -364,7 +364,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
   }
 
   Future<void> _openSheet() async {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     _handleOpen();
     final choice = await showTRDrawer<_TRSelectChoice<T>>(
       context: context,
@@ -498,22 +498,25 @@ class _TRSelectState<T> extends State<TRSelect<T>>
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final controlHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final horizontalPadding = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlPaddingInline,
     };
     final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlFontSize,
     };
     final selectedValue = _selectedValue;
     final interactive = widget.enabled && !widget.readOnly;
@@ -634,6 +637,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
                   TRUiSize.sm => TRGeneratedControlMetrics.smGap,
                   TRUiSize.md => TRGeneratedControlMetrics.mdGap,
                   TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
+                  TRUiSize.xl => TRGeneratedControlMetrics.xlGap,
                 },
               ),
               TRLayerPartBoundary(

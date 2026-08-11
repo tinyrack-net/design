@@ -1,3 +1,12 @@
+## 0.52.0
+
+- Replaces the control-only density scope with `TRUiDensityScope`, which lets
+  a product opt a subtree into coordinated control, typography, card, and
+  status-indicator sizing.
+- Adds the Flutter-only `TRUiSize.xl` recipe with a 48-pixel control height,
+  16-pixel labels, and 20-pixel icons. Comfortable density now selects this
+  recipe while explicit component sizes and card padding still win.
+
 ## 0.51.0
 
 - Adds an optional `key` to `TRTreeNavGroup` and `TRTreeNavLeaf`. The key is

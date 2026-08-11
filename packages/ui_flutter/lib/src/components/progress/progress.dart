@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/motion_boundary.dart';
 import '../../theme.dart';
+import '../../tokens.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 
 // @tinyrack-preview progress
 /// A linear determinate or indeterminate progress indicator.
@@ -14,7 +16,7 @@ class TRProgress extends StatefulWidget {
     this.max = 100,
     this.label,
     this.variant = TRStatusVariant.neutral,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   });
 
@@ -24,7 +26,7 @@ class TRProgress extends StatefulWidget {
   final double max;
   final String? label;
   final TRStatusVariant variant;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   @override
   State<TRProgress> createState() => _TRProgressState();
@@ -78,6 +80,7 @@ class _TRProgressState extends State<TRProgress>
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final fill = switch (widget.variant) {
       TRStatusVariant.neutral => colors.textMuted,
@@ -86,10 +89,11 @@ class _TRProgressState extends State<TRProgress>
       TRStatusVariant.warning => colors.warning,
       TRStatusVariant.danger => colors.danger,
     };
-    final height = switch (widget.uiSize) {
+    final height = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,
       TRUiSize.md => TRGeneratedSpacing.xs,
       TRUiSize.lg => TRGeneratedSpacing.sm,
+      TRUiSize.xl => TRGeneratedSpacing.md,
     };
     final fraction = _fractionOf(widget);
     final motionDuration = MediaQuery.disableAnimationsOf(context)
@@ -106,10 +110,10 @@ class _TRProgressState extends State<TRProgress>
           if (widget.label case final label?)
             Text(
               label,
-              style: TextStyle(
-                color: colors.text,
-                fontFamily: TRGeneratedFontFamilies.body,
-              ),
+              style: TRTypography.resolve(
+                context,
+                TRTextVariant.bodySm,
+              ).copyWith(color: colors.text),
             ),
           ClipRRect(
             borderRadius: BorderRadius.circular(TRGeneratedRadii.full),

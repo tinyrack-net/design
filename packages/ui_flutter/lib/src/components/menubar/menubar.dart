@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
@@ -37,7 +37,7 @@ class TRMenubarMenu extends StatelessWidget {
     final size =
         uiSize ??
         _TRMenubarScope.maybeOf(context)?.uiSize ??
-        TRControlDensityScope.resolve(context, null);
+        TRUiDensityScope.resolveSize(context, null);
     final height = TRControlMetrics.heightOf(size);
     return SubmenuButton(
       // The bar insets its triggers, so shift the panel down by that inset to
@@ -141,7 +141,7 @@ class TRMenubar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, this.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, this.uiSize);
     final colors = context.tinyrackTheme;
     return Semantics(
       container: true,

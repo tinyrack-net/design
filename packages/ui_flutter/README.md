@@ -25,22 +25,23 @@ MaterialApp(
 );
 ```
 
-Products can choose a larger default for interactive controls without scaling
-typography or display components. Decide the responsive condition in the
-product, then wrap the affected subtree:
+Products can choose a more readable interface scale for narrow or touch-first
+surfaces. Decide the responsive condition in the product, then wrap the
+affected subtree:
 
 ```dart
-TRControlDensityScope(
+TRUiDensityScope(
   density: narrow
-      ? TRControlDensity.comfortable
-      : TRControlDensity.standard,
+      ? TRUiDensity.comfortable
+      : TRUiDensity.standard,
   child: const App(),
 )
 ```
 
-Controls that omit `uiSize` use `md` in standard density and `lg` in
-comfortable density. An explicit `uiSize` always wins, so compact title-bar
-actions can remain `TRUiSize.sm` inside a comfortable subtree.
+Comfortable density uses 48-pixel `xl` controls, advances typography by one
+semantic step, and enlarges default card padding and status indicators.
+Explicit `uiSize` and card padding always win, so compact title-bar actions can
+remain `TRUiSize.sm` inside a comfortable subtree.
 
 Use `TRSplitView` when two application-owned surfaces need a controlled,
 resizable boundary. The caller owns the ratio and decides when a responsive

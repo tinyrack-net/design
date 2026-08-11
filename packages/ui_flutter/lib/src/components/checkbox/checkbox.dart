@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/form_registry.dart';
@@ -37,7 +37,7 @@ class TRCheckbox extends StatefulWidget {
   final bool readOnly;
   final bool invalid;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -88,7 +88,7 @@ class _TRCheckboxState extends State<TRCheckbox> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final scope = _TRCheckboxGroupScope.maybeOf(context);
     final grouped = widget.value != null && scope != null;
@@ -123,6 +123,7 @@ class _TRCheckboxState extends State<TRCheckbox> with TRFocusSourceMixin {
       TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlIconSize,
     };
     final indicatorFontSize = switch (uiSize) {
       TRUiSize.sm =>
@@ -130,6 +131,7 @@ class _TRCheckboxState extends State<TRCheckbox> with TRFocusSourceMixin {
       TRUiSize.md =>
         TRGeneratedTypographySizes.size2xs - TRGeneratedSpacing.size3xs,
       TRUiSize.lg => TRGeneratedTypographySizes.xs,
+      TRUiSize.xl => TRGeneratedTypographySizes.sm,
     };
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero

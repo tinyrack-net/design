@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -42,7 +42,7 @@ class TRSwitch extends StatefulWidget {
   /// Identifies the visual thumb for geometry measurement and composition.
   final Key? thumbKey;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
 
   @override
@@ -88,25 +88,28 @@ class _TRSwitchState extends State<TRSwitch> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final width = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.size2xl,
       TRUiSize.md => TRGeneratedSpacing.size2xl + TRGeneratedSpacing.sm,
       TRUiSize.lg => TRGeneratedSpacing.size3xl,
+      TRUiSize.xl => TRGeneratedSpacing.size3xl + TRGeneratedSpacing.sm,
     };
     final height = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.lg + TRGeneratedSpacing.xs,
       TRUiSize.md => TRGeneratedSpacing.xl,
       TRUiSize.lg => TRGeneratedSpacing.size2xl,
+      TRUiSize.xl => TRGeneratedSpacing.size2xl + TRGeneratedSpacing.xs,
     };
     final padding = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,
-      TRUiSize.md || TRUiSize.lg => TRGeneratedSpacing.xs,
+      TRUiSize.md || TRUiSize.lg || TRUiSize.xl => TRGeneratedSpacing.xs,
     };
     final thumbSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
       TRUiSize.md => TRGeneratedSpacing.lg,
       TRUiSize.lg => TRGeneratedSpacing.xl,
+      TRUiSize.xl => TRGeneratedSpacing.xl + TRGeneratedSpacing.xs,
     };
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
