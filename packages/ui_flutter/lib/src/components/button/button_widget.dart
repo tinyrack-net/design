@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -24,7 +25,7 @@ class TRButton extends StatelessWidget {
     this.intent = TRIntent.neutral,
     this.loading = false,
     this.loadingLabel,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   }) : _hideChildWhenLoading = false,
        _paddingOverride = null,
@@ -53,25 +54,28 @@ class TRButton extends StatelessWidget {
   final TRIntent intent;
   final bool loading;
   final String? loadingLabel;
-  final TRUiSize uiSize;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
   final bool _hideChildWhenLoading;
   final EdgeInsetsGeometry? _paddingOverride;
   final String? _semanticLabel;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveUiSize = TRControlDensityScope.resolve(context, uiSize);
     final colors = context.tinyrackTheme;
     final foreground = colors.foregroundFor(intent);
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
     final disabled = onPressed == null || loading;
-    final size = switch (uiSize) {
+    final size = switch (effectiveUiSize) {
       TRUiSize.sm => const Size(0, TRGeneratedControlMetrics.smHeight),
       TRUiSize.md => const Size(0, TRGeneratedControlMetrics.mdHeight),
       TRUiSize.lg => const Size(0, TRGeneratedControlMetrics.lgHeight),
     };
-    final padding = switch (uiSize) {
+    final padding = switch (effectiveUiSize) {
       TRUiSize.sm => const EdgeInsets.symmetric(
         horizontal:
             TRGeneratedControlMetrics.smPaddingInline +
@@ -88,7 +92,7 @@ class TRButton extends StatelessWidget {
             TRGeneratedBorders.defaultWidth,
       ),
     };
-    final gap = switch (uiSize) {
+    final gap = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smGap,
       TRUiSize.md => TRGeneratedControlMetrics.mdGap,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
@@ -187,7 +191,9 @@ class TRButton extends StatelessWidget {
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       padding: WidgetStatePropertyAll(_paddingOverride ?? padding),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textStyle: WidgetStatePropertyAll(TRControlMetrics.labelStyleOf(uiSize)),
+      textStyle: WidgetStatePropertyAll(
+        TRControlMetrics.labelStyleOf(effectiveUiSize),
+      ),
       side: WidgetStatePropertyAll(
         appearance != TRAppearance.ghost
             ? BorderSide(

@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../../control_density.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
@@ -155,7 +157,7 @@ class TRTabs extends StatefulWidget {
     this.scrollController,
     this.dragConfiguration,
     this.tabWidth = TRTabsWidth.fill,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   });
 
@@ -190,7 +192,7 @@ class TRTabs extends StatefulWidget {
   /// pixels and lets the strip scroll when the tabs do not fit.
   final TRTabsWidth tabWidth;
 
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   @override
   State<TRTabs> createState() => _TRTabsState();
@@ -221,12 +223,13 @@ class _TRTabsState extends State<TRTabs> {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final active =
         widget.value ??
         _uncontrolledValue ??
         (widget.tabs.isEmpty ? '' : widget.tabs.first.value);
-    final tabHeight = switch (widget.uiSize) {
+    final tabHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
@@ -236,7 +239,7 @@ class _TRTabsState extends State<TRTabs> {
     final panelBuilder = widget.panelBuilder;
     if (panelBuilder == null) return strip;
 
-    final panelPadding = switch (widget.uiSize) {
+    final panelPadding = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
@@ -360,12 +363,13 @@ class _TRTabsState extends State<TRTabs> {
         itemCount: widget.tabs.length,
         itemExtent: tabExtent,
         itemBuilder: (context, index) {
+          final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
           final tab = widget.tabs[index];
           return _TRTabItem(
             key: ValueKey<String>('tr-tabs-tab-${tab.value}'),
             tab: tab,
             selected: tab.value == active,
-            uiSize: widget.uiSize,
+            uiSize: uiSize,
             height: tabHeight,
             stripHeight: stripHeight,
             width: tabExtent,

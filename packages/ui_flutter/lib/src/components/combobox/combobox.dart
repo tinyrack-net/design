@@ -147,7 +147,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.placeholder,
     this.readOnly = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.width,
     super.key,
   }) : value = null,
@@ -174,7 +174,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.placeholder,
     this.readOnly = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.width,
     super.key,
   }) : defaultValue = null,
@@ -220,7 +220,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
   final ValueChanged<T?>? onValueChange;
   final String? placeholder;
   final bool readOnly;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final double? width;
   final bool _controlled;
 
@@ -355,7 +355,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.placeholder,
     this.readOnly = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.width,
     super.key,
   }) : value = null,
@@ -381,7 +381,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.placeholder,
     this.readOnly = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.width,
     super.key,
   }) : defaultValue = const [],
@@ -426,7 +426,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
   final ValueChanged<List<T>>? onValueChange;
   final String? placeholder;
   final bool readOnly;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final double? width;
 
   @override
@@ -606,7 +606,7 @@ class _TRComboboxInput<T extends Object> extends StatefulWidget {
   final String? placeholder;
   final bool readOnly;
   final Set<T> selected;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final double? width;
 
   @override
@@ -914,7 +914,7 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
     super.onSaved,
     super.validator,
     String? placeholder,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     super.key,
   }) : super(
          builder: (field) => TRCombobox<T>.controlled(
@@ -963,7 +963,7 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
     super.onSaved,
     super.validator,
     String? placeholder,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     super.key,
   }) : super(
          initialValue: initialValue,

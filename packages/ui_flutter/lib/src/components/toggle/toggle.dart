@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -17,7 +18,7 @@ class TRToggle extends StatefulWidget {
     this.defaultPressed = false,
     this.onPressedChange,
     this.disabled = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.focusNode,
     this.autofocus = false,
     this.value,
@@ -29,7 +30,9 @@ class TRToggle extends StatefulWidget {
   final bool defaultPressed;
   final ValueChanged<bool>? onPressedChange;
   final bool disabled;
-  final TRUiSize uiSize;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
   final FocusNode? focusNode;
   final bool autofocus;
 
@@ -81,6 +84,7 @@ class _TRToggleState extends State<TRToggle> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -117,22 +121,22 @@ class _TRToggleState extends State<TRToggle> with TRFocusSourceMixin {
         ? generated.surfaceSelected
         : colors.surface;
     final borderColor = pressed ? colors.primary : generated.controlBorder;
-    final height = switch (widget.uiSize) {
+    final height = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
-    final paddingInline = switch (widget.uiSize) {
+    final paddingInline = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
-    final fontSize = switch (widget.uiSize) {
+    final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
     };
-    final lineHeight = switch (widget.uiSize) {
+    final lineHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smLineHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,

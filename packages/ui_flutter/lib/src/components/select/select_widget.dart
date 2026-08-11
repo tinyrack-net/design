@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -48,7 +49,7 @@ class TRSelect<T> extends StatefulWidget {
     this.helperText,
     this.errorText,
     this.appearance = TRFieldAppearance.solid,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.enabled = true,
     this.readOnly = false,
     this.focusNode,
@@ -80,7 +81,7 @@ class TRSelect<T> extends StatefulWidget {
     this.helperText,
     this.errorText,
     this.appearance = TRFieldAppearance.solid,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.enabled = true,
     this.readOnly = false,
     this.focusNode,
@@ -115,7 +116,8 @@ class TRSelect<T> extends StatefulWidget {
   /// focus, open, and invalid emphasis.
   final TRFieldAppearance appearance;
 
-  final TRUiSize uiSize;
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
   final bool enabled;
   final bool readOnly;
   final FocusNode? focusNode;
@@ -362,6 +364,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
   }
 
   Future<void> _openSheet() async {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     _handleOpen();
     final choice = await showTRDrawer<_TRSelectChoice<T>>(
       context: context,
@@ -377,7 +380,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
         },
         noResultsText: widget.noResultsText,
         searchPlaceholder: widget.searchPlaceholder,
-        uiSize: widget.uiSize,
+        uiSize: uiSize,
         label: widget.label,
       ),
     );
@@ -495,18 +498,19 @@ class _TRSelectState<T> extends State<TRSelect<T>>
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final colors = context.tinyrackTheme;
-    final controlHeight = switch (widget.uiSize) {
+    final controlHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
-    final horizontalPadding = switch (widget.uiSize) {
+    final horizontalPadding = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
-    final fontSize = switch (widget.uiSize) {
+    final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
@@ -626,7 +630,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
                 ),
               ),
               SizedBox(
-                width: switch (widget.uiSize) {
+                width: switch (uiSize) {
                   TRUiSize.sm => TRGeneratedControlMetrics.smGap,
                   TRUiSize.md => TRGeneratedControlMetrics.mdGap,
                   TRUiSize.lg => TRGeneratedControlMetrics.lgGap,

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/form_registry.dart';
@@ -20,7 +21,7 @@ class TRCheckbox extends StatefulWidget {
     this.disabled = false,
     this.readOnly = false,
     this.invalid = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.focusNode,
     this.autofocus = false,
     this.semanticLabel,
@@ -35,7 +36,9 @@ class TRCheckbox extends StatefulWidget {
   final bool disabled;
   final bool readOnly;
   final bool invalid;
-  final TRUiSize uiSize;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
   final FocusNode? focusNode;
   final bool autofocus;
   final String? semanticLabel;
@@ -85,6 +88,7 @@ class _TRCheckboxState extends State<TRCheckbox> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final scope = _TRCheckboxGroupScope.maybeOf(context);
     final grouped = widget.value != null && scope != null;
@@ -115,12 +119,12 @@ class _TRCheckboxState extends State<TRCheckbox> with TRFocusSourceMixin {
         : filled
         ? colors.primary
         : generated.controlBorder;
-    final size = switch (widget.uiSize) {
+    final size = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
     };
-    final indicatorFontSize = switch (widget.uiSize) {
+    final indicatorFontSize = switch (uiSize) {
       TRUiSize.sm =>
         TRGeneratedTypographySizes.size2xs - TRGeneratedSpacing.size3xs * 4,
       TRUiSize.md =>
@@ -210,7 +214,7 @@ class TRCheckboxFormField extends FormField<bool> {
     super.onReset,
     super.validator,
     super.restorationId,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     FocusNode? focusNode,
     bool autofocus = false,
     String? semanticLabel,

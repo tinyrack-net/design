@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -38,7 +39,7 @@ class TRTextField extends StatelessWidget {
     this.restorationId,
     this.suffix,
     this.textInputAction,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.validator,
     super.key,
   }) : assert(
@@ -95,25 +96,28 @@ class TRTextField extends StatelessWidget {
   /// button. The decoration is unchanged when this is null.
   final Widget? suffix;
   final TextInputAction? textInputAction;
-  final TRUiSize uiSize;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
   final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveUiSize = TRControlDensityScope.resolve(context, uiSize);
     var registeredValue = controller?.text ?? initialValue ?? '';
-    final controlHeight = switch (uiSize) {
+    final controlHeight = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
     final horizontalPadding =
-        switch (uiSize) {
+        switch (effectiveUiSize) {
           TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
           TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
           TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
         } -
         TRGeneratedFlutterRendering.textFieldPaddingInlineCorrection;
-    final fontSize = switch (uiSize) {
+    final fontSize = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,

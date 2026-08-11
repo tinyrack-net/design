@@ -7,6 +7,9 @@ enum TRAppearance { solid, outline, ghost }
 /// The shared control size scale.
 enum TRUiSize { sm, md, lg }
 
+/// The default geometry used by interactive controls in a subtree.
+enum TRControlDensity { standard, comfortable }
+
 /// Controls how [TRTabs] distributes the width of its tab items.
 enum TRTabsWidth { fill, fixed }
 

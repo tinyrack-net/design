@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -23,7 +24,7 @@ class TRTextarea extends StatefulWidget {
     this.onChanged,
     this.placeholder,
     this.readOnly = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   }) : assert(
          controller == null || initialValue == null,
@@ -47,7 +48,9 @@ class TRTextarea extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final String? placeholder;
   final bool readOnly;
-  final TRUiSize uiSize;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
 
   @override
   State<TRTextarea> createState() => _TRTextareaState();
@@ -88,21 +91,22 @@ class _TRTextareaState extends State<TRTextarea> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
-    final controlHeight = switch (widget.uiSize) {
+    final controlHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
-    final horizontalPadding = switch (widget.uiSize) {
+    final horizontalPadding = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
     };
-    final fontSize = switch (widget.uiSize) {
+    final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,

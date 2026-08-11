@@ -89,6 +89,8 @@ const publicTypes = <Type>[
   TRContextMenuPresenter,
   TRContextMenuPresenterScope,
   TRControlMetrics,
+  TRControlDensity,
+  TRControlDensityScope,
   TRCopyButton,
   TRCopyButtonStatus,
   TRDialog,

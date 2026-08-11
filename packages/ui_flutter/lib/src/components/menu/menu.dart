@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/layer.dart';
@@ -21,7 +22,7 @@ class TRMenu extends StatefulWidget {
     this.focusNode,
     this.onClose,
     this.onOpen,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.useRootOverlay = true,
     super.key,
   }) : label = null;
@@ -46,7 +47,7 @@ class TRMenu extends StatefulWidget {
     this.focusNode,
     this.onClose,
     this.onOpen,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.useRootOverlay = true,
     super.key,
   }) : trigger = icon;
@@ -65,7 +66,7 @@ class TRMenu extends StatefulWidget {
   ///
   /// A menu trigger stands in a row beside buttons and fields, so it takes the
   /// same sizes they do rather than fixing one density.
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   final bool useRootOverlay;
 
@@ -118,9 +119,10 @@ class _TRMenuState extends State<TRMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final controller = _controller;
     final colors = context.tinyrackTheme;
-    final height = TRControlMetrics.heightOf(widget.uiSize);
+    final height = TRControlMetrics.heightOf(uiSize);
     final iconLabel = widget.label;
     final square = iconLabel != null;
     final triggerStyle = ButtonStyle(
@@ -144,7 +146,7 @@ class _TRMenuState extends State<TRMenu> {
             ? EdgeInsets.zero
             : EdgeInsets.symmetric(
                 horizontal:
-                    TRControlMetrics.inlinePaddingOf(widget.uiSize) +
+                    TRControlMetrics.inlinePaddingOf(uiSize) +
                     TRControlMetrics.borderWidth,
               ),
       ),
@@ -171,11 +173,11 @@ class _TRMenuState extends State<TRMenu> {
         TextStyle(
           fontFamily: TRGeneratedFontFamilies.body,
           fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-          fontSize: TRControlMetrics.fontSizeOf(widget.uiSize),
+          fontSize: TRControlMetrics.fontSizeOf(uiSize),
           fontWeight: TRGeneratedFontWeights.medium,
           height:
-              TRControlMetrics.lineHeightOf(widget.uiSize) /
-              TRControlMetrics.fontSizeOf(widget.uiSize),
+              TRControlMetrics.lineHeightOf(uiSize) /
+              TRControlMetrics.fontSizeOf(uiSize),
         ),
       ),
       visualDensity: VisualDensity.standard,
@@ -224,7 +226,7 @@ class _TRMenuState extends State<TRMenu> {
             child: square
                 ? IconTheme.merge(
                     data: IconThemeData(
-                      size: TRControlMetrics.iconSizeOf(widget.uiSize),
+                      size: TRControlMetrics.iconSizeOf(uiSize),
                     ),
                     child: widget.trigger,
                   )

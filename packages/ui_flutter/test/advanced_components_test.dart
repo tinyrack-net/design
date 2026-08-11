@@ -949,7 +949,7 @@ void main() {
 
       expect(controlHeight(TRUiSize.sm), TRGeneratedControlMetrics.smHeight);
       expect(controlHeight(TRUiSize.md), TRGeneratedControlMetrics.mdHeight);
-      expect(controlHeight(TRUiSize.lg), TRGeneratedSpacing.xl);
+      expect(controlHeight(TRUiSize.lg), TRGeneratedControlMetrics.lgHeight);
     });
   });
 
