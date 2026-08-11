@@ -2092,6 +2092,27 @@ TRCodeBlock(
   language: 'dart',
 )`,
     },
+    {
+      id: 'code-block-trailing',
+      title: {
+        en: 'Trailing action',
+        ja: '末尾のアクション',
+        ko: '끝쪽 액션',
+      },
+      description: {
+        en: 'Pass trailing to pin an action to the top-trailing corner, clear of the code. An unwrapped block also pans while a pointer drags past its edge, so a selection can reach the end of a long line.',
+        ja: 'trailing を渡すと、コードにかからない右上の角にアクションを固定できます。折り返さないブロックは、ポインターが端を越えてドラッグしている間に横スクロールするため、長い行の末尾まで選択できます。',
+        ko: 'trailing을 전달하면 코드를 가리지 않는 오른쪽 위 모서리에 액션을 고정해요. 줄바꿈하지 않는 블록은 포인터가 가장자리를 넘어 드래그하는 동안 가로로 이동하므로, 긴 줄의 끝까지 선택할 수 있어요.',
+      },
+      dart: String.raw`const TRCodeBlock(
+  code: 'tinyrack deploy --env prod --region icn --wait',
+  trailing: TRCopyButton(
+    value: 'tinyrack deploy --env prod --region icn --wait',
+    appearance: TRAppearance.ghost,
+    uiSize: TRUiSize.sm,
+  ),
+)`,
+    },
   ],
   code: [
     {

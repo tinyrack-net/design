@@ -1,3 +1,15 @@
+## 0.48.0
+
+- Lets a selection reach the end of a long line in a `TRCodeBlock`. A block that
+  does not wrap is wider than its viewport, and the pointer cannot travel past
+  the clip: a drag could only ever select the part of the line that happened to
+  be visible when it started, and nothing outside the block scrolls that axis.
+  Holding a drag past the code now pans the block at about the rate the line can
+  be read, and a reader who has turned motion off gets the whole line at once.
+- Adds `TRCodeBlock.trailing`, an action pinned to the block's top-trailing
+  corner and clear of the code, so a copy affordance no longer requires
+  recreating the surface around it.
+
 ## 0.47.4
 
 - Keeps a `TRSplitView` divider under the pointer while it is dragged. Each
