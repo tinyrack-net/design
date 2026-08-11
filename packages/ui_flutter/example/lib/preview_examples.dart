@@ -33,6 +33,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'code-block-highlighted': _codeBlockHighlighted,
   'code-block-modes': _codeBlockModes,
   'code-block-override': _codeBlockOverride,
+  'code-block-trailing': _codeBlockTrailing,
   'code-contexts': _codeContexts,
   'copy-button-labels': _copyButtonLabels,
   'copy-button-combinations': _copyButtonCombinations,
@@ -699,6 +700,19 @@ Widget _codeBlockOverride(BuildContext context, Locale locale) => SizedBox(
     language: 'dart',
   ),
 );
+
+Widget _codeBlockTrailing(BuildContext context, Locale locale) =>
+    const SizedBox(
+      width: 360,
+      child: TRCodeBlock(
+        code: 'tinyrack deploy --env prod --region icn --wait',
+        trailing: TRCopyButton(
+          value: 'tinyrack deploy --env prod --region icn --wait',
+          appearance: TRAppearance.ghost,
+          uiSize: TRUiSize.sm,
+        ),
+      ),
+    );
 
 Widget _cardVariants(BuildContext context, Locale locale) {
   final body = _pick(

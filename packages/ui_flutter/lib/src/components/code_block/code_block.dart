@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../providers/code_highlighter.dart';
@@ -15,6 +16,7 @@ class TRCodeBlock extends StatefulWidget {
     this.highlighter,
     this.language,
     this.onHighlightFailure,
+    this.trailing,
     this.wrap = false,
     super.key,
   });
@@ -23,17 +25,102 @@ class TRCodeBlock extends StatefulWidget {
   final TRCodeHighlighter? highlighter;
   final String? language;
   final ValueChanged<TRCodeHighlightFailure>? onHighlightFailure;
+
+  /// Action pinned to the block's top-trailing corner, clear of the code.
+  final Widget? trailing;
+
   final bool wrap;
 
   @override
   State<TRCodeBlock> createState() => _TRCodeBlockState();
 }
 
-final class _TRCodeBlockState extends State<TRCodeBlock> {
+final class _TRCodeBlockState extends State<TRCodeBlock>
+    with SingleTickerProviderStateMixin {
   _TRCodeBlockRequest? _activeRequest;
   ValueChanged<TRCodeHighlightFailure>? _failureHandler;
   TRCodeHighlightResult? _result;
   int _requestGeneration = 0;
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _viewportKey = GlobalKey();
+  Ticker? _panTicker;
+  Offset? _panPointer;
+  Duration _panElapsed = Duration.zero;
+
+  @override
+  void dispose() {
+    _panTicker?.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  /// Pans an unwrapped block while a held pointer sits past its code.
+  ///
+  /// A block wider than its viewport hides the tail of every long line, and
+  /// selecting text is the gesture that has to get there. The pointer cannot
+  /// travel past the clip and no ancestor scrolls this axis, so without this a
+  /// drag can only ever select what happened to be visible when it started. The
+  /// block's own padding is the gutter: reaching it brings the rest over.
+  void _dragTowards(Offset globalPosition) {
+    if (widget.wrap) return;
+    _panPointer = globalPosition;
+    final ticker = _panTicker ??= createTicker(_pan);
+    if (!ticker.isActive) {
+      _panElapsed = Duration.zero;
+      ticker.start();
+    }
+  }
+
+  void _stopDragging() {
+    _panTicker?.stop();
+    _panPointer = null;
+  }
+
+  /// Advances the pan by one frame, or all the way when motion is off.
+  ///
+  /// The speed is one viewport per slow beat, so a long line arrives at about
+  /// the rate it can be read rather than snapping past the selection.
+  void _pan(Duration elapsed) {
+    final frame = _panElapsed == Duration.zero
+        ? Duration.zero
+        : elapsed - _panElapsed;
+    _panElapsed = elapsed;
+    final pointer = _panPointer;
+    final viewport = _viewportKey.currentContext?.findRenderObject();
+    if (pointer == null || viewport is! RenderBox || !viewport.hasSize) {
+      _stopDragging();
+      return;
+    }
+    if (!_scrollController.hasClients) {
+      _stopDragging();
+      return;
+    }
+    final position = _scrollController.position;
+    final origin = viewport.localToGlobal(Offset.zero).dx;
+    final overshoot = switch (pointer.dx) {
+      final x when x > origin + viewport.size.width =>
+        x - origin - viewport.size.width,
+      final x when x < origin => x - origin,
+      _ => 0.0,
+    };
+    if (overshoot == 0) {
+      _stopDragging();
+      return;
+    }
+    final reduced = MediaQuery.disableAnimationsOf(context);
+    final step = reduced
+        ? position.maxScrollExtent
+        : viewport.size.width *
+              frame.inMicroseconds /
+              TRGeneratedMotion.slow.inMicroseconds;
+    final target = (position.pixels + (overshoot.isNegative ? -step : step))
+        .clamp(position.minScrollExtent, position.maxScrollExtent);
+    if (target == position.pixels) {
+      _stopDragging();
+      return;
+    }
+    position.jumpTo(target);
+  }
 
   void _synchronizeHighlight(
     TRCodeHighlighterProvider? provider,
@@ -156,6 +243,28 @@ final class _TRCodeBlockState extends State<TRCodeBlock> {
       ),
     );
 
+    final code = widget.wrap
+        ? content
+        : Listener(
+            // A move event carries a button, so this is a drag rather than a
+            // hover; a selection is the only thing a drag here can mean.
+            onPointerMove: (event) => _dragTowards(event.position),
+            onPointerUp: (_) => _stopDragging(),
+            onPointerCancel: (_) => _stopDragging(),
+            child: MouseRegion(
+              // Leaving the block ends the pull; whatever the pointer is doing
+              // now, it is not asking for more of this line.
+              onExit: (_) => _stopDragging(),
+              child: SingleChildScrollView(
+                key: _viewportKey,
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                child: content,
+              ),
+            ),
+          );
+    final trailing = widget.trailing;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: result?.backgroundColor ?? colors.surfaceMuted,
@@ -172,11 +281,15 @@ final class _TRCodeBlockState extends State<TRCodeBlock> {
           horizontal: TRGeneratedSpacing.lg + TRGeneratedBorders.defaultWidth,
           vertical: TRGeneratedSpacing.md + TRGeneratedBorders.defaultWidth,
         ),
-        child: widget.wrap
-            ? content
-            : SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: content,
+        child: trailing == null
+            ? code
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: code),
+                  const SizedBox(width: TRGeneratedSpacing.sm),
+                  trailing,
+                ],
               ),
       ),
     );

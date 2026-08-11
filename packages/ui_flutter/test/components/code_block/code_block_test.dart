@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
@@ -224,6 +226,191 @@ void main() {
       ),
     );
     expect(find.byType(SingleChildScrollView), findsNothing);
+  });
+
+  testWidgets('a selection drag pans to code past the horizontal clip', (
+    tester,
+  ) async {
+    final copied = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied.add(
+            ((call.arguments as Map<Object?, Object?>)['text'] as String?) ??
+                '',
+          );
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    const code = 'aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii jjjj kkkk llll';
+    await tester.pumpWidget(
+      _app(
+        const Align(
+          alignment: Alignment.topLeft,
+          child: SelectionArea(
+            child: SizedBox(width: 200, child: TRCodeBlock(code: code)),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final text = find.text(code);
+    // Far wider than its viewport, so the tail is only reachable by scrolling.
+    expect(tester.getSize(text).width, greaterThan(400));
+
+    final gesture = await tester.startGesture(
+      tester.getTopLeft(text) + const Offset(1, 1),
+      kind: PointerDeviceKind.mouse,
+    );
+    await tester.pump(const Duration(milliseconds: 200));
+    // Held against the trailing edge: the block has to bring the rest of the
+    // line to the pointer, because nothing outside it scrolls this axis.
+    await gesture.moveTo(const Offset(199, 20));
+    for (var frame = 0; frame < 120; frame += 1) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+    await tester.pumpAndSettle();
+
+    // Only 'aaaa bbbb ccc' fits the viewport, so the tail of the line proves
+    // the selection followed the pan rather than stopping at the clip.
+    expect(copied.single, contains('llll'));
+  });
+
+  testWidgets('reduced motion brings the whole line at once', (tester) async {
+    final copied = <String>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied.add(
+            ((call.arguments as Map<Object?, Object?>)['text'] as String?) ??
+                '',
+          );
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+
+    const code = 'aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii jjjj kkkk llll';
+    await tester.pumpWidget(
+      _app(
+        const MediaQuery(
+          data: MediaQueryData(disableAnimations: true),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: SelectionArea(
+              child: SizedBox(width: 200, child: TRCodeBlock(code: code)),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final gesture = await tester.startGesture(
+      tester.getTopLeft(find.text(code)) + const Offset(1, 1),
+      kind: PointerDeviceKind.mouse,
+    );
+    await tester.pump(const Duration(milliseconds: 200));
+    await gesture.moveTo(const Offset(199, 20));
+    // A reader who has turned motion off still has to reach the tail, so one
+    // frame covers the whole line instead of gliding to it.
+    await tester.pump(const Duration(milliseconds: 50));
+    await tester.pump(const Duration(milliseconds: 50));
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyC);
+    await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+    await tester.pumpAndSettle();
+
+    expect(copied.single, contains('llll'));
+  });
+
+  testWidgets('a wrapped block never auto-scrolls, having no hidden code', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const Align(
+          alignment: Alignment.topLeft,
+          child: SelectionArea(
+            child: SizedBox(
+              width: 200,
+              child: TRCodeBlock(
+                code: 'aaaa bbbb cccc dddd eeee ffff gggg',
+                wrap: true,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final gesture = await tester.startGesture(
+      const Offset(20, 20),
+      kind: PointerDeviceKind.mouse,
+    );
+    await tester.pump(const Duration(milliseconds: 200));
+    await gesture.moveTo(const Offset(199, 20));
+    await tester.pump(const Duration(seconds: 2));
+    await gesture.up();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Scrollable), findsNothing);
+  });
+
+  testWidgets('a trailing action sits in the top-trailing corner', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const Align(
+          alignment: Alignment.topLeft,
+          child: SizedBox(
+            width: 320,
+            child: TRCodeBlock(
+              code: 'tinyrack deploy --env prod',
+              trailing: TRCopyButton(value: 'tinyrack deploy --env prod'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final block = tester.getRect(find.byType(TRCodeBlock));
+    final action = tester.getRect(find.byType(TRCopyButton));
+    final viewport = tester.getRect(find.byType(SingleChildScrollView));
+    expect(find.byType(TRCopyButton), findsOneWidget);
+    // Trailing and top, and clear of the code rather than floating over it.
+    expect(action.right, lessThanOrEqualTo(block.right));
+    expect(action.left, greaterThanOrEqualTo(viewport.right));
+    expect(action.top, lessThan(block.center.dy));
   });
 
   test(
