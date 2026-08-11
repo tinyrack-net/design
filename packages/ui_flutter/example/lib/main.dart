@@ -3525,6 +3525,10 @@ class _PreviewDrawerState extends State<_PreviewDrawer> {
       placement: _placement,
       builder: (context) => TRDrawer(
         placement: _placement,
+        maxExtent: switch (_placement) {
+          TRDrawerPlacement.top || TRDrawerPlacement.bottom => 0.7,
+          TRDrawerPlacement.start || TRDrawerPlacement.end => 1,
+        },
         snapPoints: switch (_placement) {
           TRDrawerPlacement.top || TRDrawerPlacement.bottom => null,
           TRDrawerPlacement.start || TRDrawerPlacement.end => const [1],
