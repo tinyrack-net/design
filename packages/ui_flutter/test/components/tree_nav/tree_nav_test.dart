@@ -262,6 +262,57 @@ void main() {
     await mouse.removePointer();
   });
 
+  testWidgets('shows pressed surfaces for enabled leaf and group rows', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        TRTreeNav<String>(items: _items(disabled: true), onValueChange: (_) {}),
+      ),
+    );
+    final theme = Theme.of(
+      tester.element(find.byType(TRTreeNav<String>)),
+    ).extension<TinyrackThemeData>()!;
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    addTearDown(mouse.removePointer);
+
+    await mouse.moveTo(tester.getCenter(find.text('Install')));
+    await tester.pumpAndSettle();
+    expect(_background(tester, 'Install'), theme.surfaceHover);
+
+    await mouse.down(tester.getCenter(find.text('Install')));
+    await tester.pump();
+    expect(_background(tester, 'Install'), theme.surfacePressed);
+
+    await mouse.moveTo(const Offset(319, 319));
+    await tester.pumpAndSettle();
+    expect(_background(tester, 'Install'), Colors.transparent);
+
+    await mouse.up();
+    await tester.pumpAndSettle();
+
+    await mouse.moveTo(tester.getCenter(find.text('Install')));
+    await tester.pumpAndSettle();
+    expect(_background(tester, 'Install'), theme.surfaceHover);
+
+    await mouse.moveTo(tester.getCenter(find.text('GUIDES')));
+    await tester.pumpAndSettle();
+    await mouse.down(tester.getCenter(find.text('GUIDES')));
+    await tester.pump();
+    expect(_background(tester, 'GUIDES'), theme.surfacePressed);
+
+    await mouse.cancel();
+    await tester.pumpAndSettle();
+    expect(_background(tester, 'GUIDES'), theme.surfaceHover);
+
+    await mouse.moveTo(tester.getCenter(find.text('Disabled')));
+    await tester.pumpAndSettle();
+    await mouse.down(tester.getCenter(find.text('Disabled')));
+    await tester.pump();
+    expect(_background(tester, 'Disabled'), Colors.transparent);
+  });
+
   testWidgets('pointer and keyboard toggle groups and select leaves', (
     tester,
   ) async {

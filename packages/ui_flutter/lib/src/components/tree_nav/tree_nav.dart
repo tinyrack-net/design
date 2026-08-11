@@ -271,6 +271,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
   final FocusNode _focusNode = FocusNode();
   bool _focused = false;
   bool _hovered = false;
+  bool _pressed = false;
 
   @override
   void initState() {
@@ -296,6 +297,24 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     final focused = _focusNode.hasPrimaryFocus;
     if (focused == _focused || !mounted) return;
     setState(() => _focused = focused);
+  }
+
+  void _handlePointerEnter() {
+    if (_hovered) return;
+    setState(() => _hovered = true);
+  }
+
+  void _handlePointerExit() {
+    if (!_hovered && !_pressed) return;
+    setState(() {
+      _hovered = false;
+      _pressed = false;
+    });
+  }
+
+  void _handlePressChanged(bool pressed) {
+    if (_pressed == pressed) return;
+    setState(() => _pressed = pressed);
   }
 
   @override
@@ -357,13 +376,15 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     }
 
     if (group == null) {
-      final background = !disabled && (_hovered || _focused || selected)
+      final background = !disabled && _pressed
+          ? colors.surfacePressed
+          : !disabled && (_hovered || _focused || selected)
           ? colors.surfaceHover
           : Colors.transparent;
       return MouseRegion(
         cursor: disabled ? MouseCursor.defer : SystemMouseCursors.click,
-        onEnter: (_) => setState(() => _hovered = true),
-        onExit: (_) => setState(() => _hovered = false),
+        onEnter: disabled ? null : (_) => _handlePointerEnter(),
+        onExit: disabled ? null : (_) => _handlePointerExit(),
         child: Semantics(
           button: true,
           enabled: !disabled,
@@ -376,6 +397,9 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: disabled ? null : activate,
+              onTapCancel: disabled ? null : () => _handlePressChanged(false),
+              onTapDown: disabled ? null : (_) => _handlePressChanged(true),
+              onTapUp: disabled ? null : (_) => _handlePressChanged(false),
               child: AnimatedOpacity(
                 duration: motionDuration,
                 opacity: disabled ? TRGeneratedOpacity.disabled : 1,
@@ -445,7 +469,9 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
         ),
       );
     }
-    final groupBackground = !disabled && (_hovered || _focused)
+    final groupBackground = !disabled && _pressed
+        ? colors.surfacePressed
+        : !disabled && (_hovered || _focused)
         ? colors.surfaceHover
         : Colors.transparent;
     final groupColor = disabled
@@ -455,8 +481,8 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
         : colors.textMuted;
     final row = MouseRegion(
       cursor: disabled ? MouseCursor.defer : SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
+      onEnter: disabled ? null : (_) => _handlePointerEnter(),
+      onExit: disabled ? null : (_) => _handlePointerExit(),
       child: Semantics(
         button: true,
         enabled: !disabled,
@@ -469,6 +495,9 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: disabled ? null : activate,
+            onTapCancel: disabled ? null : () => _handlePressChanged(false),
+            onTapDown: disabled ? null : (_) => _handlePressChanged(true),
+            onTapUp: disabled ? null : (_) => _handlePressChanged(false),
             child: AnimatedOpacity(
               duration: motionDuration,
               opacity: disabled ? TRGeneratedOpacity.disabled : 1,

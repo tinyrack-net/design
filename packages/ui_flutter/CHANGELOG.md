@@ -1,3 +1,9 @@
+## 0.55.1
+
+- Gives `TRTreeNav` leaf and group rows a pressed surface while an enabled
+  pointer activation is held. Releasing, cancelling, or leaving the row
+  restores its hover or resting surface, while disabled rows remain inert.
+
 ## 0.55.0
 
 - Adds optional leading content to `TRSelect` and `TRSelectFormField` triggers.
@@ -10,7 +16,6 @@
   the active work.
 - Replaces running chat spinners and trailing status text with a directional
   text shimmer. Reduced-motion environments keep the same labels static.
-
 ## 0.53.0
 
 - Adds `TRDrawer.maxExtent`, which caps a drawer on its opening axis as a
