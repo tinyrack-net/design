@@ -1,3 +1,9 @@
+## 0.55.0
+
+- Adds optional leading content to `TRSelect` and `TRSelectFormField` triggers.
+- Adds stable keys to `TRSelectItem` option rows on both dropdown and sheet
+  surfaces.
+
 ## 0.54.0
 
 - Adds `secondaryLabel` to `TRChatToolDisclosure` for a concise description of

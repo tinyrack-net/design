@@ -4,12 +4,16 @@ part of 'select_widget.dart';
 @immutable
 class TRSelectItem<T> {
   const TRSelectItem({
+    this.key,
     required this.value,
     required this.label,
     this.enabled = true,
     this.leading,
     this.trailing,
   });
+
+  /// Stable identity attached to this option's interactive row.
+  final Key? key;
 
   final T value;
   final String label;
