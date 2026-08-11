@@ -34,7 +34,12 @@ jobs:
       - name: Check out repository history
         uses: actions/checkout@v7.0.1
         with:
+          # Every job waits on this one, so its clone sits at the head of the
+          # run. The full commit graph is still needed to diff against the
+          # base, but the blobs are not: the filter defers them until `git
+          # diff` actually reads a changed file.
           fetch-depth: 0
+          filter: blob:none
 
       - name: Check patch formatting
         shell: bash
@@ -143,11 +148,7 @@ jobs:
         uses: ./.github/actions/setup-js
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.23.0
-        with:
-          channel: stable
-          flutter-version: 3.44.8
-          cache: true
+        uses: ./.github/actions/setup-flutter
 
       - name: Check generated design tokens
         run: pnpm run tokens:check
@@ -199,10 +200,11 @@ jobs:
       - name: Build UI package
         run: pnpm --filter @tinyrack/ui build
 
-      - name: Install Chromium
-        run: |
-          pnpm --filter @tinyrack/ui exec playwright install chromium
-          pnpm --filter @tinyrack/ui exec node --input-type=module -e "import { chromium } from 'playwright'; const browser = await chromium.launch({ headless: true }); await browser.close();"
+      - name: Set up Chromium
+        uses: ./.github/actions/setup-playwright
+        with:
+          filter: "@tinyrack/ui"
+          browsers: chromium
 
       - name: Test UI unit, documentation contract, and Chromium suites
         run: |
@@ -245,10 +247,11 @@ jobs:
       - name: Build UI package
         run: pnpm --filter @tinyrack/ui build
 
-      - name: Install Firefox
-        run: |
-          pnpm --filter @tinyrack/ui exec playwright install firefox
-          pnpm --filter @tinyrack/ui exec node --input-type=module -e "import { firefox } from 'playwright'; const browser = await firefox.launch({ headless: true }); await browser.close();"
+      - name: Set up Firefox
+        uses: ./.github/actions/setup-playwright
+        with:
+          filter: "@tinyrack/ui"
+          browsers: firefox
 
       - name: Test UI Firefox suite
         id: ui-firefox-test
@@ -287,11 +290,24 @@ jobs:
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI documentation contracts
+          phase: start
+
       - name: Install UI contract dependencies
         run: pnpm --filter @tinyrack/ui... install --frozen-lockfile
 
       - name: Test UI documentation contracts
         run: pnpm --filter @tinyrack/ui test:docs-contract
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI documentation contracts
+          phase: finish
 
   docs:
     name: Docs package
@@ -311,6 +327,12 @@ jobs:
       - name: Set up JavaScript runtime
         uses: ./.github/actions/setup-js
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Docs package
+          phase: start
+
       - name: Install Docs dependencies
         run: pnpm --filter @tinyrack/docs... install --frozen-lockfile
 
@@ -325,6 +347,13 @@ jobs:
           export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
           tar -xzf "$TINYRACK_UI_TARBALL" -C packages/ui_web --strip-components=1 package/dist
           pnpm --filter @tinyrack/docs test:prepared
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Docs package
+          phase: finish
 
   homepage:
     name: Homepage package
@@ -383,10 +412,11 @@ jobs:
           pnpm --filter @tinyrack/homepage build
           pnpm run flutter:preview:budget
 
-      - name: Install Chromium
-        run: |
-          pnpm --filter @tinyrack/homepage exec playwright install chromium
-          pnpm --filter @tinyrack/homepage exec node --input-type=module -e "import { chromium } from 'playwright'; const browser = await chromium.launch({ headless: true }); await browser.close();"
+      - name: Set up Chromium
+        uses: ./.github/actions/setup-playwright
+        with:
+          filter: "@tinyrack/homepage"
+          browsers: chromium
 
       - name: Test Homepage package
         run: pnpm --filter @tinyrack/homepage test:prepared
@@ -469,6 +499,12 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7.0.1
 
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Flutter example (${{ matrix.target }})
+          phase: start
+
       - name: Set up Java
         if: matrix.target == 'android'
         uses: actions/setup-java@v5.7.0
@@ -480,20 +516,29 @@ jobs:
             packages/ui_flutter/example/android/**/*.gradle*
             packages/ui_flutter/example/android/gradle/wrapper/gradle-wrapper.properties
 
+      # This step measured 87s against a 14s build. Most of that is the
+      # recommended-package fan-out behind libgtk-3-dev, which the Flutter
+      # Linux toolchain does not need.
       - name: Install Linux desktop dependencies
         if: matrix.target == 'linux'
-        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.23.0
-        with:
-          channel: stable
-          flutter-version: 3.44.8
-          cache: true
+        uses: ./.github/actions/setup-flutter
 
       - name: Build example
         working-directory: packages/ui_flutter/example
         run: ${{ matrix.command }}
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: Flutter example (${{ matrix.target }})
+          phase: finish
 
   flutter_preview:
     name: Flutter preview development
@@ -518,19 +563,16 @@ jobs:
         uses: ./.github/actions/setup-js
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2.23.0
-        with:
-          channel: stable
-          flutter-version: 3.44.8
-          cache: true
+        uses: ./.github/actions/setup-flutter
 
       - name: Install Homepage dependencies
         run: pnpm --filter @tinyrack/homepage... install --frozen-lockfile
 
-      - name: Install Chromium
-        run: |
-          pnpm --filter @tinyrack/homepage exec playwright install chromium
-          pnpm --filter @tinyrack/homepage exec node --input-type=module -e "import { chromium } from 'playwright'; const browser = await chromium.launch({ headless: true }); await browser.close();"
+      - name: Set up Chromium
+        uses: ./.github/actions/setup-playwright
+        with:
+          filter: "@tinyrack/homepage"
+          browsers: chromium
 
       - name: Test Flutter preview development server
         run: pnpm --filter @tinyrack/homepage test:flutter-dev
