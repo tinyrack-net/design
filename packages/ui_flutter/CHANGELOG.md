@@ -1,3 +1,9 @@
+## 0.51.0
+
+- Adds an optional `key` to `TRTreeNavGroup` and `TRTreeNavLeaf`. The key is
+  attached to the rendered row, so products can distinguish destinations with
+  the same label and Flutter preserves row state when keyed nodes reorder.
+
 ## 0.50.1
 
 - Animates a dragged `TRDrawer` from its released extent to the nearest snap

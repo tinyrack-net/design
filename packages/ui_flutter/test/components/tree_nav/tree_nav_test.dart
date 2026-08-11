@@ -73,6 +73,35 @@ Color? _ringColor(WidgetTester tester, String label) =>
         .color;
 
 void main() {
+  testWidgets('node keys identify their rendered rows', (tester) async {
+    const groupKey = ValueKey<String>('guides-row');
+    const leafKey = ValueKey<String>('install-row');
+    await tester.pumpWidget(
+      _app(
+        const TRTreeNav<String>(
+          items: [
+            TRTreeNavGroup(
+              key: groupKey,
+              value: 'guides',
+              label: Text('Guides'),
+              initiallyExpanded: true,
+              children: [
+                TRTreeNavLeaf(
+                  key: leafKey,
+                  value: 'install',
+                  label: Text('Install'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    expect(find.byKey(groupKey).hitTestable(), findsOneWidget);
+    expect(find.byKey(leafKey).hitTestable(), findsOneWidget);
+  });
+
   testWidgets('matches web row heights, nested gaps, and progressive rails', (
     tester,
   ) async {

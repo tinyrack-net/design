@@ -102,8 +102,9 @@ Flutter-only editing and Form lifecycle properties remain available on
 editors through `obscureText`, `minLines`, and `maxLines`.
 
 `TRTreeNavGroup` and `TRTreeNavLeaf` accept an optional `description` for a
-muted secondary line. `TRWindowFrameTitleBar` takes any widget in its `leading`
-and `actions` slots, so window commands are composed from `TRIconButton`.
+muted secondary line and an optional `key` that identifies the rendered row.
+`TRWindowFrameTitleBar` takes any widget in its `leading` and `actions` slots,
+so window commands are composed from `TRIconButton`.
 
 From the repository root, verify the cross-platform inventory and each
 platform's own behavior and rendering baselines with:
