@@ -4,6 +4,10 @@
 
 ### Breaking
 
+- Renamed the Coder app icon assets under `@tinyrack/ui/brand/apps` to
+  `tinest-app-icon.{svg,png}`. Consumers must replace every
+  `coder-app-icon-*` import with the corresponding `tinest-app-icon-*` path;
+  the artwork and generated pixel output are unchanged.
 - Design token sources now use the DTCG 2025.10 format and resolver. The Web
   public token surface removes unused palette steps, the `xs` and `xl`
   breakpoints, `4xl` and `5xl` spacing, unused typography steps, and the
