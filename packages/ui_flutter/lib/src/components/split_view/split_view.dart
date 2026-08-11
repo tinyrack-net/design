@@ -147,8 +147,13 @@ class _TRSplitViewState extends State<TRSplitView> {
       final directionSign = horizontal && direction == TextDirection.rtl
           ? -1.0
           : 1.0;
-      final next = ratio + delta * directionSign / available;
-      setState(() => _dragRatio = _clamp(next, available));
+      // Accumulate on the live drag value, not the ratio this build rendered:
+      // a pointer can deliver several moves before the next frame. Keep the
+      // stored value unclamped so travel past a minimum extent is owed back
+      // before the divider follows the pointer again.
+      final base = _dragRatio ?? widget.ratio;
+      final next = base + delta * directionSign / available;
+      setState(() => _dragRatio = next);
       _report(next, available);
     }
 

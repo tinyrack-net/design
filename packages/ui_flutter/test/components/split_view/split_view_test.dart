@@ -178,6 +178,89 @@ void main() {
     expect(ends.single, changes.single);
   });
 
+  testWidgets('accumulates every drag update delivered within one frame', (
+    tester,
+  ) async {
+    final changes = <double>[];
+    final ends = <double>[];
+    await tester.pumpWidget(
+      _app(
+        TRSplitView(
+          axis: Axis.horizontal,
+          ratio: 0.5,
+          minFirstExtent: 0,
+          minSecondExtent: 0,
+          separatorLabel: 'Resize panes',
+          onRatioChanged: changes.add,
+          onRatioChangeEnd: ends.add,
+          first: const SizedBox.expand(),
+          second: const SizedBox.expand(),
+        ),
+      ),
+    );
+
+    final available = 600 - TRControlMetrics.borderWidth;
+    final gesture = await tester.startGesture(
+      tester.getCenter(
+        find.byKey(const ValueKey<String>('tr-split-view-separator')),
+      ),
+    );
+    // The first movement is consumed by drag acceptance and reports nothing.
+    await gesture.moveBy(const Offset(60, 0));
+    await gesture.moveBy(const Offset(20, 0));
+    final afterFirst = changes.last;
+    // A fast pointer delivers several move events before the next frame can
+    // rebuild; every delta must land, not only the last one.
+    await gesture.moveBy(const Offset(20, 0));
+    await gesture.moveBy(const Offset(20, 0));
+    await gesture.moveBy(const Offset(20, 0));
+    await gesture.up();
+    await tester.pump();
+
+    expect(changes.last, closeTo(afterFirst + 60 / available, 1e-9));
+    expect(ends.single, changes.last);
+  });
+
+  testWidgets('holds a pane at its minimum until the pointer travels back', (
+    tester,
+  ) async {
+    final changes = <double>[];
+    await tester.pumpWidget(
+      _app(
+        TRSplitView(
+          axis: Axis.horizontal,
+          ratio: 0.5,
+          separatorLabel: 'Resize panes',
+          onRatioChanged: changes.add,
+          first: const SizedBox.expand(),
+          second: const SizedBox.expand(),
+        ),
+      ),
+    );
+
+    final available = 600 - TRControlMetrics.borderWidth;
+    final minRatio = TRMeasurements.splitPaneMinExtent / available;
+    final gesture = await tester.startGesture(
+      tester.getCenter(
+        find.byKey(const ValueKey<String>('tr-split-view-separator')),
+      ),
+    );
+    // The first movement is consumed by drag acceptance and reports nothing.
+    await gesture.moveBy(const Offset(-30, 0));
+    await gesture.moveBy(const Offset(-270, 0));
+    await tester.pump();
+    expect(changes.last, closeTo(minRatio, 1e-9));
+
+    // The pointer is still far past the bound, so a partial return must not
+    // move the divider yet.
+    await gesture.moveBy(const Offset(50, 0));
+    await tester.pump();
+    expect(changes.last, closeTo(minRatio, 1e-9));
+
+    await gesture.up();
+    await tester.pump();
+  });
+
   testWidgets('supports keyboard and accessible adjustments', (tester) async {
     final changes = <double>[];
     final semantics = tester.ensureSemantics();

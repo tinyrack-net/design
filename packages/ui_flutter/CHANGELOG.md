@@ -1,3 +1,15 @@
+## 0.47.4
+
+- Keeps a `TRSplitView` divider under the pointer while it is dragged. Each
+  drag update was applied to the ratio the last frame had rendered, so when a
+  fast pointer delivered several moves before the next build, only the final
+  move of the frame survived and the divider fell further behind the cursor
+  the faster it was dragged. Updates now accumulate on the live drag value.
+  The drag value is also kept unclamped, so travel spent pushing past a pane's
+  minimum extent is owed back before the divider follows the pointer again,
+  instead of the divider reversing while the pointer is still beyond the
+  bound.
+
 ## 0.47.3
 
 - Gives a toast the height of what it says. The card carried a floor tall
