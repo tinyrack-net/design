@@ -44,6 +44,7 @@ class TRSelect<T> extends StatefulWidget {
   const TRSelect({
     required this.items,
     this.defaultValue,
+    this.leading,
     this.label,
     this.placeholder,
     this.helperText,
@@ -76,6 +77,7 @@ class TRSelect<T> extends StatefulWidget {
   const TRSelect.controlled({
     required this.items,
     required this.value,
+    this.leading,
     this.label,
     this.placeholder,
     this.helperText,
@@ -104,6 +106,10 @@ class TRSelect<T> extends StatefulWidget {
   final List<TRSelectItem<T>> items;
   final T? defaultValue;
   final T? value;
+
+  /// Optional content shown before the selected value in the trigger.
+  final Widget? leading;
+
   final String? label;
   final String? placeholder;
   final String? helperText;
@@ -518,6 +524,12 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
       TRUiSize.xl => TRGeneratedControlMetrics.xlFontSize,
     };
+    final controlGap = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smGap,
+      TRUiSize.md => TRGeneratedControlMetrics.mdGap,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlGap,
+    };
     final selectedValue = _selectedValue;
     final interactive = widget.enabled && !widget.readOnly;
     final selectedLabel = _labelFor(selectedValue);
@@ -621,6 +633,18 @@ class _TRSelectState<T> extends State<TRSelect<T>>
         ? Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (widget.leading case final leading?) ...[
+                TRLayerPartBoundary(
+                  name: 'triggerLeading',
+                  child: IconTheme.merge(
+                    data: IconThemeData(
+                      size: TRControlMetrics.iconSizeOf(uiSize),
+                    ),
+                    child: leading,
+                  ),
+                ),
+                SizedBox(width: controlGap),
+              ],
               TRLayerPartBoundary(
                 name: 'triggerLabel',
                 child: Text(
@@ -632,14 +656,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
                       : null,
                 ),
               ),
-              SizedBox(
-                width: switch (uiSize) {
-                  TRUiSize.sm => TRGeneratedControlMetrics.smGap,
-                  TRUiSize.md => TRGeneratedControlMetrics.mdGap,
-                  TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
-                  TRUiSize.xl => TRGeneratedControlMetrics.xlGap,
-                },
-              ),
+              SizedBox(width: controlGap),
               TRLayerPartBoundary(
                 name: 'triggerIcon',
                 child: _TRSelectChevron(color: colors.textMuted),
@@ -648,6 +665,18 @@ class _TRSelectState<T> extends State<TRSelect<T>>
           )
         : Row(
             children: [
+              if (widget.leading case final leading?) ...[
+                TRLayerPartBoundary(
+                  name: 'triggerLeading',
+                  child: IconTheme.merge(
+                    data: IconThemeData(
+                      size: TRControlMetrics.iconSizeOf(uiSize),
+                    ),
+                    child: leading,
+                  ),
+                ),
+                SizedBox(width: controlGap),
+              ],
               Expanded(
                 child: TRLayerPartBoundary(
                   name: 'triggerLabel',

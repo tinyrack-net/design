@@ -67,6 +67,7 @@ class _TRSelectOptions<T> extends StatelessWidget {
   Widget _row(BuildContext context, int index) {
     final item = items[index];
     final button = MenuItemButton(
+      key: item.key,
       // Only the dropdown lives inside a menu. The sheet closes itself with the
       // value it popped, so asking a menu to close would be a no-op at best.
       closeOnActivate: focusNodes != null,

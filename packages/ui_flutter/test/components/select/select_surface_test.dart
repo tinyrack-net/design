@@ -45,6 +45,45 @@ const _wide = Size(900, 800);
 
 void main() {
   group('surface resolution', () {
+    testWidgets('renders leading content in the trigger', (tester) async {
+      _sizeViewport(tester, _wide);
+      await tester.pumpWidget(
+        _app(
+          const TRSelect<String>(
+            items: _items,
+            defaultValue: 'alpha',
+            leading: Icon(Icons.hub, key: ValueKey('select-leading')),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const ValueKey('select-leading')), findsOneWidget);
+      expect(
+        find.descendant(of: _trigger, matching: find.byIcon(Icons.hub)),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('form field forwards leading content to the trigger', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _wide);
+      await tester.pumpWidget(
+        _app(
+          TRSelectFormField<String>(
+            items: _items,
+            initialValue: 'alpha',
+            leading: const Icon(
+              Icons.hub,
+              key: ValueKey('form-select-leading'),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const ValueKey('form-select-leading')), findsOneWidget);
+    });
+
     testWidgets('opens a sheet below the small breakpoint', (tester) async {
       _sizeViewport(tester, _narrow);
       await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
@@ -99,6 +138,34 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(TRDrawer), findsOneWidget);
+    });
+
+    testWidgets('attaches item keys on dropdown and sheet surfaces', (
+      tester,
+    ) async {
+      const keyedItems = <TRSelectItem<String>>[
+        TRSelectItem<String>(
+          key: ValueKey('select-option-alpha'),
+          value: 'alpha',
+          label: 'Alpha',
+        ),
+      ];
+      _sizeViewport(tester, _wide);
+      await tester.pumpWidget(_app(const TRSelect<String>(items: keyedItems)));
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('select-option-alpha')), findsOneWidget);
+
+      await tester.tap(find.text('Alpha').last);
+      await tester.pumpAndSettle();
+      tester.view.physicalSize = _narrow;
+      await tester.pumpWidget(_app(const TRSelect<String>(items: keyedItems)));
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TRDrawer), findsOneWidget);
+      expect(find.byKey(const ValueKey('select-option-alpha')), findsOneWidget);
     });
 
     testWidgets('keeps the surface it opened with across a resize', (

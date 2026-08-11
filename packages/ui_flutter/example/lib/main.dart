@@ -4051,9 +4051,11 @@ class _PreviewSelectState extends State<_PreviewSelect> {
   Widget build(BuildContext context) => SizedBox(
     width: 320,
     child: TRSelect<String>.controlled(
+      leading: const Icon(Icons.layers),
       appearance: _fieldAppearance(widget.args),
       items: [
         TRSelectItem(
+          key: const ValueKey('release-channel-stable'),
           value: 'stable',
           label: _pick('Stable', '안정', '安定版'),
           trailing: KeyedSubtree(
@@ -4061,7 +4063,11 @@ class _PreviewSelectState extends State<_PreviewSelect> {
             child: const Icon(Icons.check, size: TRGeneratedSpacing.lg),
           ),
         ),
-        TRSelectItem(value: 'beta', label: _pick('Beta', '베타', 'ベータ')),
+        TRSelectItem(
+          key: const ValueKey('release-channel-beta'),
+          value: 'beta',
+          label: _pick('Beta', '베타', 'ベータ'),
+        ),
       ],
       value: _value,
       enabled: widget.args['disabled'] != true,

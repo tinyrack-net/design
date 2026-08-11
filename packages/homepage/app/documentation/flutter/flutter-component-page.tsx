@@ -3951,6 +3951,14 @@ class _DeploymentRackState extends State<DeploymentRack> {
           ja: 'ポインターで開いた ghost Select はフォーカス枠を付けず、選択サーフェスを使います。キーボード操作ではフォーカス枠を維持します。',
         },
       },
+      {
+        axis: { en: 'Composition', ko: '구성', ja: '構成' },
+        choices: {
+          en: 'Pass leading content to identify the trigger without changing the typed value. Give each TRSelectItem a key when tests or state restoration must identify an option consistently across dropdown and sheet surfaces.',
+          ko: 'leading 콘텐츠를 넘기면 타입이 있는 값을 바꾸지 않고 트리거의 용도를 나타낼 수 있어요. 테스트나 상태 복원에서 드롭다운과 시트의 선택지를 일관되게 식별해야 한다면 각 TRSelectItem에 key를 지정하세요.',
+          ja: 'leading コンテンツを渡すと、型付きの値を変えずにトリガーの用途を示せます。テストや状態復元でドロップダウンとシートの選択肢を一貫して識別する必要がある場合は、各 TRSelectItem に key を指定してください。',
+        },
+      },
     ],
   },
   skeleton: {

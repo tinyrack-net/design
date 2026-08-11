@@ -3333,13 +3333,16 @@ Widget _selectControlled(BuildContext context, Locale locale) {
       width: 320,
       child: TRSelect<String>.controlled(
         value: channel,
+        leading: const Icon(Icons.layers),
         label: _pick(locale, 'Release channel', '릴리스 채널', 'リリースチャンネル'),
         items: [
           TRSelectItem(
+            key: const ValueKey('release-channel-stable'),
             value: 'stable',
             label: _pick(locale, 'Stable', '안정', '安定版'),
           ),
           TRSelectItem(
+            key: const ValueKey('release-channel-beta'),
             value: 'beta',
             label: _pick(locale, 'Beta', '베타', 'ベータ'),
           ),

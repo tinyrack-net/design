@@ -5,6 +5,7 @@ class TRSelectFormField<T> extends FormField<T> {
   TRSelectFormField({
     required this.items,
     super.initialValue,
+    Widget? leading,
     String? label,
     String? placeholder,
     String? helperText,
@@ -39,6 +40,7 @@ class TRSelectFormField<T> extends FormField<T> {
            child: TRSelect<T>.controlled(
              items: items,
              value: field.value,
+             leading: leading,
              label: label,
              placeholder: placeholder,
              helperText: helperText,

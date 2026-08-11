@@ -4004,16 +4004,25 @@ class _MonitoringFormState extends State<MonitoringForm> {
       id: 'select-controlled',
       title: { en: 'Controlled value', ja: 'Controlled 値', ko: 'Controlled 값' },
       description: {
-        en: 'Use the named controlled constructor when the parent owns the value. A null value explicitly clears the selection.',
-        ja: '親が値を管理する場合は named controlled constructor を使います。null は選択解除を明示します。',
-        ko: '부모가 값을 소유하면 named controlled constructor를 사용하세요. null 값은 선택 해제를 명확히 나타내요.',
+        en: 'Use the named controlled constructor when the parent owns the value. Leading content identifies the trigger, while item keys identify the same option on dropdown and sheet surfaces. A null value explicitly clears the selection.',
+        ja: '親が値を管理する場合は named controlled constructor を使います。leading コンテンツはトリガーを示し、item の key はドロップダウンとシートで同じ選択肢を識別します。null は選択解除を明示します。',
+        ko: '부모가 값을 소유하면 named controlled constructor를 사용하세요. leading 콘텐츠는 트리거의 용도를 나타내고 item key는 드롭다운과 시트에서 같은 선택지를 식별해요. null 값은 선택 해제를 명확히 나타내요.',
       },
       dart: String.raw`TRSelect<String>.controlled(
   value: channel,
+  leading: const Icon(Icons.layers),
   label: 'Release channel',
   items: const [
-    TRSelectItem(value: 'stable', label: 'Stable'),
-    TRSelectItem(value: 'beta', label: 'Beta'),
+    TRSelectItem(
+      key: ValueKey('release-channel-stable'),
+      value: 'stable',
+      label: 'Stable',
+    ),
+    TRSelectItem(
+      key: ValueKey('release-channel-beta'),
+      value: 'beta',
+      label: 'Beta',
+    ),
   ],
   onValueChange: setChannel,
 )`,
