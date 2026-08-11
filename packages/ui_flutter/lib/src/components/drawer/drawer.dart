@@ -39,6 +39,7 @@ class TRDrawer extends StatefulWidget {
     this.actions,
     this.description,
     this.initialSnapIndex = 0,
+    this.maxExtent = 1,
     this.modal = true,
     this.onDismiss,
     this.onSnapChanged,
@@ -47,7 +48,8 @@ class TRDrawer extends StatefulWidget {
     this.snapPoints,
     this.title,
     super.key,
-  }) : assert(snapPoints == null || snapPoints.length > 0),
+  }) : assert(maxExtent > 0 && maxExtent <= 1),
+       assert(snapPoints == null || snapPoints.length > 0),
        assert(
          initialSnapIndex >= 0 &&
              (snapPoints == null
@@ -59,6 +61,14 @@ class TRDrawer extends StatefulWidget {
   final Widget? actions;
   final Widget? description;
   final int initialSnapIndex;
+
+  /// Largest fraction of the viewport the drawer may occupy on its opening axis.
+  ///
+  /// Content-sized top and bottom drawers grow only until this extent, then
+  /// scroll their content. Snap points must not exceed it. The default permits
+  /// the full viewport.
+  final double maxExtent;
+
   final bool modal;
   final VoidCallback? onDismiss;
   final ValueChanged<int>? onSnapChanged;
@@ -81,9 +91,23 @@ class _TRDrawerState extends State<TRDrawer>
     with SingleTickerProviderStateMixin {
   late final AnimationController _extentController;
 
-  List<double> get _resolvedSnapPoints => (widget.snapPoints ?? const [0.5, 1])
-      .map((point) => point.clamp(0.1, 1.0))
-      .toList(growable: false);
+  List<double> get _resolvedSnapPoints {
+    assert(
+      widget.snapPoints == null ||
+          widget.snapPoints!.every(
+            (point) => point > 0 && point <= widget.maxExtent,
+          ),
+      'Every snap point must be greater than zero and no larger than maxExtent.',
+    );
+    return (widget.snapPoints ??
+            <double>[math.min(0.5, widget.maxExtent), widget.maxExtent])
+        .map(
+          (point) => point
+              .clamp(math.min(0.1, widget.maxExtent), widget.maxExtent)
+              .toDouble(),
+        )
+        .toList(growable: false);
+  }
 
   bool get _horizontal =>
       widget.placement == TRDrawerPlacement.top ||
@@ -124,7 +148,10 @@ class _TRDrawerState extends State<TRDrawer>
     final available = _horizontal ? media.height : media.width;
     _extentController
       ..stop()
-      ..value = (_extentController.value + delta / available).clamp(0.05, 1);
+      ..value = (_extentController.value + delta / available).clamp(
+        math.min(0.05, widget.maxExtent),
+        widget.maxExtent,
+      );
   }
 
   void _endDrag(DragEndDetails details) {
@@ -320,7 +347,9 @@ class _TRDrawerState extends State<TRDrawer>
       kind: TRLayerBoundaryKind.drawer,
       child: _fitsContent
           ? ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: media.size.height),
+              constraints: BoxConstraints(
+                maxHeight: media.size.height * widget.maxExtent,
+              ),
               child: SizedBox(width: media.size.width, child: interactiveBody),
             )
           : SizedBox.fromSize(size: size, child: interactiveBody),

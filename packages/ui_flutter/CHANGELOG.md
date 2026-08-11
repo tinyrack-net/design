@@ -1,3 +1,11 @@
+## 0.53.0
+
+- Adds `TRDrawer.maxExtent`, which caps a drawer on its opening axis as a
+  fraction of the viewport. Content-sized top and bottom drawers keep their
+  intrinsic size below the cap and scroll within it when their content is
+  taller; the default remains the full viewport. Fixed and draggable
+  `snapPoints` must stay within the same maximum.
+
 ## 0.52.1
 
 - Keeps dialog body padding while placing its scrollbar against the modal
