@@ -846,9 +846,9 @@ Widget _chatComposition(BuildContext context, Locale locale) => SizedBox(
       TRChatToolDisclosure(
         icon: LucideIcons.terminal,
         label: _pick(locale, 'Run command', '명령 실행', 'コマンドを実行'),
-        status: TRChatToolStatus.succeeded,
-        statusLabel: _pick(locale, 'Done', '완료', '完了'),
-        defaultOpen: true,
+        secondaryLabel: r'flutter test --coverage',
+        status: TRChatToolStatus.running,
+        statusLabel: _pick(locale, 'Running', '실행 중', '実行中'),
         details: const TRCodeBlock(code: r'$ flutter test'),
       ),
       TRChatStatusRow(

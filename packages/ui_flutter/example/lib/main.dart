@@ -2036,6 +2036,7 @@ class PreviewComponent extends StatelessWidget {
                 'ja' => 'コマンドを実行',
                 _ => 'Run command',
               },
+              secondaryLabel: r'flutter test --coverage',
               status: switch (args['status']) {
                 'running' => TRChatToolStatus.running,
                 'failed' => TRChatToolStatus.failed,

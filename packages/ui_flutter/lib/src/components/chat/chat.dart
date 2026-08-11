@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/motion_boundary.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
 import '../focus_ring/focus_ring.dart';
-import '../spinner/spinner.dart';
 import '../text/text.dart';
 
 /// Visual state of a tool or status entry in a chat transcript.
@@ -170,6 +170,7 @@ class TRChatToolDisclosure extends StatefulWidget {
     required this.status,
     required this.statusLabel,
     required this.details,
+    this.secondaryLabel,
     this.open,
     this.defaultOpen = false,
     this.onOpenChange,
@@ -178,6 +179,10 @@ class TRChatToolDisclosure extends StatefulWidget {
 
   final IconData icon;
   final String label;
+
+  /// Optional concrete activity shown after [label] in the compact row.
+  final String? secondaryLabel;
+
   final TRChatToolStatus status;
   final String statusLabel;
   final Widget details;
@@ -198,6 +203,11 @@ class _TRChatToolDisclosureState extends State<TRChatToolDisclosure> {
     final open = widget.open ?? _uncontrolledOpen;
     final colors = context.tinyrackTheme;
     final statusColor = _statusColor(colors, widget.status);
+    final displayLabel = switch (widget.secondaryLabel) {
+      final secondary? when secondary.isNotEmpty =>
+        '${widget.label} $secondary',
+      _ => widget.label,
+    };
 
     void toggle() {
       final next = !open;
@@ -209,7 +219,13 @@ class _TRChatToolDisclosureState extends State<TRChatToolDisclosure> {
       container: true,
       button: true,
       expanded: open,
-      label: '${widget.label}, ${widget.statusLabel}',
+      label: [
+        widget.label,
+        if (widget.secondaryLabel case final secondary?
+            when secondary.isNotEmpty)
+          secondary,
+        widget.statusLabel,
+      ].join(', '),
       excludeSemantics: true,
       onTap: toggle,
       child: FocusableActionDetector(
@@ -251,31 +267,24 @@ class _TRChatToolDisclosureState extends State<TRChatToolDisclosure> {
                         ),
                       ),
                       const SizedBox(width: TRGeneratedSpacing.sm),
-                      Expanded(child: TRText(widget.label, truncate: true)),
+                      Expanded(
+                        child: widget.status == TRChatToolStatus.running
+                            ? _TRChatRunningText(
+                                child: TRText(displayLabel, truncate: true),
+                              )
+                            : TRText(displayLabel, truncate: true),
+                      ),
                       const SizedBox(width: TRGeneratedSpacing.sm),
-                      if (widget.status == TRChatToolStatus.running) ...[
-                        if (MediaQuery.disableAnimationsOf(context))
-                          Icon(
-                            _statusIcon(widget.status),
-                            size: TRGeneratedControlMetrics.smIconSize,
-                            color: statusColor,
-                          )
-                        else
-                          TRSpinner(
-                            label: widget.statusLabel,
-                            uiSize: TRUiSize.sm,
-                            variant: TRSpinnerVariant.primary,
-                          ),
+                      if (widget.status != TRChatToolStatus.running) ...[
+                        TRText(
+                          widget.statusLabel,
+                          variant: TRTextVariant.bodySm,
+                          color: widget.status == TRChatToolStatus.failed
+                              ? TRTextColor.danger
+                              : TRTextColor.muted,
+                        ),
                         const SizedBox(width: TRGeneratedSpacing.xs),
                       ],
-                      TRText(
-                        widget.statusLabel,
-                        variant: TRTextVariant.bodySm,
-                        color: widget.status == TRChatToolStatus.failed
-                            ? TRTextColor.danger
-                            : TRTextColor.muted,
-                      ),
-                      const SizedBox(width: TRGeneratedSpacing.xs),
                       AnimatedRotation(
                         turns: open ? 0.25 : 0,
                         duration: MediaQuery.disableAnimationsOf(context)
@@ -336,38 +345,108 @@ class TRChatStatusRow extends StatelessWidget {
           SizedBox(
             width: TRGeneratedControlMetrics.mdIconSize,
             child: Center(
-              child: status == TRChatToolStatus.running
-                  ? MediaQuery.disableAnimationsOf(context)
-                        ? Icon(
-                            _statusIcon(status),
-                            size: TRGeneratedControlMetrics.smIconSize,
-                            color: _statusColor(context.tinyrackTheme, status),
-                          )
-                        : TRSpinner(
-                            uiSize: TRUiSize.sm,
-                            variant: TRSpinnerVariant.primary,
-                          )
-                  : Icon(
-                      icon ?? _statusIcon(status),
-                      size: TRGeneratedControlMetrics.smIconSize,
-                      color: _statusColor(context.tinyrackTheme, status),
-                    ),
+              child: Icon(
+                icon ?? _statusIcon(status),
+                size: TRGeneratedControlMetrics.smIconSize,
+                color: _statusColor(context.tinyrackTheme, status),
+              ),
             ),
           ),
           const SizedBox(width: TRGeneratedSpacing.sm),
           Expanded(
-            child: TRText(
-              label,
-              variant: TRTextVariant.bodySm,
-              color: status == TRChatToolStatus.failed
-                  ? TRTextColor.danger
-                  : TRTextColor.muted,
-            ),
+            child: status == TRChatToolStatus.running
+                ? _TRChatRunningText(
+                    child: TRText(
+                      label,
+                      variant: TRTextVariant.bodySm,
+                      color: TRTextColor.muted,
+                    ),
+                  )
+                : TRText(
+                    label,
+                    variant: TRTextVariant.bodySm,
+                    color: status == TRChatToolStatus.failed
+                        ? TRTextColor.danger
+                        : TRTextColor.muted,
+                  ),
           ),
         ],
       ),
     ),
   );
+}
+
+class _TRChatRunningText extends StatefulWidget {
+  const _TRChatRunningText({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_TRChatRunningText> createState() => _TRChatRunningTextState();
+}
+
+class _TRChatRunningTextState extends State<_TRChatRunningText>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: TRMotion.loading,
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncAnimation();
+  }
+
+  void _syncAnimation() {
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _controller
+        ..stop()
+        ..value = 0;
+      return;
+    }
+    if (!_controller.isAnimating) _controller.repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (MediaQuery.disableAnimationsOf(context)) return widget.child;
+    final colors = context.tinyrackTheme;
+    final textDirection = Directionality.of(context);
+    return AnimatedBuilder(
+      animation: _controller,
+      child: widget.child,
+      builder: (context, child) => TRMotionBoundary(
+        progress: _controller.value,
+        child: ShaderMask(
+          blendMode: BlendMode.srcIn,
+          shaderCallback: (bounds) {
+            final progress = textDirection == TextDirection.ltr
+                ? _controller.value
+                : 1 - _controller.value;
+            final center = bounds.width * (-1 + 3 * progress);
+            return LinearGradient(
+              colors: <Color>[colors.textMuted, colors.text, colors.textMuted],
+            ).createShader(
+              Rect.fromLTWH(
+                center - bounds.width,
+                0,
+                bounds.width * 2,
+                bounds.height,
+              ),
+            );
+          },
+          child: child,
+        ),
+      ),
+    );
+  }
 }
 
 Color _statusColor(TinyrackThemeData colors, TRChatToolStatus status) =>
