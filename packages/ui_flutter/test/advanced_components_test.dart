@@ -1352,7 +1352,7 @@ void main() {
       );
       expect(tester.getSize(find.byType(TRDrawer)), const Size(800, 300));
       await tester.drag(find.byType(TRDrawer), const Offset(0, -250));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(tester.getSize(find.byType(TRDrawer)), const Size(800, 600));
       expect(snappedIndex, 1);
 

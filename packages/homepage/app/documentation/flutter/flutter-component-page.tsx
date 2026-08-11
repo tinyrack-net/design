@@ -1150,9 +1150,9 @@ const componentData: Record<
       ja: 'コンテンツに合うモーダルシート、またはビューポート比率でスワイプできるドロワーを論理方向の各辺から表示します。',
     },
     contractIntro: {
-      en: 'Top and bottom drawers fit their content by default and scroll only when content exceeds the available viewport. Supply `snapPoints` to opt into viewport-relative sizing and drag-to-snap behavior. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted. Every drawer extends its surface to the viewport edge while keeping content inside the system safe areas.',
-      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고, 콘텐츠가 사용 가능한 뷰포트를 넘을 때만 스크롤해요. 뷰포트 비율 크기와 드래그 스냅이 필요하면 `snapPoints`를 지정하세요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요. 모든 드로어의 표면은 뷰포트 끝까지 이어지고 콘텐츠는 시스템 안전영역 안에 배치돼요.',
-      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、利用可能なビューポートを超えた場合のみスクロールします。ビューポート比率のサイズとドラッグスナップを使う場合は `snapPoints` を指定してください。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。すべてのドロワーはサーフェスをビューポートの端まで広げながら、コンテンツをシステムのセーフエリア内に配置します。',
+      en: 'Top and bottom drawers fit their content by default and scroll only when content exceeds the available viewport. Supply `snapPoints` to opt into viewport-relative sizing and drag-to-snap behavior. When a drag ends, the drawer eases to its nearest snap point; reduced-motion environments settle it immediately. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted. Every drawer extends its surface to the viewport edge while keeping content inside the system safe areas.',
+      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고, 콘텐츠가 사용 가능한 뷰포트를 넘을 때만 스크롤해요. 뷰포트 비율 크기와 드래그 스냅이 필요하면 `snapPoints`를 지정하세요. 드래그를 놓으면 가장 가까운 스냅 지점까지 부드럽게 이동하고, 모션 줄이기가 켜진 환경에서는 즉시 이동해요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요. 모든 드로어의 표면은 뷰포트 끝까지 이어지고 콘텐츠는 시스템 안전영역 안에 배치돼요.',
+      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、利用可能なビューポートを超えた場合のみスクロールします。ビューポート比率のサイズとドラッグスナップを使う場合は `snapPoints` を指定してください。ドラッグを離すと最も近いスナップポイントまで滑らかに移動し、モーションを減らす設定ではすぐに移動します。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。すべてのドロワーはサーフェスをビューポートの端まで広げながら、コンテンツをシステムのセーフエリア内に配置します。',
     },
     contractRows: [
       {
@@ -1161,6 +1161,14 @@ const componentData: Record<
           en: 'Content-sized by default for top and bottom; viewport-relative when `snapPoints` is supplied',
           ko: '상단과 하단은 기본적으로 콘텐츠에 맞고, `snapPoints`를 지정하면 뷰포트 비율을 사용해요',
           ja: '上端と下端はデフォルトでコンテンツに合わせ、`snapPoints` を指定するとビューポート比率を使います',
+        },
+      },
+      {
+        axis: { en: 'Snap motion', ko: '스냅 모션', ja: 'スナップモーション' },
+        choices: {
+          en: 'Uses Tinyrack motion after a drag and settles immediately when reduced motion is enabled',
+          ko: '드래그 뒤에는 Tinyrack 모션을 사용하고, 모션 줄이기가 켜지면 즉시 이동해요',
+          ja: 'ドラッグ後は Tinyrack のモーションを使い、モーションを減らす設定ではすぐに移動します',
         },
       },
     ],
