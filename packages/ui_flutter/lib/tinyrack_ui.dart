@@ -1,7 +1,7 @@
 /// Tinyrack themes, tokens, and Flutter widgets.
 library;
 
-export 'src/control_density.dart';
+export 'src/ui_density.dart';
 export 'src/components/accordion/accordion.dart';
 export 'src/components/alert/alert.dart';
 export 'src/components/alert_dialog/alert_dialog.dart';

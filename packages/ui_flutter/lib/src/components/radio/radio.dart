@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/form_registry.dart';
@@ -38,7 +38,7 @@ class TRRadio extends StatefulWidget {
   final bool readOnly;
   final bool invalid;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
 
   /// Aligns the glyph to a compound label's first body line by default.
@@ -90,7 +90,7 @@ class _TRRadioState extends State<TRRadio> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -126,11 +126,13 @@ class _TRRadioState extends State<TRRadio> with TRFocusSourceMixin {
       TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlIconSize,
     };
     final indicatorSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,
       TRUiSize.md => TRGeneratedSpacing.xs,
       TRUiSize.lg => TRGeneratedSpacing.sm,
+      TRUiSize.xl => TRGeneratedSpacing.md,
     };
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero

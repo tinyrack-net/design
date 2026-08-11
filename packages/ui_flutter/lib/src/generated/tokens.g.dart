@@ -484,12 +484,19 @@ abstract final class TRGeneratedControlMetrics {
   static const double lgFontSize = 14.0;
   static const double lgLineHeight = 20.0;
   static const double lgIconSize = 16.0;
+  static const double xlHeight = 48.0;
+  static const double xlPaddingInline = 20.0;
+  static const double xlGap = 8.0;
+  static const double xlFontSize = 16.0;
+  static const double xlLineHeight = 24.0;
+  static const double xlIconSize = 20.0;
 }
 
 abstract final class TRGeneratedSpinnerMetrics {
   static const double sizeSm = 12.0;
   static const double sizeMd = 16.0;
   static const double sizeLg = 20.0;
+  static const double sizeXl = 24.0;
   static const double strokeWidth = 2.0;
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'generated/tokens.g.dart';
 import 'types.dart';
+import 'ui_density.dart';
 
 /// Platform-resolved spacing values in logical pixels.
 abstract final class TRSpacing {
@@ -104,6 +105,7 @@ abstract final class TRControlMetrics {
     TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
     TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
     TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+    TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
   };
 
   /// Inset between the control edge and its content, excluding the border.
@@ -111,6 +113,7 @@ abstract final class TRControlMetrics {
     TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
     TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
     TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+    TRUiSize.xl => TRGeneratedControlMetrics.xlPaddingInline,
   };
 
   /// Space between adjacent pieces of content inside one control.
@@ -118,6 +121,7 @@ abstract final class TRControlMetrics {
     TRUiSize.sm => TRGeneratedControlMetrics.smGap,
     TRUiSize.md => TRGeneratedControlMetrics.mdGap,
     TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
+    TRUiSize.xl => TRGeneratedControlMetrics.xlGap,
   };
 
   /// Size of an icon rendered inside a control.
@@ -125,6 +129,7 @@ abstract final class TRControlMetrics {
     TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
     TRUiSize.md => TRGeneratedControlMetrics.mdIconSize,
     TRUiSize.lg => TRGeneratedControlMetrics.lgIconSize,
+    TRUiSize.xl => TRGeneratedControlMetrics.xlIconSize,
   };
 
   /// Font size of the label of a control.
@@ -132,6 +137,7 @@ abstract final class TRControlMetrics {
     TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
     TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
     TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
+    TRUiSize.xl => TRGeneratedControlMetrics.xlFontSize,
   };
 
   /// Line height of the label of a control.
@@ -139,6 +145,7 @@ abstract final class TRControlMetrics {
     TRUiSize.sm => TRGeneratedControlMetrics.smLineHeight,
     TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
     TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,
+    TRUiSize.xl => TRGeneratedControlMetrics.xlLineHeight,
   };
 
   /// Width of the border a control draws, which adds to its outer width.
@@ -180,4 +187,39 @@ abstract final class TRTypography {
   static const headingLg = TRGeneratedTextStyles.headingLg;
   static const display = TRGeneratedTextStyles.display;
   static const displayLg = TRGeneratedTextStyles.displayLg;
+
+  /// Resolves a typography role against the nearest UI density.
+  static TextStyle resolve(BuildContext context, TRTextVariant variant) {
+    final standard = switch (variant) {
+      TRTextVariant.caption => caption,
+      TRTextVariant.label => label,
+      TRTextVariant.body => body,
+      TRTextVariant.bodySm => bodySm,
+      TRTextVariant.code => code,
+      TRTextVariant.headingSm => headingSm,
+      TRTextVariant.headingMd => headingMd,
+      TRTextVariant.headingLg => headingLg,
+      TRTextVariant.display => display,
+      TRTextVariant.displayLg => displayLg,
+    };
+    if (TRUiDensityScope.of(context) == TRUiDensity.standard) return standard;
+    final fontSize = switch (variant) {
+      TRTextVariant.caption ||
+      TRTextVariant.label => TRGeneratedTypographySizes.sm,
+      TRTextVariant.bodySm ||
+      TRTextVariant.code => TRGeneratedTypographySizes.md,
+      TRTextVariant.body => TRGeneratedTypographySizes.lg,
+      TRTextVariant.headingSm => TRGeneratedTypographySizes.xl,
+      TRTextVariant.headingMd => TRGeneratedTypographySizes.size3xl,
+      TRTextVariant.headingLg => TRGeneratedTypographySizes.size4xl,
+      TRTextVariant.display ||
+      TRTextVariant.displayLg => TRGeneratedTypographySizes.size6xl,
+    };
+    return standard.copyWith(
+      fontSize: fontSize,
+      letterSpacing: variant == TRTextVariant.label
+          ? TRGeneratedTypographyTracking.lg * fontSize
+          : standard.letterSpacing,
+    );
+  }
 }

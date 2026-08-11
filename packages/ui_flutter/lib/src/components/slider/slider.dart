@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../types.dart';
@@ -17,6 +17,7 @@ double _sliderThumbSize(TRUiSize uiSize) => switch (uiSize) {
   TRUiSize.sm => TRGeneratedSpacing.sm,
   TRUiSize.md => TRGeneratedSpacing.md,
   TRUiSize.lg => TRGeneratedSpacing.lg,
+  TRUiSize.xl => TRGeneratedControlMetrics.xlIconSize,
 };
 
 /// The cross-axis extent reserved for the track and thumb at each size.
@@ -24,6 +25,7 @@ double _sliderControlExtent(TRUiSize uiSize) => switch (uiSize) {
   TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
   TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
   TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+  TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
 };
 
 // @tinyrack-preview slider
@@ -98,7 +100,7 @@ class _TRSliderState extends State<TRSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final slider = _TRScalarSliderControl(
       enabled: widget.enabled,
       max: widget.max,
@@ -213,7 +215,7 @@ class _TRRangeSliderState extends State<TRRangeSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final value = _effectiveValue;
     final slider = _TRRangeSliderControl(
       enabled: widget.enabled,

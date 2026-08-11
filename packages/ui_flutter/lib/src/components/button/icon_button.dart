@@ -26,21 +26,23 @@ class TRIconButton extends StatelessWidget {
   final bool loading;
   final String? loadingLabel;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
 
   @override
   Widget build(BuildContext context) {
-    final effectiveUiSize = TRControlDensityScope.resolve(context, uiSize);
+    final effectiveUiSize = TRUiDensityScope.resolveSize(context, uiSize);
     final size = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final iconSize = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdIconSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgIconSize,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlIconSize,
     };
     return SizedBox.square(
       dimension: size,

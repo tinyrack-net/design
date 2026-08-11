@@ -74,6 +74,7 @@ type DesignTokens = {
     sizeLg: string;
     sizeMd: string;
     sizeSm: string;
+    sizeXl?: string;
     strokeWidth: string;
     trackOpacity: string;
   };
@@ -788,6 +789,9 @@ function dartOutput() {
         sizeSm: tokens.spinnerMetrics.sizeSm,
         sizeMd: tokens.spinnerMetrics.sizeMd,
         sizeLg: tokens.spinnerMetrics.sizeLg,
+        ...(tokens.spinnerMetrics.sizeXl === undefined
+          ? {}
+          : { sizeXl: tokens.spinnerMetrics.sizeXl }),
         strokeWidth: tokens.spinnerMetrics.strokeWidth,
       },
       dartNumber,

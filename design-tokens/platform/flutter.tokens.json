@@ -14,6 +14,40 @@
       }
     }
   },
+  "controlMetrics": {
+    "xl": {
+      "height": {
+        "$type": "dimension",
+        "$value": { "value": 3, "unit": "rem" },
+        "$extensions": { "net.tinyrack": { "output": "3rem" } }
+      },
+      "paddingInline": {
+        "$type": "dimension",
+        "$value": { "value": 1.25, "unit": "rem" },
+        "$extensions": { "net.tinyrack": { "output": "1.25rem" } }
+      },
+      "gap": {
+        "$type": "dimension",
+        "$value": { "value": 0.5, "unit": "rem" },
+        "$extensions": { "net.tinyrack": { "output": "0.5rem" } }
+      },
+      "fontSize": {
+        "$type": "dimension",
+        "$value": "{typography.fontSize.md}",
+        "$extensions": { "net.tinyrack": { "output": "md" } }
+      },
+      "lineHeight": {
+        "$type": "dimension",
+        "$value": { "value": 1.5, "unit": "rem" },
+        "$extensions": { "net.tinyrack": { "output": "1.5rem" } }
+      },
+      "iconSize": {
+        "$type": "dimension",
+        "$value": { "value": 1.25, "unit": "rem" },
+        "$extensions": { "net.tinyrack": { "output": "1.25rem" } }
+      }
+    }
+  },
   "spacing": {
     "4xl": {
       "$type": "dimension",
@@ -63,6 +97,13 @@
           "output": "0.7"
         }
       }
+    }
+  },
+  "spinnerMetrics": {
+    "sizeXl": {
+      "$type": "dimension",
+      "$value": { "value": 1.5, "unit": "rem" },
+      "$extensions": { "net.tinyrack": { "output": "1.5rem" } }
     }
   },
   "motion": {

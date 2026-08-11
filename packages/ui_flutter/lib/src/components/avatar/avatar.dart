@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 
 /// The corner treatment of a [TRAvatar].
 enum TRAvatarShape { circle, square }
@@ -14,17 +15,18 @@ class TRAvatar extends StatelessWidget {
     this.image,
     this.fallback,
     this.shape = TRAvatarShape.circle,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   });
 
   final ImageProvider? image;
   final String? fallback;
   final TRAvatarShape shape;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRUiDensityScope.resolveSize(context, this.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -33,11 +35,13 @@ class TRAvatar extends StatelessWidget {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedTypographySizes.size2xs,
       TRUiSize.md => TRGeneratedTypographySizes.xs,
       TRUiSize.lg => TRGeneratedTypographySizes.sm,
+      TRUiSize.xl => TRGeneratedTypographySizes.md,
     };
     final radius = switch (shape) {
       TRAvatarShape.circle => TRGeneratedRadii.full,

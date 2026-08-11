@@ -79,6 +79,16 @@ void main() {
         TRControlMetrics.heightOf(TRUiSize.lg),
         greaterThan(TRControlMetrics.heightOf(TRUiSize.md)),
       );
+      expect(TRControlMetrics.heightOf(TRUiSize.xl), 48);
+      expect(TRControlMetrics.inlinePaddingOf(TRUiSize.xl), 20);
+      expect(TRControlMetrics.gapOf(TRUiSize.xl), 8);
+      expect(TRControlMetrics.iconSizeOf(TRUiSize.xl), 20);
+      expect(TRControlMetrics.fontSizeOf(TRUiSize.xl), 16);
+      expect(TRControlMetrics.lineHeightOf(TRUiSize.xl), 24);
+      expect(
+        TRControlMetrics.heightOf(TRUiSize.xl),
+        greaterThan(TRControlMetrics.heightOf(TRUiSize.lg)),
+      );
       expect(TRControlMetrics.borderWidth, greaterThan(0));
     });
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -97,30 +97,33 @@ class TRTextField extends StatelessWidget {
   final Widget? suffix;
   final TextInputAction? textInputAction;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
   final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
-    final effectiveUiSize = TRControlDensityScope.resolve(context, uiSize);
+    final effectiveUiSize = TRUiDensityScope.resolveSize(context, uiSize);
     var registeredValue = controller?.text ?? initialValue ?? '';
     final controlHeight = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final horizontalPadding =
         switch (effectiveUiSize) {
           TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
           TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
           TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+          TRUiSize.xl => TRGeneratedControlMetrics.xlPaddingInline,
         } -
         TRGeneratedFlutterRendering.textFieldPaddingInlineCorrection;
     final fontSize = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlFontSize,
     };
     final verticalPadding =
         (controlHeight - fontSize * TRGeneratedTypographyLineHeights.sm) / 2 +

@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -188,7 +188,7 @@ class _TROtpFieldState extends State<TROtpField> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -201,11 +201,13 @@ class _TROtpFieldState extends State<TROtpField> with TRFocusSourceMixin {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final slotGap = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smGap,
       TRUiSize.md => TRGeneratedControlMetrics.mdGap,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlGap,
     };
     final slots = GestureDetector(
       behavior: HitTestBehavior.opaque,

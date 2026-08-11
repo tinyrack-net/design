@@ -84,12 +84,13 @@ test('the canonical token source covers Flutter component metrics', async () => 
         metrics.iconSize,
       ]),
     ),
-    { sm: '0.875rem', md: '1rem', lg: '1rem' },
+    { sm: '0.875rem', md: '1rem', lg: '1rem', xl: '1.25rem' },
   );
   assert.deepEqual(tokens.spinnerMetrics, {
     sizeSm: '0.75rem',
     sizeMd: '1rem',
     sizeLg: '1.25rem',
+    sizeXl: '1.5rem',
     strokeWidth: '0.125rem',
     trackOpacity: '24%',
   });

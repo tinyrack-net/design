@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
@@ -223,7 +223,7 @@ class _TRTabsState extends State<TRTabs> {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final active =
         widget.value ??
@@ -233,6 +233,7 @@ class _TRTabsState extends State<TRTabs> {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final stripHeight = tabHeight + TRGeneratedBorders.defaultWidth;
     final strip = _buildStrip(colors, active, tabHeight, stripHeight);
@@ -243,6 +244,7 @@ class _TRTabsState extends State<TRTabs> {
       TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlPaddingInline,
     };
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -363,7 +365,7 @@ class _TRTabsState extends State<TRTabs> {
         itemCount: widget.tabs.length,
         itemExtent: tabExtent,
         itemBuilder: (context, index) {
-          final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+          final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
           final tab = widget.tabs[index];
           return _TRTabItem(
             key: ValueKey<String>('tr-tabs-tab-${tab.value}'),
@@ -525,16 +527,19 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlFontSize,
     };
     final lineHeight = switch (widget.uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smLineHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdLineHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgLineHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlLineHeight,
     };
     final closeSize = switch (widget.uiSize) {
       TRUiSize.sm => TRUiSize.sm,
       TRUiSize.md => TRUiSize.sm,
       TRUiSize.lg => TRUiSize.md,
+      TRUiSize.xl => TRUiSize.lg,
     };
     final showFocusRing = focusVisible(hasFocus: _focused);
     final motionDuration = MediaQuery.disableAnimationsOf(context)

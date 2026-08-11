@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../control_density.dart';
+import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -49,7 +49,7 @@ class TRTextarea extends StatefulWidget {
   final String? placeholder;
   final bool readOnly;
 
-  /// Overrides the size supplied by [TRControlDensityScope].
+  /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
 
   @override
@@ -91,7 +91,7 @@ class _TRTextareaState extends State<TRTextarea> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
-    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -100,16 +100,19 @@ class _TRTextareaState extends State<TRTextarea> with TRFocusSourceMixin {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlHeight,
     };
     final horizontalPadding = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
       TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
       TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlPaddingInline,
     };
     final fontSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smFontSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdFontSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgFontSize,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlFontSize,
     };
     final interactive = widget.enabled && !widget.readOnly;
     // A field focused by a click paints no emphasis: `resolveFieldChrome` takes

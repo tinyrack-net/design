@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
+import '../../tokens.dart';
 import '../../types.dart';
 
 // @tinyrack-preview text
@@ -109,18 +110,7 @@ class TRText extends StatelessWidget {
       );
     }
 
-    final style = switch (variant) {
-      TRTextVariant.caption => TRGeneratedTextStyles.caption,
-      TRTextVariant.label => TRGeneratedTextStyles.label,
-      TRTextVariant.body => TRGeneratedTextStyles.body,
-      TRTextVariant.bodySm => TRGeneratedTextStyles.bodySm,
-      TRTextVariant.code => TRGeneratedTextStyles.code,
-      TRTextVariant.headingSm => TRGeneratedTextStyles.headingSm,
-      TRTextVariant.headingMd => TRGeneratedTextStyles.headingMd,
-      TRTextVariant.headingLg => TRGeneratedTextStyles.headingLg,
-      TRTextVariant.display => TRGeneratedTextStyles.display,
-      TRTextVariant.displayLg => TRGeneratedTextStyles.displayLg,
-    };
+    final style = TRTypography.resolve(context, variant);
     final locale = Localizations.localeOf(context).languageCode;
     final resolvedTracking = switch ((variant, weight, locale)) {
       (TRTextVariant.body, TRTextWeight.regular, 'en') =>
