@@ -3,6 +3,8 @@
 - Adds the `tinyrack_ui_check` command and programmatic check API for enforcing
   public Tinyrack tokens, components, imports, and light/dark theme setup in
   Flutter application source.
+- Supports analyzer 12 as well as analyzer 13 so applications pinned by the
+  Flutter SDK can install the compliance checker.
 
 ## 0.49.0
 
