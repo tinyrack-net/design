@@ -5,10 +5,10 @@ import { describe, expect, it } from 'vitest';
 
 const homepageRoot = process.cwd();
 const assetRoot = join(homepageRoot, 'public/brand/apps');
-const products = ['coder', 'dotweave', 'proxer', 'tinyauth'] as const;
+const products = ['tinest', 'dotweave', 'proxer', 'tinyauth'] as const;
 const sizes = [16, 32, 48, 128, 512] as const;
 const approvedColors = {
-  coder: new Set(['#0a0a0a', '#a78bfa', '#fafafa']),
+  tinest: new Set(['#0a0a0a', '#a78bfa', '#fafafa']),
   dotweave: new Set(['#0a0a0a', '#2dd4bf', '#fafafa']),
   proxer: new Set(['#0a0a0a', '#2563eb', '#fafafa']),
   tinyauth: new Set(['#0a0a0a', '#38bdf8', '#fafafa']),

@@ -5,7 +5,7 @@ import sharp, { type Metadata } from 'sharp';
 
 const brandRoot = join(process.cwd(), 'src/brand');
 const assetRoot = join(brandRoot, 'apps');
-const products = ['coder', 'dotweave', 'proxer', 'tinyauth'] as const;
+const products = ['tinest', 'dotweave', 'proxer', 'tinyauth'] as const;
 const productSizes = [16, 32, 48, 128, 512] as const;
 
 /** Every numeric filename suffix is the rasterized height in pixels. Square
