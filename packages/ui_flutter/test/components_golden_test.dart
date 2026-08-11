@@ -134,6 +134,53 @@ void main() {
     ('light', TinyrackTheme.light()),
     ('dark', TinyrackTheme.dark()),
   ]) {
+    testWidgets('tree navigation preserves its ${themeCase.$1} pressed row', (
+      tester,
+    ) async {
+      await _loadPackageFontAliases();
+      _useTolerantGoldenComparator();
+      await tester.binding.setSurfaceSize(const Size(360, 160));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(
+        _goldenApp(
+          theme: themeCase.$2,
+          child: const MediaQuery(
+            data: MediaQueryData(disableAnimations: true),
+            child: Padding(
+              padding: EdgeInsets.all(TRSpacing.large),
+              child: TRTreeNav<String>(
+                itemSpacing: TRSpacing.extraSmall,
+                items: [
+                  TRTreeNavLeaf(value: 'projects', label: Text('Projects')),
+                  TRTreeNavLeaf(value: 'agents', label: Text('Agents')),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: Offset.zero);
+      addTearDown(mouse.removePointer);
+      await mouse.moveTo(tester.getCenter(find.text('Projects')));
+      await tester.pump();
+      await mouse.down(tester.getCenter(find.text('Projects')));
+      await tester.pump();
+
+      await expectLater(
+        find.byType(MaterialApp),
+        matchesGoldenFile('goldens/tree-nav-${themeCase.$1}-pressed.png'),
+      );
+      await mouse.up();
+    });
+  }
+
+  for (final themeCase in <(String, ThemeData)>[
+    ('light', TinyrackTheme.light()),
+    ('dark', TinyrackTheme.dark()),
+  ]) {
     for (final localeCase in _chatLocales.entries) {
       testWidgets(
         'chat primitives preserve ${themeCase.$1} ${localeCase.key} appearance',

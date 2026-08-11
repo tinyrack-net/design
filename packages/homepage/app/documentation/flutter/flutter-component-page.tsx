@@ -2346,9 +2346,9 @@ class _RackFormState extends State<RackForm> {
       ja: '選択中の移動先とネストされたレールを表示する、型付きの展開ナビゲーションを構築します。',
     },
     contractIntro: {
-      en: 'Tab follows reading order. Enter and Space activate the focused row, Up and Down move between rows, and the logical expand and collapse arrow keys follow text direction. Disabled rows are skipped and ignore pointer and keyboard input.',
-      ko: 'Tab은 읽기 순서를 따라요. Enter와 Space는 포커스된 행을 실행하고, 위·아래 화살표는 행 사이를 이동하며, 펼침·접힘 화살표는 텍스트 방향을 따라요. 비활성 행은 건너뛰고 포인터와 키보드 입력을 무시해요.',
-      ja: 'Tab は読み順に従います。Enter と Space はフォーカス中の行を実行し、上下矢印は行間を移動し、展開・折りたたみの矢印はテキスト方向に従います。無効な行はスキップされ、ポインターとキーボード入力を無視します。',
+      en: 'Tab follows reading order. Enter and Space activate the focused row, Up and Down move between rows, and the logical expand and collapse arrow keys follow text direction. Enabled rows show hover and pressed surfaces for pointer feedback. Disabled rows are skipped and ignore pointer and keyboard input.',
+      ko: 'Tab은 읽기 순서를 따라요. Enter와 Space는 포커스된 행을 실행하고, 위·아래 화살표는 행 사이를 이동하며, 펼침·접힘 화살표는 텍스트 방향을 따라요. 활성 행은 포인터에 hover와 pressed 표면으로 반응해요. 비활성 행은 건너뛰고 포인터와 키보드 입력을 무시해요.',
+      ja: 'Tab は読み順に従います。Enter と Space はフォーカス中の行を実行し、上下矢印は行間を移動し、展開・折りたたみの矢印はテキスト方向に従います。有効な行はポインター操作にホバーと押下中のサーフェスで応答します。無効な行はスキップされ、ポインターとキーボード入力を無視します。',
     },
     contractRows: [
       {
