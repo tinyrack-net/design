@@ -4894,9 +4894,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
   chat: {
     title: 'Chat',
     description: {
-      en: 'Compose readable chat transcripts from aligned messages, user bubbles, tool disclosures, and status rows.',
-      ko: '정렬된 메시지, 사용자 말풍선, 도구 디스클로저, 상태 행으로 읽기 쉬운 채팅 기록을 조립해요.',
-      ja: '整列したメッセージ、ユーザーバブル、ツールの開閉行、ステータス行から読みやすいチャット履歴を構成します。',
+      en: 'Compose readable chat transcripts and show work in progress with accessible shimmer text.',
+      ko: '읽기 쉬운 채팅 기록을 조립하고 진행 중인 작업을 접근 가능한 빛 흐름 텍스트로 보여 줘요.',
+      ja: '読みやすいチャット履歴を構成し、進行中の作業をアクセシブルなシマーテキストで示します。',
     },
     contractRows: [
       {
@@ -4926,9 +4926,9 @@ class _AlignmentBarState extends State<AlignmentBar> {
       {
         axis: { en: 'State', ko: '상태', ja: '状態' },
         choices: {
-          en: '`TRChatToolStatus` controls semantic color, icon, progress, and assistive state; pass localized visible labels separately.',
-          ko: '`TRChatToolStatus`가 시맨틱 색상, 아이콘, 진행 상태를 정하고 표시 레이블은 현지화해서 따로 전달해요.',
-          ja: '`TRChatToolStatus` がセマンティックカラー、アイコン、進行状態を決め、表示ラベルはローカライズして別に渡します。',
+          en: '`TRChatToolStatus.running` shimmers the visible activity text and keeps `statusLabel` available to assistive technology. Reduced-motion settings leave the text static.',
+          ko: '`TRChatToolStatus.running`은 화면의 활동 텍스트 위로 밝은 빛을 흘려 보내고 `statusLabel`은 보조 기술에 계속 제공해요. 모션 감소 설정에서는 텍스트가 움직이지 않아요.',
+          ja: '`TRChatToolStatus.running` は表示中のアクティビティテキストにシマーを適用し、`statusLabel` は支援技術に引き続き提供します。視差効果を減らす設定ではテキストは動きません。',
         },
       },
       {
@@ -4952,6 +4952,7 @@ class _AlignmentBarState extends State<AlignmentBar> {
     TRChatToolDisclosure(
       icon: LucideIcons.terminal,
       label: 'Run command',
+      secondaryLabel: 'flutter test --coverage',
       status: TRChatToolStatus.running,
       statusLabel: 'Running',
       details: const TRCodeBlock(code: r'$ flutter test'),
@@ -4969,6 +4970,7 @@ class _AlignmentBarState extends State<AlignmentBar> {
     TRChatToolDisclosure(
       icon: LucideIcons.terminal,
       label: '명령 실행',
+      secondaryLabel: 'flutter test --coverage',
       status: TRChatToolStatus.running,
       statusLabel: '실행 중',
       details: const TRCodeBlock(code: r'$ flutter test'),
@@ -4986,6 +4988,7 @@ class _AlignmentBarState extends State<AlignmentBar> {
     TRChatToolDisclosure(
       icon: LucideIcons.terminal,
       label: 'コマンドを実行',
+      secondaryLabel: 'flutter test --coverage',
       status: TRChatToolStatus.running,
       statusLabel: '実行中',
       details: const TRCodeBlock(code: r'$ flutter test'),
@@ -5038,12 +5041,12 @@ class _AlignmentBarState extends State<AlignmentBar> {
         },
         rows: [
           {
-            name: 'icon, label, statusLabel',
-            type: 'IconData, String, String · required',
+            name: 'icon, label, secondaryLabel, statusLabel',
+            type: 'IconData, String, String?, String',
             purpose: {
-              en: 'Define the compact human-readable summary.',
-              ko: '사람이 읽기 쉬운 간결한 요약을 정의해요.',
-              ja: '人が読みやすいコンパクトな要約を定義します。',
+              en: 'Define the compact action, optional concrete activity, and accessible state summary.',
+              ko: '간결한 작업명, 선택적인 구체 활동, 접근 가능한 상태 요약을 정의해요.',
+              ja: 'コンパクトな操作名、任意の具体的なアクティビティ、アクセシブルな状態の要約を指定します。',
             },
           },
           {

@@ -2517,9 +2517,9 @@ Column(
         ja: 'チャット履歴の構成',
       },
       description: {
-        en: 'Combine authorship, assistant alignment, technical disclosure, and live status without exposing tool detail in the collapsed row.',
-        ko: '작성 주체, 어시스턴트 정렬, 기술 상세 공개, 실시간 상태를 조합하면서 접힌 행에는 도구 세부 정보를 노출하지 않아요.',
-        ja: '発言者、アシスタントの整列、技術詳細の開閉、進行状態を組み合わせ、閉じた行にはツールの詳細を表示しません。',
+        en: 'Combine authorship, assistant alignment, technical disclosure, and shimmer text for live work without exposing tool detail in the collapsed row.',
+        ko: '작성 주체, 어시스턴트 정렬, 기술 상세 공개, 진행 중인 작업의 빛 흐름 텍스트를 조합하면서 접힌 행에는 도구 세부 정보를 노출하지 않아요.',
+        ja: '発言者、アシスタントの整列、技術詳細の開閉、進行中の作業を示すシマーテキストを組み合わせ、閉じた行にはツールの詳細を表示しません。',
       },
       dart: String.raw`Column(
   children: [
@@ -2540,8 +2540,9 @@ Column(
     const TRChatToolDisclosure(
       icon: LucideIcons.terminal,
       label: 'Run command',
-      status: TRChatToolStatus.succeeded,
-      statusLabel: 'Done',
+      secondaryLabel: 'flutter test --coverage',
+      status: TRChatToolStatus.running,
+      statusLabel: 'Running',
       details: TRCodeBlock(code: r'$ flutter test'),
     ),
     const TRChatStatusRow(

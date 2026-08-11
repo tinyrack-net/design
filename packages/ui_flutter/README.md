@@ -107,6 +107,11 @@ muted secondary line and an optional `key` that identifies the rendered row.
 `TRWindowFrameTitleBar` takes any widget in its `leading` and `actions` slots,
 so window commands are composed from `TRIconButton`.
 
+`TRChatToolDisclosure` accepts an optional `secondaryLabel` for the concrete
+activity after its action label. A running disclosure or `TRChatStatusRow`
+shimmers its visible text while keeping the localized status in semantics;
+reduced-motion environments render the same text without animation.
+
 From the repository root, verify the cross-platform inventory and each
 platform's own behavior and rendering baselines with:
 

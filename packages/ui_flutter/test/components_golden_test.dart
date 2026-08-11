@@ -164,9 +164,9 @@ void main() {
                       TRChatToolDisclosure(
                         icon: LucideIcons.terminal,
                         label: strings.tool,
-                        status: TRChatToolStatus.failed,
-                        statusLabel: strings.failed,
-                        defaultOpen: true,
+                        secondaryLabel: strings.detail,
+                        status: TRChatToolStatus.running,
+                        statusLabel: strings.running,
                         details: TRCodeBlock(code: strings.detail),
                       ),
                       TRChatStatusRow(
@@ -179,7 +179,7 @@ void main() {
               ),
             ),
           );
-          await tester.pump();
+          await tester.pump(TRMotion.loading * 0.5);
           await expectLater(
             find.byType(MaterialApp),
             matchesGoldenFile(

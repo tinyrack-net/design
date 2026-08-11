@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
+import 'package:tinyrack_ui/src/internal/motion_boundary.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 void main() {
@@ -188,6 +189,7 @@ void main() {
           builder: (context, setState) => TRChatToolDisclosure(
             icon: LucideIcons.terminal,
             label: 'Run command',
+            secondaryLabel: 'flutter test',
             status: TRChatToolStatus.running,
             statusLabel: 'Running',
             open: open,
@@ -198,10 +200,14 @@ void main() {
       ),
     );
 
-    expect(find.byType(TRSpinner), findsOneWidget);
+    expect(find.text('Run command flutter test'), findsOneWidget);
+    expect(find.text('Running'), findsNothing);
+    expect(find.byType(TRSpinner), findsNothing);
+    expect(find.byType(ShaderMask), findsOneWidget);
     final semantics = tester.getSemantics(find.byType(TRChatToolDisclosure));
     expect(semantics.flagsCollection.isButton, isTrue);
     expect(semantics.flagsCollection.isExpanded, Tristate.isFalse);
+    expect(semantics.label, 'Run command, flutter test, Running');
 
     await tester.tap(find.byType(TRChatToolDisclosure));
     await tester.pump();
@@ -222,29 +228,70 @@ void main() {
     );
 
     expect(find.text('Running'), findsOneWidget);
-    expect(find.byType(TRSpinner), findsOneWidget);
+    expect(find.byType(TRSpinner), findsNothing);
+    expect(find.byType(ShaderMask), findsOneWidget);
     expect(find.bySemanticsLabel('Running'), findsOneWidget);
   });
 
-  testWidgets('status row keeps a running spinner square', (tester) async {
+  testWidgets('running shimmer advances and starts after an idle mount', (
+    tester,
+  ) async {
+    var status = TRChatToolStatus.succeeded;
     await tester.pumpWidget(
       _app(
-        const TRChatStatusRow(
-          label: 'Running',
-          status: TRChatToolStatus.running,
+        StatefulBuilder(
+          builder: (context, setState) => Column(
+            children: [
+              TRChatToolDisclosure(
+                icon: LucideIcons.terminal,
+                label: 'Shell',
+                secondaryLabel: 'gh pr checks 216 --watch --interval 10',
+                status: status,
+                statusLabel: status == TRChatToolStatus.running
+                    ? 'Running'
+                    : 'Done',
+                details: const SizedBox.shrink(),
+              ),
+              TextButton(
+                onPressed: () => setState(
+                  () => status = status == TRChatToolStatus.running
+                      ? TRChatToolStatus.succeeded
+                      : TRChatToolStatus.running,
+                ),
+                child: const Text('Toggle'),
+              ),
+            ],
+          ),
         ),
       ),
     );
 
-    final spinner = find.descendant(
-      of: find.byType(TRChatStatusRow),
-      matching: find.byType(TRSpinner),
+    expect(find.byType(ShaderMask), findsNothing);
+
+    await tester.tap(find.text('Toggle'));
+    await tester.pump();
+    final boundary = find.descendant(
+      of: find.byType(TRChatToolDisclosure),
+      matching: find.byType(TRMotionBoundary),
     );
-    final size = tester.getSize(spinner);
-    expect(size.width, closeTo(size.height, 0.001));
+    expect(boundary, findsOneWidget);
+    final first = tester
+        .renderObject<RenderTRMotionBoundary>(boundary)
+        .progress;
+
+    await tester.pump(TRMotion.fast);
+    final second = tester
+        .renderObject<RenderTRMotionBoundary>(boundary)
+        .progress;
+    expect(second, isNot(first));
+
+    await tester.tap(find.text('Toggle'));
+    await tester.pump();
+    expect(find.byType(ShaderMask), findsNothing);
+    expect(find.text('Done'), findsOneWidget);
   });
 
-  testWidgets('running rows settle to a static icon with reduced motion', (
+  testWidgets('running rows settle to static text with reduced motion', (
     tester,
   ) async {
     await tester.pumpWidget(
@@ -261,7 +308,42 @@ void main() {
 
     await tester.pumpAndSettle();
     expect(find.byType(TRSpinner), findsNothing);
+    expect(find.byType(ShaderMask), findsNothing);
     expect(find.byIcon(LucideIcons.loaderCircle), findsOneWidget);
+    expect(find.text('Running'), findsOneWidget);
+  });
+
+  testWidgets('running labels truncate safely at scale in both directions', (
+    tester,
+  ) async {
+    for (final direction in TextDirection.values) {
+      await tester.pumpWidget(
+        _app(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: Directionality(
+              textDirection: direction,
+              child: const SizedBox(
+                width: TRMeasurements.measureXs,
+                child: TRChatToolDisclosure(
+                  icon: LucideIcons.terminal,
+                  label: 'Shell',
+                  secondaryLabel:
+                      'gh pr checks 216 --watch --interval 10 and more arguments',
+                  status: TRChatToolStatus.running,
+                  statusLabel: 'Running',
+                  details: SizedBox.shrink(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.byType(ShaderMask), findsOneWidget);
+    }
   });
 }
 
