@@ -418,8 +418,18 @@ jobs:
           filter: "@tinyrack/homepage"
           browsers: chromium
 
-      - name: Test Homepage package
-        run: pnpm --filter @tinyrack/homepage test:prepared
+      # Temporarily split out of `test:prepared` so each suite gets its own
+      # timing in the job summary. `test:prepared` runs these three in
+      # sequence; this measures which one owns the 170-237s the combined
+      # step costs before deciding whether parallelising it is worth it.
+      - name: Test Homepage unit suite
+        run: pnpm --filter @tinyrack/homepage test:unit
+
+      - name: Test Homepage e2e suite
+        run: pnpm --filter @tinyrack/homepage exec vitest run --project e2e
+
+      - name: Test Homepage e2e overlays suite
+        run: pnpm --filter @tinyrack/homepage exec vitest run --project e2e-overlays
 
       - name: Upload Homepage artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

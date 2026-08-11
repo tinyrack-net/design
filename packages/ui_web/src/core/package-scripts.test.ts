@@ -110,7 +110,7 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain(`UI_FIREFOX_RESULT: \${{ needs.ui_firefox.result }}`);
     expect(ci).not.toContain('playwright install --with-deps');
     expect(ci).toContain('pnpm --filter @tinyrack/docs test:prepared');
-    expect(ci).toContain('pnpm --filter @tinyrack/homepage test:prepared');
+    expect(ci).toContain('pnpm --filter @tinyrack/homepage test:unit');
   });
 
   it('caches Playwright browsers and the pub cache behind shared actions', () => {
