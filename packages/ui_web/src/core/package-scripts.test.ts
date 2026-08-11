@@ -10,6 +10,28 @@ describe('@tinyrack/ui test commands', () => {
     );
   });
 
+  it('ships the compliance API and executable from the same package', () => {
+    const buildConfig = readFileSync(
+      resolve(import.meta.dirname, '../../tsdown.config.ts'),
+      'utf8',
+    );
+
+    expect(packageJson.bin).toEqual({
+      'tinyrack-ui-check': './dist/check/cli.js',
+    });
+    expect(packageJson.exports['./check']).toEqual({
+      '@tinyrack/source': './src/check/index.ts',
+      types: './dist/check/index.d.ts',
+      import: './dist/check/index.js',
+    });
+    expect(packageJson.publishConfig.exports['./check']).toEqual({
+      types: './dist/check/index.d.ts',
+      import: './dist/check/index.js',
+    });
+    expect(buildConfig).toContain("'check/index': 'src/check/index.ts'");
+    expect(buildConfig).toContain("'check/cli': 'src/check/cli.ts'");
+  });
+
   it('keeps generated TypeScript tokens in one flat module', () => {
     const generatedTokens = resolve(import.meta.dirname, 'tokens.ts');
     const legacyTokenDirectory = resolve(import.meta.dirname, 'tokens');

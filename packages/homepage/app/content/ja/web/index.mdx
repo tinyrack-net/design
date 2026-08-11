@@ -58,3 +58,38 @@ Vite 開発サーバーを起動してください。ボタンにライトテー
 
 [基礎](/ja/foundations/)でシステムのルールを理解するか、
 [Button コンポーネント](/ja/web/components/button/)からインターフェースを構築してください。
+
+## CI でデザインシステムを適用する
+
+`@tinyrack/ui` に含まれるチェッカーは、デフォルトで `src` と `app` の
+プロダクションコードを検査します。
+
+```sh
+pnpm exec tinyrack-ui-check
+pnpm exec tinyrack-ui-check --format=github
+```
+
+視覚的なリテラル値、`p-4` などの標準 Tailwind デザインユーティリティ、
+Tinyrack の非公開パス、公開 TR コンポーネントに置き換えられるネイティブ
+コントロール、読み込まれていない基礎 CSS やコンポーネント CSS を違反として
+報告します。`p-tinyrack-md` などの Tinyrack ユーティリティと公開トークンを
+使用してください。違反時の終了コードは `1`、設定またはソースを解析できない
+場合は `2` です。
+
+デフォルトのパスを変更する場合は、プロジェクトルートに
+`tinyrack.check.json` を追加してください。
+
+```json
+{
+  "include": ["packages/client/src/**"],
+  "exclude": ["packages/client/src/generated/**"]
+}
+```
+
+baseline モードはありません。トークンで表現できない構造的な値には、ルール ID
+とレビュー可能な理由を記載した次行だけの抑制を使用できます。
+
+```css
+/* tinyrack-check-ignore-next-line tokens/no-literal -- 座標はチャートデータで決まります */
+.plot-origin { left: 12px; }
+```

@@ -1,3 +1,9 @@
+## 0.50.0
+
+- Adds the `tinyrack_ui_check` command and programmatic check API for enforcing
+  public Tinyrack tokens, components, imports, and light/dark theme setup in
+  Flutter application source.
+
 ## 0.49.0
 
 - Adds `TRControlDensityScope`, which lets a product choose `standard` or
@@ -185,7 +191,6 @@
   surfaces such as attachment cards to opt into full-height centering.
 - Aligns `TRRadio` glyphs with the first line of compound labels by default and
   adds an explicit centered option for non-text label content.
-
 ## 0.43.1
 
 - Keeps the native context menu from freezing the window: the Linux popup no

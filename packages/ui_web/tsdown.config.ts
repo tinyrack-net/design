@@ -69,6 +69,8 @@ const entry = {
   'highlighters/shiki/index': 'src/highlighters/shiki/index.ts',
   'highlighters/shiki-web/index': 'src/highlighters/shiki-web/index.ts',
   'core/index': 'src/core/index.ts',
+  'check/index': 'src/check/index.ts',
+  'check/cli': 'src/check/cli.ts',
   'mdx/index': 'src/mdx/index.tsx',
 } as const;
 
@@ -202,6 +204,7 @@ export default defineConfig({
   format: 'esm',
   dts: { sourcemap: true },
   clean: true,
+  deps: { neverBundle: [/^node:/u] },
   fixedExtension: false,
   platform: 'neutral',
   unbundle: true,

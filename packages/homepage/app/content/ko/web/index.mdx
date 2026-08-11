@@ -57,3 +57,34 @@ Vite 개발 서버를 시작하세요. 버튼에 밝은 테마와 `primary` 스�
 
 [파운데이션](/ko/foundations/)에서 시스템 규칙을 이해하거나 [Button](/ko/web/components/button/)에서
 인터페이스를 만들어 보세요.
+
+## CI에서 디자인 시스템 강제하기
+
+`@tinyrack/ui`에 포함된 검사기는 기본적으로 `src`와 `app`의 제품 코드를 확인해요.
+
+```sh
+pnpm exec tinyrack-ui-check
+pnpm exec tinyrack-ui-check --format=github
+```
+
+시각 원시 값, `p-4` 같은 기본 Tailwind 디자인 유틸리티, Tinyrack 비공개 경로,
+공개 TR 컴포넌트로 바꿀 수 있는 네이티브 컨트롤, 빠진 파운데이션·컴포넌트 CSS를
+위반으로 처리해요. `p-tinyrack-md` 같은 Tinyrack 유틸리티와 공개 토큰을 사용하세요.
+위반이 있으면 종료 코드 `1`, 설정이나 소스를 해석할 수 없으면 `2`를 반환해요.
+
+기본 경로를 바꾸려면 프로젝트 루트에 `tinyrack.check.json`을 추가하세요.
+
+```json
+{
+  "include": ["packages/client/src/**"],
+  "exclude": ["packages/client/src/generated/**"]
+}
+```
+
+baseline 모드는 제공하지 않아요. 토큰으로 표현할 수 없는 구조적 값에는 규칙 ID와
+검토할 수 있는 사유를 적은 다음 줄 예외만 사용할 수 있어요.
+
+```css
+/* tinyrack-check-ignore-next-line tokens/no-literal -- 좌표는 차트 데이터에서 결정돼요 */
+.plot-origin { left: 12px; }
+```

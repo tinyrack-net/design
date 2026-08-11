@@ -211,16 +211,19 @@ importers:
 
   packages/ui_web:
     dependencies:
+      '@babel/parser':
+        specifier: 7.29.7
+        version: 7.29.7
       '@base-ui/react':
         specifier: 1.7.0
         version: 1.7.0(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       lucide-react:
         specifier: 1.28.0
         version: 1.28.0(react@19.2.8)
+      postcss:
+        specifier: 8.5.25
+        version: 8.5.25
     devDependencies:
-      '@babel/parser':
-        specifier: 7.29.7
-        version: 7.29.7
       '@biomejs/biome':
         specifier: ^2.5.7
         version: 2.5.7
@@ -263,9 +266,6 @@ importers:
       playwright:
         specifier: ^1.62.1
         version: 1.62.1
-      postcss:
-        specifier: 8.5.25
-        version: 8.5.25
       react:
         specifier: ^19.2.8
         version: 19.2.8
