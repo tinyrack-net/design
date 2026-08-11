@@ -290,6 +290,7 @@ void main() {
                 child: SizedBox(
                   width: 280,
                   child: TRSelect<String>(
+                    defaultValue: 'second',
                     label: strings.selectLabel,
                     placeholder: strings.selectPlaceholder,
                     items: [
@@ -304,7 +305,7 @@ void main() {
               ),
             ),
           );
-          await tester.tap(find.text(strings.selectPlaceholder));
+          await tester.tap(find.text(strings.selectSecond));
           await tester.pumpAndSettle();
           await expectLater(
             find.byType(MaterialApp),
@@ -324,6 +325,7 @@ void main() {
                   // tap would then close.
                   child: TRSelect<String>(
                     key: const ValueKey('searchable-select'),
+                    defaultValue: 'second',
                     label: strings.selectLabel,
                     placeholder: strings.selectPlaceholder,
                     searchable: true,
@@ -340,7 +342,7 @@ void main() {
               ),
             ),
           );
-          await tester.tap(find.text(strings.selectPlaceholder));
+          await tester.tap(find.text(strings.selectSecond));
           await tester.pumpAndSettle();
           await expectLater(
             find.byType(MaterialApp),
@@ -410,6 +412,7 @@ void main() {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: TRSelect<String>(
+                  defaultValue: 'second',
                   label: strings.selectLabel,
                   placeholder: strings.selectPlaceholder,
                   searchable: true,
@@ -422,7 +425,7 @@ void main() {
               ),
             ),
           );
-          await tester.tap(find.text(strings.selectPlaceholder));
+          await tester.tap(find.text(strings.selectSecond));
           await tester.pumpAndSettle();
           await expectLater(
             find.byType(MaterialApp),

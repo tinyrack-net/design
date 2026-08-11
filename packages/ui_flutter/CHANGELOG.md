@@ -9,7 +9,10 @@
 - Adds optional leading content to `TRSelect` and `TRSelectFormField` triggers.
 - Adds stable keys to `TRSelectItem` option rows on both dropdown and sheet
   surfaces.
-
+- Keeps hover, open, highlighted, and selected option states fill-only across
+  Select, Autocomplete, Combobox, and InlineSuggestions. Select triggers and
+  options now paint the focus border only for keyboard-origin focus, matching
+  TextField while preserving invalid danger borders.
 ## 0.54.0
 
 - Adds `secondaryLabel` to `TRChatToolDisclosure` for a concise description of

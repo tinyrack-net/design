@@ -58,7 +58,7 @@ test('supports compact ui size on the root and trigger', async () => {
   expect(getComputedStyle(trigger as HTMLElement).minHeight).toBe('32px');
 });
 
-test('emphasises keyboard focus with the selection fill instead of an outline', async () => {
+test('matches input by painting an inset outline only for keyboard focus', async () => {
   await render(
     <div data-theme="tinyrack-light">
       <TRSelect.Root>
@@ -74,13 +74,16 @@ test('emphasises keyboard focus with the selection fill instead of an outline', 
 
   expect(trigger).toHaveFocus();
   const focusStyle = getComputedStyle(trigger);
-  expect(focusStyle.backgroundColor).toBe('rgb(219, 234, 254)');
-  expect(focusStyle.outlineStyle).toBe('none');
+  expect(focusStyle.backgroundColor).toBe('rgb(255, 255, 255)');
+  expect(focusStyle.outlineStyle).toBe('solid');
+  expect(focusStyle.outlineWidth).toBe('2px');
+  expect(focusStyle.outlineColor).toBe('rgb(37, 99, 235)');
+  expect(focusStyle.outlineOffset).toBe('-2px');
 
-  // Focus and hover are both a fill now, so the two have to be ordered: a
-  // pointer resting on a focused trigger must not wash the focus out.
+  // Input focus outranks hover, so a pointer resting on a keyboard-focused
+  // trigger cannot replace the ring with hover-only emphasis.
   await userEvent.hover(trigger);
-  expect(getComputedStyle(trigger).backgroundColor).toBe('rgb(219, 234, 254)');
+  expect(getComputedStyle(trigger).outlineColor).toBe('rgb(37, 99, 235)');
 });
 
 test('uses the danger border and inset focus ring when its field is invalid', async () => {

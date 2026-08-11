@@ -142,10 +142,11 @@
     --tr-layer-z-index: var(--tinyrack-layer-tooltip);
   }
 
-  /* Focus outranks hover, the way the ghost appearance already resolved it.
-     Both are a fill now, so a pointer resting on a focused trigger would
-     otherwise wash the focus emphasis out. */
-  .tr-select-trigger:hover:not(:disabled, [data-disabled], :focus-visible) {
+  .tr-select-trigger:hover:not(
+    :disabled,
+    [data-disabled],
+    :where(html:not([data-tr-focus-modality="pointer"]) *):focus-visible
+  ) {
     background: var(--tinyrack-surface-hover);
   }
 
@@ -176,11 +177,15 @@
     opacity: var(--tinyrack-opacity-disabled);
   }
 
-  /* Keyboard focus reads as the selection fill rather than an accent outline,
-     which is the emphasis an open trigger already carries. Invalid keeps its
-     outline: that is the one state a fill on its own cannot say. */
+  /* Match Input: pointer focus stays quiet, while keyboard focus paints an
+     inset ring without changing the trigger's outer size. */
+  :where(html:not([data-tr-focus-modality="pointer"]))
   .tr-select-trigger:focus-visible {
-    background: var(--tinyrack-surface-selected);
+    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  html[data-tr-focus-modality="pointer"] .tr-select-trigger:focus-visible {
     outline: none;
   }
 
@@ -200,14 +205,15 @@
     :disabled,
     [data-disabled],
     [data-readonly],
-    :focus-visible,
+    :where(html:not([data-tr-focus-modality="pointer"]) *):focus-visible,
     [data-popup-open]
   ) {
     background: var(--tinyrack-surface-hover);
   }
 
-  .tr-select-trigger[data-appearance="ghost"]:focus-visible {
-    background: var(--tinyrack-surface-selected);
+  :where(html:not([data-tr-focus-modality="pointer"]))
+    .tr-select-trigger[data-appearance="ghost"]:focus-visible {
+    background: var(--tinyrack-surface);
   }
 
   .tr-select-trigger[data-appearance="ghost"][data-popup-open] {

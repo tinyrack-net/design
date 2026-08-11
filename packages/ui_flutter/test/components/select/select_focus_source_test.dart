@@ -28,10 +28,14 @@ Widget _app(Widget child) => MaterialApp(
 
 Widget _select({
   TRFieldAppearance appearance = TRFieldAppearance.solid,
+  String? defaultValue,
   String? errorText,
+  TRSelectSurface surface = TRSelectSurface.auto,
 }) => TRSelect<String>(
   appearance: appearance,
+  defaultValue: defaultValue,
   errorText: errorText,
+  surface: surface,
   items: const [
     TRSelectItem<String>(value: 'a', label: 'Alpha'),
     TRSelectItem<String>(value: 'b', label: 'Beta'),
@@ -53,6 +57,24 @@ Color _paintedFill(WidgetTester tester) {
   final focused = button.focusNode?.hasFocus ?? false;
   return button.style!.backgroundColor!.resolve(<WidgetState>{
     if (focused) WidgetState.focused,
+  })!;
+}
+
+BorderSide _optionSide(WidgetTester tester, String label) {
+  final button = tester.widget<MenuItemButton>(
+    find.widgetWithText(MenuItemButton, label),
+  );
+  return button.style!.side!.resolve(<WidgetState>{
+    if (button.focusNode?.hasFocus ?? false) WidgetState.focused,
+  })!;
+}
+
+Color _optionFill(WidgetTester tester, String label) {
+  final button = tester.widget<MenuItemButton>(
+    find.widgetWithText(MenuItemButton, label),
+  );
+  return button.style!.backgroundColor!.resolve(<WidgetState>{
+    if (button.focusNode?.hasFocus ?? false) WidgetState.focused,
   })!;
 }
 
@@ -98,6 +120,31 @@ void main() {
     },
   );
 
+  for (final surface in <TRSelectSurface>[
+    TRSelectSurface.menu,
+    TRSelectSurface.sheet,
+  ]) {
+    testWidgets(
+      'a pointer-open ${surface.name} selected option uses fill without a focus border',
+      (tester) async {
+        await tester.pumpWidget(
+          _app(_select(defaultValue: 'b', surface: surface)),
+        );
+
+        await tester.tap(
+          find.byType(TextButton),
+          kind: PointerDeviceKind.mouse,
+        );
+        await tester.pumpAndSettle();
+
+        expect(_optionFill(tester, 'Beta'), isNot(Colors.transparent));
+        final side = _optionSide(tester, 'Beta');
+        expect(side.color, Colors.transparent);
+        expect(side.width, TRGeneratedBorders.defaultWidth);
+      },
+    );
+  }
+
   for (final appearance in TRFieldAppearance.values) {
     testWidgets(
       'a mouse-driven ${appearance.name} select round trip leaves no focus border',
@@ -134,33 +181,21 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('a keyboard-focused solid trigger emphasises its fill', (
-    tester,
-  ) async {
-    await tester.pumpWidget(_app(_select()));
+  testWidgets(
+    'a keyboard-focused solid trigger paints the input focus border',
+    (tester) async {
+      await tester.pumpWidget(_app(_select()));
 
-    await focusWithKeyboard(tester);
+      await focusWithKeyboard(tester);
 
-    expect(_paintedFill(tester), _colors.surfaceSelected);
-    final side = _paintedSide(tester);
-    expect(
-      side.color,
-      isNot(_colors.focus),
-      reason: 'focus reads as a selected fill, not as an accent outline',
-    );
-    expect(side.color, _colors.border);
-    expect(
-      side.width,
-      TRGeneratedBorders.defaultWidth,
-      reason: 'the border never thickens, so the trigger cannot shift on focus',
-    );
-  });
+      expect(_paintedFill(tester), _colors.surface);
+      final side = _paintedSide(tester);
+      expect(side.color, _colors.focus);
+      expect(side.width, TRGeneratedBorders.focusWidth);
+    },
+  );
 
-  testWidgets('a focused trigger keeps its emphasis under the pointer', (
-    tester,
-  ) async {
-    // Focus and hover are both a fill now, so the two have to be ordered:
-    // a pointer resting on a focused trigger must not wash the focus out.
+  testWidgets('keyboard focus outranks hover on the trigger', (tester) async {
     await tester.pumpWidget(_app(_select()));
 
     await focusWithKeyboard(tester);
@@ -171,24 +206,34 @@ void main() {
         WidgetState.focused,
         WidgetState.hovered,
       }),
-      _colors.surfaceSelected,
+      _colors.surface,
+    );
+    expect(
+      button.style!.side!.resolve({
+        WidgetState.focused,
+        WidgetState.hovered,
+      })!.color,
+      _colors.focus,
     );
   });
 
-  testWidgets('a keyboard-focused ghost trigger emphasises its fill', (
-    tester,
-  ) async {
-    await tester.pumpWidget(_app(_select(appearance: TRFieldAppearance.ghost)));
+  testWidgets(
+    'a keyboard-focused ghost trigger paints the input focus border',
+    (tester) async {
+      await tester.pumpWidget(
+        _app(_select(appearance: TRFieldAppearance.ghost)),
+      );
 
-    await focusWithKeyboard(tester);
+      await focusWithKeyboard(tester);
 
-    expect(_paintedFill(tester), _colors.surfaceSelected);
-    final side = _paintedSide(tester);
-    expect(side.color, Colors.transparent);
-    expect(side.width, TRGeneratedBorders.defaultWidth);
-  });
+      expect(_paintedFill(tester), _colors.surface);
+      final side = _paintedSide(tester);
+      expect(side.color, _colors.focus);
+      expect(side.width, TRGeneratedBorders.focusWidth);
+    },
+  );
 
-  testWidgets('a keyboard-driven select round trip emphasises its fill', (
+  testWidgets('a keyboard-driven select round trip keeps the focus border', (
     tester,
   ) async {
     await tester.pumpWidget(_app(_select()));
@@ -199,8 +244,8 @@ void main() {
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
 
-    expect(_paintedFill(tester), _colors.surfaceSelected);
-    expect(_paintedSide(tester).color, isNot(_colors.focus));
+    expect(_paintedFill(tester), _colors.surface);
+    expect(_paintedSide(tester).color, _colors.focus);
   });
 
   testWidgets('an invalid trigger keeps its danger emphasis while focused', (

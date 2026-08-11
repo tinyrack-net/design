@@ -84,7 +84,6 @@ class _TRSelectSheetState<T> extends State<_TRSelectSheet<T>> {
             items: _visibleItems,
             selectedValue: widget.selectedValue,
             interactive: true,
-            highlightSelected: true,
             noResultsText: widget.noResultsText,
             onSelected: _commit,
           ),

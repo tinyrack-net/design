@@ -205,4 +205,4 @@ const racks = Object.fromEntries(
 | 배치 | `Positioner`는 트리거 아래 4px에서 열리고 배치 prop을 받지 않아요. 공간이 부족하면 트리거 위로 전환해요. |
 | form | `name`, `form`, `autoComplete`, `inputRef`를 받아요. 비제어 select는 native reset에서 `defaultValue`로 돌아가요. |
 
-`Trigger`에 접근 가능한 이름을 제공하세요. Arrow Down으로 열고 사용 가능한 option 사이를 이동하거나 typeahead를 사용할 수 있어요. Enter로 확정하고 Escape로 닫으면 trigger로 focus가 돌아가요. 필요하면 `value`와 `open`을 독립적으로 제어하세요. 사용할 수 없는 control에는 `disabled`, 변경할 수 없는 focusable value에는 `readOnly`를 사용하세요.
+`Trigger`에 접근 가능한 이름을 제공하세요. Arrow Down으로 열고 사용 가능한 option 사이를 이동하거나 typeahead를 사용할 수 있어요. Enter로 확정하고 Escape로 닫으면 trigger로 focus가 돌아가요. 포인터 hover, open, highlighted, selected 상태는 배경색으로만 강조하고, 포커스 테두리는 키보드에서 시작된 focus에만 표시해요. 필요하면 `value`와 `open`을 독립적으로 제어하세요. 사용할 수 없는 control에는 `disabled`, 변경할 수 없는 focusable value에는 `readOnly`를 사용하세요.

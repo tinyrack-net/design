@@ -3946,9 +3946,9 @@ class _DeploymentRackState extends State<DeploymentRack> {
       {
         axis: { en: 'Open state', ko: '열린 상태', ja: '展開状態' },
         choices: {
-          en: 'A pointer-open ghost select uses the selected surface without a focus border. Keyboard navigation keeps the focus border.',
-          ko: '포인터로 연 ghost Select는 포커스 테두리 없이 선택 표면을 사용해요. 키보드 탐색에서는 포커스 테두리를 유지해요.',
-          ja: 'ポインターで開いた ghost Select はフォーカス枠を付けず、選択サーフェスを使います。キーボード操作ではフォーカス枠を維持します。',
+          en: 'Pointer hover, open, and selected states use background emphasis only. The focus border appears only for keyboard-origin focus.',
+          ko: '포인터 hover, open, selected 상태는 배경색으로만 강조해요. 포커스 테두리는 키보드에서 시작된 focus에만 표시해요.',
+          ja: 'ポインターの hover、open、selected 状態は背景色だけで強調します。フォーカス枠はキーボード操作で得た focus にだけ表示します。',
         },
       },
       {

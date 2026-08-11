@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Restored the Input focus contract for Select: pointer hover, open, selected,
+  and highlighted states use background emphasis only, while keyboard-origin
+  focus paints the inset focus border. Invalid danger borders are unchanged.
+
 ### Breaking
 
 - Renamed the Coder app icon assets under `@tinyrack/ui/brand/apps` to

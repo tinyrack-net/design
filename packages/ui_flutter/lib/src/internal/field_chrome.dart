@@ -32,13 +32,6 @@ class TRFieldChrome {
 /// Every appearance returns a border at a real width, transparent when it
 /// should not be seen, so switching appearance never changes a field's
 /// metrics.
-///
-/// [focusChrome] replaces what a valid [TRFieldAppearance.ghost] field paints
-/// while focused. A control passes it when its focus reads as something other
-/// than the shared focus outline; the equivalent for
-/// [TRFieldAppearance.solid] is the control's own [solidFill] and
-/// [solidBorderColor]. Invalid fields ignore it, because danger outranks the
-/// focus treatment either way.
 TRFieldChrome resolveFieldChrome({
   required TRFieldAppearance appearance,
   required TinyrackThemeData colors,
@@ -47,7 +40,6 @@ TRFieldChrome resolveFieldChrome({
   required double solidBorderWidth,
   bool enabled = true,
   bool error = false,
-  TRFieldChrome? focusChrome,
   bool focused = false,
   bool hovered = false,
   bool open = false,
@@ -87,12 +79,11 @@ TRFieldChrome resolveFieldChrome({
     );
   }
   if (focused) {
-    return focusChrome ??
-        TRFieldChrome(
-          fill: colors.surface,
-          borderColor: colors.focus,
-          borderWidth: TRGeneratedBorders.focusWidth,
-        );
+    return TRFieldChrome(
+      fill: colors.surface,
+      borderColor: colors.focus,
+      borderWidth: TRGeneratedBorders.focusWidth,
+    );
   }
   if (open) {
     return TRFieldChrome(

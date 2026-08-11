@@ -436,9 +436,17 @@ void main() {
       final highlighted = tester.widget<MenuItemButton>(
         find.widgetWithText(MenuItemButton, 'Alpine'),
       );
+      final colors = TinyrackTheme.light().extension<TinyrackThemeData>()!;
+      expect(
+        highlighted.style?.backgroundColor?.resolve(const {}),
+        colors.surfaceHover,
+      );
       expect(
         highlighted.style?.side?.resolve(const {}),
-        isNot(const BorderSide(color: Colors.transparent)),
+        const BorderSide(
+          color: Colors.transparent,
+          width: TRGeneratedBorders.defaultWidth,
+        ),
       );
 
       await tester.testTextInput.receiveAction(TextInputAction.done);
