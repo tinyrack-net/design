@@ -1,3 +1,9 @@
+## 0.50.1
+
+- Animates a dragged `TRDrawer` from its released extent to the nearest snap
+  point instead of jumping there. Reduced-motion environments still settle the
+  drawer immediately, and dismissal thresholds are unchanged.
+
 ## 0.50.0
 
 - Adds the `tinyrack_ui_check` command and programmatic check API for enforcing

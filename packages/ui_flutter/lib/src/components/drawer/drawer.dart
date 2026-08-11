@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -76,8 +77,9 @@ class TRDrawer extends StatefulWidget {
   State<TRDrawer> createState() => _TRDrawerState();
 }
 
-class _TRDrawerState extends State<TRDrawer> {
-  late double _extent = _resolvedSnapPoints[widget.initialSnapIndex];
+class _TRDrawerState extends State<TRDrawer>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _extentController;
 
   List<double> get _resolvedSnapPoints => (widget.snapPoints ?? const [0.5, 1])
       .map((point) => point.clamp(0.1, 1.0))
@@ -91,6 +93,23 @@ class _TRDrawerState extends State<TRDrawer> {
 
   bool get _draggable => !_fitsContent;
 
+  @override
+  void initState() {
+    super.initState();
+    _extentController = AnimationController.unbounded(
+      value: _resolvedSnapPoints[widget.initialSnapIndex],
+      vsync: this,
+    )..addListener(_extentChanged);
+  }
+
+  @override
+  void dispose() {
+    _extentController.dispose();
+    super.dispose();
+  }
+
+  void _extentChanged() => setState(() {});
+
   void _drag(DragUpdateDetails details) {
     final media = MediaQuery.sizeOf(context);
     final direction = Directionality.of(context);
@@ -103,7 +122,9 @@ class _TRDrawerState extends State<TRDrawer> {
         direction == TextDirection.ltr ? -details.delta.dx : details.delta.dx,
     };
     final available = _horizontal ? media.height : media.width;
-    setState(() => _extent = (_extent + delta / available).clamp(0.05, 1));
+    _extentController
+      ..stop()
+      ..value = (_extentController.value + delta / available).clamp(0.05, 1);
   }
 
   void _endDrag(DragEndDetails details) {
@@ -120,19 +141,31 @@ class _TRDrawerState extends State<TRDrawer> {
             ? -details.velocity.pixelsPerSecond.dx
             : details.velocity.pixelsPerSecond.dx,
     };
-    if (velocity < -800 || _extent < _resolvedSnapPoints.first / 2) {
+    if (velocity < -800 ||
+        _extentController.value < _resolvedSnapPoints.first / 2) {
       widget.onDismiss?.call();
       Navigator.maybeOf(context)?.maybePop();
       return;
     }
     var nearest = 0;
     for (var index = 1; index < _resolvedSnapPoints.length; index += 1) {
-      if ((_resolvedSnapPoints[index] - _extent).abs() <
-          (_resolvedSnapPoints[nearest] - _extent).abs()) {
+      if ((_resolvedSnapPoints[index] - _extentController.value).abs() <
+          (_resolvedSnapPoints[nearest] - _extentController.value).abs()) {
         nearest = index;
       }
     }
-    setState(() => _extent = _resolvedSnapPoints[nearest]);
+    final target = _resolvedSnapPoints[nearest];
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _extentController.value = target;
+    } else {
+      unawaited(
+        _extentController.animateTo(
+          target,
+          duration: TRMotion.normal,
+          curve: TRMotion.easeOut,
+        ),
+      );
+    }
     widget.onSnapChanged?.call(nearest);
   }
 
@@ -164,10 +197,10 @@ class _TRDrawerState extends State<TRDrawer> {
       ),
     };
     final size = _horizontal
-        ? Size(media.size.width, media.size.height * _extent)
+        ? Size(media.size.width, media.size.height * _extentController.value)
         : Size(
             math.min(
-              media.size.width * _extent,
+              media.size.width * _extentController.value,
               TRGeneratedLayerMetrics.drawerWidth,
             ),
             media.size.height,
