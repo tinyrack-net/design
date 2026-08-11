@@ -7,6 +7,7 @@ import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
+import '../scroll_area/scroll_area.dart';
 
 /// Logical dialog placement that follows the ambient text direction.
 enum TRDialogPlacement { middle, top, bottom, start, end }
@@ -134,11 +135,15 @@ class TRDialog extends StatelessWidget {
                 label: semanticLabel,
                 role: SemanticsRole.dialog,
                 child: Padding(
-                  padding: const EdgeInsets.all(
-                    TRGeneratedBorders.defaultWidth,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: TRGeneratedBorders.defaultWidth,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(TRGeneratedSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      vertical:
+                          TRGeneratedSpacing.md +
+                          TRGeneratedBorders.defaultWidth,
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: isVerticalSheet
@@ -146,31 +151,39 @@ class TRDialog extends StatelessWidget {
                           : MainAxisSize.min,
                       children: [
                         if (title case final title?)
-                          Transform.translate(
-                            offset: const Offset(
-                              0,
-                              -TRGeneratedBorders.defaultWidth,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: TRGeneratedSpacing.md,
                             ),
-                            child: TRLayerPartBoundary(
-                              name: 'title',
-                              child: DefaultTextStyle.merge(
-                                style: TextStyle(
-                                  color: colors.text,
-                                  fontFamily: TRGeneratedFontFamilies.body,
-                                  fontFamilyFallback:
-                                      TRGeneratedFontFamilies.fallback,
-                                  fontSize: TRGeneratedTypographySizes.lg,
-                                  fontWeight: TRGeneratedFontWeights.bold,
-                                  height: TRGeneratedTypographyLineHeights.sm,
+                            child: Transform.translate(
+                              offset: const Offset(
+                                0,
+                                -TRGeneratedBorders.defaultWidth,
+                              ),
+                              child: TRLayerPartBoundary(
+                                name: 'title',
+                                child: DefaultTextStyle.merge(
+                                  style: TextStyle(
+                                    color: colors.text,
+                                    fontFamily: TRGeneratedFontFamilies.body,
+                                    fontFamilyFallback:
+                                        TRGeneratedFontFamilies.fallback,
+                                    fontSize: TRGeneratedTypographySizes.lg,
+                                    fontWeight: TRGeneratedFontWeights.bold,
+                                    height: TRGeneratedTypographyLineHeights.sm,
+                                  ),
+                                  child: title,
                                 ),
-                                child: title,
                               ),
                             ),
                           ),
                         if (description case final description?)
                           Padding(
-                            padding: const EdgeInsets.only(
-                              top: TRGeneratedSpacing.sm,
+                            padding: const EdgeInsets.fromLTRB(
+                              TRGeneratedSpacing.md,
+                              TRGeneratedSpacing.sm,
+                              TRGeneratedSpacing.md,
+                              0,
                             ),
                             child: Align(
                               alignment: AlignmentDirectional.topStart,
@@ -197,21 +210,29 @@ class TRDialog extends StatelessWidget {
                             fit: isVerticalSheet
                                 ? FlexFit.tight
                                 : FlexFit.loose,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: TRGeneratedSpacing.sm,
-                              ),
-                              child: TRLayerPartBoundary(
-                                name: 'body',
-                                child: SingleChildScrollView(
-                                  child: DefaultTextStyle.merge(
-                                    style: TRGeneratedTextStyles.bodySm
-                                        .copyWith(
-                                          color: colors.text,
-                                          fontFamilyFallback:
-                                              TRGeneratedFontFamilies.fallback,
-                                        ),
-                                    child: content,
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: TRGeneratedSpacing.sm,
+                                ),
+                                child: TRLayerPartBoundary(
+                                  name: 'body',
+                                  child: TRScrollArea(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: TRGeneratedSpacing.md,
+                                    ),
+                                    thumbVisibility: null,
+                                    child: DefaultTextStyle.merge(
+                                      style: TRGeneratedTextStyles.bodySm
+                                          .copyWith(
+                                            color: colors.text,
+                                            fontFamilyFallback:
+                                                TRGeneratedFontFamilies
+                                                    .fallback,
+                                          ),
+                                      child: content,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -219,8 +240,11 @@ class TRDialog extends StatelessWidget {
                           ),
                         if (actions case final actions?)
                           Padding(
-                            padding: const EdgeInsets.only(
-                              top: TRGeneratedSpacing.sm,
+                            padding: const EdgeInsets.fromLTRB(
+                              TRGeneratedSpacing.md,
+                              TRGeneratedSpacing.sm,
+                              TRGeneratedSpacing.md,
+                              0,
                             ),
                             child: Align(
                               alignment: AlignmentDirectional.centerEnd,

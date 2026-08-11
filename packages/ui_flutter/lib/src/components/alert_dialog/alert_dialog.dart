@@ -10,6 +10,7 @@ import '../../theme.dart';
 import '../../tokens.dart';
 import '../button/button.dart';
 import '../dialog/dialog.dart';
+import '../scroll_area/scroll_area.dart';
 
 // @tinyrack-preview alert-dialog
 /// A decision dialog whose backdrop cannot dismiss the pending choice.
@@ -40,13 +41,17 @@ class TRAlertDialog extends StatelessWidget {
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
     final locale = Localizations.localeOf(context).languageCode;
+    final media = MediaQuery.of(context);
     final dialogWidth = math.max(
       0.0,
       math.min(
-        MediaQuery.sizeOf(context).width -
-            TRGeneratedMeasurements.overlayInlineInset * 2,
+        media.size.width - TRGeneratedMeasurements.overlayInlineInset * 2,
         TRGeneratedMeasurements.overlayWidthMd,
       ),
+    );
+    final dialogHeight = math.max(
+      0.0,
+      media.size.height - TRGeneratedMeasurements.overlayInlineInset * 2,
     );
     final alignment = switch (placement) {
       TRDialogPlacement.middle => AlignmentDirectional.center,
@@ -58,7 +63,8 @@ class TRAlertDialog extends StatelessWidget {
     return Align(
       alignment: alignment,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
+        constraints: BoxConstraints(
+          maxHeight: dialogHeight,
           maxWidth: TRGeneratedMeasurements.overlayWidthMd,
         ),
         child: SizedBox(
@@ -82,7 +88,10 @@ class TRAlertDialog extends StatelessWidget {
                 label: semanticLabel,
                 role: SemanticsRole.dialog,
                 child: Padding(
-                  padding: const EdgeInsets.all(
+                  padding: const EdgeInsets.fromLTRB(
+                    TRGeneratedBorders.defaultWidth,
+                    TRGeneratedSpacing.md + TRGeneratedBorders.defaultWidth,
+                    TRGeneratedBorders.defaultWidth,
                     TRGeneratedSpacing.md + TRGeneratedBorders.defaultWidth,
                   ),
                   child: Column(
@@ -90,81 +99,115 @@ class TRAlertDialog extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     spacing: TRGeneratedSpacing.sm,
                     children: [
-                      TRLayerPartBoundary(
-                        name: 'title',
-                        child: DefaultTextStyle.merge(
-                          style: TextStyle(
-                            color: colors.text,
-                            fontFamily: TRGeneratedFontFamilies.body,
-                            fontFamilyFallback:
-                                TRGeneratedFontFamilies.fallback,
-                            fontSize: TRGeneratedTypographySizes.lg,
-                            fontWeight: TRGeneratedFontWeights.medium,
-                            height: switch (locale) {
-                              'ko' =>
-                                (TRGeneratedTypographySizes.lg +
-                                        TRGeneratedSpacing.sm -
-                                        TRGeneratedBorders.defaultWidth) /
-                                    TRGeneratedTypographySizes.lg,
-                              'ja' =>
-                                (TRGeneratedTypographySizes.lg +
-                                        TRGeneratedSpacing.lg) /
-                                    TRGeneratedTypographySizes.lg,
-                              _ =>
-                                (TRGeneratedTypographySizes.lg +
-                                        TRGeneratedSpacing.xs +
-                                        TRGeneratedBorders.defaultWidth / 2) /
-                                    TRGeneratedTypographySizes.lg,
-                            },
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: TRGeneratedSpacing.md,
+                        ),
+                        child: TRLayerPartBoundary(
+                          name: 'title',
+                          child: DefaultTextStyle.merge(
+                            style: TextStyle(
+                              color: colors.text,
+                              fontFamily: TRGeneratedFontFamilies.body,
+                              fontFamilyFallback:
+                                  TRGeneratedFontFamilies.fallback,
+                              fontSize: TRGeneratedTypographySizes.lg,
+                              fontWeight: TRGeneratedFontWeights.medium,
+                              height: switch (locale) {
+                                'ko' =>
+                                  (TRGeneratedTypographySizes.lg +
+                                          TRGeneratedSpacing.sm -
+                                          TRGeneratedBorders.defaultWidth) /
+                                      TRGeneratedTypographySizes.lg,
+                                'ja' =>
+                                  (TRGeneratedTypographySizes.lg +
+                                          TRGeneratedSpacing.lg) /
+                                      TRGeneratedTypographySizes.lg,
+                                _ =>
+                                  (TRGeneratedTypographySizes.lg +
+                                          TRGeneratedSpacing.xs +
+                                          TRGeneratedBorders.defaultWidth / 2) /
+                                      TRGeneratedTypographySizes.lg,
+                              },
+                            ),
+                            child: title,
                           ),
-                          child: title,
                         ),
                       ),
                       if (description case final description?)
-                        Transform.translate(
-                          offset: locale == 'ja' || locale == 'ko'
-                              ? const Offset(
-                                  0,
-                                  TRGeneratedBorders.defaultWidth / 2,
-                                )
-                              : Offset.zero,
-                          child: TRLayerPartBoundary(
-                            name: 'description',
-                            child: DefaultTextStyle.merge(
-                              style: TRGeneratedTextStyles.bodySm.copyWith(
-                                color: colors.textMuted,
-                                fontFamilyFallback:
-                                    TRGeneratedFontFamilies.fallback,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: TRGeneratedSpacing.md,
+                          ),
+                          child: Transform.translate(
+                            offset: locale == 'ja' || locale == 'ko'
+                                ? const Offset(
+                                    0,
+                                    TRGeneratedBorders.defaultWidth / 2,
+                                  )
+                                : Offset.zero,
+                            child: TRLayerPartBoundary(
+                              name: 'description',
+                              child: DefaultTextStyle.merge(
+                                style: TRGeneratedTextStyles.bodySm.copyWith(
+                                  color: colors.textMuted,
+                                  fontFamilyFallback:
+                                      TRGeneratedFontFamilies.fallback,
+                                ),
+                                child: description,
                               ),
-                              child: description,
                             ),
                           ),
                         ),
-                      ?content,
+                      if (content case final content?)
+                        Flexible(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: TRScrollArea(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: TRGeneratedSpacing.md,
+                              ),
+                              thumbVisibility: null,
+                              child: DefaultTextStyle.merge(
+                                style: TRGeneratedTextStyles.bodySm.copyWith(
+                                  color: colors.text,
+                                  fontFamilyFallback:
+                                      TRGeneratedFontFamilies.fallback,
+                                ),
+                                child: content,
+                              ),
+                            ),
+                          ),
+                        ),
                       if (actions.isNotEmpty)
-                        Transform.translate(
-                          offset: switch (locale) {
-                            'ko' => const Offset(
-                              TRGeneratedBorders.defaultWidth * 2,
-                              -TRGeneratedBorders.defaultWidth,
-                            ),
-                            'ja' => const Offset(
-                              0,
-                              -TRGeneratedBorders.defaultWidth,
-                            ),
-                            _ => const Offset(
-                              -TRGeneratedBorders.defaultWidth / 2,
-                              -TRGeneratedBorders.defaultWidth * 1.5,
-                            ),
-                          },
-                          child: Align(
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: Wrap(
-                              alignment: WrapAlignment.end,
-                              runAlignment: WrapAlignment.end,
-                              spacing: TRGeneratedSpacing.sm,
-                              runSpacing: TRGeneratedSpacing.sm,
-                              children: actions,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: TRGeneratedSpacing.md,
+                          ),
+                          child: Transform.translate(
+                            offset: switch (locale) {
+                              'ko' => const Offset(
+                                TRGeneratedBorders.defaultWidth * 2,
+                                -TRGeneratedBorders.defaultWidth,
+                              ),
+                              'ja' => const Offset(
+                                0,
+                                -TRGeneratedBorders.defaultWidth,
+                              ),
+                              _ => const Offset(
+                                -TRGeneratedBorders.defaultWidth / 2,
+                                -TRGeneratedBorders.defaultWidth * 1.5,
+                              ),
+                            },
+                            child: Align(
+                              alignment: AlignmentDirectional.centerEnd,
+                              child: Wrap(
+                                alignment: WrapAlignment.end,
+                                runAlignment: WrapAlignment.end,
+                                spacing: TRGeneratedSpacing.sm,
+                                runSpacing: TRGeneratedSpacing.sm,
+                                children: actions,
+                              ),
                             ),
                           ),
                         ),
