@@ -16,6 +16,11 @@
 
 ### Added
 
+- Added `tinyrack-ui-check` and `@tinyrack/ui/check` for enforcing public
+  Tinyrack tokens, Tailwind utilities, component imports, component CSS, and
+  foundation CSS across Web application source. The command supports readable,
+  JSON, and GitHub Actions output and fails on every violation without a
+  baseline.
 - Added an `appearance` prop to the seven chrome-bearing input controls — `TRInput`, `TRTextarea`, `TRSelect.Trigger`, `TRCombobox.InputGroup`, `TRAutocomplete.InputGroup`, `TRNumberField.Root`, and `TROTPField.Root` — typed as the new `TRFieldAppearance` (`'solid' | 'ghost'`, exported from `@tinyrack/ui/core`). Only buttons and shell surfaces could drop their chrome before, so a select or a text field placed inside a sidebar or a toolbar had no way to stop looking like a boxed control. It is emitted as `data-appearance`, matching `TRButton`. This is deliberately narrower than `TRButtonAppearance`: a field's solid form is already outlined, so an `outline` step would be indistinguishable from the default.
 - `ghost` drops only the resting fill and border. Hover, focus, and invalid emphasis are still painted by the control from the same tokens `solid` uses, and `TRSelect.Trigger` also marks its open popup, and the border box is kept at its normal width and painted transparent, so swapping appearance never shifts layout. Focus and the open popup state take precedence over hover rather than competing with it.
 

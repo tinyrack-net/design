@@ -11,7 +11,7 @@ pub.devからパッケージをインストールします。
 flutter pub add tinyrack_ui
 ```
 
-`tinyrack_ui` 0.1.0にはFlutter 3.44以降とDart 3.12以降が必要です。
+`tinyrack_ui` 0.50.0にはFlutter 3.44以降とDart 3.12以降が必要です。
 公開ライブラリは`package:tinyrack_ui/tinyrack_ui.dart`からインポートします。
 IBM Plex Sans、Mono、韓国語、日本語のフォントアセットを同梱しているため、
 実行時にフォントをダウンロードしません。
@@ -19,6 +19,30 @@ IBM Plex Sans、Mono、韓国語、日本語のフォントアセットを同梱
 サンプルアプリはAndroid、iOS、web、Windows、macOS、Linuxに対応します。
 パッケージを使うアプリで`flutter run`を実行すると、Flutterで選択した
 プラットフォーム上で確認できます。
+
+## CI でデザインシステムを適用する
+
+同じパッケージに含まれるチェッカーを実行してください。
+
+```sh
+dart run tinyrack_ui:tinyrack_ui_check
+dart run tinyrack_ui:tinyrack_ui_check --format=github
+```
+
+デフォルトでは `lib` のプロダクション Dart ファイルを検査し、視覚的な
+リテラル値、Tinyrack の非公開パス、公開 TR コンポーネントに置き換えられる
+Material コントロール、ライトとダークの Tinyrack テーマ設定漏れを違反として
+報告します。公開 TR トークンから派生した定数と、ゼロ、全領域への展開、実行時の
+ジオメトリ、比率などの構造的な値は使用できます。違反時の終了コードは `1`、設定
+またはソースを解析できない場合は `2` です。デフォルトパスは
+`tinyrack.check.json` で変更でき、baseline モードはありません。
+
+避けられない構造的な例外には、1 つのルールと安全である理由を記載してください。
+
+```dart
+// tinyrack-check-ignore-next-line tokens/no-literal -- 座標はドキュメントデータで決まります
+final inset = EdgeInsets.only(left: 20);
+```
 
 ## ターミナルアプリケーション
 

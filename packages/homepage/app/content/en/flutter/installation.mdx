@@ -11,7 +11,7 @@ Install the package from pub.dev:
 flutter pub add tinyrack_ui
 ```
 
-`tinyrack_ui` 0.1.0 requires Flutter 3.44 or later and Dart 3.12 or later.
+`tinyrack_ui` 0.50.0 requires Flutter 3.44 or later and Dart 3.12 or later.
 Import the public library from `package:tinyrack_ui/tinyrack_ui.dart`. The
 package includes IBM Plex Sans, Mono, Korean, and Japanese font assets, so no
 runtime font download is required.
@@ -19,6 +19,31 @@ runtime font download is required.
 The example application supports Android, iOS, web, Windows, macOS, and Linux.
 Run `flutter run` from the application that consumes the package to use the
 platform selected by Flutter.
+
+## Enforce the design system in CI
+
+Run the checker shipped in the same package:
+
+```sh
+dart run tinyrack_ui:tinyrack_ui_check
+dart run tinyrack_ui:tinyrack_ui_check --format=github
+```
+
+It scans production Dart files in `lib` and rejects visual literals, private
+Tinyrack imports, Material controls with a public TR equivalent, and missing
+light or dark Tinyrack theme setup. Constants derived from public TR tokens and
+structural values such as zero, full expansion, runtime geometry, and ratios
+are accepted. The command exits with `1` for a violation and `2` for a
+configuration or parsing failure. Use `tinyrack.check.json` to replace the
+default include or exclude paths; baseline mode is not available.
+
+An unavoidable structural exception must name one rule and explain why it is
+safe:
+
+```dart
+// tinyrack-check-ignore-next-line tokens/no-literal -- coordinate comes from document data
+final inset = EdgeInsets.only(left: 20);
+```
 
 ## Terminal applications
 

@@ -58,3 +58,37 @@ unstyled, check that `core.css` comes before `button.css`.
 
 Continue with [Foundations](/en/foundations/) to understand the system rules, or
 browse the [Button guide](/en/web/components/button/) to build the interface.
+
+## Enforce the design system in CI
+
+Run the checker included with `@tinyrack/ui` against production files in `src`
+and `app`:
+
+```sh
+pnpm exec tinyrack-ui-check
+pnpm exec tinyrack-ui-check --format=github
+```
+
+The command rejects literal visual values, default Tailwind design utilities
+such as `p-4`, private Tinyrack imports, native controls with a public TR
+equivalent, and missing foundation or component CSS. Use Tinyrack utilities
+such as `p-tinyrack-md` and public tokens instead. It exits with `1` for a
+violation and `2` when configuration or source parsing fails.
+
+Add `tinyrack.check.json` at the project root to replace the default paths:
+
+```json
+{
+  "include": ["packages/client/src/**"],
+  "exclude": ["packages/client/src/generated/**"]
+}
+```
+
+There is no baseline mode. For a structural value that cannot be expressed by
+a design token, add a rule-specific next-line suppression with a reviewable
+reason:
+
+```css
+/* tinyrack-check-ignore-next-line tokens/no-literal -- coordinate comes from the chart data */
+.plot-origin { left: 12px; }
+```
