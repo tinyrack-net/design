@@ -108,8 +108,10 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'select-surface': _selectSurface,
   'dialog-result': _dialogResult,
   'dialog-nested-layers': _dialogNestedLayers,
+  'dialog-scrollable': _dialogScrollable,
   'alert-dialog-result': _alertDialogResult,
   'alert-dialog-states': _alertDialogStates,
+  'alert-dialog-scrollable': _alertDialogScrollable,
   'popover-nested-menu': _popoverNestedMenu,
   'autocomplete-modes': _autocompleteModes,
   'autocomplete-async': _autocompleteAsync,
@@ -3499,8 +3501,68 @@ Widget _dialogNestedLayers(BuildContext context, Locale locale) => TRButton(
   child: Text(_pick(locale, 'Open settings', '설정 열기', '設定を開く')),
 );
 
+Widget _dialogScrollable(BuildContext context, Locale locale) => TRButton(
+  onPressed: () => showTRDialog<void>(
+    context: context,
+    builder: (dialogContext) => TRDialog(
+      title: Text(_pick(locale, 'Release notes', '릴리스 노트', 'リリースノート')),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: TRSpacing.medium,
+        children: List<Widget>.generate(
+          20,
+          (index) => Text(
+            _pick(
+              locale,
+              'Change ${index + 1}: Modal content remains readable.',
+              '변경 ${index + 1}: 모달 콘텐츠를 계속 읽을 수 있어요.',
+              '変更 ${index + 1}: モーダルの内容を続けて読めます。',
+            ),
+          ),
+        ),
+      ),
+      actions: TRButton(
+        onPressed: () => Navigator.pop(dialogContext),
+        child: Text(_pick(locale, 'Done', '완료', '完了')),
+      ),
+    ),
+  ),
+  child: Text(_pick(locale, 'Open long dialog', '긴 다이얼로그 열기', '長いダイアログを開く')),
+);
+
 Widget _alertDialogResult(BuildContext context, Locale locale) =>
     _AlertDialogResultExample(locale: locale);
+
+Widget _alertDialogScrollable(BuildContext context, Locale locale) => TRButton(
+  onPressed: () => showTRAlertDialog<void>(
+    context: context,
+    builder: (dialogContext) => TRAlertDialog(
+      title: Text(_pick(locale, 'Review output', '출력 검토', '出力を確認')),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: TRSpacing.medium,
+        children: List<Widget>.generate(
+          20,
+          (index) => Text(
+            _pick(
+              locale,
+              'Output line ${index + 1}',
+              '출력 줄 ${index + 1}',
+              '出力行 ${index + 1}',
+            ),
+          ),
+        ),
+      ),
+      actions: <TRButton>[
+        TRButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: Text(_pick(locale, 'Close', '닫기', '閉じる')),
+        ),
+      ],
+    ),
+  ),
+  child: Text(_pick(locale, 'Open long alert', '긴 경고 열기', '長い警告を開く')),
+);
 
 class _AlertDialogResultExample extends StatefulWidget {
   const _AlertDialogResultExample({required this.locale});

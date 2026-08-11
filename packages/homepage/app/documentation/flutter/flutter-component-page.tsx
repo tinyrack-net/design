@@ -304,6 +304,14 @@ const componentData: Record<
           ja: '`Navigator.pop` は型付きの結果を返し、フォーカスは開いたコントロールへ戻ります。',
         },
       },
+      {
+        axis: { en: 'Overflow', ko: '넘침', ja: 'オーバーフロー' },
+        choices: {
+          en: 'Pass plain body content. AlertDialog keeps actions visible and scrolls overflow at the logical surface edge.',
+          ko: '본문 콘텐츠를 그대로 넘기세요. AlertDialog가 액션을 보이게 유지하고 문자 방향에 따른 표면 끝에서 넘치는 본문을 스크롤해요.',
+          ja: '本文コンテンツをそのまま渡します。AlertDialog はアクションを表示したまま、文字方向に応じたサーフェス端であふれた本文をスクロールします。',
+        },
+      },
     ],
     contractIntro: {
       en: 'Use neutral outline styling for cancel and `TRIntent.danger` for destructive confirmation.',
@@ -3289,6 +3297,16 @@ class _InstallCommandState extends State<InstallCommand> {
       ko: '타입이 있는 결과, 포커스 가두기, 5가지 논리적 배치를 지원하는 Navigator route로 모달 콘텐츠를 표시해요.',
       ja: '型付きの結果、フォーカスの閉じ込め、5 つの論理配置に対応した Navigator route でモーダルコンテンツを表示します。',
     },
+    contractRows: [
+      {
+        axis: { en: 'Overflow', ko: '넘침', ja: 'オーバーフロー' },
+        choices: {
+          en: 'The body owns vertical scrolling. Its content remains inset while the scrollbar reaches the logical trailing edge; title, description, and actions stay fixed.',
+          ko: '본문이 세로 스크롤을 소유해요. 콘텐츠 여백은 유지하고 스크롤바는 문자 방향에 따른 표면 끝에 붙으며, 제목·설명·액션은 고정돼요.',
+          ja: '本文が縦スクロールを管理します。内容の余白を保ったままスクロールバーは文字方向に応じたサーフェス端に配置され、タイトル・説明・アクションは固定されます。',
+        },
+      },
+    ],
     usage:
       "final result = await showTRDialog<bool>(\n  context: context,\n  builder: (context) => TRDialog(\n    title: const Text('Deploy rack?'),\n    content: const Text('The stable channel will be updated.'),\n    actions: TRButton(\n      onPressed: () => Navigator.pop(context, true),\n      child: const Text('Deploy'),\n    ),\n  ),\n);",
   },

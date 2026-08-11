@@ -1,3 +1,9 @@
+## 0.52.1
+
+- Keeps dialog body padding while placing its scrollbar against the modal
+  surface edge. Dialog and AlertDialog now own long-body scrolling while their
+  titles, descriptions, and actions remain fixed.
+
 ## 0.52.0
 
 - Replaces the control-only density scope with `TRUiDensityScope`, which lets

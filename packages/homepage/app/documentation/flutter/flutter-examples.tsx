@@ -4118,6 +4118,24 @@ class _MonitoringFormState extends State<MonitoringForm> {
   ),
 )`,
     },
+    {
+      id: 'dialog-scrollable',
+      title: {
+        en: 'Long body content',
+        ja: '長い本文',
+        ko: '긴 본문',
+      },
+      description: {
+        en: 'Long content scrolls inside the body while the title and actions stay fixed. Content keeps its inset while the scrollbar sits against the surface edge.',
+        ja: '長い内容は本文内でスクロールし、タイトルとアクションは固定されます。内容の余白を保ちながら、スクロールバーはサーフェスの端に配置されます。',
+        ko: '긴 콘텐츠는 본문 안에서 스크롤되고 제목과 액션은 고정돼요. 콘텐츠 여백은 유지하면서 스크롤바는 표면 끝에 배치돼요.',
+      },
+      dart: String.raw`TRDialog(
+  title: const Text('Release notes'),
+  content: Column(children: releaseNotes),
+  actions: TRButton(onPressed: close, child: const Text('Done')),
+)`,
+    },
   ],
   'alert-dialog': [
     {
@@ -4147,6 +4165,26 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '폭이 좁으면 긴 레이블이 줄바꿈되고 비활성 트리거는 route를 열지 않아요. Escape 또는 취소로 닫으면 포커스가 트리거로 돌아가요.',
       },
       dart: alertDialogStatesSources,
+    },
+    {
+      id: 'alert-dialog-scrollable',
+      title: {
+        en: 'Long body content',
+        ja: '長い本文',
+        ko: '긴 본문',
+      },
+      description: {
+        en: 'AlertDialog owns overflow scrolling too, so callers pass plain content instead of nesting a scroll view. The decision actions remain visible.',
+        ja: 'AlertDialog もオーバーフローのスクロールを管理するため、呼び出し側はスクロールビューを入れ子にせず内容をそのまま渡します。判断アクションは表示されたままです。',
+        ko: 'AlertDialog도 넘치는 본문의 스크롤을 소유하므로 호출부는 스크롤 뷰를 중첩하지 않고 콘텐츠를 그대로 전달해요. 결정 액션은 계속 보여요.',
+      },
+      dart: String.raw`TRAlertDialog(
+  title: const Text('Review output'),
+  content: Column(children: outputLines),
+  actions: [
+    TRButton(onPressed: close, child: const Text('Close')),
+  ],
+)`,
     },
   ],
   popover: [
