@@ -85,7 +85,7 @@ class TRAutocomplete<T extends Object> extends StatefulWidget {
     this.onSelected,
     this.placeholder,
     this.readOnly = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.width,
     super.key,
   }) : assert(
@@ -113,7 +113,7 @@ class TRAutocomplete<T extends Object> extends StatefulWidget {
   final ValueChanged<T>? onSelected;
   final String? placeholder;
   final bool readOnly;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final double? width;
 
   @override
@@ -361,7 +361,7 @@ class TRAutocompleteFormField<T extends Object> extends FormField<T> {
     super.onSaved,
     super.validator,
     String? placeholder,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     super.key,
   }) : super(
          builder: (field) => TRAutocomplete<T>(

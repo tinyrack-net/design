@@ -25,6 +25,23 @@ MaterialApp(
 );
 ```
 
+Products can choose a larger default for interactive controls without scaling
+typography or display components. Decide the responsive condition in the
+product, then wrap the affected subtree:
+
+```dart
+TRControlDensityScope(
+  density: narrow
+      ? TRControlDensity.comfortable
+      : TRControlDensity.standard,
+  child: const App(),
+)
+```
+
+Controls that omit `uiSize` use `md` in standard density and `lg` in
+comfortable density. An explicit `uiSize` always wins, so compact title-bar
+actions can remain `TRUiSize.sm` inside a comfortable subtree.
+
 Use `TRSplitView` when two application-owned surfaces need a controlled,
 resizable boundary. The caller owns the ratio and decides when a responsive
 layout should render the split:

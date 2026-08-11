@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/field_chrome.dart';
 import '../../internal/focus_source.dart';
@@ -52,7 +53,7 @@ class TROtpField extends StatefulWidget {
     this.readOnly = false,
     this.semanticLabel,
     this.separatorBuilder,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   }) : value = null,
        assert(length > 0);
@@ -74,7 +75,7 @@ class TROtpField extends StatefulWidget {
     this.readOnly = false,
     this.semanticLabel,
     this.separatorBuilder,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   }) : defaultValue = '',
        assert(length > 0);
@@ -105,7 +106,7 @@ class TROtpField extends StatefulWidget {
   final bool readOnly;
   final String? semanticLabel;
   final TROtpSeparatorBuilder? separatorBuilder;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   @override
   State<TROtpField> createState() => _TROtpFieldState();
@@ -187,6 +188,7 @@ class _TROtpFieldState extends State<TROtpField> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -195,12 +197,12 @@ class _TROtpFieldState extends State<TROtpField> with TRFocusSourceMixin {
     final activeIndex = math.min(characters.length, widget.length - 1);
     // Square slots track the shared control height scale, so an OTP field lines
     // up with a neighboring TRTextField or TRButton of the same uiSize.
-    final slotSize = switch (widget.uiSize) {
+    final slotSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
-    final slotGap = switch (widget.uiSize) {
+    final slotGap = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smGap,
       TRUiSize.md => TRGeneratedControlMetrics.mdGap,
       TRUiSize.lg => TRGeneratedControlMetrics.lgGap,
@@ -363,7 +365,7 @@ class TROtpFieldFormField extends FormField<String> {
     super.onSaved,
     super.validator,
     super.restorationId,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     super.key,
   }) : super(
          builder: (field) => TROtpField.controlled(

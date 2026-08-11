@@ -10,7 +10,7 @@ class TRSelectFormField<T> extends FormField<T> {
     String? helperText,
     String? name,
     TRFieldAppearance appearance = TRFieldAppearance.solid,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     super.enabled = true,
     bool readOnly = false,
     FocusNode? focusNode,

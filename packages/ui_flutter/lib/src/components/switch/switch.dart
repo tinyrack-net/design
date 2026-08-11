@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
+import '../../types.dart';
 
 // @tinyrack-preview switch
 /// A binary on/off Tinyrack control.
@@ -20,6 +22,7 @@ class TRSwitch extends StatefulWidget {
     this.autofocus = false,
     this.semanticLabel,
     this.thumbKey,
+    this.uiSize,
     super.key,
   });
 
@@ -38,6 +41,9 @@ class TRSwitch extends StatefulWidget {
 
   /// Identifies the visual thumb for geometry measurement and composition.
   final Key? thumbKey;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
 
   @override
   State<TRSwitch> createState() => _TRSwitchState();
@@ -80,13 +86,28 @@ class _TRSwitchState extends State<TRSwitch> with TRFocusSourceMixin {
     super.dispose();
   }
 
-  static const _width = TRGeneratedSpacing.size2xl + TRGeneratedSpacing.sm;
-  static const _height = TRGeneratedSpacing.xl;
-  static const _padding = TRGeneratedSpacing.xs;
-  static const _thumbSize = TRGeneratedSpacing.lg;
-
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
+    final width = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.size2xl,
+      TRUiSize.md => TRGeneratedSpacing.size2xl + TRGeneratedSpacing.sm,
+      TRUiSize.lg => TRGeneratedSpacing.size3xl,
+    };
+    final height = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.lg + TRGeneratedSpacing.xs,
+      TRUiSize.md => TRGeneratedSpacing.xl,
+      TRUiSize.lg => TRGeneratedSpacing.size2xl,
+    };
+    final padding = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,
+      TRUiSize.md || TRUiSize.lg => TRGeneratedSpacing.xs,
+    };
+    final thumbSize = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
+      TRUiSize.md => TRGeneratedSpacing.lg,
+      TRUiSize.lg => TRGeneratedSpacing.xl,
+    };
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -151,9 +172,9 @@ class _TRSwitchState extends State<TRSwitch> with TRFocusSourceMixin {
                 child: AnimatedContainer(
                   curve: TRMotion.standard,
                   duration: motionDuration,
-                  width: _width,
-                  height: _height,
-                  padding: const EdgeInsets.all(_padding),
+                  width: width,
+                  height: height,
+                  padding: EdgeInsets.all(padding),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(TRGeneratedRadii.full),
                     border: Border.all(
@@ -169,16 +190,16 @@ class _TRSwitchState extends State<TRSwitch> with TRFocusSourceMixin {
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: SizedBox(
-                      width: _thumbSize,
+                      width: thumbSize,
                       height:
-                          _height -
-                          (_padding * 2) -
+                          height -
+                          (padding * 2) -
                           (TRGeneratedBorders.defaultWidth * 2),
                       child: OverflowBox(
-                        minWidth: _thumbSize,
-                        maxWidth: _thumbSize,
-                        minHeight: _thumbSize,
-                        maxHeight: _thumbSize,
+                        minWidth: thumbSize,
+                        maxWidth: thumbSize,
+                        minHeight: thumbSize,
+                        maxHeight: thumbSize,
                         child: AnimatedContainer(
                           key: widget.thumbKey,
                           curve: TRMotion.standard,
@@ -188,8 +209,8 @@ class _TRSwitchState extends State<TRSwitch> with TRFocusSourceMixin {
                             shape: BoxShape.circle,
                             boxShadow: const [TRGeneratedShadows.raised],
                           ),
-                          width: _thumbSize,
-                          height: _thumbSize,
+                          width: thumbSize,
+                          height: thumbSize,
                         ),
                       ),
                     ),

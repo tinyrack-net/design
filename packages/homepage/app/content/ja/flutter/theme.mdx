@@ -29,6 +29,29 @@ IBM Plex Sans、Mono、韓国語、日本語のフォントファイル11個を�
 アプリケーションのFlutterアセットバンドルに含まれます。実行時に
 フォントをダウンロードする必要はありません。
 
+## コントロール密度
+
+狭い画面やタッチ操作を優先する画面で、デフォルトの操作領域を大きくするには
+`TRControlDensityScope`を使ってください。レスポンシブ条件は製品側で決め、
+スコープは`uiSize`を省略したインタラクティブなコントロールに対してのみ、
+`standard`を`TRUiSize.md`、`comfortable`を`TRUiSize.lg`に割り当てます。
+
+```dart
+LayoutBuilder(
+  builder: (context, constraints) => TRControlDensityScope(
+    density: constraints.maxWidth < TRBreakpoints.small
+        ? TRControlDensity.comfortable
+        : TRControlDensity.standard,
+    child: const AppContent(),
+  ),
+);
+```
+
+サイズを固定するコントロールには`uiSize`を直接指定してください。明示した
+`sm`、`md`、`lg`はスコープより優先されます。このスコープはタイポグラフィ、
+spacingトークン、badge、spinner、avatarなどの表示専用コンポーネントを
+拡大しません。
+
 ## ページ遷移
 
 どちらのテーマもすべての`TargetPlatform`に`TRPageTransitionsBuilder`を

@@ -1,3 +1,17 @@
+## 0.49.0
+
+- Adds `TRControlDensityScope`, which lets a product choose `standard` or
+  `comfortable` default geometry for a subtree without teaching the design
+  system where its responsive breakpoint belongs. Interactive controls that
+  omit `uiSize` now resolve to `md` or `lg` from that scope, while an explicit
+  `sm`, `md`, or `lg` remains fixed. Status and display components keep their
+  existing size defaults.
+- Adds `uiSize` to `TRSwitch`. Its existing 40 by 24 geometry remains the
+  medium default, and the comfortable large recipe renders a 48 by 32 switch.
+- Makes the large slider recipe reserve the shared 40-pixel large control
+  height instead of shrinking below the medium recipe, so comfortable density
+  increases both its target and thumb clearance.
+
 ## 0.48.1
 
 - Keeps `TRDrawer` content clear of every system safe area while its surface

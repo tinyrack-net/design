@@ -21,7 +21,7 @@ class TRCopyButton extends StatefulWidget {
     this.resetDelay = TRGeneratedMotion.feedback,
     this.appearance = TRAppearance.solid,
     this.intent = TRIntent.neutral,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   });
 
@@ -32,7 +32,7 @@ class TRCopyButton extends StatefulWidget {
   final Duration resetDelay;
   final TRAppearance appearance;
   final TRIntent intent;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
 
   @override
   State<TRCopyButton> createState() => _TRCopyButtonState();

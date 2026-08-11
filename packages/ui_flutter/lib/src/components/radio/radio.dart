@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/form_registry.dart';
@@ -20,7 +21,7 @@ class TRRadio extends StatefulWidget {
     this.disabled = false,
     this.readOnly = false,
     this.invalid = false,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.labelAlignment = TRRadioLabelAlignment.firstLine,
     this.focusNode,
     this.autofocus = false,
@@ -36,7 +37,9 @@ class TRRadio extends StatefulWidget {
   final bool disabled;
   final bool readOnly;
   final bool invalid;
-  final TRUiSize uiSize;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
 
   /// Aligns the glyph to a compound label's first body line by default.
   final TRRadioLabelAlignment labelAlignment;
@@ -87,6 +90,7 @@ class _TRRadioState extends State<TRRadio> with TRFocusSourceMixin {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final colors = context.tinyrackTheme;
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
@@ -118,12 +122,12 @@ class _TRRadioState extends State<TRRadio> with TRFocusSourceMixin {
     final background = checked || !interactive || !_hovered
         ? colors.surface
         : colors.surfaceHover;
-    final size = switch (widget.uiSize) {
+    final size = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.sm,
       TRUiSize.md => TRGeneratedSpacing.md,
       TRUiSize.lg => TRGeneratedSpacing.lg,
     };
-    final indicatorSize = switch (widget.uiSize) {
+    final indicatorSize = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,
       TRUiSize.md => TRGeneratedSpacing.xs,
       TRUiSize.lg => TRGeneratedSpacing.sm,

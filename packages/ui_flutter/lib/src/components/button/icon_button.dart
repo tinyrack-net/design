@@ -12,7 +12,7 @@ class TRIconButton extends StatelessWidget {
     this.intent = TRIntent.neutral,
     this.loading = false,
     this.loadingLabel,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   });
 
@@ -25,16 +25,19 @@ class TRIconButton extends StatelessWidget {
   final TRIntent intent;
   final bool loading;
   final String? loadingLabel;
-  final TRUiSize uiSize;
+
+  /// Overrides the size supplied by [TRControlDensityScope].
+  final TRUiSize? uiSize;
 
   @override
   Widget build(BuildContext context) {
-    final size = switch (uiSize) {
+    final effectiveUiSize = TRControlDensityScope.resolve(context, uiSize);
+    final size = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
       TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
     };
-    final iconSize = switch (uiSize) {
+    final iconSize = switch (effectiveUiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smIconSize,
       TRUiSize.md => TRGeneratedControlMetrics.mdIconSize,
       TRUiSize.lg => TRGeneratedControlMetrics.lgIconSize,
@@ -52,7 +55,7 @@ class TRIconButton extends StatelessWidget {
         loading: loading,
         loadingLabel: loadingLabel ?? label,
         onPressed: onPressed,
-        uiSize: uiSize,
+        uiSize: effectiveUiSize,
         child: IconTheme.merge(
           data: IconThemeData(size: iconSize),
           child: icon,

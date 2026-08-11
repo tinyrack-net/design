@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../control_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../types.dart';
@@ -22,7 +23,7 @@ double _sliderThumbSize(TRUiSize uiSize) => switch (uiSize) {
 double _sliderControlExtent(TRUiSize uiSize) => switch (uiSize) {
   TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
   TRUiSize.md => TRGeneratedControlMetrics.mdHeight,
-  TRUiSize.lg => TRGeneratedSpacing.xl,
+  TRUiSize.lg => TRGeneratedControlMetrics.lgHeight,
 };
 
 // @tinyrack-preview slider
@@ -39,7 +40,7 @@ class TRSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.vertical = false,
     super.key,
   }) : value = null,
@@ -57,7 +58,7 @@ class TRSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.vertical = false,
     super.key,
   }) : defaultValue = 0,
@@ -75,7 +76,7 @@ class TRSlider extends StatefulWidget {
   final ValueChanged<double>? onValueChange;
   final String? semanticLabel;
   final double step;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final bool vertical;
   final bool _controlled;
 
@@ -97,6 +98,7 @@ class _TRSliderState extends State<TRSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final slider = _TRScalarSliderControl(
       enabled: widget.enabled,
       max: widget.max,
@@ -104,7 +106,7 @@ class _TRSliderState extends State<TRSlider> {
       invalid: widget.errorText != null,
       onChanged: _change,
       step: widget.step,
-      uiSize: widget.uiSize,
+      uiSize: uiSize,
       value: _effectiveValue,
       vertical: widget.vertical,
     );
@@ -135,7 +137,7 @@ class TRRangeSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.vertical = false,
     super.key,
   }) : value = null,
@@ -154,7 +156,7 @@ class TRRangeSlider extends StatefulWidget {
     this.onValueChange,
     this.semanticLabel,
     this.step = 1,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     this.vertical = false,
     super.key,
   }) : defaultValue = const RangeValues(25, 75),
@@ -173,7 +175,7 @@ class TRRangeSlider extends StatefulWidget {
   final ValueChanged<RangeValues>? onValueChange;
   final String? semanticLabel;
   final double step;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final bool vertical;
   final bool _controlled;
 
@@ -211,6 +213,7 @@ class _TRRangeSliderState extends State<TRRangeSlider> {
 
   @override
   Widget build(BuildContext context) {
+    final uiSize = TRControlDensityScope.resolve(context, widget.uiSize);
     final value = _effectiveValue;
     final slider = _TRRangeSliderControl(
       enabled: widget.enabled,
@@ -220,7 +223,7 @@ class _TRRangeSliderState extends State<TRRangeSlider> {
       minGap: widget.minGap,
       onChanged: _change,
       step: widget.step,
-      uiSize: widget.uiSize,
+      uiSize: uiSize,
       values: value,
       vertical: widget.vertical,
     );
@@ -829,7 +832,7 @@ class TRSliderFormField extends FormField<double> {
     super.onSaved,
     String? semanticLabel,
     double step = 1,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     super.validator,
     bool vertical = false,
     super.key,
@@ -869,7 +872,7 @@ class TRRangeSliderFormField extends FormField<RangeValues> {
     super.onSaved,
     String? semanticLabel,
     double step = 1,
-    TRUiSize uiSize = TRUiSize.md,
+    TRUiSize? uiSize,
     super.validator,
     bool vertical = false,
     super.key,

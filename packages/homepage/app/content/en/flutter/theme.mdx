@@ -27,6 +27,28 @@ The package bundles 11 IBM Plex Sans, Mono, Korean, and Japanese font files.
 They total about 16.4 MB before platform packaging and are included in the
 application’s Flutter asset bundle. No runtime font download is required.
 
+## Control density
+
+Use `TRControlDensityScope` when a product needs larger default targets on a
+narrow or touch-first surface. The product owns the responsive condition; the
+scope only maps `standard` to `TRUiSize.md` and `comfortable` to
+`TRUiSize.lg` for interactive controls that omit `uiSize`.
+
+```dart
+LayoutBuilder(
+  builder: (context, constraints) => TRControlDensityScope(
+    density: constraints.maxWidth < TRBreakpoints.small
+        ? TRControlDensity.comfortable
+        : TRControlDensity.standard,
+    child: const AppContent(),
+  ),
+);
+```
+
+Set `uiSize` directly when a control must stay fixed. Explicit `sm`, `md`, and
+`lg` values override the scope. The scope does not scale typography, spacing
+tokens, badges, spinners, avatars, or other display-only components.
+
 ## Page transitions
 
 Both themes install `TRPageTransitionsBuilder` for every `TargetPlatform`, so a

@@ -49,7 +49,7 @@ class TRNumberField extends StatefulWidget {
     this.scrubbable = true,
     this.smallStep = 0.1,
     this.step = 1,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   }) : value = null,
        _controlled = false,
@@ -74,7 +74,7 @@ class TRNumberField extends StatefulWidget {
     this.scrubbable = true,
     this.smallStep = 0.1,
     this.step = 1,
-    this.uiSize = TRUiSize.md,
+    this.uiSize,
     super.key,
   }) : defaultValue = null,
        _controlled = true,
@@ -106,7 +106,7 @@ class TRNumberField extends StatefulWidget {
   final bool scrubbable;
   final double smallStep;
   final double step;
-  final TRUiSize uiSize;
+  final TRUiSize? uiSize;
   final bool _controlled;
 
   @override
