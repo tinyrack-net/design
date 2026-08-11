@@ -193,8 +193,6 @@ class _TRDrawerState extends State<TRDrawer> {
         label: widget.semanticLabel,
         role: widget.modal ? SemanticsRole.dialog : null,
         child: SafeArea(
-          top: widget.placement != TRDrawerPlacement.top,
-          bottom: widget.placement != TRDrawerPlacement.bottom,
           // The border comes from the Material shape, which paints over the box
           // without reserving room inside it. The web panel is `box-sizing:
           // border-box`, so its content starts one border width further in.
