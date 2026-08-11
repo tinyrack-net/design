@@ -1,3 +1,10 @@
+## 0.48.1
+
+- Keeps `TRDrawer` content clear of every system safe area while its surface
+  still reaches the viewport edge. Top and bottom sheets previously disabled
+  the inset on the edge they were attached to, placing controls under a status
+  bar, home indicator, or system navigation bar.
+
 ## 0.48.0
 
 - Lets a selection reach the end of a long line in a `TRCodeBlock`. A block that

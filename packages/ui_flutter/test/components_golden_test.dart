@@ -352,6 +352,7 @@ void main() {
           _useTolerantGoldenComparator();
           tester.view.devicePixelRatio = 1;
           tester.view.physicalSize = const Size(360, 520);
+          tester.view.padding = const FakeViewPadding(top: 24, bottom: 34);
           addTearDown(tester.view.reset);
 
           final language = localeCase.key;

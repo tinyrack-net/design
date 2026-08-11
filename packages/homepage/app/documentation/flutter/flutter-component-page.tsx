@@ -1150,9 +1150,9 @@ const componentData: Record<
       ja: 'コンテンツに合うモーダルシート、またはビューポート比率でスワイプできるドロワーを論理方向の各辺から表示します。',
     },
     contractIntro: {
-      en: 'Top and bottom drawers fit their content by default and scroll only when content exceeds the available viewport. Supply `snapPoints` to opt into viewport-relative sizing and drag-to-snap behavior. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted.',
-      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고, 콘텐츠가 사용 가능한 뷰포트를 넘을 때만 스크롤해요. 뷰포트 비율 크기와 드래그 스냅이 필요하면 `snapPoints`를 지정하세요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요.',
-      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、利用可能なビューポートを超えた場合のみスクロールします。ビューポート比率のサイズとドラッグスナップを使う場合は `snapPoints` を指定してください。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。',
+      en: 'Top and bottom drawers fit their content by default and scroll only when content exceeds the available viewport. Supply `snapPoints` to opt into viewport-relative sizing and drag-to-snap behavior. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted. Every drawer extends its surface to the viewport edge while keeping content inside the system safe areas.',
+      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고, 콘텐츠가 사용 가능한 뷰포트를 넘을 때만 스크롤해요. 뷰포트 비율 크기와 드래그 스냅이 필요하면 `snapPoints`를 지정하세요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요. 모든 드로어의 표면은 뷰포트 끝까지 이어지고 콘텐츠는 시스템 안전영역 안에 배치돼요.',
+      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、利用可能なビューポートを超えた場合のみスクロールします。ビューポート比率のサイズとドラッグスナップを使う場合は `snapPoints` を指定してください。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。すべてのドロワーはサーフェスをビューポートの端まで広げながら、コンテンツをシステムのセーフエリア内に配置します。',
     },
     contractRows: [
       {
