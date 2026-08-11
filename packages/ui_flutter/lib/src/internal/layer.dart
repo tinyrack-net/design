@@ -256,12 +256,10 @@ abstract final class TRLayerStyles {
           borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
         ),
       ),
-      side: WidgetStatePropertyAll(
+      side: const WidgetStatePropertyAll(
         BorderSide(
-          color: highlighted ? colors.focus : Colors.transparent,
-          width: highlighted
-              ? TRGeneratedBorders.focusWidth
-              : TRGeneratedBorders.defaultWidth,
+          color: Colors.transparent,
+          width: TRGeneratedBorders.defaultWidth,
         ),
       ),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,

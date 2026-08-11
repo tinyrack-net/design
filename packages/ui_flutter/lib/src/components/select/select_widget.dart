@@ -553,35 +553,28 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       );
       final hovered = states.contains(WidgetState.hovered);
       final error = widget.errorText != null;
-      // A valid trigger answers keyboard focus with the selection fill rather
-      // than an accent outline, which is the same emphasis a pointer-opened
-      // trigger already carries. Invalid keeps its danger outline: that is the
-      // one state the fill alone cannot say.
       return resolveFieldChrome(
         appearance: widget.appearance,
         colors: colors,
         solidFill: !interactive
             ? colors.surfaceMuted
             : focused
-            ? colors.surfaceSelected
+            ? colors.surface
             : hovered
             ? colors.surfaceHover
             : colors.surface,
-        solidBorderColor: error
-            ? focused
+        solidBorderColor: focused
+            ? error
                   ? colors.danger
-                  : colors.dangerBorder
+                  : colors.focus
+            : error
+            ? colors.dangerBorder
             : colors.border,
-        solidBorderWidth: focused && error
+        solidBorderWidth: focused
             ? TRGeneratedBorders.focusWidth
             : TRGeneratedBorders.defaultWidth,
         enabled: widget.enabled,
         error: error,
-        focusChrome: TRFieldChrome(
-          fill: colors.surfaceSelected,
-          borderColor: Colors.transparent,
-          borderWidth: TRGeneratedBorders.defaultWidth,
-        ),
         focused: focused,
         hovered: hovered,
         open: _reportedOpen,
@@ -736,7 +729,6 @@ class _TRSelectState<T> extends State<TRSelect<T>>
                     items: visible.items,
                     selectedValue: selectedValue,
                     interactive: interactive,
-                    highlightSelected: _reportedOpen,
                     noResultsText: widget.noResultsText,
                     onSelected: _handleSelected,
                     focusNodes: visible.focusNodes,

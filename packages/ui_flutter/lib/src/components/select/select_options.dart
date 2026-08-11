@@ -10,7 +10,6 @@ class _TRSelectOptions<T> extends StatelessWidget {
     required this.items,
     required this.selectedValue,
     required this.interactive,
-    required this.highlightSelected,
     required this.noResultsText,
     required this.onSelected,
     this.focusNodes,
@@ -22,8 +21,6 @@ class _TRSelectOptions<T> extends StatelessWidget {
   final T? selectedValue;
   final bool interactive;
 
-  /// Whether the selected row paints the open-state emphasis.
-  final bool highlightSelected;
   final String noResultsText;
   final ValueChanged<T?> onSelected;
 
@@ -134,12 +131,12 @@ class _TRSelectOptions<T> extends StatelessWidget {
         ),
       ),
       side: WidgetStateProperty.resolveWith((states) {
-        final highlighted =
-            states.contains(WidgetState.focused) ||
-            (selected && highlightSelected);
+        final focused =
+            states.contains(WidgetState.focused) &&
+            TRFocusSource.instance.isKeyboardFocus;
         return BorderSide(
-          color: highlighted ? colors.focus : Colors.transparent,
-          width: highlighted
+          color: focused ? colors.focus : Colors.transparent,
+          width: focused
               ? TRGeneratedBorders.focusWidth
               : TRGeneratedBorders.defaultWidth,
         );

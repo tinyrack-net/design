@@ -205,4 +205,4 @@ const racks = Object.fromEntries(
 | 配置 | `Positioner` はトリガーの下 4 px の位置で開き、配置用 prop は受け取りません。十分な空きがない場合はトリガーの上へ切り替わります。 |
 | フォーム | `name`、`form`、`autoComplete`、`inputRef` を受け取ります。非制御 select は native reset で `defaultValue` に戻ります。 |
 
-`Trigger` にアクセシブルな名前を付けます。キーボードでは Arrow Down で開き、有効な option 間を移動し、typeahead を使い、Enter で確定し、Escape で閉じた後に trigger へ focus が戻ります。必要に応じて `value` と `open` を独立して制御します。利用できない control には `disabled`、変更できない focusable value には `readOnly` を使います。
+`Trigger` にアクセシブルな名前を付けます。キーボードでは Arrow Down で開き、有効な option 間を移動し、typeahead を使い、Enter で確定し、Escape で閉じた後に trigger へ focus が戻ります。ポインターの hover、open、highlighted、selected 状態は背景色だけで強調し、フォーカス枠はキーボード操作で得た focus にだけ表示します。必要に応じて `value` と `open` を独立して制御します。利用できない control には `disabled`、変更できない focusable value には `readOnly` を使います。

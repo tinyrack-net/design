@@ -40,6 +40,28 @@ Widget _app(Widget child, {double? width, TextDirection? textDirection}) {
 }
 
 void main() {
+  testWidgets('shared layer options highlight with fill and no focus border', (
+    tester,
+  ) async {
+    late ButtonStyle style;
+    await tester.pumpWidget(
+      _app(
+        Builder(
+          builder: (context) {
+            style = TRLayerStyles.option(context, highlighted: true);
+            return const SizedBox.shrink();
+          },
+        ),
+      ),
+    );
+
+    final colors = TinyrackTheme.light().extension<TinyrackThemeData>()!;
+    expect(style.backgroundColor!.resolve({}), colors.surfaceHover);
+    final side = style.side!.resolve({})!;
+    expect(side.color, Colors.transparent);
+    expect(side.width, TRGeneratedBorders.defaultWidth);
+  });
+
   group('TRMenu', () {
     testWidgets('keeps menu layers bordered without a focused item border', (
       tester,

@@ -184,12 +184,13 @@ void main() {
     );
     expect(
       style.backgroundColor!.resolve({WidgetState.focused}),
-      colors.surfaceSelected,
-      reason: 'a ghost trigger still has to show keyboard focus, as a fill',
+      colors.surface,
+      reason: 'keyboard focus restores the shared field surface',
     );
     expect(
       style.side!.resolve({WidgetState.focused})!.color,
-      Colors.transparent,
+      colors.focus,
+      reason: 'keyboard focus uses the same focus border as an input',
     );
   });
 
