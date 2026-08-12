@@ -75,6 +75,53 @@ void main() {
     expect(_option('Beta'), findsNothing);
   });
 
+  testWidgets('a searchable select renders and matches option descriptions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const TRSelect<String>(
+          items: <TRSelectItem<String>>[
+            TRSelectItem<String>(
+              value: 'alpha',
+              label: 'Alpha',
+              description: 'Primary rack in Seoul',
+            ),
+            TRSelectItem<String>(
+              value: 'beta',
+              label: 'Beta',
+              description: 'Preview rack in Tokyo',
+            ),
+          ],
+          searchable: true,
+        ),
+      ),
+    );
+
+    await _open(tester);
+    expect(find.text('Primary rack in Seoul'), findsOneWidget);
+    expect(find.text('Preview rack in Tokyo'), findsOneWidget);
+    final labelTop = tester.getTopLeft(find.text('Alpha')).dy;
+    final descriptionTop = tester
+        .getTopLeft(find.text('Primary rack in Seoul'))
+        .dy;
+    expect(descriptionTop, greaterThan(labelTop));
+    expect(
+      tester.widget<Text>(find.text('Primary rack in Seoul')).style?.color,
+      tester
+          .element(find.text('Primary rack in Seoul'))
+          .tinyrackTheme
+          .textMuted,
+    );
+
+    await tester.enterText(_searchField, 'tokyo');
+    await tester.pumpAndSettle();
+
+    expect(_option('Alpha'), findsNothing);
+    expect(_option('Beta'), findsOneWidget);
+    expect(find.text('Preview rack in Tokyo'), findsOneWidget);
+  });
+
   testWidgets('a searchable select explains an empty result', (tester) async {
     await tester.pumpWidget(
       _app(

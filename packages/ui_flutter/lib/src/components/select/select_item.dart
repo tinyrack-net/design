@@ -7,6 +7,7 @@ class TRSelectItem<T> {
     this.key,
     required this.value,
     required this.label,
+    this.description,
     this.enabled = true,
     this.leading,
     this.trailing,
@@ -17,6 +18,13 @@ class TRSelectItem<T> {
 
   final T value;
   final String label;
+
+  /// Optional supporting text shown beneath [label] in the option row.
+  ///
+  /// The selected trigger continues to display only [label]. Search matches
+  /// both strings unless the enclosing [TRSelect] supplies a custom filter.
+  final String? description;
+
   final bool enabled;
   final Widget? leading;
   final Widget? trailing;

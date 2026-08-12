@@ -73,24 +73,60 @@ class _TRSelectOptions<T> extends StatelessWidget {
       onPressed: interactive && item.enabled
           ? () => onSelected(item.value)
           : null,
-      style: _style(context, selected: item.value == selectedValue),
+      style: _style(
+        context,
+        selected: item.value == selectedValue,
+        described: item.description != null,
+      ),
       trailingIcon: item.trailing == null
           ? null
           : TRLayerPartBoundary(
               name: 'item${index}Indicator',
               child: item.trailing!,
             ),
-      child: TRLayerPartBoundary(
-        name: 'item${index}Label',
-        child: Text(item.label),
-      ),
+      child: item.description == null
+          ? TRLayerPartBoundary(
+              name: 'item${index}Label',
+              child: Text(item.label),
+            )
+          : ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: TRGeneratedMeasurements.measureLg,
+              ),
+              child: TRLayerPartBoundary(
+                name: 'item${index}Label',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(item.label, overflow: TextOverflow.ellipsis),
+                    const SizedBox(height: TRGeneratedSpacing.xs),
+                    Text(
+                      item.description!,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: context.tinyrackTheme.textMuted,
+                        fontFamily: TRGeneratedFontFamilies.body,
+                        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+                        fontSize: TRGeneratedTypographySizes.xs,
+                        height: TRGeneratedTypographyLineHeights.md,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
     );
     final onRowKeyEvent = this.onRowKeyEvent;
     if (onRowKeyEvent == null) return button;
     return Focus(onKeyEvent: (_, event) => onRowKeyEvent(event), child: button);
   }
 
-  ButtonStyle _style(BuildContext context, {required bool selected}) {
+  ButtonStyle _style(
+    BuildContext context, {
+    required bool selected,
+    required bool described,
+  }) {
     final colors = context.tinyrackTheme;
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
@@ -117,7 +153,12 @@ class _TRSelectOptions<T> extends StatelessWidget {
         Size(0, TRControlMetrics.heightOf(TRLayerStyles.rowSize)),
       ),
       maximumSize: WidgetStatePropertyAll(
-        Size(double.infinity, TRControlMetrics.heightOf(TRLayerStyles.rowSize)),
+        described
+            ? Size.infinite
+            : Size(
+                double.infinity,
+                TRControlMetrics.heightOf(TRLayerStyles.rowSize),
+              ),
       ),
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       padding: WidgetStatePropertyAll(

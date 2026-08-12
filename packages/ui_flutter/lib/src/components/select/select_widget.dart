@@ -210,7 +210,9 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     if (!widget.searchable || _query.isEmpty) return true;
     final filter = widget.filter;
     if (filter != null) return filter(item, _query);
-    return item.label.toLowerCase().contains(_query.toLowerCase());
+    final query = _query.toLowerCase();
+    return item.label.toLowerCase().contains(query) ||
+        (item.description?.toLowerCase().contains(query) ?? false);
   }
 
   FocusNode get _focusNode =>
@@ -382,7 +384,10 @@ class _TRSelectState<T> extends State<TRSelect<T>>
         matches: (item, query) {
           final filter = widget.filter;
           if (filter != null) return filter(item, query);
-          return item.label.toLowerCase().contains(query.toLowerCase());
+          final normalizedQuery = query.toLowerCase();
+          return item.label.toLowerCase().contains(normalizedQuery) ||
+              (item.description?.toLowerCase().contains(normalizedQuery) ??
+                  false);
         },
         noResultsText: widget.noResultsText,
         searchPlaceholder: widget.searchPlaceholder,
