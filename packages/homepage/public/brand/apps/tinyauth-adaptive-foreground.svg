@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" role="img" aria-labelledby="tinyauth-adaptive-foreground-title tinyauth-adaptive-foreground-description" data-safe-zone="27 27 54 54">
+  <title id="tinyauth-adaptive-foreground-title">TinyAuth adaptive icon foreground</title>
+  <desc id="tinyauth-adaptive-foreground-description">TinyAuth glyph centered inside the Android adaptive icon safe zone</desc>
+  <g transform="translate(54 54) scale(1.325) translate(-32 -33.333334)">
+    <path fill="#fafafa" d="M17 14.667h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Zm0 27.333h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>
+    <path fill="#38bdf8" d="M17 28h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>
+    <path fill="#0a0a0a" d="M27 24.667h10v4.5l-1.5 1.5h-7l-1.5-1.5v-4.5Zm5-1.5a7.5 7.5 0 0 1 7.5 7.5c0 2.554-1.275 4.81-3.223 6.167L37.75 52h-11.5l1.473-15.166A7.5 7.5 0 0 1 24.5 30.667a7.5 7.5 0 0 1 7.5-7.5Z"/>
+  </g>
+</svg>

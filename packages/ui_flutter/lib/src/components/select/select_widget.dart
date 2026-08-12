@@ -24,8 +24,11 @@ part 'select_sheet.dart';
 
 /// Surface a [TRSelect] presents its options on.
 enum TRSelectSurface {
-  /// A dropdown on a viewport at least [TRBreakpoints.small] wide, and a
-  /// bottom sheet below it.
+  /// A bottom sheet in comfortable [TRUiDensityScope] density, and an
+  /// anchored dropdown in standard density.
+  ///
+  /// Without a density scope, the viewport remains the fallback: a dropdown
+  /// at least [TRBreakpoints.small] wide, and a bottom sheet below it.
   auto,
 
   /// Always an anchored dropdown.
@@ -151,7 +154,7 @@ class TRSelect<T> extends StatefulWidget {
   final TRSelectFilter<T>? filter;
 
   /// Whether the options open in a dropdown, a sheet, or whichever suits the
-  /// viewport.
+  /// inherited density and viewport fallback.
   final TRSelectSurface surface;
   final bool _controlled;
 
@@ -343,13 +346,23 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     if (_openSurface == TRSelectSurface.menu) _menuController.close();
   }
 
-  TRSelectSurface _resolveSurface() => switch (widget.surface) {
-    TRSelectSurface.auto =>
-      MediaQuery.sizeOf(context).width < TRBreakpoints.small
+  TRSelectSurface _resolveSurface() {
+    if (widget.surface case final surface
+        when surface != TRSelectSurface.auto) {
+      return surface;
+    }
+    final density = context
+        .getInheritedWidgetOfExactType<TRUiDensityScope>()
+        ?.density;
+    if (density != null) {
+      return density == TRUiDensity.comfortable
           ? TRSelectSurface.sheet
-          : TRSelectSurface.menu,
-    final surface => surface,
-  };
+          : TRSelectSurface.menu;
+    }
+    return MediaQuery.sizeOf(context).width < TRBreakpoints.small
+        ? TRSelectSurface.sheet
+        : TRSelectSurface.menu;
+  }
 
   void _toggleMenu() {
     if (_reportedOpen) {

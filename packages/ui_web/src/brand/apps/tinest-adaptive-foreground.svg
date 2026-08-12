@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" role="img" aria-labelledby="tinest-adaptive-foreground-title tinest-adaptive-foreground-description" data-safe-zone="27 27 54 54">
+  <title id="tinest-adaptive-foreground-title">Tinest adaptive icon foreground</title>
+  <desc id="tinest-adaptive-foreground-description">Tinest glyph centered inside the Android adaptive icon safe zone</desc>
+  <g transform="translate(54 54) scale(1.528846) translate(-32 -32)">
+    <path fill="#fafafa" d="M40 14.667h5.333a4 4 0 0 1 0 8H40a4 4 0 0 1 0-8Zm0 13.333h5.333a4 4 0 0 1 0 8H40a4 4 0 0 1 0-8Zm0 13.333h5.333a4 4 0 0 1 0 8H40a4 4 0 0 1 0-8Z"/>
+    <path fill="#a78bfa" d="M31.43 29.942 23.43 16.609a4 4 0 0 0-6.86 4.116l8 13.333a4 4 0 0 0 6.86-4.116Zm-6.86 0-8 13.333a4 4 0 0 0 6.86 4.116l8-13.333a4 4 0 0 0-6.86-4.116Z"/>
+  </g>
+</svg>

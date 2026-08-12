@@ -74,6 +74,62 @@ void main() {
     );
   });
 
+  testWidgets('keeps main content above the software keyboard', (tester) async {
+    await _setViewport(tester, const Size(400, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      _app(
+        const MediaQuery(
+          data: MediaQueryData(
+            size: Size(400, 600),
+            viewInsets: EdgeInsets.only(bottom: 240),
+          ),
+          child: TRAppShell(
+            header: TRAppShellHeader(
+              height: 48,
+              children: [SizedBox(key: headerKey)],
+            ),
+            main: TRAppShellMain(
+              key: mainKey,
+              child: SizedBox.expand(key: Key('main-content')),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(
+      tester.getRect(find.byType(TRAppShell)),
+      const Offset(0, 0) & Size(400, 600),
+    );
+    expect(tester.getRect(find.byKey(mainKey)).bottom, 360);
+  });
+
+  testWidgets('can leave the software keyboard over the shell by request', (
+    tester,
+  ) async {
+    await _setViewport(tester, const Size(400, 600));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+
+    await tester.pumpWidget(
+      _app(
+        const MediaQuery(
+          data: MediaQueryData(
+            size: Size(400, 600),
+            viewInsets: EdgeInsets.only(bottom: 240),
+          ),
+          child: TRAppShell(
+            resizeToAvoidBottomInset: false,
+            main: TRAppShellMain(key: mainKey, child: SizedBox.expand()),
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.getRect(find.byKey(mainKey)).bottom, 600);
+  });
+
   testWidgets('uses viewport media width rather than local layout width', (
     tester,
   ) async {

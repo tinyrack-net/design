@@ -43,6 +43,11 @@ semantic step, and enlarges default card padding and status indicators.
 Explicit `uiSize` and card padding always win, so compact title-bar actions can
 remain `TRUiSize.sm` inside a comfortable subtree.
 
+`TRSelectSurface.auto` follows the same semantic density: standard density
+opens an anchored dropdown and comfortable density opens a bottom sheet. A
+select outside `TRUiDensityScope` falls back to `TRBreakpoints.small`, preserving
+the viewport-responsive default for standalone consumers.
+
 Use `TRSplitView` when two application-owned surfaces need a controlled,
 resizable boundary. The caller owns the ratio and decides when a responsive
 layout should render the split:
@@ -58,6 +63,33 @@ TRSplitView(
   second: const PreviewPane(),
 )
 ```
+
+Use `TRNavigableThreePaneScaffold` for a hierarchical navigation surface that
+must adapt across phones, tablets, and desktop windows. Its width classes use
+the canonical 600, 840, 1200, and 1600 logical-pixel boundaries. Compact
+windows show the active destination, medium and expanded windows keep
+navigation beside the active destination, and large windows can show all three
+roles:
+
+```dart
+final navigator = TRThreePaneNavigator<String>(
+  initialDestination: const TRPaneDestination(
+    role: TRPaneRole.navigation,
+    value: 'navigation',
+  ),
+);
+
+TRNavigableThreePaneScaffold<String>(
+  navigator: navigator,
+  navigationPane: const WorkspaceNavigation(),
+  primaryPane: const WorkspaceCollection(),
+  secondaryPane: const WorkspaceDetail(),
+)
+```
+
+Compose navigation content with `TRNavigationPane` and
+`TRNavigationSection`; use `TRTreeNav` inside each section so selection,
+hover, press, keyboard, and semantics behavior remains shared.
 
 `TRTabs` composes one full-width tab strip from optional capabilities. Provide
 `panelBuilder` when the component should draw the active panel, add `onClose`

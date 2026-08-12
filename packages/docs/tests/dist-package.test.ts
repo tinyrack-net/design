@@ -20,6 +20,19 @@ let artifactsRoot = '';
 let consumerRoot = '';
 const suppliedUiArchive = process.env['TINYRACK_UI_TARBALL'];
 const uiBrandRoot = resolve(docsRoot, '../ui_web/src/brand');
+const launcherBrandAssets = [
+  { name: 'tinyrack', prefix: '' },
+  ...['tinest', 'dotweave', 'proxer', 'tinyauth'].map((name) => ({
+    name,
+    prefix: 'apps/',
+  })),
+].flatMap(({ name, prefix }) =>
+  ['launcher-icon', 'adaptive-foreground'].flatMap((suffix) => [
+    `${prefix}${name}-${suffix}.svg`,
+    `${prefix}${name}-${suffix}-512.png`,
+    `${prefix}${name}-${suffix}-1024.png`,
+  ]),
+);
 const uiBrandAssets = [
   'tinyrack-app-icon-128.png',
   'tinyrack-app-icon-180.png',
@@ -53,6 +66,7 @@ const uiBrandAssets = [
   'apps/tinyauth-app-icon-128.png',
   'apps/tinyauth-app-icon-512.png',
   'apps/tinyauth-app-icon.svg',
+  ...launcherBrandAssets,
 ] as const;
 
 function run(command: string, args: string[], cwd: string) {

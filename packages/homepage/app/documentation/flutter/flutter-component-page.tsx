@@ -6033,6 +6033,70 @@ TRAppShell(
 
           <h2>
             {locale === 'ko'
+              ? 'Adaptive pane navigation'
+              : locale === 'ja'
+                ? 'アダプティブペインナビゲーション'
+                : 'Adaptive pane navigation'}
+          </h2>
+          <p>
+            {locale === 'ko'
+              ? 'TRNavigableThreePaneScaffold는 navigation, primary, secondary 역할을 Android window size class에 맞춰 배치합니다. 600px 미만에서는 현재 destination 하나, 600–1199px에서는 navigation과 현재 destination, 1200px 이상에서는 최대 세 pane을 표시합니다. TRThreePaneNavigator는 push, replace, pop 기록을 유지하며 창 크기가 바뀌어도 현재 destination을 보존합니다. 탐색 목록은 TRNavigationPane과 TRNavigationSection 안에서 TRTreeNav로 구성하세요.'
+              : locale === 'ja'
+                ? 'TRNavigableThreePaneScaffold は navigation、primary、secondary の役割を Android の window size class に合わせて配置します。600px 未満では現在の destination を 1 つ、600–1199px では navigation と現在の destination、1200px 以上では最大 3 つの pane を表示します。TRThreePaneNavigator は push、replace、pop の履歴を保持し、ウィンドウサイズが変わっても現在の destination を保ちます。ナビゲーションリストは TRNavigationPane と TRNavigationSection 内で TRTreeNav を使って構成してください。'
+                : 'TRNavigableThreePaneScaffold lays out fixed navigation, primary, and secondary roles using Android window size classes. It shows only the active destination below 600px, navigation plus the active destination from 600–1199px, and up to three panes at 1200px and wider. TRThreePaneNavigator owns push, replace, and pop history and preserves the active destination through resize. Build navigation lists from TRTreeNav inside TRNavigationPane and TRNavigationSection.'}
+          </p>
+          <TRCodeBlock
+            code={`final navigator = TRThreePaneNavigator<String>(
+  const TRPaneDestination(
+    id: 'projects',
+    role: TRPaneRole.primary,
+  ),
+);
+
+TRNavigableThreePaneScaffold<String>(
+  navigator: navigator,
+  navigationPane: TRAdaptivePane(
+    id: 'navigation',
+    child: TRNavigationPane(children: navigationSections),
+  ),
+  primaryPane: const TRAdaptivePane(
+    id: 'projects',
+    child: ProjectList(),
+  ),
+  secondaryPane: selectedProject == null
+      ? null
+      : TRAdaptivePane(
+          id: selectedProject!.id,
+          child: ProjectDetail(project: selectedProject!),
+        ),
+)`}
+            language="dart"
+          />
+
+          <h2>
+            {locale === 'ko'
+              ? '소프트웨어 키보드'
+              : locale === 'ja'
+                ? 'ソフトウェアキーボード'
+                : 'Software keyboard'}
+          </h2>
+          <p>
+            {locale === 'ko'
+              ? 'TRAppShell은 기본적으로 header, sidebar와 main을 소프트웨어 키보드 위에 유지하면서 배경은 viewport 끝까지 그려요. 의도적으로 키보드 뒤에 인터랙티브 콘텐츠를 그려야 할 때만 resizeToAvoidBottomInset을 false로 설정하세요.'
+              : locale === 'ja'
+                ? 'TRAppShell は既定で header、sidebar、main をソフトウェアキーボードの上に保ち、背景は viewport の端まで描画します。インタラクティブなコンテンツを意図的にキーボードの背後へ描画する場合に限り、resizeToAvoidBottomInset を false に設定してください。'
+                : 'TRAppShell keeps the header, sidebar, and main above the software keyboard by default while its background continues to paint to the viewport edge. Set resizeToAvoidBottomInset to false only when interactive content must deliberately render behind the keyboard.'}
+          </p>
+          <TRCodeBlock
+            code={`TRAppShell(
+  resizeToAvoidBottomInset: false,
+  main: const TRAppShellMain(child: ImmersiveCanvas()),
+)`}
+            language="dart"
+          />
+
+          <h2>
+            {locale === 'ko'
               ? 'sidebar 너비와 접기'
               : locale === 'ja'
                 ? 'sidebar の幅と折りたたみ'

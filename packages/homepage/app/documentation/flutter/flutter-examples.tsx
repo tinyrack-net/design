@@ -4077,9 +4077,9 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '드롭다운과 시트',
       },
       description: {
-        en: 'A select opens as an anchored dropdown on a viewport at least TRBreakpoints.small wide and as a bottom sheet below it, which gives the options room and a touch-sized target on a phone. The surface is resolved when the select opens, so a resize cannot swap it mid-selection. Pass surface to pin one of the two, as a playground or a fixed-width panel might need.',
-        ja: 'Select はビューポートが TRBreakpoints.small 以上ならアンカーされたドロップダウンとして開き、それより狭ければボトムシートとして開くので、スマートフォンでも選択肢に十分な領域とタッチしやすいターゲットを確保できます。サーフェスは開いた時点で決まるため、選択の途中でリサイズしても入れ替わりません。どちらかに固定するときは surface を渡します。',
-        ko: 'Select는 뷰포트가 TRBreakpoints.small 이상이면 트리거에 붙는 드롭다운으로, 그보다 좁으면 바텀 시트로 열려요. 덕분에 휴대폰에서도 선택지가 놓일 공간과 터치하기 좋은 크기를 확보해요. 표면은 select를 열 때 결정되므로 선택 도중에 크기가 바뀌어도 교체되지 않아요. 둘 중 하나로 고정하려면 surface를 넘기세요.',
+        en: 'Inside TRUiDensityScope, a select opens as an anchored dropdown in standard density and as a bottom sheet in comfortable density. Without that scope it falls back to the TRBreakpoints.small viewport boundary. The surface is resolved when the select opens, so a resize cannot swap it mid-selection. Pass surface to pin one of the two.',
+        ja: 'TRUiDensityScope 内では、Select は standard density ならアンカーされたドロップダウンとして、comfortable density ならボトムシートとして開きます。Scope がない場合は TRBreakpoints.small のビューポート境界にフォールバックします。サーフェスは開いた時点で決まるため、選択の途中でリサイズしても入れ替わりません。どちらかに固定するときは surface を渡してください。',
+        ko: 'TRUiDensityScope 안에서 Select는 standard density이면 트리거에 붙는 드롭다운으로, comfortable density이면 바텀 시트로 열려요. Scope가 없으면 TRBreakpoints.small 뷰포트 경계를 사용해요. 표면은 Select를 열 때 결정되므로 선택 도중에 크기가 바뀌어도 교체되지 않아요. 둘 중 하나로 고정하려면 surface를 넘기세요.',
       },
       dart: String.raw`TRSelect<String>(
   items: channels,
@@ -4136,9 +4136,9 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '긴 본문',
       },
       description: {
-        en: 'Long content scrolls inside the body while the title and actions stay fixed. Content keeps its inset while the scrollbar sits against the surface edge.',
-        ja: '長い内容は本文内でスクロールし、タイトルとアクションは固定されます。内容の余白を保ちながら、スクロールバーはサーフェスの端に配置されます。',
-        ko: '긴 콘텐츠는 본문 안에서 스크롤되고 제목과 액션은 고정돼요. 콘텐츠 여백은 유지하면서 스크롤바는 표면 끝에 배치돼요.',
+        en: 'Long content scrolls inside the body while the title and actions stay fixed. The route also keeps the surface above the software keyboard. Content keeps its inset while the scrollbar sits against the surface edge.',
+        ja: '長い内容は本文内でスクロールし、タイトルとアクションは固定されます。ルートはサーフェスをソフトウェアキーボードの上にも保ちます。内容の余白を保ちながら、スクロールバーはサーフェスの端に配置されます。',
+        ko: '긴 콘텐츠는 본문 안에서 스크롤되고 제목과 액션은 고정돼요. route는 표면을 소프트웨어 키보드 위에도 유지해요. 콘텐츠 여백은 유지하면서 스크롤바는 표면 끝에 배치돼요.',
       },
       dart: String.raw`TRDialog(
   title: const Text('Release notes'),
@@ -4184,9 +4184,9 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '긴 본문',
       },
       description: {
-        en: 'AlertDialog owns overflow scrolling too, so callers pass plain content instead of nesting a scroll view. The decision actions remain visible.',
-        ja: 'AlertDialog もオーバーフローのスクロールを管理するため、呼び出し側はスクロールビューを入れ子にせず内容をそのまま渡します。判断アクションは表示されたままです。',
-        ko: 'AlertDialog도 넘치는 본문의 스크롤을 소유하므로 호출부는 스크롤 뷰를 중첩하지 않고 콘텐츠를 그대로 전달해요. 결정 액션은 계속 보여요.',
+        en: 'AlertDialog owns overflow scrolling too, so callers pass plain content instead of nesting a scroll view. Decision actions remain visible above the software keyboard.',
+        ja: 'AlertDialog もオーバーフローのスクロールを管理するため、呼び出し側はスクロールビューを入れ子にせず内容をそのまま渡します。判断アクションはソフトウェアキーボードの上に表示されたままです。',
+        ko: 'AlertDialog도 넘치는 본문의 스크롤을 소유하므로 호출부는 스크롤 뷰를 중첩하지 않고 콘텐츠를 그대로 전달해요. 결정 액션은 소프트웨어 키보드 위에 계속 보여요.',
       },
       dart: String.raw`TRAlertDialog(
   title: const Text('Review output'),

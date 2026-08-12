@@ -5,8 +5,27 @@
   matches both strings, and the selected trigger remains concise with only the
   label.
 
+## 0.56.2
+
+- Makes `TRSelectSurface.auto` follow an explicit `TRUiDensityScope`: standard
+  density opens an anchored dropdown and comfortable density opens a bottom
+  sheet. Consumers without a density scope retain the existing viewport
+  breakpoint fallback.
+
+## 0.56.1
+
+- Keeps AppShell content, Dialog forms, and AlertDialog actions above the
+  software keyboard while preserving an edge-to-edge application surface.
+- Adds `TRAppShell.resizeToAvoidBottomInset` for applications that deliberately
+  draw interactive content behind the software keyboard.
+
 ## 0.56.0
 
+- Adds `TRAdaptiveWidthClass`, `TRThreePaneNavigator`, and
+  `TRNavigableThreePaneScaffold` for canonical one, two, and three-pane
+  navigation at 600, 840, 1200, and 1600 logical-pixel window boundaries.
+- Adds `TRNavigationPane` and `TRNavigationSection` so navigation surfaces
+  share token-based insets, section labels, and spacing.
 - Resolves Flutter components, overlays, framework icons, theme reads, and
   visual constants to their declaring libraries before enforcing Tinyrack
   equivalents, including prefixed and named calls without misidentifying local

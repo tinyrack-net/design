@@ -937,6 +937,66 @@ void main() {
   });
 
   group('TRDialog', () {
+    testWidgets('keeps scrollable form content above the software keyboard', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(400, 600));
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              size: const Size(400, 600),
+              viewInsets: const EdgeInsets.only(bottom: 240),
+            ),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TextButton(
+                onPressed: () => showTRDialog<void>(
+                  context: context,
+                  builder: (_) => TRDialog(
+                    title: const Text('Keyboard form'),
+                    content: Column(
+                      children: const [
+                        SizedBox(height: 400),
+                        TRTextField(label: 'Last field'),
+                      ],
+                    ),
+                    actions: const Text('Save action'),
+                  ),
+                ),
+                child: const Text('Open keyboard form'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open keyboard form'));
+      await tester.pumpAndSettle();
+
+      final surface = find.descendant(
+        of: find.byType(TRDialog),
+        matching: find.byWidgetPredicate(
+          (widget) => widget is Material && widget.type == MaterialType.card,
+        ),
+      );
+      expect(tester.getRect(surface).bottom, lessThanOrEqualTo(360));
+      expect(
+        tester.getRect(find.text('Save action')).bottom,
+        lessThanOrEqualTo(360),
+      );
+      await tester.showKeyboard(find.byType(TextField));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getRect(find.byType(TextField)).bottom,
+        lessThanOrEqualTo(360),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('returns a typed result and restores focus', (tester) async {
       final triggerFocus = FocusNode();
       addTearDown(triggerFocus.dispose);

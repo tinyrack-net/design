@@ -20,11 +20,60 @@ import { TRTable } from '@tinyrack/ui/components/table';
     <tr><th scope="row">SVG</th><td>웹 화면과 크기가 바뀌는 자산</td><td>기본 선택이에요. 64×64 벡터 격자를 사용해요.</td></tr>
     <tr><th scope="row">16px PNG</th><td>브라우저 파비콘</td><td>SVG 파비콘을 쓸 수 없을 때 선택하세요.</td></tr>
     <tr><th scope="row">32px PNG</th><td>고밀도 파비콘과 작은 목록</td><td>32px 또는 2배율 화면의 16px로 표시하세요.</td></tr>
-    <tr><th scope="row">48px PNG</th><td>작은 실행기와 바로 가기</td><td>원본 48px 크기로 사용하세요.</td></tr>
-    <tr><th scope="row">128px PNG</th><td>서비스 아바타와 큰 실행기</td><td>래스터 이미지가 필요한 표면에 사용하세요.</td></tr>
-    <tr><th scope="row">512px PNG</th><td>스토어 등록과 후속 내보내기</td><td>고해상도 래스터 원본으로 사용하고 축소하세요.</td></tr>
+    <tr><th scope="row">48px PNG</th><td>작은 목록과 바로 가기</td><td>원본 48px 크기로 사용하세요.</td></tr>
+    <tr><th scope="row">128px PNG</th><td>서비스 아바타와 큰 목록</td><td>래스터 이미지가 필요한 표면에 사용하세요.</td></tr>
+    <tr><th scope="row">512px PNG</th><td>큰 웹 아트워크</td><td>설치형 앱에는 아래의 런처 전용 파일을 사용하세요.</td></tr>
   </tbody>
 </TRTable.Root>
+
+## 런처 원본 선택
+
+설치형 앱 아이콘에는 파비콘이나 화면용 아트워크보다 넓은 여백이 필요해요. 완성형 아이콘에는 `launcher-icon` 파일을 사용하세요. 64×64 캔버스 안에서 타일 전체를 유지하고 사방에 8px 투명 여백을 포함해요. Android adaptive icon에는 같은 제품의 `adaptive-foreground`를 `#0a0a0a` 배경 위에 사용하세요. 전경 파일은 타일을 제외하고, Android의 108×108 레이어 격자 가운데 54×54 영역 안에 심볼을 배치해요.
+
+파비콘, 서비스 아바타, 웹 화면에는 기존 `app-icon` 파일을 계속 사용하세요. 런처 아트워크의 알파 채널을 허용하지 않는 플랫폼에서는 원본을 직접 잘라내거나 합치지 말고 플랫폼 아이콘 생성기가 요구하는 불투명 배경을 적용하세요.
+
+<div className="grid gap-3 md:grid-cols-2" data-launcher-icon-comparison>
+  <section className="grid justify-items-center gap-3 border border-tinyrack-border p-4">
+    <img alt="런처 여백이 없는 기존 Tinest 앱 아이콘" className="h-32 w-32" height="128" src="/brand/apps/tinest-app-icon.svg" width="128" />
+    <strong>화면용 아트워크</strong>
+  </section>
+  <section className="grid justify-items-center gap-3 border border-tinyrack-border p-4">
+    <img alt="여백이 포함된 Tinest 런처 아이콘" className="h-32 w-32" height="128" src="/brand/apps/tinest-launcher-icon.svg" width="128" />
+    <strong>런처용 아트워크</strong>
+  </section>
+</div>
+
+<div className="flex flex-wrap justify-center gap-6 border border-tinyrack-border bg-tinyrack-surface-muted p-6" data-adaptive-mask-previews>
+  {[
+    ['원형', '50%'],
+    ['스쿼클', '28%'],
+    ['둥근 사각형', '16%'],
+  ].map(([label, borderRadius]) => (
+    <figure className="m-0 grid justify-items-center gap-2" key={label}>
+      <div className="h-28 w-28 overflow-hidden bg-[#0a0a0a]" style={{ borderRadius }}>
+        <img alt="" className="h-full w-full" height="112" src="/brand/apps/tinest-adaptive-foreground.svg" width="112" />
+      </div>
+      <figcaption className="text-tinyrack-xs font-semibold text-tinyrack-text-muted">{label}</figcaption>
+    </figure>
+  ))}
+</div>
+
+<div className="grid gap-3" data-launcher-icon-downloads>
+  {[
+    ['Tinyrack', '/brand/tinyrack-launcher-icon.svg', '/brand/tinyrack-launcher-icon-512.png', '/brand/tinyrack-launcher-icon-1024.png', '/brand/tinyrack-adaptive-foreground.svg', '/brand/tinyrack-adaptive-foreground-512.png', '/brand/tinyrack-adaptive-foreground-1024.png'],
+    ['Tinest', '/brand/apps/tinest-launcher-icon.svg', '/brand/apps/tinest-launcher-icon-512.png', '/brand/apps/tinest-launcher-icon-1024.png', '/brand/apps/tinest-adaptive-foreground.svg', '/brand/apps/tinest-adaptive-foreground-512.png', '/brand/apps/tinest-adaptive-foreground-1024.png'],
+    ['Dotweave', '/brand/apps/dotweave-launcher-icon.svg', '/brand/apps/dotweave-launcher-icon-512.png', '/brand/apps/dotweave-launcher-icon-1024.png', '/brand/apps/dotweave-adaptive-foreground.svg', '/brand/apps/dotweave-adaptive-foreground-512.png', '/brand/apps/dotweave-adaptive-foreground-1024.png'],
+    ['Proxer', '/brand/apps/proxer-launcher-icon.svg', '/brand/apps/proxer-launcher-icon-512.png', '/brand/apps/proxer-launcher-icon-1024.png', '/brand/apps/proxer-adaptive-foreground.svg', '/brand/apps/proxer-adaptive-foreground-512.png', '/brand/apps/proxer-adaptive-foreground-1024.png'],
+    ['TinyAuth', '/brand/apps/tinyauth-launcher-icon.svg', '/brand/apps/tinyauth-launcher-icon-512.png', '/brand/apps/tinyauth-launcher-icon-1024.png', '/brand/apps/tinyauth-adaptive-foreground.svg', '/brand/apps/tinyauth-adaptive-foreground-512.png', '/brand/apps/tinyauth-adaptive-foreground-1024.png'],
+  ].map(([name, ...files]) => (
+    <section className="grid gap-2 border border-tinyrack-border p-4" key={name}>
+      <strong>{name}</strong>
+      <div className="flex flex-wrap gap-x-4 gap-y-2">
+        {files.map((file, index) => <TRLink download={file.slice(file.lastIndexOf('/') + 1)} href={file} key={file}>{index < 3 ? '런처' : 'Adaptive 전경'} {index % 3 === 0 ? 'SVG' : index % 3 === 1 ? '512px PNG' : '1024px PNG'}</TRLink>)}
+      </div>
+    </section>
+  ))}
+</div>
 
 ## 제품 마크
 

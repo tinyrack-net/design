@@ -267,6 +267,12 @@ Future<T?> showTRAlertDialog<T>({
           ),
         );
         if (useSafeArea) page = SafeArea(child: page);
+        page = Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(routeContext).bottom,
+          ),
+          child: page,
+        );
         return themes.wrap(page);
       },
       requestFocus: requestFocus ?? true,

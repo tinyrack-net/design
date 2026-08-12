@@ -16,8 +16,7 @@ Finder get _trigger => find.descendant(
   matching: find.byType(TextButton),
 );
 
-/// Turns animations off while leaving the viewport size intact, which is the
-/// only input [TRSelectSurface.auto] has.
+/// Turns animations off while leaving the viewport size intact.
 Widget _app(Widget child) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(
@@ -29,6 +28,9 @@ Widget _app(Widget child) => MaterialApp(
     ),
   ),
 );
+
+Widget _withDensity(TRUiDensity density, Widget child) =>
+    TRUiDensityScope(density: density, child: child);
 
 /// Sizes the viewport, which is what [TRSelectSurface.auto] reads.
 ///
@@ -99,6 +101,45 @@ void main() {
       // exact boundary is asserted rather than a comfortably wide viewport.
       _sizeViewport(tester, const Size(TRBreakpoints.small, 800));
       await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TRDrawer), findsNothing);
+      expect(find.widgetWithText(MenuItemButton, 'Gamma'), findsOneWidget);
+    });
+
+    testWidgets('opens a sheet for comfortable density on a wide viewport', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _wide);
+      await tester.pumpWidget(
+        _app(
+          _withDensity(
+            TRUiDensity.comfortable,
+            const TRSelect<String>(items: _items),
+          ),
+        ),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TRDrawer), findsOneWidget);
+    });
+
+    testWidgets('opens a dropdown for standard density on a narrow viewport', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(
+          _withDensity(
+            TRUiDensity.standard,
+            const TRSelect<String>(items: _items),
+          ),
+        ),
+      );
 
       await tester.tap(_trigger);
       await tester.pumpAndSettle();
