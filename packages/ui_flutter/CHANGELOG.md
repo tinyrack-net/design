@@ -1,3 +1,10 @@
+## 0.57.0
+
+- Adds optional supporting descriptions to `TRSelectItem`. Dropdown and sheet
+  option rows render the same description beneath the label, default search
+  matches both strings, and the selected trigger remains concise with only the
+  label.
+
 ## 0.56.2
 
 - Makes `TRSelectSurface.auto` follow an explicit `TRUiDensityScope`: standard

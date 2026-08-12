@@ -3340,11 +3340,23 @@ Widget _selectControlled(BuildContext context, Locale locale) {
             key: const ValueKey('release-channel-stable'),
             value: 'stable',
             label: _pick(locale, 'Stable', '안정', '安定版'),
+            description: _pick(
+              locale,
+              'Recommended for production',
+              '프로덕션에 권장해요',
+              '本番環境に推奨します',
+            ),
           ),
           TRSelectItem(
             key: const ValueKey('release-channel-beta'),
             value: 'beta',
             label: _pick(locale, 'Beta', '베타', 'ベータ'),
+            description: _pick(
+              locale,
+              'Preview upcoming changes',
+              '예정된 변경을 미리 확인해요',
+              '今後の変更を先行確認します',
+            ),
           ),
         ],
         onValueChange: (value) => setState(() => channel = value),

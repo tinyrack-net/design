@@ -209,6 +209,49 @@ void main() {
       expect(find.byKey(const ValueKey('select-option-alpha')), findsOneWidget);
     });
 
+    testWidgets('keeps descriptions in options but out of the trigger', (
+      tester,
+    ) async {
+      const describedItems = <TRSelectItem<String>>[
+        TRSelectItem<String>(
+          value: 'alpha',
+          label: 'Alpha',
+          description: 'Primary rack',
+        ),
+      ];
+      _sizeViewport(tester, _wide);
+      await tester.pumpWidget(
+        _app(
+          const TRSelect<String>(items: describedItems, defaultValue: 'alpha'),
+        ),
+      );
+
+      expect(
+        find.descendant(of: _trigger, matching: find.text('Alpha')),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: _trigger, matching: find.text('Primary rack')),
+        findsNothing,
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+      expect(find.text('Primary rack'), findsOneWidget);
+
+      await tester.tap(find.text('Alpha').last);
+      await tester.pumpAndSettle();
+      tester.view.physicalSize = _narrow;
+      await tester.pumpWidget(
+        _app(const TRSelect<String>(items: describedItems)),
+      );
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TRDrawer), findsOneWidget);
+      expect(find.text('Primary rack'), findsOneWidget);
+    });
+
     testWidgets('keeps the surface it opened with across a resize', (
       tester,
     ) async {

@@ -3954,9 +3954,9 @@ class _DeploymentRackState extends State<DeploymentRack> {
       {
         axis: { en: 'Composition', ko: '구성', ja: '構成' },
         choices: {
-          en: 'Pass leading content to identify the trigger without changing the typed value. Give each TRSelectItem a key when tests or state restoration must identify an option consistently across dropdown and sheet surfaces.',
-          ko: 'leading 콘텐츠를 넘기면 타입이 있는 값을 바꾸지 않고 트리거의 용도를 나타낼 수 있어요. 테스트나 상태 복원에서 드롭다운과 시트의 선택지를 일관되게 식별해야 한다면 각 TRSelectItem에 key를 지정하세요.',
-          ja: 'leading コンテンツを渡すと、型付きの値を変えずにトリガーの用途を示せます。テストや状態復元でドロップダウンとシートの選択肢を一貫して識別する必要がある場合は、各 TRSelectItem に key を指定してください。',
+          en: 'Pass leading content to identify the trigger without changing the typed value. Add a TRSelectItem description for supporting text that stays in the option row; the selected trigger keeps only the label, and default search matches both strings. Give each item a key when tests or state restoration must identify it across dropdown and sheet surfaces.',
+          ko: 'leading 콘텐츠를 넘기면 타입이 있는 값을 바꾸지 않고 트리거의 용도를 나타낼 수 있어요. 선택지에 보조 설명이 필요하면 TRSelectItem description을 추가하세요. 선택된 트리거에는 label만 남고 기본 검색은 두 문자열을 모두 찾아요. 테스트나 상태 복원에서 드롭다운과 시트의 선택지를 일관되게 식별해야 한다면 각 item에 key를 지정하세요.',
+          ja: 'leading コンテンツを渡すと、型付きの値を変えずにトリガーの用途を示せます。選択肢に補足説明が必要な場合は TRSelectItem の description を追加してください。選択後のトリガーには label だけが残り、デフォルト検索は両方の文字列を対象にします。テストや状態復元でドロップダウンとシートの選択肢を一貫して識別する必要がある場合は、各 item に key を指定してください。',
         },
       },
     ],
