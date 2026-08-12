@@ -1087,6 +1087,67 @@ void main() {
   });
 
   group('system and menu compositions', () {
+    testWidgets('alert dialog keeps form actions above the software keyboard', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(400, 600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      const actionKey = ValueKey('keyboard-dialog-action');
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              size: const Size(400, 600),
+              viewInsets: const EdgeInsets.only(bottom: 240),
+            ),
+            child: child!,
+          ),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => TRButton(
+                onPressed: () => showTRAlertDialog<void>(
+                  context: context,
+                  builder: (_) => TRAlertDialog(
+                    title: const Text('Keyboard alert'),
+                    content: const Column(
+                      children: [
+                        SizedBox(height: 400),
+                        TRTextField(label: 'Last alert field'),
+                      ],
+                    ),
+                    actions: [
+                      TRButton(
+                        key: actionKey,
+                        onPressed: null,
+                        child: Text('Save'),
+                      ),
+                    ],
+                  ),
+                ),
+                child: const Text('Open keyboard alert'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Open keyboard alert'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getRect(find.byKey(actionKey)).bottom,
+        lessThanOrEqualTo(360),
+      );
+      await tester.showKeyboard(find.byType(TextField));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getRect(find.byType(TextField)).bottom,
+        lessThanOrEqualTo(360),
+      );
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets('alert dialog ignores backdrop and returns a typed result', (
       tester,
     ) async {

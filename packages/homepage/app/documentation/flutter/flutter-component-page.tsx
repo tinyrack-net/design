@@ -6075,6 +6075,28 @@ TRNavigableThreePaneScaffold<String>(
 
           <h2>
             {locale === 'ko'
+              ? '소프트웨어 키보드'
+              : locale === 'ja'
+                ? 'ソフトウェアキーボード'
+                : 'Software keyboard'}
+          </h2>
+          <p>
+            {locale === 'ko'
+              ? 'TRAppShell은 기본적으로 header, sidebar와 main을 소프트웨어 키보드 위에 유지하면서 배경은 viewport 끝까지 그려요. 의도적으로 키보드 뒤에 인터랙티브 콘텐츠를 그려야 할 때만 resizeToAvoidBottomInset을 false로 설정하세요.'
+              : locale === 'ja'
+                ? 'TRAppShell は既定で header、sidebar、main をソフトウェアキーボードの上に保ち、背景は viewport の端まで描画します。インタラクティブなコンテンツを意図的にキーボードの背後へ描画する場合に限り、resizeToAvoidBottomInset を false に設定してください。'
+                : 'TRAppShell keeps the header, sidebar, and main above the software keyboard by default while its background continues to paint to the viewport edge. Set resizeToAvoidBottomInset to false only when interactive content must deliberately render behind the keyboard.'}
+          </p>
+          <TRCodeBlock
+            code={`TRAppShell(
+  resizeToAvoidBottomInset: false,
+  main: const TRAppShellMain(child: ImmersiveCanvas()),
+)`}
+            language="dart"
+          />
+
+          <h2>
+            {locale === 'ko'
               ? 'sidebar 너비와 접기'
               : locale === 'ja'
                 ? 'sidebar の幅と折りたたみ'

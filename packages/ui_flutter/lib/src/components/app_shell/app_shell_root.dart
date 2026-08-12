@@ -26,6 +26,7 @@ class TRAppShell extends StatefulWidget {
     this.pageScroll = TRAppShellPageScroll.container,
     this.pendingPath,
     this.railWidth = TRGeneratedLayerMetrics.appShellRailWidth,
+    this.resizeToAvoidBottomInset = true,
     this.sidebar,
     this.sidebarWidth = TRGeneratedLayerMetrics.appShellSidebarWidth,
     this.useRootNavigator = true,
@@ -54,6 +55,14 @@ class TRAppShell extends StatefulWidget {
   final TRAppShellPageScroll pageScroll;
   final String? pendingPath;
   final double railWidth;
+
+  /// Whether the shell keeps its layout above the software keyboard.
+  ///
+  /// The surface itself remains viewport-sized so its background still paints
+  /// edge to edge. Only the composed header, sidebar, and main layout are
+  /// constrained above [MediaQueryData.viewInsets].
+  final bool resizeToAvoidBottomInset;
+
   final TRAppShellSidebar? sidebar;
   final double sidebarWidth;
   final bool useRootNavigator;
@@ -188,6 +197,9 @@ class _TRAppShellState extends State<TRAppShell> {
   @override
   Widget build(BuildContext context) {
     final viewportWidth = MediaQuery.sizeOf(context).width;
+    final bottomInset = widget.resizeToAvoidBottomInset
+        ? MediaQuery.viewInsetsOf(context).bottom
+        : 0.0;
     final mobile = viewportWidth < _breakpointWidth;
     final drawerActive =
         mobile &&
@@ -223,7 +235,10 @@ class _TRAppShellState extends State<TRAppShell> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            _buildLayout(mobile: mobile),
+            Padding(
+              padding: EdgeInsets.only(bottom: bottomInset),
+              child: _buildLayout(mobile: mobile),
+            ),
             if (_isPending)
               PositionedDirectional(
                 start: 0,
