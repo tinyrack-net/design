@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="proxer-launcher-icon-title proxer-launcher-icon-description" data-safe-inset="8">
+  <title id="proxer-launcher-icon-title">Proxer launcher icon</title>
+  <desc id="proxer-launcher-icon-description">Proxer app icon centered with launcher-safe padding</desc>
+  <g transform="translate(8 8) scale(0.75)">
+    <path fill="#0a0a0a" d="M16 0h32a16 16 0 0 1 16 16v32a16 16 0 0 1-16 16H16A16 16 0 0 1 0 48V16A16 16 0 0 1 16 0Z"/>
+    <path fill="#fafafa" d="M18.667 14.667h26.666a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4H18.667a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4Zm0 13.333h26.666a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4H18.667a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4Zm0 13.333h26.666a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4H18.667a4 4 0 0 1-4-4v0a4 4 0 0 1 4-4Z"/>
+    <path fill="#2563eb" d="M26.667 12h10.666v9.333L34.667 24v16l2.666 2.667V52H26.667v-9.333L29.333 40V24l-2.666-2.667V12Z"/>
+  </g>
+</svg>

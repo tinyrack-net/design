@@ -7,6 +7,7 @@ const homepageRoot = process.cwd();
 const assetRoot = join(homepageRoot, 'public/brand/apps');
 const products = ['tinest', 'dotweave', 'proxer', 'tinyauth'] as const;
 const sizes = [16, 32, 48, 128, 512] as const;
+const launcherSizes = [512, 1024] as const;
 const approvedColors = {
   tinest: new Set(['#0a0a0a', '#a78bfa', '#fafafa']),
   dotweave: new Set(['#0a0a0a', '#2dd4bf', '#fafafa']),
@@ -105,6 +106,9 @@ describe('Tinyrack app icon system', () => {
       expect(docs, locale).toContain('order: 1');
       expect(docs, locale).toContain('src="/brand/tinyrack-app-icon.svg"');
       expect(docs, locale).toContain('data-app-icon-construction');
+      expect(docs, locale).toContain('data-launcher-icon-comparison');
+      expect(docs, locale).toContain('data-adaptive-mask-previews');
+      expect(docs, locale).toContain('data-launcher-icon-downloads');
       expect(docs.indexOf('<TRTable.Root'), locale).toBeLessThan(
         docs.indexOf('## Shared construction') >= 0
           ? docs.indexOf('## Shared construction')
@@ -132,6 +136,20 @@ describe('Tinyrack app icon system', () => {
           const png = `${product}-app-icon-${size}.png`;
           expect(docs, locale).toContain(`href="/brand/apps/${png}"`);
           expect(docs, locale).toContain(`download="${png}"`);
+        }
+        for (const suffix of ['launcher-icon', 'adaptive-foreground']) {
+          expect(docs, locale).toContain(`/brand/apps/${product}-${suffix}.svg`);
+          for (const size of launcherSizes) {
+            expect(docs, locale).toContain(
+              `/brand/apps/${product}-${suffix}-${size}.png`,
+            );
+          }
+        }
+      }
+      for (const suffix of ['launcher-icon', 'adaptive-foreground']) {
+        expect(docs, locale).toContain(`/brand/tinyrack-${suffix}.svg`);
+        for (const size of launcherSizes) {
+          expect(docs, locale).toContain(`/brand/tinyrack-${suffix}-${size}.png`);
         }
       }
     }

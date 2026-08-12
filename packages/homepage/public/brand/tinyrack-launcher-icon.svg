@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="tinyrack-launcher-icon-title tinyrack-launcher-icon-description" data-safe-inset="8">
+  <title id="tinyrack-launcher-icon-title">Tinyrack launcher icon</title>
+  <desc id="tinyrack-launcher-icon-description">Tinyrack app icon centered with launcher-safe padding</desc>
+  <g transform="translate(8 8)">
+    <path fill="#0a0a0a" d="M12 0h24a12 12 0 0 1 12 12v24a12 12 0 0 1-12 12H12A12 12 0 0 1 0 36V12A12 12 0 0 1 12 0Z"/>
+    <path fill="#fafafa" fill-rule="evenodd" transform="translate(8 8)" d="M5 3h22a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm21 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM5 13h22a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Zm21 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0ZM5 23h22a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2Zm21 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+  </g>
+</svg>
