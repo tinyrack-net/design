@@ -99,7 +99,7 @@ export function Settings() {
 | React MDX map | `@tinyrack/ui/mdx` |
 | React MDX CSS | `@tinyrack/ui/mdx.css` |
 | Brand artwork | `@tinyrack/ui/brand/<asset>` |
-| Product app icons | `@tinyrack/ui/brand/apps/<asset>` |
+| Product app and launcher icons | `@tinyrack/ui/brand/apps/<asset>` |
 | CSP provider | `@tinyrack/ui/providers/csp` |
 | Color scheme provider | `@tinyrack/ui/providers/color-scheme` |
 | Direction provider | `@tinyrack/ui/providers/direction` |
@@ -109,13 +109,15 @@ export function Settings() {
 
 ## Brand assets
 
-Tinyrack logo artwork and the Tinyrack, Dotweave, Proxer, and TinyAuth app icons
-ship as static SVG and PNG files. Import them through the package so the build tool
-copies and fingerprints the selected asset.
+Tinyrack logo artwork and the Tinyrack, Tinest, Dotweave, Proxer, and TinyAuth
+app icons ship as static SVG and PNG files. Import them through the package so
+the build tool copies and fingerprints the selected asset.
 
 ```tsx
 import tinyrackLogoUrl from '@tinyrack/ui/brand/tinyrack-lockup.svg';
 import proxerIconUrl from '@tinyrack/ui/brand/apps/proxer-app-icon-512.png';
+import tinestLauncherUrl from '@tinyrack/ui/brand/apps/tinest-launcher-icon-1024.png';
+import tinestAdaptiveForegroundUrl from '@tinyrack/ui/brand/apps/tinest-adaptive-foreground.svg';
 ```
 
 Every SVG is canonical; the PNGs are rendered from it onto a transparent
@@ -123,6 +125,11 @@ background. Product icons are available at 16, 32, 48, 128, and 512 pixels. The
 Tinyrack app icon adds 128, 180, 256, and 512 pixels, the mark 128, 256, and 512
 pixels, and each lockup 64, 128, and 256 pixels tall. A lockup filename names its
 height, because its width follows the artwork.
+
+Each icon family also includes a padded `launcher-icon` and a tileless Android
+`adaptive-foreground` as SVG plus 512px and 1024px PNG files. Composite the
+adaptive foreground over `#0a0a0a`; keep the ordinary app icon for favicons,
+service avatars, and web interfaces.
 
 ## Color scheme
 
