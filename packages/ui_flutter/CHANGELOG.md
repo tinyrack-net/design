@@ -9,6 +9,9 @@
   runtime-derived geometry, and reasoned line suppressions remain supported.
 - Verifies light and dark setup through the resolved public `TinyrackTheme`
   methods instead of accepting matching application-local source text.
+- Ignores named-argument labels when tracing visual expressions, preventing
+  analyzer 12 from mistaking optional parameter defaults for application
+  literals.
 
 ## 0.55.2
 

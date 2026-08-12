@@ -349,6 +349,7 @@ final class _LiteralVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitSimpleIdentifier(SimpleIdentifier node) {
+    if (node.parent is Label) return;
     final element = _variableElement(node.element);
     final initializer = element == null ? null : variables[element];
     if (initializer != null && visited.add(element!)) {
