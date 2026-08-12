@@ -1,3 +1,15 @@
+## 0.56.0
+
+- Resolves Flutter components, overlays, framework icons, theme reads, and
+  visual constants to their declaring libraries before enforcing Tinyrack
+  equivalents, including prefixed and named calls without misidentifying local
+  symbols that reuse Flutter names.
+- Validates complete visual expressions so a public token cannot hide an
+  arbitrary literal multiplier, fraction, or offset. Token-only composition,
+  runtime-derived geometry, and reasoned line suppressions remain supported.
+- Verifies light and dark setup through the resolved public `TinyrackTheme`
+  methods instead of accepting matching application-local source text.
+
 ## 0.55.2
 
 - Keeps hover, open, highlighted, and selected option states fill-only across
