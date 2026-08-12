@@ -82,6 +82,38 @@ Terminal emulation lives in the style-neutral `termworld` package at
 `TerminalView` with public Tinyrack tokens and components; `tinyrack_ui` does
 not ship a terminal engine or compatibility adapter.
 
+## Enforce the design system in an application
+
+Run the package-owned analyzer check from the application root:
+
+```sh
+dart run tinyrack_ui:tinyrack_ui_check --root .
+```
+
+The checker scans `lib/**` by default and rejects private `tinyrack_ui` imports,
+Flutter Material or Cupertino APIs with public Tinyrack equivalents, framework
+icons and theme values, visual expressions containing arbitrary literals, and
+applications that omit either `TinyrackTheme.light()` or
+`TinyrackTheme.dark()`. It follows resolved declarations, so import prefixes and
+named constructors are covered while unrelated local symbols with the same name
+are not.
+
+Configure monorepo source roots with `tinyrack.check.json`:
+
+```json
+{
+  "include": ["packages/app/lib/**"]
+}
+```
+
+Structural values that cannot be expressed by a public token require a narrow,
+reasoned suppression immediately above the expression:
+
+```dart
+// tinyrack-check-ignore-next-line tokens/no-literal -- viewport-owned split ratio
+final width = constraints.maxWidth * 0.7;
+```
+
 ## Cross-platform component contract
 
 React and Flutter share semantic tokens and component purposes where both

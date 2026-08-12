@@ -5,6 +5,7 @@ import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/line_info.dart';
 
@@ -48,7 +49,7 @@ final class TinyrackCheckResult {
     required this.violations,
   });
 
-  static const packageVersion = '0.55.2';
+  static const packageVersion = '0.56.0';
 
   final int checkedFiles;
   final List<TinyrackCheckViolation> violations;
@@ -105,18 +106,35 @@ const _defaultExcludes = <String>[
 ];
 const _styleConstructors = <String>{
   'AnimatedOpacity',
+  'Border',
   'BorderRadius',
   'BorderSide',
   'BoxConstraints',
   'BoxShadow',
   'Color',
   'EdgeInsets',
+  'IconData',
   'Opacity',
+  'Offset',
   'Padding',
   'Radius',
   'ShapeDecoration',
+  'Size',
   'SizedBox',
   'TextStyle',
+};
+const _styleMethods = <String>{
+  'all',
+  'circular',
+  'fromLTRB',
+  'fromRadius',
+  'fromSTEB',
+  'lerp',
+  'only',
+  'symmetric',
+  'withAlpha',
+  'withOpacity',
+  'withValues',
 };
 const _styleArguments = <String>{
   'blurRadius',
@@ -154,27 +172,42 @@ const _styleArguments = <String>{
   'width',
 };
 const _materialComponents = <String, String>{
+  'ActionChip': 'a Tinyrack button or token-backed product composite',
   'AlertDialog': 'TRAlertDialog',
   'AppBar': 'TRAppShell',
   'Card': 'TRCard',
   'Checkbox': 'TRCheckbox',
+  'ChoiceChip': 'TRToggleGroup or a token-backed product composite',
   'CircularProgressIndicator': 'TRSpinner or TRProgress',
   'Dialog': 'TRDialog',
   'Divider': 'TRSeparator',
   'Drawer': 'TRDrawer',
   'DropdownButton': 'TRSelect',
+  'DropdownButtonFormField': 'TRSelect with TRForm',
   'ElevatedButton': 'TRButton',
   'ExpansionTile': 'TRAccordion',
+  'FilterChip': 'TRToggleGroup or a token-backed product composite',
   'FilledButton': 'TRButton',
+  'FloatingActionButton': 'TRButton',
   'IconButton': 'TRIconButton',
+  'InputChip': 'a Tinyrack button or token-backed product composite',
+  'InkResponse': 'a Tinyrack component',
+  'InkWell': 'a Tinyrack component',
   'LinearProgressIndicator': 'TRProgress',
   'ListTile': 'a Tinyrack list component or token-backed product composite',
+  'Material': 'a Tinyrack surface component',
+  'BottomNavigationBar': 'TRAppShell or a Tinyrack navigation component',
+  'NavigationRail': 'TRAppShell or TRTreeNav',
   'OutlinedButton': 'TRButton',
   'PopupMenuButton': 'TRMenu',
+  'PopupMenuItem': 'TRMenu',
   'Radio': 'TRRadio',
   'Scaffold': 'TRAppShell',
   'Scrollbar': 'TRScrollArea',
   'SegmentedButton': 'TRToggleGroup',
+  'SelectableText': 'TRText or a Tinyrack text component',
+  'SimpleDialog': 'TRDialog',
+  'SnackBar': 'TRToastRegion',
   'Switch': 'TRSwitch',
   'TabBar': 'TRTabs',
   'TextButton': 'TRButton',
@@ -183,12 +216,44 @@ const _materialComponents = <String, String>{
   'Tooltip': 'TRTooltip',
   'VerticalDivider': 'TRSeparator',
 };
-final _number = RegExp(
-  r'(?<![A-Za-z0-9_])(?:0x[0-9a-fA-F]+|\d+(?:\.\d+)?)(?![A-Za-z0-9_])',
-);
-final _tokenReference = RegExp(
-  r'\b(?:TRSpacing|TRTypography|TRRadii|TRMotion|TRShadows|TRMeasurements|TRControlMetrics|TRBreakpoints|TROpacity|TinyrackTheme|tinyrackTheme)\b',
-);
+const _cupertinoComponents = <String, String>{
+  'CupertinoActivityIndicator': 'TRSpinner or TRProgress',
+  'CupertinoAlertDialog': 'TRAlertDialog',
+  'CupertinoButton': 'TRButton',
+  'CupertinoContextMenu': 'TRContextMenu',
+  'CupertinoNavigationBar': 'TRAppShell',
+  'CupertinoPageScaffold': 'TRAppShell',
+  'CupertinoScrollbar': 'TRScrollArea',
+  'CupertinoSwitch': 'TRSwitch',
+  'CupertinoTabBar': 'TRTabs',
+  'CupertinoTextField': 'TRTextField',
+};
+const _overlayMethods = <String, String>{
+  'showAboutDialog': 'TRDialog',
+  'showDialog': 'TRDialog',
+  'showMenu': 'TRMenu',
+  'showModalBottomSheet': 'TRDrawer',
+};
+const _tinyrackTokenOwners = <String>{
+  'TRBreakpoints',
+  'TRControlMetrics',
+  'TRMeasurements',
+  'TRMotion',
+  'TROpacity',
+  'TRRadii',
+  'TRShadows',
+  'TRSpacing',
+  'TRTypography',
+  'TinyrackThemeData',
+};
+const _frameworkVisualOwners = <String>{
+  'Colors',
+  'CupertinoColors',
+  'CupertinoIcons',
+  'FontWeight',
+  'Icons',
+};
+const _frameworkThemeMembers = <String>{'colorScheme', 'textTheme'};
 
 String _pathKey(String path) => path.replaceAll('\\', '/');
 
@@ -212,106 +277,129 @@ bool _ignored(String source, int line, String ruleId) {
   return match?.group(1) == ruleId;
 }
 
-bool _tokenBacked(
-  String source,
-  Set<String> aliases, {
-  required bool publicTokens,
-}) =>
-    (publicTokens && _tokenReference.hasMatch(source)) ||
-    aliases.any(
-      (alias) => RegExp('\\b${RegExp.escape(alias)}\\b').hasMatch(source),
-    );
+String? _libraryUri(Element? element) => element?.library?.uri.toString();
 
-bool _literalDesignExpression(
-  String source,
-  Set<String> aliases,
-  Map<String, String> variables, [
-  Set<String>? visited,
-  bool publicTokens = false,
-]) {
-  if (!publicTokens && _tokenReference.hasMatch(source)) return true;
-  if (_tokenBacked(source, aliases, publicTokens: publicTokens)) return false;
-  final identifier = RegExp(r'^\w+$').firstMatch(source)?.group(0);
-  final initializer = identifier == null ? null : variables[identifier];
-  if (initializer != null) {
-    final seen = visited ?? <String>{};
-    if (!seen.add(identifier!)) return true;
-    return _literalDesignExpression(
-      initializer,
-      aliases,
-      variables,
-      seen,
-      publicTokens,
-    );
+String? _ownerName(Element? element) => element?.enclosingElement?.lookupName;
+
+bool _fromFlutter(Element? element) =>
+    _libraryUri(element)?.startsWith('package:flutter/') ?? false;
+
+bool _fromFlutterSdk(Element? element) =>
+    _fromFlutter(element) || _libraryUri(element) == 'dart:ui';
+
+bool _fromTinyrack(Element? element) =>
+    _libraryUri(element)?.startsWith('package:tinyrack_ui/') ?? false;
+
+bool _isTinyrackToken(Element? element) =>
+    _fromTinyrack(element) &&
+    _tinyrackTokenOwners.contains(_ownerName(element));
+
+bool _isAllowedStructuralConstant(AstNode node, Element? element) =>
+    node.toSource() == 'double.infinity' || element?.lookupName == 'zero';
+
+Element? _variableElement(Element? element) =>
+    element is PropertyAccessorElement && element.isOriginVariable
+    ? element.variable
+    : element;
+
+final class _LiteralVisitor extends RecursiveAstVisitor<void> {
+  _LiteralVisitor(this.variables, [Set<Element>? visited])
+    : visited = visited ?? <Element>{};
+
+  final Set<Element> visited;
+  final Map<Element, Expression> variables;
+  bool forbidden = false;
+
+  void _checkElement(AstNode node, Element? element) {
+    if (forbidden || element == null || _isTinyrackToken(element)) return;
+    if (_isAllowedStructuralConstant(node, element)) return;
+    if (element is VariableElement) {
+      final value = element.computeConstantValue();
+      if (value?.toDoubleValue() != null || value?.toIntValue() != null) {
+        forbidden = true;
+      }
+    }
   }
-  if (source.contains('double.infinity') || source.contains('.zero')) {
-    return false;
+
+  @override
+  void visitDoubleLiteral(DoubleLiteral node) => forbidden = true;
+
+  @override
+  void visitIntegerLiteral(IntegerLiteral node) => forbidden = true;
+
+  @override
+  void visitPrefixedIdentifier(PrefixedIdentifier node) {
+    if (_isTinyrackToken(node.element) ||
+        _isAllowedStructuralConstant(node, node.element)) {
+      return;
+    }
+    _checkElement(node, node.element);
+    if (!forbidden) super.visitPrefixedIdentifier(node);
   }
-  if (RegExp(r'Duration\s*\(\s*days\s*:').hasMatch(source)) return false;
-  final matches = _number.allMatches(source);
-  for (final match in matches) {
-    final literal = match.group(0)!;
-    if (literal.startsWith('0x')) return true;
-    final value = double.parse(literal);
-    if (value <= 1) continue;
-    final before = source.substring(0, match.start).trimRight();
-    final after = source.substring(match.end).trimLeft();
-    final adjacent =
-        '${before.isEmpty ? '' : before[before.length - 1]}'
-        '${after.isEmpty ? '' : after[0]}';
-    if (!adjacent.contains('*') && !adjacent.contains('/')) return true;
+
+  @override
+  void visitPropertyAccess(PropertyAccess node) {
+    if (_isTinyrackToken(node.propertyName.element) ||
+        _isAllowedStructuralConstant(node, node.propertyName.element)) {
+      return;
+    }
+    _checkElement(node, node.propertyName.element);
+    if (!forbidden) super.visitPropertyAccess(node);
   }
-  return false;
+
+  @override
+  void visitSimpleIdentifier(SimpleIdentifier node) {
+    final element = _variableElement(node.element);
+    final initializer = element == null ? null : variables[element];
+    if (initializer != null && visited.add(element!)) {
+      final visitor = _LiteralVisitor(variables, visited);
+      initializer.accept(visitor);
+      forbidden = visitor.forbidden;
+      return;
+    }
+    _checkElement(node, node.element);
+    if (!forbidden) super.visitSimpleIdentifier(node);
+  }
 }
 
-final class _AliasVisitor extends RecursiveAstVisitor<void> {
-  _AliasVisitor(this.aliases, this.publicTokens);
+bool _containsVisualLiteral(
+  Expression expression,
+  Map<Element, Expression> variables,
+) {
+  final visitor = _LiteralVisitor(variables);
+  expression.accept(visitor);
+  return visitor.forbidden;
+}
 
-  final Set<String> aliases;
-  final bool publicTokens;
-  final Map<String, String> candidates = <String, String>{};
+final class _VariableVisitor extends RecursiveAstVisitor<void> {
+  final variables = <Element, Expression>{};
 
   @override
   void visitVariableDeclaration(VariableDeclaration node) {
     final initializer = node.initializer;
-    if (initializer != null) {
-      candidates[node.name.lexeme] = initializer.toSource();
+    final element = node.declaredFragment?.element;
+    if ((node.isConst || node.isFinal) &&
+        initializer != null &&
+        element != null) {
+      variables[element] = initializer;
     }
     super.visitVariableDeclaration(node);
-  }
-
-  void resolve() {
-    var changed = true;
-    while (changed) {
-      changed = false;
-      for (final entry in candidates.entries) {
-        if (aliases.contains(entry.key) ||
-            !_tokenBacked(entry.value, aliases, publicTokens: publicTokens)) {
-          continue;
-        }
-        aliases.add(entry.key);
-        changed = true;
-      }
-    }
   }
 }
 
 final class _CheckVisitor extends RecursiveAstVisitor<void> {
   _CheckVisitor({
-    required this.aliases,
     required this.lineInfo,
     required this.path,
-    required this.publicTokens,
     required this.source,
     required this.variables,
   });
 
-  final Set<String> aliases;
   final LineInfo lineInfo;
   final String path;
-  final bool publicTokens;
   final String source;
-  final Map<String, String> variables;
+  final Map<Element, Expression> variables;
+  final configuredThemes = <String>{};
   final violations = <TinyrackCheckViolation>[];
   final _seen = <String>{};
 
@@ -333,23 +421,16 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
     );
   }
 
-  void _checkExpression(AstNode expression) {
+  void _checkExpression(Expression expression) {
     if (expression is InstanceCreationExpression &&
+        _fromFlutterSdk(expression.constructorName.element) &&
         _styleConstructors.contains(
-          expression.constructorName.type.toSource(),
+          _ownerName(expression.constructorName.element),
         )) {
       return;
     }
+    if (!_containsVisualLiteral(expression, variables)) return;
     final value = expression.toSource();
-    if (!(_literalDesignExpression(
-      value,
-      aliases,
-      variables,
-      null,
-      publicTokens,
-    ))) {
-      return;
-    }
     _add(
       expression,
       'tokens/no-literal',
@@ -359,11 +440,55 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
   }
 
   void _checkArgument(AstNode argument) {
-    final source = argument.toSource();
-    final name = RegExp(r'^\s*([A-Za-z_]\w*)\s*:').firstMatch(source)?.group(1);
-    if (name == null || _styleArguments.contains(name)) {
+    final name = RegExp(
+      r'^\s*([A-Za-z_]\w*)\s*:',
+    ).firstMatch(argument.toSource())?.group(1);
+    if (name != null && !_styleArguments.contains(name)) return;
+    if (argument is Expression) {
       _checkExpression(argument);
+      return;
     }
+    final expression = argument.childEntities.whereType<Expression>().first;
+    _checkExpression(expression);
+  }
+
+  void _checkFrameworkVisualConstant(AstNode node, Element? element) {
+    final owner = _ownerName(element);
+    final name = element?.lookupName;
+    final library = _libraryUri(element);
+    final frameworkOwner =
+        _frameworkVisualOwners.contains(owner) &&
+        ((_fromFlutter(element)) || library == 'dart:ui');
+    final themeMember =
+        owner == 'ThemeData' && _frameworkThemeMembers.contains(name);
+    if (!(frameworkOwner || themeMember) ||
+        (owner == 'Colors' && name == 'transparent')) {
+      return;
+    }
+    _add(
+      node,
+      'tokens/no-literal',
+      'Flutter visual constant is not backed by a public Tinyrack token: '
+          '${node.toSource()}',
+      'Use a public TR token or context.tinyrackTheme.',
+    );
+  }
+
+  void _checkComponent(
+    AstNode node,
+    Element? element,
+    Map<String, String> replacements,
+  ) {
+    if (!_fromFlutter(element)) return;
+    final owner = _ownerName(element);
+    final replacement = replacements[owner];
+    if (owner == null || replacement == null) return;
+    _add(
+      node,
+      'components/no-material-equivalent',
+      '$owner has a public Tinyrack equivalent.',
+      'Use $replacement.',
+    );
   }
 
   @override
@@ -382,19 +507,19 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitInstanceCreationExpression(InstanceCreationExpression node) {
-    final constructor = node.constructorName.type.toSource();
-    final replacement = _materialComponents[constructor];
-    if (replacement != null) {
-      _add(
-        node,
-        'components/no-material-equivalent',
-        '$constructor has a public Tinyrack equivalent.',
-        'Use $replacement.',
-      );
-    }
-    if (_styleConstructors.contains(constructor)) {
+    final element = node.constructorName.element;
+    _checkComponent(node, element, _materialComponents);
+    _checkComponent(node, element, _cupertinoComponents);
+    final constructor = _ownerName(element);
+    if (_fromFlutterSdk(element) && _styleConstructors.contains(constructor)) {
       for (final argument in node.argumentList.arguments) {
         _checkArgument(argument);
+      }
+    } else if (_fromTinyrack(element)) {
+      for (final argument in node.argumentList.arguments) {
+        if (RegExp(r'^\s*[A-Za-z_]\w*\s*:').hasMatch(argument.toSource())) {
+          _checkArgument(argument);
+        }
       }
     }
     super.visitInstanceCreationExpression(node);
@@ -402,15 +527,9 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
 
   @override
   void visitMethodInvocation(MethodInvocation node) {
+    final element = node.methodName.element;
     final name = node.methodName.name;
-    final replacement =
-        _materialComponents[name] ??
-        switch (name) {
-          'showDialog' => 'TRDialog',
-          'showMenu' => 'TRMenu',
-          'showModalBottomSheet' => 'TRDrawer',
-          _ => null,
-        };
+    final replacement = _fromFlutter(element) ? _overlayMethods[name] : null;
     if (replacement != null) {
       _add(
         node,
@@ -419,13 +538,32 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
         'Use $replacement.',
       );
     }
-    final target = node.target?.toSource() ?? name;
-    if (_styleConstructors.contains(target)) {
+    final owner = _ownerName(element);
+    if (_fromFlutterSdk(element) &&
+        _styleConstructors.contains(owner) &&
+        _styleMethods.contains(name)) {
       for (final argument in node.argumentList.arguments) {
         _checkArgument(argument);
       }
     }
+    if (_fromTinyrack(element) &&
+        owner == 'TinyrackTheme' &&
+        const <String>{'light', 'dark'}.contains(name)) {
+      configuredThemes.add(name);
+    }
     super.visitMethodInvocation(node);
+  }
+
+  @override
+  void visitPrefixedIdentifier(PrefixedIdentifier node) {
+    _checkFrameworkVisualConstant(node, node.element);
+    super.visitPrefixedIdentifier(node);
+  }
+
+  @override
+  void visitPropertyAccess(PropertyAccess node) {
+    _checkFrameworkVisualConstant(node, node.propertyName.element);
+    super.visitPropertyAccess(node);
   }
 }
 
@@ -495,11 +633,10 @@ Future<TinyrackCheckResult> checkTinyrackProject([
     sdkPath: _dartSdkPath(),
   );
   final violations = <TinyrackCheckViolation>[];
-  final allSource = StringBuffer();
+  final configuredThemes = <String>{};
   try {
     for (final file in files) {
       final source = file.readAsStringSync();
-      allSource.writeln(source);
       final path = _pathKey(file.path.substring(root.path.length + 1));
       final resolved = await contexts
           .contextFor(file.path)
@@ -520,42 +657,28 @@ Future<TinyrackCheckResult> checkTinyrackProject([
           '${first.message}',
         );
       }
-      final publicTokens = resolved.unit.directives
-          .whereType<ImportDirective>()
-          .any(
-            (directive) =>
-                directive.uri.stringValue ==
-                'package:tinyrack_ui/tinyrack_ui.dart',
-          );
-      final aliases = <String>{};
-      final aliasVisitor = _AliasVisitor(aliases, publicTokens);
-      resolved.unit.accept(aliasVisitor);
-      aliasVisitor.resolve();
+      final variableVisitor = _VariableVisitor();
+      resolved.unit.accept(variableVisitor);
       final visitor = _CheckVisitor(
-        aliases: aliases,
         lineInfo: resolved.lineInfo,
         path: path,
-        publicTokens: publicTokens,
         source: source,
-        variables: aliasVisitor.candidates,
+        variables: variableVisitor.variables,
       );
       resolved.unit.accept(visitor);
+      configuredThemes.addAll(visitor.configuredThemes);
       violations.addAll(visitor.violations);
     }
   } finally {
     await contexts.dispose();
   }
-  final combined = allSource.toString();
-  for (final theme in const <String>[
-    'TinyrackTheme.light',
-    'TinyrackTheme.dark',
-  ]) {
-    if (files.isEmpty || combined.contains('$theme(')) continue;
+  for (final theme in const <String>['light', 'dark']) {
+    if (files.isEmpty || configuredThemes.contains(theme)) continue;
     violations.add(
       TinyrackCheckViolation(
         column: 1,
         line: 1,
-        message: 'The application does not configure $theme().',
+        message: 'The application does not configure TinyrackTheme.$theme().',
         path: '.',
         replacement: 'Configure both Tinyrack light and dark themes.',
         ruleId: 'setup/require-tinyrack-theme',
