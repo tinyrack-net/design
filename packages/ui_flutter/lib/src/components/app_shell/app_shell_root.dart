@@ -197,9 +197,8 @@ class _TRAppShellState extends State<TRAppShell> {
   @override
   Widget build(BuildContext context) {
     final viewportWidth = MediaQuery.sizeOf(context).width;
-    final bottomInset = widget.resizeToAvoidBottomInset
-        ? MediaQuery.viewInsetsOf(context).bottom
-        : 0.0;
+    var bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    if (!widget.resizeToAvoidBottomInset) bottomInset = 0;
     final mobile = viewportWidth < _breakpointWidth;
     final drawerActive =
         mobile &&
