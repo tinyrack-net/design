@@ -43,6 +43,11 @@ semantic step, and enlarges default card padding and status indicators.
 Explicit `uiSize` and card padding always win, so compact title-bar actions can
 remain `TRUiSize.sm` inside a comfortable subtree.
 
+`TRSelectSurface.auto` follows the same semantic density: standard density
+opens an anchored dropdown and comfortable density opens a bottom sheet. A
+select outside `TRUiDensityScope` falls back to `TRBreakpoints.small`, preserving
+the viewport-responsive default for standalone consumers.
+
 Use `TRSplitView` when two application-owned surfaces need a controlled,
 resizable boundary. The caller owns the ratio and decides when a responsive
 layout should render the split:

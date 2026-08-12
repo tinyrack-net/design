@@ -1,3 +1,10 @@
+## 0.56.2
+
+- Makes `TRSelectSurface.auto` follow an explicit `TRUiDensityScope`: standard
+  density opens an anchored dropdown and comfortable density opens a bottom
+  sheet. Consumers without a density scope retain the existing viewport
+  breakpoint fallback.
+
 ## 0.56.1
 
 - Keeps AppShell content, Dialog forms, and AlertDialog actions above the
