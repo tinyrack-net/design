@@ -200,6 +200,43 @@ void main() {
     expect(find.text('Primary'), findsOneWidget);
   });
 
+  testWidgets('classifies the logical layout constraint, not the host view', (
+    tester,
+  ) async {
+    tester.view
+      ..devicePixelRatio = 3
+      ..physicalSize = const Size(3600, 1800);
+    addTearDown(tester.view.reset);
+    final navigator = TRThreePaneNavigator<String>(
+      initialDestination: const TRPaneDestination(
+        role: TRPaneRole.primary,
+        value: 'primary',
+      ),
+    );
+    addTearDown(navigator.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Align(
+          child: SizedBox(
+            width: 599,
+            height: 600,
+            child: TRNavigableThreePaneScaffold<String>(
+              navigator: navigator,
+              navigationPane: const Text('Navigation'),
+              primaryPane: const Text('Primary'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(TRAdaptivePane), findsOneWidget);
+    expect(find.text('Navigation'), findsNothing);
+    expect(find.text('Primary'), findsOneWidget);
+  });
+
   testWidgets('honors reduced motion and logical navigation order', (
     tester,
   ) async {
