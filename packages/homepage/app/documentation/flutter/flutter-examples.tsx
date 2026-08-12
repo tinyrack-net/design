@@ -4136,9 +4136,9 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '긴 본문',
       },
       description: {
-        en: 'Long content scrolls inside the body while the title and actions stay fixed. Content keeps its inset while the scrollbar sits against the surface edge.',
-        ja: '長い内容は本文内でスクロールし、タイトルとアクションは固定されます。内容の余白を保ちながら、スクロールバーはサーフェスの端に配置されます。',
-        ko: '긴 콘텐츠는 본문 안에서 스크롤되고 제목과 액션은 고정돼요. 콘텐츠 여백은 유지하면서 스크롤바는 표면 끝에 배치돼요.',
+        en: 'Long content scrolls inside the body while the title and actions stay fixed. The route also keeps the surface above the software keyboard. Content keeps its inset while the scrollbar sits against the surface edge.',
+        ja: '長い内容は本文内でスクロールし、タイトルとアクションは固定されます。ルートはサーフェスをソフトウェアキーボードの上にも保ちます。内容の余白を保ちながら、スクロールバーはサーフェスの端に配置されます。',
+        ko: '긴 콘텐츠는 본문 안에서 스크롤되고 제목과 액션은 고정돼요. route는 표면을 소프트웨어 키보드 위에도 유지해요. 콘텐츠 여백은 유지하면서 스크롤바는 표면 끝에 배치돼요.',
       },
       dart: String.raw`TRDialog(
   title: const Text('Release notes'),
@@ -4184,9 +4184,9 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '긴 본문',
       },
       description: {
-        en: 'AlertDialog owns overflow scrolling too, so callers pass plain content instead of nesting a scroll view. The decision actions remain visible.',
-        ja: 'AlertDialog もオーバーフローのスクロールを管理するため、呼び出し側はスクロールビューを入れ子にせず内容をそのまま渡します。判断アクションは表示されたままです。',
-        ko: 'AlertDialog도 넘치는 본문의 스크롤을 소유하므로 호출부는 스크롤 뷰를 중첩하지 않고 콘텐츠를 그대로 전달해요. 결정 액션은 계속 보여요.',
+        en: 'AlertDialog owns overflow scrolling too, so callers pass plain content instead of nesting a scroll view. Decision actions remain visible above the software keyboard.',
+        ja: 'AlertDialog もオーバーフローのスクロールを管理するため、呼び出し側はスクロールビューを入れ子にせず内容をそのまま渡します。判断アクションはソフトウェアキーボードの上に表示されたままです。',
+        ko: 'AlertDialog도 넘치는 본문의 스크롤을 소유하므로 호출부는 스크롤 뷰를 중첩하지 않고 콘텐츠를 그대로 전달해요. 결정 액션은 소프트웨어 키보드 위에 계속 보여요.',
       },
       dart: String.raw`TRAlertDialog(
   title: const Text('Review output'),

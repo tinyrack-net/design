@@ -1,3 +1,10 @@
+## 0.56.1
+
+- Keeps AppShell content, Dialog forms, and AlertDialog actions above the
+  software keyboard while preserving an edge-to-edge application surface.
+- Adds `TRAppShell.resizeToAvoidBottomInset` for applications that deliberately
+  draw interactive content behind the software keyboard.
+
 ## 0.56.0
 
 - Adds `TRAdaptiveWidthClass`, `TRThreePaneNavigator`, and

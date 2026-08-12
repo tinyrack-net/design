@@ -294,6 +294,12 @@ Future<T?> showTRDialog<T>({
       pageBuilder: (routeContext, animation, secondaryAnimation) {
         Widget page = Builder(builder: builder);
         if (useSafeArea) page = SafeArea(child: page);
+        page = Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(routeContext).bottom,
+          ),
+          child: page,
+        );
         return themes.wrap(page);
       },
       requestFocus: requestFocus,
