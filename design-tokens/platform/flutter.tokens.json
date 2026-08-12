@@ -1,6 +1,26 @@
 {
   "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
   "breakpoints": {
+    "adaptiveCompact": {
+      "$type": "dimension",
+      "$value": { "value": 37.5, "unit": "rem" },
+      "$extensions": { "net.tinyrack": { "output": "37.5rem" } }
+    },
+    "adaptiveMedium": {
+      "$type": "dimension",
+      "$value": { "value": 52.5, "unit": "rem" },
+      "$extensions": { "net.tinyrack": { "output": "52.5rem" } }
+    },
+    "adaptiveLarge": {
+      "$type": "dimension",
+      "$value": { "value": 75, "unit": "rem" },
+      "$extensions": { "net.tinyrack": { "output": "75rem" } }
+    },
+    "adaptiveExtraLarge": {
+      "$type": "dimension",
+      "$value": { "value": 100, "unit": "rem" },
+      "$extensions": { "net.tinyrack": { "output": "100rem" } }
+    },
     "xl": {
       "$type": "dimension",
       "$value": {

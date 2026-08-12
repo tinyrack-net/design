@@ -43,6 +43,10 @@ export const reactComponentAdaptations = {
 
 /** Flutter surfaces with no public React component of the same purpose. */
 export const flutterPlatformOnlyComponents = {
+  adaptive_pane: {
+    reason:
+      'Flutter native applications use canonical one, two, and three-pane navigation tied to logical window width.',
+  },
   chat: {
     reason:
       'Flutter native applications compose chat transcripts from shared message, tool, and status primitives.',

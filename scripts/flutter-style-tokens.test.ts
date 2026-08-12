@@ -190,6 +190,10 @@ test('the resolver keeps platform-only token surfaces separate', async () => {
   });
   assert.deepEqual(flutter.breakpoints, {
     sm: '40rem',
+    adaptiveCompact: '37.5rem',
+    adaptiveMedium: '52.5rem',
+    adaptiveLarge: '75rem',
+    adaptiveExtraLarge: '100rem',
     xl: '80rem',
   });
   assert.equal(web.spacing['4xl'], undefined);

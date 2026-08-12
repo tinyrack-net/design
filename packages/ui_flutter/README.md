@@ -59,6 +59,33 @@ TRSplitView(
 )
 ```
 
+Use `TRNavigableThreePaneScaffold` for a hierarchical navigation surface that
+must adapt across phones, tablets, and desktop windows. Its width classes use
+the canonical 600, 840, 1200, and 1600 logical-pixel boundaries. Compact
+windows show the active destination, medium and expanded windows keep
+navigation beside the active destination, and large windows can show all three
+roles:
+
+```dart
+final navigator = TRThreePaneNavigator<String>(
+  initialDestination: const TRPaneDestination(
+    role: TRPaneRole.navigation,
+    value: 'navigation',
+  ),
+);
+
+TRNavigableThreePaneScaffold<String>(
+  navigator: navigator,
+  navigationPane: const WorkspaceNavigation(),
+  primaryPane: const WorkspaceCollection(),
+  secondaryPane: const WorkspaceDetail(),
+)
+```
+
+Compose navigation content with `TRNavigationPane` and
+`TRNavigationSection`; use `TRTreeNav` inside each section so selection,
+hover, press, keyboard, and semantics behavior remains shared.
+
 `TRTabs` composes one full-width tab strip from optional capabilities. Provide
 `panelBuilder` when the component should draw the active panel, add `onClose`
 to individual tabs when they can close, and pass `TRTabsDragConfiguration` to

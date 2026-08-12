@@ -428,6 +428,10 @@ abstract final class TRGeneratedMeasurements {
 
 abstract final class TRGeneratedBreakpoints {
   static const double sm = 640.0;
+  static const double adaptiveCompact = 600.0;
+  static const double adaptiveMedium = 840.0;
+  static const double adaptiveLarge = 1200.0;
+  static const double adaptiveExtraLarge = 1600.0;
   static const double xl = 1280.0;
 }
 

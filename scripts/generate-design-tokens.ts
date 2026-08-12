@@ -936,10 +936,16 @@ async function formatBiome(content: string, extension: 'css' | 'ts') {
   const path = join(directory, `generated.${extension}`);
   try {
     await writeFile(path, content);
-    const executable = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
-    const result = spawnSync(executable, ['exec', 'biome', 'format', '--write', path], {
-      stdio: 'ignore',
-    });
+    const result =
+      process.platform === 'win32'
+        ? spawnSync(
+            process.env['ComSpec'] ?? 'C:\\Windows\\System32\\cmd.exe',
+            ['/d', '/s', '/c', 'pnpm', 'exec', 'biome', 'format', '--write', path],
+            { stdio: 'ignore' },
+          )
+        : spawnSync('pnpm', ['exec', 'biome', 'format', '--write', path], {
+            stdio: 'ignore',
+          });
     if (result.error) throw result.error;
     if (result.status !== 0) {
       throw new Error('Biome format failed for generated design tokens.');
