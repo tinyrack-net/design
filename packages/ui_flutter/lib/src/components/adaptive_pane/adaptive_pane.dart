@@ -108,18 +108,18 @@ class TRNavigableThreePaneScaffold<T extends Object> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AnimatedBuilder(
     animation: navigator,
-    builder: (context, _) {
-      final widthClass = TRAdaptiveWidthClass.fromWidth(
-        MediaQuery.sizeOf(context).width,
-      );
-      return switch (widthClass) {
-        TRAdaptiveWidthClass.compact => _singlePane(context),
-        TRAdaptiveWidthClass.medium ||
-        TRAdaptiveWidthClass.expanded => _twoPanes(context),
-        TRAdaptiveWidthClass.large ||
-        TRAdaptiveWidthClass.extraLarge => _threePanes(),
-      };
-    },
+    builder: (context, _) => LayoutBuilder(
+      builder: (context, constraints) {
+        final widthClass = TRAdaptiveWidthClass.fromWidth(constraints.maxWidth);
+        return switch (widthClass) {
+          TRAdaptiveWidthClass.compact => _singlePane(context),
+          TRAdaptiveWidthClass.medium ||
+          TRAdaptiveWidthClass.expanded => _twoPanes(context),
+          TRAdaptiveWidthClass.large ||
+          TRAdaptiveWidthClass.extraLarge => _threePanes(),
+        };
+      },
+    ),
   );
 
   Widget _singlePane(BuildContext context) => _animatedActivePane(context);

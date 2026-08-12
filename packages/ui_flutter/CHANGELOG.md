@@ -1,3 +1,8 @@
+## 0.57.1
+
+- Classifies adaptive pane layouts from their logical constraints so embedded
+  surfaces and Flutter test viewports follow the same width-class contract.
+
 ## 0.57.0
 
 - Adds optional supporting descriptions to `TRSelectItem`. Dropdown and sheet
