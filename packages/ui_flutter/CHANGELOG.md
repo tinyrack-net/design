@@ -1,5 +1,10 @@
 ## 0.56.0
 
+- Adds `TRAdaptiveWidthClass`, `TRThreePaneNavigator`, and
+  `TRNavigableThreePaneScaffold` for canonical one, two, and three-pane
+  navigation at 600, 840, 1200, and 1600 logical-pixel window boundaries.
+- Adds `TRNavigationPane` and `TRNavigationSection` so navigation surfaces
+  share token-based insets, section labels, and spacing.
 - Resolves Flutter components, overlays, framework icons, theme reads, and
   visual constants to their declaring libraries before enforcing Tinyrack
   equivalents, including prefixed and named calls without misidentifying local

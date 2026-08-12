@@ -10,6 +10,8 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 /// how three window-caption types once lived and died outside this list, so
 /// the list is also checked against what the sources declare.
 const publicTypes = <Type>[
+  TRAdaptivePane,
+  TRAdaptiveWidthClass,
   TRAccordion,
   TRAccordionItem,
   TRAlert,
@@ -144,6 +146,8 @@ const publicTypes = <Type>[
   TRNavigationMenu,
   TRNavigationMenuController,
   TRNavigationMenuItem,
+  TRNavigationPane,
+  TRNavigationSection,
   TRNativeContextMenuPresenter,
   TRNumberField,
   TRNumberFieldController,
@@ -226,6 +230,10 @@ const publicTypes = <Type>[
   TRTreeNavGroup,
   TRTreeNavItem,
   TRTreeNavLeaf,
+  TRNavigableThreePaneScaffold,
+  TRPaneDestination,
+  TRPaneRole,
+  TRThreePaneNavigator,
   TRTypography,
   TRUiSize,
   TRWindowFrame,
