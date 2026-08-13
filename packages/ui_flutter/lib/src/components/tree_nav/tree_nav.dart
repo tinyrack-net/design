@@ -57,10 +57,61 @@ final class TRTreeNavLeaf<T extends Object> extends TRTreeNavItem<T> {
     super.disabled,
     this.leading,
     this.trailing,
+    this.showDisclosureIndicator = false,
   });
 
   final Widget? leading;
   final Widget? trailing;
+
+  /// Whether an actionable leaf shows a direction-aware disclosure indicator.
+  ///
+  /// Defaults to false to preserve the appearance of existing tree leaves.
+  final bool showDisclosureIndicator;
+}
+
+/// A standalone navigation destination with TreeNav interaction and geometry.
+class TRNavigationRow extends StatelessWidget {
+  const TRNavigationRow({
+    required this.label,
+    this.description,
+    this.leading,
+    this.trailing,
+    this.selected = false,
+    this.enabled = true,
+    this.onPressed,
+    this.uiSize,
+    super.key,
+  });
+
+  final Widget label;
+  final Widget? description;
+  final Widget? leading;
+  final Widget? trailing;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback? onPressed;
+
+  /// Overrides the size supplied by [TRUiDensityScope].
+  final TRUiSize? uiSize;
+
+  @override
+  Widget build(BuildContext context) {
+    final effectiveUiSize = TRUiDensityScope.resolveSize(context, uiSize);
+    final actionable = enabled && onPressed != null;
+    return _TRNavigationRowSurface(
+      label: label,
+      description: description,
+      leading: leading,
+      trailing: trailing,
+      selected: selected,
+      active: selected,
+      enabled: actionable,
+      showDisclosureIndicator: actionable,
+      kind: _TRNavigationRowKind.leaf,
+      onPressed: actionable ? onPressed : null,
+      uiSize: effectiveUiSize,
+    );
+  }
 }
 
 /// Owns tree expansion and selection state.
@@ -257,7 +308,7 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
   }
 }
 
-class _TRTreeNavNode<T extends Object> extends StatefulWidget {
+class _TRTreeNavNode<T extends Object> extends StatelessWidget {
   const _TRTreeNavNode({
     required this.controller,
     required this.depth,
@@ -276,10 +327,168 @@ class _TRTreeNavNode<T extends Object> extends StatefulWidget {
   final TRUiSize uiSize;
 
   @override
-  State<_TRTreeNavNode<T>> createState() => _TRTreeNavNodeState<T>();
+  Widget build(BuildContext context) {
+    final item = this.item;
+    final group = item is TRTreeNavGroup<T> ? item : null;
+    final leaf = item is TRTreeNavLeaf<T> ? item : null;
+    final expanded = group != null && controller.expanded.contains(item.value);
+    final selected = selectedValue == item.value;
+    final activeBranch =
+        group != null && _containsValue(group.children, selectedValue);
+    final disabled = item.disabled ?? false;
+    final leading = group?.leading ?? leaf?.leading;
+    final trailing = group?.trailing ?? leaf?.trailing;
+    final colors = context.tinyrackTheme;
+    final motionDuration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : TRMotion.fast;
+    final verticalPadding = _treeNavVerticalPadding(uiSize);
+
+    void activate() {
+      if (disabled) return;
+      group == null ? onSelect(item.value) : controller.toggle(item.value);
+    }
+
+    KeyEventResult onDirectionalKey(LogicalKeyboardKey key) {
+      if (key == LogicalKeyboardKey.arrowRight && group != null) {
+        controller.setExpanded(
+          item.value,
+          Directionality.of(context) == TextDirection.ltr,
+        );
+        return KeyEventResult.handled;
+      }
+      if (key == LogicalKeyboardKey.arrowLeft && group != null) {
+        controller.setExpanded(
+          item.value,
+          Directionality.of(context) == TextDirection.rtl,
+        );
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    }
+
+    if (group == null) {
+      return _TRNavigationRowSurface(
+        label: item.label,
+        description: item.description,
+        leading: leading,
+        trailing: trailing,
+        selected: selected,
+        active: selected,
+        enabled: !disabled,
+        showDisclosureIndicator: leaf?.showDisclosureIndicator ?? false,
+        kind: _TRNavigationRowKind.leaf,
+        onPressed: activate,
+        onDirectionalKey: onDirectionalKey,
+        uiSize: uiSize,
+      );
+    }
+    final row = _TRNavigationRowSurface(
+      label: item.label,
+      description: item.description,
+      leading: leading,
+      trailing: trailing,
+      active: activeBranch,
+      enabled: !disabled,
+      expanded: expanded,
+      kind: _TRNavigationRowKind.group,
+      onPressed: activate,
+      onDirectionalKey: onDirectionalKey,
+      uiSize: uiSize,
+    );
+    final nestedList = expanded
+        ? Padding(
+            padding: EdgeInsets.only(top: verticalPadding),
+            child: Container(
+              margin: const EdgeInsetsDirectional.only(
+                start: TRGeneratedSpacing.md,
+              ),
+              padding: const EdgeInsetsDirectional.only(
+                start: TRGeneratedSpacing.sm,
+              ),
+              decoration: BoxDecoration(
+                border: BorderDirectional(
+                  start: BorderSide(color: colors.border),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                spacing: verticalPadding,
+                children: [
+                  for (final child in group.children)
+                    _TRTreeNavNode<T>(
+                      key: child.key,
+                      controller: controller,
+                      depth: depth + 1,
+                      item: child,
+                      onSelect: onSelect,
+                      selectedValue: selectedValue,
+                      uiSize: uiSize,
+                    ),
+                ],
+              ),
+            ),
+          )
+        : const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        row,
+        if (motionDuration == Duration.zero)
+          nestedList
+        else
+          AnimatedSize(
+            duration: motionDuration,
+            curve: TRMotion.standard,
+            alignment: Alignment.topCenter,
+            child: nestedList,
+          ),
+      ],
+    );
+  }
 }
 
-class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
+enum _TRNavigationRowKind { leaf, group }
+
+class _TRNavigationRowSurface extends StatefulWidget {
+  const _TRNavigationRowSurface({
+    required this.label,
+    required this.active,
+    required this.enabled,
+    required this.kind,
+    required this.onPressed,
+    required this.uiSize,
+    this.description,
+    this.leading,
+    this.trailing,
+    this.selected = false,
+    this.expanded = false,
+    this.showDisclosureIndicator = false,
+    this.onDirectionalKey,
+  });
+
+  final Widget label;
+  final Widget? description;
+  final Widget? leading;
+  final Widget? trailing;
+  final bool selected;
+  final bool active;
+  final bool enabled;
+  final bool expanded;
+  final bool showDisclosureIndicator;
+  final _TRNavigationRowKind kind;
+  final VoidCallback? onPressed;
+  final KeyEventResult Function(LogicalKeyboardKey key)? onDirectionalKey;
+  final TRUiSize uiSize;
+
+  @override
+  State<_TRNavigationRowSurface> createState() =>
+      _TRNavigationRowSurfaceState();
+}
+
+class _TRNavigationRowSurfaceState extends State<_TRNavigationRowSurface>
     with TRFocusSourceMixin {
   final FocusNode _focusNode = FocusNode();
   bool _focused = false;
@@ -290,10 +499,8 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
   void initState() {
     super.initState();
     initFocusSource();
-    // A row carries the focus surface only while it is the focused control
-    // itself. `Focus.onFocusChange` reports `hasFocus`, which a trailing button
-    // or menu trigger inside the row also satisfies; listening to the node
-    // reads the primary focus directly and reports it on every change.
+    // A trailing control owns its own focus surface. Listening to the row's
+    // primary focus keeps the row ring from appearing for focused descendants.
     _focusNode.addListener(_handleFocusChange);
   }
 
@@ -330,205 +537,117 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     setState(() => _pressed = pressed);
   }
 
+  void _activate() {
+    if (!widget.enabled) return;
+    widget.onPressed?.call();
+  }
+
+  KeyEventResult _onKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent || !widget.enabled) {
+      return KeyEventResult.ignored;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.enter ||
+        event.logicalKey == LogicalKeyboardKey.space) {
+      _activate();
+      return KeyEventResult.handled;
+    }
+    final directionalResult = widget.onDirectionalKey?.call(event.logicalKey);
+    if (directionalResult == KeyEventResult.handled) return directionalResult!;
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      FocusScope.of(context).focusInDirection(TraversalDirection.down);
+      return KeyEventResult.handled;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      FocusScope.of(context).focusInDirection(TraversalDirection.up);
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final item = widget.item;
-    final group = item is TRTreeNavGroup<T> ? item : null;
-    final leaf = item is TRTreeNavLeaf<T> ? item : null;
-    final expanded =
-        group != null && widget.controller.expanded.contains(item.value);
-    final selected = widget.selectedValue == item.value;
-    final activeBranch =
-        group != null && _containsValue(group.children, widget.selectedValue);
-    final disabled = item.disabled ?? false;
-    final leading = group?.leading ?? leaf?.leading;
-    final trailing = group?.trailing ?? leaf?.trailing;
-    final showFocusRing = focusVisible(hasFocus: _focused);
+    final isGroup = widget.kind == _TRNavigationRowKind.group;
     final colors = context.tinyrackTheme;
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
-    final verticalPadding = _treeNavVerticalPadding(widget.uiSize);
-    final contentGap = _treeNavContentGap(widget.uiSize);
-
-    void activate() {
-      if (disabled) return;
-      group == null
-          ? widget.onSelect(item.value)
-          : widget.controller.toggle(item.value);
-    }
-
-    KeyEventResult onKey(FocusNode node, KeyEvent event) {
-      if (event is! KeyDownEvent || disabled) return KeyEventResult.ignored;
-      if (event.logicalKey == LogicalKeyboardKey.enter ||
-          event.logicalKey == LogicalKeyboardKey.space) {
-        activate();
-        return KeyEventResult.handled;
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowRight && group != null) {
-        widget.controller.setExpanded(
-          item.value,
-          Directionality.of(context) == TextDirection.ltr,
-        );
-        return KeyEventResult.handled;
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowLeft && group != null) {
-        widget.controller.setExpanded(
-          item.value,
-          Directionality.of(context) == TextDirection.rtl,
-        );
-        return KeyEventResult.handled;
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        FocusScope.of(context).focusInDirection(TraversalDirection.down);
-        return KeyEventResult.handled;
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        FocusScope.of(context).focusInDirection(TraversalDirection.up);
-        return KeyEventResult.handled;
-      }
-      return KeyEventResult.ignored;
-    }
-
-    if (group == null) {
-      final background = !disabled && _pressed
-          ? colors.surfacePressed
-          : !disabled && (_hovered || _focused || selected)
-          ? colors.surfaceHover
-          : Colors.transparent;
-      return MouseRegion(
-        cursor: disabled ? MouseCursor.defer : SystemMouseCursors.click,
-        onEnter: disabled ? null : (_) => _handlePointerEnter(),
-        onExit: disabled ? null : (_) => _handlePointerExit(),
-        child: Semantics(
-          button: true,
-          enabled: !disabled,
-          selected: selected,
-          child: Focus(
-            focusNode: _focusNode,
-            canRequestFocus: !disabled,
-            skipTraversal: disabled,
-            onKeyEvent: onKey,
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: disabled ? null : activate,
-              onTapCancel: disabled ? null : () => _handlePressChanged(false),
-              onTapDown: disabled ? null : (_) => _handlePressChanged(true),
-              onTapUp: disabled ? null : (_) => _handlePressChanged(false),
-              child: AnimatedOpacity(
-                duration: motionDuration,
-                opacity: disabled ? TRGeneratedOpacity.disabled : 1,
-                child: AnimatedContainer(
-                  duration: motionDuration,
-                  constraints: BoxConstraints(
-                    minHeight: _treeNavLeafMinHeight(widget.uiSize),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: TRGeneratedSpacing.md,
-                    vertical: verticalPadding,
-                  ),
-                  // The ring is always present and only changes colour.
-                  // Swapping it against null adds and removes a foreground
-                  // layer, which re-inflates the row; the trailing control's
-                  // focus node would then be destroyed as traversal steps onto
-                  // it, trapping the keyboard inside the tree.
-                  foregroundDecoration: BoxDecoration(
-                    border: Border.all(
-                      color: showFocusRing ? colors.focus : Colors.transparent,
-                      width: TRGeneratedBorders.focusWidth,
-                    ),
-                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-                  ),
-                  decoration: BoxDecoration(
-                    color: background,
-                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-                  ),
-                  child: _treeNavIconTheme(
-                    widget.uiSize,
-                    Row(
-                      children: [
-                        ?leading,
-                        if (leading != null) SizedBox(width: contentGap),
-                        Expanded(
-                          child: _TRTreeNavItemContent(
-                            description: item.description,
-                            descriptionStyle:
-                                _treeNavDescriptionStyle(
-                                  widget.uiSize,
-                                ).copyWith(
-                                  color: colors.textMuted,
-                                  fontFamilyFallback:
-                                      TRGeneratedFontFamilies.fallback,
-                                ),
-                            label: item.label,
-                            labelStyle: _treeNavLeafLabelStyle(widget.uiSize)
-                                .copyWith(
-                                  color: selected || _hovered || _focused
-                                      ? colors.text
-                                      : colors.textMuted,
-                                  fontFamilyFallback:
-                                      TRGeneratedFontFamilies.fallback,
-                                ),
-                          ),
-                        ),
-                        if (trailing != null) ...[
-                          SizedBox(width: contentGap),
-                          trailing,
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    final groupBackground = !disabled && _pressed
+    final showFocusRing = focusVisible(hasFocus: _focused);
+    final background = widget.enabled && _pressed
         ? colors.surfacePressed
-        : !disabled && (_hovered || _focused)
+        : widget.enabled &&
+              (_hovered || _focused || (!isGroup && widget.selected))
         ? colors.surfaceHover
         : Colors.transparent;
-    final groupColor = disabled
-        ? colors.textMuted
-        : activeBranch || _hovered || _focused
+    final foreground = widget.enabled && (widget.active || _hovered || _focused)
         ? colors.text
         : colors.textMuted;
-    final row = MouseRegion(
-      cursor: disabled ? MouseCursor.defer : SystemMouseCursors.click,
-      onEnter: disabled ? null : (_) => _handlePointerEnter(),
-      onExit: disabled ? null : (_) => _handlePointerExit(),
+    final contentGap = _treeNavContentGap(widget.uiSize);
+    final indicator = _indicator(
+      context,
+      color: foreground,
+      motionDuration: motionDuration,
+    );
+    final content = _TRTreeNavItemContent(
+      description: widget.description,
+      descriptionStyle: _treeNavDescriptionStyle(widget.uiSize).copyWith(
+        color: colors.textMuted,
+        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+      ),
+      label: widget.label,
+      labelStyle:
+          (isGroup
+                  ? _treeNavGroupLabelStyle(widget.uiSize)
+                  : _treeNavLeafLabelStyle(widget.uiSize))
+              .copyWith(
+                color: foreground,
+                fontWeight: isGroup
+                    ? widget.active
+                          ? TRGeneratedFontWeights.bold
+                          : TRGeneratedFontWeights.medium
+                    : null,
+                fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+                height: isGroup ? TRGeneratedTypographyLineHeights.sm : null,
+              ),
+    );
+
+    return MouseRegion(
+      cursor: widget.enabled ? SystemMouseCursors.click : MouseCursor.defer,
+      onEnter: widget.enabled ? (_) => _handlePointerEnter() : null,
+      onExit: widget.enabled ? (_) => _handlePointerExit() : null,
       child: Semantics(
         button: true,
-        enabled: !disabled,
-        expanded: expanded,
+        enabled: widget.enabled,
+        selected: isGroup ? null : widget.selected,
+        expanded: isGroup ? widget.expanded : null,
         child: Focus(
           focusNode: _focusNode,
-          canRequestFocus: !disabled,
-          skipTraversal: disabled,
-          onKeyEvent: onKey,
+          canRequestFocus: widget.enabled,
+          skipTraversal: !widget.enabled,
+          onKeyEvent: _onKey,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: disabled ? null : activate,
-            onTapCancel: disabled ? null : () => _handlePressChanged(false),
-            onTapDown: disabled ? null : (_) => _handlePressChanged(true),
-            onTapUp: disabled ? null : (_) => _handlePressChanged(false),
+            onTap: widget.enabled ? _activate : null,
+            onTapCancel: widget.enabled
+                ? () => _handlePressChanged(false)
+                : null,
+            onTapDown: widget.enabled ? (_) => _handlePressChanged(true) : null,
+            onTapUp: widget.enabled ? (_) => _handlePressChanged(false) : null,
             child: AnimatedOpacity(
               duration: motionDuration,
-              opacity: disabled ? TRGeneratedOpacity.disabled : 1,
+              opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
               child: AnimatedContainer(
                 duration: motionDuration,
                 constraints: BoxConstraints(
-                  minHeight: _treeNavGroupMinHeight(widget.uiSize),
+                  minHeight: isGroup
+                      ? _treeNavGroupMinHeight(widget.uiSize)
+                      : _treeNavLeafMinHeight(widget.uiSize),
                 ),
                 padding: EdgeInsets.symmetric(
                   horizontal: TRGeneratedSpacing.md,
-                  vertical: verticalPadding,
+                  vertical: _treeNavVerticalPadding(widget.uiSize),
                 ),
-                // Always present, colour-only, for the reason the leaf row
-                // gives above: swapping it against null re-inflates the row and
-                // kills the trailing control's focus node mid-traversal.
+                // Keep the ring layer mounted so focus changes do not re-inflate
+                // the row and destroy a trailing control's focus node.
                 foregroundDecoration: BoxDecoration(
                   border: Border.all(
                     color: showFocusRing ? colors.focus : Colors.transparent,
@@ -537,59 +656,35 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
                   borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
                 ),
                 decoration: BoxDecoration(
-                  color: groupBackground,
+                  color: background,
                   borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
                 ),
                 child: _treeNavIconTheme(
                   widget.uiSize,
                   Row(
                     children: [
-                      ?leading,
-                      if (leading != null) SizedBox(width: contentGap),
+                      ?widget.leading,
+                      if (widget.leading != null) SizedBox(width: contentGap),
                       Expanded(
-                        child: Transform.translate(
-                          offset: const Offset(
-                            0,
-                            -TRGeneratedBorders.defaultWidth / 2,
-                          ),
-                          child: _TRTreeNavItemContent(
-                            description: item.description,
-                            descriptionStyle:
-                                _treeNavDescriptionStyle(
-                                  widget.uiSize,
-                                ).copyWith(
-                                  color: colors.textMuted,
-                                  fontFamilyFallback:
-                                      TRGeneratedFontFamilies.fallback,
+                        child: isGroup
+                            ? Transform.translate(
+                                offset: const Offset(
+                                  0,
+                                  -TRGeneratedBorders.defaultWidth / 2,
                                 ),
-                            label: item.label,
-                            labelStyle: _treeNavGroupLabelStyle(widget.uiSize)
-                                .copyWith(
-                                  color: groupColor,
-                                  fontWeight: activeBranch
-                                      ? TRGeneratedFontWeights.bold
-                                      : TRGeneratedFontWeights.medium,
-                                  fontFamilyFallback:
-                                      TRGeneratedFontFamilies.fallback,
-                                  height: TRGeneratedTypographyLineHeights.sm,
-                                ),
-                          ),
-                        ),
+                                child: content,
+                              )
+                            : content,
                       ),
-                      if (trailing != null) ...[
+                      if (widget.trailing != null) ...[
                         SizedBox(width: contentGap),
-                        trailing,
-                      ] else
-                        AnimatedRotation(
-                          duration: motionDuration,
-                          curve: TRMotion.standard,
-                          turns: expanded ? 0.25 : 0,
-                          child: Icon(
-                            LucideIcons.chevronRight,
-                            color: groupColor,
-                            size: _treeNavChevronSize(widget.uiSize),
-                          ),
-                        ),
+                        widget.trailing!,
+                      ],
+                      if (indicator != null) ...[
+                        if (widget.trailing != null)
+                          SizedBox(width: contentGap),
+                        indicator,
+                      ],
                     ],
                   ),
                 ),
@@ -599,56 +694,33 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
         ),
       ),
     );
-    final nestedList = expanded
-        ? Padding(
-            padding: EdgeInsets.only(top: verticalPadding),
-            child: Container(
-              margin: const EdgeInsetsDirectional.only(
-                start: TRGeneratedSpacing.md,
-              ),
-              padding: const EdgeInsetsDirectional.only(
-                start: TRGeneratedSpacing.sm,
-              ),
-              decoration: BoxDecoration(
-                border: BorderDirectional(
-                  start: BorderSide(color: colors.border),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                spacing: verticalPadding,
-                children: [
-                  for (final child in group.children)
-                    _TRTreeNavNode<T>(
-                      key: child.key,
-                      controller: widget.controller,
-                      depth: widget.depth + 1,
-                      item: child,
-                      onSelect: widget.onSelect,
-                      selectedValue: widget.selectedValue,
-                      uiSize: widget.uiSize,
-                    ),
-                ],
-              ),
-            ),
-          )
-        : const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        row,
-        if (motionDuration == Duration.zero)
-          nestedList
-        else
-          AnimatedSize(
-            duration: motionDuration,
-            curve: TRMotion.standard,
-            alignment: Alignment.topCenter,
-            child: nestedList,
-          ),
-      ],
+  }
+
+  Widget? _indicator(
+    BuildContext context, {
+    required Color color,
+    required Duration motionDuration,
+  }) {
+    if (widget.kind == _TRNavigationRowKind.group) {
+      if (widget.trailing != null) return null;
+      return AnimatedRotation(
+        duration: motionDuration,
+        curve: TRMotion.standard,
+        turns: widget.expanded ? 0.25 : 0,
+        child: Icon(
+          LucideIcons.chevronRight,
+          color: color,
+          size: _treeNavChevronSize(widget.uiSize),
+        ),
+      );
+    }
+    if (!widget.enabled || !widget.showDisclosureIndicator) return null;
+    return Icon(
+      Directionality.of(context) == TextDirection.rtl
+          ? LucideIcons.chevronLeft
+          : LucideIcons.chevronRight,
+      color: color,
+      size: _treeNavChevronSize(widget.uiSize),
     );
   }
 }
@@ -662,10 +734,7 @@ double _treeNavLeafMinHeight(TRUiSize uiSize) => switch (uiSize) {
 double _treeNavGroupMinHeight(TRUiSize uiSize) =>
     TRControlMetrics.heightOf(uiSize);
 
-double _treeNavVerticalPadding(TRUiSize uiSize) => switch (uiSize) {
-  TRUiSize.xl => TRSpacing.small,
-  TRUiSize.sm || TRUiSize.md || TRUiSize.lg => TRSpacing.extraSmall,
-};
+double _treeNavVerticalPadding(TRUiSize uiSize) => TRSpacing.small;
 
 double _treeNavContentGap(TRUiSize uiSize) => switch (uiSize) {
   TRUiSize.sm => TRSpacing.extraSmall,

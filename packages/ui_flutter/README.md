@@ -258,9 +258,18 @@ editors through `obscureText`, `minLines`, and `maxLines`.
 
 `TRTreeNavGroup` and `TRTreeNavLeaf` accept an optional `description` for a
 muted secondary line and an optional `key` that identifies the rendered row.
-`TRTreeNav.uiSize` overrides row scale; when omitted, standard density keeps
-the compact navigation geometry and comfortable density provides 48 logical
-pixel rows with larger labels, descriptions, and inherited icons.
+Set `TRTreeNavLeaf.showDisclosureIndicator` when a leaf opens a deeper surface;
+existing leaves omit the indicator by default. Use `TRNavigationRow` for a
+standalone destination instead of constructing a one-item tree. It adds a
+direction-aware disclosure indicator whenever the row is actionable and keeps
+trailing controls ahead of that indicator.
+
+Navigation rows use `TRSpacing.small` above and below their content at every UI
+size. `TRTreeNav.uiSize` and `TRNavigationRow.uiSize` override row scale; when
+omitted, both follow `TRUiDensityScope`. Standard density preserves the 40
+logical pixel minimum for one-line leaf rows, while two-line rows grow with the
+shared vertical padding. Comfortable density provides larger labels,
+descriptions, and inherited icons.
 `TRWindowFrameTitleBar` takes any widget in its `leading` and `actions` slots,
 so window commands are composed from `TRIconButton`.
 

@@ -1,3 +1,14 @@
+## 0.62.0
+
+- Adds `TRNavigationRow` for standalone destinations with selected, disabled,
+  leading, trailing, secondary-description, density, and direction-aware
+  disclosure behavior.
+- Adds opt-in `TRTreeNavLeaf.showDisclosureIndicator` while preserving existing
+  leaf appearance by default.
+- Uses `TRSpacing.small` for the top and bottom padding of TreeNav and
+  navigation rows at every UI size. Standard-density two-line rows gain 8
+  logical pixels while one-line leaf minimum heights remain unchanged.
+
 ## 0.61.2
 
 - Keeps `TRVirtualList` pinned during repeated trailing-item growth and

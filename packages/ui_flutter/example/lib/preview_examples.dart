@@ -4469,39 +4469,53 @@ Widget _treeNavNavigation(BuildContext context, Locale locale) {
   return StatefulBuilder(
     builder: (context, setState) => SizedBox(
       width: 320,
-      child: TRTreeNav<String>.controlled(
-        value: currentPage,
-        onValueChange: (value) => setState(() => currentPage = value),
-        pageStorageId: 'documentation-navigation',
-        semanticLabel: _pick(locale, 'Documentation', '문서 탐색', 'ドキュメント'),
-        items: [
-          TRTreeNavGroup(
-            value: 'guides',
-            label: Text(_pick(locale, 'GUIDES', '가이드', 'ガイド')),
-            initiallyExpanded: true,
-            children: [
-              TRTreeNavLeaf(
-                value: 'install',
-                label: Text(_pick(locale, 'Install', '설치', 'インストール')),
-                leading: const Icon(Icons.download_outlined, size: 16),
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: TRSpacing.small,
+        children: [
+          TRNavigationRow(
+            label: Text(_pick(locale, 'Workspace', '작업 공간', 'ワークスペース')),
+            description: const Text(r'C:\Users\winetree94'),
+            leading: const Icon(Icons.folder_outlined),
+            selected: true,
+            onPressed: () {},
+          ),
+          TRTreeNav<String>.controlled(
+            value: currentPage,
+            onValueChange: (value) => setState(() => currentPage = value),
+            pageStorageId: 'documentation-navigation',
+            semanticLabel: _pick(locale, 'Documentation', '문서 탐색', 'ドキュメント'),
+            items: [
               TRTreeNavGroup(
-                value: 'advanced',
-                label: Text(_pick(locale, 'ADVANCED', '고급', '高度な設定')),
+                value: 'guides',
+                label: Text(_pick(locale, 'GUIDES', '가이드', 'ガイド')),
                 initiallyExpanded: true,
                 children: [
                   TRTreeNavLeaf(
-                    value: 'plugins',
-                    label: Text(_pick(locale, 'Plugins', '플러그인', 'プラグイン')),
+                    value: 'install',
+                    label: Text(_pick(locale, 'Install', '설치', 'インストール')),
+                    leading: const Icon(Icons.download_outlined, size: 16),
+                    showDisclosureIndicator: true,
                   ),
-                  TRTreeNavLeaf(
-                    value: 'theming',
-                    label: Text(_pick(locale, 'Theming', '테마', 'テーマ')),
-                  ),
-                  TRTreeNavLeaf(
-                    value: 'labs',
-                    label: Text(_pick(locale, 'Labs', '실험실', 'ラボ')),
-                    disabled: true,
+                  TRTreeNavGroup(
+                    value: 'advanced',
+                    label: Text(_pick(locale, 'ADVANCED', '고급', '高度な設定')),
+                    initiallyExpanded: true,
+                    children: [
+                      TRTreeNavLeaf(
+                        value: 'plugins',
+                        label: Text(_pick(locale, 'Plugins', '플러그인', 'プラグイン')),
+                      ),
+                      TRTreeNavLeaf(
+                        value: 'theming',
+                        label: Text(_pick(locale, 'Theming', '테마', 'テーマ')),
+                      ),
+                      TRTreeNavLeaf(
+                        value: 'labs',
+                        label: Text(_pick(locale, 'Labs', '실험실', 'ラボ')),
+                        disabled: true,
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -2495,9 +2495,9 @@ class _RackFormState extends State<RackForm> {
       ja: '選択中の移動先とネストされたレールを表示する、型付きの展開ナビゲーションを構築します。',
     },
     contractIntro: {
-      en: 'Tab follows reading order. Enter and Space activate the focused row, Up and Down move between rows, and the logical expand and collapse arrow keys follow text direction. Enabled rows show hover and pressed surfaces for pointer feedback. Disabled rows are skipped and ignore pointer and keyboard input.',
-      ko: 'Tab은 읽기 순서를 따라요. Enter와 Space는 포커스된 행을 실행하고, 위·아래 화살표는 행 사이를 이동하며, 펼침·접힘 화살표는 텍스트 방향을 따라요. 활성 행은 포인터에 hover와 pressed 표면으로 반응해요. 비활성 행은 건너뛰고 포인터와 키보드 입력을 무시해요.',
-      ja: 'Tab は読み順に従います。Enter と Space はフォーカス中の行を実行し、上下矢印は行間を移動し、展開・折りたたみの矢印はテキスト方向に従います。有効な行はポインター操作にホバーと押下中のサーフェスで応答します。無効な行はスキップされ、ポインターとキーボード入力を無視します。',
+      en: 'Use TRTreeNav for an ordered collection or TRNavigationRow for one standalone destination. Tab follows reading order. Enter and Space activate the focused row, Up and Down move between tree rows, and the logical expand and collapse arrow keys follow text direction. Enabled rows show hover and pressed surfaces for pointer feedback. Disabled rows are skipped and ignore pointer and keyboard input.',
+      ko: '순서가 있는 컬렉션에는 TRTreeNav를 사용하고, 단독 목적지에는 TRNavigationRow를 사용해요. Tab은 읽기 순서를 따라요. Enter와 Space는 포커스된 행을 실행하고, 위·아래 화살표는 트리 행 사이를 이동하며, 펼침·접힘 화살표는 텍스트 방향을 따라요. 활성 행은 포인터에 hover와 pressed 표면으로 반응해요. 비활성 행은 건너뛰고 포인터와 키보드 입력을 무시해요.',
+      ja: '順序付きのコレクションには TRTreeNav を使い、単独の移動先には TRNavigationRow を使います。Tab は読み順に従います。Enter と Space はフォーカス中の行を実行し、上下矢印はツリーの行間を移動し、展開・折りたたみの矢印はテキスト方向に従います。有効な行はポインター操作にホバーと押下中のサーフェスで応答します。無効な行はスキップされ、ポインターとキーボード入力を無視します。',
     },
     contractRows: [
       {
@@ -2535,17 +2535,17 @@ class _RackFormState extends State<RackForm> {
       {
         axis: { en: 'Content', ko: '콘텐츠', ja: 'コンテンツ' },
         choices: {
-          en: '`description` adds a muted secondary line. `leading` and `trailing` stay aligned around the complete row, and a group `trailing` replaces its default chevron.',
-          ko: '`description`은 옅은 보조 줄을 추가해요. `leading`과 `trailing`은 전체 행 주위에서 정렬을 유지하고, 그룹의 `trailing`은 기본 chevron을 대체해요.',
-          ja: '`description` は薄い補助行を追加します。`leading` と `trailing` は行全体の両側で整列し、グループの `trailing` は既定の chevron を置き換えます。',
+          en: '`description` adds a muted secondary line. `leading` and `trailing` stay aligned around the complete row. A group `trailing` replaces its chevron; a leaf can opt into a disclosure indicator after its trailing content.',
+          ko: '`description`은 옅은 보조 줄을 추가해요. `leading`과 `trailing`은 전체 행 주위에서 정렬을 유지해요. 그룹의 `trailing`은 chevron을 대체하고, leaf는 trailing 콘텐츠 뒤에 disclosure indicator를 선택적으로 표시할 수 있어요.',
+          ja: '`description` は薄い補助行を追加します。`leading` と `trailing` は行全体の両側で整列します。グループの `trailing` は chevron を置き換え、leaf は trailing コンテンツの後ろに disclosure indicator を任意で表示できます。',
         },
       },
       {
         axis: { en: 'Scale', ko: '크기', ja: 'サイズ' },
         choices: {
-          en: 'Omit `uiSize` to follow `TRUiDensityScope`. Standard density keeps compact navigation, while comfortable density provides 48-pixel rows and larger content.',
-          ko: '`uiSize`를 생략하면 `TRUiDensityScope`를 따라요. standard density는 간결한 탐색 크기를 유지하고, comfortable density는 48px 행과 더 큰 콘텐츠를 제공해요.',
-          ja: '`uiSize` を省略すると `TRUiDensityScope` に従います。standard density はコンパクトなナビゲーションを維持し、comfortable density は 48px の行と大きなコンテンツを提供します。',
+          en: 'Omit `uiSize` to follow `TRUiDensityScope`. Every size uses 8 logical pixels above and below the content. Standard density preserves the 40-pixel one-line leaf minimum; descriptions grow the row from its content.',
+          ko: '`uiSize`를 생략하면 `TRUiDensityScope`를 따라요. 모든 크기는 콘텐츠 위아래에 8 logical px를 사용해요. standard density는 한 줄 leaf의 최소 높이 40px를 유지하고, description이 있으면 콘텐츠에 맞춰 행이 커져요.',
+          ja: '`uiSize` を省略すると `TRUiDensityScope` に従います。すべてのサイズでコンテンツの上下に 8 logical px を使います。standard density は 1 行の leaf の最小高 40px を維持し、description がある場合はコンテンツに合わせて行が広がります。',
         },
       },
     ],
@@ -2592,6 +2592,60 @@ class _DocsTreeState extends State<DocsTree> {
   );
 }`,
     apiGroups: [
+      {
+        title: {
+          en: 'TRNavigationRow properties',
+          ko: 'TRNavigationRow 속성',
+          ja: 'TRNavigationRow のプロパティ',
+        },
+        rows: [
+          {
+            name: 'label, description',
+            type: 'Widget, Widget? · label required',
+            purpose: {
+              en: 'Render the primary label and an optional muted secondary line.',
+              ko: '기본 label과 선택적인 옅은 보조 줄을 렌더링해요.',
+              ja: '主ラベルと、任意の薄い補助行を描画します。',
+            },
+          },
+          {
+            name: 'leading, trailing',
+            type: 'Widget?, Widget? · null',
+            purpose: {
+              en: 'Add content around the label. The automatic disclosure indicator follows trailing content.',
+              ko: 'label 앞뒤에 콘텐츠를 추가해요. 자동 disclosure indicator는 trailing 콘텐츠 뒤에 표시돼요.',
+              ja: 'ラベルの前後にコンテンツを追加します。自動 disclosure indicator は trailing コンテンツの後ろに表示されます。',
+            },
+          },
+          {
+            name: 'selected, enabled',
+            type: 'bool, bool · false, true',
+            purpose: {
+              en: 'Control selected emphasis and whether the row can be activated.',
+              ko: '선택 강조와 행을 실행할 수 있는지 제어해요.',
+              ja: '選択中の強調表示と、行を実行できるかどうかを制御します。',
+            },
+          },
+          {
+            name: 'onPressed',
+            type: 'VoidCallback? · null',
+            purpose: {
+              en: 'Activate the destination. A row without a callback is non-actionable and omits its indicator.',
+              ko: '목적지를 실행해요. callback이 없는 행은 실행할 수 없으며 indicator를 표시하지 않아요.',
+              ja: '移動先を実行します。callback のない行は実行不可となり、indicator を表示しません。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize? · density default',
+            purpose: {
+              en: 'Override the row and content scale supplied by `TRUiDensityScope`.',
+              ko: '`TRUiDensityScope`가 제공하는 행과 콘텐츠 크기를 덮어써요.',
+              ja: '`TRUiDensityScope` が提供する行とコンテンツのサイズを上書きします。',
+            },
+          },
+        ],
+      },
       {
         title: {
           en: 'TRTreeNav properties',
@@ -2750,6 +2804,15 @@ class _DocsTreeState extends State<DocsTree> {
               en: 'Block selection or add content before and after the label.',
               ko: '선택을 막거나 label 앞뒤에 콘텐츠를 추가해요.',
               ja: '選択を無効にするか、label の前後へコンテンツを追加します。',
+            },
+          },
+          {
+            name: 'showDisclosureIndicator',
+            type: 'bool · false',
+            purpose: {
+              en: 'Show a direction-aware indicator after trailing content for an enabled destination.',
+              ko: '활성 목적지의 trailing 콘텐츠 뒤에 텍스트 방향을 따르는 indicator를 표시해요.',
+              ja: '有効な移動先の trailing コンテンツの後ろに、文字方向に対応する indicator を表示します。',
             },
           },
         ],
