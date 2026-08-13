@@ -9,9 +9,9 @@ const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
 // The Flutter preview catalog grows with each public component and the docs
 // example builder its page adds, at roughly 8 KB per
 // documented component. The select surfaces plus the chat running-text shimmer
-// example bring the compiled bundle to 3,483,073 bytes. Keep a narrow regression
-// margin while allowing those public catalog variants.
-const maximumMainBytes = 3_490_000;
+// example bring the compiled bundle to 3,483,073 bytes. Flutter 3.47 raises
+// the Linux build to 3,500,338 bytes; retain a narrow 9,662-byte margin.
+const maximumMainBytes = 3_510_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;
 const expectedFlutterFonts = [
