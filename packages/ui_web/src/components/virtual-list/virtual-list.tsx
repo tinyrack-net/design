@@ -1,6 +1,12 @@
 'use client';
 
-import { defaultRangeExtractor, useVirtualizer } from '@tanstack/react-virtual';
+import {
+  defaultRangeExtractor,
+  observeElementRect,
+  type Rect,
+  useVirtualizer,
+  type Virtualizer,
+} from '@tanstack/react-virtual';
 import {
   type ComponentPropsWithoutRef,
   type FocusEvent,
@@ -89,6 +95,17 @@ type VisualLayout<K> =
 const subscribeToHydration = () => () => {};
 const clientSnapshot = () => true;
 const serverSnapshot = () => false;
+
+function observeScrollportRect(
+  instance: Virtualizer<HTMLDivElement, HTMLDivElement>,
+  callback: (rect: Rect) => void,
+) {
+  return observeElementRect(instance, () => {
+    const element = instance.scrollElement;
+    if (element === null) return;
+    callback({ height: element.clientHeight, width: element.clientWidth });
+  });
+}
 
 export function TRVirtualList<T, K extends Key>({
   axis = 'vertical',
@@ -225,6 +242,7 @@ export function TRVirtualList<T, K extends Key>({
     initialMeasurementsCache,
     initialOffset,
     isRtl: axis === 'horizontal' && isRtl,
+    observeElementRect: observeScrollportRect,
     overscan,
     paddingEnd: edgeSizes.trailing,
     paddingStart: edgeSizes.leading,
