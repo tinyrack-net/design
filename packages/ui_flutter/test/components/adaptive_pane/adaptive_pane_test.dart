@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
@@ -42,6 +43,96 @@ void main() {
       const TRPaneDestination(role: TRPaneRole.primary, value: 'replacement'),
     );
     expect(navigator.currentDestination.value, 'replacement');
+  });
+
+  test(
+    'navigator reports typed operations and skips invisible back history',
+    () {
+      final navigator = TRThreePaneNavigator<String>(
+        initialDestination: const TRPaneDestination(
+          role: TRPaneRole.navigation,
+          value: 'navigation',
+        ),
+      );
+      addTearDown(navigator.dispose);
+
+      navigator
+        ..push(
+          const TRPaneDestination(
+            role: TRPaneRole.primary,
+            value: 'collection',
+          ),
+        )
+        ..replace(
+          const TRPaneDestination(
+            role: TRPaneRole.primary,
+            value: 'replacement',
+          ),
+        )
+        ..push(
+          const TRPaneDestination(role: TRPaneRole.secondary, value: 'detail'),
+        );
+
+      expect(navigator.lastChange?.operation, TRPaneNavigationOperation.push);
+      expect(
+        navigator.canPopUntilScaffoldValueChange(
+          TRAdaptiveWidthClass.medium,
+          hasSecondaryPane: true,
+        ),
+        isTrue,
+      );
+      expect(
+        navigator.popUntilScaffoldValueChange(
+          TRAdaptiveWidthClass.medium,
+          hasSecondaryPane: true,
+        ),
+        isTrue,
+      );
+      expect(navigator.currentDestination.value, 'replacement');
+      expect(navigator.lastChange?.operation, TRPaneNavigationOperation.pop);
+
+      expect(
+        navigator.canPopUntilScaffoldValueChange(
+          TRAdaptiveWidthClass.medium,
+          hasSecondaryPane: true,
+        ),
+        isFalse,
+        reason: 'navigation and primary share the tablet scaffold value',
+      );
+      expect(
+        navigator.canPopUntilScaffoldValueChange(
+          TRAdaptiveWidthClass.compact,
+          hasSecondaryPane: true,
+        ),
+        isTrue,
+      );
+      expect(
+        navigator.canPopUntilScaffoldValueChange(
+          TRAdaptiveWidthClass.large,
+          hasSecondaryPane: true,
+        ),
+        isFalse,
+        reason: 'all available roles are already visible on desktop',
+      );
+    },
+  );
+
+  test('reset records a non-animated navigation operation', () {
+    final navigator = TRThreePaneNavigator<String>(
+      initialDestination: const TRPaneDestination(
+        role: TRPaneRole.navigation,
+        value: 'navigation',
+      ),
+    );
+    addTearDown(navigator.dispose);
+
+    navigator.reset(
+      const TRPaneDestination(role: TRPaneRole.secondary, value: 'deep-link'),
+    );
+
+    expect(navigator.lastChange?.operation, TRPaneNavigationOperation.reset);
+    expect(navigator.lastChange?.previous.value, 'navigation');
+    expect(navigator.lastChange?.current.value, 'deep-link');
   });
 
   for (final testCase in <({double width, int panes})>[
@@ -524,6 +615,156 @@ void main() {
       greaterThan(tester.getCenter(find.text('Primary')).dx),
     );
   });
+
+  testWidgets('compact push and pop use opposite horizontal directions', (
+    tester,
+  ) async {
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(599, 600);
+    addTearDown(tester.view.reset);
+    final navigator = TRThreePaneNavigator<String>(
+      initialDestination: const TRPaneDestination(
+        role: TRPaneRole.navigation,
+        value: 'navigation',
+      ),
+    );
+    addTearDown(navigator.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: TRNavigableThreePaneScaffold<String>(
+          navigator: navigator,
+          navigationPane: const Text('Navigation'),
+          primaryPane: const Text('Primary'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    navigator.push(
+      const TRPaneDestination(role: TRPaneRole.primary, value: 'primary'),
+    );
+    await tester.pump();
+    await tester.pump(TRMotion.slow ~/ 2);
+    final pushOffset = tester.getTopLeft(find.text('Primary')).dx;
+    expect(pushOffset, greaterThan(0));
+    await tester.pumpAndSettle();
+
+    navigator.pop();
+    await tester.pump();
+    await tester.pump(TRMotion.slow ~/ 2);
+    final popOffset = tester.getTopLeft(find.text('Navigation')).dx;
+    expect(popOffset, lessThan(0));
+  });
+
+  testWidgets('departing panes cannot receive pointers or semantics', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(599, 600);
+    addTearDown(tester.view.reset);
+    final navigator = TRThreePaneNavigator<String>(
+      initialDestination: const TRPaneDestination(
+        role: TRPaneRole.navigation,
+        value: 'navigation',
+      ),
+    );
+    addTearDown(navigator.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: TRNavigableThreePaneScaffold<String>(
+          navigator: navigator,
+          navigationPane: const Text('Navigation'),
+          primaryPane: const Text('Primary'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    navigator.push(
+      const TRPaneDestination(role: TRPaneRole.primary, value: 'primary'),
+    );
+    await tester.pump();
+
+    expect(find.text('Navigation').hitTestable(), findsNothing);
+    expect(find.bySemanticsLabel('Navigation'), findsNothing);
+    semantics.dispose();
+  });
+
+  testWidgets('Android predictive back previews, cancels, and commits a pane', (
+    tester,
+  ) async {
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(599, 600);
+    addTearDown(tester.view.reset);
+    final navigator =
+        TRThreePaneNavigator<String>(
+          initialDestination: const TRPaneDestination(
+            role: TRPaneRole.navigation,
+            value: 'navigation',
+          ),
+        )..push(
+          const TRPaneDestination(role: TRPaneRole.primary, value: 'primary'),
+        );
+    addTearDown(navigator.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: TRNavigableThreePaneScaffold<String>(
+          navigator: navigator,
+          navigationPane: const Text('Navigation'),
+          primaryPane: const Text('Primary'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    Future<void> send(MethodCall call) async {
+      final message = const StandardMethodCodec().encodeMethodCall(call);
+      await tester.binding.defaultBinaryMessenger.handlePlatformMessage(
+        'flutter/backgesture',
+        message,
+        (_) {},
+      );
+      await tester.pump();
+    }
+
+    const start = MethodCall('startBackGesture', <String, Object>{
+      'touchOffset': <double>[0, 300],
+      'progress': 0.0,
+      'swipeEdge': 0,
+    });
+    const update = MethodCall('updateBackGestureProgress', <String, Object>{
+      'x': 180.0,
+      'y': 300.0,
+      'progress': 0.5,
+      'swipeEdge': 0,
+    });
+
+    await send(start);
+    await send(update);
+    expect(find.text('Navigation'), findsOneWidget);
+    expect(tester.getTopLeft(find.text('Primary')).dx, greaterThan(0));
+
+    await send(const MethodCall('cancelBackGesture'));
+    await tester.pumpAndSettle();
+    expect(navigator.currentDestination.value, 'primary');
+    expect(find.text('Navigation'), findsNothing);
+
+    await send(start);
+    await send(update);
+    await send(const MethodCall('commitBackGesture'));
+    await tester.pumpAndSettle();
+    expect(navigator.currentDestination.value, 'navigation');
+    expect(find.text('Navigation'), findsOneWidget);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.android));
 }
 
 class _AdaptiveScopeProbe extends StatelessWidget {

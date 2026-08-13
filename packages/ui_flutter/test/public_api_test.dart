@@ -246,6 +246,8 @@ const publicTypes = <Type>[
   TRVirtualListViewportTriggerExtent,
   TRNavigableThreePaneScaffold,
   TRPaneDestination,
+  TRPaneNavigationChange,
+  TRPaneNavigationOperation,
   TRPaneRole,
   TRThreePaneNavigator,
   TRTypography,

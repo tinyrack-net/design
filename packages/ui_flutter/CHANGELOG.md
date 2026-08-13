@@ -1,3 +1,13 @@
+## 0.61.0
+
+- Adds typed pane navigation operations and scaffold-value Back traversal to
+  `TRThreePaneNavigator`.
+- Gives compact and tablet pane changes direction-aware horizontal motion,
+  Android predictive Back previews, reduced-motion behavior, and inert
+  departing panes. Desktop layouts keep their visible pane roles stable.
+- Replaces routed overlay scaling with Android predictive Back and Material
+  forward-fade page transitions. Dialog and drawer motion is unchanged.
+
 ## 0.60.3
 
 - Keeps trackpad and wheel scrolling over fixed `TRSelect` sheet headers inside

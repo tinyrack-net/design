@@ -105,6 +105,15 @@ TRNavigableThreePaneScaffold<String>(
 )
 ```
 
+`TRThreePaneNavigator.lastChange` distinguishes `push`, `replace`, `pop`, and
+`reset`. Push and pop move in opposite logical directions, replace crossfades
+content in the current pane role, and reset settles without entry motion. The
+scaffold handles Android predictive Back when an earlier destination changes
+what the current width class displays. Use
+`popUntilScaffoldValueChange` for a visible Back button so touch, keyboard, and
+system Back share the same rule. On a three-pane desktop layout, every available
+role is already visible and Back continues to the enclosing route.
+
 Compose navigation content with `TRNavigationPane` and
 `TRNavigationSection`; use `TRTreeNav` inside each section so selection,
 hover, press, keyboard, and semantics behavior remains shared. Their default
