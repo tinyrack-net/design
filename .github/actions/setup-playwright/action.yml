@@ -49,6 +49,13 @@ runs:
         PLAYWRIGHT_BROWSERS: ${{ inputs.browsers }}
       run: pnpm --filter "$PACKAGE_FILTER" exec playwright install $PLAYWRIGHT_BROWSERS
 
+    - name: Install WebKit host dependencies
+      if: runner.os == 'Linux' && contains(inputs.browsers, 'webkit')
+      shell: bash
+      env:
+        PACKAGE_FILTER: ${{ inputs.filter }}
+      run: pnpm --filter "$PACKAGE_FILTER" exec playwright install-deps webkit
+
     - name: Smoke launch Playwright browsers
       shell: bash
       env:

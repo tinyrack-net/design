@@ -166,6 +166,11 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).not.toContain('playwright install');
     expect(ci).not.toContain('subosito/flutter-action');
     expect(playwrightAction).not.toContain('playwright install --with-deps');
+    expect(playwrightAction).toContain('Install WebKit host dependencies');
+    expect(playwrightAction).toContain(
+      "runner.os == 'Linux' && contains(inputs.browsers, 'webkit')",
+    );
+    expect(playwrightAction).toContain('playwright install-deps webkit');
     expect(flutterAction).toContain('path: ~/.pub-cache');
 
     // The smoke launch has to run on a cache hit too. It is the only thing
