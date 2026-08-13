@@ -1,3 +1,14 @@
+## 0.59.0
+
+- Gives searchable Select layers a readable width independent of narrow
+  triggers, full-width search separators, padded options, and list-only
+  scrolling. Adaptive sheets fit short content, cap long lists at the viewport,
+  and apply the active UI density to option geometry.
+- Adds a drag-to-dismiss handle to top and bottom `TRDrawer` surfaces by
+  default. Set `showDragHandle` to false to hide the handle and disable the
+  content-sized sheet drag gesture.
+- Restores the full semantic inline padding inside `TRTextField` controls.
+
 ## 0.58.0
 
 - Adds `TRPaneHeader` for density-aware pane titles, supporting descriptions,
@@ -12,14 +23,6 @@
   16-pixel labels, 14-pixel descriptions, and 20-pixel inherited icons.
 - Keeps intrinsic-width `TRSelect` labels inside bounded parents at large text
   scales by truncating the trigger label without changing option copy.
-- Gives searchable Select layers a readable width independent of narrow
-  triggers, full-width search separators, padded options, and list-only
-  scrolling. Adaptive sheets fit short content, cap long lists at the viewport,
-  and apply the active UI density to option geometry.
-- Adds a drag-to-dismiss handle to top and bottom `TRDrawer` surfaces by
-  default. Set `showDragHandle` to false to hide the handle and disable the
-  content-sized sheet drag gesture.
-- Restores the full semantic inline padding inside `TRTextField` controls.
 
 ## 0.57.1
 
