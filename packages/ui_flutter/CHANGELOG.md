@@ -1,3 +1,9 @@
+## 0.61.2
+
+- Keeps `TRVirtualList` pinned during repeated trailing-item growth and
+  viewport resizing, while nested scroll activity no longer changes the outer
+  list's follow state.
+
 ## 0.61.1
 
 - Makes Flutter-rendered popup rows follow `TRUiDensityScope`: standard uses

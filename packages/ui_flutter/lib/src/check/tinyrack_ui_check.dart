@@ -49,7 +49,7 @@ final class TinyrackCheckResult {
     required this.violations,
   });
 
-  static const packageVersion = '0.61.1';
+  static const packageVersion = '0.61.2';
 
   final int checkedFiles;
   final List<TinyrackCheckViolation> violations;
