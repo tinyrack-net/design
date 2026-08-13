@@ -6,6 +6,8 @@ import '../../internal/focus_source.dart';
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
+import '../../types.dart';
+import '../../ui_density.dart';
 
 /// Base class for tree navigation nodes.
 sealed class TRTreeNavItem<T extends Object> {
@@ -108,6 +110,7 @@ class TRTreeNav<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.pageStorageId,
     this.semanticLabel,
+    this.uiSize,
     this.itemSpacing = TRGeneratedSpacing.lg,
     super.key,
   }) : value = null,
@@ -120,6 +123,7 @@ class TRTreeNav<T extends Object> extends StatefulWidget {
     this.onValueChange,
     this.pageStorageId,
     this.semanticLabel,
+    this.uiSize,
     this.itemSpacing = TRGeneratedSpacing.lg,
     super.key,
   }) : defaultValue = null,
@@ -132,6 +136,9 @@ class TRTreeNav<T extends Object> extends StatefulWidget {
   final ValueChanged<T?>? onValueChange;
   final Object? pageStorageId;
   final String? semanticLabel;
+
+  /// Overrides the size supplied by [TRUiDensityScope].
+  final TRUiSize? uiSize;
 
   /// Gap between this tree's top-level items.
   ///
@@ -221,29 +228,33 @@ class _TRTreeNavState<T extends Object> extends State<TRTreeNav<T>> {
   }
 
   @override
-  Widget build(BuildContext context) => Semantics(
-    container: true,
-    label: widget.semanticLabel,
-    child: FocusTraversalGroup(
-      policy: ReadingOrderTraversalPolicy(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        spacing: widget.itemSpacing,
-        children: [
-          for (final item in widget.items)
-            _TRTreeNavNode<T>(
-              key: item.key,
-              controller: _controller,
-              depth: 0,
-              item: item,
-              onSelect: _select,
-              selectedValue: _value,
-            ),
-        ],
+  Widget build(BuildContext context) {
+    final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
+    return Semantics(
+      container: true,
+      label: widget.semanticLabel,
+      child: FocusTraversalGroup(
+        policy: ReadingOrderTraversalPolicy(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          spacing: widget.itemSpacing,
+          children: [
+            for (final item in widget.items)
+              _TRTreeNavNode<T>(
+                key: item.key,
+                controller: _controller,
+                depth: 0,
+                item: item,
+                onSelect: _select,
+                selectedValue: _value,
+                uiSize: uiSize,
+              ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _TRTreeNavNode<T extends Object> extends StatefulWidget {
@@ -253,6 +264,7 @@ class _TRTreeNavNode<T extends Object> extends StatefulWidget {
     required this.item,
     required this.onSelect,
     required this.selectedValue,
+    required this.uiSize,
     super.key,
   });
 
@@ -261,6 +273,7 @@ class _TRTreeNavNode<T extends Object> extends StatefulWidget {
   final TRTreeNavItem<T> item;
   final ValueChanged<T> onSelect;
   final T? selectedValue;
+  final TRUiSize uiSize;
 
   @override
   State<_TRTreeNavNode<T>> createState() => _TRTreeNavNodeState<T>();
@@ -335,6 +348,8 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     final motionDuration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRMotion.fast;
+    final verticalPadding = _treeNavVerticalPadding(widget.uiSize);
+    final contentGap = _treeNavContentGap(widget.uiSize);
 
     void activate() {
       if (disabled) return;
@@ -405,16 +420,12 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
                 opacity: disabled ? TRGeneratedOpacity.disabled : 1,
                 child: AnimatedContainer(
                   duration: motionDuration,
-                  constraints: const BoxConstraints(
-                    // Web navigation links use a 32px content box plus 4px
-                    // block padding on each side (content-box sizing).
-                    minHeight:
-                        TRGeneratedControlMetrics.mdHeight +
-                        TRGeneratedSpacing.xs * 2,
+                  constraints: BoxConstraints(
+                    minHeight: _treeNavLeafMinHeight(widget.uiSize),
                   ),
-                  padding: const EdgeInsets.symmetric(
+                  padding: EdgeInsets.symmetric(
                     horizontal: TRGeneratedSpacing.md,
-                    vertical: TRGeneratedSpacing.xs,
+                    vertical: verticalPadding,
                   ),
                   // The ring is always present and only changes colour.
                   // Swapping it against null adds and removes a foreground
@@ -432,35 +443,40 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
                     color: background,
                     borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
                   ),
-                  child: Row(
-                    children: [
-                      ?leading,
-                      if (leading != null)
-                        const SizedBox(width: TRGeneratedSpacing.sm),
-                      Expanded(
-                        child: _TRTreeNavItemContent(
-                          description: item.description,
-                          descriptionStyle: TRGeneratedTextStyles.caption
-                              .copyWith(
-                                color: colors.textMuted,
-                                fontFamilyFallback:
-                                    TRGeneratedFontFamilies.fallback,
-                              ),
-                          label: item.label,
-                          labelStyle: TRGeneratedTextStyles.bodySm.copyWith(
-                            color: selected || _hovered || _focused
-                                ? colors.text
-                                : colors.textMuted,
-                            fontFamilyFallback:
-                                TRGeneratedFontFamilies.fallback,
+                  child: _treeNavIconTheme(
+                    widget.uiSize,
+                    Row(
+                      children: [
+                        ?leading,
+                        if (leading != null) SizedBox(width: contentGap),
+                        Expanded(
+                          child: _TRTreeNavItemContent(
+                            description: item.description,
+                            descriptionStyle:
+                                _treeNavDescriptionStyle(
+                                  widget.uiSize,
+                                ).copyWith(
+                                  color: colors.textMuted,
+                                  fontFamilyFallback:
+                                      TRGeneratedFontFamilies.fallback,
+                                ),
+                            label: item.label,
+                            labelStyle: _treeNavLeafLabelStyle(widget.uiSize)
+                                .copyWith(
+                                  color: selected || _hovered || _focused
+                                      ? colors.text
+                                      : colors.textMuted,
+                                  fontFamilyFallback:
+                                      TRGeneratedFontFamilies.fallback,
+                                ),
                           ),
                         ),
-                      ),
-                      if (trailing != null) ...[
-                        const SizedBox(width: TRGeneratedSpacing.sm),
-                        trailing,
+                        if (trailing != null) ...[
+                          SizedBox(width: contentGap),
+                          trailing,
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -503,12 +519,12 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
               opacity: disabled ? TRGeneratedOpacity.disabled : 1,
               child: AnimatedContainer(
                 duration: motionDuration,
-                constraints: const BoxConstraints(
-                  minHeight: TRGeneratedLayerMetrics.treeItemHeight,
+                constraints: BoxConstraints(
+                  minHeight: _treeNavGroupMinHeight(widget.uiSize),
                 ),
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: TRGeneratedSpacing.md,
-                  vertical: TRGeneratedSpacing.xs,
+                  vertical: verticalPadding,
                 ),
                 // Always present, colour-only, for the reason the leaf row
                 // gives above: swapping it against null re-inflates the row and
@@ -524,53 +540,58 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
                   color: groupBackground,
                   borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
                 ),
-                child: Row(
-                  children: [
-                    ?leading,
-                    if (leading != null)
-                      const SizedBox(width: TRGeneratedSpacing.sm),
-                    Expanded(
-                      child: Transform.translate(
-                        offset: const Offset(
-                          0,
-                          -TRGeneratedBorders.defaultWidth / 2,
-                        ),
-                        child: _TRTreeNavItemContent(
-                          description: item.description,
-                          descriptionStyle: TRGeneratedTextStyles.caption
-                              .copyWith(
-                                color: colors.textMuted,
-                                fontFamilyFallback:
-                                    TRGeneratedFontFamilies.fallback,
-                              ),
-                          label: item.label,
-                          labelStyle: TRGeneratedTextStyles.label.copyWith(
-                            color: groupColor,
-                            fontWeight: activeBranch
-                                ? TRGeneratedFontWeights.bold
-                                : TRGeneratedFontWeights.medium,
-                            fontFamilyFallback:
-                                TRGeneratedFontFamilies.fallback,
-                            height: TRGeneratedTypographyLineHeights.sm,
+                child: _treeNavIconTheme(
+                  widget.uiSize,
+                  Row(
+                    children: [
+                      ?leading,
+                      if (leading != null) SizedBox(width: contentGap),
+                      Expanded(
+                        child: Transform.translate(
+                          offset: const Offset(
+                            0,
+                            -TRGeneratedBorders.defaultWidth / 2,
+                          ),
+                          child: _TRTreeNavItemContent(
+                            description: item.description,
+                            descriptionStyle:
+                                _treeNavDescriptionStyle(
+                                  widget.uiSize,
+                                ).copyWith(
+                                  color: colors.textMuted,
+                                  fontFamilyFallback:
+                                      TRGeneratedFontFamilies.fallback,
+                                ),
+                            label: item.label,
+                            labelStyle: _treeNavGroupLabelStyle(widget.uiSize)
+                                .copyWith(
+                                  color: groupColor,
+                                  fontWeight: activeBranch
+                                      ? TRGeneratedFontWeights.bold
+                                      : TRGeneratedFontWeights.medium,
+                                  fontFamilyFallback:
+                                      TRGeneratedFontFamilies.fallback,
+                                  height: TRGeneratedTypographyLineHeights.sm,
+                                ),
                           ),
                         ),
                       ),
-                    ),
-                    if (trailing != null) ...[
-                      const SizedBox(width: TRGeneratedSpacing.sm),
-                      trailing,
-                    ] else
-                      AnimatedRotation(
-                        duration: motionDuration,
-                        curve: TRMotion.standard,
-                        turns: expanded ? 0.25 : 0,
-                        child: Icon(
-                          LucideIcons.chevronRight,
-                          color: groupColor,
-                          size: TRGeneratedSpacing.md,
+                      if (trailing != null) ...[
+                        SizedBox(width: contentGap),
+                        trailing,
+                      ] else
+                        AnimatedRotation(
+                          duration: motionDuration,
+                          curve: TRMotion.standard,
+                          turns: expanded ? 0.25 : 0,
+                          child: Icon(
+                            LucideIcons.chevronRight,
+                            color: groupColor,
+                            size: _treeNavChevronSize(widget.uiSize),
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -580,7 +601,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     );
     final nestedList = expanded
         ? Padding(
-            padding: const EdgeInsets.only(top: TRGeneratedSpacing.xs),
+            padding: EdgeInsets.only(top: verticalPadding),
             child: Container(
               margin: const EdgeInsetsDirectional.only(
                 start: TRGeneratedSpacing.md,
@@ -596,7 +617,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
-                spacing: TRGeneratedSpacing.xs,
+                spacing: verticalPadding,
                 children: [
                   for (final child in group.children)
                     _TRTreeNavNode<T>(
@@ -606,6 +627,7 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
                       item: child,
                       onSelect: widget.onSelect,
                       selectedValue: widget.selectedValue,
+                      uiSize: widget.uiSize,
                     ),
                 ],
               ),
@@ -630,6 +652,60 @@ class _TRTreeNavNodeState<T extends Object> extends State<_TRTreeNavNode<T>>
     );
   }
 }
+
+double _treeNavLeafMinHeight(TRUiSize uiSize) => switch (uiSize) {
+  TRUiSize.sm ||
+  TRUiSize.md => TRControlMetrics.heightOf(uiSize) + TRSpacing.extraSmall * 2,
+  TRUiSize.lg || TRUiSize.xl => TRControlMetrics.heightOf(uiSize),
+};
+
+double _treeNavGroupMinHeight(TRUiSize uiSize) =>
+    TRControlMetrics.heightOf(uiSize);
+
+double _treeNavVerticalPadding(TRUiSize uiSize) => switch (uiSize) {
+  TRUiSize.xl => TRSpacing.small,
+  TRUiSize.sm || TRUiSize.md || TRUiSize.lg => TRSpacing.extraSmall,
+};
+
+double _treeNavContentGap(TRUiSize uiSize) => switch (uiSize) {
+  TRUiSize.sm => TRSpacing.extraSmall,
+  TRUiSize.md || TRUiSize.lg || TRUiSize.xl => TRSpacing.small,
+};
+
+double _treeNavChevronSize(TRUiSize uiSize) => uiSize == TRUiSize.md
+    ? TRSpacing.medium
+    : TRControlMetrics.iconSizeOf(uiSize);
+
+TextStyle _treeNavLeafLabelStyle(TRUiSize uiSize) => TRGeneratedTextStyles
+    .bodySm
+    .copyWith(fontSize: TRControlMetrics.fontSizeOf(uiSize));
+
+TextStyle _treeNavGroupLabelStyle(TRUiSize uiSize) {
+  if (uiSize == TRUiSize.md) return TRGeneratedTextStyles.label;
+  final fontSize = TRControlMetrics.fontSizeOf(uiSize);
+  return TRGeneratedTextStyles.label.copyWith(
+    fontSize: fontSize,
+    letterSpacing: TRGeneratedTypographyTracking.lg * fontSize,
+  );
+}
+
+TextStyle _treeNavDescriptionStyle(TRUiSize uiSize) {
+  final supportingSize = switch (uiSize) {
+    TRUiSize.sm || TRUiSize.md => TRUiSize.sm,
+    TRUiSize.lg => TRUiSize.md,
+    TRUiSize.xl => TRUiSize.lg,
+  };
+  return TRGeneratedTextStyles.caption.copyWith(
+    fontSize: TRControlMetrics.fontSizeOf(supportingSize),
+  );
+}
+
+Widget _treeNavIconTheme(TRUiSize uiSize, Widget child) => uiSize == TRUiSize.md
+    ? child
+    : IconTheme.merge(
+        data: IconThemeData(size: TRControlMetrics.iconSizeOf(uiSize)),
+        child: child,
+      );
 
 bool _containsValue<T extends Object>(
   List<TRTreeNavItem<T>> items,

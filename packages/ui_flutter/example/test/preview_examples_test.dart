@@ -15,6 +15,19 @@ Widget _preview(String id) => MaterialApp(
 );
 
 void main() {
+  testWidgets('pane header example renders localized comfortable chrome', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_preview('app-shell-pane-header'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TRPaneHeader), findsOneWidget);
+    expect(find.text('Projects'), findsOneWidget);
+    expect(find.text('1 active project'), findsOneWidget);
+    expect(find.text('Create'), findsOneWidget);
+    expect(find.byType(TRSeparator), findsOneWidget);
+  });
+
   testWidgets('otp field examples build every registered scenario', (
     tester,
   ) async {

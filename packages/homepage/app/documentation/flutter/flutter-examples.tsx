@@ -4585,6 +4585,25 @@ class _RegionAutocompleteState extends State<RegionAutocomplete> {
   main: TRAppShellMain(scroll: true, child: article),
 )`,
     },
+    {
+      id: 'app-shell-pane-header',
+      title: {
+        en: 'Shared pane chrome',
+        ja: '共通のペインクローム',
+        ko: '공통 pane chrome',
+      },
+      description: {
+        en: 'PaneHeader aligns leading navigation, density-aware headings, supporting text, wrapping actions, and the body divider.',
+        ja: 'PaneHeader は、先頭のナビゲーション、density に応じた見出し、補足テキスト、折り返すアクション、本文の区切り線を揃えます。',
+        ko: 'PaneHeader는 앞쪽 탐색, density에 맞는 제목, 보조 설명, 줄바꿈되는 action, 본문 divider를 정렬해요.',
+      },
+      dart: String.raw`TRPaneHeader(
+  leading: backButton,
+  title: const Text('Projects'),
+  description: const Text('1 active project'),
+  actions: [createButton],
+)`,
+    },
   ],
   pagination: [
     {

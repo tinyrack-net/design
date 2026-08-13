@@ -162,6 +162,19 @@ void main() {
           tester.getBottomLeft(find.text('Themes')).dy,
       greaterThanOrEqualTo(20),
     );
+    expect(
+      tester
+          .widget<Icon>(
+            find
+                .descendant(
+                  of: find.byType(AnimatedRotation).first,
+                  matching: find.byType(Icon),
+                )
+                .first,
+          )
+          .size,
+      TRSpacing.medium,
+    );
 
     final rails = tester
         .widgetList<Container>(find.byType(Container))
@@ -171,6 +184,130 @@ void main() {
               (widget.decoration! as BoxDecoration).border is BorderDirectional,
         );
     expect(rails, hasLength(2));
+  });
+
+  testWidgets(
+    'comfortable density enlarges rows, typography, and inherited icons',
+    (tester) async {
+      await tester.pumpWidget(
+        _app(
+          const TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRTreeNav<String>(
+              items: [
+                TRTreeNavGroup(
+                  value: 'group',
+                  label: Text('Group'),
+                  leading: Icon(Icons.folder, key: ValueKey('group-icon')),
+                  children: [],
+                ),
+                TRTreeNavLeaf(
+                  value: 'leaf',
+                  label: Text('Leaf'),
+                  description: Text('Supporting copy'),
+                  leading: Icon(Icons.description, key: ValueKey('leaf-icon')),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      for (final label in ['Group', 'Leaf']) {
+        expect(_row(tester, label).constraints?.minHeight, 48);
+        expect(
+          DefaultTextStyle.of(tester.element(find.text(label))).style.fontSize,
+          16,
+        );
+      }
+      expect(
+        DefaultTextStyle.of(
+          tester.element(find.text('Supporting copy')),
+        ).style.fontSize,
+        14,
+      );
+      for (final key in ['group-icon', 'leaf-icon']) {
+        expect(
+          IconTheme.of(tester.element(find.byKey(ValueKey<String>(key)))).size,
+          20,
+        );
+      }
+      expect(
+        tester
+            .widget<Icon>(
+              find
+                  .descendant(
+                    of: find.byType(AnimatedRotation).first,
+                    matching: find.byType(Icon),
+                  )
+                  .first,
+            )
+            .size,
+        20,
+      );
+    },
+  );
+
+  testWidgets('explicit uiSize overrides the inherited density', (
+    tester,
+  ) async {
+    const items = [
+      TRTreeNavGroup<String>(
+        value: 'group',
+        label: Text('Group'),
+        children: [],
+      ),
+      TRTreeNavLeaf<String>(
+        value: 'leaf',
+        label: Text('Leaf'),
+        description: Text('Supporting copy'),
+      ),
+    ];
+
+    await tester.pumpWidget(
+      _app(
+        const TRUiDensityScope(
+          density: TRUiDensity.comfortable,
+          child: TRTreeNav<String>(items: items, uiSize: TRUiSize.md),
+        ),
+      ),
+    );
+    expect(_row(tester, 'Group').constraints?.minHeight, 32);
+    expect(_row(tester, 'Leaf').constraints?.minHeight, 40);
+    expect(
+      DefaultTextStyle.of(tester.element(find.text('Group'))).style.fontSize,
+      12,
+    );
+    expect(
+      DefaultTextStyle.of(tester.element(find.text('Leaf'))).style.fontSize,
+      14,
+    );
+    expect(
+      DefaultTextStyle.of(
+        tester.element(find.text('Supporting copy')),
+      ).style.fontSize,
+      12,
+    );
+
+    await tester.pumpWidget(
+      _app(const TRTreeNav<String>(items: items, uiSize: TRUiSize.xl)),
+    );
+    expect(_row(tester, 'Group').constraints?.minHeight, 48);
+    expect(_row(tester, 'Leaf').constraints?.minHeight, 48);
+    expect(
+      DefaultTextStyle.of(tester.element(find.text('Group'))).style.fontSize,
+      16,
+    );
+    expect(
+      DefaultTextStyle.of(tester.element(find.text('Leaf'))).style.fontSize,
+      16,
+    );
+    expect(
+      DefaultTextStyle.of(
+        tester.element(find.text('Supporting copy')),
+      ).style.fontSize,
+      14,
+    );
   });
 
   testWidgets('itemSpacing overrides the default top-level gap', (

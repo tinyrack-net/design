@@ -2391,6 +2391,14 @@ class _RackFormState extends State<RackForm> {
           ja: '`description` は薄い補助行を追加します。`leading` と `trailing` は行全体の両側で整列し、グループの `trailing` は既定の chevron を置き換えます。',
         },
       },
+      {
+        axis: { en: 'Scale', ko: '크기', ja: 'サイズ' },
+        choices: {
+          en: 'Omit `uiSize` to follow `TRUiDensityScope`. Standard density keeps compact navigation, while comfortable density provides 48-pixel rows and larger content.',
+          ko: '`uiSize`를 생략하면 `TRUiDensityScope`를 따라요. standard density는 간결한 탐색 크기를 유지하고, comfortable density는 48px 행과 더 큰 콘텐츠를 제공해요.',
+          ja: '`uiSize` を省略すると `TRUiDensityScope` に従います。standard density はコンパクトなナビゲーションを維持し、comfortable density は 48px の行と大きなコンテンツを提供します。',
+        },
+      },
     ],
     usage: String.raw`class DocsTree extends StatefulWidget {
   const DocsTree({super.key});
@@ -2485,6 +2493,15 @@ class _DocsTreeState extends State<DocsTree> {
               en: 'Persist expansion and name the navigation region for assistive technology.',
               ko: '펼침 상태를 유지하고 보조 기술에 탐색 영역 이름을 제공해요.',
               ja: '展開状態を保持し、支援技術向けにナビゲーション領域へ名前を付けます。',
+            },
+          },
+          {
+            name: 'uiSize',
+            type: 'TRUiSize? · density default',
+            purpose: {
+              en: 'Override the row and content scale supplied by `TRUiDensityScope`.',
+              ko: '`TRUiDensityScope`가 제공하는 행과 콘텐츠 크기를 덮어써요.',
+              ja: '`TRUiDensityScope` が提供する行とコンテンツのサイズを上書きします。',
             },
           },
         ],
@@ -6040,35 +6057,40 @@ TRAppShell(
           </h2>
           <p>
             {locale === 'ko'
-              ? 'TRNavigableThreePaneScaffold는 navigation, primary, secondary 역할을 Android window size class에 맞춰 배치합니다. 600px 미만에서는 현재 destination 하나, 600–1199px에서는 navigation과 현재 destination, 1200px 이상에서는 최대 세 pane을 표시합니다. TRThreePaneNavigator는 push, replace, pop 기록을 유지하며 창 크기가 바뀌어도 현재 destination을 보존합니다. 탐색 목록은 TRNavigationPane과 TRNavigationSection 안에서 TRTreeNav로 구성하세요.'
+              ? 'TRNavigableThreePaneScaffold는 navigation, primary, secondary 역할을 Android window size class에 맞춰 배치합니다. 600px 미만에서는 현재 destination 하나, 600–1199px에서는 navigation과 현재 destination, 1200px 이상에서는 최대 세 pane을 표시합니다. TRThreePaneNavigator는 push, replace, pop 기록을 유지하며 창 크기가 바뀌어도 현재 destination을 보존해요. TRAdaptivePaneScope에서 결정된 width class와 표시 역할을 읽고, TRPaneHeader로 제목, 설명, 앞쪽 탐색, action, divider를 정렬하세요. TRNavigationPane과 TRNavigationSection의 기본 세로 간격은 TRUiDensityScope를 따라요.'
               : locale === 'ja'
-                ? 'TRNavigableThreePaneScaffold は navigation、primary、secondary の役割を Android の window size class に合わせて配置します。600px 未満では現在の destination を 1 つ、600–1199px では navigation と現在の destination、1200px 以上では最大 3 つの pane を表示します。TRThreePaneNavigator は push、replace、pop の履歴を保持し、ウィンドウサイズが変わっても現在の destination を保ちます。ナビゲーションリストは TRNavigationPane と TRNavigationSection 内で TRTreeNav を使って構成してください。'
-                : 'TRNavigableThreePaneScaffold lays out fixed navigation, primary, and secondary roles using Android window size classes. It shows only the active destination below 600px, navigation plus the active destination from 600–1199px, and up to three panes at 1200px and wider. TRThreePaneNavigator owns push, replace, and pop history and preserves the active destination through resize. Build navigation lists from TRTreeNav inside TRNavigationPane and TRNavigationSection.'}
+                ? 'TRNavigableThreePaneScaffold は navigation、primary、secondary の役割を Android の window size class に合わせて配置します。600px 未満では現在の destination を 1 つ、600–1199px では navigation と現在の destination、1200px 以上では最大 3 つの pane を表示します。TRThreePaneNavigator は push、replace、pop の履歴を保持し、ウィンドウサイズが変わっても現在の destination を保ちます。TRAdaptivePaneScope から決定済みの width class と表示中の役割を読み取り、TRPaneHeader でタイトル、説明、先頭のナビゲーション、アクション、区切り線を揃えてください。TRNavigationPane と TRNavigationSection の既定の縦方向の間隔は TRUiDensityScope に従います。'
+                : 'TRNavigableThreePaneScaffold lays out fixed navigation, primary, and secondary roles using Android window size classes. It shows only the active destination below 600px, navigation plus the active destination from 600–1199px, and up to three panes at 1200px and wider. TRThreePaneNavigator owns push, replace, and pop history and preserves the active destination through resize. Read the resolved width class and visible roles from TRAdaptivePaneScope, and use TRPaneHeader to align the title, description, leading navigation, actions, and divider. TRNavigationPane and TRNavigationSection follow TRUiDensityScope for their default block rhythm.'}
           </p>
           <TRCodeBlock
             code={`final navigator = TRThreePaneNavigator<String>(
-  const TRPaneDestination(
-    id: 'projects',
-    role: TRPaneRole.primary,
+  initialDestination: const TRPaneDestination(
+    role: TRPaneRole.navigation,
+    value: 'navigation',
   ),
 );
 
 TRNavigableThreePaneScaffold<String>(
   navigator: navigator,
-  navigationPane: TRAdaptivePane(
-    id: 'navigation',
-    child: TRNavigationPane(children: navigationSections),
-  ),
-  primaryPane: const TRAdaptivePane(
-    id: 'projects',
-    child: ProjectList(),
-  ),
+  navigationPane: TRNavigationPane(children: navigationSections),
+  primaryPane: Builder(builder: (context) {
+    final pane = TRAdaptivePaneScope.of(context);
+    return Column(children: [
+      TRPaneHeader(
+        title: const Text('Projects'),
+        description: const Text('1 project'),
+        actions: [createButton],
+      ),
+      Expanded(
+        child: ProjectList(
+          showSelection: pane.visibleRoles.contains(TRPaneRole.secondary),
+        ),
+      ),
+    ]);
+  }),
   secondaryPane: selectedProject == null
       ? null
-      : TRAdaptivePane(
-          id: selectedProject!.id,
-          child: ProjectDetail(project: selectedProject!),
-        ),
+      : ProjectDetail(project: selectedProject!),
 )`}
             language="dart"
           />

@@ -89,7 +89,35 @@ TRNavigableThreePaneScaffold<String>(
 
 Compose navigation content with `TRNavigationPane` and
 `TRNavigationSection`; use `TRTreeNav` inside each section so selection,
-hover, press, keyboard, and semantics behavior remains shared.
+hover, press, keyboard, and semantics behavior remains shared. Their default
+block rhythm follows `TRUiDensityScope`, while an explicit navigation-pane
+padding still wins. Use `TRPaneHeader` to keep pane titles, descriptions,
+leading navigation, actions, and the body divider aligned. Pane contents can
+read the scaffold decision from `TRAdaptivePaneScope` without classifying their
+own local width:
+
+```dart
+Builder(
+  builder: (context) {
+    final pane = TRAdaptivePaneScope.of(context);
+    return Column(
+      children: [
+        TRPaneHeader(
+          leading: backButton,
+          title: const Text('Projects'),
+          description: Text('${projects.length} projects'),
+          actions: [createButton],
+        ),
+        Expanded(
+          child: ProjectCollection(
+            showSelection: pane.visibleRoles.contains(TRPaneRole.secondary),
+          ),
+        ),
+      ],
+    );
+  },
+)
+```
 
 `TRTabs` composes one full-width tab strip from optional capabilities. Provide
 `panelBuilder` when the component should draw the active panel, add `onClose`
@@ -168,6 +196,9 @@ editors through `obscureText`, `minLines`, and `maxLines`.
 
 `TRTreeNavGroup` and `TRTreeNavLeaf` accept an optional `description` for a
 muted secondary line and an optional `key` that identifies the rendered row.
+`TRTreeNav.uiSize` overrides row scale; when omitted, standard density keeps
+the compact navigation geometry and comfortable density provides 48 logical
+pixel rows with larger labels, descriptions, and inherited icons.
 `TRWindowFrameTitleBar` takes any widget in its `leading` and `actions` slots,
 so window commands are composed from `TRIconButton`.
 

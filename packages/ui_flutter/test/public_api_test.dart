@@ -11,6 +11,7 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 /// the list is also checked against what the sources declare.
 const publicTypes = <Type>[
   TRAdaptivePane,
+  TRAdaptivePaneScope,
   TRAdaptiveWidthClass,
   TRAccordion,
   TRAccordionItem,
@@ -158,6 +159,7 @@ const publicTypes = <Type>[
   TROtpFieldFormField,
   TRPageTransitionsBuilder,
   TRPagination,
+  TRPaneHeader,
   TRPopover,
   TRPopoverController,
   TRPreviewCard,
