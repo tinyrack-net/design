@@ -1,3 +1,14 @@
+## 0.60.0
+
+- Adds `TRVirtualList`, a forward-order lazy linear list for vertical,
+  horizontal, and RTL layouts. Stable keys preserve a visible anchor across
+  insertions, removals, reordering, and variable-size measurement; optional
+  leading or trailing follow keeps streaming content pinned only while the
+  reader remains at that edge.
+- Adds typed edge request signals and measured status slots, controller
+  navigation and one-layout anchor holding, opaque snapshots, and PageStorage
+  restoration for virtualized collections.
+
 ## 0.59.0
 
 - Gives searchable Select layers a readable width independent of narrow
@@ -23,14 +34,6 @@
   16-pixel labels, 14-pixel descriptions, and 20-pixel inherited icons.
 - Keeps intrinsic-width `TRSelect` labels inside bounded parents at large text
   scales by truncating the trigger label without changing option copy.
-- Adds `TRVirtualList`, a forward-order lazy linear list for vertical,
-  horizontal, and RTL layouts. Stable keys preserve a visible anchor across
-  insertions, removals, reordering, and variable-size measurement; optional
-  leading or trailing follow keeps streaming content pinned only while the
-  reader remains at that edge.
-- Adds typed edge request signals and measured status slots, controller
-  navigation and one-layout anchor holding, opaque snapshots, and PageStorage
-  restoration for virtualized collections.
 
 ## 0.57.1
 
