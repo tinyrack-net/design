@@ -35,12 +35,6 @@ function findRenderedItem(label: string) {
   ).find((element) => element.textContent === label);
 }
 
-function viewportContentInlineEdges(viewport: HTMLElement) {
-  const rect = viewport.getBoundingClientRect();
-  const left = rect.left + viewport.clientLeft;
-  return { left, right: left + viewport.clientWidth };
-}
-
 async function waitForRenderedItem(label: string) {
   await expect.poll(() => findRenderedItem(label)).toBeDefined();
   return findRenderedItem(label) as HTMLElement;
@@ -572,16 +566,12 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
     requestKey: 'horizontal-leading',
     slot: <span>Earlier</span>,
   };
-  const viewportProps = {
-    style: { overflowY: 'scroll', scrollbarGutter: 'stable' },
-  } as const;
   const ltr = await render(
     <List
       axis="horizontal"
       initialPosition={{ edge: 'trailing' }}
       items={makeItems(3)}
       leadingEdgeRequest={leadingEdgeRequest}
-      viewportProps={viewportProps}
     />,
   );
   let viewport = getViewport();
@@ -590,8 +580,7 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
       const item = findRenderedItem('Item 2');
       return item === undefined
         ? undefined
-        : item.getBoundingClientRect().right -
-            viewportContentInlineEdges(viewport).right;
+        : item.getBoundingClientRect().right - viewport.getBoundingClientRect().right;
     })
     .toBeCloseTo(0, 0);
   await ltr.unmount();
@@ -603,7 +592,6 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
         initialPosition={{ edge: 'trailing' }}
         items={makeItems(3)}
         leadingEdgeRequest={leadingEdgeRequest}
-        viewportProps={viewportProps}
       />
     </div>,
   );
@@ -613,7 +601,7 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
       const item = findRenderedItem('Item 2');
       return item === undefined
         ? undefined
-        : item.getBoundingClientRect().left - viewportContentInlineEdges(viewport).left;
+        : item.getBoundingClientRect().left - viewport.getBoundingClientRect().left;
     })
     .toBeCloseTo(0, 0);
 });
