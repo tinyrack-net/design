@@ -877,7 +877,11 @@ export function TRVirtualList<T, K extends Key>({
             className={mergeClassNames('tr-virtual-list-viewport', viewportClassName)}
             onScroll={handleViewportScroll}
             ref={setViewportRef}
-            style={viewportStyle}
+            style={{
+              ...viewportStyle,
+              overflowX: axis === 'horizontal' ? 'auto' : 'hidden',
+              overflowY: axis === 'vertical' ? 'auto' : 'hidden',
+            }}
           >
             <TRScrollArea.Content
               className="tr-virtual-list-content"

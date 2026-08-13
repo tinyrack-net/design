@@ -203,6 +203,9 @@ test('virtualizes a 100k item list and preserves native props, classes, and refs
   expect(root).toHaveAttribute('data-variant', 'plain');
   const viewport = document.querySelector('.tr-virtual-list-viewport');
   expect(viewportRef).toHaveBeenCalledWith(viewport);
+  const viewportStyle = getComputedStyle(viewport as HTMLDivElement);
+  expect(viewportStyle.overflowX).toBe('hidden');
+  expect(viewportStyle.overflowY).toBe('auto');
   expect(viewport).toHaveClass('tr-virtual-list-viewport', 'consumer-viewport');
   expect(viewport).toHaveAttribute('aria-label', 'Virtual rack events');
   expect(getComputedStyle(viewport as HTMLDivElement).overflowAnchor).toBe('none');
@@ -581,6 +584,8 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
     />,
   );
   let viewport = getViewport();
+  expect(getComputedStyle(viewport).overflowX).toBe('auto');
+  expect(getComputedStyle(viewport).overflowY).toBe('hidden');
   await expect
     .poll(() => {
       const item = findRenderedItem('Item 2');
