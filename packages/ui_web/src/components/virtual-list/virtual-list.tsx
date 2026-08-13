@@ -20,6 +20,8 @@ import { useIsoLayoutEffect } from '../../internal/iso-layout-effect.js';
 import { TRScrollArea } from '../scroll-area/index.js';
 import {
   attachTRVirtualListController,
+  createTRVirtualListSnapshot,
+  readTRVirtualListSnapshot,
   type TRVirtualListAlignment,
   type TRVirtualListController,
   type TRVirtualListControllerBinding,
@@ -63,6 +65,7 @@ type VisibleAnchor<K> = {
   atLeading: boolean;
   atTrailing: boolean;
   candidates: readonly { index: number; key: K; offset: number }[];
+  positionedCandidates: readonly { index: number; key: K; offset: number }[];
 };
 
 type EdgeLayoutAnchor<K> = {
@@ -70,6 +73,18 @@ type EdgeLayoutAnchor<K> = {
   leadingPinned: boolean;
   trailingPinned: boolean;
 };
+
+type RequestedEdgeKeys = Record<TRVirtualListEdge, Set<string | number>>;
+
+type AlignmentTarget<K> = {
+  alignment: Exclude<TRVirtualListAlignment, 'nearest'>;
+  key: K;
+};
+
+type VisualLayout<K> =
+  | { alignmentTarget: AlignmentTarget<K>; kind: 'alignment' }
+  | { kind: 'offset'; value: number }
+  | null;
 
 const subscribeToHydration = () => () => {};
 const clientSnapshot = () => true;
@@ -106,8 +121,16 @@ export function TRVirtualList<T, K extends Key>({
     serverSnapshot,
   );
   const internalViewportRef = useRef<HTMLDivElement | null>(null);
-  const [isRtl, setIsRtl] = useState(false);
+  const [horizontalDirection, setHorizontalDirection] = useState<'ltr' | 'rtl' | null>(
+    null,
+  );
+  const directionReady = axis === 'vertical' || horizontalDirection !== null;
+  const isRtl = axis === 'horizontal' && horizontalDirection === 'rtl';
+  const [visualLayout, setVisualLayout] = useState<VisualLayout<K>>(() =>
+    initialVisualLayout(items, itemKey, initialPosition, initialSnapshot),
+  );
   const [focusedKey, setFocusedKey] = useState<K | null>(null);
+  const [edgeRequestsReady, setEdgeRequestsReady] = useState(false);
   const [edgeSizes, setEdgeSizes] = useState({ leading: 0, trailing: 0 });
   const edgeSizesRef = useRef(edgeSizes);
   const edgeElementsRef = useRef<{
@@ -124,14 +147,15 @@ export function TRVirtualList<T, K extends Key>({
   const trailingPinnedRef = useRef(false);
   const initialPositionAppliedRef = useRef(false);
   const lastVisibleRangeRef = useRef<TRVirtualListRange<K> | null>(null);
-  const requestedKeysRef = useRef<{
-    leading?: string | number;
-    trailing?: string | number;
-  }>({});
+  const requestedKeysRef = useRef<RequestedEdgeKeys>({
+    leading: new Set(),
+    trailing: new Set(),
+  });
   const visibleAnchorRef = useRef<VisibleAnchor<K>>({
     atLeading: true,
     atTrailing: false,
     candidates: [],
+    positionedCandidates: [],
   });
 
   const keys = useMemo(() => {
@@ -149,7 +173,10 @@ export function TRVirtualList<T, K extends Key>({
   const estimateIndexSize = useCallback(
     (index: number) => {
       const item = items[index];
-      return item === undefined ? 0 : estimateSize(item, index);
+      if (item === undefined) return 0;
+      const estimate = estimateSize(item, index);
+      assertValidEstimate(estimate, index);
+      return estimate;
     },
     [estimateSize, items],
   );
@@ -189,7 +216,7 @@ export function TRVirtualList<T, K extends Key>({
   const virtualizer = useVirtualizer<HTMLDivElement, HTMLDivElement>({
     anchorTo: 'start',
     count: items.length,
-    enabled: hydrated,
+    enabled: hydrated && directionReady,
     estimateSize: estimateIndexSize,
     followOnAppend: false,
     getItemKey,
@@ -206,16 +233,40 @@ export function TRVirtualList<T, K extends Key>({
     useAnimationFrameWithResizeObserver: true,
     useFlushSync: false,
   });
-  const virtualItems = hydrated ? virtualizer.getVirtualItems() : [];
+  virtualizer.shouldAdjustScrollPositionOnItemSizeChange = shouldAdjustForSizeChange;
+  const virtualItems = hydrated && directionReady ? virtualizer.getVirtualItems() : [];
   const totalSize = virtualizer.getTotalSize();
-  const edgeMeasurementContextRef = useRef({ axis, keys, virtualizer });
-  edgeMeasurementContextRef.current = { axis, keys, virtualizer };
+  const visualOffset = resolveVisualOffset(
+    visualLayout,
+    virtualItems,
+    edgeSizes,
+    (axis === 'vertical'
+      ? virtualizer.scrollRect?.height
+      : virtualizer.scrollRect?.width) ?? 0,
+    totalSize,
+  );
+  const edgeMeasurementContextRef = useRef({
+    axis,
+    isRtl,
+    keys,
+    visualOffset,
+    virtualizer,
+  });
+  edgeMeasurementContextRef.current = {
+    axis,
+    isRtl,
+    keys,
+    visualOffset,
+    virtualizer,
+  };
 
   const measureEdgeSlot = useCallback((edge: TRVirtualListEdge) => {
     const element = edgeElementsRef.current[edge];
     const {
       axis: currentAxis,
+      isRtl: currentIsRtl,
       keys: currentKeys,
+      visualOffset: currentVisualOffset,
       virtualizer: currentVirtualizer,
     } = edgeMeasurementContextRef.current;
     const rect = element?.getBoundingClientRect();
@@ -224,11 +275,23 @@ export function TRVirtualList<T, K extends Key>({
       rect === undefined ? 0 : currentAxis === 'vertical' ? rect.height : rect.width,
     );
     if (edgeSizesRef.current[edge] === size) return;
-    pendingEdgeLayoutRef.current = {
-      anchor: captureVisibleAnchor(currentVirtualizer, currentKeys, currentAxis),
-      leadingPinned: leadingPinnedRef.current,
-      trailingPinned: trailingPinnedRef.current,
-    };
+    if (initialPositionAppliedRef.current) {
+      pendingEdgeLayoutRef.current = {
+        anchor: captureVisibleAnchor(
+          currentVirtualizer,
+          currentKeys,
+          currentAxis,
+          currentVisualOffset,
+          logicalScrollOffset(
+            currentVirtualizer.scrollElement,
+            currentAxis,
+            currentIsRtl,
+          ),
+        ),
+        leadingPinned: leadingPinnedRef.current,
+        trailingPinned: trailingPinnedRef.current,
+      };
+    }
     const nextSizes = { ...edgeSizesRef.current, [edge]: size };
     edgeSizesRef.current = nextSizes;
     setEdgeSizes(nextSizes);
@@ -269,17 +332,27 @@ export function TRVirtualList<T, K extends Key>({
     [],
   );
 
+  const syncHorizontalDirection = useCallback(() => {
+    if (axis !== 'horizontal') return;
+    const viewport = internalViewportRef.current;
+    if (viewport === null) return;
+    const nextDirection =
+      getComputedStyle(viewport).direction === 'rtl' ? 'rtl' : 'ltr';
+    setHorizontalDirection((current) =>
+      current === nextDirection ? current : nextDirection,
+    );
+  }, [axis]);
+
   const setViewportRef = useCallback(
     (element: HTMLDivElement | null) => {
       internalViewportRef.current = element;
       setRef(viewportRef, element);
-      if (element) {
-        const nextIsRtl = getComputedStyle(element).direction === 'rtl';
-        setIsRtl((current) => (current === nextIsRtl ? current : nextIsRtl));
-      }
+      if (element) syncHorizontalDirection();
     },
-    [viewportRef],
+    [syncHorizontalDirection, viewportRef],
   );
+
+  useIsoLayoutEffect(syncHorizontalDirection);
 
   const scrollToIndex = useCallback(
     (
@@ -290,6 +363,17 @@ export function TRVirtualList<T, K extends Key>({
       },
     ) => {
       if (items.length === 0) return;
+      const key = keys[index];
+      setVisualLayout(
+        key === undefined ||
+          options?.alignment === undefined ||
+          options.alignment === 'nearest'
+          ? null
+          : {
+              alignmentTarget: { alignment: options.alignment, key },
+              kind: 'alignment',
+            },
+      );
       leadingPinnedRef.current = index === 0 && options?.alignment === 'leading';
       trailingPinnedRef.current =
         index === items.length - 1 && options?.alignment === 'trailing';
@@ -297,7 +381,6 @@ export function TRVirtualList<T, K extends Key>({
         align: toTanStackAlignment(options?.alignment),
         ...(options?.behavior === undefined ? {} : { behavior: options.behavior }),
       });
-      const key = keys[index];
       const viewport = internalViewportRef.current;
       const measurement = virtualizer.takeSnapshot()[index];
       if (key !== undefined && viewport !== null && measurement !== undefined) {
@@ -310,11 +393,16 @@ export function TRVirtualList<T, K extends Key>({
         visibleAnchorRef.current = {
           atLeading: offset <= 1,
           atTrailing: trailingPinnedRef.current,
-          candidates: [{ index, key, offset: offset - measurement.start }],
+          candidates: [
+            { index, key, offset: offset - measurement.start - visualOffset },
+          ],
+          positionedCandidates: [
+            { index, key, offset: offset - measurement.start - visualOffset },
+          ],
         };
       }
     },
-    [axis, isRtl, items.length, keys, virtualizer],
+    [axis, isRtl, items.length, keys, virtualizer, visualOffset],
   );
   const scrollToKey = useCallback(
     (
@@ -331,11 +419,19 @@ export function TRVirtualList<T, K extends Key>({
   );
   const scrollToEdge = useCallback(
     (edge: TRVirtualListEdge, options?: { behavior?: ScrollBehavior }) => {
+      const key = edge === 'leading' ? keys[0] : keys.at(-1);
+      setVisualLayout(
+        key === undefined
+          ? null
+          : {
+              alignmentTarget: { alignment: edge, key },
+              kind: 'alignment',
+            },
+      );
       if (edge === 'leading') {
         leadingPinnedRef.current = true;
         trailingPinnedRef.current = items.length <= 1;
-        scrollToIndex(0, {
-          alignment: 'leading',
+        virtualizer.scrollToOffset(0, {
           ...(options?.behavior === undefined ? {} : { behavior: options.behavior }),
         });
       } else {
@@ -346,14 +442,46 @@ export function TRVirtualList<T, K extends Key>({
         );
       }
     },
-    [items.length, scrollToIndex, virtualizer],
+    [items.length, keys, virtualizer],
+  );
+  const restoreCandidate = useCallback(
+    (candidate: { key: K; offset: number } | undefined) => {
+      if (candidate === undefined) return false;
+      const index = keyToIndex.get(candidate.key);
+      if (index === undefined) return false;
+      const target = virtualizer.getOffsetForIndex(index, 'start');
+      if (target === undefined) return false;
+      const itemStart =
+        virtualizer.getVirtualItems().find((item) => item.index === index)?.start ??
+        target[0];
+      const viewportExtent =
+        (axis === 'vertical'
+          ? virtualizer.scrollRect?.height
+          : virtualizer.scrollRect?.width) ?? 0;
+      const requestedOffset = itemStart + candidate.offset;
+      const actualOffset = Math.min(
+        Math.max(requestedOffset, 0),
+        Math.max(virtualizer.getTotalSize() - viewportExtent, 0),
+      );
+      virtualizer.scrollToOffset(actualOffset);
+      setVisualLayout({
+        kind: 'offset',
+        value: actualOffset - itemStart - candidate.offset,
+      });
+      return true;
+    },
+    [axis, keyToIndex, virtualizer],
   );
   const takeSnapshot = useCallback((): TRVirtualListSnapshot<K> => {
-    const anchor = captureVisibleAnchor(virtualizer, keys, axis);
-    const leading = anchor.candidates[0];
-    return {
-      anchorKey: leading?.key ?? null,
-      anchorOffset: leading?.offset ?? 0,
+    const anchor = captureVisibleAnchor(
+      virtualizer,
+      keys,
+      axis,
+      visualOffset,
+      logicalScrollOffset(internalViewportRef.current, axis, isRtl),
+    );
+    return createTRVirtualListSnapshot({
+      candidates: anchor.candidates,
       itemSizes: virtualizer
         .takeSnapshot()
         .flatMap((measurement) =>
@@ -361,12 +489,21 @@ export function TRVirtualList<T, K extends Key>({
             ? [{ key: measurement.key as K, size: measurement.size }]
             : [],
         ),
-      version: 1,
-    };
-  }, [axis, keyToIndex, keys, virtualizer]);
+      positionedCandidates: anchor.positionedCandidates,
+      alignmentTarget:
+        visualLayout?.kind === 'alignment' ? visualLayout.alignmentTarget : null,
+    });
+  }, [axis, isRtl, keyToIndex, keys, virtualizer, visualLayout, visualOffset]);
   const controllerBinding = useMemo<TRVirtualListControllerBinding<K>>(
     () => ({
       holdVisibleAnchorForNextLayout() {
+        visibleAnchorRef.current = captureVisibleAnchor(
+          virtualizer,
+          keys,
+          axis,
+          visualOffset,
+          logicalScrollOffset(internalViewportRef.current, axis, isRtl),
+        );
         holdVisibleAnchorRef.current = true;
       },
       scrollToEdge,
@@ -374,7 +511,17 @@ export function TRVirtualList<T, K extends Key>({
       scrollToKey,
       takeSnapshot,
     }),
-    [scrollToEdge, scrollToIndex, scrollToKey, takeSnapshot],
+    [
+      axis,
+      isRtl,
+      keys,
+      scrollToEdge,
+      scrollToIndex,
+      scrollToKey,
+      takeSnapshot,
+      visualOffset,
+      virtualizer,
+    ],
   );
 
   useIsoLayoutEffect(
@@ -383,16 +530,35 @@ export function TRVirtualList<T, K extends Key>({
   );
 
   useIsoLayoutEffect(() => {
-    if (!hydrated || initialPositionAppliedRef.current || items.length === 0) return;
+    if (
+      !hydrated ||
+      !directionReady ||
+      initialPositionAppliedRef.current ||
+      items.length === 0
+    ) {
+      return;
+    }
     initialPositionAppliedRef.current = true;
-    if (initialSnapshot?.version === 1 && initialSnapshot.anchorKey !== null) {
-      const index = keyToIndex.get(initialSnapshot.anchorKey);
-      const start =
-        index === undefined ? undefined : virtualizer.getOffsetForIndex(index, 'start');
-      if (start) {
-        virtualizer.scrollToOffset(start[0] + initialSnapshot.anchorOffset);
-        return;
-      }
+    const enableEdgeRequests = () => {
+      requestAnimationFrame(() => setEdgeRequestsReady(true));
+    };
+    const snapshotAlignment =
+      readTRVirtualListSnapshot(initialSnapshot)?.alignmentTarget;
+    if (
+      snapshotAlignment !== null &&
+      snapshotAlignment !== undefined &&
+      keyToIndex.has(snapshotAlignment.key)
+    ) {
+      scrollToKey(snapshotAlignment.key, {
+        alignment: snapshotAlignment.alignment,
+      });
+      enableEdgeRequests();
+      return;
+    }
+    const snapshotAnchor = resolveSnapshotAnchor(initialSnapshot, keyToIndex);
+    if (restoreCandidate(snapshotAnchor)) {
+      enableEdgeRequests();
+      return;
     }
     if ('edge' in initialPosition) {
       scrollToEdge(initialPosition.edge);
@@ -405,15 +571,19 @@ export function TRVirtualList<T, K extends Key>({
         alignment: initialPosition.alignment ?? 'nearest',
       });
     }
+    enableEdgeRequests();
   }, [
     hydrated,
+    directionReady,
     initialPosition,
     initialSnapshot,
     items.length,
     keyToIndex,
+    restoreCandidate,
     scrollToEdge,
     scrollToIndex,
     scrollToKey,
+    visualOffset,
     virtualizer,
   ]);
 
@@ -421,7 +591,7 @@ export function TRVirtualList<T, K extends Key>({
     if (keysChanged && hydrated) {
       const previousAnchor = visibleAnchorRef.current;
       const previousKeys = previousKeysRef.current;
-      const onlyTrailingExtentChanged = equalKeyPrefix(previousKeys, keys);
+      const onlyTrailingExtentChanged = isTrailingAppend(previousKeys, keys);
       if (!holdVisibleAnchor && follow === 'leading' && leadingPinnedRef.current) {
         scrollToEdge('leading');
       } else if (
@@ -432,18 +602,11 @@ export function TRVirtualList<T, K extends Key>({
         scrollToEdge('trailing');
       } else if (!onlyTrailingExtentChanged) {
         const candidate = findSurvivingAnchor(previousAnchor, previousKeys, keyToIndex);
-        if (candidate) {
-          const index = keyToIndex.get(candidate.key);
-          const start =
-            index === undefined
-              ? undefined
-              : virtualizer.getOffsetForIndex(index, 'start');
-          if (start) virtualizer.scrollToOffset(start[0] + candidate.offset);
-        }
+        restoreCandidate(candidate);
       }
     }
     previousKeysRef.current = keys;
-    if (holdVisibleAnchor) holdVisibleAnchorRef.current = false;
+    if (keysChanged && holdVisibleAnchor) holdVisibleAnchorRef.current = false;
   }, [
     follow,
     holdVisibleAnchor,
@@ -451,7 +614,9 @@ export function TRVirtualList<T, K extends Key>({
     keyToIndex,
     keys,
     keysChanged,
+    restoreCandidate,
     scrollToEdge,
+    visualOffset,
     virtualizer,
   ]);
 
@@ -468,16 +633,18 @@ export function TRVirtualList<T, K extends Key>({
       return;
     }
     const candidate = pending.anchor.candidates.find(({ key }) => keyToIndex.has(key));
-    if (!candidate) return;
-    const index = keyToIndex.get(candidate.key);
-    const start =
-      index === undefined ? undefined : virtualizer.getOffsetForIndex(index, 'start');
-    if (start) virtualizer.scrollToOffset(start[0] + candidate.offset);
-  }, [edgeSizes, hydrated, keyToIndex, scrollToEdge, virtualizer]);
+    restoreCandidate(candidate);
+  }, [edgeSizes, hydrated, keyToIndex, restoreCandidate, scrollToEdge]);
 
   const previousTotalSizeRef = useRef(totalSize);
   useIsoLayoutEffect(() => {
     const sizeChanged = previousTotalSizeRef.current !== totalSize;
+    if (sizeChanged && holdVisibleAnchor) {
+      const candidate = visibleAnchorRef.current.candidates.find(({ key }) =>
+        keyToIndex.has(key),
+      );
+      restoreCandidate(candidate);
+    }
     if (
       sizeChanged &&
       !keysChanged &&
@@ -489,34 +656,57 @@ export function TRVirtualList<T, K extends Key>({
     }
     previousTotalSizeRef.current = totalSize;
     if (sizeChanged && holdVisibleAnchor) holdVisibleAnchorRef.current = false;
-  }, [follow, holdVisibleAnchor, keysChanged, scrollToEdge, totalSize]);
+  }, [
+    follow,
+    holdVisibleAnchor,
+    keysChanged,
+    keyToIndex,
+    restoreCandidate,
+    scrollToEdge,
+    totalSize,
+  ]);
 
   useIsoLayoutEffect(() => {
     if (hydrated) {
-      visibleAnchorRef.current = captureVisibleAnchor(virtualizer, keys, axis);
+      visibleAnchorRef.current = captureVisibleAnchor(
+        virtualizer,
+        keys,
+        axis,
+        visualOffset,
+        logicalScrollOffset(internalViewportRef.current, axis, isRtl),
+      );
     }
   });
 
-  const rangeStart = virtualizer.range?.startIndex;
-  const rangeEnd = virtualizer.range?.endIndex;
+  const scrollOffset =
+    logicalScrollOffset(internalViewportRef.current, axis, isRtl) ??
+    virtualizer.scrollOffset ??
+    0;
+  const viewportExtent =
+    (axis === 'vertical'
+      ? virtualizer.scrollRect?.height
+      : virtualizer.scrollRect?.width) ?? 0;
+  const visibleRange = resolveVisibleRange(
+    virtualItems,
+    keys,
+    scrollOffset,
+    viewportExtent,
+    visualOffset,
+  );
   useEffect(() => {
     if (
       !hydrated ||
       onVisibleRangeChanged === undefined ||
-      rangeStart === undefined ||
-      rangeEnd === undefined
+      edgeSizes.leading !== edgeSizesRef.current.leading ||
+      edgeSizes.trailing !== edgeSizesRef.current.trailing
     ) {
       return;
     }
-    const leadingKey = keys[rangeStart];
-    const trailingKey = keys[rangeEnd];
-    if (leadingKey === undefined || trailingKey === undefined) return;
-    const nextRange: TRVirtualListRange<K> = {
-      endIndex: rangeEnd,
-      leadingKey,
-      startIndex: rangeStart,
-      trailingKey,
-    };
+    if (visibleRange === null) {
+      lastVisibleRangeRef.current = null;
+      return;
+    }
+    const nextRange = visibleRange;
     const previousRange = lastVisibleRangeRef.current;
     if (
       previousRange?.startIndex === nextRange.startIndex &&
@@ -528,11 +718,10 @@ export function TRVirtualList<T, K extends Key>({
     }
     lastVisibleRangeRef.current = nextRange;
     onVisibleRangeChanged(nextRange);
-  }, [hydrated, keys, onVisibleRangeChanged, rangeEnd, rangeStart]);
+  }, [edgeSizes, hydrated, onVisibleRangeChanged, visibleRange]);
 
-  const scrollOffset = virtualizer.scrollOffset ?? 0;
   useEffect(() => {
-    if (!hydrated || items.length === 0) return;
+    if (!hydrated || !edgeRequestsReady || items.length === 0) return;
     const viewport = internalViewportRef.current;
     const defaultThreshold =
       viewport === null
@@ -562,6 +751,7 @@ export function TRVirtualList<T, K extends Key>({
     );
   }, [
     axis,
+    edgeRequestsReady,
     hydrated,
     items.length,
     leadingEdgeRequest,
@@ -610,6 +800,17 @@ export function TRVirtualList<T, K extends Key>({
         : viewport.scrollWidth - viewport.clientWidth;
     leadingPinnedRef.current = offset <= 1;
     trailingPinnedRef.current = maximum - offset <= 1;
+    if (!trailingPinnedRef.current) {
+      setVisualLayout((current) => (current?.kind === 'offset' ? current : null));
+    } else if (follow === 'trailing') {
+      const key = keys.at(-1);
+      if (key !== undefined) {
+        setVisualLayout({
+          alignmentTarget: { alignment: 'trailing', key },
+          kind: 'alignment',
+        });
+      }
+    }
     viewportOnScroll?.(event);
   };
 
@@ -645,6 +846,12 @@ export function TRVirtualList<T, K extends Key>({
                   className="tr-virtual-list-edge-slot"
                   data-edge="leading"
                   ref={setLeadingEdgeSlotRef}
+                  style={{
+                    transform:
+                      axis === 'vertical'
+                        ? `translateY(${visualOffset}px)`
+                        : `translateX(${isRtl ? -visualOffset : visualOffset}px)`,
+                  }}
                 >
                   {leadingEdgeRequest.slot}
                 </div>
@@ -660,8 +867,12 @@ export function TRVirtualList<T, K extends Key>({
                 } = consumerProps;
                 const translate =
                   axis === 'vertical'
-                    ? `translateY(${virtualItem.start}px)`
-                    : `translateX(${isRtl ? -virtualItem.start : virtualItem.start}px)`;
+                    ? `translateY(${virtualItem.start + visualOffset}px)`
+                    : `translateX(${
+                        isRtl
+                          ? -(virtualItem.start + visualOffset)
+                          : virtualItem.start + visualOffset
+                      }px)`;
                 return (
                   <div
                     {...nativeItemProps}
@@ -720,6 +931,91 @@ function equalKeyPrefix<K>(left: readonly K[], right: readonly K[]) {
   return true;
 }
 
+function isTrailingAppend<K>(previous: readonly K[], current: readonly K[]) {
+  return previous.length < current.length && equalKeyPrefix(previous, current);
+}
+
+function initialVisualLayout<T, K extends Key>(
+  items: readonly T[],
+  itemKey: (item: T, index: number) => K,
+  initialPosition: TRVirtualListInitialPosition<K>,
+  initialSnapshot: TRVirtualListSnapshot<K> | undefined,
+): VisualLayout<K> {
+  const keys = items.map(itemKey);
+  const snapshotTarget = readTRVirtualListSnapshot(initialSnapshot)?.alignmentTarget;
+  if (snapshotTarget !== null && snapshotTarget !== undefined) {
+    return keys.includes(snapshotTarget.key)
+      ? { alignmentTarget: snapshotTarget, kind: 'alignment' }
+      : null;
+  }
+  let alignment: TRVirtualListAlignment | undefined;
+  let key: K | undefined;
+  if ('edge' in initialPosition) {
+    alignment = initialPosition.edge;
+    key = initialPosition.edge === 'leading' ? keys[0] : keys.at(-1);
+  } else {
+    alignment = initialPosition.alignment;
+    if ('key' in initialPosition) key = initialPosition.key;
+    else if (keys.length > 0) {
+      key = keys[Math.min(Math.max(initialPosition.index, 0), keys.length - 1)];
+    }
+  }
+  return key === undefined || alignment === undefined || alignment === 'nearest'
+    ? null
+    : { alignmentTarget: { alignment, key }, kind: 'alignment' };
+}
+
+function resolveVisualOffset<K extends Key>(
+  layout: VisualLayout<K>,
+  measurements: readonly { key: Key; size: number; start: number }[],
+  edgeSizes: { leading: number; trailing: number },
+  viewportExtent: number,
+  totalSize: number,
+) {
+  if (layout === null) return 0;
+  if (layout.kind === 'offset') return layout.value;
+  if (viewportExtent <= 0 || totalSize > viewportExtent) return 0;
+  const measurement = measurements.find(
+    ({ key }) => key === layout.alignmentTarget.key,
+  );
+  if (measurement === undefined) return 0;
+  const desiredStart =
+    layout.alignmentTarget.alignment === 'leading'
+      ? edgeSizes.leading
+      : layout.alignmentTarget.alignment === 'trailing'
+        ? viewportExtent - edgeSizes.trailing - measurement.size
+        : (viewportExtent - measurement.size) / 2;
+  return desiredStart - measurement.start;
+}
+
+function resolveVisibleRange<K extends Key>(
+  virtualItems: readonly { end: number; index: number; start: number }[],
+  keys: readonly K[],
+  scrollOffset: number,
+  viewportExtent: number,
+  visualOffset: number,
+): TRVirtualListRange<K> | null {
+  if (viewportExtent <= 0) return null;
+  const visible = virtualItems.filter(
+    (item) =>
+      item.end + visualOffset > scrollOffset &&
+      item.start + visualOffset < scrollOffset + viewportExtent,
+  );
+  const first = visible[0];
+  const last = visible.at(-1);
+  if (first === undefined || last === undefined) return null;
+  const leadingKey = keys[first.index];
+  const trailingKey = keys[last.index];
+  return leadingKey === undefined || trailingKey === undefined
+    ? null
+    : {
+        endIndex: last.index,
+        leadingKey,
+        startIndex: first.index,
+        trailingKey,
+      };
+}
+
 function assertUniqueKeys(keys: readonly Key[]) {
   const seen = new Set<Key>();
   for (const [index, key] of keys.entries()) {
@@ -755,29 +1051,80 @@ function captureVisibleAnchor<K extends Key>(
   virtualizer: ReturnType<typeof useVirtualizer<HTMLDivElement, HTMLDivElement>>,
   keys: readonly K[],
   axis: 'horizontal' | 'vertical',
+  visualOffset = 0,
+  scrollOffset?: number,
 ): VisibleAnchor<K> {
   const viewport = virtualizer.scrollElement;
-  const offset = virtualizer.scrollOffset ?? 0;
+  const offset = scrollOffset ?? virtualizer.scrollOffset ?? 0;
   const extent =
     viewport === null
       ? 0
       : axis === 'vertical'
         ? viewport.clientHeight
         : viewport.clientWidth;
-  const visibleItems = virtualizer
-    .getVirtualItems()
-    .filter((item) => item.end > offset && item.start < offset + extent);
-  const candidates = visibleItems.flatMap((item) => {
+  const positionedCandidates = virtualizer.getVirtualItems().flatMap((item) => {
     const key = keys[item.index];
     return key === undefined
       ? []
-      : [{ index: item.index, key, offset: offset - item.start }];
+      : [
+          {
+            end: item.end + visualOffset,
+            index: item.index,
+            key,
+            offset: offset - item.start - visualOffset,
+            start: item.start + visualOffset,
+          },
+        ];
   });
+  const candidates = positionedCandidates.filter(
+    (item) => item.end > offset && item.start < offset + extent,
+  );
   return {
     atLeading: offset <= 1,
     atTrailing: virtualizer.isAtEnd(1),
     candidates,
+    positionedCandidates,
   };
+}
+
+function logicalScrollOffset(
+  viewport: HTMLDivElement | null,
+  axis: 'horizontal' | 'vertical',
+  isRtl: boolean,
+) {
+  if (viewport === null) return undefined;
+  return axis === 'vertical'
+    ? viewport.scrollTop
+    : isRtl
+      ? -viewport.scrollLeft
+      : viewport.scrollLeft;
+}
+
+function resolveSnapshotAnchor<K extends Key>(
+  snapshot: TRVirtualListSnapshot<K> | undefined,
+  keyToIndex: ReadonlyMap<K, number>,
+) {
+  const data = readTRVirtualListSnapshot(snapshot);
+  if (data === undefined) return undefined;
+  const visible = data.candidates.find(({ key }) => keyToIndex.has(key));
+  if (visible !== undefined) return visible;
+  const primary = data.candidates[0];
+  if (primary === undefined) return undefined;
+  const successor = data.positionedCandidates.find(
+    ({ index, key }) => index > primary.index && keyToIndex.has(key),
+  );
+  if (successor !== undefined) return successor;
+  for (let index = data.positionedCandidates.length - 1; index >= 0; index -= 1) {
+    const candidate = data.positionedCandidates[index];
+    if (
+      candidate !== undefined &&
+      candidate.index < primary.index &&
+      keyToIndex.has(candidate.key)
+    ) {
+      return candidate;
+    }
+  }
+  return undefined;
 }
 
 function findSurvivingAnchor<K>(
@@ -792,13 +1139,25 @@ function findSurvivingAnchor<K>(
   for (let index = primary.index + 1; index < previousKeys.length; index += 1) {
     const key = previousKeys[index];
     if (key !== undefined && keyToIndex.has(key)) {
-      return { index, key, offset: primary.offset };
+      return (
+        anchor.positionedCandidates.find((candidate) => candidate.key === key) ?? {
+          index,
+          key,
+          offset: primary.offset,
+        }
+      );
     }
   }
   for (let index = primary.index - 1; index >= 0; index -= 1) {
     const key = previousKeys[index];
     if (key !== undefined && keyToIndex.has(key)) {
-      return { index, key, offset: primary.offset };
+      return (
+        anchor.positionedCandidates.find((candidate) => candidate.key === key) ?? {
+          index,
+          key,
+          offset: primary.offset,
+        }
+      );
     }
   }
   return undefined;
@@ -808,10 +1167,10 @@ function requestEdge(
   edge: TRVirtualListEdge,
   request: TRVirtualListEdgeRequest | undefined,
   reached: boolean,
-  requestedKeys: { leading?: string | number; trailing?: string | number },
+  requestedKeys: RequestedEdgeKeys,
 ) {
-  if (!request || !reached || requestedKeys[edge] === request.requestKey) return;
-  requestedKeys[edge] = request.requestKey;
+  if (!request || !reached || requestedKeys[edge].has(request.requestKey)) return;
+  requestedKeys[edge].add(request.requestKey);
   request.onRequest();
 }
 
@@ -834,20 +1193,43 @@ function assertValidTriggerExtent(extent: TRVirtualListEdgeRequest['triggerExten
   }
 }
 
+function assertValidEstimate(estimate: number, index: number) {
+  if (!Number.isFinite(estimate) || estimate <= 0) {
+    throw new RangeError(
+      `TRVirtualList estimateSize must return a finite value greater than zero at index ${index}.`,
+    );
+  }
+}
+
+function shouldAdjustForSizeChange(
+  item: { end: number; key: Key; start: number },
+  _delta: number,
+  instance: {
+    itemSizeCache: ReadonlyMap<Key, number>;
+    scrollAdjustments: number;
+    scrollOffset: number | null;
+  },
+) {
+  const fold = (instance.scrollOffset ?? 0) + instance.scrollAdjustments;
+  return instance.itemSizeCache.has(item.key) ? item.end <= fold : item.start < fold;
+}
+
 function restoreMeasurements<T, K extends Key>(
   items: readonly T[],
   keys: readonly K[],
   estimateSize: (item: T, index: number) => number,
   snapshot: TRVirtualListSnapshot<K> | undefined,
 ) {
-  if (snapshot?.version !== 1 || items.length === 0) return [];
+  const data = readTRVirtualListSnapshot(snapshot);
+  if (data === undefined || items.length === 0) return [];
   const savedSizes = new Map(
-    snapshot.itemSizes.map((measurement) => [measurement.key, measurement.size]),
+    data.itemSizes.map((measurement) => [measurement.key, measurement.size]),
   );
   let start = 0;
   return items.map((item, index) => {
     const key = keys[index] ?? index;
     const size = savedSizes.get(key as K) ?? estimateSize(item, index);
+    assertValidEstimate(size, index);
     const measurement = { end: start + size, index, key, lane: 0, size, start };
     start += size;
     return measurement;
@@ -859,22 +1241,34 @@ function restoreOffset<K extends Key>(
   measurements: readonly { key: Key; start: number }[],
   snapshot: TRVirtualListSnapshot<K> | undefined,
 ) {
-  if (snapshot?.version !== 1 || snapshot.anchorKey === null) return 0;
-  const index = keys.indexOf(snapshot.anchorKey);
-  return index < 0 ? 0 : (measurements[index]?.start ?? 0) + snapshot.anchorOffset;
+  const anchor = resolveSnapshotAnchor(
+    snapshot,
+    new Map(keys.map((key, index) => [key, index])),
+  );
+  if (anchor === undefined) return 0;
+  const index = keys.indexOf(anchor.key);
+  return (measurements[index]?.start ?? 0) + anchor.offset;
 }
 
 export const trVirtualListInternals = {
   assertUniqueKeys,
+  assertValidEstimate,
   assertValidTriggerExtent,
   captureVisibleAnchor,
+  createTRVirtualListSnapshot,
   equalKeyPrefix,
   equalKeys,
   findSurvivingAnchor,
+  initialVisualLayout,
   requestEdge,
+  readTRVirtualListSnapshot,
+  resolveSnapshotAnchor,
   resolveTriggerExtent,
+  resolveVisibleRange,
+  resolveVisualOffset,
   restoreMeasurements,
   restoreOffset,
   setRef,
+  shouldAdjustForSizeChange,
   toTanStackAlignment,
 };

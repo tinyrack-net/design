@@ -11,15 +11,48 @@ export type TRVirtualListInitialPosition<K> =
   | { alignment?: TRVirtualListAlignment; index: number }
   | { alignment?: TRVirtualListAlignment; key: K };
 
+declare const trVirtualListSnapshotBrand: unique symbol;
+
+/** An opaque, versioned virtual-list restoration value. */
 export type TRVirtualListSnapshot<K> = {
-  readonly anchorKey: K | null;
-  readonly anchorOffset: number;
-  readonly itemSizes: readonly {
-    readonly key: K;
-    readonly size: number;
-  }[];
   readonly version: 1;
+  readonly [trVirtualListSnapshotBrand]: K;
 };
+
+export type TRVirtualListSnapshotData<K> = {
+  readonly alignmentTarget: {
+    readonly alignment: Exclude<TRVirtualListAlignment, 'nearest'>;
+    readonly key: K;
+  } | null;
+  readonly candidates: readonly {
+    readonly index: number;
+    readonly key: K;
+    readonly offset: number;
+  }[];
+  readonly itemSizes: readonly { readonly key: K; readonly size: number }[];
+  readonly positionedCandidates: readonly {
+    readonly index: number;
+    readonly key: K;
+    readonly offset: number;
+  }[];
+};
+
+const snapshotData = new WeakMap<object, TRVirtualListSnapshotData<unknown>>();
+
+export function createTRVirtualListSnapshot<K>(
+  data: TRVirtualListSnapshotData<K>,
+): TRVirtualListSnapshot<K> {
+  const snapshot = Object.freeze({ version: 1 }) as TRVirtualListSnapshot<K>;
+  snapshotData.set(snapshot, data as TRVirtualListSnapshotData<unknown>);
+  return snapshot;
+}
+
+export function readTRVirtualListSnapshot<K>(
+  snapshot: TRVirtualListSnapshot<K> | undefined,
+): TRVirtualListSnapshotData<K> | undefined {
+  if (snapshot?.version !== 1) return undefined;
+  return snapshotData.get(snapshot) as TRVirtualListSnapshotData<K> | undefined;
+}
 
 export type TRVirtualListTriggerExtent =
   | { readonly kind: 'pixels'; readonly value: number }
