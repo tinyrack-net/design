@@ -95,8 +95,8 @@ describe('TRVirtualList internals', () => {
     expect(
       trVirtualListInternals.captureVisibleAnchor(
         {
+          getTotalSize: () => 100,
           getVirtualItems: () => [{ end: 40, index: 0, start: 0 }],
-          isAtEnd: () => false,
           scrollElement: null,
           scrollOffset: null,
         } as never,
@@ -112,10 +112,11 @@ describe('TRVirtualList internals', () => {
     expect(
       trVirtualListInternals.captureVisibleAnchor(
         {
+          getTotalSize: () => 100,
           getVirtualItems: () => [{ end: 60, index: 0, start: 20 }],
-          isAtEnd: () => true,
           scrollElement: { clientHeight: 80, clientWidth: 100 },
           scrollOffset: 30,
+          scrollRect: { height: 80, width: 100 },
         } as never,
         ['a'],
         'horizontal',
