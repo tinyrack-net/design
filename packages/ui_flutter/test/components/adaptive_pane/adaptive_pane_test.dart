@@ -303,6 +303,29 @@ void main() {
     );
   });
 
+  testWidgets('pane header aligns its identity to a capped content rail', (
+    tester,
+  ) async {
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(1000, 400);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const TRPaneHeader(
+          contentMaxWidth: 640,
+          title: Text('Projects'),
+          actions: <Widget>[Text('Save')],
+        ),
+      ),
+    );
+
+    expect(tester.getTopLeft(find.text('Projects')).dx, 180);
+    expect(tester.getRect(find.byType(TRSeparator)).width, 1000);
+    expect(tester.getRect(find.text('Save')).right, lessThanOrEqualTo(820));
+  });
+
   testWidgets('adaptive pane scope exposes scaffold decisions to panes', (
     tester,
   ) async {

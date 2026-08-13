@@ -1,7 +1,8 @@
 ## 0.58.0
 
 - Adds `TRPaneHeader` for density-aware pane titles, supporting descriptions,
-  leading navigation, wrapping actions, and an optional divider.
+  leading navigation, wrapping actions, an optional full-width divider, and a
+  capped content rail that can align with a readable pane body.
 - Exposes `TRAdaptivePaneScope` from `TRNavigableThreePaneScaffold` so pane
   contents can read the resolved width class, visible roles, and active role.
 - Makes `TRNavigationPane` and `TRNavigationSection` default block rhythm
@@ -9,6 +10,8 @@
 - Adds optional `uiSize` to `TRTreeNav`. When omitted, standard density keeps
   the existing row geometry and comfortable density uses 48-pixel rows,
   16-pixel labels, 14-pixel descriptions, and 20-pixel inherited icons.
+- Keeps intrinsic-width `TRSelect` labels inside bounded parents at large text
+  scales by truncating the trigger label without changing option copy.
 
 ## 0.57.1
 

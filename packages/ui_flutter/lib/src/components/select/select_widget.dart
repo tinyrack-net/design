@@ -656,15 +656,18 @@ class _TRSelectState<T> extends State<TRSelect<T>>
                 ),
                 SizedBox(width: controlGap),
               ],
-              TRLayerPartBoundary(
-                name: 'triggerLabel',
-                child: Text(
-                  selectedLabel.isEmpty
-                      ? widget.placeholder ?? ''
-                      : selectedLabel,
-                  style: selectedLabel.isEmpty
-                      ? TextStyle(color: colors.textPlaceholder)
-                      : null,
+              Flexible(
+                child: TRLayerPartBoundary(
+                  name: 'triggerLabel',
+                  child: Text(
+                    selectedLabel.isEmpty
+                        ? widget.placeholder ?? ''
+                        : selectedLabel,
+                    overflow: TextOverflow.ellipsis,
+                    style: selectedLabel.isEmpty
+                        ? TextStyle(color: colors.textPlaceholder)
+                        : null,
+                  ),
                 ),
               ),
               SizedBox(width: controlGap),

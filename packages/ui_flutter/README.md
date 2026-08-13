@@ -99,7 +99,10 @@ Compose navigation content with `TRNavigationPane` and
 hover, press, keyboard, and semantics behavior remains shared. Their default
 block rhythm follows `TRUiDensityScope`, while an explicit navigation-pane
 padding still wins. Use `TRPaneHeader` to keep pane titles, descriptions,
-leading navigation, actions, and the body divider aligned. Pane contents can
+leading navigation, actions, and the body divider aligned. When a pane body
+uses a centred readable-width cap, pass the same `contentMaxWidth` to keep the
+header identity and actions on that rail while its divider stays full width.
+Pane contents can
 read the scaffold decision from `TRAdaptivePaneScope` without classifying their
 own local width:
 
@@ -110,6 +113,7 @@ Builder(
     return Column(
       children: [
         TRPaneHeader(
+          contentMaxWidth: 640,
           leading: backButton,
           title: const Text('Projects'),
           description: Text('${projects.length} projects'),
