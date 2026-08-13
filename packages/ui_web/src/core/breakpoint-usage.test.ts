@@ -10,8 +10,12 @@ const privateResponsiveBoundaries = new Map([
   ['src/components/otp-field/otp-field.css', new Set(['@media (width < 24rem)'])],
 ]);
 
+function normalizePath(path: string): string {
+  return path.replaceAll('\\', '/');
+}
+
 function sourcePath(file: string) {
-  return relative(packageRoot, file).replaceAll('\\', '/');
+  return normalizePath(relative(packageRoot, file));
 }
 
 function sourceFiles(directory: string): string[] {
@@ -25,6 +29,12 @@ function sourceFiles(directory: string): string[] {
 }
 
 describe('breakpoint token usage', () => {
+  it('normalizes Windows paths before matching private boundaries', () => {
+    expect(normalizePath('src\\components\\app-shell\\app-shell.css')).toBe(
+      'src/components/app-shell/app-shell.css',
+    );
+  });
+
   it('keeps responsive conditions on public tokens or explicit private boundaries', () => {
     const violations: string[] = [];
 
