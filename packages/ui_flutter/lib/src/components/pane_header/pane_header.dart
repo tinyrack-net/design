@@ -13,6 +13,7 @@ class TRPaneHeader extends StatelessWidget {
     this.description,
     this.leading,
     this.actions = const <Widget>[],
+    this.contentMaxWidth,
     this.divider = true,
     super.key,
   });
@@ -31,6 +32,13 @@ class TRPaneHeader extends StatelessWidget {
   /// Actions wrap onto additional rows when they do not fit the pane width.
   final List<Widget> actions;
 
+  /// Optional maximum width for the header identity and action rail.
+  ///
+  /// The divider continues to span the complete pane. A pane whose body caps
+  /// and centres its readable content can pass the same cap here so its title,
+  /// actions, and body retain one leading edge on a wide window.
+  final double? contentMaxWidth;
+
   /// Whether to separate the header from the pane body.
   final bool divider;
 
@@ -38,6 +46,25 @@ class TRPaneHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final comfortable = TRUiDensityScope.of(context) == TRUiDensity.comfortable;
     final verticalInset = comfortable ? TRSpacing.extraLarge : TRSpacing.large;
+    final content = Wrap(
+      alignment: WrapAlignment.spaceBetween,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      spacing: TRSpacing.extraLarge,
+      runSpacing: TRSpacing.medium,
+      children: <Widget>[
+        _TRPaneHeaderIdentity(
+          title: title,
+          description: description,
+          leading: leading,
+        ),
+        if (actions.isNotEmpty)
+          Wrap(
+            spacing: TRSpacing.small,
+            runSpacing: TRSpacing.small,
+            children: actions,
+          ),
+      ],
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -49,25 +76,14 @@ class TRPaneHeader extends StatelessWidget {
             TRSpacing.extraLarge,
             verticalInset,
           ),
-          child: Wrap(
-            alignment: WrapAlignment.spaceBetween,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            spacing: TRSpacing.extraLarge,
-            runSpacing: TRSpacing.medium,
-            children: <Widget>[
-              _TRPaneHeaderIdentity(
-                title: title,
-                description: description,
-                leading: leading,
-              ),
-              if (actions.isNotEmpty)
-                Wrap(
-                  spacing: TRSpacing.small,
-                  runSpacing: TRSpacing.small,
-                  children: actions,
+          child: contentMaxWidth == null
+              ? content
+              : Align(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: contentMaxWidth!),
+                    child: SizedBox(width: double.infinity, child: content),
+                  ),
                 ),
-            ],
-          ),
         ),
         if (divider)
           const TRSeparator(

@@ -46,6 +46,53 @@ const _narrow = Size(400, 800);
 const _wide = Size(900, 800);
 
 void main() {
+  testWidgets(
+    'intrinsic trigger truncates a scaled label inside a bounded parent',
+    (tester) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(
+          const MediaQuery(
+            data: MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: SizedBox(
+              width: 266,
+              child: TRSelect<String>(
+                items: <TRSelectItem<String>>[
+                  TRSelectItem(
+                    value: 'ask',
+                    label: 'Ask before changes to the workspace',
+                  ),
+                ],
+                defaultValue: 'ask',
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      expect(tester.getSize(_trigger).width, 266);
+      expect(
+        tester
+            .widget<Text>(find.text('Ask before changes to the workspace'))
+            .overflow,
+        TextOverflow.ellipsis,
+      );
+    },
+  );
+
+  testWidgets('intrinsic trigger remains content-sized without a width', (
+    tester,
+  ) async {
+    _sizeViewport(tester, _wide);
+    await tester.pumpWidget(
+      _app(const TRSelect<String>(items: _items, defaultValue: 'alpha')),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(tester.getSize(_trigger).width, lessThan(_wide.width));
+  });
+
   group('surface resolution', () {
     testWidgets('renders leading content in the trigger', (tester) async {
       _sizeViewport(tester, _wide);
