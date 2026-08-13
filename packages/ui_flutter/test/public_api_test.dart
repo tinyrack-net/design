@@ -148,6 +148,7 @@ const publicTypes = <Type>[
   TRNavigationMenuController,
   TRNavigationMenuItem,
   TRNavigationPane,
+  TRNavigationRow,
   TRNavigationSection,
   TRNativeContextMenuPresenter,
   TRNumberField,

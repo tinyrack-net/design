@@ -1516,53 +1516,71 @@ class PreviewComponent extends StatelessWidget {
       'tree-nav' => SizedBox(
         key: measureKey,
         width: 320,
-        child: TRTreeNav<String>(
-          key: ValueKey(
-            'tree-nav-${args['collapsed'] == true}-${args['selected'] != false}',
-          ),
-          defaultValue: args['selected'] == false ? null : 'theming',
-          items: [
-            TRTreeNavGroup(
-              value: 'getting-started',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: TRSpacing.small,
+          children: [
+            TRNavigationRow(
               label: Text(switch (locale) {
-                'ko' => '시작하기',
-                'ja' => 'はじめに',
-                _ => 'GETTING STARTED',
-              }, key: _partKey('group0Label')),
-              initiallyExpanded: args['collapsed'] != true,
-              children: [
-                TRTreeNavLeaf(
-                  value: 'install',
-                  label: Text(switch (locale) {
-                    'ko' => '설치',
-                    'ja' => 'インストール',
-                    _ => 'Install',
-                  }, key: _partKey('leaf0Label')),
-                ),
+                'ko' => '작업 공간',
+                'ja' => 'ワークスペース',
+                _ => 'Workspace',
+              }),
+              description: const Text(r'C:\Users\winetree94'),
+              leading: const Icon(Icons.folder_outlined),
+              selected: args['selected'] != false,
+              onPressed: () {},
+            ),
+            TRTreeNav<String>(
+              key: ValueKey(
+                'tree-nav-${args['collapsed'] == true}-${args['selected'] != false}',
+              ),
+              defaultValue: args['selected'] == false ? null : 'theming',
+              items: [
                 TRTreeNavGroup(
-                  value: 'advanced',
+                  value: 'getting-started',
                   label: Text(switch (locale) {
-                    'ko' => '고급',
-                    'ja' => '高度な設定',
-                    _ => 'ADVANCED',
-                  }, key: _partKey('group1Label')),
-                  initiallyExpanded: true,
+                    'ko' => '시작하기',
+                    'ja' => 'はじめに',
+                    _ => 'GETTING STARTED',
+                  }, key: _partKey('group0Label')),
+                  initiallyExpanded: args['collapsed'] != true,
                   children: [
                     TRTreeNavLeaf(
-                      value: 'plugins',
+                      value: 'install',
                       label: Text(switch (locale) {
-                        'ko' => '플러그인',
-                        'ja' => 'プラグイン',
-                        _ => 'Plugins',
-                      }, key: _partKey('leaf1Label')),
+                        'ko' => '설치',
+                        'ja' => 'インストール',
+                        _ => 'Install',
+                      }, key: _partKey('leaf0Label')),
+                      showDisclosureIndicator: true,
                     ),
-                    TRTreeNavLeaf(
-                      value: 'theming',
+                    TRTreeNavGroup(
+                      value: 'advanced',
                       label: Text(switch (locale) {
-                        'ko' => '테마',
-                        'ja' => 'テーマ',
-                        _ => 'Theming',
-                      }, key: _partKey('leaf2Label')),
+                        'ko' => '고급',
+                        'ja' => '高度な設定',
+                        _ => 'ADVANCED',
+                      }, key: _partKey('group1Label')),
+                      initiallyExpanded: true,
+                      children: [
+                        TRTreeNavLeaf(
+                          value: 'plugins',
+                          label: Text(switch (locale) {
+                            'ko' => '플러그인',
+                            'ja' => 'プラグイン',
+                            _ => 'Plugins',
+                          }, key: _partKey('leaf1Label')),
+                        ),
+                        TRTreeNavLeaf(
+                          value: 'theming',
+                          label: Text(switch (locale) {
+                            'ko' => '테마',
+                            'ja' => 'テーマ',
+                            _ => 'Theming',
+                          }, key: _partKey('leaf2Label')),
+                        ),
+                      ],
                     ),
                   ],
                 ),

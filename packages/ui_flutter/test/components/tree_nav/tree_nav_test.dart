@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 Widget _app(
@@ -335,6 +336,52 @@ void main() {
     expect(defaultGap - tightGap, TRSpacing.large - TRSpacing.extraSmall);
   });
 
+  testWidgets('leaf disclosure indicator is opt-in and direction-aware', (
+    tester,
+  ) async {
+    const items = [
+      TRTreeNavLeaf<String>(
+        value: 'destination',
+        label: Text('Destination'),
+        showDisclosureIndicator: true,
+      ),
+    ];
+
+    await tester.pumpWidget(_app(const TRTreeNav<String>(items: items)));
+    expect(
+      tester.widget<Icon>(find.byType(Icon)).icon,
+      LucideIcons.chevronRight,
+    );
+
+    await tester.pumpWidget(
+      _app(
+        const TRTreeNav<String>(items: items),
+        textDirection: TextDirection.rtl,
+      ),
+    );
+    expect(
+      tester.widget<Icon>(find.byType(Icon)).icon,
+      LucideIcons.chevronLeft,
+    );
+
+    await tester.pumpWidget(
+      _app(
+        const TRTreeNav<String>(
+          items: [
+            TRTreeNavLeaf(value: 'plain', label: Text('Plain')),
+            TRTreeNavLeaf(
+              value: 'disabled',
+              label: Text('Disabled'),
+              disabled: true,
+              showDisclosureIndicator: true,
+            ),
+          ],
+        ),
+      ),
+    );
+    expect(find.byType(Icon), findsNothing);
+  });
+
   testWidgets('renders selected leaf and its ancestor groups as active', (
     tester,
   ) async {
@@ -570,6 +617,8 @@ void main() {
   testWidgets(
     'keeps long scaled labels and leading or trailing content aligned',
     (tester) async {
+      await tester.binding.setSurfaceSize(const Size(800, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
       await tester.pumpWidget(
         _app(
           const TRTreeNav<String>(
