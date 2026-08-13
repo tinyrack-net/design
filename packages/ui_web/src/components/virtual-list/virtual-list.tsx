@@ -879,8 +879,10 @@ export function TRVirtualList<T, K extends Key>({
             ref={setViewportRef}
             style={{
               ...viewportStyle,
-              overflowX: axis === 'horizontal' ? 'auto' : 'hidden',
-              overflowY: axis === 'vertical' ? 'auto' : 'hidden',
+              // Base UI supplies `overflow: scroll`. Override that same
+              // shorthand key so WebKit never lays out a transient scrollbar
+              // on the inactive axis before TanStack reads the scrollport.
+              overflow: axis === 'horizontal' ? 'auto hidden' : 'hidden auto',
             }}
           >
             <TRScrollArea.Content
