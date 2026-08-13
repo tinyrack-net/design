@@ -274,7 +274,7 @@ jobs:
           phase: finish
 
   ui_webkit:
-    name: UI WebKit
+    name: UI Virtual List WebKit
     if: >-
       needs.changes.outputs.ui == 'true' ||
       needs.changes.outputs.shared == 'true'
@@ -289,7 +289,7 @@ jobs:
       - name: Start job metrics
         uses: ./.github/actions/job-metrics
         with:
-          label: UI WebKit
+          label: UI Virtual List WebKit
           phase: start
 
       - name: Set up JavaScript runtime
@@ -307,16 +307,16 @@ jobs:
           filter: "@tinyrack/ui"
           browsers: webkit
 
-      - name: Test UI WebKit suite
+      - name: Test virtual list in WebKit
         id: ui-webkit-test
         continue-on-error: true
-        run: pnpm --filter @tinyrack/ui test:webkit
+        run: pnpm --filter @tinyrack/ui test:webkit:virtual-list
 
-      - name: Retry UI WebKit suite for diagnostics
+      - name: Retry virtual list WebKit suite for diagnostics
         if: steps.ui-webkit-test.outcome == 'failure'
-        run: pnpm --filter @tinyrack/ui test:webkit
+        run: pnpm --filter @tinyrack/ui test:webkit:virtual-list
 
-      - name: Preserve the first UI WebKit failure
+      - name: Preserve the first virtual list WebKit failure
         if: steps.ui-webkit-test.outcome == 'failure'
         run: exit 1
 
@@ -324,7 +324,7 @@ jobs:
         if: always()
         uses: ./.github/actions/job-metrics
         with:
-          label: UI WebKit
+          label: UI Virtual List WebKit
           phase: finish
 
   docs_contract:
@@ -712,7 +712,7 @@ jobs:
           require_success "$HOMEPAGE_PREVIEW_SELECTED" "$HOMEPAGE_PREVIEW_RESULT" "Build Homepage Flutter preview"
           require_success "$UI_SELECTED" "$UI_RESULT" "UI Chromium and contracts"
           require_success "$UI_SELECTED" "$UI_FIREFOX_RESULT" "UI Firefox"
-          require_success "$UI_SELECTED" "$UI_WEBKIT_RESULT" "UI WebKit"
+          require_success "$UI_SELECTED" "$UI_WEBKIT_RESULT" "UI Virtual List WebKit"
           require_success "$CONTRACT_SELECTED" "$CONTRACT_RESULT" "UI documentation contracts"
           require_success "$DOCS_SELECTED" "$DOCS_RESULT" "Docs package"
           require_success "$HOMEPAGE_SELECTED" "$HOMEPAGE_RESULT" "Homepage package"

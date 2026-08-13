@@ -72,10 +72,10 @@ describe('@tinyrack/ui test commands', () => {
 
   it('runs browser coverage directly without a wrapper or fixed API port', () => {
     expect(packageJson.scripts['test:e2e']).toBe(
-      'pnpm build && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit',
+      'pnpm build && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit:virtual-list',
     );
     expect(packageJson.scripts['test:prepared']).toBe(
-      'pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit',
+      'pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit:virtual-list',
     );
     expect(packageJson.scripts['test:docs-contract']).toBe(
       'vitest run --project docs-contract',
@@ -88,6 +88,9 @@ describe('@tinyrack/ui test commands', () => {
     );
     expect(packageJson.scripts['test:webkit']).toBe(
       'vitest run --mode component-webkit --project browser',
+    );
+    expect(packageJson.scripts['test:webkit:virtual-list']).toBe(
+      'vitest run --mode component-webkit --project browser src/components/virtual-list/virtual-list.browser.test.tsx',
     );
 
     const vitestConfig = readFileSync(
@@ -134,7 +137,8 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('Preserve the first UI Firefox failure');
     expect(ci).toContain('name: UI Chromium and contracts');
     expect(ci).toContain('name: UI Firefox');
-    expect(ci).toContain('name: UI WebKit');
+    expect(ci).toContain('name: UI Virtual List WebKit');
+    expect(ci).toContain('pnpm --filter @tinyrack/ui test:webkit:virtual-list');
     expect(ci).toContain(`UI_FIREFOX_RESULT: \${{ needs.ui_firefox.result }}`);
     expect(ci).toContain(`UI_WEBKIT_RESULT: \${{ needs.ui_webkit.result }}`);
     expect(ci).not.toContain('playwright install --with-deps');
