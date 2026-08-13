@@ -31,8 +31,8 @@ FocusNode _radioFocusNode(WidgetTester tester, int index) =>
     _radioFocus(tester, index).focusNode!;
 
 /// Two routes whose page transition can be driven from the first one.
-Widget _pageTransitionApp() => MaterialApp(
-  theme: TinyrackTheme.light(),
+Widget _pageTransitionApp({TargetPlatform? platform}) => MaterialApp(
+  theme: TinyrackTheme.light().copyWith(platform: platform),
   home: Scaffold(
     body: Builder(
       builder: (context) => TextButton(
@@ -81,8 +81,12 @@ void main() {
     }
   });
 
-  testWidgets('a pushed page scales up into place and settles', (tester) async {
-    await tester.pumpWidget(_pageTransitionApp());
+  testWidgets('a pushed page uses navigation motion without overlay scaling', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _pageTransitionApp(platform: TargetPlatform.windows),
+    );
     await tester.tap(find.text('open'));
     await tester.pump();
     await tester.pump(TRMotion.slow ~/ 2);
@@ -91,19 +95,15 @@ void main() {
     await tester.pumpAndSettle();
     final settled = tester.getRect(find.text('second'));
 
-    expect(midFlight.width, lessThan(settled.width));
-    expect(
-      midFlight.width,
-      greaterThanOrEqualTo(
-        settled.width * TRGeneratedMeasurements.overlayClosedScale,
-      ),
-    );
+    expect(midFlight.size, settled.size);
   });
 
-  testWidgets('a popped page plays the entry transition in reverse', (
+  testWidgets('a popped page keeps navigation content at its settled scale', (
     tester,
   ) async {
-    await tester.pumpWidget(_pageTransitionApp());
+    await tester.pumpWidget(
+      _pageTransitionApp(platform: TargetPlatform.windows),
+    );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
     final settled = tester.getRect(find.text('second'));
@@ -112,7 +112,9 @@ void main() {
     await tester.pump();
     await tester.pump(TRMotion.slow ~/ 2);
 
-    expect(tester.getRect(find.text('second')).width, lessThan(settled.width));
+    final midFlight = tester.getRect(find.text('second')).size;
+    expect(midFlight.width, closeTo(settled.width, 0.001));
+    expect(midFlight.height, closeTo(settled.height, 0.001));
   });
 
   testWidgets('disabled animations skip the page transition', (tester) async {
