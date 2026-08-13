@@ -4,7 +4,9 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../tokens.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 import '../text_field/text_field.dart';
 
 /// How an autocomplete query is completed.
@@ -185,6 +187,8 @@ class _TRAutocompleteState<T extends Object> extends State<TRAutocomplete<T>> {
   @override
   Widget build(BuildContext context) {
     final fieldWidth = widget.width ?? TRGeneratedMeasurements.overlayWidthSm;
+    final density = TRUiDensityScope.of(context);
+    final rowSize = TRLayerStyles.rowSizeOf(context);
     return SizedBox(
       width: widget.width,
       child: RawAutocomplete<TRAutocompleteItem<T>>(
@@ -213,9 +217,11 @@ class _TRAutocompleteState<T extends Object> extends State<TRAutocomplete<T>> {
             ),
         optionsViewBuilder: (context, onSelected, options) =>
             _TRAutocompleteOptionsView<T>(
+              density: density,
               highlightedIndex: AutocompleteHighlightedOption.of(context),
               onSelected: onSelected,
               options: options.toList(growable: false),
+              rowSize: rowSize,
               width: fieldWidth,
             ),
       ),
@@ -225,15 +231,19 @@ class _TRAutocompleteState<T extends Object> extends State<TRAutocomplete<T>> {
 
 class _TRAutocompleteOptionsView<T extends Object> extends StatefulWidget {
   const _TRAutocompleteOptionsView({
+    required this.density,
     required this.highlightedIndex,
     required this.onSelected,
     required this.options,
+    required this.rowSize,
     required this.width,
   });
 
+  final TRUiDensity density;
   final int highlightedIndex;
   final AutocompleteOnSelected<TRAutocompleteItem<T>> onSelected;
   final List<TRAutocompleteItem<T>> options;
+  final TRUiSize rowSize;
   final double width;
 
   @override
@@ -272,12 +282,14 @@ class _TRAutocompleteOptionsViewState<T extends Object>
         return;
       }
       if (!_scrollController.hasClients) return;
-      final estimatedOffset = index * TRGeneratedLayerMetrics.optionItemHeight;
+      final estimatedOffset = index * TRControlMetrics.heightOf(widget.rowSize);
       _scrollController.jumpTo(
-        estimatedOffset.clamp(
-          _scrollController.position.minScrollExtent,
-          _scrollController.position.maxScrollExtent,
-        ),
+        estimatedOffset
+            .clamp(
+              _scrollController.position.minScrollExtent,
+              _scrollController.position.maxScrollExtent,
+            )
+            .toDouble(),
       );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -296,48 +308,52 @@ class _TRAutocompleteOptionsViewState<T extends Object>
   }
 
   @override
-  Widget build(BuildContext context) => Align(
-    alignment: AlignmentDirectional.topStart,
-    child: Transform.translate(
-      offset: const Offset(0, TRGeneratedSpacing.sm),
-      child: TRLayerSurface(
-        kind: TRLayerBoundaryKind.autocomplete,
-        minWidth: widget.width,
-        maxWidth: widget.width,
-        padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
-        child: ExcludeFocus(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxHeight: TRGeneratedMeasurements.measureXl,
-            ),
-            child: ListView.separated(
-              controller: _scrollController,
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              itemCount: widget.options.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: TRGeneratedSpacing.xs),
-              itemBuilder: (context, index) {
-                final item = widget.options[index];
-                return SizedBox(
-                  key: _optionKeys[index],
-                  width: double.infinity,
-                  child: MenuItemButton(
-                    leadingIcon: item.leading,
-                    onPressed: () => widget.onSelected(item),
-                    requestFocusOnHover: false,
-                    style: TRLayerStyles.option(
-                      context,
-                      highlighted: widget.highlightedIndex == index,
+  Widget build(BuildContext context) => TRUiDensityScope(
+    density: widget.density,
+    child: Align(
+      alignment: AlignmentDirectional.topStart,
+      child: Transform.translate(
+        offset: const Offset(0, TRGeneratedSpacing.sm),
+        child: TRLayerSurface(
+          kind: TRLayerBoundaryKind.autocomplete,
+          minWidth: widget.width,
+          maxWidth: widget.width,
+          padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
+          child: ExcludeFocus(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxHeight: TRGeneratedMeasurements.measureXl,
+              ),
+              child: ListView.separated(
+                controller: _scrollController,
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: widget.options.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: TRGeneratedSpacing.xs),
+                itemBuilder: (context, index) {
+                  final item = widget.options[index];
+                  return SizedBox(
+                    key: _optionKeys[index],
+                    width: double.infinity,
+                    child: MenuItemButton(
+                      leadingIcon: item.leading,
+                      onPressed: () => widget.onSelected(item),
+                      requestFocusOnHover: false,
+                      style: TRLayerStyles.option(
+                        context,
+                        highlighted: widget.highlightedIndex == index,
+                        uiSize: widget.rowSize,
+                      ),
+                      trailingIcon: item.trailing,
+                      child: TRLayerPartBoundary(
+                        name: 'option$index',
+                        child: Text(item.label),
+                      ),
                     ),
-                    trailingIcon: item.trailing,
-                    child: TRLayerPartBoundary(
-                      name: 'option$index',
-                      child: Text(item.label),
-                    ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),

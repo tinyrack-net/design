@@ -246,7 +246,7 @@ void main() {
         );
 
         expect(
-          tester.getSize(find.byType(TextButton)),
+          tester.getSize(find.byType(TextButton).first),
           Size.square(TRControlMetrics.heightOf(size)),
           reason: '$size',
         );
@@ -256,6 +256,211 @@ void main() {
           reason: '$size',
         );
       }
+    });
+
+    testWidgets(
+      'keeps the trigger size while popup rows follow the anchor density',
+      (tester) async {
+        final density = ValueNotifier(TRUiDensity.standard);
+        addTearDown(density.dispose);
+        await tester.pumpWidget(
+          _app(
+            ValueListenableBuilder<TRUiDensity>(
+              valueListenable: density,
+              builder: (context, value, child) => TRUiDensityScope(
+                density: value,
+                child: TRMenu.icon(
+                  uiSize: TRUiSize.sm,
+                  icon: const Icon(Icons.add),
+                  label: 'New tab',
+                  menuChildren: [
+                    TRMenuItem(
+                      leadingIcon: const Icon(Icons.chat_bubble_outline),
+                      onPressed: () {},
+                      child: const Text('New session'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.byType(TextButton));
+        await tester.pumpAndSettle();
+        final row = find.widgetWithText(MenuItemButton, 'New session');
+        expect(
+          tester.getSize(find.byType(TextButton).first),
+          Size.square(TRControlMetrics.heightOf(TRUiSize.sm)),
+        );
+        expect(
+          tester.getSize(row).height,
+          TRControlMetrics.heightOf(TRUiSize.sm),
+        );
+        final standardStyle = tester.widget<MenuItemButton>(row).style!;
+        expect(
+          standardStyle.textStyle?.resolve({})?.fontSize,
+          TRControlMetrics.fontSizeOf(TRUiSize.sm),
+        );
+        expect(
+          standardStyle.iconSize?.resolve({}),
+          TRControlMetrics.iconSizeOf(TRUiSize.sm),
+        );
+        expect(
+          standardStyle.padding?.resolve({}),
+          EdgeInsets.symmetric(
+            horizontal: TRControlMetrics.inlinePaddingOf(TRUiSize.sm),
+          ),
+        );
+
+        density.value = TRUiDensity.comfortable;
+        await tester.pumpAndSettle();
+
+        expect(row, findsOneWidget, reason: 'an open layer must stay open');
+        expect(
+          tester.getSize(find.byType(TextButton).first),
+          Size.square(TRControlMetrics.heightOf(TRUiSize.sm)),
+        );
+        expect(
+          tester.getSize(row).height,
+          TRControlMetrics.heightOf(TRUiSize.lg),
+        );
+        final comfortableStyle = tester.widget<MenuItemButton>(row).style!;
+        expect(
+          comfortableStyle.textStyle?.resolve({})?.fontSize,
+          TRControlMetrics.fontSizeOf(TRUiSize.lg),
+        );
+        expect(
+          comfortableStyle.iconSize?.resolve({}),
+          TRControlMetrics.iconSizeOf(TRUiSize.lg),
+        );
+        expect(
+          comfortableStyle.padding?.resolve({}),
+          EdgeInsets.symmetric(
+            horizontal: TRControlMetrics.inlinePaddingOf(TRUiSize.lg),
+          ),
+        );
+      },
+    );
+
+    testWidgets('a nested standard scope keeps popup rows compact', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRUiDensityScope(
+              density: TRUiDensity.standard,
+              child: TRMenu(
+                trigger: const Text('Compact menu'),
+                menuChildren: [
+                  TRMenuItem(
+                    onPressed: () {},
+                    child: const Text('Compact row'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Compact menu'));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .getSize(find.widgetWithText(MenuItemButton, 'Compact row'))
+            .height,
+        TRControlMetrics.heightOf(TRUiSize.sm),
+      );
+    });
+
+    testWidgets('comfortable density reaches nested submenu rows', (
+      tester,
+    ) async {
+      await tester.binding.setSurfaceSize(const Size(1200, 700));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        _app(
+          TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRMenu(
+              trigger: const Text('Localized commands'),
+              menuChildren: [
+                TRMenuSubmenu(
+                  menuChildren: [
+                    TRMenuItem(onPressed: () {}, child: const Text('새 세션 만들기')),
+                    TRMenuItem(
+                      onPressed: () {},
+                      child: const Text('Create a new terminal'),
+                    ),
+                    TRMenuItem(onPressed: () {}, child: const Text('新しいセッション')),
+                  ],
+                  child: const Text('More'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Localized commands'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSize(find.widgetWithText(SubmenuButton, 'More')).height,
+        TRControlMetrics.heightOf(TRUiSize.lg),
+      );
+      await tester.tap(find.text('More'));
+      await tester.pumpAndSettle();
+      for (final label in const [
+        '새 세션 만들기',
+        'Create a new terminal',
+        '新しいセッション',
+      ]) {
+        final row = find.widgetWithText(MenuItemButton, label);
+        expect(row, findsOneWidget);
+        expect(
+          tester.getSize(row).height,
+          TRControlMetrics.heightOf(TRUiSize.lg),
+        );
+      }
+    });
+
+    testWidgets('popup rows grow for scaled text without losing their floor', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: TRUiDensityScope(
+              density: TRUiDensity.comfortable,
+              child: TRMenu(
+                trigger: const Text('Scaled menu'),
+                menuChildren: [
+                  TRMenuItem(
+                    onPressed: () {},
+                    child: const Text('Create a new terminal'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Scaled menu'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(
+        tester
+            .getSize(
+              find.widgetWithText(MenuItemButton, 'Create a new terminal'),
+            )
+            .height,
+        greaterThanOrEqualTo(TRControlMetrics.heightOf(TRUiSize.lg)),
+      );
     });
 
     testWidgets('publishes the icon trigger label on the widget', (
@@ -851,6 +1056,58 @@ void main() {
         _layerBoundary(TRLayerBoundaryKind.select),
       );
       expect(layerRect.top - triggerRect.bottom, 4);
+    });
+
+    testWidgets('menu-surface options inherit comfortable density', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          const TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRSelect<String>(
+              surface: TRSelectSurface.menu,
+              items: [
+                TRSelectItem(
+                  value: 'alpha',
+                  label: 'Alpha',
+                  leading: Icon(Icons.circle_outlined),
+                ),
+                TRSelectItem(value: 'beta', label: 'Beta'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(_selectTriggers);
+      await tester.pumpAndSettle();
+      final option = find.widgetWithText(MenuItemButton, 'Alpha');
+      expect(
+        tester.getSize(option).height,
+        TRControlMetrics.heightOf(TRUiSize.lg),
+      );
+      expect(
+        tester
+            .widget<MenuItemButton>(option)
+            .style
+            ?.textStyle
+            ?.resolve({})
+            ?.fontSize,
+        TRControlMetrics.fontSizeOf(TRUiSize.lg),
+      );
+      final optionStyle = tester.widget<MenuItemButton>(option).style!;
+      expect(
+        optionStyle.iconSize?.resolve({}),
+        TRControlMetrics.iconSizeOf(TRUiSize.lg),
+      );
+      expect(
+        optionStyle.padding?.resolve({}),
+        EdgeInsets.symmetric(
+          horizontal: TRControlMetrics.inlinePaddingOf(TRUiSize.lg),
+          vertical: TRControlMetrics.gapOf(TRUiSize.lg),
+        ),
+      );
     });
 
     testWidgets('flips above when the preferred bottom side has no room', (

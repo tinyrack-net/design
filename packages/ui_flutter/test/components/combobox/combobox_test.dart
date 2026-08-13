@@ -31,6 +31,35 @@ Finder _option(String label) => find.descendant(
 );
 
 void main() {
+  testWidgets('options inherit comfortable density through the overlay', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        TRUiDensityScope(
+          density: TRUiDensity.comfortable,
+          child: TRCombobox<String>(items: _channels),
+        ),
+      ),
+    );
+    await _query(tester, 'sta');
+
+    final option = find.widgetWithText(MenuItemButton, 'Stable');
+    expect(
+      tester.getSize(option).height,
+      TRControlMetrics.heightOf(TRUiSize.lg),
+    );
+    expect(
+      tester
+          .widget<MenuItemButton>(option)
+          .style
+          ?.textStyle
+          ?.resolve({})
+          ?.fontSize,
+      TRControlMetrics.fontSizeOf(TRUiSize.lg),
+    );
+  });
+
   testWidgets('contains keeps infix matches by default', (tester) async {
     await tester.pumpWidget(_app(TRCombobox<String>(items: _channels)));
     await _query(tester, 'sta');

@@ -1,3 +1,10 @@
+## 0.61.1
+
+- Makes Flutter-rendered popup rows follow `TRUiDensityScope`: standard uses
+  `TRUiSize.sm`, comfortable uses `TRUiSize.lg`, and root overlays, open-layer
+  updates, and cascading submenus retain their anchor density. Explicit menu
+  sizes continue to affect only their triggers.
+
 ## 0.61.0
 
 - Adds typed pane navigation operations and scaffold-value Back traversal to

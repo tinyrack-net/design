@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
+import '../../tokens.dart';
 import '../../types.dart';
 import '../scroll_area/scroll_area.dart';
 import '../spinner/spinner.dart';
@@ -472,7 +473,8 @@ class _TRInlineSuggestionsState<T extends Object>
   }
 
   Widget _rows(BuildContext context) {
-    const rowExtent = TRGeneratedLayerMetrics.optionItemHeight;
+    final rowSize = TRLayerStyles.rowSizeOf(context);
+    final rowExtent = TRControlMetrics.heightOf(rowSize);
     final maxHeight =
         MediaQuery.textScalerOf(context).scale(rowExtent) *
         widget.maxVisibleItems;
@@ -491,7 +493,7 @@ class _TRInlineSuggestionsState<T extends Object>
             contentWidth: math.max(
               0,
               constraints.maxWidth -
-                  TRGeneratedControlMetrics.mdPaddingInline * 2,
+                  TRControlMetrics.inlinePaddingOf(rowSize) * 2,
             ),
           ),
         ),
@@ -557,6 +559,8 @@ class _TRInlineSuggestionRow<T extends Object> extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
     final enabled = item.enabled;
+    final rowSize = TRLayerStyles.rowSizeOf(context);
+    final rowHeight = TRControlMetrics.heightOf(rowSize);
     final label = Text.rich(
       _highlightedLabel(context, enabled: enabled),
       maxLines: 1,
@@ -575,12 +579,14 @@ class _TRInlineSuggestionRow<T extends Object> extends StatelessWidget {
           leadingIcon: item.leading,
           style: TRLayerStyles.option(context, highlighted: highlighted)
               .copyWith(
-                minimumSize: const WidgetStatePropertyAll(Size(0, 0)),
+                minimumSize: WidgetStatePropertyAll(Size(0, rowHeight)),
                 maximumSize: const WidgetStatePropertyAll(Size.infinite),
-                padding: const WidgetStatePropertyAll(
+                padding: WidgetStatePropertyAll(
                   EdgeInsets.symmetric(
-                    horizontal: TRGeneratedControlMetrics.mdPaddingInline,
-                    vertical: TRGeneratedSpacing.xs,
+                    horizontal: TRControlMetrics.inlinePaddingOf(rowSize),
+                    vertical: item.description == null
+                        ? 0
+                        : TRControlMetrics.gapOf(rowSize),
                   ),
                 ),
               ),

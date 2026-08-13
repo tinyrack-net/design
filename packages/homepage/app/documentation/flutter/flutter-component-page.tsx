@@ -3585,9 +3585,9 @@ class _InstallCommandState extends State<InstallCommand> {
   menu: {
     title: 'Menu',
     description: {
-      en: 'Open commands, persistent checkbox or radio settings, and cascading submenus from an anchored trigger.',
-      ko: '고정된 트리거에서 명령, 열린 채로 유지되는 체크박스·라디오 설정, 중첩 메뉴를 열어요.',
-      ja: 'アンカー付きトリガーから、コマンド、開いたまま操作できるチェックボックス・ラジオ設定、サブメニューを表示します。',
+      en: 'Open density-aware commands, persistent checkbox or radio settings, and cascading submenus from an anchored trigger.',
+      ko: '고정된 트리거에서 밀도를 따르는 명령, 열린 채로 유지되는 체크박스·라디오 설정, 중첩 메뉴를 열어요.',
+      ja: 'アンカー付きトリガーから、密度に応じたコマンド、開いたまま操作できるチェックボックス・ラジオ設定、サブメニューを表示します。',
     },
     usage:
       "TRMenu(\n  trigger: const Text('View'),\n  menuChildren: [\n    TRMenuItem(onPressed: duplicate, child: const Text('Duplicate')),\n    TRMenuCheckboxItem(\n      value: showGrid,\n      onChanged: setShowGrid,\n      child: const Text('Show grid'),\n    ),\n  ],\n)",

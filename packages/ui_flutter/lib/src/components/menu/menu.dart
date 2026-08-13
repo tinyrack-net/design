@@ -65,7 +65,9 @@ class TRMenu extends StatefulWidget {
   /// Control geometry of the trigger.
   ///
   /// A menu trigger stands in a row beside buttons and fields, so it takes the
-  /// same sizes they do rather than fixing one density.
+  /// same sizes they do rather than fixing one density. Popup rows ignore this
+  /// override and resolve from the nearest [TRUiDensityScope]: standard uses
+  /// [TRUiSize.sm] and comfortable uses [TRUiSize.lg].
   final TRUiSize? uiSize;
 
   final bool useRootOverlay;
@@ -120,6 +122,7 @@ class _TRMenuState extends State<TRMenu> {
   @override
   Widget build(BuildContext context) {
     final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
+    final density = TRUiDensityScope.of(context);
     final controller = _controller;
     final colors = context.tinyrackTheme;
     final height = TRControlMetrics.heightOf(uiSize);
@@ -192,14 +195,17 @@ class _TRMenuState extends State<TRMenu> {
         childFocusNode: _focusNode,
         controller: controller,
         menuChildren: [
-          _TRMenuEntryMotion(
-            child: TRLayerSurface(
-              child: SingleChildScrollView(
-                primary: false,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: widget.menuChildren,
+          TRUiDensityScope(
+            density: density,
+            child: _TRMenuEntryMotion(
+              child: TRLayerSurface(
+                child: SingleChildScrollView(
+                  primary: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: widget.menuChildren,
+                  ),
                 ),
               ),
             ),
@@ -467,30 +473,36 @@ class TRMenuSubmenu extends StatelessWidget {
   final Widget? trailingIcon;
 
   @override
-  Widget build(BuildContext context) => SubmenuButton(
-    alignmentOffset: alignmentOffset,
-    animated: !MediaQuery.disableAnimationsOf(context),
-    controller: controller,
-    focusNode: focusNode,
-    leadingIcon: leadingIcon,
-    menuChildren: [
-      TRLayerSurface(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: menuChildren,
+  Widget build(BuildContext context) {
+    final density = TRUiDensityScope.of(context);
+    return SubmenuButton(
+      alignmentOffset: alignmentOffset,
+      animated: !MediaQuery.disableAnimationsOf(context),
+      controller: controller,
+      focusNode: focusNode,
+      leadingIcon: leadingIcon,
+      menuChildren: [
+        TRUiDensityScope(
+          density: density,
+          child: TRLayerSurface(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: menuChildren,
+            ),
+          ),
         ),
+      ],
+      menuStyle: TRLayerStyles.menu(
+        context,
+        alignment: AlignmentDirectional.topEnd,
       ),
-    ],
-    menuStyle: TRLayerStyles.menu(
-      context,
-      alignment: AlignmentDirectional.topEnd,
-    ),
-    style: TRLayerStyles.item(context, showFocusBorder: false),
-    trailingIcon: trailingIcon,
-    useRootOverlay: true,
-    child: child,
-  );
+      style: TRLayerStyles.item(context, showFocusBorder: false),
+      trailingIcon: trailingIcon,
+      useRootOverlay: true,
+      child: child,
+    );
+  }
 }
 
 /// A muted heading for a related group of menu items.
@@ -500,26 +512,29 @@ class TRMenuGroupLabel extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.fromLTRB(
-      TRControlMetrics.inlinePaddingOf(TRLayerStyles.rowSize),
-      TRGeneratedSpacing.sm,
-      TRControlMetrics.inlinePaddingOf(TRLayerStyles.rowSize),
-      TRGeneratedSpacing.xs,
-    ),
-    child: DefaultTextStyle.merge(
-      style: TRTypography.caption.copyWith(
-        color: context.tinyrackTheme.textMuted,
-        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-        fontWeight: TRGeneratedFontWeights.strong,
-        height: TRGeneratedTypographyLineHeights.md,
+  Widget build(BuildContext context) {
+    final rowSize = TRLayerStyles.rowSizeOf(context);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        TRControlMetrics.inlinePaddingOf(rowSize),
+        TRGeneratedSpacing.sm,
+        TRControlMetrics.inlinePaddingOf(rowSize),
+        TRGeneratedSpacing.xs,
       ),
-      child: Transform.translate(
-        offset: const Offset(0, TRGeneratedBorders.defaultWidth),
-        child: child,
+      child: DefaultTextStyle.merge(
+        style: TRTypography.caption.copyWith(
+          color: context.tinyrackTheme.textMuted,
+          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+          fontWeight: TRGeneratedFontWeights.strong,
+          height: TRGeneratedTypographyLineHeights.md,
+        ),
+        child: Transform.translate(
+          offset: const Offset(0, TRGeneratedBorders.defaultWidth),
+          child: child,
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 enum _TRMenuIndicatorKind { empty, check, dot }

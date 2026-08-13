@@ -130,6 +130,48 @@ void main() {
   });
 
   group('TRContextMenu.items', () {
+    testWidgets('Flutter-rendered rows inherit comfortable density', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          const TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRContextMenu.items(
+              items: <TRMenuElement>[
+                TRMenuActionElement(
+                  id: 'copy',
+                  title: 'Copy',
+                  onPressed: _noop,
+                ),
+              ],
+              child: SizedBox(width: 100, height: 40, child: Text('Target')),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tapAt(
+        tester.getCenter(find.text('Target')),
+        buttons: kSecondaryMouseButton,
+      );
+      await tester.pumpAndSettle();
+      final item = find.widgetWithText(MenuItemButton, 'Copy');
+      expect(
+        tester.getSize(item).height,
+        TRControlMetrics.heightOf(TRUiSize.lg),
+      );
+      expect(
+        tester
+            .widget<MenuItemButton>(item)
+            .style
+            ?.textStyle
+            ?.resolve({})
+            ?.fontSize,
+        TRControlMetrics.fontSizeOf(TRUiSize.lg),
+      );
+    });
+
     testWidgets('renders each element with its Tinyrack menu component', (
       tester,
     ) async {

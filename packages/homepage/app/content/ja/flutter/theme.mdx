@@ -52,6 +52,14 @@ LayoutBuilder(
 ください。明示した`sm`、`md`、`lg`、`xl`はスコープより優先されます。
 システムのtext scalingは、密度で選ばれたタイポグラフィに引き続き適用されます。
 
+Flutterが描画するポップアップ行は、アンカーコントロールとは別に密度を解決します。
+`standard`は`TRUiSize.sm`の行メトリクス（高さ28px、ラベル12px）、
+`comfortable`は`TRUiSize.lg`の行メトリクス（高さ40px、ラベル14px）を使います。
+メニュー、サブメニュー、メニューバー、Flutterコンテキストメニュー、Select、
+Autocomplete、Combobox、インライン候補は、root overlayでもアンカーの密度を
+維持します。メニューに明示した`uiSize`は引き続きトリガーだけを変更します。
+特定のポップアップを小さく保つには、アンカーを入れ子の`standard`スコープで囲みます。
+
 ## ページ遷移
 
 どちらのテーマもすべての`TargetPlatform`に`TRPageTransitionsBuilder`を

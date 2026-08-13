@@ -50,6 +50,15 @@ semantic step, and enlarges default card padding and status indicators.
 Explicit `uiSize` and card padding always win, so compact title-bar actions can
 remain `TRUiSize.sm` inside a comfortable subtree.
 
+Flutter-rendered popup rows follow the same scope independently from their
+anchor: standard density uses `TRUiSize.sm` row metrics (28-pixel height and
+12-pixel labels), while comfortable density uses `TRUiSize.lg` row metrics
+(40-pixel height and 14-pixel labels). This applies to menus and submenus,
+menubars, Flutter context menus, selects, autocompletes, comboboxes, and inline
+suggestions, including root-overlay layers. `TRMenu.uiSize` still sizes only the
+trigger. Wrap a specific popup anchor in a nested standard scope when its rows
+must remain compact.
+
 `TRSelectSurface.auto` follows the same semantic density: standard density
 opens an anchored dropdown and comfortable density opens a bottom sheet. A
 select outside `TRUiDensityScope` falls back to `TRBreakpoints.small`, preserving

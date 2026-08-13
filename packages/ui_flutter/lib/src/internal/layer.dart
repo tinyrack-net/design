@@ -8,6 +8,7 @@ import '../generated/tokens.g.dart';
 import '../theme.dart';
 import '../tokens.dart';
 import '../types.dart';
+import '../ui_density.dart';
 import 'focus_source.dart';
 
 /// Internal render-tree marker used by layer tests and preview diagnostics.
@@ -103,13 +104,12 @@ class RenderTRLayerPartBoundary extends RenderProxyBox {
 /// Shared layer chrome for package components. This file is intentionally not
 /// exported from the public package library.
 abstract final class TRLayerStyles {
-  /// Density every popup layer renders its rows at.
-  ///
-  /// A layer row is a target inside an already-open surface, not a control the
-  /// page has to make room for, so it reads at a tighter size than the trigger
-  /// that opened it. Naming it once keeps every layer in this file, and the
-  /// components that copy these metrics, on the same scale.
-  static const TRUiSize rowSize = TRUiSize.sm;
+  /// Resolves popup-row geometry independently from the anchor control size.
+  static TRUiSize rowSizeOf(BuildContext context) =>
+      switch (TRUiDensityScope.of(context)) {
+        TRUiDensity.standard => TRUiSize.sm,
+        TRUiDensity.comfortable => TRUiSize.lg,
+      };
 
   static MenuStyle menu(
     BuildContext context, {
@@ -155,8 +155,11 @@ abstract final class TRLayerStyles {
     BuildContext context, {
     bool selected = false,
     bool showFocusBorder = true,
+    TRUiSize? uiSize,
   }) {
     final colors = context.tinyrackTheme;
+    final rowSize = uiSize ?? rowSizeOf(context);
+    final rowHeight = TRControlMetrics.heightOf(rowSize);
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
       backgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -178,12 +181,8 @@ abstract final class TRLayerStyles {
             : colors.text,
       ),
       iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(rowSize)),
-      minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedLayerMetrics.menuItemHeight),
-      ),
-      maximumSize: const WidgetStatePropertyAll(
-        Size(double.infinity, TRGeneratedLayerMetrics.menuItemHeight),
-      ),
+      minimumSize: WidgetStatePropertyAll(Size(0, rowHeight)),
+      maximumSize: const WidgetStatePropertyAll(Size.infinite),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
           horizontal: TRControlMetrics.inlinePaddingOf(rowSize),
@@ -218,8 +217,11 @@ abstract final class TRLayerStyles {
     BuildContext context, {
     bool highlighted = false,
     bool selected = false,
+    TRUiSize? uiSize,
   }) {
     final colors = context.tinyrackTheme;
+    final rowSize = uiSize ?? rowSizeOf(context);
+    final rowHeight = TRControlMetrics.heightOf(rowSize);
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
       backgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -240,12 +242,8 @@ abstract final class TRLayerStyles {
             : colors.text,
       ),
       iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(rowSize)),
-      minimumSize: const WidgetStatePropertyAll(
-        Size(0, TRGeneratedLayerMetrics.optionItemHeight),
-      ),
-      maximumSize: const WidgetStatePropertyAll(
-        Size(double.infinity, TRGeneratedLayerMetrics.optionItemHeight),
-      ),
+      minimumSize: WidgetStatePropertyAll(Size(0, rowHeight)),
+      maximumSize: const WidgetStatePropertyAll(Size.infinite),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
           horizontal: TRControlMetrics.inlinePaddingOf(rowSize),
@@ -503,6 +501,7 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
     final textDirection = Directionality.of(context);
+    final density = TRUiDensityScope.of(context);
     final target = TapRegion(
       groupId: _tapRegionGroup,
       onTapOutside: widget.dismissOnTapOutside && _isOpen
@@ -537,7 +536,10 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
                 math.max(media.padding.bottom, media.viewInsets.bottom) -
                 widget.viewportInset,
           );
-          Widget layer = widget.layerBuilder(context);
+          Widget layer = TRUiDensityScope(
+            density: density,
+            child: Builder(builder: widget.layerBuilder),
+          );
           if (widget.requestFocus) {
             layer = Focus(
               focusNode: _layerFocusNode,
