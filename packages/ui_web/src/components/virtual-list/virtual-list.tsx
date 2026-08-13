@@ -2,7 +2,6 @@
 
 import {
   defaultRangeExtractor,
-  observeElementRect,
   type Rect,
   useVirtualizer,
   type Virtualizer,
@@ -100,11 +99,40 @@ function observeScrollportRect(
   instance: Virtualizer<HTMLDivElement, HTMLDivElement>,
   callback: (rect: Rect) => void,
 ) {
-  return observeElementRect(instance, () => {
-    const element = instance.scrollElement;
-    if (element === null) return;
-    callback({ height: element.clientHeight, width: element.clientWidth });
+  const element = instance.scrollElement;
+  const targetWindow = instance.targetWindow;
+  if (element === null || targetWindow === null) return;
+
+  let previous: Rect | undefined;
+  const notify = () => {
+    const next = { height: element.clientHeight, width: element.clientWidth };
+    if (previous?.height === next.height && previous.width === next.width) return;
+    previous = next;
+    callback(next);
+  };
+  notify();
+
+  const ResizeObserverConstructor = targetWindow.ResizeObserver;
+  if (ResizeObserverConstructor === undefined) return;
+  let animationFrame: number | undefined;
+  const observer = new ResizeObserverConstructor(() => {
+    if (!instance.options.useAnimationFrameWithResizeObserver) {
+      notify();
+      return;
+    }
+    if (animationFrame !== undefined) return;
+    animationFrame = targetWindow.requestAnimationFrame(() => {
+      animationFrame = undefined;
+      notify();
+    });
   });
+  observer.observe(element, { box: 'content-box' });
+  return () => {
+    observer.disconnect();
+    if (animationFrame !== undefined) {
+      targetWindow.cancelAnimationFrame(animationFrame);
+    }
+  };
 }
 
 export function TRVirtualList<T, K extends Key>({
@@ -1278,6 +1306,7 @@ export const trVirtualListInternals = {
   equalKeys,
   findSurvivingAnchor,
   initialVisualLayout,
+  observeScrollportRect,
   requestEdge,
   readTRVirtualListSnapshot,
   resolveSnapshotAnchor,

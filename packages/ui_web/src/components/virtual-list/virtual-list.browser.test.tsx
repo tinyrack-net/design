@@ -1,5 +1,6 @@
 import '../../core/core.css';
 import './virtual-list.css';
+import type { Virtualizer } from '@tanstack/react-virtual';
 import { act, type ComponentProps, type ReactNode, useState } from 'react';
 import { hydrateRoot } from 'react-dom/client';
 import { renderToString } from 'react-dom/server.browser';
@@ -615,6 +616,163 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
         : item.getBoundingClientRect().left - viewportContentInlineEdges(viewport).left;
     })
     .toBeCloseTo(0, 0);
+});
+
+test('remeasures the client scrollport when only its content box changes', () => {
+  const element = document.createElement('div');
+  let clientWidth = 320;
+  let clientHeight = 240;
+  Object.defineProperties(element, {
+    clientHeight: { configurable: true, get: () => clientHeight },
+    clientWidth: { configurable: true, get: () => clientWidth },
+  });
+
+  let resizeCallback: ResizeObserverCallback | undefined;
+  let observeOptions: ResizeObserverOptions | undefined;
+  let animationFrameCallback: FrameRequestCallback | undefined;
+  let disconnected = false;
+  class ProbeResizeObserver {
+    constructor(callback: ResizeObserverCallback) {
+      resizeCallback = callback;
+    }
+
+    observe(_target: Element, options?: ResizeObserverOptions) {
+      observeOptions = options;
+    }
+
+    unobserve() {}
+
+    disconnect() {
+      disconnected = true;
+    }
+  }
+  const requestAnimationFrame = vi.fn((callback: FrameRequestCallback) => {
+    animationFrameCallback = callback;
+    return 1;
+  });
+  const cancelAnimationFrame = vi.fn();
+  const targetWindow = {
+    ResizeObserver: ProbeResizeObserver,
+    cancelAnimationFrame,
+    requestAnimationFrame,
+  } as unknown as Window;
+  const instance = {
+    options: { useAnimationFrameWithResizeObserver: true },
+    scrollElement: element,
+    targetWindow,
+  } as unknown as Virtualizer<HTMLDivElement, HTMLDivElement>;
+  const measurements: { height: number; width: number }[] = [];
+
+  const disconnect = trVirtualListInternals.observeScrollportRect(instance, (rect) => {
+    measurements.push(rect);
+  });
+  expect(observeOptions).toEqual({ box: 'content-box' });
+  expect(measurements).toEqual([{ height: 240, width: 320 }]);
+
+  clientWidth = 304;
+  clientHeight = 224;
+  resizeCallback?.([], {} as ResizeObserver);
+  resizeCallback?.([], {} as ResizeObserver);
+  expect(requestAnimationFrame).toHaveBeenCalledTimes(1);
+  animationFrameCallback?.(0);
+  expect(measurements).toEqual([
+    { height: 240, width: 320 },
+    { height: 224, width: 304 },
+  ]);
+
+  resizeCallback?.([], {} as ResizeObserver);
+  animationFrameCallback?.(1);
+  expect(measurements).toHaveLength(2);
+
+  clientWidth = 288;
+  resizeCallback?.([], {} as ResizeObserver);
+  disconnect?.();
+  expect(disconnected).toBe(true);
+  expect(cancelAnimationFrame).toHaveBeenCalledWith(1);
+});
+
+test('observes scrollport size without relying on animation frames', () => {
+  const element = document.createElement('div');
+  let clientWidth = 320;
+  Object.defineProperties(element, {
+    clientHeight: { configurable: true, value: 240 },
+    clientWidth: { configurable: true, get: () => clientWidth },
+  });
+
+  let resizeCallback: ResizeObserverCallback | undefined;
+  class ProbeResizeObserver {
+    constructor(callback: ResizeObserverCallback) {
+      resizeCallback = callback;
+    }
+
+    observe() {}
+
+    unobserve() {}
+
+    disconnect() {}
+  }
+  const targetWindow = {
+    ResizeObserver: ProbeResizeObserver,
+    cancelAnimationFrame: vi.fn(),
+    requestAnimationFrame: vi.fn(),
+  } as unknown as Window;
+  const instance = {
+    options: { useAnimationFrameWithResizeObserver: false },
+    scrollElement: element,
+    targetWindow,
+  } as unknown as Virtualizer<HTMLDivElement, HTMLDivElement>;
+  const measurements: { height: number; width: number }[] = [];
+
+  trVirtualListInternals.observeScrollportRect(instance, (rect) => {
+    measurements.push(rect);
+  });
+  clientWidth = 304;
+  resizeCallback?.([], {} as ResizeObserver);
+
+  expect(measurements).toEqual([
+    { height: 240, width: 320 },
+    { height: 240, width: 304 },
+  ]);
+  expect(targetWindow.requestAnimationFrame).not.toHaveBeenCalled();
+});
+
+test('reports an initial scrollport size without ResizeObserver support', () => {
+  const element = document.createElement('div');
+  Object.defineProperties(element, {
+    clientHeight: { configurable: true, value: 240 },
+    clientWidth: { configurable: true, value: 320 },
+  });
+  const targetWindow = {} as Window;
+  const instance = {
+    options: { useAnimationFrameWithResizeObserver: true },
+    scrollElement: element,
+    targetWindow,
+  } as unknown as Virtualizer<HTMLDivElement, HTMLDivElement>;
+  const callback = vi.fn();
+
+  expect(
+    trVirtualListInternals.observeScrollportRect(instance, callback),
+  ).toBeUndefined();
+  expect(callback).toHaveBeenCalledWith({ height: 240, width: 320 });
+
+  expect(
+    trVirtualListInternals.observeScrollportRect(
+      { ...instance, scrollElement: null } as unknown as Virtualizer<
+        HTMLDivElement,
+        HTMLDivElement
+      >,
+      callback,
+    ),
+  ).toBeUndefined();
+  expect(
+    trVirtualListInternals.observeScrollportRect(
+      { ...instance, targetWindow: null } as unknown as Virtualizer<
+        HTMLDivElement,
+        HTMLDivElement
+      >,
+      callback,
+    ),
+  ).toBeUndefined();
 });
 
 test('aligns underfilled vertical initial and controller item targets', async () => {
