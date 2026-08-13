@@ -8,6 +8,7 @@ const _viewportHeight = 240.0;
 
 Widget _host(
   Widget child, {
+  PageStorageBucket? pageStorageBucket,
   TextDirection textDirection = TextDirection.ltr,
   double viewportHeight = _viewportHeight,
   TextScaler textScaler = TextScaler.noScaling,
@@ -23,7 +24,9 @@ Widget _host(
             key: const ValueKey('viewport'),
             width: 360,
             height: viewportHeight,
-            child: child,
+            child: pageStorageBucket == null
+                ? child
+                : PageStorage(bucket: pageStorageBucket, child: child),
           ),
         ),
       ),
@@ -40,6 +43,7 @@ class _VirtualListHarness extends StatefulWidget {
     this.initialPosition = const TRVirtualListInitialPosition.leading(),
     this.initialSnapshot,
     this.leadingEdgeRequest,
+    this.onVisibleRangeChanged,
     this.pageStorageId,
     this.trailingEdgeRequest,
     super.key,
@@ -52,6 +56,7 @@ class _VirtualListHarness extends StatefulWidget {
   final TRVirtualListInitialPosition<String> initialPosition;
   final TRVirtualListSnapshot<String>? initialSnapshot;
   final TRVirtualListEdgeRequest? leadingEdgeRequest;
+  final ValueChanged<TRVirtualListRange<String>>? onVisibleRangeChanged;
   final String? pageStorageId;
   final TRVirtualListEdgeRequest? trailingEdgeRequest;
 
@@ -106,6 +111,7 @@ class _VirtualListHarnessState extends State<_VirtualListHarness> {
     initialSnapshot: widget.initialSnapshot,
     follow: widget.follow,
     leadingEdgeRequest: widget.leadingEdgeRequest,
+    onVisibleRangeChanged: widget.onVisibleRangeChanged,
     pageStorageId: widget.pageStorageId,
     trailingEdgeRequest: widget.trailingEdgeRequest,
   );
@@ -119,6 +125,57 @@ double _bottom(WidgetTester tester, String item) =>
 
 double _left(WidgetTester tester, String item) =>
     tester.getTopLeft(find.byKey(ValueKey('row-$item'))).dx;
+
+Widget _mismatchedExtentList({
+  required TRVirtualListController<String> controller,
+  required String keyPrefix,
+  int itemCount = 50,
+  TRVirtualListInitialPosition<String> initialPosition =
+      const TRVirtualListInitialPosition.leading(),
+}) => TRVirtualList<String, String>(
+  controller: controller,
+  items: List<String>.generate(itemCount, (index) => 'item-$index'),
+  itemKey: (item) => item,
+  estimatedItemExtent: (item, index) => 80,
+  initialPosition: initialPosition,
+  itemBuilder: (context, item, index) => SizedBox(
+    key: ValueKey('$keyPrefix-$item'),
+    height: 40,
+    child: TRText(item),
+  ),
+);
+
+Widget _storedHost(PageStorageBucket bucket, Widget child) =>
+    _host(child, pageStorageBucket: bucket);
+
+Future<void> _seedStoredAnchor(
+  WidgetTester tester, {
+  required PageStorageBucket bucket,
+  required List<String> items,
+  required String pageStorageId,
+  required String target,
+  required Key widgetKey,
+}) async {
+  final controller = TRVirtualListController<String>();
+  addTearDown(controller.dispose);
+  await tester.pumpWidget(
+    _storedHost(
+      bucket,
+      _VirtualListHarness(
+        key: widgetKey,
+        controller: controller,
+        initialItems: items,
+        pageStorageId: pageStorageId,
+      ),
+    ),
+  );
+  await controller.scrollToKey(
+    target,
+    alignment: TRVirtualListAlignment.leading,
+  );
+  await tester.pump();
+  await tester.pumpWidget(_storedHost(bucket, const SizedBox.shrink()));
+}
 
 void main() {
   testWidgets('builds only the visible and cached part of a 100k item list', (
@@ -879,4 +936,575 @@ void main() {
       }
     },
   );
+
+  testWidgets('fills the viewport when estimates exceed measured extents', (
+    tester,
+  ) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      _host(
+        TRVirtualList<String, String>(
+          controller: controller,
+          items: List<String>.generate(100, (index) => 'item-$index'),
+          itemKey: (item) => item,
+          estimatedItemExtent: (item, index) => 100,
+          itemBuilder: (context, item, index) => SizedBox(
+            key: ValueKey('short-$index'),
+            height: 20,
+            child: TRText(item),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byKey(const ValueKey('short-11')), findsOneWidget);
+    expect(
+      tester.getBottomLeft(find.byKey(const ValueKey('short-11'))).dy,
+      moreOrLessEquals(
+        tester.getBottomLeft(find.byKey(const ValueKey('viewport'))).dy,
+      ),
+    );
+  });
+
+  testWidgets('initial item alignment converges after measuring the target', (
+    tester,
+  ) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    const target = 'item-20';
+
+    await tester.pumpWidget(
+      _host(
+        _mismatchedExtentList(
+          controller: controller,
+          keyPrefix: 'measured',
+          itemCount: 40,
+          initialPosition: const TRVirtualListInitialPosition.key(
+            target,
+            alignment: TRVirtualListAlignment.center,
+          ),
+        ),
+      ),
+    );
+
+    final viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+    final item = tester.getRect(find.byKey(const ValueKey('measured-$target')));
+    expect(item.center.dy, moreOrLessEquals(viewport.center.dy));
+  });
+
+  testWidgets('controller item and edge alignment converge after measurement', (
+    tester,
+  ) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+
+    await tester.pumpWidget(
+      _host(
+        _mismatchedExtentList(controller: controller, keyPrefix: 'controller'),
+      ),
+    );
+
+    await controller.scrollToKey(
+      'item-24',
+      alignment: TRVirtualListAlignment.center,
+    );
+    await tester.pump();
+    var viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+    var item = tester.getRect(find.byKey(const ValueKey('controller-item-24')));
+    expect(item.center.dy, moreOrLessEquals(viewport.center.dy));
+
+    await controller.scrollToIndex(
+      30,
+      alignment: TRVirtualListAlignment.trailing,
+    );
+    await tester.pump();
+    viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+    item = tester.getRect(find.byKey(const ValueKey('controller-item-30')));
+    expect(item.bottom, moreOrLessEquals(viewport.bottom));
+
+    await controller.scrollToEdge(TRVirtualListEdge.trailing);
+    await tester.pump();
+    viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+    item = tester.getRect(find.byKey(const ValueKey('controller-item-49')));
+    expect(item.bottom, moreOrLessEquals(viewport.bottom));
+  });
+
+  testWidgets('retains index and key initial targets while initially empty', (
+    tester,
+  ) async {
+    final items = List<String>.generate(30, (index) => 'item-$index');
+
+    Future<void> verifyTarget({
+      required Key listKey,
+      required TRVirtualListInitialPosition<String> position,
+      required String target,
+      required TRVirtualListAlignment alignment,
+    }) async {
+      final controller = TRVirtualListController<String>();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        _host(
+          _VirtualListHarness(
+            key: listKey,
+            controller: controller,
+            initialItems: const <String>[],
+            initialPosition: position,
+          ),
+        ),
+      );
+      final state = tester.state<_VirtualListHarnessState>(
+        find.byType(_VirtualListHarness),
+      );
+      state.replaceItems(items);
+      await tester.pump();
+
+      final viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+      final item = tester.getRect(find.byKey(ValueKey('row-$target')));
+      if (alignment == TRVirtualListAlignment.leading) {
+        expect(item.top, moreOrLessEquals(viewport.top));
+      } else {
+        expect(item.bottom, moreOrLessEquals(viewport.bottom));
+      }
+    }
+
+    await verifyTarget(
+      listKey: const ValueKey('empty-index'),
+      position: const TRVirtualListInitialPosition.index(12),
+      target: 'item-12',
+      alignment: TRVirtualListAlignment.leading,
+    );
+    await verifyTarget(
+      listKey: const ValueKey('empty-key'),
+      position: const TRVirtualListInitialPosition.key(
+        'item-18',
+        alignment: TRVirtualListAlignment.trailing,
+      ),
+      target: 'item-18',
+      alignment: TRVirtualListAlignment.trailing,
+    );
+  });
+
+  testWidgets('retains a snapshot target while initially empty', (
+    tester,
+  ) async {
+    final items = List<String>.generate(40, (index) => 'item-$index');
+    final sourceController = TRVirtualListController<String>();
+    addTearDown(sourceController.dispose);
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          key: const ValueKey('snapshot-source'),
+          controller: sourceController,
+          initialItems: items,
+        ),
+      ),
+    );
+    await sourceController.scrollToKey(
+      'item-16',
+      alignment: TRVirtualListAlignment.leading,
+    );
+    await tester.pump();
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byKey(const ValueKey('viewport'))),
+    );
+    await gesture.moveBy(const Offset(0, -13));
+    await gesture.up();
+    await tester.pumpAndSettle();
+    final expectedTop = _top(tester, 'item-16');
+    final snapshot = sourceController.takeSnapshot();
+
+    final targetKey = GlobalKey<_VirtualListHarnessState>();
+    final targetController = TRVirtualListController<String>();
+    addTearDown(targetController.dispose);
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          key: targetKey,
+          controller: targetController,
+          initialItems: const <String>[],
+          initialPosition: const TRVirtualListInitialPosition.trailing(),
+          initialSnapshot: snapshot,
+        ),
+      ),
+    );
+    targetKey.currentState!.replaceItems(items);
+    await tester.pump();
+
+    expect(_top(tester, 'item-16'), moreOrLessEquals(expectedTop));
+    expect(find.byKey(const ValueKey('row-item-39')), findsNothing);
+  });
+
+  testWidgets('visible ranges use half-open viewport boundaries', (
+    tester,
+  ) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    final ranges = <TRVirtualListRange<String>>[];
+
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          key: const ValueKey('range-boundary'),
+          controller: controller,
+          initialItems: List<String>.generate(20, (index) => 'item-$index'),
+          onVisibleRangeChanged: ranges.add,
+        ),
+      ),
+    );
+    expect(ranges, isNotEmpty);
+    expect(ranges.last.firstIndex, 0);
+    expect(ranges.last.lastIndex, 5);
+  });
+
+  testWidgets('visible range reports index changes for the same keys', (
+    tester,
+  ) async {
+    final key = GlobalKey<_VirtualListHarnessState>();
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    final ranges = <TRVirtualListRange<String>>[];
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          key: key,
+          controller: controller,
+          initialItems: List<String>.generate(40, (index) => 'item-$index'),
+          onVisibleRangeChanged: ranges.add,
+        ),
+      ),
+    );
+    await controller.scrollToKey(
+      'item-16',
+      alignment: TRVirtualListAlignment.leading,
+    );
+    await tester.pump();
+    final before = ranges.last;
+    final reportCount = ranges.length;
+
+    key.currentState!.prepend('prepended');
+    await tester.pump();
+
+    expect(ranges, hasLength(reportCount + 1));
+    expect(ranges.last.firstKey, before.firstKey);
+    expect(ranges.last.lastKey, before.lastKey);
+    expect(ranges.last.firstIndex, before.firstIndex + 1);
+    expect(ranges.last.lastIndex, before.lastIndex + 1);
+  });
+
+  testWidgets('page storage follows page id and bucket changes', (
+    tester,
+  ) async {
+    final firstBucket = PageStorageBucket();
+    final secondBucket = PageStorageBucket();
+    final items = List<String>.generate(50, (index) => 'item-$index');
+    await _seedStoredAnchor(
+      tester,
+      bucket: firstBucket,
+      items: items,
+      pageStorageId: 'second-id',
+      target: 'item-30',
+      widgetKey: const ValueKey('id-seed'),
+    );
+
+    final switchController = TRVirtualListController<String>();
+    addTearDown(switchController.dispose);
+    await tester.pumpWidget(
+      _storedHost(
+        firstBucket,
+        _VirtualListHarness(
+          key: const ValueKey('identity-switch'),
+          controller: switchController,
+          initialItems: items,
+          pageStorageId: 'first-id',
+        ),
+      ),
+    );
+    await switchController.scrollToKey(
+      'item-10',
+      alignment: TRVirtualListAlignment.leading,
+    );
+    await tester.pump();
+    await tester.pumpWidget(
+      _storedHost(
+        firstBucket,
+        _VirtualListHarness(
+          key: const ValueKey('identity-switch'),
+          controller: switchController,
+          initialItems: items,
+          pageStorageId: 'second-id',
+        ),
+      ),
+    );
+    expect(_top(tester, 'item-30'), moreOrLessEquals(_viewportTop(tester)));
+
+    await _seedStoredAnchor(
+      tester,
+      bucket: secondBucket,
+      items: items,
+      pageStorageId: 'shared-id',
+      target: 'item-34',
+      widgetKey: const ValueKey('bucket-seed'),
+    );
+
+    final bucketSwitchController = TRVirtualListController<String>();
+    addTearDown(bucketSwitchController.dispose);
+    await tester.pumpWidget(
+      _storedHost(
+        firstBucket,
+        _VirtualListHarness(
+          key: const ValueKey('bucket-switch'),
+          controller: bucketSwitchController,
+          initialItems: items,
+          pageStorageId: 'shared-id',
+        ),
+      ),
+    );
+    await bucketSwitchController.scrollToKey(
+      'item-8',
+      alignment: TRVirtualListAlignment.leading,
+    );
+    await tester.pump();
+    await tester.pumpWidget(
+      _storedHost(
+        secondBucket,
+        _VirtualListHarness(
+          key: const ValueKey('bucket-switch'),
+          controller: bucketSwitchController,
+          initialItems: items,
+          pageStorageId: 'shared-id',
+        ),
+      ),
+    );
+    expect(_top(tester, 'item-34'), moreOrLessEquals(_viewportTop(tester)));
+  });
+
+  testWidgets('dispose stores the final in-progress scroll anchor', (
+    tester,
+  ) async {
+    final bucket = PageStorageBucket();
+    final items = List<String>.generate(50, (index) => 'item-$index');
+    Widget storedHost(Widget child) =>
+        PageStorage(bucket: bucket, child: _host(child));
+    final firstController = TRVirtualListController<String>();
+    addTearDown(firstController.dispose);
+    await tester.pumpWidget(
+      storedHost(
+        _VirtualListHarness(
+          controller: firstController,
+          initialItems: items,
+          pageStorageId: 'dispose-final',
+        ),
+      ),
+    );
+    await firstController.scrollToKey(
+      'item-22',
+      alignment: TRVirtualListAlignment.leading,
+    );
+    await tester.pump();
+    final storedGesture = await tester.startGesture(
+      tester.getCenter(find.byKey(const ValueKey('viewport'))),
+    );
+    await storedGesture.moveBy(const Offset(0, -17));
+    await storedGesture.up();
+    await tester.pumpAndSettle();
+
+    final finalGesture = await tester.startGesture(
+      tester.getCenter(find.byKey(const ValueKey('viewport'))),
+    );
+    await finalGesture.moveBy(const Offset(0, -5));
+    await tester.pump();
+    final finalTop = _top(tester, 'item-22');
+    await tester.pumpWidget(storedHost(const SizedBox.shrink()));
+    await finalGesture.cancel();
+
+    final secondController = TRVirtualListController<String>();
+    addTearDown(secondController.dispose);
+    await tester.pumpWidget(
+      storedHost(
+        _VirtualListHarness(
+          controller: secondController,
+          initialItems: items,
+          pageStorageId: 'dispose-final',
+        ),
+      ),
+    );
+    expect(_top(tester, 'item-22'), moreOrLessEquals(finalTop));
+  });
+
+  testWidgets('initial trailing alignment converges after measurement', (
+    tester,
+  ) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _host(
+        _mismatchedExtentList(
+          controller: controller,
+          keyPrefix: 'initial-trailing',
+          itemCount: 40,
+          initialPosition: const TRVirtualListInitialPosition.trailing(),
+        ),
+      ),
+    );
+
+    expect(
+      tester
+          .getRect(find.byKey(const ValueKey('initial-trailing-item-39')))
+          .bottom,
+      moreOrLessEquals(
+        tester.getRect(find.byKey(const ValueKey('viewport'))).bottom,
+      ),
+    );
+  });
+
+  testWidgets('does not report items while only an edge slot is visible', (
+    tester,
+  ) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    final ranges = <TRVirtualListRange<String>>[];
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          controller: controller,
+          initialItems: List<String>.generate(20, (index) => 'item-$index'),
+          leadingEdgeRequest: TRVirtualListEdgeRequest(
+            requestKey: 'leading-slot',
+            onRequest: () {},
+            slot: const SizedBox(height: 320),
+          ),
+          onVisibleRangeChanged: ranges.add,
+        ),
+      ),
+    );
+
+    expect(ranges, isEmpty);
+  });
+
+  testWidgets('trailing follow bottom-aligns an underfilled list and slot', (
+    tester,
+  ) async {
+    final key = GlobalKey<_VirtualListHarnessState>();
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          key: key,
+          controller: controller,
+          initialItems: const <String>['item-0', 'item-1'],
+          initialPosition: const TRVirtualListInitialPosition.trailing(),
+          follow: TRVirtualListFollow.trailing,
+          trailingEdgeRequest: TRVirtualListEdgeRequest(
+            requestKey: 'short-trailing',
+            onRequest: () {},
+            slot: const SizedBox(
+              key: ValueKey('short-trailing-slot'),
+              height: 56,
+            ),
+          ),
+        ),
+      ),
+    );
+    var viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+    var slot = tester.getRect(
+      find.byKey(const ValueKey('short-trailing-slot')),
+    );
+    expect(slot.bottom, moreOrLessEquals(viewport.bottom));
+
+    for (var index = 2; index < 6; index += 1) {
+      key.currentState!.append('item-$index');
+    }
+    await tester.pump();
+    viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+    slot = tester.getRect(find.byKey(const ValueKey('short-trailing-slot')));
+    expect(slot.bottom, moreOrLessEquals(viewport.bottom));
+  });
+
+  testWidgets('horizontal RTL underfill aligns to logical trailing', (
+    tester,
+  ) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          controller: controller,
+          initialItems: const <String>['item-0', 'item-1', 'item-2'],
+          axis: Axis.horizontal,
+          initialPosition: const TRVirtualListInitialPosition.trailing(),
+          follow: TRVirtualListFollow.trailing,
+        ),
+        textDirection: TextDirection.rtl,
+      ),
+    );
+
+    expect(
+      tester.getRect(find.byKey(const ValueKey('row-item-2'))).left,
+      moreOrLessEquals(
+        tester.getRect(find.byKey(const ValueKey('viewport'))).left,
+      ),
+    );
+  });
+
+  testWidgets('an underfilled snapshot restores its trailing inset', (
+    tester,
+  ) async {
+    const items = <String>['item-0', 'item-1', 'item-2'];
+    final sourceController = TRVirtualListController<String>();
+    addTearDown(sourceController.dispose);
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          controller: sourceController,
+          initialItems: items,
+          initialPosition: const TRVirtualListInitialPosition.trailing(),
+        ),
+      ),
+    );
+    final snapshot = sourceController.takeSnapshot();
+
+    final targetController = TRVirtualListController<String>();
+    addTearDown(targetController.dispose);
+    await tester.pumpWidget(
+      _host(
+        _VirtualListHarness(
+          key: const ValueKey('underfilled-snapshot-target'),
+          controller: targetController,
+          initialItems: items,
+          initialSnapshot: snapshot,
+        ),
+      ),
+    );
+
+    expect(
+      _bottom(tester, 'item-2'),
+      moreOrLessEquals(
+        tester.getRect(find.byKey(const ValueKey('viewport'))).bottom,
+      ),
+    );
+  });
+
+  testWidgets('rejects zero item estimates before layout', (tester) async {
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _host(
+        TRVirtualList<String, String>(
+          controller: controller,
+          items: const <String>['item'],
+          itemKey: (item) => item,
+          estimatedItemExtent: (item, index) => 0,
+          itemBuilder: (context, item, index) => const SizedBox(height: 40),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isA<AssertionError>());
+  });
 }
+
+double _viewportTop(WidgetTester tester) =>
+    tester.getTopLeft(find.byKey(const ValueKey('viewport'))).dy;

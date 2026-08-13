@@ -307,7 +307,9 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
   final Set<Object> _requestedTrailingKeys = <Object>{};
   TRVirtualListRange<K>? _lastRange;
   TRVirtualListSnapshot<K>? _pageStorageSnapshot;
-  bool _readPageStorage = false;
+  PageStorageBucket? _pageStorageBucket;
+  String? _pageStorageId;
+  int _initialTargetRevision = 0;
 
   @override
   void initState() {
@@ -326,6 +328,7 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
       oldWidget.controller?._detach(this);
       widget.controller?._attach(this);
     }
+    _syncPageStorage();
     final leadingRequestChanged =
         oldWidget.leadingEdgeRequest?.requestKey !=
         widget.leadingEdgeRequest?.requestKey;
@@ -344,16 +347,18 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_readPageStorage || widget.pageStorageId == null) return;
-    _readPageStorage = true;
-    final stored = PageStorage.maybeOf(
-      context,
-    )?.readState(context, identifier: widget.pageStorageId);
-    if (stored is TRVirtualListSnapshot<K>) _pageStorageSnapshot = stored;
+    _syncPageStorage();
+  }
+
+  @override
+  void deactivate() {
+    _savePageSnapshot();
+    super.deactivate();
   }
 
   @override
   void dispose() {
+    _savePageSnapshot();
     widget.controller?._detach(this);
     _coordinator.renderObject = null;
     _scrollController.dispose();
@@ -362,6 +367,7 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
 
   @override
   Widget build(BuildContext context) {
+    _syncPageStorage();
     final itemKeys = <K>[];
     final seenKeys = <K>{};
     final estimates = <double>[];
@@ -375,8 +381,8 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
       itemKeys.add(key);
       final estimate = widget.estimatedItemExtent(item, index);
       assert(
-        estimate.isFinite && estimate >= 0,
-        'TRVirtualList estimates must be finite and non-negative.',
+        estimate.isFinite && estimate > 0,
+        'TRVirtualList estimates must be finite and positive.',
       );
       estimates.add(estimate);
     }
@@ -447,6 +453,7 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
                 itemKeys,
                 hasLeadingSlot: hasLeadingSlot,
               ),
+              initialTargetRevision: _initialTargetRevision,
               initialMeasurements: <Object, double>{
                 for (final entry
                     in (widget.initialSnapshot ?? _pageStorageSnapshot)
@@ -469,6 +476,7 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
                 },
               ),
               follow: widget.follow,
+              onDetach: _savePageSnapshot,
               onRange: (firstEntryIndex, lastEntryIndex) {
                 _reportRange(
                   firstEntryIndex,
@@ -487,6 +495,26 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
       semanticLabel: widget.semanticLabel,
       child: scrollView,
     );
+  }
+
+  void _syncPageStorage() {
+    final bucket = PageStorage.maybeOf(context);
+    final pageStorageId = widget.pageStorageId;
+    if (identical(bucket, _pageStorageBucket) &&
+        pageStorageId == _pageStorageId) {
+      return;
+    }
+    _savePageSnapshot();
+    _pageStorageBucket = bucket;
+    _pageStorageId = pageStorageId;
+    _pageStorageSnapshot = null;
+    if (bucket != null && pageStorageId != null) {
+      final stored = bucket.readState(context, identifier: pageStorageId);
+      if (stored is TRVirtualListSnapshot<K>) {
+        _pageStorageSnapshot = stored;
+      }
+    }
+    if (widget.initialSnapshot == null) _initialTargetRevision += 1;
   }
 
   _InitialTarget _initialTarget(
@@ -564,22 +592,33 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
     List<K> itemKeys, {
     required bool hasLeadingSlot,
   }) {
-    if (itemKeys.isEmpty ||
-        (widget.onVisibleRangeChanged == null &&
-            widget.pageStorageId == null)) {
+    if (itemKeys.isEmpty || firstEntryIndex < 0 || lastEntryIndex < 0) {
+      _lastRange = null;
+      return;
+    }
+    if (widget.onVisibleRangeChanged == null && widget.pageStorageId == null) {
       return;
     }
     final shift = hasLeadingSlot ? 1 : 0;
-    final first = (firstEntryIndex - shift).clamp(0, itemKeys.length - 1);
-    final last = (lastEntryIndex - shift).clamp(0, itemKeys.length - 1);
-    if (first > last) return;
+    final firstItemEntry = shift;
+    final lastItemEntry = shift + itemKeys.length - 1;
+    final visibleFirstEntry = math.max(firstEntryIndex, firstItemEntry);
+    final visibleLastEntry = math.min(lastEntryIndex, lastItemEntry);
+    if (visibleFirstEntry > visibleLastEntry) {
+      _lastRange = null;
+      return;
+    }
+    final first = visibleFirstEntry - shift;
+    final last = visibleLastEntry - shift;
     final range = TRVirtualListRange<K>(
       firstIndex: first,
       lastIndex: last,
       firstKey: itemKeys[first],
       lastKey: itemKeys[last],
     );
-    if (_lastRange?.firstKey == range.firstKey &&
+    if (_lastRange?.firstIndex == range.firstIndex &&
+        _lastRange?.lastIndex == range.lastIndex &&
+        _lastRange?.firstKey == range.firstKey &&
         _lastRange?.lastKey == range.lastKey) {
       return;
     }
@@ -593,13 +632,12 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
   }
 
   void _savePageSnapshot() {
-    final pageStorageId = widget.pageStorageId;
-    if (pageStorageId == null || widget.items.isEmpty) return;
+    final pageStorageId = _pageStorageId;
+    final bucket = _pageStorageBucket;
+    if (pageStorageId == null || bucket == null || widget.items.isEmpty) return;
     final renderObject = _coordinator.renderObject;
     if (renderObject == null || !_scrollController.hasClients) return;
-    PageStorage.maybeOf(
-      context,
-    )?.writeState(context, takeSnapshot(), identifier: pageStorageId);
+    bucket.writeState(context, takeSnapshot(), identifier: pageStorageId);
   }
 
   _RenderTRVirtualSliver get _renderObject {
@@ -644,17 +682,18 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
     final trailing = renderObject.offsetForIndex(entryIndex + 1);
     final viewport = position.viewportDimension;
     final current = position.pixels;
-    final target = switch (alignment) {
-      TRVirtualListAlignment.leading => leading,
-      TRVirtualListAlignment.center => (leading + trailing - viewport) / 2,
-      TRVirtualListAlignment.trailing => trailing - viewport,
-      TRVirtualListAlignment.nearest =>
-        current > leading
-            ? leading
-            : current + viewport < trailing
-            ? trailing - viewport
-            : current,
-    };
+    final resolvedAlignment = alignment == TRVirtualListAlignment.nearest
+        ? current > leading
+              ? TRVirtualListAlignment.leading
+              : current + viewport < trailing
+              ? TRVirtualListAlignment.trailing
+              : null
+        : alignment;
+    if (resolvedAlignment == null) return;
+    final target = renderObject.activateTarget(
+      _InitialTarget.item(entryIndex, resolvedAlignment),
+      viewport,
+    );
     position.jumpTo(
       target.clamp(position.minScrollExtent, position.maxScrollExtent),
     );
@@ -662,13 +701,28 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
 
   @override
   Future<void> scrollToEdge(TRVirtualListEdge edge) async {
+    final renderObject = _renderObject;
     final position = _scrollController.position;
     if (edge == TRVirtualListEdge.leading) {
       _coordinator.leadingPinned = true;
-      position.jumpTo(position.minScrollExtent);
+      position.jumpTo(
+        renderObject
+            .activateTarget(
+              const _InitialTarget.leading(),
+              position.viewportDimension,
+            )
+            .clamp(position.minScrollExtent, position.maxScrollExtent),
+      );
     } else {
       _coordinator.trailingPinned = true;
-      position.jumpTo(position.maxScrollExtent);
+      position.jumpTo(
+        renderObject
+            .activateTarget(
+              const _InitialTarget.trailing(),
+              position.viewportDimension,
+            )
+            .clamp(position.minScrollExtent, position.maxScrollExtent),
+      );
     }
   }
 
@@ -688,7 +742,8 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
     return TRVirtualListSnapshot<K>._(
       anchorKey: itemAnchor.value,
       anchorViewportOffset:
-          renderObject.offsetForKey(itemAnchor) - _scrollController.offset,
+          renderObject.visualOffsetForKey(itemAnchor) -
+          _scrollController.offset,
       anchorCandidates: itemCandidates
           .skip(1)
           .map((entry) => entry.value)
@@ -739,6 +794,8 @@ class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
     required this.follow,
     required this.initialMeasurements,
     required this.initialTarget,
+    required this.initialTargetRevision,
+    required this.onDetach,
     required this.onRange,
   });
 
@@ -748,6 +805,8 @@ class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
   final TRVirtualListFollow follow;
   final Map<Object, double> initialMeasurements;
   final _InitialTarget initialTarget;
+  final int initialTargetRevision;
+  final VoidCallback onDetach;
   final void Function(int firstIndex, int lastIndex) onRange;
 
   @override
@@ -761,6 +820,8 @@ class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
       follow: follow,
       initialMeasurements: initialMeasurements,
       initialTarget: initialTarget,
+      initialTargetRevision: initialTargetRevision,
+      onDetach: onDetach,
       onRange: onRange,
     );
   }
@@ -773,8 +834,11 @@ class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
     renderObject
       ..coordinator = coordinator
       ..follow = follow
+      ..initialTarget = initialTarget
+      ..initialTargetRevision = initialTargetRevision
+      ..onDetach = onDetach
       ..onRange = onRange
-      ..updateEntries(entryKeys, estimates);
+      ..updateEntries(entryKeys, estimates, initialMeasurements);
   }
 
   @override
@@ -855,6 +919,25 @@ class _ExtentIndex {
     }
     return math.min(index, _values.length - 1);
   }
+
+  int indexBeforeOffset(double offset) {
+    if (_values.isEmpty) return 0;
+    final target = offset.clamp(0, total);
+    var index = 0;
+    var sum = 0.0;
+    var bit = 1;
+    while (bit < _tree.length) {
+      bit <<= 1;
+    }
+    for (bit >>= 1; bit > 0; bit >>= 1) {
+      final next = index + bit;
+      if (next < _tree.length && sum + _tree[next] < target) {
+        index = next;
+        sum += _tree[next];
+      }
+    }
+    return math.min(index, _values.length - 1);
+  }
 }
 
 class _CapturedAnchor {
@@ -873,6 +956,8 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     required this._follow,
     required Map<Object, double> initialMeasurements,
     required this._initialTarget,
+    required this._initialTargetRevision,
+    required this._onDetach,
     required this._onRange,
   }) : _entryKeys = List<Object>.of(entryKeys),
        _estimates = List<double>.of(estimates),
@@ -889,10 +974,14 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
   List<double> _estimates;
   final Map<Object, double> _measurements;
   _ExtentIndex _extentIndex;
-  final _InitialTarget _initialTarget;
+  _InitialTarget _initialTarget;
+  int _initialTargetRevision;
   TRVirtualListFollow _follow;
+  VoidCallback _onDetach;
   void Function(int, int) _onRange;
   bool _initialResolved = false;
+  _InitialTarget? _activeTarget;
+  double _underfillOffset = 0;
   double _pendingCorrection = 0;
 
   set coordinator(_TRVirtualListCoordinator value) {
@@ -909,21 +998,51 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     markNeedsLayout();
   }
 
+  set initialTarget(_InitialTarget value) {
+    _initialTarget = value;
+    if (!_initialResolved) markNeedsLayout();
+  }
+
+  set initialTargetRevision(int value) {
+    if (_initialTargetRevision == value) return;
+    _initialTargetRevision = value;
+    _initialResolved = false;
+    _activeTarget = null;
+    _pendingCorrection = 0;
+    markNeedsLayout();
+  }
+
   set onRange(void Function(int, int) value) => _onRange = value;
+
+  set onDetach(VoidCallback value) => _onDetach = value;
 
   Map<Object, double> get measurements =>
       Map<Object, double>.unmodifiable(_measurements);
 
-  void updateEntries(List<Object> keys, List<double> estimates) {
-    if (listEquals(_entryKeys, keys) && listEquals(_estimates, estimates)) {
+  void updateEntries(
+    List<Object> keys,
+    List<double> estimates,
+    Map<Object, double> initialMeasurements,
+  ) {
+    var restoredMeasurements = false;
+    if (!_initialResolved) {
+      for (final entry in initialMeasurements.entries) {
+        if (_measurements[entry.key] != entry.value) {
+          _measurements[entry.key] = entry.value;
+          restoredMeasurements = true;
+        }
+      }
+    }
+    if (!restoredMeasurements &&
+        listEquals(_entryKeys, keys) &&
+        listEquals(_estimates, estimates)) {
       return;
     }
     final oldKeys = _entryKeys;
     final oldIndex = _extentIndex;
-    final anchor = geometry != null && oldKeys.isNotEmpty
+    final anchor = _initialResolved && geometry != null && oldKeys.isNotEmpty
         ? captureAnchor(constraints.scrollOffset)
         : null;
-    final oldTotal = oldIndex.total;
     _entryKeys = List<Object>.of(keys);
     _estimates = List<double>.of(estimates);
     final keySet = keys.toSet();
@@ -932,22 +1051,25 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
       for (var index = 0; index < keys.length; index += 1)
         _measurements[keys[index]] ?? estimates[index],
     ]);
-    final held = _coordinator.consumeHold();
-    if (!held &&
-        _follow == TRVirtualListFollow.leading &&
-        _coordinator.leadingPinned) {
-      // Offset zero already keeps the logical leading edge pinned.
-    } else if (!held &&
-        _follow == TRVirtualListFollow.trailing &&
-        _coordinator.trailingPinned) {
-      _pendingCorrection += _extentIndex.total - oldTotal;
-    } else if (anchor != null) {
-      final replacement = _replacementAnchor(anchor, oldKeys, keySet);
-      if (replacement != null) {
-        final oldReplacementOffset = oldIndex.prefix(
-          oldKeys.indexOf(replacement),
-        );
-        _pendingCorrection += offsetForKey(replacement) - oldReplacementOffset;
+    if (_initialResolved) {
+      final held = _coordinator.consumeHold();
+      if (!held &&
+          _follow == TRVirtualListFollow.leading &&
+          _coordinator.leadingPinned) {
+        // Offset zero already keeps the logical leading edge pinned.
+      } else if (!held &&
+          _follow == TRVirtualListFollow.trailing &&
+          _coordinator.trailingPinned) {
+        _activeTarget = const _InitialTarget.trailing();
+      } else if (anchor != null) {
+        final replacement = _replacementAnchor(anchor, oldKeys, keySet);
+        if (replacement != null) {
+          final oldReplacementOffset = oldIndex.prefix(
+            oldKeys.indexOf(replacement),
+          );
+          _pendingCorrection +=
+              offsetForKey(replacement) - oldReplacementOffset;
+        }
       }
     }
     markNeedsLayout();
@@ -985,6 +1107,14 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     return offsetForIndex(index);
   }
 
+  double activateTarget(_InitialTarget target, double viewportExtent) {
+    _activeTarget = target;
+    markNeedsLayout();
+    return _resolveTargetOffset(target, viewportExtent);
+  }
+
+  double visualOffsetForKey(Object key) => offsetForKey(key) + _underfillOffset;
+
   _CapturedAnchor captureAnchor(double scrollOffset) {
     if (_entryKeys.isEmpty) {
       throw StateError('An empty virtual list has no restorable anchor.');
@@ -1012,6 +1142,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
 
   @override
   void detach() {
+    _onDetach();
     if (identical(_coordinator.renderObject, this)) {
       _coordinator.renderObject = null;
     }
@@ -1030,7 +1161,9 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     final sliverConstraints = constraints;
     if (!_initialResolved && _entryKeys.isNotEmpty) {
       _initialResolved = true;
-      final target = _resolveInitialOffset(
+      _activeTarget = _initialTarget;
+      final target = _resolveTargetOffset(
+        _initialTarget,
         sliverConstraints.viewportMainAxisExtent,
       );
       final correction = target - sliverConstraints.scrollOffset;
@@ -1102,72 +1235,130 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
       trailingChild = firstChild;
     }
 
-    for (
-      var index = indexOf(trailingChild!) + 1;
-      index <= targetLastIndex;
-      index += 1
-    ) {
-      var child = childAfter(trailingChild!);
-      if (child == null || indexOf(child) != index) {
-        child = insertAndLayoutChild(
-          childConstraints,
-          after: trailingChild,
-          parentUsesSize: true,
-        );
-        if (child == null) break;
-      } else {
-        child.layout(childConstraints, parentUsesSize: true);
+    void layoutThrough(int lastIndex) {
+      for (
+        var index = indexOf(trailingChild!) + 1;
+        index <= lastIndex;
+        index += 1
+      ) {
+        var child = childAfter(trailingChild!);
+        if (child == null || indexOf(child) != index) {
+          child = insertAndLayoutChild(
+            childConstraints,
+            after: trailingChild,
+            parentUsesSize: true,
+          );
+          if (child == null) return;
+        } else {
+          child.layout(childConstraints, parentUsesSize: true);
+        }
+        trailingChild = child;
+        (child.parentData! as SliverMultiBoxAdaptorParentData).layoutOffset =
+            offsetForIndex(index);
       }
-      trailingChild = child;
-      (child.parentData! as SliverMultiBoxAdaptorParentData).layoutOffset =
-          offsetForIndex(index);
     }
+
+    layoutThrough(targetLastIndex);
 
     final anchor = captureAnchor(sliverConstraints.scrollOffset);
-    final oldTotal = _extentIndex.total;
     var changed = false;
-    RenderBox? child = firstChild;
-    while (child != null) {
-      final index = indexOf(child);
-      final measured = paintExtentOf(child);
-      final key = _entryKeys[index];
-      if ((measured - _extentIndex.valueAt(index)).abs() >
-          precisionErrorTolerance) {
-        _measurements[key] = measured;
-        _extentIndex.update(index, measured);
-        changed = true;
-      }
-      child = childAfter(child);
-    }
-
-    if (changed) {
-      child = firstChild;
+    while (true) {
+      var roundChanged = false;
+      RenderBox? child = firstChild;
       while (child != null) {
-        final parentData = child.parentData! as SliverMultiBoxAdaptorParentData;
-        parentData.layoutOffset = offsetForIndex(indexOf(child));
+        final index = indexOf(child);
+        final measured = paintExtentOf(child);
+        final key = _entryKeys[index];
+        if ((measured - _extentIndex.valueAt(index)).abs() >
+            precisionErrorTolerance) {
+          _measurements[key] = measured;
+          _extentIndex.update(index, measured);
+          changed = true;
+          roundChanged = true;
+        }
         child = childAfter(child);
       }
-      final held = _coordinator.consumeHold();
-      final correction =
-          !held &&
-              _follow == TRVirtualListFollow.leading &&
-              _coordinator.leadingPinned
-          ? 0.0
-          : !held &&
-                _follow == TRVirtualListFollow.trailing &&
-                _coordinator.trailingPinned
-          ? _extentIndex.total - oldTotal
-          : offsetForKey(anchor.key) - anchor.oldOffsets[anchor.key]!;
-      if (correction.abs() > precisionErrorTolerance) {
-        childManager.didFinishLayout();
-        geometry = SliverGeometry(scrollOffsetCorrection: correction);
-        return;
+      if (roundChanged) {
+        child = firstChild;
+        while (child != null) {
+          final parentData =
+              child.parentData! as SliverMultiBoxAdaptorParentData;
+          parentData.layoutOffset = offsetForIndex(indexOf(child));
+          child = childAfter(child);
+        }
       }
+      final measuredTargetLast = _extentIndex.indexForOffset(targetEnd);
+      if (indexOf(trailingChild!) >= measuredTargetLast) break;
+      final previousTrailingIndex = indexOf(trailingChild!);
+      layoutThrough(measuredTargetLast);
+      if (indexOf(trailingChild!) == previousTrailingIndex) break;
     }
 
-    final firstOffset = offsetForIndex(indexOf(firstChild!));
-    final lastOffset = offsetForIndex(indexOf(lastChild!) + 1);
+    var correction = 0.0;
+    final targetUnderfillOffset =
+        _follow == TRVirtualListFollow.trailing && _coordinator.trailingPinned;
+    var resolvedUnderfillOffset = targetUnderfillOffset
+        ? math.max(
+            0.0,
+            sliverConstraints.viewportMainAxisExtent - _extentIndex.total,
+          )
+        : 0.0;
+    if (_activeTarget case final activeTarget?) {
+      resolvedUnderfillOffset = _resolveTargetUnderfillOffset(
+        activeTarget,
+        sliverConstraints.viewportMainAxisExtent,
+      );
+      correction =
+          _resolveTargetOffset(
+            activeTarget,
+            sliverConstraints.viewportMainAxisExtent,
+          ) -
+          sliverConstraints.scrollOffset;
+    } else if (changed) {
+      final held = _coordinator.consumeHold();
+      if (held) {
+        resolvedUnderfillOffset = 0;
+        correction = offsetForKey(anchor.key) - anchor.oldOffsets[anchor.key]!;
+      } else if (_follow == TRVirtualListFollow.leading &&
+          _coordinator.leadingPinned) {
+        correction = 0;
+      } else if (_follow == TRVirtualListFollow.trailing &&
+          _coordinator.trailingPinned) {
+        _activeTarget = const _InitialTarget.trailing();
+        correction =
+            _resolveTargetOffset(
+              _activeTarget!,
+              sliverConstraints.viewportMainAxisExtent,
+            ) -
+            sliverConstraints.scrollOffset;
+      } else {
+        correction = offsetForKey(anchor.key) - anchor.oldOffsets[anchor.key]!;
+      }
+    }
+    if (correction.abs() > precisionErrorTolerance) {
+      childManager.didFinishLayout();
+      geometry = SliverGeometry(scrollOffsetCorrection: correction);
+      return;
+    }
+    _underfillOffset = resolvedUnderfillOffset;
+    RenderBox? positionedChild = firstChild;
+    while (positionedChild != null) {
+      final parentData =
+          positionedChild.parentData! as SliverMultiBoxAdaptorParentData;
+      parentData.layoutOffset =
+          _underfillOffset + offsetForIndex(indexOf(positionedChild));
+      positionedChild = childAfter(positionedChild);
+    }
+    _activeTarget = null;
+
     final total = _extentIndex.total;
+    final visualTotal = _underfillOffset + total;
+    final firstOffset = _underfillOffset > 0
+        ? 0.0
+        : offsetForIndex(indexOf(firstChild!));
+    final lastOffset = _underfillOffset > 0
+        ? visualTotal
+        : offsetForIndex(indexOf(lastChild!) + 1);
     final paintExtent = calculatePaintOffset(
       sliverConstraints,
       from: firstOffset,
@@ -1179,43 +1370,76 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
       to: lastOffset,
     );
     geometry = SliverGeometry(
-      scrollExtent: total,
+      scrollExtent: visualTotal,
       paintExtent: paintExtent,
       cacheExtent: cacheExtent,
-      maxPaintExtent: total,
+      maxPaintExtent: visualTotal,
       hasVisualOverflow:
-          total > sliverConstraints.remainingPaintExtent ||
+          visualTotal > sliverConstraints.remainingPaintExtent ||
           sliverConstraints.scrollOffset > 0,
     );
     if (indexOf(lastChild!) == _entryKeys.length - 1) {
       childManager.setDidUnderflow(true);
     }
-    final visibleFirst = _extentIndex.indexForOffset(
-      sliverConstraints.scrollOffset,
-    );
-    final visibleLast = _extentIndex.indexForOffset(
+    final visibleEnd = math.min(
+      total,
       sliverConstraints.scrollOffset + sliverConstraints.remainingPaintExtent,
     );
-    _onRange(visibleFirst, visibleLast);
+    if (visibleEnd <= sliverConstraints.scrollOffset) {
+      _onRange(-1, -1);
+    } else {
+      final visibleFirst = _extentIndex.indexForOffset(
+        sliverConstraints.scrollOffset,
+      );
+      final visibleLast = _extentIndex.indexBeforeOffset(visibleEnd);
+      _onRange(visibleFirst, visibleLast);
+    }
     childManager.didFinishLayout();
   }
 
-  double _resolveInitialOffset(double viewportExtent) {
+  double _resolveTargetOffset(_InitialTarget target, double viewportExtent) {
     final maxOffset = math.max(0.0, _extentIndex.total - viewportExtent);
-    if (_initialTarget.kind == _InitialTargetKind.leading) return 0;
-    if (_initialTarget.kind == _InitialTargetKind.trailing) return maxOffset;
-    final index = _initialTarget.index!.clamp(0, _entryKeys.length - 1);
+    if (target.kind == _InitialTargetKind.leading) return 0;
+    if (target.kind == _InitialTargetKind.trailing) return maxOffset;
+    final index = target.index!.clamp(0, _entryKeys.length - 1);
     final leading = offsetForIndex(index);
-    if (_initialTarget.viewportOffset case final viewportOffset?) {
+    if (target.viewportOffset case final viewportOffset?) {
       return (leading - viewportOffset).clamp(0.0, maxOffset).toDouble();
     }
     final trailing = offsetForIndex(index + 1);
-    return switch (_initialTarget.alignment) {
+    return switch (target.alignment) {
       TRVirtualListAlignment.leading ||
       TRVirtualListAlignment.nearest => leading,
       TRVirtualListAlignment.center =>
         (leading + trailing - viewportExtent) / 2,
       TRVirtualListAlignment.trailing => trailing - viewportExtent,
     }.clamp(0.0, maxOffset).toDouble();
+  }
+
+  double _resolveTargetUnderfillOffset(
+    _InitialTarget target,
+    double viewportExtent,
+  ) {
+    final maxUnderfill = math.max(0.0, viewportExtent - _extentIndex.total);
+    if (maxUnderfill == 0 || target.kind == _InitialTargetKind.leading) {
+      return 0;
+    }
+    if (target.kind == _InitialTargetKind.trailing) {
+      return maxUnderfill;
+    }
+    final index = target.index!.clamp(0, _entryKeys.length - 1);
+    final leading = offsetForIndex(index);
+    final trailing = offsetForIndex(index + 1);
+    final desiredLeading = switch (target.viewportOffset) {
+      final viewportOffset? => viewportOffset,
+      null => switch (target.alignment) {
+        TRVirtualListAlignment.leading || TRVirtualListAlignment.nearest => 0,
+        TRVirtualListAlignment.center =>
+          (viewportExtent - (trailing - leading)) / 2,
+        TRVirtualListAlignment.trailing =>
+          viewportExtent - (trailing - leading),
+      },
+    };
+    return (desiredLeading - leading).clamp(0.0, maxUnderfill).toDouble();
   }
 }
