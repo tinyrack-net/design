@@ -446,6 +446,8 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
           semanticChildCount: widget.items.length,
           slivers: <Widget>[
             _TRVirtualSliver(
+              canResolveInitialTarget:
+                  itemKeys.isNotEmpty || !_initialTargetRequiresItems,
               coordinator: _coordinator,
               entryKeys: entryKeys,
               estimates: entryEstimates,
@@ -558,6 +560,13 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
       ),
     };
   }
+
+  bool get _initialTargetRequiresItems =>
+      widget.initialSnapshot != null ||
+      _pageStorageSnapshot != null ||
+      widget.initialPosition._kind ==
+          _TRVirtualListInitialPositionKind.atIndex ||
+      widget.initialPosition._kind == _TRVirtualListInitialPositionKind.byKey;
 
   void _updateMetrics(ScrollMetrics metrics) {
     const threshold = 1.0;
@@ -788,6 +797,7 @@ class _InitialTarget {
 class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
   const _TRVirtualSliver({
     required super.delegate,
+    required this.canResolveInitialTarget,
     required this.coordinator,
     required this.entryKeys,
     required this.estimates,
@@ -799,6 +809,7 @@ class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
     required this.onRange,
   });
 
+  final bool canResolveInitialTarget;
   final _TRVirtualListCoordinator coordinator;
   final List<Object> entryKeys;
   final List<double> estimates;
@@ -814,6 +825,7 @@ class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
     final element = context as SliverMultiBoxAdaptorElement;
     return _RenderTRVirtualSliver(
       childManager: element,
+      canResolveInitialTarget: canResolveInitialTarget,
       coordinator: coordinator,
       entryKeys: entryKeys,
       estimates: estimates,
@@ -832,6 +844,7 @@ class _TRVirtualSliver extends SliverMultiBoxAdaptorWidget {
     covariant _RenderTRVirtualSliver renderObject,
   ) {
     renderObject
+      ..canResolveInitialTarget = canResolveInitialTarget
       ..coordinator = coordinator
       ..follow = follow
       ..initialTarget = initialTarget
@@ -950,6 +963,7 @@ class _CapturedAnchor {
 class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
   _RenderTRVirtualSliver({
     required super.childManager,
+    required this._canResolveInitialTarget,
     required this._coordinator,
     required List<Object> entryKeys,
     required List<double> estimates,
@@ -970,6 +984,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
   }
 
   _TRVirtualListCoordinator _coordinator;
+  bool _canResolveInitialTarget;
   List<Object> _entryKeys;
   List<double> _estimates;
   final Map<Object, double> _measurements;
@@ -983,6 +998,13 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
   _InitialTarget? _activeTarget;
   double _underfillOffset = 0;
   double _pendingCorrection = 0;
+  bool _holdAnchorForLayout = false;
+
+  set canResolveInitialTarget(bool value) {
+    if (_canResolveInitialTarget == value) return;
+    _canResolveInitialTarget = value;
+    if (!_initialResolved) markNeedsLayout();
+  }
 
   set coordinator(_TRVirtualListCoordinator value) {
     if (identical(_coordinator, value)) return;
@@ -1052,7 +1074,8 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
         _measurements[keys[index]] ?? estimates[index],
     ]);
     if (_initialResolved) {
-      final held = _coordinator.consumeHold();
+      if (_coordinator.consumeHold()) _holdAnchorForLayout = true;
+      final held = _holdAnchorForLayout;
       if (!held &&
           _follow == TRVirtualListFollow.leading &&
           _coordinator.leadingPinned) {
@@ -1159,7 +1182,9 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     }
 
     final sliverConstraints = constraints;
-    if (!_initialResolved && _entryKeys.isNotEmpty) {
+    if (!_initialResolved &&
+        _entryKeys.isNotEmpty &&
+        _canResolveInitialTarget) {
       _initialResolved = true;
       _activeTarget = _initialTarget;
       final target = _resolveTargetOffset(
@@ -1178,6 +1203,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     if (_entryKeys.isEmpty) {
       collectGarbage(childCount, 0);
       geometry = SliverGeometry.zero;
+      _holdAnchorForLayout = false;
       childManager.didFinishLayout();
       return;
     }
@@ -1206,6 +1232,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
         scrollExtent: _extentIndex.total,
         maxPaintExtent: _extentIndex.total,
       );
+      _holdAnchorForLayout = false;
       childManager.didFinishLayout();
       return;
     }
@@ -1315,7 +1342,8 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
           ) -
           sliverConstraints.scrollOffset;
     } else if (changed) {
-      final held = _coordinator.consumeHold();
+      if (_coordinator.consumeHold()) _holdAnchorForLayout = true;
+      final held = _holdAnchorForLayout;
       if (held) {
         resolvedUnderfillOffset = 0;
         correction = offsetForKey(anchor.key) - anchor.oldOffsets[anchor.key]!;
@@ -1394,6 +1422,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
       final visibleLast = _extentIndex.indexBeforeOffset(visibleEnd);
       _onRange(visibleFirst, visibleLast);
     }
+    _holdAnchorForLayout = false;
     childManager.didFinishLayout();
   }
 

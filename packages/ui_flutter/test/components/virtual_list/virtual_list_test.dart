@@ -66,12 +66,14 @@ class _VirtualListHarness extends StatefulWidget {
 
 class _VirtualListHarnessState extends State<_VirtualListHarness> {
   late List<String> items = List<String>.of(widget.initialItems);
+  final Map<String, double> estimates = <String, double>{};
   final Map<String, double> heights = <String, double>{};
   var buildCount = 0;
 
-  void append(String item, {double? height}) {
+  void append(String item, {double? estimate, double? height}) {
     setState(() {
       items = <String>[...items, item];
+      if (estimate != null) estimates[item] = estimate;
       if (height != null) heights[item] = height;
     });
   }
@@ -97,7 +99,8 @@ class _VirtualListHarnessState extends State<_VirtualListHarness> {
     items: items,
     axis: widget.axis,
     itemKey: (item) => item,
-    estimatedItemExtent: (item, index) => heights[item] ?? 40,
+    estimatedItemExtent: (item, index) =>
+        estimates[item] ?? heights[item] ?? 40,
     itemBuilder: (context, item, index) {
       buildCount += 1;
       return SizedBox(
@@ -304,6 +307,42 @@ void main() {
 
     expect(_top(tester, 'item-29'), moreOrLessEquals(disclosureTop));
   });
+
+  testWidgets(
+    'one-shot hold spans structural and measured disclosure changes',
+    (tester) async {
+      final key = GlobalKey<_VirtualListHarnessState>();
+      final controller = TRVirtualListController<String>();
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        _host(
+          _VirtualListHarness(
+            key: key,
+            controller: controller,
+            initialItems: List<String>.generate(30, (index) => 'item-$index'),
+            initialPosition: const TRVirtualListInitialPosition.trailing(),
+            follow: TRVirtualListFollow.trailing,
+          ),
+        ),
+      );
+      final anchorTop = _top(tester, 'item-29');
+
+      controller.holdVisibleAnchorForNextLayout();
+      key.currentState!.append('disclosure', estimate: 20, height: 120);
+      await tester.pump();
+
+      expect(_top(tester, 'item-29'), moreOrLessEquals(anchorTop));
+
+      await controller.scrollToEdge(TRVirtualListEdge.trailing);
+      await tester.pump();
+      key.currentState!.append('after-hold', estimate: 20, height: 100);
+      await tester.pump();
+
+      final viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+      expect(_bottom(tester, 'after-hold'), moreOrLessEquals(viewport.bottom));
+    },
+  );
 
   testWidgets('trailing follow resumes only after returning to the edge', (
     tester,
@@ -1031,7 +1070,7 @@ void main() {
     expect(item.bottom, moreOrLessEquals(viewport.bottom));
   });
 
-  testWidgets('retains index and key initial targets while initially empty', (
+  testWidgets('retains empty index and key targets when edge slots exist', (
     tester,
   ) async {
     final items = List<String>.generate(30, (index) => 'item-$index');
@@ -1041,6 +1080,8 @@ void main() {
       required TRVirtualListInitialPosition<String> position,
       required String target,
       required TRVirtualListAlignment alignment,
+      TRVirtualListEdgeRequest? leadingEdgeRequest,
+      TRVirtualListEdgeRequest? trailingEdgeRequest,
     }) async {
       final controller = TRVirtualListController<String>();
       addTearDown(controller.dispose);
@@ -1051,6 +1092,8 @@ void main() {
             controller: controller,
             initialItems: const <String>[],
             initialPosition: position,
+            leadingEdgeRequest: leadingEdgeRequest,
+            trailingEdgeRequest: trailingEdgeRequest,
           ),
         ),
       );
@@ -1074,6 +1117,11 @@ void main() {
       position: const TRVirtualListInitialPosition.index(12),
       target: 'item-12',
       alignment: TRVirtualListAlignment.leading,
+      leadingEdgeRequest: TRVirtualListEdgeRequest(
+        requestKey: 'empty-index-leading-slot',
+        onRequest: () {},
+        slot: const SizedBox(height: 56),
+      ),
     );
     await verifyTarget(
       listKey: const ValueKey('empty-key'),
@@ -1083,10 +1131,15 @@ void main() {
       ),
       target: 'item-18',
       alignment: TRVirtualListAlignment.trailing,
+      trailingEdgeRequest: TRVirtualListEdgeRequest(
+        requestKey: 'empty-key-trailing-slot',
+        onRequest: () {},
+        slot: const SizedBox(height: 56),
+      ),
     );
   });
 
-  testWidgets('retains a snapshot target while initially empty', (
+  testWidgets('retains an empty snapshot target when an edge slot exists', (
     tester,
   ) async {
     final items = List<String>.generate(40, (index) => 'item-$index');
@@ -1126,6 +1179,11 @@ void main() {
           initialItems: const <String>[],
           initialPosition: const TRVirtualListInitialPosition.trailing(),
           initialSnapshot: snapshot,
+          leadingEdgeRequest: TRVirtualListEdgeRequest(
+            requestKey: 'empty-snapshot-leading-slot',
+            onRequest: () {},
+            slot: const SizedBox(height: 56),
+          ),
         ),
       ),
     );
