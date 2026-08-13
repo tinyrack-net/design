@@ -9,9 +9,12 @@ pub.devからパッケージをインストールします。
 
 ```sh
 flutter pub add tinyrack_ui
+flutter pub add material_ui
 ```
 
-`tinyrack_ui` 0.50.0にはFlutter 3.44以降とDart 3.12以降が必要です。
+`tinyrack_ui` 0.57.1にはFlutter 3.47以降とDart 3.12以降が必要です。
+アプリでMaterial APIを使う場合は`material_ui`を直接追加し、
+`package:material_ui/material_ui.dart`からインポートしてください。Tinyrackの
 公開ライブラリは`package:tinyrack_ui/tinyrack_ui.dart`からインポートします。
 IBM Plex Sans、Mono、韓国語、日本語のフォントアセットを同梱しているため、
 実行時にフォントをダウンロードしません。

@@ -5648,7 +5648,7 @@ const copy = {
   },
 } as const;
 
-const codeBlockSetupSource = String.raw`import 'package:flutter/material.dart';
+const codeBlockSetupSource = String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 final dartKeywords = RegExp(r'\b(class|const|final|return|void)\b');
@@ -5973,7 +5973,7 @@ export function FlutterComponentPage({
 
       <h2>{labels.usage}</h2>
       <TRCodeBlock
-        code={`import 'package:flutter/material.dart';\nimport 'package:tinyrack_ui/tinyrack_ui.dart';\n\n${localized(data.usage)}`}
+        code={`import 'package:material_ui/material_ui.dart';\nimport 'package:tinyrack_ui/tinyrack_ui.dart';\n\n${localized(data.usage)}`}
         language="dart"
       />
 
