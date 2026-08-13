@@ -394,6 +394,16 @@ export const scrollAreaPlayground = flutterPlayground(
   { autoHide: false },
   { autoHide: { control: 'boolean' } },
 );
+export const virtualListPlayground = flutterPlayground(
+  'virtual-list',
+  { initialEdge: 'leading' },
+  {
+    initialEdge: {
+      control: 'radio',
+      options: ['leading', 'trailing'],
+    },
+  },
+);
 export const sliderPlayground = flutterPlayground(
   'slider',
   {
@@ -800,6 +810,7 @@ export const flutterPlaygrounds = {
   radio: radioPlayground,
   'radio-group': radioGroupPlayground,
   'scroll-area': scrollAreaPlayground,
+  'virtual-list': virtualListPlayground,
   separator: separatorPlayground,
   select: selectPlayground,
   skeleton: skeletonPlayground,

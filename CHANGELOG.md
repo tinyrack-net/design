@@ -28,6 +28,13 @@
 
 ### Added
 
+- Added `TRVirtualList<T, K>` at `@tinyrack/ui/components/virtual-list` for
+  stable-key vertical and horizontal virtualization. It includes controller
+  navigation and snapshots, dynamic `ResizeObserver` measurement, visible-anchor
+  correction across complete collection diffs, pinned edge following, focused
+  item retention, independent deduplicated edge requests, RTL scrolling, and an
+  explicit hydration-safe `ssrFallback`. The public API hides TanStack types;
+  `@tanstack/react-virtual` is pinned as a regular dependency.
 - Added `tinyrack-ui-check` and `@tinyrack/ui/check` for enforcing public
   Tinyrack tokens, Tailwind utilities, component imports, component CSS, and
   foundation CSS across Web application source. The command supports readable,

@@ -72,10 +72,10 @@ describe('@tinyrack/ui test commands', () => {
 
   it('runs browser coverage directly without a wrapper or fixed API port', () => {
     expect(packageJson.scripts['test:e2e']).toBe(
-      'pnpm build && pnpm test:chromium && pnpm test:firefox',
+      'pnpm build && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit',
     );
     expect(packageJson.scripts['test:prepared']).toBe(
-      'pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox',
+      'pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit',
     );
     expect(packageJson.scripts['test:docs-contract']).toBe(
       'vitest run --project docs-contract',
@@ -85,6 +85,9 @@ describe('@tinyrack/ui test commands', () => {
     );
     expect(packageJson.scripts['test:firefox']).toBe(
       'vitest run --mode component-firefox --project browser',
+    );
+    expect(packageJson.scripts['test:webkit']).toBe(
+      'vitest run --mode component-webkit --project browser',
     );
 
     const vitestConfig = readFileSync(
@@ -99,7 +102,9 @@ describe('@tinyrack/ui test commands', () => {
     expect(vitestConfig).not.toMatch(/port:\s*\d/);
     expect(vitestConfig).not.toContain('strictPort');
     expect(vitestConfig).not.toContain('retry:');
-    expect(vitestConfig).toContain('fileParallelism: !componentFirefox');
+    expect(vitestConfig).toContain(
+      'fileParallelism: !(componentFirefox || componentWebkit)',
+    );
     expect(vitestConfig).not.toContain('maxWorkers');
   });
 
@@ -129,7 +134,9 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('Preserve the first UI Firefox failure');
     expect(ci).toContain('name: UI Chromium and contracts');
     expect(ci).toContain('name: UI Firefox');
+    expect(ci).toContain('name: UI WebKit');
     expect(ci).toContain(`UI_FIREFOX_RESULT: \${{ needs.ui_firefox.result }}`);
+    expect(ci).toContain(`UI_WEBKIT_RESULT: \${{ needs.ui_webkit.result }}`);
     expect(ci).not.toContain('playwright install --with-deps');
     expect(ci).toContain('pnpm --filter @tinyrack/docs test:prepared');
     expect(ci).toContain('pnpm --filter @tinyrack/homepage test:prepared');

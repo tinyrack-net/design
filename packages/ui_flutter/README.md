@@ -137,6 +137,28 @@ Builder(
 )
 ```
 
+Use `TRVirtualList` for a large bounded linear collection whose items can be
+inserted, removed, reordered, or resized. Stable keys keep one visible item at
+the same viewport-relative coordinate. A trailing-follow list stays pinned only
+while the reader is already at the trailing edge, so streaming content does not
+move a scrolled-up viewport:
+
+```dart
+TRVirtualList<Message, String>(
+  items: messages,
+  itemKey: (message) => message.id,
+  estimatedItemExtent: (message, index) => TRMeasurements.measureSm,
+  initialPosition: const TRVirtualListInitialPosition.trailing(),
+  follow: TRVirtualListFollow.trailing,
+  itemBuilder: (context, message, index) => MessageRow(message),
+)
+```
+
+The list owns its bounded viewport and lazily mounts only the visible and cached
+range. Use `TRScrollArea` for ordinary non-virtual content, and use non-virtual
+rendering when full-document search, print, selection, or assistive virtual-
+cursor access must include every offscreen item.
+
 `TRTabs` composes one full-width tab strip from optional capabilities. Provide
 `panelBuilder` when the component should draw the active panel, add `onClose`
 to individual tabs when they can close, and pass `TRTabsDragConfiguration` to

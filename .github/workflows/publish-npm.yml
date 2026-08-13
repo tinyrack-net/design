@@ -32,7 +32,7 @@ jobs:
         run: pnpm --filter @tinyrack/ui... install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox
+        run: pnpm --filter @tinyrack/ui exec playwright install --with-deps chromium firefox webkit
 
       - name: Verify tag matches package version
         run: |

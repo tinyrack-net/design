@@ -4654,6 +4654,32 @@ class _RegionAutocompleteState extends State<RegionAutocomplete> {
 )`,
     },
   ],
+  'virtual-list': [
+    {
+      id: 'virtual-list-edge-loading',
+      title: {
+        en: 'Load older rows without moving the reader',
+        ko: '읽는 위치를 움직이지 않고 이전 행 로드',
+        ja: '読んでいる位置を動かさずに古い行を読み込む',
+      },
+      description: {
+        en: 'Change requestKey with each cursor or retry attempt. The consumer owns fetching and the status slot while the list preserves the visible anchor.',
+        ko: 'cursor나 재시도 attempt마다 requestKey를 바꾸세요. 소비자가 fetch와 상태 슬롯을 소유하고 목록은 보이는 anchor를 보존해요.',
+        ja: 'cursor または再試行 attempt ごとに requestKey を変更してください。consumer が fetch と状態 slot を管理し、リストは表示アンカーを保ちます。',
+      },
+      dart: String.raw`TRVirtualList<String, String>(
+  items: events,
+  itemKey: (event) => event,
+  estimatedItemExtent: (event, index) => TRMeasurements.measureXs,
+  leadingEdgeRequest: TRVirtualListEdgeRequest(
+    requestKey: olderCursor,
+    onRequest: loadOlderEvents,
+    slot: loadingOlder ? TRSpinner(label: loadingLabel) : null,
+  ),
+  itemBuilder: (context, event, index) => TRText(event),
+)`,
+    },
+  ],
   'tree-nav': [
     {
       id: 'tree-nav-navigation',

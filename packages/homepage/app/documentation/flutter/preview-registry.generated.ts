@@ -66,6 +66,7 @@ export const flutterPreviewComponents = [
   'toolbar',
   'tooltip',
   'tree-nav',
+  'virtual-list',
   'window-frame',
 ] as const;
 export type FlutterPreviewComponent = (typeof flutterPreviewComponents)[number];

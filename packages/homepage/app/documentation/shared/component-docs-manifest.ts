@@ -1062,6 +1062,23 @@ export const componentDocsManifest = [
     title: 'ScrollArea',
   },
   {
+    capabilities: ['responsive', 'keyboard', 'overflow', 'stateful'],
+    file: 'app/content/en/web/components/virtual-list.mdx',
+    id: 'virtual-list',
+    controls: ['axis', 'follow', 'itemCount'],
+    exampleGroups: [
+      exampleGroup('virtual-list-basic', 'usage', 'basic', 1),
+      exampleGroup('virtual-list-streaming', 'examples', 'recipe', 1),
+      exampleGroup('virtual-list-horizontal', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'virtual-list-basic',
+      'virtual-list-streaming',
+      'virtual-list-horizontal',
+    ],
+    title: 'VirtualList',
+  },
+  {
     capabilities: ['responsive', 'keyboard', 'validation', 'stateful', 'overlay'],
     file: 'app/content/en/web/components/select.mdx',
     id: 'select',

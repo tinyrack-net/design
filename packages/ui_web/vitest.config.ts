@@ -24,6 +24,7 @@ const componentCoverageThresholds = Object.fromEntries(
 export default async function config({ mode }: ConfigEnv) {
   const componentCoverage = mode === 'component-coverage';
   const componentFirefox = mode === 'component-firefox';
+  const componentWebkit = mode === 'component-webkit';
 
   return defineConfig({
     test: {
@@ -87,7 +88,7 @@ export default async function config({ mode }: ConfigEnv) {
               enabled: true,
               provider: playwright(),
               headless: true,
-              fileParallelism: !componentFirefox,
+              fileParallelism: !(componentFirefox || componentWebkit),
               // No explicit port. Probing for a free one meant binding it,
               // reading the number, closing, and rebinding later, which leaves
               // a window for anything else to take it. Vite binds once and
@@ -95,7 +96,9 @@ export default async function config({ mode }: ConfigEnv) {
               api: { host: '127.0.0.1' },
               instances: componentFirefox
                 ? [{ browser: 'firefox' }]
-                : [{ browser: 'chromium' }],
+                : componentWebkit
+                  ? [{ browser: 'webkit' }]
+                  : [{ browser: 'chromium' }],
             },
           },
         },

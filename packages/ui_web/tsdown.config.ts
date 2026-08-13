@@ -60,6 +60,7 @@ const entry = {
   'components/toolbar/index': 'src/components/toolbar/index.tsx',
   'components/tooltip/index': 'src/components/tooltip/index.tsx',
   'components/tree-nav/index': 'src/components/tree-nav/index.tsx',
+  'components/virtual-list/index': 'src/components/virtual-list/index.tsx',
   'components/window-frame/index': 'src/components/window-frame/index.tsx',
   'providers/csp/index': 'src/providers/csp/index.tsx',
   'providers/color-scheme/index': 'src/providers/color-scheme/index.tsx',
@@ -188,6 +189,10 @@ const copy = [
   { from: 'src/components/toolbar/toolbar.css', to: 'dist/components/toolbar' },
   { from: 'src/components/tooltip/tooltip.css', to: 'dist/components/tooltip' },
   { from: 'src/components/tree-nav/tree-nav.css', to: 'dist/components/tree-nav' },
+  {
+    from: 'src/components/virtual-list/virtual-list.css',
+    to: 'dist/components/virtual-list',
+  },
   {
     from: 'src/components/window-frame/window-frame.css',
     to: 'dist/components/window-frame',

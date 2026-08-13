@@ -1,0 +1,80 @@
+---
+title: "VirtualList"
+description: "大規模、可変サイズ、ストリーミングのコレクションを安定キーで仮想化します。"
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRVirtualList } from '@tinyrack/ui/components/virtual-list';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/virtual-list.demo.js';
+
+## 主なプロパティ
+
+`TRVirtualList<T, K>` は表示範囲と overscan だけをマウントし、ネイティブスクロールを維持します。項目の挿入、削除、並べ替え、再計測が発生しても、安定キーを基準に表示中のアンカーを同じ位置に保ちます。
+
+| プロパティ | 説明 |
+| --- | --- |
+| コレクション | 完全な `items` 配列と安定した `itemKey` を渡してください。長さや両端だけでなく、キー配列全体を比較します。 |
+| 計測 | 最初のレイアウトには `estimateSize` を使います。描画した項目を `ResizeObserver` で計測し、表示中のアンカーを保つように補正します。 |
+| フォーカス | フォーカス中の項目は通常の仮想範囲を外れてもマウントされたままです。 |
+| 追従 | `follow="leading"` または `follow="trailing"` は、ビューポートがその端に固定されている間だけ新しい項目を追従します。 |
+
+すべての子要素をマウントしたままカスタムスクロールバーの構造が必要な場合は `TRScrollArea` を使ってください。コレクションの大きさや動的計測のために全項目のマウントが高コストになる場合は `TRVirtualList` を使います。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/virtual-list.css';"],
+      codeImports: ["import { TRVirtualList } from '@tinyrack/ui/components/virtual-list';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="virtual-list-basic"
+  title="大規模なイベントログ"
+  description="各項目に永続的なキーを付け、想定するブロックサイズに近い推定値を渡してください。描画した行の実寸を計測してレイアウトを補正します。"
+  preview={<div data-docs-example-item-count="1"><Stories.VirtualListPreview axis="vertical" follow="none" itemCount={100000} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListBasicSource }]}
+/>
+
+## 例
+
+<ComponentExampleTabs
+  id="virtual-list-streaming"
+  title="固定されたストリーミング出力"
+  description="チャットやログは trailing edge から開始し、follow を trailing に設定します。端に固定されている間は新しい出力を追従しますが、上へスクロールすると停止し、controller で端に戻ると再開します。"
+  preview={<div data-docs-example-item-count="1"><Stories.VirtualListPreview axis="vertical" follow="trailing" itemCount={200} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListStreamingSource }]}
+/>
+
+<ComponentExampleTabs
+  id="virtual-list-horizontal"
+  title="横方向と RTL のコレクション"
+  description="axis を horizontal に設定してください。RTL のスクロールオフセットを負の値で返すブラウザーでも、継承した文字方向に従って論理的な leading と trailing を移動します。"
+  preview={<div dir="rtl" data-docs-example-item-count="1"><Stories.VirtualListPreview axis="horizontal" follow="none" itemCount={1000} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListHorizontalSource }]}
+/>
+
+## API
+
+| API | 説明 |
+| --- | --- |
+| `TRVirtualList<T, K>` | ジェネリックな React コンポーネントです。`items`、`itemKey`、`estimateSize`、`renderItem` が必須で、`axis` の既定値は `vertical` です。 |
+| `rootProps`, `viewportProps`, `itemProps` | 各公開 DOM サーフェスへネイティブ `div` の属性、イベント、クラス、スタイルを渡します。`itemProps` は項目と index を受け取ります。 |
+| `rootRef`, `viewportRef`, `itemRef` | ネイティブ要素を受け取ります。`itemRef` には要素、項目、index が渡されます。 |
+| `TRVirtualListInitialPosition<K>` | 論理的な端、安定キー、index から開始します。leading、center、trailing、nearest の配置を選べます。 |
+| `TRVirtualListSnapshot<K>` | 表示中のアンカーと安定キーごとの計測サイズを保存します。`takeSnapshot()` の結果を `initialSnapshot` に渡して復元してください。 |
+| `TRVirtualListFollow` | `none`、`leading`、`trailing` のいずれかです。選択した端に固定されている間だけ追従します。 |
+| `TRVirtualListEdgeRequest` | `leadingEdgeRequest` と `trailingEdgeRequest` は、独立した `requestKey`、callback、計測される slot、型付きの `triggerExtent` を受け取ります。同じ key はその端で一度だけ実行され、既定の範囲は viewport 1 個分です。 |
+| `TRVirtualListTriggerExtent` | 0 以上の有限な edge 範囲を `{ kind: 'viewports', value }` または `{ kind: 'pixels', value }` で指定します。 |
+| `TRVirtualListRange<K>` | `onVisibleRangeChanged` が表示中の開始・終了 index と安定キーを通知します。Overscan は含みません。 |
+| `TRVirtualListController<K>` | `scrollToIndex`、`scrollToKey`、`scrollToEdge`、`takeSnapshot`、一度だけ適用する `holdVisibleAnchorForNextLayout` を提供します。`useTRVirtualListController<K>()` で作成してください。 |
+| `ssrFallback` | サーバーと最初の hydration で表示する明示的な content です。Hydration 中に server tree を変えず、その後 virtual viewport をマウントします。 |
+
+`scrollToKey` に存在しないキーを渡しても何も行いません。コレクション更新で表示中のアンカーが削除された場合は、次に残っている visible key を fallback に使います。Disclosure や streaming row のサイズが変わる 1 回のレイアウトで edge follow より現在のアンカーを優先する場合は、変更前に `holdVisibleAnchorForNextLayout()` を呼び出してください。

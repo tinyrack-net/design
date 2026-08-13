@@ -1,0 +1,68 @@
+@import "../scroll-area/scroll-area.css";
+
+@layer components {
+  .tr-virtual-list {
+    min-block-size: 0;
+    min-inline-size: 0;
+  }
+
+  .tr-virtual-list-viewport {
+    block-size: 100%;
+    inline-size: 100%;
+    overflow: auto;
+    overflow-anchor: none;
+    position: relative;
+  }
+
+  .tr-virtual-list-content {
+    display: grid;
+    min-block-size: 100%;
+    min-inline-size: 100%;
+    position: relative;
+  }
+
+  .tr-virtual-list[data-axis="vertical"] .tr-virtual-list-content {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .tr-virtual-list[data-axis="horizontal"] .tr-virtual-list-content {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .tr-virtual-list-item {
+    box-sizing: border-box;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    position: absolute;
+  }
+
+  .tr-virtual-list[data-axis="vertical"] .tr-virtual-list-item {
+    inline-size: 100%;
+  }
+
+  .tr-virtual-list[data-axis="horizontal"] .tr-virtual-list-item {
+    block-size: 100%;
+  }
+
+  .tr-virtual-list-edge-slot {
+    z-index: var(--tinyrack-layer-base);
+  }
+
+  .tr-virtual-list-edge-slot[data-edge="leading"] {
+    grid-area: 1 / 1;
+  }
+
+  .tr-virtual-list-edge-slot[data-edge="trailing"] {
+    grid-area: 3 / 1;
+  }
+
+  .tr-virtual-list[data-axis="horizontal"]
+    .tr-virtual-list-edge-slot[data-edge="leading"] {
+    grid-area: 1 / 1;
+  }
+
+  .tr-virtual-list[data-axis="horizontal"]
+    .tr-virtual-list-edge-slot[data-edge="trailing"] {
+    grid-area: 1 / 3;
+  }
+}

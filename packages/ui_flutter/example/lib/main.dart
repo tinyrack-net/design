@@ -748,6 +748,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'totalPages',
   ],
   'scroll-area' => ['autoHide'],
+  'virtual-list' => ['initialEdge'],
   'table' => ['density', 'striped'],
   'tree-nav' => ['collapsed', 'selected'],
   'window-frame' => ['padding', 'variant'],
@@ -793,6 +794,8 @@ Map<String, Object?>? _validateArgs(
         value is String &&
             const {'compact', 'comfortable', 'spacious'}.contains(value),
       'striped' => value is bool,
+      'initialEdge' when component == 'virtual-list' =>
+        value is String && const {'leading', 'trailing'}.contains(value),
       // A field has no outline step, so it is checked before the shared action
       // rule that allows one.
       'appearance'
@@ -1429,6 +1432,40 @@ class PreviewComponent extends StatelessWidget {
                   child: Text('Deployment $index'),
                 ),
             ],
+          ),
+        ),
+      ),
+      'virtual-list' => SizedBox(
+        key: measureKey,
+        width: TRMeasurements.measureLg,
+        height: TRMeasurements.measureMd,
+        child: TRVirtualList<String, String>(
+          key: ValueKey<String>(
+            args['initialEdge'] == 'trailing' ? 'trailing' : 'leading',
+          ),
+          items: List<String>.generate(
+            80,
+            (index) =>
+                '${switch (locale) {
+                  'ko' => '랙',
+                  'ja' => 'ラック',
+                  _ => 'Rack',
+                }} ${index + 1}',
+          ),
+          itemKey: (item) => item,
+          estimatedItemExtent: (item, index) => TRMeasurements.measureXs,
+          initialPosition: args['initialEdge'] == 'trailing'
+              ? const TRVirtualListInitialPosition.trailing()
+              : const TRVirtualListInitialPosition.leading(),
+          itemBuilder: (context, item, index) => SizedBox(
+            height: TRMeasurements.measureXs,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: TRSpacing.medium),
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TRText(item),
+              ),
+            ),
           ),
         ),
       ),

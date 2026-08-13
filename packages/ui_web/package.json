@@ -1,6 +1,6 @@
 {
   "name": "@tinyrack/ui",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "React-only Tinyrack UI components and design tokens.",
   "keywords": [
     "design-system",
@@ -40,12 +40,13 @@
     "generate:brand-rasters": "node scripts/generate-brand-rasters.ts",
     "generate:wordmark": "node --experimental-strip-types scripts/generate-wordmark.ts",
     "test": "pnpm test:unit && pnpm test:docs-contract && pnpm test:e2e",
-    "test:prepared": "pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox",
+    "test:prepared": "pnpm test:unit && pnpm test:docs-contract && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit",
     "test:docs-contract": "vitest run --project docs-contract",
     "test:unit": "vitest run --project unit",
-    "test:e2e": "pnpm build && pnpm test:chromium && pnpm test:firefox",
+    "test:e2e": "pnpm build && pnpm test:chromium && pnpm test:firefox && pnpm test:webkit",
     "test:chromium": "vitest run --mode component-coverage --project browser --coverage",
     "test:firefox": "vitest run --mode component-firefox --project browser",
+    "test:webkit": "vitest run --mode component-webkit --project browser",
     "typecheck": "tsc -p tsconfig.test.json --noEmit",
     "prepack": "pnpm build"
   },
@@ -179,8 +180,9 @@
     }
   },
   "dependencies": {
-    "@base-ui/react": "1.7.0",
     "@babel/parser": "7.29.7",
+    "@base-ui/react": "1.7.0",
+    "@tanstack/react-virtual": "3.14.9",
     "lucide-react": "1.28.0",
     "postcss": "8.5.25"
   }

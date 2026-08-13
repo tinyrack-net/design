@@ -1,0 +1,80 @@
+---
+title: "VirtualList"
+description: "크거나 크기가 변하거나 계속 추가되는 collection을 stable key로 가상화해요."
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRVirtualList } from '@tinyrack/ui/components/virtual-list';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/virtual-list.demo.js';
+
+## 핵심 속성
+
+`TRVirtualList<T, K>`는 보이는 범위와 overscan만 mount하면서 native scrolling을 유지해요. 항목을 삽입, 제거, 재정렬하거나 다시 측정해도 stable key를 기준으로 보이는 anchor를 같은 위치에 유지해요.
+
+| 속성 | 설명 |
+| --- | --- |
+| Collection | 전체 `items` 배열과 stable `itemKey`를 전달하세요. 길이나 양쪽 끝만 보지 않고 전체 key 순서를 비교해요. |
+| Measurement | 첫 layout에는 `estimateSize`를 사용해요. 렌더링된 항목은 `ResizeObserver`로 측정하고 보이는 anchor를 유지하도록 보정해요. |
+| Focus | 포커스된 항목은 일반 virtual range를 벗어나도 mount 상태를 유지해요. |
+| Following | `follow="leading"`이나 `follow="trailing"`은 viewport가 해당 edge에 고정된 동안만 새 항목을 따라가요. |
+
+모든 child를 mount한 채 사용자 정의 scrollbar 구조가 필요하면 `TRScrollArea`를 사용하세요. Collection 크기나 동적 측정 때문에 모든 항목을 mount하기 부담스러우면 `TRVirtualList`를 사용하세요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/virtual-list.css';"],
+      codeImports: ["import { TRVirtualList } from '@tinyrack/ui/components/virtual-list';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs
+  id="virtual-list-basic"
+  title="큰 이벤트 로그"
+  description="각 항목에 오래 유지되는 key를 부여하고 예상 block size와 가까운 값을 전달하세요. 렌더링된 row의 실제 크기를 측정한 뒤 layout을 보정해요."
+  preview={<div data-docs-example-item-count="1"><Stories.VirtualListPreview axis="vertical" follow="none" itemCount={100000} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListBasicSource }]}
+/>
+
+## 예시
+
+<ComponentExampleTabs
+  id="virtual-list-streaming"
+  title="고정된 streaming output"
+  description="chat이나 log는 trailing edge에서 시작하고 follow를 trailing으로 설정하세요. edge에 고정된 동안에는 새 output을 따라가지만 위로 scroll하면 중단하고, controller로 edge에 돌아오면 다시 시작해요."
+  preview={<div data-docs-example-item-count="1"><Stories.VirtualListPreview axis="vertical" follow="trailing" itemCount={200} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListStreamingSource }]}
+/>
+
+<ComponentExampleTabs
+  id="virtual-list-horizontal"
+  title="가로 및 RTL collection"
+  description="axis를 horizontal로 설정하세요. 음수 RTL scroll offset을 보고하는 browser에서도 상속된 text direction에 따라 논리적 leading과 trailing을 탐색해요."
+  preview={<div dir="rtl" data-docs-example-item-count="1"><Stories.VirtualListPreview axis="horizontal" follow="none" itemCount={1000} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListHorizontalSource }]}
+/>
+
+## API
+
+| API | 설명 |
+| --- | --- |
+| `TRVirtualList<T, K>` | Generic React component예요. `items`, `itemKey`, `estimateSize`, `renderItem`이 필요하고 `axis` 기본값은 `vertical`이에요. |
+| `rootProps`, `viewportProps`, `itemProps` | 각 public DOM surface에 native `div` attribute, event, class, style을 전달해요. `itemProps`는 항목과 index를 받아요. |
+| `rootRef`, `viewportRef`, `itemRef` | Native element를 받아요. `itemRef`에는 element, 항목, index가 전달돼요. |
+| `TRVirtualListInitialPosition<K>` | 논리적 edge, stable key, index에서 시작해요. leading, center, trailing, nearest alignment를 선택할 수 있어요. |
+| `TRVirtualListSnapshot<K>` | 보이는 anchor와 stable key별 측정 크기를 저장해요. `takeSnapshot()` 결과를 `initialSnapshot`에 다시 전달하세요. |
+| `TRVirtualListFollow` | `none`, `leading`, `trailing` 중 하나예요. 선택한 edge에 고정된 동안만 따라가요. |
+| `TRVirtualListEdgeRequest` | `leadingEdgeRequest`와 `trailingEdgeRequest`는 서로 독립된 `requestKey`, callback, 측정되는 slot, 타입이 지정된 `triggerExtent`를 받아요. 같은 key는 해당 edge에서 한 번만 실행되고 기본 범위는 viewport 하나예요. |
+| `TRVirtualListTriggerExtent` | 음수가 아닌 유한한 edge 범위를 `{ kind: 'viewports', value }` 또는 `{ kind: 'pixels', value }`로 지정해요. |
+| `TRVirtualListRange<K>` | `onVisibleRangeChanged`가 보이는 시작·끝 index와 stable key를 알려 줘요. Overscan은 제외해요. |
+| `TRVirtualListController<K>` | `scrollToIndex`, `scrollToKey`, `scrollToEdge`, `takeSnapshot`, 한 번만 적용되는 `holdVisibleAnchorForNextLayout`을 제공해요. `useTRVirtualListController<K>()`로 만드세요. |
+| `ssrFallback` | Server와 첫 hydration에 표시할 명시적 content예요. Hydration 중 server tree를 바꾸지 않고 이후에 virtual viewport를 mount해요. |
+
+`scrollToKey`에 없는 key를 전달하면 아무 작업도 하지 않아요. Collection update에서 보이는 anchor가 제거되면 다음으로 살아남은 visible key를 fallback으로 사용해요. Disclosure나 streaming row의 크기가 바뀌는 한 번의 layout에서 edge follow 대신 현재 anchor를 유지하려면 변경 전에 `holdVisibleAnchorForNextLayout()`을 호출하세요.
