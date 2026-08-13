@@ -102,6 +102,7 @@ class _TRSelectSheetState<T> extends State<_TRSelectSheet<T>> {
                 noResultsText: widget.noResultsText,
                 onSelected: _commit,
                 uiSize: widget.uiSize,
+                minimumRowHeight: TRControlMetrics.heightOf(TRUiSize.xl),
               ),
             ),
           ),

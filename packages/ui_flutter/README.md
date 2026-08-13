@@ -56,7 +56,8 @@ select outside `TRUiDensityScope` falls back to `TRBreakpoints.small`, preservin
 the viewport-responsive default for standalone consumers. Searchable dropdowns
 can grow wider than a narrow trigger, while adaptive sheets fit short option
 lists and keep only long option regions scrollable. Sheet option padding,
-typography, and icons follow the resolved density.
+typography, and icons follow the resolved density. Their touch targets remain
+at least 48 logical pixels tall even when the trigger uses compact metrics.
 
 Top and bottom `TRDrawer` surfaces show a drag-to-dismiss handle by default.
 Set `showDragHandle: false` when a sheet must not advertise or accept that drag
