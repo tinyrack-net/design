@@ -1381,7 +1381,7 @@ export const flutterExamples: Partial<
         ja: 'onValueChange から value を更新すると、各セクションを開閉でき、現在の選択も表示できます。',
         ko: 'onValueChange에서 value를 갱신하면 각 섹션을 열고 닫을 수 있고 현재 선택도 표시할 수 있어요.',
       },
-      dart: String.raw`import 'package:flutter/material.dart';
+      dart: String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 class AccordionExample extends StatefulWidget {
@@ -1435,7 +1435,7 @@ class _AccordionExampleState extends State<AccordionExample> {
         ja: '排他的なセクションには既定の単一展開、独立したセクションには multiple、利用できない項目には disabled を使います。',
         ko: '서로 하나만 열어야 하는 섹션에는 기본 단일 모드를, 독립적인 섹션에는 multiple을, 사용할 수 없는 항목에는 disabled를 사용하세요.',
       },
-      dart: String.raw`import 'package:flutter/material.dart';
+      dart: String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 class AccordionStates extends StatelessWidget {
@@ -2655,7 +2655,7 @@ Column(
         ja: 'チェックボックスが一部だけ選択された集合を要約する場合に限り、indeterminate を使います。',
         ko: '체크박스가 일부만 선택한 집합을 요약할 때만 indeterminate를 사용해요.',
       },
-      dart: String.raw`import 'package:flutter/material.dart';
+      dart: String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 Widget checkboxStates() => const Wrap(
@@ -2685,7 +2685,7 @@ Widget checkboxStates() => const Wrap(
         ja: '周囲のコントロールの密度に合わせて md、lg を選びます。',
         ko: '주변 컨트롤 밀도에 맞춰 md and lg를 선택하세요.',
       },
-      dart: String.raw`import 'package:flutter/material.dart';
+      dart: String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 Widget checkboxSizes() => Wrap(
@@ -2713,7 +2713,7 @@ Widget checkboxSizes() => Wrap(
         ja: '読み取り専用はフォーカスとフォーム値を保ち、無効はどちらも保持しません。',
         ko: '읽기 전용 컨트롤은 포커스와 폼 값을 유지하고, 비활성 컨트롤은 둘 다 유지하지 않아요.',
       },
-      dart: String.raw`import 'package:flutter/material.dart';
+      dart: String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 Widget checkboxAvailability() => const Wrap(
@@ -2745,7 +2745,7 @@ Widget checkboxAvailability() => const Wrap(
         ja: 'TRCheckboxFormField で同意を検証し、無効なコントロール状態を表示します。',
         ko: 'TRCheckboxFormField로 동의를 검증하고 올바르지 않은 컨트롤 상태를 표시해요.',
       },
-      dart: String.raw`import 'package:flutter/material.dart';
+      dart: String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 class AgreementForm extends StatefulWidget {
@@ -2792,7 +2792,7 @@ class _AgreementFormState extends State<AgreementForm> {
         ja: '名前を登録し、各状態で TRFormValues が収集する値を指定します。',
         ko: '이름을 등록하고 각 상태에서 TRFormValues가 수집할 값을 정해요.',
       },
-      dart: String.raw`import 'package:flutter/material.dart';
+      dart: String.raw`import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 class MonitoringForm extends StatefulWidget {

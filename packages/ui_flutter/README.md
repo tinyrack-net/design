@@ -6,8 +6,15 @@ Flutter widgets for Android, iOS, Linux, macOS, web, and Windows.
 Component-owned glyphs use Lucide. Application-supplied icons should use the
 same `lucide_flutter` package so stroke weight and geometry stay consistent.
 
+Applications that use the Material app and widget APIs shown below must add the
+standalone package directly:
+
+```sh
+flutter pub add material_ui
+```
+
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 MaterialApp(

@@ -284,8 +284,17 @@ String? _ownerName(Element? element) => element?.enclosingElement?.lookupName;
 bool _fromFlutter(Element? element) =>
     _libraryUri(element)?.startsWith('package:flutter/') ?? false;
 
+bool _fromStandaloneDesignUi(Element? element) {
+  final library = _libraryUri(element);
+  return library?.startsWith('package:material_ui/') == true ||
+      library?.startsWith('package:cupertino_ui/') == true;
+}
+
+bool _fromFlutterDesignUi(Element? element) =>
+    _fromFlutter(element) || _fromStandaloneDesignUi(element);
+
 bool _fromFlutterSdk(Element? element) =>
-    _fromFlutter(element) || _libraryUri(element) == 'dart:ui';
+    _fromFlutterDesignUi(element) || _libraryUri(element) == 'dart:ui';
 
 bool _fromTinyrack(Element? element) =>
     _libraryUri(element)?.startsWith('package:tinyrack_ui/') ?? false;
@@ -459,7 +468,7 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
     final library = _libraryUri(element);
     final frameworkOwner =
         _frameworkVisualOwners.contains(owner) &&
-        ((_fromFlutter(element)) || library == 'dart:ui');
+        (_fromFlutterDesignUi(element) || library == 'dart:ui');
     final themeMember =
         owner == 'ThemeData' && _frameworkThemeMembers.contains(name);
     if (!(frameworkOwner || themeMember) ||
@@ -480,7 +489,7 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
     Element? element,
     Map<String, String> replacements,
   ) {
-    if (!_fromFlutter(element)) return;
+    if (!_fromFlutterDesignUi(element)) return;
     final owner = _ownerName(element);
     final replacement = replacements[owner];
     if (owner == null || replacement == null) return;
@@ -530,7 +539,9 @@ final class _CheckVisitor extends RecursiveAstVisitor<void> {
   void visitMethodInvocation(MethodInvocation node) {
     final element = node.methodName.element;
     final name = node.methodName.name;
-    final replacement = _fromFlutter(element) ? _overlayMethods[name] : null;
+    final replacement = _fromFlutterDesignUi(element)
+        ? _overlayMethods[name]
+        : null;
     if (replacement != null) {
       _add(
         node,
