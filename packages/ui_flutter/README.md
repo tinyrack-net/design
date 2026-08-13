@@ -53,7 +53,14 @@ remain `TRUiSize.sm` inside a comfortable subtree.
 `TRSelectSurface.auto` follows the same semantic density: standard density
 opens an anchored dropdown and comfortable density opens a bottom sheet. A
 select outside `TRUiDensityScope` falls back to `TRBreakpoints.small`, preserving
-the viewport-responsive default for standalone consumers.
+the viewport-responsive default for standalone consumers. Searchable dropdowns
+can grow wider than a narrow trigger, while adaptive sheets fit short option
+lists and keep only long option regions scrollable. Sheet option padding,
+typography, and icons follow the resolved density.
+
+Top and bottom `TRDrawer` surfaces show a drag-to-dismiss handle by default.
+Set `showDragHandle: false` when a sheet must not advertise or accept that drag
+gesture. Side drawers never show the handle.
 
 Use `TRSplitView` when two application-owned surfaces need a controlled,
 resizable boundary. The caller owns the ratio and decides when a responsive

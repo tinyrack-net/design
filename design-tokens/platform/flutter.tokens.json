@@ -285,12 +285,12 @@
       "paddingInlineCorrection": {
         "$type": "dimension",
         "$value": {
-          "value": 0.25,
+          "value": 0,
           "unit": "rem"
         },
         "$extensions": {
           "net.tinyrack": {
-            "output": "0.25rem"
+            "output": "0rem"
           }
         }
       },

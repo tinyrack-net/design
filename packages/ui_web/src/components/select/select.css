@@ -64,11 +64,15 @@
   }
 
   .tr-select-popup {
-    --_tr-select-popup-max-width: var(--tinyrack-overlay-width-md);
+    --_tr-select-popup-content-width: var(--tinyrack-measure-lg);
+    --_tr-select-popup-max-width: var(--tinyrack-overlay-width-sm);
     --_tr-select-popup-viewport-inset: var(--tinyrack-space-lg);
     --tr-layer-background: var(--tr-select-popup-background, var(--tinyrack-surface));
     --tr-layer-padding: var(--tinyrack-space-sm);
-    min-width: var(--anchor-width);
+    min-width: min(
+      max(var(--anchor-width), var(--_tr-select-popup-content-width)),
+      var(--available-width, calc(100vw - var(--_tr-select-popup-viewport-inset)))
+    );
     max-width: min(
       var(--tr-select-popup-max-width, var(--_tr-select-popup-max-width)),
       var(--available-width, calc(100vw - var(--_tr-select-popup-viewport-inset)))
@@ -89,6 +93,7 @@
     justify-content: space-between;
     line-height: var(--tinyrack-leading-sm);
     min-height: var(--tinyrack-control-height-sm);
+    padding-block: var(--tinyrack-space-xs);
     padding-inline: var(--tinyrack-control-padding-inline-sm);
   }
 

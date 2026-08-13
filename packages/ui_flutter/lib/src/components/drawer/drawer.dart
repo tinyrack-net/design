@@ -45,7 +45,9 @@ class TRDrawer extends StatefulWidget {
     this.onSnapChanged,
     this.placement = TRDrawerPlacement.bottom,
     this.semanticLabel,
+    this.showDragHandle = true,
     this.snapPoints,
+    this.scrollContent = true,
     this.title,
     super.key,
   }) : assert(maxExtent > 0 && maxExtent <= 1),
@@ -74,6 +76,18 @@ class TRDrawer extends StatefulWidget {
   final ValueChanged<int>? onSnapChanged;
   final TRDrawerPlacement placement;
   final String? semanticLabel;
+
+  /// Whether top and bottom sheets display their drag-to-dismiss handle.
+  ///
+  /// Side drawers never display a handle. Hiding the handle on a content-sized
+  /// sheet also disables its drag gesture so its affordance and behavior agree.
+  final bool showDragHandle;
+
+  /// Whether the drawer owns scrolling for its complete [content] region.
+  ///
+  /// Set this to false when [content] contains a fixed header and owns a
+  /// nested scrolling region itself.
+  final bool scrollContent;
 
   /// Fractions of the viewport at which the drawer snaps.
   ///
@@ -115,7 +129,8 @@ class _TRDrawerState extends State<TRDrawer>
 
   bool get _fitsContent => _horizontal && widget.snapPoints == null;
 
-  bool get _draggable => !_fitsContent;
+  bool get _draggable =>
+      !_fitsContent || (_horizontal && widget.showDragHandle);
 
   @override
   void initState() {
@@ -237,6 +252,7 @@ class _TRDrawerState extends State<TRDrawer>
     // the viewport edge and a full-height outline there reads as a seam. Only
     // the top and bottom sheets keep one.
     final borderWidth = _horizontal ? TRGeneratedBorders.defaultWidth : 0.0;
+    final showDragHandle = _horizontal && widget.showDragHandle;
     final body = Material(
       color: colors.surface,
       elevation: 0,
@@ -268,6 +284,25 @@ class _TRDrawerState extends State<TRDrawer>
               mainAxisSize: _fitsContent ? MainAxisSize.min : MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (showDragHandle) ...[
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: ExcludeSemantics(
+                      child: Container(
+                        key: const ValueKey('tr-drawer-drag-handle'),
+                        width: TRGeneratedSpacing.size2xl,
+                        height: TRGeneratedSpacing.xs,
+                        decoration: BoxDecoration(
+                          color: colors.borderStrong,
+                          borderRadius: BorderRadius.circular(
+                            TRGeneratedRadii.full,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: TRGeneratedSpacing.sm),
+                ],
                 if (widget.title case final title?)
                   TRLayerPartBoundary(
                     name: 'title',
@@ -303,7 +338,8 @@ class _TRDrawerState extends State<TRDrawer>
                     ),
                   ),
                 ],
-                const SizedBox(height: TRGeneratedSpacing.md),
+                if (widget.title != null || widget.description != null)
+                  const SizedBox(height: TRGeneratedSpacing.md),
                 Flexible(
                   fit: _fitsContent ? FlexFit.loose : FlexFit.tight,
                   child: DefaultTextStyle.merge(
@@ -316,12 +352,17 @@ class _TRDrawerState extends State<TRDrawer>
                           TRGeneratedFlutterRendering.normalLineMd /
                           TRGeneratedTypographySizes.md,
                     ),
-                    child: SingleChildScrollView(
-                      child: TRLayerPartBoundary(
-                        name: 'content',
-                        child: widget.content,
-                      ),
-                    ),
+                    child: widget.scrollContent
+                        ? SingleChildScrollView(
+                            child: TRLayerPartBoundary(
+                              name: 'content',
+                              child: widget.content,
+                            ),
+                          )
+                        : TRLayerPartBoundary(
+                            name: 'content',
+                            child: widget.content,
+                          ),
                   ),
                 ),
                 if (widget.actions case final actions?)
@@ -335,7 +376,7 @@ class _TRDrawerState extends State<TRDrawer>
         ),
       ),
     );
-    final interactiveBody = GestureDetector(
+    Widget interactiveBody = GestureDetector(
       behavior: HitTestBehavior.opaque,
       onHorizontalDragEnd: !_draggable || _horizontal ? null : _endDrag,
       onHorizontalDragUpdate: !_draggable || _horizontal ? null : _drag,
@@ -343,6 +384,20 @@ class _TRDrawerState extends State<TRDrawer>
       onVerticalDragUpdate: !_draggable || !_horizontal ? null : _drag,
       child: body,
     );
+    if (_fitsContent && showDragHandle) {
+      final restingExtent = _resolvedSnapPoints[widget.initialSnapIndex];
+      final dragDistance =
+          (restingExtent - _extentController.value) * media.size.height;
+      interactiveBody = Transform.translate(
+        offset: Offset(
+          0,
+          widget.placement == TRDrawerPlacement.bottom
+              ? dragDistance
+              : -dragDistance,
+        ),
+        child: interactiveBody,
+      );
+    }
     return TRLayerBoundary(
       kind: TRLayerBoundaryKind.drawer,
       child: _fitsContent

@@ -177,7 +177,7 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(
     <TRSelect.Root defaultValue="alpha">
-      <TRSelect.Trigger aria-label="Rack">
+      <TRSelect.Trigger aria-label="Rack" style={{ width: '120px' }}>
         <TRSelect.Value />
       </TRSelect.Trigger>
       <TRSelect.Portal>
@@ -224,9 +224,8 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
     .toBe(4);
 
   const triggerWidth = trigger?.getBoundingClientRect().width ?? 0;
-  expect(popup?.getBoundingClientRect().width ?? 0).toBeGreaterThanOrEqual(
-    triggerWidth,
-  );
+  expect(triggerWidth).toBe(120);
+  expect(popup?.getBoundingClientRect().width).toBe(256);
   expect(getComputedStyle(popup as HTMLElement).fontSize).toBe(
     getComputedStyle(trigger as HTMLElement).fontSize,
   );
@@ -236,6 +235,8 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
   expect(indicatorStyle.color).not.toBe(indicatorStyle.backgroundColor);
 
   const selectedItemStyle = getComputedStyle(selectedItem as HTMLElement);
+  expect(selectedItemStyle.paddingBlockStart).toBe('4px');
+  expect(selectedItemStyle.paddingBlockEnd).toBe('4px');
   expect(selectedItem?.hasAttribute('data-highlighted')).toBe(true);
   expect(selectedItemStyle.backgroundColor).not.toBe(
     getComputedStyle(popup as HTMLElement).backgroundColor,

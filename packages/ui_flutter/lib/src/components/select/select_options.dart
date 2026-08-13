@@ -12,6 +12,7 @@ class _TRSelectOptions<T> extends StatelessWidget {
     required this.interactive,
     required this.noResultsText,
     required this.onSelected,
+    required this.uiSize,
     this.focusNodes,
     this.onRowKeyEvent,
   });
@@ -23,6 +24,7 @@ class _TRSelectOptions<T> extends StatelessWidget {
 
   final String noResultsText;
   final ValueChanged<T?> onSelected;
+  final TRUiSize uiSize;
 
   /// One node per entry in [items], or null when the surface does not move
   /// focus between rows itself.
@@ -146,24 +148,20 @@ class _TRSelectOptions<T> extends StatelessWidget {
             ? colors.textMuted
             : colors.text,
       ),
-      iconSize: WidgetStatePropertyAll(
-        TRControlMetrics.iconSizeOf(TRLayerStyles.rowSize),
-      ),
+      iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(uiSize)),
       minimumSize: WidgetStatePropertyAll(
-        Size(0, TRControlMetrics.heightOf(TRLayerStyles.rowSize)),
+        Size(0, TRControlMetrics.heightOf(uiSize)),
       ),
       maximumSize: WidgetStatePropertyAll(
         described
             ? Size.infinite
-            : Size(
-                double.infinity,
-                TRControlMetrics.heightOf(TRLayerStyles.rowSize),
-              ),
+            : Size(double.infinity, TRControlMetrics.heightOf(uiSize)),
       ),
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       padding: WidgetStatePropertyAll(
         EdgeInsets.symmetric(
-          horizontal: TRControlMetrics.inlinePaddingOf(TRLayerStyles.rowSize),
+          horizontal: TRControlMetrics.inlinePaddingOf(uiSize),
+          vertical: TRControlMetrics.gapOf(uiSize),
         ),
       ),
       shape: WidgetStatePropertyAll(
@@ -183,9 +181,7 @@ class _TRSelectOptions<T> extends StatelessWidget {
         );
       }),
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      textStyle: WidgetStatePropertyAll(
-        TRControlMetrics.labelStyleOf(TRLayerStyles.rowSize),
-      ),
+      textStyle: WidgetStatePropertyAll(TRControlMetrics.labelStyleOf(uiSize)),
       visualDensity: VisualDensity.standard,
     );
   }

@@ -107,7 +107,7 @@ test('the canonical token source covers Flutter component metrics', async () => 
     code: { inlineLineHeight: 1.25 },
     normalLine: { sm: '18px', md: '20px', lg: '23px' },
     textField: {
-      paddingInlineCorrection: '0.25rem',
+      paddingInlineCorrection: '0rem',
       paddingBlockCorrection: '0.1875rem',
     },
     textTracking: {

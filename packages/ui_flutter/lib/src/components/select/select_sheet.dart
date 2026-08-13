@@ -63,29 +63,47 @@ class _TRSelectSheetState<T> extends State<_TRSelectSheet<T>> {
     final label = widget.label;
     return TRDrawer(
       title: label == null ? null : Text(label),
-      // The sheet is a list, so it opens tall enough to show one without
-      // covering the page entirely, and drags to full height from there.
-      snapPoints: const <double>[0.8, 1],
+      scrollContent: false,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         spacing: TRGeneratedSpacing.sm,
         children: [
           if (widget.searchable)
-            TRTextField(
-              autofocus: true,
-              controller: _searchController,
-              onChanged: (query) => setState(() => _query = query),
-              onSubmitted: (_) => _commitSoleMatch(),
-              placeholder: widget.searchPlaceholder,
-              uiSize: widget.uiSize,
+            Padding(
+              padding: const EdgeInsets.only(bottom: TRGeneratedSpacing.xs),
+              child: TRTextField(
+                autofocus: true,
+                controller: _searchController,
+                onChanged: (query) => setState(() => _query = query),
+                onSubmitted: (_) => _commitSoleMatch(),
+                placeholder: widget.searchPlaceholder,
+                uiSize: widget.uiSize,
+              ),
             ),
-          _TRSelectOptions<T>(
-            items: _visibleItems,
-            selectedValue: widget.selectedValue,
-            interactive: true,
-            noResultsText: widget.noResultsText,
-            onSelected: _commit,
+          if (widget.searchable)
+            SizedBox(
+              height: TRGeneratedBorders.defaultWidth,
+              child: OverflowBox(
+                minWidth: MediaQuery.sizeOf(context).width,
+                maxWidth: MediaQuery.sizeOf(context).width,
+                minHeight: TRGeneratedBorders.defaultWidth,
+                maxHeight: TRGeneratedBorders.defaultWidth,
+                child: const TRSeparator(variant: TRSeparatorVariant.muted),
+              ),
+            ),
+          Flexible(
+            fit: FlexFit.loose,
+            child: SingleChildScrollView(
+              child: _TRSelectOptions<T>(
+                items: _visibleItems,
+                selectedValue: widget.selectedValue,
+                interactive: true,
+                noResultsText: widget.noResultsText,
+                onSelected: _commit,
+                uiSize: widget.uiSize,
+              ),
+            ),
           ),
         ],
       ),
