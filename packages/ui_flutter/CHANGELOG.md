@@ -1,3 +1,8 @@
+## 0.60.2
+
+- Keeps adjacent anchored layers in separate semantics containers so Flutter
+  does not serialize orphan accessibility nodes on Windows.
+
 ## 0.60.1
 
 - Keeps `TRSelect` bottom-sheet option targets at least 48 logical pixels tall
