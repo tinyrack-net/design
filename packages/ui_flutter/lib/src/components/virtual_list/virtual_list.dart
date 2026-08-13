@@ -338,7 +338,7 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
     if (leadingRequestChanged || trailingRequestChanged) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         if (mounted && _scrollController.hasClients) {
-          _updateMetrics(_scrollController.position);
+          _requestEdgesIfNeeded(_scrollController.position);
         }
       });
     }
@@ -429,12 +429,14 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
 
     final scrollView = NotificationListener<ScrollMetricsNotification>(
       onNotification: (notification) {
-        _updateMetrics(notification.metrics);
+        if (notification.depth != 0) return false;
+        _requestEdgesIfNeeded(notification.metrics);
         return false;
       },
       child: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          _updateMetrics(notification.metrics);
+          if (notification.depth != 0) return false;
+          _updatePinnedEdges(notification.metrics);
           if (notification is ScrollEndNotification) _savePageSnapshot();
           return false;
         },
@@ -569,11 +571,15 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
           _TRVirtualListInitialPositionKind.atIndex ||
       widget.initialPosition._kind == _TRVirtualListInitialPositionKind.byKey;
 
-  void _updateMetrics(ScrollMetrics metrics) {
+  void _updatePinnedEdges(ScrollMetrics metrics) {
     const threshold = 1.0;
     _coordinator
       ..leadingPinned = metrics.extentBefore <= threshold
       ..trailingPinned = metrics.extentAfter <= threshold;
+    _requestEdgesIfNeeded(metrics);
+  }
+
+  void _requestEdgesIfNeeded(ScrollMetrics metrics) {
     _requestEdgeIfNeeded(metrics, TRVirtualListEdge.leading);
     _requestEdgeIfNeeded(metrics, TRVirtualListEdge.trailing);
   }
@@ -1000,6 +1006,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
   double _underfillOffset = 0;
   double _pendingCorrection = 0;
   bool _holdAnchorForLayout = false;
+  double? _lastViewportExtent;
 
   set canResolveInitialTarget(bool value) {
     if (_canResolveInitialTarget == value) return;
@@ -1184,6 +1191,25 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     }
 
     final sliverConstraints = constraints;
+    final viewportExtent = sliverConstraints.viewportMainAxisExtent;
+    final viewportChanged = switch (_lastViewportExtent) {
+      final previous? =>
+        (previous - viewportExtent).abs() > precisionErrorTolerance,
+      null => false,
+    };
+    if (_initialResolved &&
+        viewportChanged &&
+        _activeTarget == null &&
+        !_holdAnchorForLayout &&
+        !_coordinator.holdAnchor) {
+      if (_follow == TRVirtualListFollow.leading &&
+          _coordinator.leadingPinned) {
+        _activeTarget = const _InitialTarget.leading();
+      } else if (_follow == TRVirtualListFollow.trailing &&
+          _coordinator.trailingPinned) {
+        _activeTarget = const _InitialTarget.trailing();
+      }
+    }
     if (!_initialResolved &&
         _entryKeys.isNotEmpty &&
         _canResolveInitialTarget) {
@@ -1206,6 +1232,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
       collectGarbage(childCount, 0);
       geometry = SliverGeometry.zero;
       _holdAnchorForLayout = false;
+      _lastViewportExtent = viewportExtent;
       childManager.didFinishLayout();
       return;
     }
@@ -1235,6 +1262,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
         maxPaintExtent: _extentIndex.total,
       );
       _holdAnchorForLayout = false;
+      _lastViewportExtent = viewportExtent;
       childManager.didFinishLayout();
       return;
     }
@@ -1432,6 +1460,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
       _onRange(visibleFirst, visibleLast);
     }
     _holdAnchorForLayout = false;
+    _lastViewportExtent = viewportExtent;
     childManager.didFinishLayout();
   }
 

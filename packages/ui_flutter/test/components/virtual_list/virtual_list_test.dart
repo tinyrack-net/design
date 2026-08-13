@@ -43,6 +43,7 @@ class _VirtualListHarness extends StatefulWidget {
     this.initialPosition = const TRVirtualListInitialPosition.leading(),
     this.initialSnapshot,
     this.leadingEdgeRequest,
+    this.nestedScrollableItem,
     this.onVisibleRangeChanged,
     this.pageStorageId,
     this.trailingEdgeRequest,
@@ -56,6 +57,7 @@ class _VirtualListHarness extends StatefulWidget {
   final TRVirtualListInitialPosition<String> initialPosition;
   final TRVirtualListSnapshot<String>? initialSnapshot;
   final TRVirtualListEdgeRequest? leadingEdgeRequest;
+  final String? nestedScrollableItem;
   final ValueChanged<TRVirtualListRange<String>>? onVisibleRangeChanged;
   final String? pageStorageId;
   final TRVirtualListEdgeRequest? trailingEdgeRequest;
@@ -107,7 +109,15 @@ class _VirtualListHarnessState extends State<_VirtualListHarness> {
         key: ValueKey('row-$item'),
         width: widget.axis == Axis.horizontal ? heights[item] ?? 40 : null,
         height: widget.axis == Axis.vertical ? heights[item] ?? 40 : null,
-        child: TRText(item),
+        child: item == widget.nestedScrollableItem
+            ? ListView(
+                primary: false,
+                children: List<Widget>.generate(
+                  10,
+                  (index) => SizedBox(height: 40, child: TRText('$index')),
+                ),
+              )
+            : TRText(item),
       );
     },
     initialPosition: widget.initialPosition,
@@ -224,15 +234,17 @@ void main() {
 
     key.currentState!.append('item-30', height: 40);
     await tester.pump();
-    key.currentState!.resize('item-30', 120);
-    await tester.pump();
+    for (final height in <double>[72, 120, 184, 260, 340]) {
+      key.currentState!.resize('item-30', height);
+      await tester.pump();
 
-    expect(
-      _bottom(tester, 'item-30'),
-      moreOrLessEquals(
-        tester.getBottomLeft(find.byKey(const ValueKey('viewport'))).dy,
-      ),
-    );
+      expect(
+        _bottom(tester, 'item-30'),
+        moreOrLessEquals(
+          tester.getBottomLeft(find.byKey(const ValueKey('viewport'))).dy,
+        ),
+      );
+    }
   });
 
   testWidgets('streaming below a scrolled-up viewport preserves its anchor', (
@@ -901,6 +913,87 @@ void main() {
       ),
     );
   });
+
+  testWidgets(
+    'viewport shrink keeps following later streaming growth at trailing',
+    (tester) async {
+      final key = GlobalKey<_VirtualListHarnessState>();
+      final controller = TRVirtualListController<String>();
+      addTearDown(controller.dispose);
+      final list = _VirtualListHarness(
+        key: key,
+        controller: controller,
+        initialItems: List<String>.generate(30, (index) => 'item-$index'),
+        initialPosition: const TRVirtualListInitialPosition.trailing(),
+        follow: TRVirtualListFollow.trailing,
+      );
+
+      await tester.pumpWidget(_host(list, viewportHeight: 320));
+      await tester.pumpWidget(_host(list, viewportHeight: 160));
+      await tester.pump();
+
+      for (final height in <double>[72, 120, 200]) {
+        key.currentState!.resize('item-29', height);
+        await tester.pump();
+        expect(
+          _bottom(tester, 'item-29'),
+          moreOrLessEquals(
+            tester.getBottomLeft(find.byKey(const ValueKey('viewport'))).dy,
+          ),
+        );
+      }
+
+      await tester.pumpWidget(_host(list, viewportHeight: 320));
+      key.currentState!.resize('item-29', 280);
+      await tester.pump();
+      expect(
+        _bottom(tester, 'item-29'),
+        moreOrLessEquals(
+          tester.getBottomLeft(find.byKey(const ValueKey('viewport'))).dy,
+        ),
+      );
+    },
+  );
+
+  testWidgets(
+    'nested scroll activity does not stop trailing streaming follow',
+    (tester) async {
+      final key = GlobalKey<_VirtualListHarnessState>();
+      final controller = TRVirtualListController<String>();
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        _host(
+          _VirtualListHarness(
+            key: key,
+            controller: controller,
+            initialItems: List<String>.generate(30, (index) => 'item-$index'),
+            nestedScrollableItem: 'item-29',
+            initialPosition: const TRVirtualListInitialPosition.trailing(),
+            follow: TRVirtualListFollow.trailing,
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final nestedScrollable = find.descendant(
+        of: find.byKey(const ValueKey('row-item-29')),
+        matching: find.byType(Scrollable),
+      );
+      tester.state<ScrollableState>(nestedScrollable).position.jumpTo(80);
+      await tester.pump();
+
+      key.currentState!.resize('item-29', 120);
+      await tester.pump();
+
+      expect(
+        _bottom(tester, 'item-29'),
+        moreOrLessEquals(
+          tester.getBottomLeft(find.byKey(const ValueKey('viewport'))).dy,
+        ),
+      );
+    },
+  );
 
   testWidgets('text scale growth preserves a scrolled visible item', (
     tester,
