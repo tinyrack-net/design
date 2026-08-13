@@ -35,6 +35,12 @@ function findRenderedItem(label: string) {
   ).find((element) => element.textContent === label);
 }
 
+function viewportContentInlineEdges(viewport: HTMLElement) {
+  const rect = viewport.getBoundingClientRect();
+  const left = rect.left + viewport.clientLeft;
+  return { left, right: left + viewport.clientWidth };
+}
+
 async function waitForRenderedItem(label: string) {
   await expect.poll(() => findRenderedItem(label)).toBeDefined();
   return findRenderedItem(label) as HTMLElement;
@@ -580,7 +586,8 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
       const item = findRenderedItem('Item 2');
       return item === undefined
         ? undefined
-        : item.getBoundingClientRect().right - viewport.getBoundingClientRect().right;
+        : item.getBoundingClientRect().right -
+            viewportContentInlineEdges(viewport).right;
     })
     .toBeCloseTo(0, 0);
   await ltr.unmount();
@@ -601,7 +608,7 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
       const item = findRenderedItem('Item 2');
       return item === undefined
         ? undefined
-        : item.getBoundingClientRect().left - viewport.getBoundingClientRect().left;
+        : item.getBoundingClientRect().left - viewportContentInlineEdges(viewport).left;
     })
     .toBeCloseTo(0, 0);
 });
