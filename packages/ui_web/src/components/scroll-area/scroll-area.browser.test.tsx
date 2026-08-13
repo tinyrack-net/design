@@ -6,6 +6,7 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { TRCSPProvider } from '../../providers/csp/index.js';
 import { TRDirectionProvider } from '../../providers/direction/index.js';
 import {
   TRScrollArea,
@@ -121,6 +122,47 @@ test('offers a borderless and padding-free plain variant', async () => {
   expect(root?.dataset['variant']).toBe('plain');
   expect(getComputedStyle(root as HTMLElement).borderTopWidth).toBe('0px');
   expect(getComputedStyle(content as HTMLElement).paddingTop).toBe('0px');
+});
+
+test('statically suppresses native scrollbars when runtime styles are disabled', async () => {
+  await render(
+    <TRCSPProvider disableStyleElements>
+      <TRScrollArea.Root variant="plain" style={{ height: 120, width: 320 }}>
+        <TRScrollArea.Viewport data-testid="static-scrollbar-viewport">
+          <TRScrollArea.Content style={{ height: 240, width: 640 }}>
+            Scrollable content
+          </TRScrollArea.Content>
+        </TRScrollArea.Viewport>
+        <TRScrollArea.Scrollbar orientation="vertical">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+        <TRScrollArea.Scrollbar orientation="horizontal">
+          <TRScrollArea.Thumb />
+        </TRScrollArea.Scrollbar>
+      </TRScrollArea.Root>
+    </TRCSPProvider>,
+  );
+
+  const viewport = document.querySelector<HTMLElement>(
+    '[data-testid="static-scrollbar-viewport"]',
+  ) as HTMLElement;
+  const runtimeSheets = Array.from(
+    document.querySelectorAll<HTMLStyleElement>(
+      'style[data-href="base-ui-disable-scrollbar"]',
+    ),
+  ).flatMap((element) => (element.sheet === null ? [] : [element.sheet]));
+  const previousDisabledStates = runtimeSheets.map((sheet) => sheet.disabled);
+  for (const sheet of runtimeSheets) sheet.disabled = true;
+  try {
+    expect(getComputedStyle(viewport).scrollbarWidth).toBe('none');
+    expect(getComputedStyle(viewport, '::-webkit-scrollbar').display).toBe('none');
+    expect(viewport.clientWidth).toBe(320);
+    expect(viewport.clientHeight).toBe(120);
+  } finally {
+    runtimeSheets.forEach((sheet, index) => {
+      sheet.disabled = previousDisabledStates[index] ?? false;
+    });
+  }
 });
 
 test('keeps vertical and horizontal scroll indicators visible', async () => {

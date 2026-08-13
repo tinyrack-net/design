@@ -691,52 +691,6 @@ test('remeasures the client scrollport when only its content box changes', () =>
   expect(cancelAnimationFrame).toHaveBeenCalledWith(1);
 });
 
-test('remeasures the initial scrollport on the next frame without a resize callback', () => {
-  const element = document.createElement('div');
-  let clientWidth = 316;
-  Object.defineProperties(element, {
-    clientHeight: { configurable: true, value: 240 },
-    clientWidth: { configurable: true, get: () => clientWidth },
-  });
-
-  class ProbeResizeObserver {
-    observe() {}
-
-    unobserve() {}
-
-    disconnect() {}
-  }
-  let animationFrameCallback: FrameRequestCallback | undefined;
-  const requestAnimationFrame = vi.fn((callback: FrameRequestCallback) => {
-    animationFrameCallback = callback;
-    return 1;
-  });
-  const targetWindow = {
-    ResizeObserver: ProbeResizeObserver,
-    cancelAnimationFrame: vi.fn(),
-    requestAnimationFrame,
-  } as unknown as Window;
-  const instance = {
-    options: { useAnimationFrameWithResizeObserver: true },
-    scrollElement: element,
-    targetWindow,
-  } as unknown as Virtualizer<HTMLDivElement, HTMLDivElement>;
-  const measurements: { height: number; width: number }[] = [];
-
-  trVirtualListInternals.observeScrollportRect(instance, (rect) => {
-    measurements.push(rect);
-  });
-  expect(measurements).toEqual([{ height: 240, width: 316 }]);
-  expect(requestAnimationFrame).toHaveBeenCalledTimes(1);
-
-  clientWidth = 320;
-  animationFrameCallback?.(0);
-  expect(measurements).toEqual([
-    { height: 240, width: 316 },
-    { height: 240, width: 320 },
-  ]);
-});
-
 test('observes scrollport size without relying on animation frames', () => {
   const element = document.createElement('div');
   let clientWidth = 320;
