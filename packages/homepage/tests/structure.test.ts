@@ -1090,7 +1090,7 @@ describe('React Router documentation contract', () => {
     const flutterRoutes = staticDocumentRoutes.filter(
       (route) => route.locale === 'en' && route.section === 'flutter-components',
     );
-    expect(flutterRoutes).toHaveLength(64);
+    expect(flutterRoutes).toHaveLength(65);
     const webRoutes = staticDocumentRoutes.filter(
       (route) => route.locale === 'en' && route.section === 'components',
     );
@@ -1145,8 +1145,8 @@ describe('React Router documentation contract', () => {
         pageCounts.push(labels.length);
         expect([...labels].sort(collator.compare), child.label).toEqual(labels);
       }
-      expect(pageCounts).toEqual([1, 6, 8, 8, 10, 9, 7, 6, 7, 2]);
-      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(64);
+      expect(pageCounts).toEqual([1, 6, 8, 8, 10, 9, 7, 7, 7, 2]);
+      expect(pageCounts.reduce((sum, count) => sum + count, 0)).toBe(65);
     }
   });
 
@@ -1341,7 +1341,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(444);
+    expect(mdxFiles).toHaveLength(447);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
