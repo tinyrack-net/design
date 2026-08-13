@@ -1,3 +1,6 @@
+@Timeout(Duration(minutes: 2))
+library;
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -94,6 +97,43 @@ void main() {
     );
     expect(rules.where((rule) => rule == 'tokens/no-literal'), hasLength(5));
   });
+
+  test(
+    'enforces the same policy for standalone Material and Cupertino packages',
+    () async {
+      source('''
+      import 'package:material_ui/material_ui.dart' as material;
+      import 'package:cupertino_ui/cupertino_ui.dart' as cupertino;
+      import 'package:tinyrack_ui/tinyrack_ui.dart';
+
+      void build(material.BuildContext context) {
+        material.FilledButton.tonal(onPressed: () {}, child: const material.Text('Save'));
+        cupertino.CupertinoButton(onPressed: () {}, child: const material.Text('Save'));
+        material.showDialog<void>(context: context, builder: (_) => const material.Dialog());
+        material.ScaffoldMessenger.of(context).showSnackBar(const material.SnackBar(content: material.Text('Saved')));
+        const material.Icon(material.Icons.add);
+        const cupertino.Icon(cupertino.CupertinoIcons.add);
+        final color = material.Colors.red;
+        final weight = material.FontWeight.w500;
+        final text = material.Theme.of(context).textTheme;
+        assert(color != null && weight != null && text != null);
+      }
+
+      final light = TinyrackTheme.light();
+      final dark = TinyrackTheme.dark();
+    ''');
+      final rules = (await checkTinyrackProject(
+        TinyrackCheckOptions(root: root.path),
+      )).violations.map((violation) => violation.ruleId).toList();
+
+      expect(
+        rules.where((rule) => rule == 'components/no-material-equivalent'),
+        hasLength(5),
+      );
+      expect(rules.where((rule) => rule == 'tokens/no-literal'), hasLength(5));
+    },
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 
   test('does not reject unrelated local symbols with Flutter names', () async {
     source('''
