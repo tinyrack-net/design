@@ -4128,9 +4128,9 @@ class _DeploymentRackState extends State<DeploymentRack> {
       {
         axis: { en: 'Adaptive geometry', ko: '적응형 구조', ja: 'アダプティブな配置' },
         choices: {
-          en: 'Searchable desktop layers can grow wider than narrow triggers and keep the search field fixed above a full-width separator and a scrollable option region. Sheets fit short lists, cap long lists at the viewport, and apply the resolved UI density to option padding, icons, and typography while keeping every option target at least 48 logical pixels tall.',
-          ko: '검색 가능한 데스크톱 레이어는 좁은 트리거보다 넓어질 수 있어요. 검색 필드는 전체 폭 구분선 위에 고정되고 선택지 영역만 스크롤해요. 시트는 짧은 목록의 콘텐츠 높이에 맞고 긴 목록은 뷰포트를 넘지 않아요. 선택지의 여백, 아이콘, 타이포그래피는 해석된 UI 밀도를 따르며 각 선택 영역의 높이는 최소 48 논리 픽셀을 유지해요.',
-          ja: '検索可能なデスクトップレイヤーは、狭いトリガーより広く表示できます。検索フィールドは全幅のセパレーターの上に固定され、選択肢の領域だけがスクロールします。シートは短いリストの高さに合わせ、長いリストはビューポート内に制限します。選択肢の余白、アイコン、タイポグラフィには解決済みの UI 密度を適用し、各選択領域の高さは 48 論理ピクセル以上に保ちます。',
+          en: 'Searchable desktop layers can grow wider than narrow triggers and keep the search field fixed above a full-width separator and a scrollable option region. Sheets fit short lists, cap long lists at the viewport, and apply the resolved UI density to option padding, icons, and typography while keeping every option target at least 48 logical pixels tall. Trackpad and wheel input over the fixed search field scrolls the options; a downward drag returns to the drawer only at the start of the list.',
+          ko: '검색 가능한 데스크톱 레이어는 좁은 트리거보다 넓어질 수 있어요. 검색 필드는 전체 폭 구분선 위에 고정되고 선택지 영역만 스크롤해요. 시트는 짧은 목록의 콘텐츠 높이에 맞고 긴 목록은 뷰포트를 넘지 않아요. 선택지의 여백, 아이콘, 타이포그래피는 해석된 UI 밀도를 따르며 각 선택 영역의 높이는 최소 48 논리 픽셀을 유지해요. 고정된 검색 필드 위에서 트랙패드나 휠을 사용해도 선택지가 스크롤되고, 목록 맨 위에서 아래로 당길 때만 시트 드래그로 전환돼요.',
+          ja: '検索可能なデスクトップレイヤーは、狭いトリガーより広く表示できます。検索フィールドは全幅のセパレーターの上に固定され、選択肢の領域だけがスクロールします。シートは短いリストの高さに合わせ、長いリストはビューポート内に制限します。選択肢の余白、アイコン、タイポグラフィには解決済みの UI 密度を適用し、各選択領域の高さは 48 論理ピクセル以上に保ちます。固定された検索フィールド上でトラックパッドやホイールを操作しても選択肢がスクロールし、リストの先頭で下にドラッグした場合だけシートのドラッグに切り替わります。',
         },
       },
     ],

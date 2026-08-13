@@ -58,6 +58,9 @@ can grow wider than a narrow trigger, while adaptive sheets fit short option
 lists and keep only long option regions scrollable. Sheet option padding,
 typography, and icons follow the resolved density. Their touch targets remain
 at least 48 logical pixels tall even when the trigger uses compact metrics.
+Trackpad and wheel input over a fixed sheet search field continues scrolling
+the options. A downward drag returns to the drawer only after the option list
+reaches its leading edge.
 
 Top and bottom `TRDrawer` surfaces show a drag-to-dismiss handle by default.
 Set `showDragHandle: false` when a sheet must not advertise or accept that drag

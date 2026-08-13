@@ -43,6 +43,7 @@ class _TRSelectSheet<T> extends StatefulWidget {
 }
 
 class _TRSelectSheetState<T> extends State<_TRSelectSheet<T>> {
+  late final ScrollController _optionsScrollController = ScrollController();
   late final TextEditingController _searchController = TextEditingController(
     text: widget.initialQuery,
   );
@@ -50,6 +51,7 @@ class _TRSelectSheetState<T> extends State<_TRSelectSheet<T>> {
 
   @override
   void dispose() {
+    _optionsScrollController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -64,49 +66,53 @@ class _TRSelectSheetState<T> extends State<_TRSelectSheet<T>> {
     return TRDrawer(
       title: label == null ? null : Text(label),
       scrollContent: false,
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        spacing: TRGeneratedSpacing.sm,
-        children: [
-          if (widget.searchable)
-            Padding(
-              padding: const EdgeInsets.only(bottom: TRGeneratedSpacing.xs),
-              child: TRTextField(
-                autofocus: true,
-                controller: _searchController,
-                onChanged: (query) => setState(() => _query = query),
-                onSubmitted: (_) => _commitSoleMatch(),
-                placeholder: widget.searchPlaceholder,
-                uiSize: widget.uiSize,
+      content: TRInternalDrawerScrollRegion(
+        controller: _optionsScrollController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          spacing: TRGeneratedSpacing.sm,
+          children: [
+            if (widget.searchable)
+              Padding(
+                padding: const EdgeInsets.only(bottom: TRGeneratedSpacing.xs),
+                child: TRTextField(
+                  autofocus: true,
+                  controller: _searchController,
+                  onChanged: (query) => setState(() => _query = query),
+                  onSubmitted: (_) => _commitSoleMatch(),
+                  placeholder: widget.searchPlaceholder,
+                  uiSize: widget.uiSize,
+                ),
+              ),
+            if (widget.searchable)
+              SizedBox(
+                height: TRGeneratedBorders.defaultWidth,
+                child: OverflowBox(
+                  minWidth: MediaQuery.sizeOf(context).width,
+                  maxWidth: MediaQuery.sizeOf(context).width,
+                  minHeight: TRGeneratedBorders.defaultWidth,
+                  maxHeight: TRGeneratedBorders.defaultWidth,
+                  child: const TRSeparator(variant: TRSeparatorVariant.muted),
+                ),
+              ),
+            Flexible(
+              fit: FlexFit.loose,
+              child: SingleChildScrollView(
+                controller: _optionsScrollController,
+                child: _TRSelectOptions<T>(
+                  items: _visibleItems,
+                  selectedValue: widget.selectedValue,
+                  interactive: true,
+                  noResultsText: widget.noResultsText,
+                  onSelected: _commit,
+                  uiSize: widget.uiSize,
+                  minimumRowHeight: TRControlMetrics.heightOf(TRUiSize.xl),
+                ),
               ),
             ),
-          if (widget.searchable)
-            SizedBox(
-              height: TRGeneratedBorders.defaultWidth,
-              child: OverflowBox(
-                minWidth: MediaQuery.sizeOf(context).width,
-                maxWidth: MediaQuery.sizeOf(context).width,
-                minHeight: TRGeneratedBorders.defaultWidth,
-                maxHeight: TRGeneratedBorders.defaultWidth,
-                child: const TRSeparator(variant: TRSeparatorVariant.muted),
-              ),
-            ),
-          Flexible(
-            fit: FlexFit.loose,
-            child: SingleChildScrollView(
-              child: _TRSelectOptions<T>(
-                items: _visibleItems,
-                selectedValue: widget.selectedValue,
-                interactive: true,
-                noResultsText: widget.noResultsText,
-                onSelected: _commit,
-                uiSize: widget.uiSize,
-                minimumRowHeight: TRControlMetrics.heightOf(TRUiSize.xl),
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

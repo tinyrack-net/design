@@ -36,7 +36,7 @@ void main() {
     expect(tester.getSize(find.byType(TRDrawer)).height, 300);
 
     await tester.timedDrag(
-      find.byType(TRDrawer),
+      find.byKey(const ValueKey('tr-drawer-drag-handle')),
       const Offset(0, -180),
       TRMotion.slow,
     );
@@ -117,7 +117,7 @@ void main() {
     );
 
     await tester.timedDrag(
-      find.byType(TRDrawer),
+      find.byKey(const ValueKey('tr-drawer-drag-handle')),
       const Offset(0, -180),
       TRMotion.slow,
     );
@@ -149,7 +149,11 @@ void main() {
     await tester.tap(find.text('Open drawer'));
     await tester.pumpAndSettle();
 
-    await tester.fling(find.byType(TRDrawer), const Offset(0, 100), 1000);
+    await tester.fling(
+      find.byKey(const ValueKey('tr-drawer-drag-handle')),
+      const Offset(0, 100),
+      1000,
+    );
     await tester.pumpAndSettle();
 
     expect(find.byType(TRDrawer), findsNothing);

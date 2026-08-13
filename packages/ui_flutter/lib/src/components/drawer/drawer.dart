@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/semantics.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/drawer_scroll_region.dart';
 import '../../internal/layer.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
@@ -104,6 +105,7 @@ class TRDrawer extends StatefulWidget {
 class _TRDrawerState extends State<TRDrawer>
     with SingleTickerProviderStateMixin {
   late final AnimationController _extentController;
+  late final ScrollController _contentScrollController = ScrollController();
 
   List<double> get _resolvedSnapPoints {
     assert(
@@ -143,6 +145,7 @@ class _TRDrawerState extends State<TRDrawer>
 
   @override
   void dispose() {
+    _contentScrollController.dispose();
     _extentController.dispose();
     super.dispose();
   }
@@ -285,17 +288,22 @@ class _TRDrawerState extends State<TRDrawer>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (showDragHandle) ...[
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: ExcludeSemantics(
-                      child: Container(
-                        key: const ValueKey('tr-drawer-drag-handle'),
-                        width: TRGeneratedSpacing.size2xl,
-                        height: TRGeneratedSpacing.xs,
-                        decoration: BoxDecoration(
-                          color: colors.borderStrong,
-                          borderRadius: BorderRadius.circular(
-                            TRGeneratedRadii.full,
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onVerticalDragEnd: _draggable ? _endDrag : null,
+                    onVerticalDragUpdate: _draggable ? _drag : null,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ExcludeSemantics(
+                        child: Container(
+                          key: const ValueKey('tr-drawer-drag-handle'),
+                          width: TRGeneratedSpacing.size2xl,
+                          height: TRGeneratedSpacing.xs,
+                          decoration: BoxDecoration(
+                            color: colors.borderStrong,
+                            borderRadius: BorderRadius.circular(
+                              TRGeneratedRadii.full,
+                            ),
                           ),
                         ),
                       ),
@@ -353,10 +361,14 @@ class _TRDrawerState extends State<TRDrawer>
                           TRGeneratedTypographySizes.md,
                     ),
                     child: widget.scrollContent
-                        ? SingleChildScrollView(
-                            child: TRLayerPartBoundary(
-                              name: 'content',
-                              child: widget.content,
+                        ? TRInternalDrawerScrollRegion(
+                            controller: _contentScrollController,
+                            child: SingleChildScrollView(
+                              controller: _contentScrollController,
+                              child: TRLayerPartBoundary(
+                                name: 'content',
+                                child: widget.content,
+                              ),
                             ),
                           )
                         : TRLayerPartBoundary(
@@ -376,14 +388,20 @@ class _TRDrawerState extends State<TRDrawer>
         ),
       ),
     );
-    Widget interactiveBody = GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onHorizontalDragEnd: !_draggable || _horizontal ? null : _endDrag,
-      onHorizontalDragUpdate: !_draggable || _horizontal ? null : _drag,
-      onVerticalDragEnd: !_draggable || !_horizontal ? null : _endDrag,
-      onVerticalDragUpdate: !_draggable || !_horizontal ? null : _drag,
-      child: body,
-    );
+    Widget interactiveBody = _horizontal
+        ? _draggable
+              ? TRInternalDrawerDragScope(
+                  onDragEnd: _endDrag,
+                  onDragUpdate: _drag,
+                  child: body,
+                )
+              : body
+        : GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onHorizontalDragEnd: !_draggable ? null : _endDrag,
+            onHorizontalDragUpdate: !_draggable ? null : _drag,
+            child: body,
+          );
     if (_fitsContent && showDragHandle) {
       final restingExtent = _resolvedSnapPoints[widget.initialSnapIndex];
       final dragDistance =
