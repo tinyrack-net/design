@@ -34,6 +34,7 @@ class TRMenubarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final density = TRUiDensityScope.of(context);
     final size =
         uiSize ??
         _TRMenubarScope.maybeOf(context)?.uiSize ??
@@ -47,16 +48,19 @@ class TRMenubarMenu extends StatelessWidget {
       focusNode: focusNode,
       menuChildren: enabled
           ? [
-              TRLayerSurface(
-                kind: TRLayerBoundaryKind.menubar,
-                child: SingleChildScrollView(
-                  primary: false,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    // Matches the web popup's row gap.
-                    spacing: TRGeneratedRadii.xs,
-                    children: menuChildren,
+              TRUiDensityScope(
+                density: density,
+                child: TRLayerSurface(
+                  kind: TRLayerBoundaryKind.menubar,
+                  child: SingleChildScrollView(
+                    primary: false,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      // Matches the web popup's row gap.
+                      spacing: TRGeneratedRadii.xs,
+                      children: menuChildren,
+                    ),
                   ),
                 ),
               ),

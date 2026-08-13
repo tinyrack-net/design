@@ -50,6 +50,14 @@ Set `uiSize` or card padding directly when a component must stay fixed.
 Explicit `sm`, `md`, `lg`, and `xl` values override the scope. System text
 scaling continues to apply on top of the density-selected typography.
 
+Flutter-rendered popup rows resolve separately from their anchor control.
+Standard density uses `TRUiSize.sm` row metrics (28-pixel height and 12-pixel
+labels), while comfortable density uses `TRUiSize.lg` row metrics (40-pixel
+height and 14-pixel labels). Menus, submenus, menubars, Flutter context menus,
+selects, autocompletes, comboboxes, and inline suggestions retain the anchor's
+density even in a root overlay. A menu's explicit `uiSize` still changes only
+its trigger; nest a standard scope around the anchor to keep that popup compact.
+
 ## Page transitions
 
 Both themes install `TRPageTransitionsBuilder` for every `TargetPlatform`, so a

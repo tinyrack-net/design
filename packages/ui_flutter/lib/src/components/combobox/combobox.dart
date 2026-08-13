@@ -6,7 +6,9 @@ import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../tokens.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 import '../button/button.dart';
 import '../text_field/text_field.dart';
 
@@ -747,6 +749,8 @@ class _TRComboboxInputState<T extends Object>
   @override
   Widget build(BuildContext context) {
     final popupWidth = widget.width ?? TRGeneratedMeasurements.overlayWidthSm;
+    final density = TRUiDensityScope.of(context);
+    final rowSize = TRLayerStyles.rowSizeOf(context);
     return SizedBox(
       width: widget.width,
       child: RawAutocomplete<TRComboboxItem<T>>(
@@ -774,55 +778,59 @@ class _TRComboboxInputState<T extends Object>
         ),
         optionsViewBuilder: (context, select, options) {
           _publishHighlight(AutocompleteHighlightedOption.of(context));
-          return Align(
-            alignment: AlignmentDirectional.topStart,
-            child: Transform.translate(
-              offset: const Offset(0, TRGeneratedSpacing.sm),
-              child: TRLayerSurface(
-                kind: TRLayerBoundaryKind.combobox,
-                minWidth: popupWidth,
-                maxWidth: popupWidth,
-                padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
-                // Keyboard focus stays on the query field so arrow keys reach
-                // the highlight shortcuts instead of the option buttons.
-                child: ExcludeFocus(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxHeight: TRGeneratedMeasurements.measureXl,
+          return TRUiDensityScope(
+            density: density,
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
+              child: Transform.translate(
+                offset: const Offset(0, TRGeneratedSpacing.sm),
+                child: TRLayerSurface(
+                  kind: TRLayerBoundaryKind.combobox,
+                  minWidth: popupWidth,
+                  maxWidth: popupWidth,
+                  padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
+                  // Keyboard focus stays on the query field so arrow keys reach
+                  // the highlight shortcuts instead of the option buttons.
+                  child: ExcludeFocus(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxHeight: TRGeneratedMeasurements.measureXl,
+                      ),
+                      child: widget.layout == TRComboboxLayout.grid
+                          ? GridView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisExtent: TRControlMetrics.heightOf(
+                                      rowSize,
+                                    ),
+                                    crossAxisSpacing: TRGeneratedSpacing.xs,
+                                    mainAxisSpacing: TRGeneratedSpacing.xs,
+                                  ),
+                              itemCount: options.length,
+                              itemBuilder: (context, index) => _option(
+                                context,
+                                options.elementAt(index),
+                                index,
+                                select,
+                              ),
+                            )
+                          : ListView.separated(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              itemCount: options.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: TRGeneratedSpacing.xs),
+                              itemBuilder: (context, index) => _option(
+                                context,
+                                options.elementAt(index),
+                                index,
+                                select,
+                              ),
+                            ),
                     ),
-                    child: widget.layout == TRComboboxLayout.grid
-                        ? GridView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisExtent:
-                                      TRGeneratedLayerMetrics.optionItemHeight,
-                                  crossAxisSpacing: TRGeneratedSpacing.xs,
-                                  mainAxisSpacing: TRGeneratedSpacing.xs,
-                                ),
-                            itemCount: options.length,
-                            itemBuilder: (context, index) => _option(
-                              context,
-                              options.elementAt(index),
-                              index,
-                              select,
-                            ),
-                          )
-                        : ListView.separated(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            itemCount: options.length,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(height: TRGeneratedSpacing.xs),
-                            itemBuilder: (context, index) => _option(
-                              context,
-                              options.elementAt(index),
-                              index,
-                              select,
-                            ),
-                          ),
                   ),
                 ),
               ),

@@ -374,6 +374,41 @@ void main() {
   });
 
   group('typed inputs', () {
+    testWidgets('autocomplete options inherit comfortable density', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRAutocomplete<String>(
+              items: [
+                TRAutocompleteItem(value: 'alpha', label: 'Alpha'),
+                TRAutocompleteItem(value: 'alpine', label: 'Alpine'),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'al');
+      await tester.pumpAndSettle();
+      final option = find.widgetWithText(MenuItemButton, 'Alpha');
+      expect(
+        tester.getSize(option).height,
+        TRControlMetrics.heightOf(TRUiSize.lg),
+      );
+      expect(
+        tester
+            .widget<MenuItemButton>(option)
+            .style
+            ?.textStyle
+            ?.resolve({})
+            ?.fontSize,
+        TRControlMetrics.fontSizeOf(TRUiSize.lg),
+      );
+    });
+
     testWidgets('autocomplete keeps input focus while pointer hovers options', (
       tester,
     ) async {
@@ -1589,6 +1624,50 @@ void main() {
       expect(
         tester.getSize(find.byType(MenuBar)).height,
         TRGeneratedControlMetrics.mdHeight + TRGeneratedSpacing.xs * 2,
+      );
+    });
+
+    testWidgets('menubar popup rows inherit comfortable density', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _app(
+          TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRMenubar(
+              uiSize: TRUiSize.sm,
+              menus: [
+                TRMenubarMenu(
+                  trigger: const Text('File'),
+                  menuChildren: [
+                    TRMenuItem(onPressed: () {}, child: const Text('New')),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        tester.getSize(find.byType(SubmenuButton)).height,
+        TRControlMetrics.heightOf(TRUiSize.sm),
+      );
+      await tester.tap(find.text('File'));
+      await tester.pumpAndSettle();
+      final item = find.widgetWithText(MenuItemButton, 'New');
+      expect(
+        tester.getSize(item).height,
+        TRControlMetrics.heightOf(TRUiSize.lg),
+      );
+      expect(
+        tester
+            .widget<MenuItemButton>(item)
+            .style
+            ?.textStyle
+            ?.resolve({})
+            ?.fontSize,
+        TRControlMetrics.fontSizeOf(TRUiSize.lg),
       );
     });
 

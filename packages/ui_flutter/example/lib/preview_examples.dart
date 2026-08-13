@@ -97,6 +97,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'textarea-sizes': _textareaSizes,
   'textarea-form': _textareaForm,
   'textarea-validation': _textareaValidation,
+  'menu-density': _menuDensity,
   'menu-settings': _menuSettings,
   'menu-submenu': _menuSubmenu,
   'menu-icon-trigger': _menuIconTrigger,
@@ -3165,6 +3166,27 @@ class _TextareaValidationExampleState
     );
   }
 }
+
+Widget _menuDensity(BuildContext context, Locale locale) => TRUiDensityScope(
+  density: TRUiDensity.comfortable,
+  child: TRMenu.icon(
+    uiSize: TRUiSize.sm,
+    icon: const Icon(Icons.add),
+    label: _pick(locale, 'New tab', '새 탭', '新しいタブ'),
+    menuChildren: [
+      TRMenuItem(
+        leadingIcon: const Icon(Icons.chat_bubble_outline),
+        onPressed: () {},
+        child: Text(_pick(locale, 'New session', '새 세션', '新しいセッション')),
+      ),
+      TRMenuItem(
+        leadingIcon: const Icon(Icons.terminal),
+        onPressed: () {},
+        child: Text(_pick(locale, 'New terminal', '새 터미널', '新しいターミナル')),
+      ),
+    ],
+  ),
+);
 
 Widget _menuSettings(BuildContext context, Locale locale) {
   var showGrid = true;

@@ -151,7 +151,7 @@ class TRToolbarLink extends StatelessWidget {
     label: semanticLabel,
     child: TextButton(
       onPressed: onTap,
-      style: TRLayerStyles.item(context),
+      style: TRLayerStyles.item(context, uiSize: TRUiSize.sm),
       child: child,
     ),
   );

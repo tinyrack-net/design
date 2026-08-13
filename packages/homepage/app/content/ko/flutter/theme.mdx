@@ -50,6 +50,13 @@ LayoutBuilder(
 명시한 `sm`, `md`, `lg`, `xl`은 scope보다 우선해요. 시스템 text scaling은
 밀도에서 고른 타이포그래피 위에 그대로 적용돼요.
 
+Flutter가 그리는 팝업 행은 앵커 컨트롤과 별도로 밀도를 결정해요. `standard`는
+`TRUiSize.sm` 행 지표(높이 28px, 레이블 12px)를 사용하고, `comfortable`은
+`TRUiSize.lg` 행 지표(높이 40px, 레이블 14px)를 사용해요. 메뉴, 중첩 메뉴,
+메뉴바, Flutter 컨텍스트 메뉴, 셀렉트, 자동완성, 콤보박스, 인라인 제안은 root
+overlay에서도 앵커의 밀도를 유지해요. 메뉴에 명시한 `uiSize`는 계속 트리거만
+바꾸며, 특정 팝업을 작게 유지하려면 앵커를 중첩 `standard` scope로 감싸세요.
+
 ## 페이지 전환
 
 두 테마 모두 모든 `TargetPlatform`에 `TRPageTransitionsBuilder`를 설치해요.

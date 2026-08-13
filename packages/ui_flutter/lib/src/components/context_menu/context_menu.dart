@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../tokens.dart';
+import '../../ui_density.dart';
 import '../menu/menu.dart';
 import 'menu_model.dart';
 
@@ -437,49 +438,56 @@ class _TRFlutterMenuHostState extends State<_TRFlutterMenuHost>
   bool get isOpen => _menuController.isOpen;
 
   @override
-  Widget build(BuildContext context) => MenuAnchor(
-    controller: _menuController,
-    menuChildren: [
-      TRLayerSurface(
-        kind: TRLayerBoundaryKind.contextMenu,
-        minWidth: TRControlMetrics.heightOf(TRLayerStyles.rowSize) * 5,
-        maxWidth: TRGeneratedMeasurements.overlayWidthMd,
-        padding: EdgeInsets.all(TRControlMetrics.gapOf(TRLayerStyles.rowSize)),
-        child: SingleChildScrollView(
-          primary: false,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            // Matches the web popup's row gap.
-            spacing: TRGeneratedSpacing.xs,
-            children: widget.menuChildren(context),
+  Widget build(BuildContext context) {
+    final density = TRUiDensityScope.of(context);
+    final rowSize = TRLayerStyles.rowSizeOf(context);
+    return MenuAnchor(
+      controller: _menuController,
+      menuChildren: [
+        TRUiDensityScope(
+          density: density,
+          child: TRLayerSurface(
+            kind: TRLayerBoundaryKind.contextMenu,
+            minWidth: TRControlMetrics.heightOf(rowSize) * 5,
+            maxWidth: TRGeneratedMeasurements.overlayWidthMd,
+            padding: EdgeInsets.all(TRControlMetrics.gapOf(rowSize)),
+            child: SingleChildScrollView(
+              primary: false,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                // Matches the web popup's row gap.
+                spacing: TRGeneratedSpacing.xs,
+                children: widget.menuChildren(context),
+              ),
+            ),
           ),
         ),
-      ),
-    ],
-    onClose: () {
-      _removeEscapeHandler();
-      widget.onClose?.call();
-    },
-    onOpen: () {
-      _installEscapeHandler();
-      widget.onOpen?.call();
-    },
-    style: TRLayerStyles.menu(
-      context,
-      minWidth: TRControlMetrics.heightOf(TRLayerStyles.rowSize) * 5,
-      maxWidth: TRGeneratedMeasurements.overlayWidthMd,
-    ),
-    useRootOverlay: widget.useRootOverlay,
-    // The anchor child shares the menu's tap region, so a press on the child
-    // never counts as an outside tap; close the open menu here before the
-    // press resolves into any gesture.
-    child: Listener(
-      behavior: HitTestBehavior.translucent,
-      onPointerDown: (_) {
-        if (_menuController.isOpen) _menuController.close();
+      ],
+      onClose: () {
+        _removeEscapeHandler();
+        widget.onClose?.call();
       },
-      child: widget.child,
-    ),
-  );
+      onOpen: () {
+        _installEscapeHandler();
+        widget.onOpen?.call();
+      },
+      style: TRLayerStyles.menu(
+        context,
+        minWidth: TRControlMetrics.heightOf(rowSize) * 5,
+        maxWidth: TRGeneratedMeasurements.overlayWidthMd,
+      ),
+      useRootOverlay: widget.useRootOverlay,
+      // The anchor child shares the menu's tap region, so a press on the child
+      // never counts as an outside tap; close the open menu here before the
+      // press resolves into any gesture.
+      child: Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerDown: (_) {
+          if (_menuController.isOpen) _menuController.close();
+        },
+        child: widget.child,
+      ),
+    );
+  }
 }

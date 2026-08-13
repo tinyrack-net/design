@@ -525,6 +525,8 @@ class _TRSelectState<T> extends State<TRSelect<T>>
   @override
   Widget build(BuildContext context) {
     final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
+    final density = TRUiDensityScope.of(context);
+    final rowSize = TRLayerStyles.rowSizeOf(context);
     final colors = context.tinyrackTheme;
     final controlHeight = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
@@ -727,53 +729,58 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       controller: _menuController,
       crossAxisUnconstrained: true,
       menuChildren: [
-        TRLayerSurface(
-          kind: TRLayerBoundaryKind.select,
-          minWidth: popupWidth,
-          maxWidth: popupWidth,
-          padding: EdgeInsets.zero,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.searchable)
-                Padding(
-                  padding: const EdgeInsets.all(TRGeneratedSpacing.sm),
-                  child: TRTextField(
-                    controller: _searchTextController,
-                    focusNode: _searchFocus,
-                    onChanged: _setQuery,
-                    onSubmitted: (_) => _commitSoleMatch(),
-                    placeholder: widget.searchPlaceholder,
-                    uiSize: TRLayerStyles.rowSize,
+        TRUiDensityScope(
+          density: density,
+          child: TRLayerSurface(
+            kind: TRLayerBoundaryKind.select,
+            minWidth: popupWidth,
+            maxWidth: popupWidth,
+            padding: EdgeInsets.zero,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.searchable)
+                  Padding(
+                    padding: const EdgeInsets.all(TRGeneratedSpacing.sm),
+                    child: TRTextField(
+                      controller: _searchTextController,
+                      focusNode: _searchFocus,
+                      onChanged: _setQuery,
+                      onSubmitted: (_) => _commitSoleMatch(),
+                      placeholder: widget.searchPlaceholder,
+                      uiSize: rowSize,
+                    ),
+                  ),
+                if (widget.searchable)
+                  const TRSeparator(variant: TRSeparatorVariant.muted),
+                // A long list has to scroll inside the layer rather than grow
+                // past the viewport it is anchored in.
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: TRGeneratedMeasurements.measureXl,
+                  ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(TRGeneratedSpacing.sm),
+                    // The menu panel already owns the primary controller, and
+                    // a scrollbar cannot be shared between two positions.
+                    primary: false,
+                    child: _TRSelectOptions<T>(
+                      items: visible.items,
+                      selectedValue: selectedValue,
+                      interactive: interactive,
+                      noResultsText: widget.noResultsText,
+                      onSelected: _handleSelected,
+                      uiSize: rowSize,
+                      focusNodes: visible.focusNodes,
+                      onRowKeyEvent: widget.searchable
+                          ? null
+                          : _handleTypeahead,
+                    ),
                   ),
                 ),
-              if (widget.searchable)
-                const TRSeparator(variant: TRSeparatorVariant.muted),
-              // A long list has to scroll inside the layer rather than grow
-              // past the viewport it is anchored in.
-              ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: TRGeneratedMeasurements.measureXl,
-                ),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(TRGeneratedSpacing.sm),
-                  // The menu panel already owns the primary controller, and a
-                  // scrollbar cannot be shared between two positions.
-                  primary: false,
-                  child: _TRSelectOptions<T>(
-                    items: visible.items,
-                    selectedValue: selectedValue,
-                    interactive: interactive,
-                    noResultsText: widget.noResultsText,
-                    onSelected: _handleSelected,
-                    uiSize: TRLayerStyles.rowSize,
-                    focusNodes: visible.focusNodes,
-                    onRowKeyEvent: widget.searchable ? null : _handleTypeahead,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

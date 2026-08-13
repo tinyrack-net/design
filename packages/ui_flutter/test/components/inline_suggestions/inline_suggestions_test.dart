@@ -137,6 +137,37 @@ Finder _row(String label) => find.descendant(
 );
 
 void main() {
+  testWidgets('rows inherit comfortable density from the anchored field', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const TRUiDensityScope(
+          density: TRUiDensity.comfortable,
+          child: _Host(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(TRTextField));
+    await tester.pumpAndSettle();
+
+    final row = find.ancestor(
+      of: _row('lib/app.dart'),
+      matching: find.byType(MenuItemButton),
+    );
+    expect(tester.getSize(row).height, TRControlMetrics.heightOf(TRUiSize.lg));
+    expect(
+      tester
+          .widget<MenuItemButton>(row)
+          .style
+          ?.textStyle
+          ?.resolve({})
+          ?.fontSize,
+      TRControlMetrics.fontSizeOf(TRUiSize.lg),
+    );
+  });
+
   testWidgets('renders the host field and nothing else while closed', (
     tester,
   ) async {

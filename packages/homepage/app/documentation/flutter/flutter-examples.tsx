@@ -3777,6 +3777,31 @@ class _MonitoringFormState extends State<MonitoringForm> {
   ],
   menu: [
     {
+      id: 'menu-density',
+      title: {
+        en: 'Popup density and compact triggers',
+        ja: 'ポップアップ密度とコンパクトなトリガー',
+        ko: '팝업 밀도와 작은 트리거',
+      },
+      description: {
+        en: 'Popup rows inherit the anchor density even in the root overlay: standard uses sm row metrics and comfortable uses lg. uiSize remains a trigger-only override.',
+        ja: 'ポップアップ行はroot overlayでもアンカーの密度を継承し、standardではsm、comfortableではlgの行メトリクスを使います。uiSizeはトリガーだけを上書きします。',
+        ko: '팝업 행은 root overlay에서도 앵커의 밀도를 이어받아 standard에서는 sm, comfortable에서는 lg 행 지표를 사용해요. uiSize는 트리거만 재정의해요.',
+      },
+      dart: String.raw`TRUiDensityScope(
+  density: TRUiDensity.comfortable,
+  child: TRMenu.icon(
+    uiSize: TRUiSize.sm,
+    icon: const Icon(Icons.add),
+    label: 'New tab',
+    menuChildren: [
+      TRMenuItem(onPressed: newSession, child: const Text('New session')),
+      TRMenuItem(onPressed: newTerminal, child: const Text('New terminal')),
+    ],
+  ),
+)`,
+    },
+    {
       id: 'menu-settings',
       title: {
         en: 'Persistent settings',

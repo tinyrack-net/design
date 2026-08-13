@@ -7,6 +7,8 @@ import 'types.dart';
 ///
 /// Products choose where a density applies. Components keep their standard
 /// geometry unless the product opts a subtree into comfortable density.
+/// Flutter-rendered popup rows preserve the anchor's density through overlays,
+/// using [TRUiSize.sm] for standard and [TRUiSize.lg] for comfortable.
 class TRUiDensityScope extends InheritedWidget {
   /// Creates a UI-density scope.
   const TRUiDensityScope({
