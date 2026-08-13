@@ -517,75 +517,78 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
       ),
     );
 
-    return OverlayPortal.overlayChildLayoutBuilder(
-      controller: _overlayController,
-      overlayLocation: widget.useRootOverlay
-          ? OverlayChildLocation.rootOverlay
-          : OverlayChildLocation.nearestOverlay,
-      overlayChildBuilder: (context, info) {
-        final anchor = MatrixUtils.transformRect(
-          info.childPaintTransform,
-          Offset.zero & info.childSize,
-        );
-        final safeRect = Rect.fromLTRB(
-          media.padding.left + widget.viewportInset,
-          media.padding.top + widget.viewportInset,
-          info.overlaySize.width - media.padding.right - widget.viewportInset,
-          info.overlaySize.height -
-              math.max(media.padding.bottom, media.viewInsets.bottom) -
-              widget.viewportInset,
-        );
-        Widget layer = widget.layerBuilder(context);
-        if (widget.requestFocus) {
-          layer = Focus(
-            focusNode: _layerFocusNode,
-            onKeyEvent: (_, event) {
-              if (event is KeyDownEvent &&
-                  event.logicalKey == LogicalKeyboardKey.escape) {
-                _setOpen(false);
-                return KeyEventResult.handled;
-              }
-              return KeyEventResult.ignored;
-            },
+    return Semantics(
+      container: true,
+      child: OverlayPortal.overlayChildLayoutBuilder(
+        controller: _overlayController,
+        overlayLocation: widget.useRootOverlay
+            ? OverlayChildLocation.rootOverlay
+            : OverlayChildLocation.nearestOverlay,
+        overlayChildBuilder: (context, info) {
+          final anchor = MatrixUtils.transformRect(
+            info.childPaintTransform,
+            Offset.zero & info.childSize,
+          );
+          final safeRect = Rect.fromLTRB(
+            media.padding.left + widget.viewportInset,
+            media.padding.top + widget.viewportInset,
+            info.overlaySize.width - media.padding.right - widget.viewportInset,
+            info.overlaySize.height -
+                math.max(media.padding.bottom, media.viewInsets.bottom) -
+                widget.viewportInset,
+          );
+          Widget layer = widget.layerBuilder(context);
+          if (widget.requestFocus) {
+            layer = Focus(
+              focusNode: _layerFocusNode,
+              onKeyEvent: (_, event) {
+                if (event is KeyDownEvent &&
+                    event.logicalKey == LogicalKeyboardKey.escape) {
+                  _setOpen(false);
+                  return KeyEventResult.handled;
+                }
+                return KeyEventResult.ignored;
+              },
+              child: layer,
+            );
+          }
+          layer = TapRegion(
+            groupId: _tapRegionGroup,
+            onTapOutside: widget.dismissOnTapOutside
+                ? (_) => _setOpen(false)
+                : null,
             child: layer,
           );
-        }
-        layer = TapRegion(
-          groupId: _tapRegionGroup,
-          onTapOutside: widget.dismissOnTapOutside
-              ? (_) => _setOpen(false)
-              : null,
-          child: layer,
-        );
-        final anchorWidth = math.min(anchor.width, safeRect.width);
-        layer = ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: widget.matchAnchorWidth ? math.max(0, anchorWidth) : 0,
-            maxWidth: math.max(
-              0,
-              widget.matchAnchorWidth ? anchorWidth : safeRect.width,
+          final anchorWidth = math.min(anchor.width, safeRect.width);
+          layer = ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: widget.matchAnchorWidth ? math.max(0, anchorWidth) : 0,
+              maxWidth: math.max(
+                0,
+                widget.matchAnchorWidth ? anchorWidth : safeRect.width,
+              ),
+              maxHeight: math.max(0, safeRect.height),
             ),
-            maxHeight: math.max(0, safeRect.height),
-          ),
-          child: _TRAnchoredLayerMotion(
-            duration: widget.motionDuration,
-            scale: widget.motionScale,
-            alignment: _motionAlignment(widget.placement),
+            child: _TRAnchoredLayerMotion(
+              duration: widget.motionDuration,
+              scale: widget.motionScale,
+              alignment: _motionAlignment(widget.placement),
+              child: layer,
+            ),
+          );
+          return CustomSingleChildLayout(
+            delegate: _TRAnchoredLayerLayoutDelegate(
+              anchor: anchor,
+              gap: widget.gap,
+              placement: widget.placement,
+              safeRect: safeRect,
+              textDirection: textDirection,
+            ),
             child: layer,
-          ),
-        );
-        return CustomSingleChildLayout(
-          delegate: _TRAnchoredLayerLayoutDelegate(
-            anchor: anchor,
-            gap: widget.gap,
-            placement: widget.placement,
-            safeRect: safeRect,
-            textDirection: textDirection,
-          ),
-          child: layer,
-        );
-      },
-      child: target,
+          );
+        },
+        child: target,
+      ),
     );
   }
 }
