@@ -68,6 +68,28 @@ void main() {
     );
   });
 
+  testWidgets('hidden handle disables drag handoff from scroll content', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(400, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      _host(
+        const TRDrawer(
+          showDragHandle: false,
+          content: SizedBox(height: 1200, child: Text('Fixed sheet')),
+        ),
+      ),
+    );
+
+    final drawer = find.byType(TRDrawer);
+    final startingRect = tester.getRect(drawer);
+    await tester.dragFrom(const Offset(200, 400), const Offset(0, 200));
+    await tester.pumpAndSettle();
+
+    expect(tester.getRect(drawer), startingRect);
+  });
+
   testWidgets('short content stays smaller than its maximum extent', (
     tester,
   ) async {

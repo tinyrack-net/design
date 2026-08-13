@@ -1,5 +1,6 @@
 import 'dart:ui' show SemanticsRole, Tristate;
 
+import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/semantics.dart' show SemanticsNode;
 import 'package:flutter_test/flutter_test.dart';
@@ -319,6 +320,174 @@ void main() {
         tester.getRect(find.text('Option 39')).bottom,
         lessThanOrEqualTo(tester.getRect(drawer).bottom),
       );
+    });
+
+    testWidgets('sheet gives upward trackpad drags to its long option list', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(
+          TRSelect<int>(
+            items: <TRSelectItem<int>>[
+              for (var index = 0; index < 40; index += 1)
+                TRSelectItem(value: index, label: 'Option $index'),
+            ],
+            searchable: true,
+          ),
+        ),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      final drawer = find.byType(TRDrawer);
+      final search = find.byType(TRTextField);
+      final optionsScroll = find.descendant(
+        of: drawer,
+        matching: find.byType(SingleChildScrollView),
+      );
+      final drawerRect = tester.getRect(drawer);
+      final searchRect = tester.getRect(search);
+      final position = tester
+          .state<ScrollableState>(
+            find.descendant(
+              of: optionsScroll,
+              matching: find.byType(Scrollable),
+            ),
+          )
+          .position;
+
+      await tester.trackpadFling(search, const Offset(0, -300), 1000);
+      await tester.pumpAndSettle();
+
+      expect(position.pixels, greaterThan(0));
+      expect(tester.getRect(drawer), drawerRect);
+      expect(tester.getRect(search), searchRect);
+    });
+
+    testWidgets('sheet scrolls back before handing a downward drag to drawer', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(
+          TRSelect<int>(
+            items: <TRSelectItem<int>>[
+              for (var index = 0; index < 40; index += 1)
+                TRSelectItem(value: index, label: 'Option $index'),
+            ],
+            searchable: true,
+          ),
+        ),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      final drawer = find.byType(TRDrawer);
+      final search = find.byType(TRTextField);
+      final drawerRect = tester.getRect(drawer);
+      final position = tester
+          .state<ScrollableState>(
+            find.descendant(
+              of: find.descendant(
+                of: drawer,
+                matching: find.byType(SingleChildScrollView),
+              ),
+              matching: find.byType(Scrollable),
+            ),
+          )
+          .position;
+      position.jumpTo(500);
+      final startingPixels = position.pixels;
+
+      await tester.trackpadFling(search, const Offset(0, 100), 400);
+      await tester.pumpAndSettle();
+
+      expect(position.pixels, greaterThan(0));
+      expect(position.pixels, lessThan(startingPixels));
+      expect(tester.getRect(drawer), drawerRect);
+    });
+
+    testWidgets('sheet hands a downward drag at the top to the drawer', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(
+          TRSelect<int>(
+            items: <TRSelectItem<int>>[
+              for (var index = 0; index < 40; index += 1)
+                TRSelectItem(value: index, label: 'Option $index'),
+            ],
+            searchable: true,
+          ),
+        ),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+      final search = find.byType(TRTextField);
+      final startingRect = tester.getRect(search);
+      final searchCenter = tester.getCenter(search);
+      final gesture = await tester.startGesture(
+        searchCenter,
+        kind: PointerDeviceKind.trackpad,
+      );
+      await gesture.panZoomUpdate(searchCenter, pan: const Offset(0, 120));
+      await tester.pump();
+      await gesture.panZoomUpdate(searchCenter, pan: const Offset(0, 240));
+      await tester.pump();
+
+      expect(tester.getRect(search).top, greaterThan(startingRect.top));
+      await gesture.panZoomEnd();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('sheet forwards a wheel over its fixed search to options', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(
+          TRSelect<int>(
+            items: <TRSelectItem<int>>[
+              for (var index = 0; index < 40; index += 1)
+                TRSelectItem(value: index, label: 'Option $index'),
+            ],
+            searchable: true,
+          ),
+        ),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+      final drawer = find.byType(TRDrawer);
+      final search = find.byType(TRTextField);
+      final drawerRect = tester.getRect(drawer);
+      final position = tester
+          .state<ScrollableState>(
+            find.descendant(
+              of: find.descendant(
+                of: drawer,
+                matching: find.byType(SingleChildScrollView),
+              ),
+              matching: find.byType(Scrollable),
+            ),
+          )
+          .position;
+
+      await tester.sendEventToBinding(
+        PointerScrollEvent(
+          position: tester.getCenter(search),
+          scrollDelta: const Offset(0, 300),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(position.pixels, greaterThan(0));
+      expect(tester.getRect(drawer), drawerRect);
     });
 
     testWidgets('opens a dropdown at the small breakpoint', (tester) async {

@@ -1420,7 +1420,10 @@ void main() {
         ),
       );
       expect(tester.getSize(find.byType(TRDrawer)), const Size(800, 300));
-      await tester.drag(find.byType(TRDrawer), const Offset(0, -250));
+      await tester.drag(
+        find.byKey(const ValueKey('tr-drawer-drag-handle')),
+        const Offset(0, -250),
+      );
       await tester.pumpAndSettle();
       expect(tester.getSize(find.byType(TRDrawer)), const Size(800, 600));
       expect(snappedIndex, 1);

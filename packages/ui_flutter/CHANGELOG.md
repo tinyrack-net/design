@@ -1,3 +1,8 @@
+## 0.60.3
+
+- Keeps trackpad and wheel scrolling over fixed `TRSelect` sheet headers inside
+  the option list, while handing a downward drag at the top back to the drawer.
+
 ## 0.60.2
 
 - Keeps adjacent anchored layers in separate semantics containers so Flutter
