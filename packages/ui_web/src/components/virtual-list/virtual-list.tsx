@@ -506,12 +506,12 @@ export function TRVirtualList<T, K extends Key>({
       } else {
         leadingPinnedRef.current = items.length <= 1;
         trailingPinnedRef.current = true;
-        virtualizer.scrollToEnd(
-          options?.behavior === undefined ? {} : { behavior: options.behavior },
-        );
+        virtualizer.scrollToOffset(resolveListMaximumScrollOffset(virtualizer, axis), {
+          ...(options?.behavior === undefined ? {} : { behavior: options.behavior }),
+        });
       }
     },
-    [items.length, keys, virtualizer],
+    [axis, items.length, keys, virtualizer],
   );
   const restoreCandidate = useCallback(
     (candidate: { key: K; offset: number } | undefined) => {
@@ -523,14 +523,10 @@ export function TRVirtualList<T, K extends Key>({
       const itemStart =
         virtualizer.getVirtualItems().find((item) => item.index === index)?.start ??
         target[0];
-      const viewportExtent =
-        (axis === 'vertical'
-          ? virtualizer.scrollRect?.height
-          : virtualizer.scrollRect?.width) ?? 0;
       const requestedOffset = itemStart + candidate.offset;
       const actualOffset = Math.min(
         Math.max(requestedOffset, 0),
-        Math.max(virtualizer.getTotalSize() - viewportExtent, 0),
+        resolveListMaximumScrollOffset(virtualizer, axis),
       );
       virtualizer.scrollToOffset(actualOffset);
       setVisualLayout({
@@ -791,13 +787,7 @@ export function TRVirtualList<T, K extends Key>({
 
   useEffect(() => {
     if (!hydrated || !edgeRequestsReady || items.length === 0) return;
-    const viewport = internalViewportRef.current;
-    const defaultThreshold =
-      viewport === null
-        ? 0
-        : axis === 'vertical'
-          ? viewport.clientHeight
-          : viewport.clientWidth;
+    const defaultThreshold = resolveListViewportExtent(virtualizer, axis);
     const leadingThreshold = resolveTriggerExtent(
       leadingEdgeRequest?.triggerExtent,
       defaultThreshold,
@@ -815,7 +805,7 @@ export function TRVirtualList<T, K extends Key>({
     requestEdge(
       'trailing',
       trailingEdgeRequest,
-      virtualizer.isAtEnd(trailingThreshold),
+      isAtListTrailingEdge(virtualizer, axis, scrollOffset, trailingThreshold),
       requestedKeysRef.current,
     );
   }, [
@@ -863,12 +853,8 @@ export function TRVirtualList<T, K extends Key>({
         : isRtl
           ? -viewport.scrollLeft
           : viewport.scrollLeft;
-    const maximum =
-      axis === 'vertical'
-        ? viewport.scrollHeight - viewport.clientHeight
-        : viewport.scrollWidth - viewport.clientWidth;
     leadingPinnedRef.current = offset <= 1;
-    trailingPinnedRef.current = maximum - offset <= 1;
+    trailingPinnedRef.current = isAtListTrailingEdge(virtualizer, axis, offset, 1);
     if (!trailingPinnedRef.current) {
       setVisualLayout((current) => (current?.kind === 'offset' ? current : null));
     } else if (follow === 'trailing') {
@@ -1063,6 +1049,44 @@ function resolveVisualOffset<K extends Key>(
   return desiredStart - measurement.start;
 }
 
+function resolveListViewportExtent(
+  virtualizer: Virtualizer<HTMLDivElement, HTMLDivElement>,
+  axis: 'horizontal' | 'vertical',
+) {
+  const measured =
+    axis === 'vertical'
+      ? virtualizer.scrollRect?.height
+      : virtualizer.scrollRect?.width;
+  if (measured !== undefined && measured > 0) return measured;
+  const viewport = virtualizer.scrollElement;
+  const targetWindow = virtualizer.targetWindow;
+  if (viewport === null || targetWindow === null) return 0;
+  const rect = readScrollportRect(viewport, targetWindow);
+  return axis === 'vertical' ? rect.height : rect.width;
+}
+
+function resolveListMaximumScrollOffset(
+  virtualizer: Virtualizer<HTMLDivElement, HTMLDivElement>,
+  axis: 'horizontal' | 'vertical',
+) {
+  return Math.max(
+    virtualizer.getTotalSize() - resolveListViewportExtent(virtualizer, axis),
+    0,
+  );
+}
+
+function isAtListTrailingEdge(
+  virtualizer: Virtualizer<HTMLDivElement, HTMLDivElement>,
+  axis: 'horizontal' | 'vertical',
+  scrollOffset: number,
+  threshold: number,
+) {
+  return (
+    Math.max(resolveListMaximumScrollOffset(virtualizer, axis) - scrollOffset, 0) <=
+    threshold
+  );
+}
+
 function resolveVisibleRange<K extends Key>(
   virtualItems: readonly { end: number; index: number; start: number }[],
   keys: readonly K[],
@@ -1131,12 +1155,7 @@ function captureVisibleAnchor<K extends Key>(
 ): VisibleAnchor<K> {
   const viewport = virtualizer.scrollElement;
   const offset = scrollOffset ?? virtualizer.scrollOffset ?? 0;
-  const extent =
-    viewport === null
-      ? 0
-      : axis === 'vertical'
-        ? viewport.clientHeight
-        : viewport.clientWidth;
+  const extent = viewport === null ? 0 : resolveListViewportExtent(virtualizer, axis);
   const positionedCandidates = virtualizer.getVirtualItems().flatMap((item) => {
     const key = keys[item.index];
     return key === undefined
@@ -1156,7 +1175,7 @@ function captureVisibleAnchor<K extends Key>(
   );
   return {
     atLeading: offset <= 1,
-    atTrailing: virtualizer.isAtEnd(1),
+    atTrailing: isAtListTrailingEdge(virtualizer, axis, offset, 1),
     candidates,
     positionedCandidates,
   };

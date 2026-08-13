@@ -570,6 +570,16 @@ test('trailing-aligns an underfilled list and measured slot while following grow
 });
 
 test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical edge', async () => {
+  const trailingRequest = vi.fn();
+  const intrinsicOverflow = (
+    <style>{`
+      .intrinsic-overflow > button {
+        inline-size: 44px !important;
+        inset-inline-start: 0;
+        position: absolute;
+      }
+    `}</style>
+  );
   const leadingEdgeRequest = {
     onRequest: vi.fn(),
     requestKey: 'horizontal-leading',
@@ -579,9 +589,20 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
     <List
       axis="horizontal"
       initialPosition={{ edge: 'trailing' }}
+      itemProps={(_item, index) => ({
+        className: index === 2 ? 'intrinsic-overflow' : undefined,
+        style: { width: 40 },
+      })}
       items={makeItems(3)}
       leadingEdgeRequest={leadingEdgeRequest}
-    />,
+      trailingEdgeRequest={{
+        onRequest: trailingRequest,
+        requestKey: 'horizontal-trailing-ltr',
+        triggerExtent: { kind: 'pixels', value: 0 },
+      }}
+    >
+      {intrinsicOverflow}
+    </List>,
   );
   let viewport = getViewport();
   expect(getComputedStyle(viewport).overflowX).toBe('auto');
@@ -595,6 +616,9 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
             viewportContentInlineEdges(viewport).right;
     })
     .toBeCloseTo(0, 0);
+  expect(viewport.scrollWidth - viewport.clientWidth).toBe(4);
+  expect(viewport.scrollLeft).toBe(0);
+  await expect.poll(() => trailingRequest).toHaveBeenCalledTimes(1);
   await ltr.unmount();
 
   await render(
@@ -602,9 +626,20 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
       <List
         axis="horizontal"
         initialPosition={{ edge: 'trailing' }}
+        itemProps={(_item, index) => ({
+          className: index === 2 ? 'intrinsic-overflow' : undefined,
+          style: { width: 40 },
+        })}
         items={makeItems(3)}
         leadingEdgeRequest={leadingEdgeRequest}
-      />
+        trailingEdgeRequest={{
+          onRequest: trailingRequest,
+          requestKey: 'horizontal-trailing-rtl',
+          triggerExtent: { kind: 'pixels', value: 0 },
+        }}
+      >
+        {intrinsicOverflow}
+      </List>
     </div>,
   );
   viewport = getViewport();
@@ -616,6 +651,56 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
         : item.getBoundingClientRect().left - viewportContentInlineEdges(viewport).left;
     })
     .toBeCloseTo(0, 0);
+  expect(viewport.scrollWidth - viewport.clientWidth).toBe(4);
+  expect(-viewport.scrollLeft).toBeCloseTo(0, 0);
+  await expect.poll(() => trailingRequest).toHaveBeenCalledTimes(2);
+});
+
+test('keeps underfilled horizontal follow pinned to the nominal list extent', async () => {
+  let append: (() => void) | undefined;
+  function Harness() {
+    const [items, setItems] = useState(makeItems(3));
+    append = () =>
+      setItems((current) => [
+        ...current,
+        { id: `item-${current.length}`, label: `Item ${current.length}` },
+      ]);
+    return (
+      <List
+        axis="horizontal"
+        follow="trailing"
+        initialPosition={{ edge: 'trailing' }}
+        itemProps={(_item, index) => ({
+          className: index === items.length - 1 ? 'intrinsic-overflow' : undefined,
+          style: { width: 40 },
+        })}
+        items={items}
+      >
+        <style>{`
+          .intrinsic-overflow > button {
+            inline-size: 44px !important;
+            inset-inline-start: 0;
+            position: absolute;
+          }
+        `}</style>
+      </List>
+    );
+  }
+
+  await render(<Harness />);
+  const viewport = getViewport();
+  await expect
+    .poll(() => findRenderedItem('Item 2')?.getBoundingClientRect().right)
+    .toBeCloseTo(viewportContentInlineEdges(viewport).right, 0);
+  expect(viewport.scrollWidth - viewport.clientWidth).toBe(4);
+
+  await act(async () => viewport.dispatchEvent(new Event('scroll')));
+  await act(async () => append?.());
+
+  await expect
+    .poll(() => findRenderedItem('Item 3')?.getBoundingClientRect().right)
+    .toBeCloseTo(viewportContentInlineEdges(viewport).right, 0);
+  expect(viewport.scrollLeft).toBe(0);
 });
 
 test('measures the stable inner border box despite a native scrollbar gutter', () => {
@@ -1323,10 +1408,11 @@ test('keeps invalid alignment and range fallback states inert', () => {
   expect(
     trVirtualListInternals.captureVisibleAnchor(
       {
+        getTotalSize: () => 40,
         getVirtualItems: () => [{ end: 40, index: 0, start: 0 }],
-        isAtEnd: () => false,
         scrollElement: { clientHeight: 240, clientWidth: 320 },
         scrollOffset: null,
+        scrollRect: { height: 240, width: 320 },
       } as never,
       [],
       'vertical',
