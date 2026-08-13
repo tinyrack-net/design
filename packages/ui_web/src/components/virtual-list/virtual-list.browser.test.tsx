@@ -618,13 +618,18 @@ test('trailing-aligns an underfilled horizontal list to the LTR and RTL logical 
     .toBeCloseTo(0, 0);
 });
 
-test('remeasures the client scrollport when only its content box changes', () => {
+test('measures the stable inner border box despite a native scrollbar gutter', () => {
   const element = document.createElement('div');
-  let clientWidth = 320;
-  let clientHeight = 240;
+  element.style.border = '2px solid transparent';
+  let clientWidth = 316;
+  let clientHeight = 236;
+  let offsetWidth = 324;
+  let offsetHeight = 244;
   Object.defineProperties(element, {
     clientHeight: { configurable: true, get: () => clientHeight },
     clientWidth: { configurable: true, get: () => clientWidth },
+    offsetHeight: { configurable: true, get: () => offsetHeight },
+    offsetWidth: { configurable: true, get: () => offsetWidth },
   });
 
   let resizeCallback: ResizeObserverCallback | undefined;
@@ -654,6 +659,13 @@ test('remeasures the client scrollport when only its content box changes', () =>
   const targetWindow = {
     ResizeObserver: ProbeResizeObserver,
     cancelAnimationFrame,
+    getComputedStyle: () =>
+      ({
+        borderBottomWidth: '2px',
+        borderLeftWidth: '2px',
+        borderRightWidth: '2px',
+        borderTopWidth: '2px',
+      }) as CSSStyleDeclaration,
     requestAnimationFrame,
   } as unknown as Window;
   const instance = {
@@ -666,25 +678,35 @@ test('remeasures the client scrollport when only its content box changes', () =>
   const disconnect = trVirtualListInternals.observeScrollportRect(instance, (rect) => {
     measurements.push(rect);
   });
-  expect(observeOptions).toEqual({ box: 'content-box' });
+  expect(observeOptions).toEqual({ box: 'border-box' });
   expect(measurements).toEqual([{ height: 240, width: 320 }]);
 
-  clientWidth = 304;
-  clientHeight = 224;
+  clientWidth = 320;
+  clientHeight = 240;
   resizeCallback?.([], {} as ResizeObserver);
   resizeCallback?.([], {} as ResizeObserver);
   expect(requestAnimationFrame).toHaveBeenCalledTimes(1);
   animationFrameCallback?.(0);
+  expect(measurements).toEqual([{ height: 240, width: 320 }]);
+
+  clientWidth = 300;
+  clientHeight = 220;
+  offsetWidth = 308;
+  offsetHeight = 228;
+  resizeCallback?.([], {} as ResizeObserver);
+  resizeCallback?.([], {} as ResizeObserver);
+  expect(requestAnimationFrame).toHaveBeenCalledTimes(2);
+  animationFrameCallback?.(1);
   expect(measurements).toEqual([
     { height: 240, width: 320 },
     { height: 224, width: 304 },
   ]);
 
   resizeCallback?.([], {} as ResizeObserver);
-  animationFrameCallback?.(1);
+  animationFrameCallback?.(2);
   expect(measurements).toHaveLength(2);
 
-  clientWidth = 288;
+  offsetWidth = 292;
   resizeCallback?.([], {} as ResizeObserver);
   disconnect?.();
   expect(disconnected).toBe(true);
@@ -693,10 +715,13 @@ test('remeasures the client scrollport when only its content box changes', () =>
 
 test('observes scrollport size without relying on animation frames', () => {
   const element = document.createElement('div');
-  let clientWidth = 320;
+  element.style.border = '2px solid transparent';
+  let offsetWidth = 324;
   Object.defineProperties(element, {
-    clientHeight: { configurable: true, value: 240 },
-    clientWidth: { configurable: true, get: () => clientWidth },
+    clientHeight: { configurable: true, value: 236 },
+    clientWidth: { configurable: true, value: 316 },
+    offsetHeight: { configurable: true, value: 244 },
+    offsetWidth: { configurable: true, get: () => offsetWidth },
   });
 
   let resizeCallback: ResizeObserverCallback | undefined;
@@ -714,6 +739,13 @@ test('observes scrollport size without relying on animation frames', () => {
   const targetWindow = {
     ResizeObserver: ProbeResizeObserver,
     cancelAnimationFrame: vi.fn(),
+    getComputedStyle: () =>
+      ({
+        borderBottomWidth: '2px',
+        borderLeftWidth: '2px',
+        borderRightWidth: '2px',
+        borderTopWidth: '2px',
+      }) as CSSStyleDeclaration,
     requestAnimationFrame: vi.fn(),
   } as unknown as Window;
   const instance = {
@@ -726,7 +758,7 @@ test('observes scrollport size without relying on animation frames', () => {
   trVirtualListInternals.observeScrollportRect(instance, (rect) => {
     measurements.push(rect);
   });
-  clientWidth = 304;
+  offsetWidth = 308;
   resizeCallback?.([], {} as ResizeObserver);
 
   expect(measurements).toEqual([
@@ -738,11 +770,22 @@ test('observes scrollport size without relying on animation frames', () => {
 
 test('reports an initial scrollport size without ResizeObserver support', () => {
   const element = document.createElement('div');
+  element.style.border = '2px solid transparent';
   Object.defineProperties(element, {
-    clientHeight: { configurable: true, value: 240 },
-    clientWidth: { configurable: true, value: 320 },
+    clientHeight: { configurable: true, value: 236 },
+    clientWidth: { configurable: true, value: 316 },
+    offsetHeight: { configurable: true, value: 244 },
+    offsetWidth: { configurable: true, value: 324 },
   });
-  const targetWindow = {} as Window;
+  const targetWindow = {
+    getComputedStyle: () =>
+      ({
+        borderBottomWidth: '2px',
+        borderLeftWidth: '2px',
+        borderRightWidth: '2px',
+        borderTopWidth: '2px',
+      }) as CSSStyleDeclaration,
+  } as unknown as Window;
   const instance = {
     options: { useAnimationFrameWithResizeObserver: true },
     scrollElement: element,

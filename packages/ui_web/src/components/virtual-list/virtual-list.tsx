@@ -95,6 +95,29 @@ const subscribeToHydration = () => () => {};
 const clientSnapshot = () => true;
 const serverSnapshot = () => false;
 
+function cssPixel(value: string) {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function readScrollportRect(element: HTMLElement, targetWindow: Window): Rect {
+  const style = targetWindow.getComputedStyle(element);
+  return {
+    height: Math.max(
+      0,
+      element.offsetHeight -
+        cssPixel(style.borderTopWidth) -
+        cssPixel(style.borderBottomWidth),
+    ),
+    width: Math.max(
+      0,
+      element.offsetWidth -
+        cssPixel(style.borderLeftWidth) -
+        cssPixel(style.borderRightWidth),
+    ),
+  };
+}
+
 function observeScrollportRect(
   instance: Virtualizer<HTMLDivElement, HTMLDivElement>,
   callback: (rect: Rect) => void,
@@ -105,7 +128,7 @@ function observeScrollportRect(
 
   let previous: Rect | undefined;
   const notify = () => {
-    const next = { height: element.clientHeight, width: element.clientWidth };
+    const next = readScrollportRect(element, targetWindow);
     if (previous?.height === next.height && previous.width === next.width) return;
     previous = next;
     callback(next);
@@ -126,7 +149,7 @@ function observeScrollportRect(
       notify();
     });
   });
-  observer.observe(element, { box: 'content-box' });
+  observer.observe(element, { box: 'border-box' });
   return () => {
     observer.disconnect();
     if (animationFrame !== undefined) {
