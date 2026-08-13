@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart' show setEquals;
 import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 import '../separator/separator.dart';
 
 /// Canonical width classes for high-level adaptive application layouts.
@@ -26,6 +28,50 @@ enum TRAdaptiveWidthClass {
 
 /// Stable roles in a canonical navigation, primary, and secondary hierarchy.
 enum TRPaneRole { navigation, primary, secondary }
+
+/// Exposes the adaptive decisions made by a
+/// [TRNavigableThreePaneScaffold] to its pane contents.
+class TRAdaptivePaneScope extends InheritedWidget {
+  TRAdaptivePaneScope({
+    required this.widthClass,
+    required Set<TRPaneRole> visibleRoles,
+    required this.activeRole,
+    required super.child,
+    super.key,
+  }) : visibleRoles = Set<TRPaneRole>.unmodifiable(visibleRoles);
+
+  /// The width class resolved from the scaffold's logical constraints.
+  final TRAdaptiveWidthClass widthClass;
+
+  /// The pane roles currently represented in the scaffold.
+  final Set<TRPaneRole> visibleRoles;
+
+  /// The role of the current destination, even when a wider layout also keeps
+  /// its parent roles visible.
+  final TRPaneRole activeRole;
+
+  /// Returns the nearest adaptive pane scope.
+  static TRAdaptivePaneScope of(BuildContext context) {
+    final scope = maybeOf(context);
+    if (scope == null) {
+      throw FlutterError(
+        'TRAdaptivePaneScope.of() was called outside a '
+        'TRNavigableThreePaneScaffold.',
+      );
+    }
+    return scope;
+  }
+
+  /// Returns the nearest adaptive pane scope, if one is available.
+  static TRAdaptivePaneScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<TRAdaptivePaneScope>();
+
+  @override
+  bool updateShouldNotify(TRAdaptivePaneScope oldWidget) =>
+      widthClass != oldWidget.widthClass ||
+      activeRole != oldWidget.activeRole ||
+      !setEquals(visibleRoles, oldWidget.visibleRoles);
+}
 
 /// One typed destination in a three-pane navigation history.
 final class TRPaneDestination<T extends Object> {
@@ -111,16 +157,43 @@ class TRNavigableThreePaneScaffold<T extends Object> extends StatelessWidget {
     builder: (context, _) => LayoutBuilder(
       builder: (context, constraints) {
         final widthClass = TRAdaptiveWidthClass.fromWidth(constraints.maxWidth);
-        return switch (widthClass) {
+        final activeRole = navigator.currentDestination.role;
+        final visibleRoles = _visibleRoles(widthClass, activeRole);
+        final content = switch (widthClass) {
           TRAdaptiveWidthClass.compact => _singlePane(context),
           TRAdaptiveWidthClass.medium ||
           TRAdaptiveWidthClass.expanded => _twoPanes(context),
           TRAdaptiveWidthClass.large ||
           TRAdaptiveWidthClass.extraLarge => _threePanes(),
         };
+        return TRAdaptivePaneScope(
+          widthClass: widthClass,
+          visibleRoles: visibleRoles,
+          activeRole: activeRole,
+          child: content,
+        );
       },
     ),
   );
+
+  Set<TRPaneRole> _visibleRoles(
+    TRAdaptiveWidthClass widthClass,
+    TRPaneRole activeRole,
+  ) => switch (widthClass) {
+    TRAdaptiveWidthClass.compact => <TRPaneRole>{activeRole},
+    TRAdaptiveWidthClass.medium || TRAdaptiveWidthClass.expanded =>
+      activeRole == TRPaneRole.navigation
+          ? const <TRPaneRole>{TRPaneRole.navigation, TRPaneRole.primary}
+          : <TRPaneRole>{TRPaneRole.navigation, activeRole},
+    TRAdaptiveWidthClass.large || TRAdaptiveWidthClass.extraLarge =>
+      secondaryPane == null
+          ? const <TRPaneRole>{TRPaneRole.navigation, TRPaneRole.primary}
+          : const <TRPaneRole>{
+              TRPaneRole.navigation,
+              TRPaneRole.primary,
+              TRPaneRole.secondary,
+            },
+  };
 
   Widget _singlePane(BuildContext context) => _animatedActivePane(context);
 
@@ -220,23 +293,30 @@ class TRNavigableThreePaneScaffold<T extends Object> extends StatelessWidget {
 
 /// Scrollable navigation content with standard pane insets and section rhythm.
 class TRNavigationPane extends StatelessWidget {
-  const TRNavigationPane({
-    required this.children,
-    this.padding = const EdgeInsets.all(TRSpacing.medium),
-    super.key,
-  });
+  const TRNavigationPane({required this.children, this.padding, super.key});
 
   final List<Widget> children;
-  final EdgeInsetsGeometry padding;
+
+  /// Overrides the density-aware pane inset.
+  final EdgeInsetsGeometry? padding;
 
   @override
-  Widget build(BuildContext context) => ListView.separated(
-    padding: padding,
-    itemCount: children.length,
-    itemBuilder: (context, index) => children[index],
-    separatorBuilder: (context, index) =>
-        const SizedBox(height: TRSpacing.large),
-  );
+  Widget build(BuildContext context) {
+    final comfortable = TRUiDensityScope.of(context) == TRUiDensity.comfortable;
+    final effectivePadding =
+        padding ??
+        EdgeInsets.symmetric(
+          horizontal: TRSpacing.medium,
+          vertical: comfortable ? TRSpacing.large : TRSpacing.medium,
+        );
+    final sectionGap = comfortable ? TRSpacing.extraLarge : TRSpacing.large;
+    return ListView.separated(
+      padding: effectivePadding,
+      itemCount: children.length,
+      itemBuilder: (context, index) => children[index],
+      separatorBuilder: (context, index) => SizedBox(height: sectionGap),
+    );
+  }
 }
 
 /// A labelled group inside a [TRNavigationPane].
@@ -251,25 +331,28 @@ class TRNavigationSection extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: <Widget>[
-      Padding(
-        padding: const EdgeInsets.fromLTRB(
-          TRSpacing.small,
-          TRSpacing.small,
-          TRSpacing.small,
-          TRSpacing.medium,
+  Widget build(BuildContext context) {
+    final comfortable = TRUiDensityScope.of(context) == TRUiDensity.comfortable;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            TRSpacing.medium,
+            comfortable ? TRSpacing.medium : TRSpacing.small,
+            TRSpacing.medium,
+            comfortable ? TRSpacing.large : TRSpacing.medium,
+          ),
+          child: DefaultTextStyle.merge(
+            style: TRTypography.resolve(
+              context,
+              TRTextVariant.label,
+            ).copyWith(color: context.tinyrackTheme.textMuted),
+            child: label,
+          ),
         ),
-        child: DefaultTextStyle.merge(
-          style: TRTypography.resolve(
-            context,
-            TRTextVariant.label,
-          ).copyWith(color: context.tinyrackTheme.textMuted),
-          child: label,
-        ),
-      ),
-      child,
-    ],
-  );
+        child,
+      ],
+    );
+  }
 }

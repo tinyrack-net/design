@@ -129,6 +129,229 @@ void main() {
     );
   });
 
+  testWidgets(
+    'navigation pane and sections enlarge block rhythm in comfortable density',
+    (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: const TRUiDensityScope(
+            density: TRUiDensity.comfortable,
+            child: TRNavigationPane(
+              children: [
+                TRNavigationSection(label: Text('App'), child: Text('General')),
+                TRNavigationSection(
+                  label: Text('Daemon'),
+                  child: Text('Embedded'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final list = tester.widget<ListView>(find.byType(ListView));
+      expect(
+        list.padding,
+        const EdgeInsets.symmetric(
+          horizontal: TRSpacing.medium,
+          vertical: TRSpacing.large,
+        ),
+      );
+      final labelPadding = tester.widget<Padding>(
+        find
+            .ancestor(of: find.text('App'), matching: find.byType(Padding))
+            .first,
+      );
+      expect(
+        labelPadding.padding,
+        const EdgeInsets.fromLTRB(
+          TRSpacing.medium,
+          TRSpacing.medium,
+          TRSpacing.medium,
+          TRSpacing.large,
+        ),
+      );
+      expect(
+        tester.getTopLeft(find.text('Daemon')).dy -
+            tester.getBottomLeft(find.text('General')).dy,
+        greaterThanOrEqualTo(TRSpacing.extraLarge),
+      );
+    },
+  );
+
+  testWidgets('explicit navigation pane padding overrides density defaults', (
+    tester,
+  ) async {
+    const padding = EdgeInsets.all(TRSpacing.extraSmall);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const TRUiDensityScope(
+          density: TRUiDensity.comfortable,
+          child: TRNavigationPane(
+            padding: padding,
+            children: [Text('Navigation')],
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.widget<ListView>(find.byType(ListView)).padding, padding);
+  });
+
+  testWidgets('pane header shares insets and density-aware typography', (
+    tester,
+  ) async {
+    Future<void> pump(TRUiDensity density) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: TinyrackTheme.light(),
+          home: TRUiDensityScope(
+            density: density,
+            child: const TRPaneHeader(
+              title: Text('Projects'),
+              description: Text('1 project'),
+            ),
+          ),
+        ),
+      );
+    }
+
+    await pump(TRUiDensity.standard);
+    expect(tester.getTopLeft(find.text('Projects')).dx, TRSpacing.extraLarge);
+    expect(
+      DefaultTextStyle.of(tester.element(find.text('Projects'))).style.fontSize,
+      TRTypography.headingSm.fontSize,
+    );
+    expect(
+      DefaultTextStyle.of(
+        tester.element(find.text('1 project')),
+      ).style.fontSize,
+      TRTypography.bodySm.fontSize,
+    );
+    expect(find.byType(TRSeparator), findsOneWidget);
+
+    await pump(TRUiDensity.comfortable);
+    expect(
+      DefaultTextStyle.of(tester.element(find.text('Projects'))).style.fontSize,
+      TRTypography.resolve(
+        tester.element(find.text('Projects')),
+        TRTextVariant.headingSm,
+      ).fontSize,
+    );
+    expect(
+      DefaultTextStyle.of(
+        tester.element(find.text('1 project')),
+      ).style.fontSize,
+      TRTypography.resolve(
+        tester.element(find.text('1 project')),
+        TRTextVariant.bodySm,
+      ).fontSize,
+    );
+  });
+
+  testWidgets('pane header wraps actions without overflowing narrow panes', (
+    tester,
+  ) async {
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(TRMeasurements.measureLg, 400);
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: const MediaQuery(
+          data: MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: TRPaneHeader(
+            leading: SizedBox.square(
+              key: ValueKey('leading'),
+              dimension: TRSpacing.large,
+            ),
+            title: Text('Projects'),
+            description: Text('Workspace projects'),
+            actions: [
+              SizedBox(
+                key: ValueKey('first-action'),
+                width: TRMeasurements.measureSm,
+                height: TRSpacing.extraLarge,
+              ),
+              SizedBox(
+                key: ValueKey('second-action'),
+                width: TRMeasurements.measureSm,
+                height: TRSpacing.extraLarge,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    expect(tester.takeException(), isNull);
+    expect(
+      tester.getTopLeft(find.byKey(const ValueKey('first-action'))).dy,
+      lessThan(
+        tester.getTopLeft(find.byKey(const ValueKey('second-action'))).dy,
+      ),
+    );
+
+    tester.view.physicalSize = const Size(600, 400);
+    await tester.pump();
+    expect(
+      tester.getTopLeft(find.byKey(const ValueKey('first-action'))).dy,
+      tester.getTopLeft(find.byKey(const ValueKey('second-action'))).dy,
+    );
+  });
+
+  testWidgets('adaptive pane scope exposes scaffold decisions to panes', (
+    tester,
+  ) async {
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(599, 600);
+    addTearDown(tester.view.reset);
+    final navigator = TRThreePaneNavigator<String>(
+      initialDestination: const TRPaneDestination(
+        role: TRPaneRole.secondary,
+        value: 'detail',
+      ),
+    );
+    addTearDown(navigator.dispose);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: TRNavigableThreePaneScaffold<String>(
+          navigator: navigator,
+          navigationPane: const _AdaptiveScopeProbe('Navigation'),
+          primaryPane: const _AdaptiveScopeProbe('Primary'),
+          secondaryPane: const _AdaptiveScopeProbe('Secondary'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Secondary:compact:secondary:secondary'), findsOneWidget);
+
+    tester.view.physicalSize = const Size(800, 600);
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Navigation:medium:navigation,secondary:secondary'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Secondary:medium:navigation,secondary:secondary'),
+      findsOneWidget,
+    );
+
+    tester.view.physicalSize = const Size(1200, 600);
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Secondary:large:navigation,primary,secondary:secondary'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('resize preserves the active destination and expands panes', (
     tester,
   ) async {
@@ -278,4 +501,19 @@ void main() {
       greaterThan(tester.getCenter(find.text('Primary')).dx),
     );
   });
+}
+
+class _AdaptiveScopeProbe extends StatelessWidget {
+  const _AdaptiveScopeProbe(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = TRAdaptivePaneScope.of(context);
+    final roles = scope.visibleRoles.map((role) => role.name).join(',');
+    return Text(
+      '$label:${scope.widthClass.name}:$roles:${scope.activeRole.name}',
+    );
+  }
 }

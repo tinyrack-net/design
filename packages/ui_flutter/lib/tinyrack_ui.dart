@@ -40,6 +40,7 @@ export 'src/components/navigation_menu/navigation_menu.dart';
 export 'src/components/number_field/number_field.dart';
 export 'src/components/otp_field/otp_field.dart';
 export 'src/components/pagination/pagination.dart';
+export 'src/components/pane_header/pane_header.dart';
 export 'src/components/popover/popover.dart';
 export 'src/components/preview_card/preview_card.dart';
 export 'src/components/select/select.dart';

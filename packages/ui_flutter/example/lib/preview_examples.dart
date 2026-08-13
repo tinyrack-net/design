@@ -132,6 +132,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'app-shell-navigation': _appShellNavigation,
   'app-shell-controls': _appShellControls,
   'app-shell-docs': _appShellDocs,
+  'app-shell-pane-header': _appShellPaneHeader,
   'pagination-controlled': _paginationControlled,
   'table-dense-status': _tableDenseStatus,
   'tree-nav-navigation': _treeNavNavigation,
@@ -4357,6 +4358,29 @@ Widget _appShellDocs(BuildContext context, Locale locale) => SizedBox(
     ),
   ),
 );
+
+Widget _appShellPaneHeader(BuildContext context, Locale locale) =>
+    TRUiDensityScope(
+      density: TRUiDensity.comfortable,
+      child: TRPaneHeader(
+        leading: TRIconButton(
+          appearance: TRAppearance.ghost,
+          icon: const Icon(Icons.arrow_back),
+          label: _pick(locale, 'Back', '뒤로', '戻る'),
+          onPressed: () {},
+        ),
+        title: Text(_pick(locale, 'Projects', '프로젝트', 'プロジェクト')),
+        description: Text(
+          _pick(locale, '1 active project', '활성 프로젝트 1개', '有効なプロジェクト 1 件'),
+        ),
+        actions: [
+          TRButton(
+            onPressed: () {},
+            child: Text(_pick(locale, 'Create', '만들기', '作成')),
+          ),
+        ],
+      ),
+    );
 
 Widget _paginationControlled(BuildContext context, Locale locale) {
   var page = 3;
