@@ -115,18 +115,22 @@ function observeScrollportRect(
   const ResizeObserverConstructor = targetWindow.ResizeObserver;
   if (ResizeObserverConstructor === undefined) return;
   let animationFrame: number | undefined;
-  const observer = new ResizeObserverConstructor(() => {
-    if (!instance.options.useAnimationFrameWithResizeObserver) {
-      notify();
-      return;
-    }
+  const scheduleNotify = () => {
     if (animationFrame !== undefined) return;
     animationFrame = targetWindow.requestAnimationFrame(() => {
       animationFrame = undefined;
       notify();
     });
+  };
+  const observer = new ResizeObserverConstructor(() => {
+    if (!instance.options.useAnimationFrameWithResizeObserver) {
+      notify();
+      return;
+    }
+    scheduleNotify();
   });
   observer.observe(element, { box: 'content-box' });
+  if (instance.options.useAnimationFrameWithResizeObserver) scheduleNotify();
   return () => {
     observer.disconnect();
     if (animationFrame !== undefined) {
