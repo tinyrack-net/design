@@ -243,7 +243,7 @@ void main() {
       final button = tester.widget<MenuItemButton>(firstOption);
       expect(
         button.style?.minimumSize?.resolve(<WidgetState>{})?.height,
-        TRControlMetrics.heightOf(TRUiSize.md),
+        TRControlMetrics.heightOf(TRUiSize.xl),
       );
       expect(
         button.style?.padding?.resolve(<WidgetState>{}),
@@ -258,6 +258,32 @@ void main() {
           matching: find.widgetWithText(MenuItemButton, 'Alpha'),
         ),
         findsOneWidget,
+      );
+    });
+
+    testWidgets('compact sheet options keep 48px touch targets', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      final option = find.widgetWithText(MenuItemButton, 'Alpha');
+      final minimumTouchTarget = TRControlMetrics.heightOf(TRUiSize.xl);
+      expect(
+        tester.getSize(option).height,
+        greaterThanOrEqualTo(minimumTouchTarget),
+      );
+      final button = tester.widget<MenuItemButton>(option);
+      expect(
+        button.style?.minimumSize?.resolve(<WidgetState>{})?.height,
+        greaterThanOrEqualTo(minimumTouchTarget),
+      );
+      expect(
+        button.style?.textStyle?.resolve(<WidgetState>{})?.fontSize,
+        TRControlMetrics.fontSizeOf(TRUiSize.md),
       );
     });
 
@@ -329,6 +355,10 @@ void main() {
         find.widgetWithText(MenuItemButton, 'Alpha'),
       );
       expect(
+        tester.getSize(find.widgetWithText(MenuItemButton, 'Alpha')).height,
+        TRControlMetrics.heightOf(TRUiSize.xl),
+      );
+      expect(
         option.style?.minimumSize?.resolve(<WidgetState>{})?.height,
         TRControlMetrics.heightOf(TRUiSize.xl),
       );
@@ -338,6 +368,14 @@ void main() {
           horizontal: TRControlMetrics.inlinePaddingOf(TRUiSize.xl),
           vertical: TRControlMetrics.gapOf(TRUiSize.xl),
         ),
+      );
+      expect(
+        option.style?.iconSize?.resolve(<WidgetState>{}),
+        TRControlMetrics.iconSizeOf(TRUiSize.xl),
+      );
+      expect(
+        option.style?.textStyle?.resolve(<WidgetState>{})?.fontSize,
+        TRControlMetrics.fontSizeOf(TRUiSize.xl),
       );
     });
 

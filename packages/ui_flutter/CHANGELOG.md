@@ -1,3 +1,8 @@
+## 0.60.1
+
+- Keeps `TRSelect` bottom-sheet option targets at least 48 logical pixels tall
+  while retaining density-resolved typography, padding, and icon geometry.
+
 ## 0.60.0
 
 - Adds `TRVirtualList`, a forward-order lazy linear list for vertical,

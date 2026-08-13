@@ -13,6 +13,7 @@ class _TRSelectOptions<T> extends StatelessWidget {
     required this.noResultsText,
     required this.onSelected,
     required this.uiSize,
+    this.minimumRowHeight,
     this.focusNodes,
     this.onRowKeyEvent,
   });
@@ -25,6 +26,13 @@ class _TRSelectOptions<T> extends StatelessWidget {
   final String noResultsText;
   final ValueChanged<T?> onSelected;
   final TRUiSize uiSize;
+
+  /// Optional accessibility floor for the rendered option target.
+  ///
+  /// A sheet is touch-oriented even when its trigger uses compact metrics, so
+  /// it supplies the `xl` control height while retaining the resolved density
+  /// for the option's typography, padding, and icons.
+  final double? minimumRowHeight;
 
   /// One node per entry in [items], or null when the surface does not move
   /// focus between rows itself.
@@ -130,6 +138,8 @@ class _TRSelectOptions<T> extends StatelessWidget {
     required bool described,
   }) {
     final colors = context.tinyrackTheme;
+    final resolvedHeight = TRControlMetrics.heightOf(uiSize);
+    final rowHeight = math.max(resolvedHeight, minimumRowHeight ?? 0);
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
       backgroundColor: WidgetStateProperty.resolveWith((states) {
@@ -149,13 +159,9 @@ class _TRSelectOptions<T> extends StatelessWidget {
             : colors.text,
       ),
       iconSize: WidgetStatePropertyAll(TRControlMetrics.iconSizeOf(uiSize)),
-      minimumSize: WidgetStatePropertyAll(
-        Size(0, TRControlMetrics.heightOf(uiSize)),
-      ),
+      minimumSize: WidgetStatePropertyAll(Size(0, rowHeight)),
       maximumSize: WidgetStatePropertyAll(
-        described
-            ? Size.infinite
-            : Size(double.infinity, TRControlMetrics.heightOf(uiSize)),
+        described ? Size.infinite : Size(double.infinity, rowHeight),
       ),
       overlayColor: const WidgetStatePropertyAll(Colors.transparent),
       padding: WidgetStatePropertyAll(
