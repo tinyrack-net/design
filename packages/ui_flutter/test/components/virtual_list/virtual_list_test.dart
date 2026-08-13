@@ -1481,6 +1481,40 @@ void main() {
     expect(slot.bottom, moreOrLessEquals(viewport.bottom));
   });
 
+  testWidgets(
+    'trailing initial alignment without follow retains its underfill anchor',
+    (tester) async {
+      final key = GlobalKey<_VirtualListHarnessState>();
+      final controller = TRVirtualListController<String>();
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        _host(
+          _VirtualListHarness(
+            key: key,
+            controller: controller,
+            initialItems: const <String>['item-0', 'item-1'],
+            initialPosition: const TRVirtualListInitialPosition.trailing(),
+          ),
+        ),
+      );
+      final anchorTop = _top(tester, 'item-0');
+      expect(
+        _bottom(tester, 'item-1'),
+        moreOrLessEquals(
+          tester.getRect(find.byKey(const ValueKey('viewport'))).bottom,
+        ),
+      );
+
+      key.currentState!.append('item-2', estimate: 20, height: 80);
+      await tester.pump();
+      expect(_top(tester, 'item-0'), moreOrLessEquals(anchorTop));
+
+      key.currentState!.resize('item-0', 72);
+      await tester.pump();
+      expect(_top(tester, 'item-0'), moreOrLessEquals(anchorTop));
+    },
+  );
+
   testWidgets('horizontal RTL underfill aligns to logical trailing', (
     tester,
   ) async {

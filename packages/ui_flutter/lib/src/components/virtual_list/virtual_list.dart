@@ -1324,12 +1324,15 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     var correction = 0.0;
     final targetUnderfillOffset =
         _follow == TRVirtualListFollow.trailing && _coordinator.trailingPinned;
-    var resolvedUnderfillOffset = targetUnderfillOffset
-        ? math.max(
-            0.0,
-            sliverConstraints.viewportMainAxisExtent - _extentIndex.total,
-          )
+    var resolvedUnderfillOffset = _follow == TRVirtualListFollow.none
+        ? _underfillOffset
         : 0.0;
+    if (targetUnderfillOffset) {
+      resolvedUnderfillOffset = math.max(
+        0.0,
+        sliverConstraints.viewportMainAxisExtent - _extentIndex.total,
+      );
+    }
     if (_activeTarget case final activeTarget?) {
       resolvedUnderfillOffset = _resolveTargetUnderfillOffset(
         activeTarget,
