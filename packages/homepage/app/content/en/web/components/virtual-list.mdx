@@ -1,0 +1,80 @@
+---
+title: "VirtualList"
+description: "A stable-key virtual list for large, measured, or streaming collections."
+section: components
+group: layout-structure
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+
+import { TRVirtualList } from '@tinyrack/ui/components/virtual-list';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/virtual-list.demo.js';
+
+## Contract
+
+`TRVirtualList<T, K>` mounts only the visible range plus overscan while preserving native scrolling. Stable keys keep the visible anchor in place when items are inserted, removed, reordered, or remeasured.
+
+| Axis | Contract |
+| --- | --- |
+| Collection | Supply the complete `items` array and a stable `itemKey`. The component compares the full key sequence, not only its length or edge keys. |
+| Measurement | `estimateSize` provides the first layout. Rendered items are then measured with `ResizeObserver`, and corrections preserve the visible anchor. |
+| Focus | A focused item stays mounted even after it leaves the ordinary virtual range. |
+| Following | `follow="leading"` or `follow="trailing"` follows growth only while the viewport remains pinned to that edge. |
+
+Use `TRScrollArea` when every child should remain mounted and you need custom scrollbar anatomy. Use `TRVirtualList` when collection size or dynamic measurement makes mounting every item expensive.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/virtual-list.css';"],
+      codeImports: ["import { TRVirtualList } from '@tinyrack/ui/components/virtual-list';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="virtual-list-basic"
+  title="Large event log"
+  description="Give every item a persistent key and an estimate close to its expected block size. The list measures rendered rows and corrects the layout as their actual sizes become available."
+  preview={<div data-docs-example-item-count="1"><Stories.VirtualListPreview axis="vertical" follow="none" itemCount={100000} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListBasicSource }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs
+  id="virtual-list-streaming"
+  title="Pinned streaming output"
+  description="Start at the trailing edge and set follow to trailing for chat or logs. New output stays in view while pinned, but scrolling upward pauses following until the controller returns to the edge."
+  preview={<div data-docs-example-item-count="1"><Stories.VirtualListPreview axis="vertical" follow="trailing" itemCount={200} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListStreamingSource }]}
+/>
+
+<ComponentExampleTabs
+  id="virtual-list-horizontal"
+  title="Horizontal and RTL collections"
+  description="Set axis to horizontal. Logical leading and trailing navigation follows the inherited text direction, including browsers that report negative RTL scroll offsets."
+  preview={<div dir="rtl" data-docs-example-item-count="1"><Stories.VirtualListPreview axis="horizontal" follow="none" itemCount={1000} /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: Stories.virtualListHorizontalSource }]}
+/>
+
+## API
+
+| API | Purpose |
+| --- | --- |
+| `TRVirtualList<T, K>` | Generic React component. Required props are `items`, `itemKey`, `estimateSize`, and `renderItem`; `axis` defaults to `vertical`. |
+| `rootProps`, `viewportProps`, `itemProps` | Forward native `div` attributes, events, classes, and styles to each public DOM surface. `itemProps` receives the item and index. |
+| `rootRef`, `viewportRef`, `itemRef` | Receive the native elements. `itemRef` is called with the element, item, and index. |
+| `TRVirtualListInitialPosition<K>` | Starts at a logical edge, stable key, or index with optional leading, center, trailing, or nearest alignment. |
+| `TRVirtualListSnapshot<K>` | Stores a visible anchor and measured stable-key sizes. Pass the result of `takeSnapshot()` back through `initialSnapshot`. |
+| `TRVirtualListFollow` | `none`, `leading`, or `trailing`. Following remains active only while pinned to the selected edge. |
+| `TRVirtualListEdgeRequest` | `leadingEdgeRequest` and `trailingEdgeRequest` each accept an independent `requestKey`, callback, optional measured slot, and typed `triggerExtent`. A key fires at most once at its edge. The default trigger extent is one viewport. |
+| `TRVirtualListTriggerExtent` | Selects a non-negative finite edge trigger as `{ kind: 'viewports', value }` or `{ kind: 'pixels', value }`. |
+| `TRVirtualListRange<K>` | `onVisibleRangeChanged` reports the visible start and end indexes with their stable keys. Overscan is excluded. |
+| `TRVirtualListController<K>` | `scrollToIndex`, `scrollToKey`, `scrollToEdge`, `takeSnapshot`, and one-shot `holdVisibleAnchorForNextLayout`. Create it with `useTRVirtualListController<K>()`. |
+| `ssrFallback` | Explicit server and first-hydration content. The virtual viewport mounts after hydration without changing the server tree during hydration. |
+
+`scrollToKey` does nothing when its key is absent. When a visible anchor is removed during a collection update, the next surviving visible key becomes the fallback. Call `holdVisibleAnchorForNextLayout()` before a disclosure or streaming row changes size when that one layout must keep its current visible anchor instead of following an edge.

@@ -2050,6 +2050,147 @@ class _RackFormState extends State<RackForm> {
       ja: '常時表示またはホバー時にフェード表示できる、テーマ付きでキーボード操作可能な Flutter スクロールバーで領域内のコンテンツをスクロールします。',
     },
     usage: 'const TRScrollArea(\n  autoHide: true,\n  child: activityList,\n)',
+    contractIntro: {
+      en: 'Use `TRScrollArea` for ordinary bounded content. Choose `TRVirtualList` when a large linear collection needs lazy construction, stable visual anchoring, edge loading signals, or pinned streaming updates.',
+      ko: '일반적인 제한 영역 콘텐츠에는 `TRScrollArea`를 쓰세요. 큰 선형 목록에 lazy 생성, 안정적인 시각적 anchor, 끝 로딩 신호, 고정된 스트리밍 갱신이 필요하면 `TRVirtualList`를 선택하세요.',
+      ja: '通常の領域内コンテンツには `TRScrollArea` を使用してください。大きな線形リストで遅延生成、安定した視覚アンカー、端の読み込み通知、固定されたストリーミング更新が必要な場合は `TRVirtualList` を選んでください。',
+    },
+  },
+  'virtual-list': {
+    title: 'VirtualList',
+    description: {
+      en: 'Render a large variable-size linear collection lazily while preserving a stable visible item as data and item sizes change.',
+      ko: '큰 가변 크기 선형 목록을 lazy하게 렌더링하면서 데이터와 항목 크기가 바뀌어도 보이는 항목의 위치를 안정적으로 유지해요.',
+      ja: '大きな可変サイズの線形リストを遅延描画し、データや項目サイズが変わっても表示中の項目位置を安定して保ちます。',
+    },
+    usage: String.raw`TRVirtualList<Message, String>(
+  items: messages,
+  itemKey: (message) => message.id,
+  estimatedItemExtent: (message, index) => TRMeasurements.measureSm,
+  initialPosition: const TRVirtualListInitialPosition.trailing(),
+  follow: TRVirtualListFollow.trailing,
+  itemBuilder: (context, message, index) => MessageRow(message),
+)`,
+    contractIntro: {
+      en: 'The list owns one bounded viewport and keeps data in forward order. It preserves one surviving visible item wrapper at the same viewport-relative coordinate. If a mutation crosses the visible range, every visible item cannot remain fixed at once.',
+      ko: '목록은 하나의 제한된 viewport를 소유하고 데이터를 정방향으로 유지해요. 살아남은 보이는 항목 wrapper 하나를 viewport 기준 같은 좌표에 보존해요. 변경 지점이 보이는 범위를 가로지르면 모든 보이는 항목을 동시에 고정할 수는 없어요.',
+      ja: 'リストは 1 つの領域内 viewport を所有し、データを順方向に保ちます。存続する表示項目の wrapper 1 つを viewport 相対の同じ座標に保ちます。変更位置が表示範囲をまたぐ場合、すべての表示項目を同時に固定することはできません。',
+    },
+    contractRows: [
+      {
+        axis: { en: 'Identity', ko: '식별', ja: '識別' },
+        choices: {
+          en: '`itemKey` must return a unique, stable key. Keys preserve item state and define the anchor across insertions, removals, reordering, and size changes.',
+          ko: '`itemKey`는 고유하고 안정적인 key를 반환해야 해요. key는 항목 상태를 보존하고 삽입, 삭제, 재정렬, 크기 변경에서 anchor를 정해요.',
+          ja: '`itemKey` は一意で安定した key を返す必要があります。key は項目の状態を保ち、挿入、削除、並べ替え、サイズ変更時のアンカーを定義します。',
+        },
+      },
+      {
+        axis: { en: 'Measurement', ko: '측정', ja: '計測' },
+        choices: {
+          en: '`estimatedItemExtent` seeds unmeasured items. Natural layout replaces each estimate, so total extent and the scrollbar thumb are approximate until measurement completes.',
+          ko: '`estimatedItemExtent`가 아직 측정하지 않은 항목의 초기값을 제공해요. 자연 layout이 각 예상값을 교체하므로 측정이 끝나기 전 전체 extent와 스크롤바 thumb는 근사값이에요.',
+          ja: '`estimatedItemExtent` は未計測項目の初期値です。自然な layout が各推定値を置き換えるため、計測が終わるまで全体の extent とスクロールバー thumb は近似値です。',
+        },
+      },
+      {
+        axis: { en: 'Following', ko: '끝 따라가기', ja: '端の追従' },
+        choices: {
+          en: '`follow` stays pinned only while the reader is already at that logical edge. Scrolling away preserves the visible anchor; returning to the edge enables following again. Call `holdVisibleAnchorForNextLayout()` before a disclosure resize that must override following once.',
+          ko: '`follow`는 읽는 사람이 해당 논리적 끝에 있을 때만 고정돼요. 끝에서 벗어나면 보이는 anchor를 보존하고, 다시 끝에 도달하면 따라가기를 재개해요. disclosure 크기 변경이 한 번만 따라가기를 우선해야 한다면 변경 전에 `holdVisibleAnchorForNextLayout()`을 호출하세요.',
+          ja: '`follow` は読み手がその論理端にいる間だけ固定されます。端から離れると表示アンカーを保ち、端へ戻ると追従を再開します。開閉によるサイズ変更で 1 回だけ追従よりアンカーを優先する場合は、変更前に `holdVisibleAnchorForNextLayout()` を呼び出してください。',
+        },
+      },
+      {
+        axis: { en: 'Loading', ko: '로딩', ja: '読み込み' },
+        choices: {
+          en: 'Leading and trailing edge requests signal the consumer once per `requestKey` and can render a measured status slot. The consumer owns fetching, errors, retry attempts, cursors, and completion.',
+          ko: 'leading·trailing edge request는 `requestKey`마다 소비자에게 한 번 알리고 측정되는 상태 슬롯을 렌더링할 수 있어요. fetch, 오류, 재시도 attempt, cursor, 완료 상태는 소비자가 소유해요.',
+          ja: 'leading・trailing edge request は `requestKey` ごとに 1 回 consumer へ通知し、計測対象の状態 slot を描画できます。fetch、エラー、再試行 attempt、cursor、完了状態は consumer が管理します。',
+        },
+      },
+      {
+        axis: { en: 'Restoration', ko: '복원', ja: '復元' },
+        choices: {
+          en: 'Pass an opaque `initialSnapshot` or set `pageStorageId`. A compatible snapshot wins over `initialPosition`; missing keys fall back to the initial position.',
+          ko: 'opaque `initialSnapshot`을 전달하거나 `pageStorageId`를 설정하세요. 호환되는 snapshot은 `initialPosition`보다 우선하고 key가 없으면 초기 위치로 돌아가요.',
+          ja: 'opaque な `initialSnapshot` を渡すか `pageStorageId` を設定してください。互換性のある snapshot は `initialPosition` より優先され、key がない場合は初期位置へフォールバックします。',
+        },
+      },
+      {
+        axis: { en: 'Access', ko: '접근', ja: 'アクセス' },
+        choices: {
+          en: 'Only the visible and cached range exists in the widget tree. Offscreen local state, full-document search, print, selection, and assistive virtual-cursor access are consumer concerns; use non-virtual rendering when the whole document must remain available.',
+          ko: '보이는 범위와 cache 범위만 widget tree에 존재해요. 화면 밖 로컬 상태, 전체 문서 검색, 인쇄, 선택, 보조 기술의 virtual cursor 접근은 소비자가 다뤄야 해요. 전체 문서가 계속 필요하면 비가상 렌더링을 사용하세요.',
+          ja: '表示範囲と cache 範囲だけが widget tree に存在します。画面外のローカル状態、文書全体の検索、印刷、選択、支援技術の virtual cursor アクセスは consumer 側で扱います。文書全体を常に利用できる必要がある場合は、非仮想描画を使用してください。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'TRVirtualList properties',
+          ko: 'TRVirtualList 속성',
+          ja: 'TRVirtualList のプロパティ',
+        },
+        rows: [
+          {
+            name: 'items / itemKey / itemBuilder',
+            type: 'List<T> / K Function(T) / Widget Function(...) · required',
+            purpose: {
+              en: 'Provide the ordered data, stable identity, and lazy row builder.',
+              ko: '순서가 있는 데이터, 안정적인 식별값, lazy row builder를 제공해요.',
+              ja: '順序付きデータ、安定した識別子、遅延 row builder を指定します。',
+            },
+          },
+          {
+            name: 'estimatedItemExtent',
+            type: 'double Function(T, int) · required',
+            purpose: {
+              en: 'Estimates an unmeasured item main-axis extent.',
+              ko: '아직 측정하지 않은 항목의 주축 extent를 예상해요.',
+              ja: '未計測項目の主軸 extent を推定します。',
+            },
+          },
+          {
+            name: 'axis / initialPosition / follow',
+            type: 'Axis / TRVirtualListInitialPosition<K> / TRVirtualListFollow',
+            purpose: {
+              en: 'Choose vertical or horizontal layout, the fallback starting point, and optional logical-edge following.',
+              ko: '세로·가로 layout, fallback 시작 위치, 선택적인 논리적 끝 따라가기를 정해요.',
+              ja: '縦・横 layout、フォールバック開始位置、任意の論理端追従を選択します。',
+            },
+          },
+          {
+            name: 'leadingEdgeRequest / trailingEdgeRequest',
+            type: 'TRVirtualListEdgeRequest? · null',
+            purpose: {
+              en: 'Signal proximity to either edge and optionally render a status slot.',
+              ko: '각 끝에 가까워졌음을 알리고 선택적으로 상태 슬롯을 렌더링해요.',
+              ja: '各端への接近を通知し、必要に応じて状態 slot を描画します。',
+            },
+          },
+          {
+            name: 'initialSnapshot / pageStorageId',
+            type: 'TRVirtualListSnapshot<K>? / String?',
+            purpose: {
+              en: 'Restore a stable-key anchor explicitly or through PageStorage.',
+              ko: 'stable-key anchor를 직접 또는 PageStorage를 통해 복원해요.',
+              ja: 'stable-key アンカーを明示的に、または PageStorage 経由で復元します。',
+            },
+          },
+          {
+            name: 'controller',
+            type: 'TRVirtualListController<K>? · null',
+            purpose: {
+              en: 'Navigate by index, key, or edge; capture a snapshot; or hold one layout anchor.',
+              ko: 'index, key, edge로 이동하고 snapshot을 캡처하거나 한 번의 layout anchor를 고정해요.',
+              ja: 'index、key、edge へ移動し、snapshot を取得するか、1 回の layout アンカーを固定します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   slider: {
     title: 'Slider',

@@ -66,5 +66,6 @@ const supportedPreviewComponents = <String>{
   'toolbar',
   'tooltip',
   'tree-nav',
+  'virtual-list',
   'window-frame',
 };

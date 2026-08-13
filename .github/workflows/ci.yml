@@ -273,6 +273,60 @@ jobs:
           label: UI Firefox
           phase: finish
 
+  ui_webkit:
+    name: UI Virtual List WebKit
+    if: >-
+      needs.changes.outputs.ui == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+
+      - name: Start job metrics
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI Virtual List WebKit
+          phase: start
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install UI dependencies
+        run: pnpm --filter @tinyrack/ui... install --frozen-lockfile
+
+      - name: Build UI package
+        run: pnpm --filter @tinyrack/ui build
+
+      - name: Set up WebKit
+        uses: ./.github/actions/setup-playwright
+        with:
+          filter: "@tinyrack/ui"
+          browsers: webkit
+
+      - name: Test virtual list in WebKit
+        id: ui-webkit-test
+        continue-on-error: true
+        run: pnpm --filter @tinyrack/ui test:webkit:virtual-list
+
+      - name: Retry virtual list WebKit suite for diagnostics
+        if: steps.ui-webkit-test.outcome == 'failure'
+        run: pnpm --filter @tinyrack/ui test:webkit:virtual-list
+
+      - name: Preserve the first virtual list WebKit failure
+        if: steps.ui-webkit-test.outcome == 'failure'
+        run: exit 1
+
+      - name: Finish job metrics
+        if: always()
+        uses: ./.github/actions/job-metrics
+        with:
+          label: UI Virtual List WebKit
+          phase: finish
+
   docs_contract:
     name: UI documentation contracts
     if: >-
@@ -593,6 +647,7 @@ jobs:
       - homepage_preview
       - ui
       - ui_firefox
+      - ui_webkit
       - docs_contract
       - docs
       - homepage
@@ -619,6 +674,7 @@ jobs:
           UI_SELECTED: ${{ needs.changes.outputs.ui == 'true' || needs.changes.outputs.shared == 'true' }}
           UI_RESULT: ${{ needs.ui.result }}
           UI_FIREFOX_RESULT: ${{ needs.ui_firefox.result }}
+          UI_WEBKIT_RESULT: ${{ needs.ui_webkit.result }}
           CONTRACT_SELECTED: >-
             ${{ needs.changes.outputs.docs_contract == 'true' &&
                 needs.changes.outputs.ui != 'true' &&
@@ -656,6 +712,7 @@ jobs:
           require_success "$HOMEPAGE_PREVIEW_SELECTED" "$HOMEPAGE_PREVIEW_RESULT" "Build Homepage Flutter preview"
           require_success "$UI_SELECTED" "$UI_RESULT" "UI Chromium and contracts"
           require_success "$UI_SELECTED" "$UI_FIREFOX_RESULT" "UI Firefox"
+          require_success "$UI_SELECTED" "$UI_WEBKIT_RESULT" "UI Virtual List WebKit"
           require_success "$CONTRACT_SELECTED" "$CONTRACT_RESULT" "UI documentation contracts"
           require_success "$DOCS_SELECTED" "$DOCS_RESULT" "Docs package"
           require_success "$HOMEPAGE_SELECTED" "$HOMEPAGE_RESULT" "Homepage package"

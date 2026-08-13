@@ -135,6 +135,7 @@ const previewExampleScenarios = <String, PreviewExampleBuilder>{
   'app-shell-pane-header': _appShellPaneHeader,
   'pagination-controlled': _paginationControlled,
   'table-dense-status': _tableDenseStatus,
+  'virtual-list-edge-loading': _virtualListEdgeLoading,
   'tree-nav-navigation': _treeNavNavigation,
   'window-frame-browser': _windowFrameBrowser,
   'window-frame-title-bar-actions': _windowFrameTitleBarActions,
@@ -4406,6 +4407,40 @@ Widget _tableDenseStatus(BuildContext context, Locale locale) => const TRTable(
     TRTableRow(cells: [Text('Rack B'), Text('Degraded')]),
   ],
 );
+
+Widget _virtualListEdgeLoading(BuildContext context, Locale locale) {
+  final events = List<String>.generate(
+    80,
+    (index) => '${_pick(locale, 'Deployment', '배포', 'デプロイ')} ${index + 1}',
+  );
+  return SizedBox(
+    width: TRMeasurements.measureLg,
+    height: TRMeasurements.measureMd,
+    child: TRVirtualList<String, String>(
+      items: events,
+      itemKey: (event) => event,
+      estimatedItemExtent: (event, index) => TRMeasurements.measureXs,
+      leadingEdgeRequest: TRVirtualListEdgeRequest(
+        requestKey: 'older-page-2',
+        onRequest: () {},
+        slot: const SizedBox(
+          height: TRMeasurements.measureXs,
+          child: Center(child: TRSpinner()),
+        ),
+      ),
+      itemBuilder: (context, event, index) => SizedBox(
+        height: TRMeasurements.measureXs,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: TRSpacing.medium),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: TRText(event),
+          ),
+        ),
+      ),
+    ),
+  );
+}
 
 Widget _treeNavNavigation(BuildContext context, Locale locale) {
   String? currentPage = 'theming';

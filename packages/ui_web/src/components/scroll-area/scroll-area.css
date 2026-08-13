@@ -19,8 +19,13 @@
   .tr-scroll-area-viewport {
     height: 100%;
     position: relative;
+    scrollbar-width: none;
     width: 100%;
     z-index: var(--tinyrack-layer-base);
+  }
+
+  .tr-scroll-area-viewport::-webkit-scrollbar {
+    display: none;
   }
 
   .tr-scroll-area-content {

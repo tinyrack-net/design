@@ -60,6 +60,7 @@
 @import "@tinyrack/ui/components/toolbar.css";
 @import "@tinyrack/ui/components/tooltip.css";
 @import "@tinyrack/ui/components/tree-nav.css";
+@import "@tinyrack/ui/components/virtual-list.css";
 @import "@tinyrack/ui/components/window-frame.css";
 @source "../**/*.{ts,tsx,mdx}";
 
