@@ -10,6 +10,10 @@ const privateResponsiveBoundaries = new Map([
   ['src/components/otp-field/otp-field.css', new Set(['@media (width < 24rem)'])],
 ]);
 
+function sourcePath(file: string) {
+  return relative(packageRoot, file).replaceAll('\\', '/');
+}
+
 function sourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = resolve(directory, entry.name);
@@ -31,7 +35,7 @@ describe('breakpoint token usage', () => {
         source.includes('@variant') &&
         !source.includes('@reference')
       ) {
-        violations.push(`${relative(packageRoot, file)}: missing @reference`);
+        violations.push(`${sourcePath(file)}: missing @reference`);
       }
       const checks = [
         /@custom-media\b/g,
@@ -43,11 +47,11 @@ describe('breakpoint token usage', () => {
 
       for (const match of source.matchAll(/@variant\s+([^\s{]+)\s*\{/g)) {
         if (!/^(?:sm|md|lg|max-(?:sm|md|lg))$/.test(match[1] ?? '')) {
-          violations.push(`${relative(packageRoot, file)}: ${match[0]}`);
+          violations.push(`${sourcePath(file)}: ${match[0]}`);
         }
       }
 
-      const relativePath = relative(packageRoot, file);
+      const relativePath = sourcePath(file);
       for (const match of source.matchAll(
         /@media\s*\(\s*(?:width|min-width|max-width)\s*[:<>=][^)]*\)/g,
       )) {
@@ -58,7 +62,7 @@ describe('breakpoint token usage', () => {
 
       for (const pattern of checks) {
         for (const match of source.matchAll(pattern)) {
-          violations.push(`${relative(packageRoot, file)}: ${match[0]}`);
+          violations.push(`${sourcePath(file)}: ${match[0]}`);
         }
       }
     }

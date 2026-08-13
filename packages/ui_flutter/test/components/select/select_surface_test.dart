@@ -94,6 +94,64 @@ void main() {
   });
 
   group('surface resolution', () {
+    testWidgets(
+      'searchable menu can outgrow its trigger and spaces its content',
+      (tester) async {
+        _sizeViewport(tester, _wide);
+        await tester.pumpWidget(
+          _app(
+            const TRSelect<String>(
+              width: 140,
+              items: <TRSelectItem<String>>[
+                TRSelectItem(
+                  value: 'alpha',
+                  label: 'Alpha',
+                  description: 'Primary rack permission',
+                ),
+                TRSelectItem(value: 'beta', label: 'Beta'),
+              ],
+              searchable: true,
+            ),
+          ),
+        );
+
+        await tester.tap(_trigger);
+        await tester.pumpAndSettle();
+
+        final layer = find.ancestor(
+          of: find.byType(TRTextField),
+          matching: find.byWidgetPredicate(
+            (widget) => widget.runtimeType.toString() == 'TRLayerSurface',
+          ),
+        );
+        final firstOption = find.widgetWithText(MenuItemButton, 'Alpha');
+        expect(tester.getSize(layer).width, TRMeasurements.measureLg);
+        expect(tester.getSize(layer).width, greaterThan(140));
+        expect(
+          tester.getTopLeft(firstOption).dy -
+              tester.getBottomLeft(find.byType(TRTextField)).dy,
+          TRSpacing.small * 2 + TRSpacing.threeExtraSmall,
+        );
+        expect(
+          find.descendant(of: layer, matching: find.byType(TRSeparator)),
+          findsOneWidget,
+        );
+        expect(
+          tester.getSize(find.byType(TRSeparator)).width,
+          tester.getSize(layer).width - TRControlMetrics.borderWidth * 2,
+        );
+
+        final button = tester.widget<MenuItemButton>(firstOption);
+        expect(
+          button.style?.padding?.resolve(<WidgetState>{}),
+          const EdgeInsets.symmetric(
+            horizontal: TRSpacing.small,
+            vertical: TRSpacing.extraSmall,
+          ),
+        );
+      },
+    );
+
     testWidgets('renders leading content in the trigger', (tester) async {
       _sizeViewport(tester, _wide);
       await tester.pumpWidget(
@@ -143,6 +201,100 @@ void main() {
       expect(find.byType(TRDrawer), findsOneWidget);
     });
 
+    testWidgets('sheet keeps search fixed while only options scroll', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(const TRSelect<String>(items: _items, searchable: true)),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      final drawer = find.byType(TRDrawer);
+      final optionsScroll = find.descendant(
+        of: drawer,
+        matching: find.byType(SingleChildScrollView),
+      );
+      expect(optionsScroll, findsOneWidget);
+      expect(
+        find.ancestor(
+          of: find.byType(TRTextField),
+          matching: find.byType(SingleChildScrollView),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.descendant(of: drawer, matching: find.byType(TRSeparator)),
+        findsOneWidget,
+      );
+      expect(
+        tester.getSize(find.byType(TRSeparator)).width,
+        tester.getSize(drawer).width,
+      );
+      expect(
+        tester.getTopLeft(find.byType(TRSeparator)).dy -
+            tester.getBottomLeft(find.byType(TRTextField)).dy,
+        TRSpacing.medium,
+      );
+      expect(tester.getSize(drawer).height, lessThan(_narrow.height / 2));
+      final firstOption = find.widgetWithText(MenuItemButton, 'Alpha');
+      final button = tester.widget<MenuItemButton>(firstOption);
+      expect(
+        button.style?.minimumSize?.resolve(<WidgetState>{})?.height,
+        TRControlMetrics.heightOf(TRUiSize.md),
+      );
+      expect(
+        button.style?.padding?.resolve(<WidgetState>{}),
+        EdgeInsets.symmetric(
+          horizontal: TRSpacing.medium,
+          vertical: TRControlMetrics.gapOf(TRUiSize.md),
+        ),
+      );
+      expect(
+        find.descendant(
+          of: optionsScroll,
+          matching: find.widgetWithText(MenuItemButton, 'Alpha'),
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('sheet caps long option content at the viewport height', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _app(
+          TRSelect<int>(
+            items: <TRSelectItem<int>>[
+              for (var index = 0; index < 40; index += 1)
+                TRSelectItem(value: index, label: 'Option $index'),
+            ],
+            searchable: true,
+          ),
+        ),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      final drawer = find.byType(TRDrawer);
+      expect(tester.getSize(drawer).height, lessThanOrEqualTo(_narrow.height));
+      expect(
+        tester.getRect(find.text('Option 39')).top,
+        greaterThanOrEqualTo(tester.getRect(drawer).bottom),
+      );
+
+      await tester.ensureVisible(find.text('Option 39'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.getRect(find.text('Option 39')).bottom,
+        lessThanOrEqualTo(tester.getRect(drawer).bottom),
+      );
+    });
+
     testWidgets('opens a dropdown at the small breakpoint', (tester) async {
       // The breakpoint is the first width that keeps the dropdown, so the
       // exact boundary is asserted rather than a comfortably wide viewport.
@@ -164,7 +316,7 @@ void main() {
         _app(
           _withDensity(
             TRUiDensity.comfortable,
-            const TRSelect<String>(items: _items),
+            const TRSelect<String>(items: _items, searchable: true),
           ),
         ),
       );
@@ -173,6 +325,20 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(TRDrawer), findsOneWidget);
+      final option = tester.widget<MenuItemButton>(
+        find.widgetWithText(MenuItemButton, 'Alpha'),
+      );
+      expect(
+        option.style?.minimumSize?.resolve(<WidgetState>{})?.height,
+        TRControlMetrics.heightOf(TRUiSize.xl),
+      );
+      expect(
+        option.style?.padding?.resolve(<WidgetState>{}),
+        EdgeInsets.symmetric(
+          horizontal: TRControlMetrics.inlinePaddingOf(TRUiSize.xl),
+          vertical: TRControlMetrics.gapOf(TRUiSize.xl),
+        ),
+      );
     });
 
     testWidgets('opens a dropdown for standard density on a narrow viewport', (

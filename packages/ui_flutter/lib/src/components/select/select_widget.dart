@@ -14,6 +14,7 @@ import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
 import '../drawer/drawer.dart';
+import '../separator/separator.dart';
 import '../text_field/text_field.dart';
 
 part 'select_chevron.dart';
@@ -552,13 +553,21 @@ class _TRSelectState<T> extends State<TRSelect<T>>
     final interactive = widget.enabled && !widget.readOnly;
     final selectedLabel = _labelFor(selectedValue);
     final visible = _visible;
+    final anchorWidth =
+        _anchorWidth ?? widget.width ?? TRGeneratedMeasurements.measureMd;
+    final availablePopupWidth = math.max(
+      0.0,
+      MediaQuery.sizeOf(context).width -
+          TRGeneratedMeasurements.overlayInlineInset,
+    );
+    final contentWidth =
+        widget.searchable ||
+            widget.items.any((item) => item.description != null)
+        ? TRGeneratedMeasurements.measureLg
+        : anchorWidth;
     final popupWidth = math.min(
-      _anchorWidth ?? widget.width ?? TRGeneratedMeasurements.measureMd,
-      math.max(
-        0.0,
-        MediaQuery.sizeOf(context).width -
-            TRGeneratedMeasurements.overlayInlineInset,
-      ),
+      math.max(anchorWidth, contentWidth),
+      math.min(TRGeneratedMeasurements.overlayWidthSm, availablePopupWidth),
     );
     // Resolved from the same states for both the fill and the border so the
     // two never disagree about the trigger's appearance.
@@ -715,27 +724,31 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       alignmentOffset: const Offset(0, TRGeneratedSpacing.xs),
       animated: !MediaQuery.disableAnimationsOf(context),
       controller: _menuController,
-      crossAxisUnconstrained: false,
+      crossAxisUnconstrained: true,
       menuChildren: [
         TRLayerSurface(
           kind: TRLayerBoundaryKind.select,
           minWidth: popupWidth,
           maxWidth: popupWidth,
-          padding: const EdgeInsets.all(TRGeneratedSpacing.sm),
+          padding: EdgeInsets.zero,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
-            spacing: TRGeneratedSpacing.xs,
             children: [
               if (widget.searchable)
-                TRTextField(
-                  controller: _searchTextController,
-                  focusNode: _searchFocus,
-                  onChanged: _setQuery,
-                  onSubmitted: (_) => _commitSoleMatch(),
-                  placeholder: widget.searchPlaceholder,
-                  uiSize: TRLayerStyles.rowSize,
+                Padding(
+                  padding: const EdgeInsets.all(TRGeneratedSpacing.sm),
+                  child: TRTextField(
+                    controller: _searchTextController,
+                    focusNode: _searchFocus,
+                    onChanged: _setQuery,
+                    onSubmitted: (_) => _commitSoleMatch(),
+                    placeholder: widget.searchPlaceholder,
+                    uiSize: TRLayerStyles.rowSize,
+                  ),
                 ),
+              if (widget.searchable)
+                const TRSeparator(variant: TRSeparatorVariant.muted),
               // A long list has to scroll inside the layer rather than grow
               // past the viewport it is anchored in.
               ConstrainedBox(
@@ -743,6 +756,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
                   maxHeight: TRGeneratedMeasurements.measureXl,
                 ),
                 child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(TRGeneratedSpacing.sm),
                   // The menu panel already owns the primary controller, and a
                   // scrollbar cannot be shared between two positions.
                   primary: false,
@@ -752,6 +766,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
                     interactive: interactive,
                     noResultsText: widget.noResultsText,
                     onSelected: _handleSelected,
+                    uiSize: TRLayerStyles.rowSize,
                     focusNodes: visible.focusNodes,
                     onRowKeyEvent: widget.searchable ? null : _handleTypeahead,
                   ),

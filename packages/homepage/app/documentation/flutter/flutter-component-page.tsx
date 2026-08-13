@@ -1158,11 +1158,19 @@ const componentData: Record<
       ja: 'コンテンツに合うモーダルシート、またはビューポート比率でスワイプできるドロワーを論理方向の各辺から表示します。',
     },
     contractIntro: {
-      en: 'Top and bottom drawers fit their content by default, up to the full viewport. Set `maxExtent` to a smaller viewport fraction when a product needs a lower cap; overflow scrolls inside the drawer. Supply one `snapPoints` value for a fixed viewport-relative size or several for drag-to-snap behavior, and keep every value at or below `maxExtent`. When a drag ends, the drawer eases to its nearest snap point; reduced-motion environments settle it immediately. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted. Every drawer extends its surface to the viewport edge while keeping content inside the system safe areas.',
-      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고 최대 뷰포트 전체까지 커져요. 제품에서 더 낮은 상한이 필요하면 `maxExtent`에 뷰포트 비율을 지정하세요. 넘치는 콘텐츠는 드로어 안에서 스크롤해요. 뷰포트 비율의 고정 크기는 `snapPoints` 값 하나로, 드래그 스냅은 여러 값으로 설정하고 모든 값은 `maxExtent` 이하여야 해요. 드래그를 놓으면 가장 가까운 스냅 지점까지 부드럽게 이동하고, 모션 줄이기가 켜진 환경에서는 즉시 이동해요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요. 모든 드로어의 표면은 뷰포트 끝까지 이어지고 콘텐츠는 시스템 안전영역 안에 배치돼요.',
-      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、最大でビューポート全体まで広がります。製品で上限を低くする場合は、`maxExtent` にビューポート比率を指定してください。収まらないコンテンツはドロワー内でスクロールします。ビューポート比率の固定サイズには `snapPoints` を 1 つ、ドラッグスナップには複数指定し、すべての値を `maxExtent` 以下にします。ドラッグを離すと最も近いスナップポイントまで滑らかに移動し、モーションを減らす設定ではすぐに移動します。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。すべてのドロワーはサーフェスをビューポートの端まで広げながら、コンテンツをシステムのセーフエリア内に配置します。',
+      en: 'Top and bottom drawers fit their content by default, up to the full viewport. They show a drag-to-dismiss handle by default; set `showDragHandle` to false to hide it and disable that content-sized sheet gesture. Set `maxExtent` to a smaller viewport fraction when a product needs a lower cap; overflow scrolls inside the drawer. Supply one `snapPoints` value for a fixed viewport-relative size or several for drag-to-snap behavior, and keep every value at or below `maxExtent`. When a drag ends, the drawer eases to its nearest snap point; reduced-motion environments settle it immediately. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted and never show the handle. Every drawer extends its surface to the viewport edge while keeping content inside the system safe areas.',
+      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고 최대 뷰포트 전체까지 커져요. 드래그해서 닫을 수 있는 핸들이 기본으로 표시되며, `showDragHandle`을 false로 설정하면 핸들과 콘텐츠 높이형 시트의 해당 제스처가 함께 꺼져요. 제품에서 더 낮은 상한이 필요하면 `maxExtent`에 뷰포트 비율을 지정하세요. 넘치는 콘텐츠는 드로어 안에서 스크롤해요. 뷰포트 비율의 고정 크기는 `snapPoints` 값 하나로, 드래그 스냅은 여러 값으로 설정하고 모든 값은 `maxExtent` 이하여야 해요. 드래그를 놓으면 가장 가까운 스냅 지점까지 부드럽게 이동하고, 모션 줄이기가 켜진 환경에서는 즉시 이동해요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지하며 핸들은 표시되지 않아요. 모든 드로어의 표면은 뷰포트 끝까지 이어지고 콘텐츠는 시스템 안전영역 안에 배치돼요.',
+      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、最大でビューポート全体まで広がります。ドラッグして閉じられるハンドルがデフォルトで表示され、`showDragHandle` を false にすると、ハンドルとコンテンツサイズのシートに対するそのジェスチャーが無効になります。製品で上限を低くする場合は、`maxExtent` にビューポート比率を指定してください。収まらないコンテンツはドロワー内でスクロールします。ビューポート比率の固定サイズには `snapPoints` を 1 つ、ドラッグスナップには複数指定し、すべての値を `maxExtent` 以下にします。ドラッグを離すと最も近いスナップポイントまで滑らかに移動し、モーションを減らす設定ではすぐに移動します。開始側と終了側のドロワーで `snapPoints` を省略すると標準のサイドパネルサイズを維持し、ハンドルは表示しません。すべてのドロワーはサーフェスをビューポートの端まで広げながら、コンテンツをシステムのセーフエリア内に配置します。',
     },
     contractRows: [
+      {
+        axis: { en: 'Drag handle', ko: '드래그 핸들', ja: 'ドラッグハンドル' },
+        choices: {
+          en: 'Shown by default for top and bottom sheets; `showDragHandle: false` hides it and disables the content-sized sheet drag gesture',
+          ko: '상단과 하단 시트에는 기본으로 표시해요. `showDragHandle: false`로 숨기면 콘텐츠 높이형 시트의 드래그 제스처도 꺼져요',
+          ja: '上端と下端のシートではデフォルトで表示します。`showDragHandle: false` で非表示にすると、コンテンツサイズのシートに対するドラッグジェスチャーも無効になります',
+        },
+      },
       {
         axis: { en: 'Sizing', ko: '크기', ja: 'サイズ' },
         choices: {
@@ -3974,6 +3982,14 @@ class _DeploymentRackState extends State<DeploymentRack> {
           en: 'Pass leading content to identify the trigger without changing the typed value. Add a TRSelectItem description for supporting text that stays in the option row; the selected trigger keeps only the label, and default search matches both strings. Give each item a key when tests or state restoration must identify it across dropdown and sheet surfaces.',
           ko: 'leading 콘텐츠를 넘기면 타입이 있는 값을 바꾸지 않고 트리거의 용도를 나타낼 수 있어요. 선택지에 보조 설명이 필요하면 TRSelectItem description을 추가하세요. 선택된 트리거에는 label만 남고 기본 검색은 두 문자열을 모두 찾아요. 테스트나 상태 복원에서 드롭다운과 시트의 선택지를 일관되게 식별해야 한다면 각 item에 key를 지정하세요.',
           ja: 'leading コンテンツを渡すと、型付きの値を変えずにトリガーの用途を示せます。選択肢に補足説明が必要な場合は TRSelectItem の description を追加してください。選択後のトリガーには label だけが残り、デフォルト検索は両方の文字列を対象にします。テストや状態復元でドロップダウンとシートの選択肢を一貫して識別する必要がある場合は、各 item に key を指定してください。',
+        },
+      },
+      {
+        axis: { en: 'Adaptive geometry', ko: '적응형 구조', ja: 'アダプティブな配置' },
+        choices: {
+          en: 'Searchable desktop layers can grow wider than narrow triggers and keep the search field fixed above a full-width separator and a scrollable option region. Sheets fit short lists, cap long lists at the viewport, and apply the resolved UI density to option height, padding, icons, and typography.',
+          ko: '검색 가능한 데스크톱 레이어는 좁은 트리거보다 넓어질 수 있어요. 검색 필드는 전체 폭 구분선 위에 고정되고 선택지 영역만 스크롤해요. 시트는 짧은 목록의 콘텐츠 높이에 맞고 긴 목록은 뷰포트를 넘지 않으며, 선택지 높이와 여백, 아이콘, 타이포그래피에 해석된 UI 밀도를 적용해요.',
+          ja: '検索可能なデスクトップレイヤーは、狭いトリガーより広く表示できます。検索フィールドは全幅のセパレーターの上に固定され、選択肢の領域だけがスクロールします。シートは短いリストの高さに合わせ、長いリストはビューポート内に制限し、選択肢の高さ、余白、アイコン、タイポグラフィに解決済みの UI 密度を適用します。',
         },
       },
     ],

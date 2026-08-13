@@ -3,6 +3,32 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 void main() {
+  testWidgets('horizontal sheets show an optional drag handle by default', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(const TRDrawer(content: Text('Default handle'))),
+    );
+    expect(find.byKey(const ValueKey('tr-drawer-drag-handle')), findsOneWidget);
+
+    await tester.pumpWidget(
+      _host(
+        const TRDrawer(showDragHandle: false, content: Text('Hidden handle')),
+      ),
+    );
+    expect(find.byKey(const ValueKey('tr-drawer-drag-handle')), findsNothing);
+
+    await tester.pumpWidget(
+      _host(
+        const TRDrawer(
+          placement: TRDrawerPlacement.start,
+          content: Text('Side drawer'),
+        ),
+      ),
+    );
+    expect(find.byKey(const ValueKey('tr-drawer-drag-handle')), findsNothing);
+  });
+
   testWidgets('content-sized drawer respects its maximum extent', (
     tester,
   ) async {

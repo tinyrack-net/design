@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Select popups can grow wider than narrow triggers up to the small overlay
+  limit, and option rows include token-based block padding.
 - Restored the Input focus contract for Select: pointer hover, open, selected,
   and highlighted states use background emphasis only, while keyboard-origin
   focus paints the inset focus border. Invalid danger borders are unchanged.

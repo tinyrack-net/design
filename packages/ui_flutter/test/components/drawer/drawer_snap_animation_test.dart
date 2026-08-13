@@ -155,4 +155,35 @@ void main() {
     expect(find.byType(TRDrawer), findsNothing);
     expect(dismissed, 1);
   });
+
+  testWidgets('a content-sized sheet handle drags the sheet closed', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: Builder(
+          builder: (context) => TRButton(
+            onPressed: () => showTRDrawer<void>(
+              context: context,
+              builder: (_) =>
+                  const TRDrawer(content: Text('Content-sized sheet')),
+            ),
+            child: const Text('Open content sheet'),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open content sheet'));
+    await tester.pumpAndSettle();
+
+    await tester.fling(
+      find.byKey(const ValueKey('tr-drawer-drag-handle')),
+      const Offset(0, 100),
+      1000,
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TRDrawer), findsNothing);
+  });
 }
