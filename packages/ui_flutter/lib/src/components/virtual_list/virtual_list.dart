@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../scroll_area/scroll_area.dart';
 
@@ -510,6 +510,7 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
     _pageStorageBucket = bucket;
     _pageStorageId = pageStorageId;
     _pageStorageSnapshot = null;
+    _coordinator.holdAnchor = false;
     if (bucket != null && pageStorageId != null) {
       final stored = bucket.readState(context, identifier: pageStorageId);
       if (stored is TRVirtualListSnapshot<K>) {
@@ -1031,6 +1032,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     _initialResolved = false;
     _activeTarget = null;
     _pendingCorrection = 0;
+    _holdAnchorForLayout = false;
     markNeedsLayout();
   }
 
@@ -1322,9 +1324,13 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
     }
 
     var correction = 0.0;
+    final heldBeforeMeasurement = _holdAnchorForLayout;
     final targetUnderfillOffset =
-        _follow == TRVirtualListFollow.trailing && _coordinator.trailingPinned;
-    var resolvedUnderfillOffset = _follow == TRVirtualListFollow.none
+        !heldBeforeMeasurement &&
+        _follow == TRVirtualListFollow.trailing &&
+        _coordinator.trailingPinned;
+    var resolvedUnderfillOffset =
+        heldBeforeMeasurement || _follow == TRVirtualListFollow.none
         ? _underfillOffset
         : 0.0;
     if (targetUnderfillOffset) {
@@ -1348,7 +1354,7 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
       if (_coordinator.consumeHold()) _holdAnchorForLayout = true;
       final held = _holdAnchorForLayout;
       if (held) {
-        resolvedUnderfillOffset = 0;
+        resolvedUnderfillOffset = _underfillOffset;
         correction = offsetForKey(anchor.key) - anchor.oldOffsets[anchor.key]!;
       } else if (_follow == TRVirtualListFollow.leading &&
           _coordinator.leadingPinned) {

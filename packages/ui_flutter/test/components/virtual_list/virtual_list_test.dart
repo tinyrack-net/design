@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 const _viewportHeight = 240.0;
@@ -341,6 +341,46 @@ void main() {
 
       final viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
       expect(_bottom(tester, 'after-hold'), moreOrLessEquals(viewport.bottom));
+    },
+  );
+
+  testWidgets(
+    'one-shot hold preserves an underfilled disclosure through grow and shrink',
+    (tester) async {
+      final key = GlobalKey<_VirtualListHarnessState>();
+      final controller = TRVirtualListController<String>();
+      addTearDown(controller.dispose);
+
+      await tester.pumpWidget(
+        _host(
+          _VirtualListHarness(
+            key: key,
+            controller: controller,
+            initialItems: const <String>['summary', 'disclosure'],
+            initialPosition: const TRVirtualListInitialPosition.trailing(),
+            follow: TRVirtualListFollow.trailing,
+          ),
+        ),
+      );
+      final viewport = tester.getRect(find.byKey(const ValueKey('viewport')));
+      final disclosureTop = _top(tester, 'disclosure');
+      expect(_bottom(tester, 'disclosure'), moreOrLessEquals(viewport.bottom));
+
+      controller.holdVisibleAnchorForNextLayout();
+      key.currentState!.resize('disclosure', 120);
+      await tester.pump();
+      expect(_top(tester, 'disclosure'), moreOrLessEquals(disclosureTop));
+      await tester.pump();
+      expect(_top(tester, 'disclosure'), moreOrLessEquals(disclosureTop));
+
+      controller.holdVisibleAnchorForNextLayout();
+      key.currentState!.resize('disclosure', 40);
+      await tester.pump();
+      expect(_top(tester, 'disclosure'), moreOrLessEquals(disclosureTop));
+      expect(_bottom(tester, 'disclosure'), moreOrLessEquals(viewport.bottom));
+      await tester.pump();
+      expect(_top(tester, 'disclosure'), moreOrLessEquals(disclosureTop));
+      expect(_bottom(tester, 'disclosure'), moreOrLessEquals(viewport.bottom));
     },
   );
 
@@ -1336,6 +1376,42 @@ void main() {
       ),
     );
     expect(_top(tester, 'item-34'), moreOrLessEquals(_viewportTop(tester)));
+  });
+
+  testWidgets('page storage identity changes discard a pending one-shot hold', (
+    tester,
+  ) async {
+    final bucket = PageStorageBucket();
+    final key = GlobalKey<_VirtualListHarnessState>();
+    final controller = TRVirtualListController<String>();
+    addTearDown(controller.dispose);
+    final items = List<String>.generate(20, (index) => 'item-$index');
+
+    Widget list(String pageStorageId) => _storedHost(
+      bucket,
+      _VirtualListHarness(
+        key: key,
+        controller: controller,
+        initialItems: items,
+        initialPosition: const TRVirtualListInitialPosition.trailing(),
+        follow: TRVirtualListFollow.trailing,
+        pageStorageId: pageStorageId,
+      ),
+    );
+
+    await tester.pumpWidget(list('first-session'));
+    controller.holdVisibleAnchorForNextLayout();
+    await tester.pumpWidget(list('second-session'));
+
+    key.currentState!.append('item-20');
+    await tester.pump();
+
+    expect(
+      _bottom(tester, 'item-20'),
+      moreOrLessEquals(
+        tester.getRect(find.byKey(const ValueKey('viewport'))).bottom,
+      ),
+    );
   });
 
   testWidgets('dispose stores the final in-progress scroll anchor', (
