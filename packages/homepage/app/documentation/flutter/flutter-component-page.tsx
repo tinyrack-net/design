@@ -6270,47 +6270,32 @@ TRAppShell(
 
           <h2>
             {locale === 'ko'
-              ? 'Adaptive pane navigation'
+              ? '반응형 pane 레이아웃'
               : locale === 'ja'
-                ? 'アダプティブペインナビゲーション'
-                : 'Adaptive pane navigation'}
+                ? 'アダプティブペインレイアウト'
+                : 'Adaptive pane layouts'}
           </h2>
           <p>
             {locale === 'ko'
-              ? 'TRNavigableThreePaneScaffold는 navigation, primary, secondary 역할을 Android window size class에 맞춰 배치합니다. 600px 미만에서는 현재 destination 하나, 600–1199px에서는 navigation과 현재 destination, 1200px 이상에서는 최대 세 pane을 표시해요. TRThreePaneNavigator는 push, replace, pop, reset 변경을 구분하고 창 크기가 바뀌어도 현재 destination을 보존합니다. 모바일과 태블릿에서는 Back이 실제 표시 pane을 바꿀 때까지만 기록을 되돌리고 Android predictive Back 진행률을 pane 전환에 반영해요. 3-pane에서는 Back을 바깥 route로 전달합니다. TRAdaptivePaneScope에서 결정된 width class와 표시 역할을 읽고, TRPaneHeader로 제목, 설명, 앞쪽 탐색, action, divider를 정렬하세요. TRNavigationPane과 TRNavigationSection의 기본 세로 간격은 TRUiDensityScope를 따라요.'
+              ? 'TRAdaptiveNavigationLayout과 TRAdaptiveListDetailLayout을 조합하면 600px 미만에서는 content만, 600–1199px에서는 navigation과 content를, 1200px 이상에서는 navigation, collection, detail을 배치할 수 있어요. 두 레이아웃은 navigation 상태를 소유하지 않아요. Navigator와 Page가 history, 시스템 뒤로 가기, Android predictive Back, 중단된 전환을 담당하도록 구성하세요. 같은 key를 가진 content Navigator를 singlePane과 detailPane에 전달하면 breakpoint가 바뀌어도 상태를 유지할 수 있어요. 하위 pane은 TRAdaptiveLayoutScope에서 전체 viewport의 width class를 읽습니다.'
               : locale === 'ja'
-                ? 'TRNavigableThreePaneScaffold は navigation、primary、secondary の役割を Android の window size class に合わせて配置します。600px 未満では現在の destination を 1 つ、600–1199px では navigation と現在の destination、1200px 以上では最大 3 つの pane を表示します。TRThreePaneNavigator は push、replace、pop、reset の変更を区別し、ウィンドウサイズが変わっても現在の destination を保ちます。モバイルとタブレットでは、表示中の pane が変わる位置まで履歴を戻し、Android の predictive Back の進行率を pane の遷移に反映します。3-pane では Back を外側の route に渡します。TRAdaptivePaneScope から決定済みの width class と表示中の役割を読み取り、TRPaneHeader でタイトル、説明、先頭のナビゲーション、アクション、区切り線を揃えてください。TRNavigationPane と TRNavigationSection の既定の縦方向の間隔は TRUiDensityScope に従います。'
-                : 'TRNavigableThreePaneScaffold lays out fixed navigation, primary, and secondary roles using Android window size classes. It shows only the active destination below 600px, navigation plus the active destination from 600–1199px, and up to three panes at 1200px and wider. TRThreePaneNavigator distinguishes push, replace, pop, and reset changes and preserves the active destination through resize. On mobile and tablet, Back skips history until the displayed pane changes and Android predictive Back drives the pane transition. A three-pane layout passes Back to the enclosing route. Read the resolved width class and visible roles from TRAdaptivePaneScope, and use TRPaneHeader to align the title, description, leading navigation, actions, and divider. TRNavigationPane and TRNavigationSection follow TRUiDensityScope for their default block rhythm.'}
+                ? 'TRAdaptiveNavigationLayout と TRAdaptiveListDetailLayout を組み合わせると、600px 未満では content のみ、600–1199px では navigation と content、1200px 以上では navigation、collection、detail を配置できます。どちらのレイアウトもナビゲーション状態を所有しません。履歴、システムの戻る操作、Android の predictive Back、中断された遷移は Navigator と Page に任せてください。同じ key を持つ content Navigator を singlePane と detailPane に渡すと、ブレークポイントが変わっても状態を維持できます。子 pane は TRAdaptiveLayoutScope から viewport 全体の width class を読み取ります。'
+                : 'Compose TRAdaptiveNavigationLayout and TRAdaptiveListDetailLayout to show content alone below 600px, navigation with content from 600–1199px, and navigation, collection, and detail at 1200px and wider. Neither layout owns navigation state. Let Navigator and Page handle history, system Back, Android predictive Back, and interrupted transitions. Pass the same keyed content Navigator as singlePane and detailPane to preserve its state through breakpoint changes. Descendant panes read the complete viewport width class from TRAdaptiveLayoutScope.'}
           </p>
           <TRCodeBlock
-            code={`final navigator = TRThreePaneNavigator<String>(
-  initialDestination: const TRPaneDestination(
-    role: TRPaneRole.navigation,
-    value: 'navigation',
-  ),
+            code={`final contentNavigator = Navigator(
+  key: contentNavigatorKey,
+  pages: contentPages,
+  onDidRemovePage: handleRemovedPage,
 );
 
-TRNavigableThreePaneScaffold<String>(
-  navigator: navigator,
+TRAdaptiveNavigationLayout(
   navigationPane: TRNavigationPane(children: navigationSections),
-  primaryPane: Builder(builder: (context) {
-    final pane = TRAdaptivePaneScope.of(context);
-    return Column(children: [
-      TRPaneHeader(
-        title: const Text('Projects'),
-        description: const Text('1 project'),
-        actions: [createButton],
-      ),
-      Expanded(
-        child: ProjectList(
-          showSelection: pane.visibleRoles.contains(TRPaneRole.secondary),
-        ),
-      ),
-    ]);
-  }),
-  secondaryPane: selectedProject == null
-      ? null
-      : ProjectDetail(project: selectedProject!),
+  contentPane: TRAdaptiveListDetailLayout(
+    singlePane: contentNavigator,
+    collectionPane: const ProjectList(),
+    detailPane: contentNavigator,
+  ),
 )`}
             language="dart"
           />

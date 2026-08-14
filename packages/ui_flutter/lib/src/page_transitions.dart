@@ -14,10 +14,15 @@ import 'tokens.dart';
 /// fade. Overlay scale motion remains owned by dialogs and drawers.
 class TRPageTransitionsBuilder extends PageTransitionsBuilder {
   /// Creates the shared Tinyrack page transition.
-  const TRPageTransitionsBuilder();
+  const TRPageTransitionsBuilder() : _enabled = true;
+
+  /// Creates a builder that preserves the Page route without visual motion.
+  const TRPageTransitionsBuilder.none() : _enabled = false;
+
+  final bool _enabled;
 
   @override
-  Duration get transitionDuration => TRMotion.slow;
+  Duration get transitionDuration => _enabled ? TRMotion.slow : Duration.zero;
 
   @override
   Widget buildTransitions<T>(
@@ -27,7 +32,8 @@ class TRPageTransitionsBuilder extends PageTransitionsBuilder {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    if (context != null && MediaQuery.disableAnimationsOf(context)) {
+    if (!_enabled ||
+        (context != null && MediaQuery.disableAnimationsOf(context))) {
       return child;
     }
     if (context == null || route == null) return child;

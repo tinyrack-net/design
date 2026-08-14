@@ -1,3 +1,14 @@
+## 0.63.0
+
+- Replaces the stateful three-pane navigation scaffold with
+  `TRAdaptiveNavigationLayout`, `TRAdaptiveListDetailLayout`, and
+  `TRAdaptiveLayoutScope`, so applications keep route history, Back, and
+  predictive Back in Flutter `Navigator` and `Page` APIs.
+- Adds `TRPageTransitionsBuilder.none()` for fixed routed regions that need Page
+  lifecycle without visual motion.
+- Removes `TRThreePaneNavigator`, `TRNavigableThreePaneScaffold`, their
+  destination and operation types, and `TRAdaptivePaneScope`.
+
 ## 0.62.3
 
 - Starts Flutter touch and stylus pressed feedback on pointer down, before the

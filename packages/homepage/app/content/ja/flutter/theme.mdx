@@ -63,20 +63,20 @@ Autocomplete、Combobox、インライン候補は、root overlayでもアンカ
 ## ページ遷移
 
 どちらのテーマもすべての`TargetPlatform`に`TRPageTransitionsBuilder`を
-登録します。そのためルーティングされたページは、Materialのプラットフォーム
-別デフォルトを継承せず、Android、iOS、macOS、Linux、Windowsで同じように
-アニメーションします。入ってくるページはダイアログやドロワーと同じ
-オーバーレイモーションで、閉じた状態のスケールから拡大しながらフェード
-インし、popではそのアニメーションを逆再生します。プラットフォームが
-`disableAnimations`を報告する場合は、遷移せずにページをそのまま返します。
+登録します。AndroidはFlutterのpredictive Back遷移を使い、iOS、macOS、
+Linux、WindowsはMaterialのforward-fadeモーションを使います。プラット
+フォームが`disableAnimations`を報告する場合は、モーションなしでページを
+そのまま返します。
 
-特定の画面だけ別のモーションが必要な場合は、自分でビルダーを登録します。
+ルーティングされた領域に別のモーション仕様が必要な場合だけ、異なるビルダーを
+登録してください。Pageのライフサイクルとidentityを維持しながら固定領域を
+動かさない場合は、`TRPageTransitionsBuilder.none()`を使います。
 
 ```dart
 ThemeData theme = TinyrackTheme.light().copyWith(
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.windows: TRPageTransitionsBuilder.none(),
     },
   ),
 );
