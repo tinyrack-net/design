@@ -431,6 +431,73 @@ void main() {
       expect(tester.getRect(search), searchRect);
     });
 
+    testWidgets(
+      'sheet isolates touch drags between its fixed search and options',
+      (tester) async {
+        _sizeViewport(tester, _narrow);
+        await tester.pumpWidget(
+          _app(
+            TRSelect<int>(
+              items: <TRSelectItem<int>>[
+                for (var index = 0; index < 40; index += 1)
+                  TRSelectItem(value: index, label: 'Option $index'),
+              ],
+              searchable: true,
+              presentation: _sheet,
+            ),
+          ),
+        );
+
+        await tester.tap(_trigger);
+        await tester.pumpAndSettle();
+
+        final drawer = find.byType(TRDrawer);
+        final search = find.byType(TRTextField);
+        final optionsScroll = find.descendant(
+          of: drawer,
+          matching: find.byType(SingleChildScrollView),
+        );
+        final position = tester
+            .state<ScrollableState>(
+              find.descendant(
+                of: optionsScroll,
+                matching: find.byType(Scrollable),
+              ),
+            )
+            .position;
+        final drawerRect = tester.getRect(drawer);
+        final searchRect = tester.getRect(search);
+
+        final searchDrag = await tester.startGesture(
+          tester.getCenter(search),
+          kind: PointerDeviceKind.touch,
+        );
+        await searchDrag.moveBy(const Offset(0, -150));
+        await tester.pump();
+        await searchDrag.moveBy(const Offset(0, -150));
+        await searchDrag.up();
+        await tester.pumpAndSettle();
+
+        expect(position.pixels, 0);
+        expect(tester.getRect(drawer), drawerRect);
+        expect(tester.getRect(search), searchRect);
+
+        final optionsDrag = await tester.startGesture(
+          tester.getCenter(optionsScroll),
+          kind: PointerDeviceKind.touch,
+        );
+        await optionsDrag.moveBy(const Offset(0, -150));
+        await tester.pump();
+        await optionsDrag.moveBy(const Offset(0, -150));
+        await optionsDrag.up();
+        await tester.pumpAndSettle();
+
+        expect(position.pixels, greaterThan(0));
+        expect(tester.getRect(drawer), drawerRect);
+        expect(tester.getRect(search), searchRect);
+      },
+    );
+
     testWidgets('sheet downward drag only scrolls its options viewport', (
       tester,
     ) async {
