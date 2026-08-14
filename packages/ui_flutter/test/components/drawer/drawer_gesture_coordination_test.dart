@@ -147,6 +147,43 @@ void main() {
     },
   );
 
+  testWidgets('handle-only drawer keeps content and extent gestures separate', (
+    tester,
+  ) async {
+    await _setViewport(tester);
+    await tester.pumpWidget(
+      _host(
+        TRDrawer(
+          dragBehavior: TRDrawerDragBehavior.handleOnly,
+          snapPoints: const <double>[0.5, 1],
+          content: _longContent(),
+        ),
+      ),
+    );
+
+    final drawer = find.byType(TRDrawer);
+    final startingSize = tester.getSize(drawer);
+    final position = _scrollPosition(tester, drawer);
+    expect(
+      tester.getSize(find.byKey(const ValueKey('tr-drawer-drag-region'))),
+      const Size(400 - TRSpacing.medium * 2 - 2, TRSpacing.twoExtraLarge),
+    );
+
+    await tester.drag(find.text('Item 0'), const Offset(0, -200));
+    await tester.pumpAndSettle();
+
+    expect(tester.getSize(drawer), startingSize);
+    expect(position.pixels, greaterThan(0));
+
+    await tester.drag(
+      find.byKey(const ValueKey<String>('tr-drawer-drag-handle')),
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.getSize(drawer).height, greaterThan(startingSize.height));
+  });
+
   testWidgets('tap controls remain interactive inside the drag region', (
     tester,
   ) async {

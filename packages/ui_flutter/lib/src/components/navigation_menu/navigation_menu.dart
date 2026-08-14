@@ -6,6 +6,7 @@ import 'package:lucide_flutter/lucide_flutter.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../internal/press_interaction.dart';
+import '../../layer_size.dart';
 import '../../theme.dart';
 import '../../types.dart';
 
@@ -60,7 +61,9 @@ class TRNavigationMenu<T> extends StatefulWidget {
     this.closeDelay = TRGeneratedMotion.immediate,
     this.openDelay = TRGeneratedMotion.immediate,
     this.onValueChange,
-    this.panelWidth = TRGeneratedLayerMetrics.navigationPanelWidth,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.fixed(TRGeneratedLayerMetrics.navigationPanelWidth),
+    ),
     this.placement = TRLayerPlacement.bottomStart,
     this.semanticLabel,
     this.useRootOverlay = true,
@@ -75,7 +78,9 @@ class TRNavigationMenu<T> extends StatefulWidget {
     this.closeDelay = TRGeneratedMotion.immediate,
     this.openDelay = TRGeneratedMotion.immediate,
     this.onValueChange,
-    this.panelWidth = TRGeneratedLayerMetrics.navigationPanelWidth,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.fixed(TRGeneratedLayerMetrics.navigationPanelWidth),
+    ),
     this.placement = TRLayerPlacement.bottomStart,
     this.semanticLabel,
     this.useRootOverlay = true,
@@ -90,7 +95,7 @@ class TRNavigationMenu<T> extends StatefulWidget {
   final Duration closeDelay;
   final Duration openDelay;
   final ValueChanged<T?>? onValueChange;
-  final double panelWidth;
+  final TRLayerSize layerSize;
   final TRLayerPlacement placement;
   final String? semanticLabel;
   final bool useRootOverlay;
@@ -166,7 +171,7 @@ class _TRNavigationMenuState<T> extends State<TRNavigationMenu<T>> {
               onChange: _change,
               open: _value == item.value,
               openDelay: widget.openDelay,
-              panelWidth: widget.panelWidth,
+              layerSize: widget.layerSize,
               placement: widget.placement,
               useRootOverlay: widget.useRootOverlay,
             ),
@@ -183,7 +188,7 @@ class _TRNavigationMenuEntry<T> extends StatefulWidget {
     required this.onChange,
     required this.open,
     required this.openDelay,
-    required this.panelWidth,
+    required this.layerSize,
     required this.placement,
     required this.useRootOverlay,
   });
@@ -193,7 +198,7 @@ class _TRNavigationMenuEntry<T> extends StatefulWidget {
   final ValueChanged<T?> onChange;
   final bool open;
   final Duration openDelay;
-  final double panelWidth;
+  final TRLayerSize layerSize;
   final TRLayerPlacement placement;
   final bool useRootOverlay;
 
@@ -229,6 +234,7 @@ class _TRNavigationMenuEntryState<T> extends State<_TRNavigationMenuEntry<T>> {
     onOpenChange: (open) => widget.onChange(open ? widget.item.value : null),
     placement: widget.placement,
     motionDuration: TRGeneratedMotion.normal,
+    size: widget.layerSize,
     useRootOverlay: widget.useRootOverlay,
     triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
         Semantics(
@@ -357,8 +363,8 @@ class _TRNavigationMenuEntryState<T> extends State<_TRNavigationMenuEntry<T>> {
       onExit: (_) => _schedule(null),
       child: TRLayerSurface(
         kind: TRLayerBoundaryKind.navigationMenu,
-        minWidth: widget.panelWidth,
-        maxWidth: widget.panelWidth,
+        minWidth: 0,
+        maxWidth: double.infinity,
         padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
         child: TRLayerPartBoundary(
           name: 'content',

@@ -21,10 +21,14 @@ class _TRSelectSheet<T> extends StatefulWidget {
     required this.selectedValue,
     required this.searchable,
     required this.initialQuery,
+    required this.deferInitialFilter,
     required this.matches,
     required this.noResultsText,
     required this.searchPlaceholder,
     required this.uiSize,
+    required this.maxExtent,
+    required this.snapPoints,
+    required this.showDragHandle,
     this.label,
   });
 
@@ -32,10 +36,14 @@ class _TRSelectSheet<T> extends StatefulWidget {
   final T? selectedValue;
   final bool searchable;
   final String initialQuery;
+  final bool deferInitialFilter;
   final bool Function(TRSelectItem<T> item, String query) matches;
   final String noResultsText;
   final String searchPlaceholder;
   final TRUiSize uiSize;
+  final double maxExtent;
+  final List<double> snapPoints;
+  final bool showDragHandle;
   final String? label;
 
   @override
@@ -44,84 +52,167 @@ class _TRSelectSheet<T> extends StatefulWidget {
 
 class _TRSelectSheetState<T> extends State<_TRSelectSheet<T>> {
   late final ScrollController _optionsScrollController = ScrollController();
+  late final List<FocusNode> _itemFocusNodes = List<FocusNode>.generate(
+    widget.items.length,
+    (_) => FocusNode(),
+  );
+  late final FocusNode _searchFocusNode = FocusNode(
+    onKeyEvent: _handleSearchKey,
+  );
+  final FocusNode _panelFocusNode = FocusNode(
+    debugLabel: 'TRSelect sheet panel',
+  );
   late final TextEditingController _searchController = TextEditingController(
     text: widget.initialQuery,
   );
   late String _query = widget.initialQuery;
+  late bool _deferInitialFilter = widget.deferInitialFilter;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!widget.searchable) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final visible = _visible;
+        final selected = visible.items.indexWhere(
+          (item) => item.enabled && item.value == widget.selectedValue,
+        );
+        if (selected >= 0) {
+          final index = selected;
+          _requestSelectOptionFocus(visible.focusNodes[index]);
+        } else {
+          _panelFocusNode.requestFocus();
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
     _optionsScrollController.dispose();
+    for (final focusNode in _itemFocusNodes) {
+      focusNode.dispose();
+    }
+    _searchFocusNode.dispose();
+    _panelFocusNode.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
-  List<TRSelectItem<T>> get _visibleItems => widget.items
-      .where((item) => _query.isEmpty || widget.matches(item, _query))
-      .toList(growable: false);
+  ({List<TRSelectItem<T>> items, List<FocusNode> focusNodes}) get _visible {
+    final items = <TRSelectItem<T>>[];
+    final focusNodes = <FocusNode>[];
+    for (var index = 0; index < widget.items.length; index += 1) {
+      final item = widget.items[index];
+      if (!_deferInitialFilter &&
+          _query.isNotEmpty &&
+          !widget.matches(item, _query)) {
+        continue;
+      }
+      items.add(item);
+      focusNodes.add(_itemFocusNodes[index]);
+    }
+    return (items: items, focusNodes: focusNodes);
+  }
 
   @override
   Widget build(BuildContext context) {
     final label = widget.label;
+    final visible = _visible;
     return TRDrawer(
       title: label == null ? null : Text(label),
+      dragBehavior: TRDrawerDragBehavior.handleOnly,
       scrollContent: false,
-      content: TRInternalDrawerScrollRegion(
-        controller: _optionsScrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          spacing: TRGeneratedSpacing.sm,
-          children: [
-            if (widget.searchable)
-              Padding(
-                padding: const EdgeInsets.only(bottom: TRGeneratedSpacing.xs),
-                child: TRTextField(
-                  autofocus: true,
-                  controller: _searchController,
-                  onChanged: (query) => setState(() => _query = query),
-                  onSubmitted: (_) => _commitSoleMatch(),
-                  placeholder: widget.searchPlaceholder,
-                  uiSize: widget.uiSize,
-                ),
-              ),
-            if (widget.searchable)
-              SizedBox(
-                height: TRGeneratedBorders.defaultWidth,
-                child: OverflowBox(
-                  minWidth: MediaQuery.sizeOf(context).width,
-                  maxWidth: MediaQuery.sizeOf(context).width,
-                  minHeight: TRGeneratedBorders.defaultWidth,
-                  maxHeight: TRGeneratedBorders.defaultWidth,
-                  child: const TRSeparator(variant: TRSeparatorVariant.muted),
-                ),
-              ),
-            Flexible(
-              fit: FlexFit.loose,
-              child: SingleChildScrollView(
-                controller: _optionsScrollController,
-                child: _TRSelectOptions<T>(
-                  items: _visibleItems,
-                  selectedValue: widget.selectedValue,
-                  interactive: true,
-                  noResultsText: widget.noResultsText,
-                  onSelected: _commit,
-                  uiSize: widget.uiSize,
-                  minimumRowHeight: TRControlMetrics.heightOf(TRUiSize.xl),
-                ),
-              ),
-            ),
-          ],
+      maxExtent: widget.maxExtent,
+      snapPoints: widget.snapPoints.isEmpty ? null : widget.snapPoints,
+      showDragHandle: widget.showDragHandle,
+      content: _TRSelectFrozenSize(
+        freezeWidth: false,
+        onSizeFrozen: _deferInitialFilter
+            ? () {
+                if (mounted) setState(() => _deferInitialFilter = false);
+              }
+            : null,
+        child: Focus(
+          focusNode: _panelFocusNode,
+          onKeyEvent: (_, event) => _handleOptionKey(event),
+          child: _TRSelectPanel<T>(
+            items: visible.items,
+            selectedValue: widget.selectedValue,
+            interactive: true,
+            searchable: widget.searchable,
+            searchController: _searchController,
+            searchFocusNode: _searchFocusNode,
+            searchAutofocus: true,
+            onQueryChanged: (query) => setState(() => _query = query),
+            onSubmitted: (_) => _commitSoleMatch(),
+            searchPlaceholder: widget.searchPlaceholder,
+            noResultsText: widget.noResultsText,
+            onSelected: _commit,
+            uiSize: widget.uiSize,
+            scrollController: _optionsScrollController,
+            fullWidthSeparator: true,
+            gap: TRGeneratedSpacing.sm,
+            searchPadding: const EdgeInsets.only(bottom: TRGeneratedSpacing.xs),
+            minimumRowHeight: TRControlMetrics.heightOf(TRUiSize.xl),
+            focusNodes: visible.focusNodes,
+            onRowKeyEvent: _handleOptionKey,
+          ),
         ),
       ),
     );
+  }
+
+  KeyEventResult _handleSearchKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    if (event.logicalKey == LogicalKeyboardKey.escape) {
+      unawaited(Navigator.of(context).maybePop());
+      return KeyEventResult.handled;
+    }
+    if (event.logicalKey != LogicalKeyboardKey.arrowDown) {
+      return KeyEventResult.ignored;
+    }
+    final visible = _visible;
+    final index = visible.items.indexWhere((item) => item.enabled);
+    if (index < 0) return KeyEventResult.handled;
+    _requestSelectOptionFocus(visible.focusNodes[index]);
+    return KeyEventResult.handled;
+  }
+
+  KeyEventResult _handleOptionKey(KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    final key = event.logicalKey;
+    if (key == LogicalKeyboardKey.escape) {
+      unawaited(Navigator.of(context).maybePop());
+      return KeyEventResult.handled;
+    }
+    if (key != LogicalKeyboardKey.arrowDown &&
+        key != LogicalKeyboardKey.arrowUp) {
+      return KeyEventResult.ignored;
+    }
+    final visible = _visible;
+    final current = visible.focusNodes.indexWhere((node) => node.hasFocus);
+    final step = key == LogicalKeyboardKey.arrowDown ? 1 : -1;
+    var index = current < 0
+        ? (step > 0 ? 0 : visible.items.length - 1)
+        : current + step;
+    while (index >= 0 && index < visible.items.length) {
+      if (visible.items[index].enabled) {
+        _requestSelectOptionFocus(visible.focusNodes[index]);
+        return KeyEventResult.handled;
+      }
+      index += step;
+    }
+    if (step < 0 && widget.searchable) _searchFocusNode.requestFocus();
+    return KeyEventResult.handled;
   }
 
   void _commit(T? value) =>
       Navigator.of(context).pop(_TRSelectChoice<T>(value));
 
   void _commitSoleMatch() {
-    final visible = _visibleItems;
+    final visible = _visible.items;
     if (visible.length != 1) return;
     final item = visible.single;
     if (!item.enabled) return;

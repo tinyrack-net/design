@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../internal/press_interaction.dart';
+import '../../layer_size.dart';
 import '../../tokens.dart';
 import '../../types.dart';
 import '../../ui_density.dart';
@@ -84,6 +85,10 @@ class TRAutocomplete<T extends Object> extends StatefulWidget {
     this.errorText,
     this.helperText,
     this.label,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.matchAnchor(),
+      height: TRLayerHeight.content(max: TRGeneratedMeasurements.measureXl),
+    ),
     this.onQueryChange,
     this.onSelected,
     this.placeholder,
@@ -112,6 +117,7 @@ class TRAutocomplete<T extends Object> extends StatefulWidget {
   final String? errorText;
   final String? helperText;
   final String? label;
+  final TRLayerSize layerSize;
   final ValueChanged<String>? onQueryChange;
   final ValueChanged<T>? onSelected;
   final String? placeholder;
@@ -187,7 +193,6 @@ class _TRAutocompleteState<T extends Object> extends State<TRAutocomplete<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final fieldWidth = widget.width ?? TRGeneratedMeasurements.overlayWidthSm;
     final density = TRUiDensityScope.of(context);
     final rowSize = TRLayerStyles.rowSizeOf(context);
     return SizedBox(
@@ -220,10 +225,11 @@ class _TRAutocompleteState<T extends Object> extends State<TRAutocomplete<T>> {
             _TRAutocompleteOptionsView<T>(
               density: density,
               highlightedIndex: AutocompleteHighlightedOption.of(context),
+              layerSize: widget.layerSize,
               onSelected: onSelected,
               options: options.toList(growable: false),
               rowSize: rowSize,
-              width: fieldWidth,
+              onDismiss: _controller.focusNode.unfocus,
             ),
       ),
     );
@@ -234,18 +240,20 @@ class _TRAutocompleteOptionsView<T extends Object> extends StatefulWidget {
   const _TRAutocompleteOptionsView({
     required this.density,
     required this.highlightedIndex,
+    required this.layerSize,
     required this.onSelected,
     required this.options,
     required this.rowSize,
-    required this.width,
+    required this.onDismiss,
   });
 
   final TRUiDensity density;
   final int highlightedIndex;
+  final TRLayerSize layerSize;
   final AutocompleteOnSelected<TRAutocompleteItem<T>> onSelected;
   final List<TRAutocompleteItem<T>> options;
   final TRUiSize rowSize;
-  final double width;
+  final VoidCallback onDismiss;
 
   @override
   State<_TRAutocompleteOptionsView<T>> createState() =>
@@ -311,53 +319,53 @@ class _TRAutocompleteOptionsViewState<T extends Object>
   @override
   Widget build(BuildContext context) => TRUiDensityScope(
     density: widget.density,
-    child: Align(
-      alignment: AlignmentDirectional.topStart,
-      child: Transform.translate(
-        offset: const Offset(0, TRGeneratedSpacing.sm),
-        child: TRLayerSurface(
+    child: LayoutBuilder(
+      builder: (context, constraints) => TRAnchoredLayer(
+        open: true,
+        onOpenChange: (open) {
+          if (!open) widget.onDismiss();
+        },
+        // RawAutocomplete groups the real field and this options view in a
+        // TextFieldTapRegion and owns visibility through the field focus. The
+        // nested layer exists only to supply collision-aware geometry; letting
+        // its surrogate anchor dismiss would treat a re-tap on the real field
+        // as an outside tap and briefly unfocus it.
+        dismissOnTapOutside: false,
+        gap: TRGeneratedSpacing.sm,
+        requestFocus: false,
+        size: widget.layerSize,
+        triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
+            SizedBox(width: constraints.maxWidth),
+        layerBuilder: (context) => TRLayerSurface(
           kind: TRLayerBoundaryKind.autocomplete,
-          minWidth: widget.width,
-          maxWidth: widget.width,
+          minWidth: 0,
+          maxWidth: double.infinity,
           padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
           child: ExcludeFocus(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxHeight: TRGeneratedMeasurements.measureXl,
-              ),
-              child: ListView.separated(
+            // A viewport always expands to its maximum cross-axis extent,
+            // which makes TRLayerWidth.content indistinguishable from a fixed
+            // maximum. The options are already materialized by RawAutocomplete,
+            // so a single-child viewport around an intrinsic column preserves
+            // vertical scrolling while allowing the labels to choose width.
+            child: IntrinsicWidth(
+              child: SingleChildScrollView(
                 controller: _scrollController,
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: widget.options.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: TRGeneratedSpacing.xs),
-                itemBuilder: (context, index) {
-                  final item = widget.options[index];
-                  return SizedBox(
-                    key: _optionKeys[index],
-                    width: double.infinity,
-                    child: TRMaterialPressable(
-                      enabled: true,
-                      builder: (context, states) => MenuItemButton(
-                        leadingIcon: item.leading,
-                        onPressed: () => widget.onSelected(item),
-                        requestFocusOnHover: false,
-                        statesController: states,
-                        style: TRLayerStyles.option(
-                          context,
-                          highlighted: widget.highlightedIndex == index,
-                          uiSize: widget.rowSize,
-                        ),
-                        trailingIcon: item.trailing,
-                        child: TRLayerPartBoundary(
-                          name: 'option$index',
-                          child: Text(item.label),
-                        ),
-                      ),
-                    ),
-                  );
-                },
+                primary: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (
+                      var index = 0;
+                      index < widget.options.length;
+                      index++
+                    ) ...[
+                      if (index > 0)
+                        const SizedBox(height: TRGeneratedSpacing.xs),
+                      _option(context, index),
+                    ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -365,6 +373,33 @@ class _TRAutocompleteOptionsViewState<T extends Object>
       ),
     ),
   );
+
+  Widget _option(BuildContext context, int index) {
+    final item = widget.options[index];
+    return KeyedSubtree(
+      key: _optionKeys[index],
+      child: TRMaterialPressable(
+        enabled: true,
+        builder: (context, states) => MenuItemButton(
+          leadingIcon: item.leading,
+          onPressed: () => widget.onSelected(item),
+          overflowAxis: Axis.vertical,
+          requestFocusOnHover: false,
+          statesController: states,
+          style: TRLayerStyles.option(
+            context,
+            highlighted: widget.highlightedIndex == index,
+            uiSize: widget.rowSize,
+          ),
+          trailingIcon: item.trailing,
+          child: TRLayerPartBoundary(
+            name: 'option$index',
+            child: Text(item.label, overflow: TextOverflow.ellipsis),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// Form-integrated [TRAutocomplete].
@@ -378,6 +413,10 @@ class TRAutocompleteFormField<T extends Object> extends FormField<T> {
     super.enabled = true,
     String? helperText,
     String? label,
+    TRLayerSize layerSize = const TRLayerSize(
+      width: TRLayerWidth.matchAnchor(),
+      height: TRLayerHeight.content(max: TRGeneratedMeasurements.measureXl),
+    ),
     ValueChanged<T>? onSelected,
     super.onSaved,
     super.validator,
@@ -393,6 +432,7 @@ class TRAutocompleteFormField<T extends Object> extends FormField<T> {
            errorText: field.errorText,
            helperText: helperText,
            label: label,
+           layerSize: layerSize,
            onSelected: (value) {
              field.didChange(value);
              onSelected?.call(value);

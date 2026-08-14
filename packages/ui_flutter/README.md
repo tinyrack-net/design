@@ -59,29 +59,109 @@ suggestions, including root-overlay layers. `TRMenu.uiSize` still sizes only the
 trigger. Wrap a specific popup anchor in a nested standard scope when its rows
 must remain compact.
 
-`TRSelectSurface.auto` follows the same semantic density: standard density
-opens an anchored dropdown and comfortable density opens a bottom sheet. A
-select outside `TRUiDensityScope` falls back to `TRBreakpoints.small`, preserving
-the viewport-responsive default for standalone consumers. Searchable dropdowns
-can grow wider than a narrow trigger, while adaptive sheets fit short option
-lists and keep only long option regions scrollable. Sheet option padding,
-typography, and icons follow the resolved density. Their touch targets remain
-at least 48 logical pixels tall even when the trigger uses compact metrics.
-Trackpad and wheel input over a fixed sheet search field continues scrolling
-the options. A downward drag returns to the drawer only after the option list
-reaches its leading edge.
+`TRSelect` leaves the responsive presentation decision to the product. Pass a
+typed layer or sheet presentation, and resolve that value from the same
+application-owned width policy used by the surrounding layout:
+
+```dart
+final widthClass = TRAdaptiveWidthClass.fromWidth(
+  MediaQuery.sizeOf(context).width,
+);
+final presentation = widthClass == TRAdaptiveWidthClass.compact
+    ? const TRSelectPresentation.sheet(maxExtent: 0.7)
+    : const TRSelectPresentation.layer(
+        layerSize: TRLayerSize(
+          width: TRLayerWidth.atLeastAnchor(
+            max: TRMeasurements.overlayWidthSm,
+          ),
+          height: TRLayerHeight.content(
+            max: TRMeasurements.measureXl,
+          ),
+        ),
+      );
+
+TRSelect<String>(
+  items: channels,
+  presentation: presentation,
+);
+```
+
+The presentation is captured when the Select opens, so resizing cannot replace
+an active layer with a sheet. Searchable anchored layers capture their full,
+unfiltered intrinsic size, while sheets capture their full-list height and keep
+tracking the viewport width. Those values stay stable until close; an explicit
+fixed width or height remains authoritative. The search field and separator stay
+outside the single scrollable options viewport; wheel, trackpad, and drag input
+over the search field does not move the list or the sheet. Sheet option padding,
+typography, and icons still follow the resolved density, and touch targets
+remain at least 48 logical pixels tall.
+
+Use `TRLayerSize` for caller-sized anchored layers. Width can follow content,
+use a fixed value, match the anchor, or stay at least as wide as the anchor.
+Height can follow content or use a fixed value. Content policies accept minimum
+and maximum bounds. The policy describes the complete layer, including its
+border and padding, and the safe viewport remains the final hard cap for every
+mode:
+
+```dart
+const contentSized = TRLayerSize(
+  width: TRLayerWidth.content(
+    min: TRMeasurements.measureMd,
+    max: TRMeasurements.overlayWidthSm,
+  ),
+  height: TRLayerHeight.content(max: TRMeasurements.measureXl),
+);
+const fixed = TRLayerSize(
+  width: TRLayerWidth.fixed(TRMeasurements.measureLg),
+  height: TRLayerHeight.fixed(TRMeasurements.measureSm),
+);
+const anchorMatched = TRLayerSize(
+  width: TRLayerWidth.matchAnchor(
+    min: TRMeasurements.measureMd,
+    max: TRMeasurements.overlayWidthSm,
+  ),
+);
+const anchorMinimum = TRLayerSize(
+  width: TRLayerWidth.atLeastAnchor(
+    min: TRMeasurements.measureMd,
+    max: TRMeasurements.overlayWidthSm,
+  ),
+);
+```
+
+`atLeastAnchor` lets content grow from the anchor width. If the anchor itself
+is wider than `max`, the anchor still wins unless the safe viewport is smaller.
+The shared policy is available on these anchored surfaces:
+
+| Component | Default `layerSize` |
+| --- | --- |
+| `TRSelectPresentation.layer` | At least the anchor and `TRMeasurements.measureMd`; content may grow through `TRMeasurements.overlayWidthSm`, while a wider anchor still wins; content height up to `TRMeasurements.measureXl` |
+| `TRAutocomplete`, `TRAutocompleteFormField` | Match the anchor; content height up to `TRMeasurements.measureXl` |
+| `TRCombobox`, `TRMultiCombobox`, and their FormField variants | Match the anchor; content height up to `TRMeasurements.measureXl` |
+| `TRInlineSuggestions` | Match the anchor; content height up to `TRMeasurements.measureXl` |
+| `TRMenu`, `TRMenuSubmenu` | Content width from `TRMeasurements.measureMd` through `TRMeasurements.overlayWidthSm + TRSpacing.twoExtraLarge`; content height up to `TRMeasurements.measureXl` |
+| `TRNavigationMenu` | Fixed navigation-panel width token; content height |
+| `TRPopover`, `TRPreviewCard` | Fixed `TRMeasurements.overlayWidthSm`; content height |
 
 Top and bottom `TRDrawer` surfaces show a drag-to-dismiss handle by default.
 Set `showDragHandle: false` when a sheet must not advertise or accept that drag
 gesture. Side drawers never show the handle.
 
-A top or bottom drawer without `snapPoints` keeps its intrinsic height. Upward
-drags scroll overflow content without lifting the sheet, while downward drags
-return the content to its leading edge before dismissing the sheet. Supplying
-`snapPoints` opts into viewport-relative expansion: the sheet expands first,
-then scrolls its content at the largest snap point. The reverse drag scrolls
-back to the leading edge before collapsing the sheet. These transitions happen
-within one continuous gesture from the header or content region.
+`TRDrawerDragBehavior.surface` is the default. A top or bottom drawer without
+`snapPoints` keeps its intrinsic height. Upward drags scroll overflow content
+without lifting the sheet, while downward drags return the content to its
+leading edge before dismissing the sheet. Supplying `snapPoints` opts into
+viewport-relative expansion: the sheet expands first, then scrolls its content
+at the largest snap point. The reverse drag scrolls back to the leading edge
+before collapsing the sheet. These transitions happen within one continuous
+gesture from the header or content region.
+
+Use `TRDrawerDragBehavior.handleOnly` when the drawer content owns a dedicated
+scroll viewport. Only the visible handle then resizes, snaps, or dismisses the
+drawer; gestures that start on the content stay with the content. Pair it with
+`scrollContent: false` when the content contains a fixed header and its own
+scrolling region. Side drawers have no handle and continue to use their complete
+surface.
 
 Use `TRSplitView` when two application-owned surfaces need a controlled,
 resizable boundary. The caller owns the ratio and decides when a responsive

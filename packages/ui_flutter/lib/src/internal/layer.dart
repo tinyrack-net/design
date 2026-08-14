@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import '../generated/tokens.g.dart';
+import '../layer_size.dart';
 import '../theme.dart';
 import '../tokens.dart';
 import '../types.dart';
@@ -115,22 +116,19 @@ abstract final class TRLayerStyles {
   static MenuStyle menu(
     BuildContext context, {
     AlignmentGeometry alignment = AlignmentDirectional.bottomStart,
+    TRLayerSize? size,
+    Size anchorSize = Size.zero,
     double minWidth = TRGeneratedMeasurements.measureMd,
     double maxWidth =
         TRGeneratedMeasurements.overlayWidthSm + TRGeneratedSpacing.size2xl,
   }) {
-    final media = MediaQuery.of(context);
-    final availableWidth = math.max(
-      0.0,
-      media.size.width -
-          media.padding.horizontal -
-          TRGeneratedMeasurements.overlayInlineInset,
+    final viewport = _trSafeLayerViewportSize(
+      context,
+      viewportInset: TRGeneratedMeasurements.overlayInlineInset / 2,
     );
-    final availableHeight = math.max(
-      0.0,
-      media.size.height -
-          media.padding.vertical -
-          TRGeneratedMeasurements.overlayInlineInset,
+    final resolved = size?.constraintsFor(
+      anchorSize: anchorSize,
+      viewportSize: viewport,
     );
     return MenuStyle(
       alignment: alignment,
@@ -138,12 +136,16 @@ abstract final class TRLayerStyles {
       elevation: const WidgetStatePropertyAll(0),
       maximumSize: WidgetStatePropertyAll(
         Size(
-          math.min(maxWidth, availableWidth),
-          math.min(TRGeneratedMeasurements.measureXl, availableHeight),
+          resolved?.maxWidth ?? math.min(maxWidth, viewport.width),
+          resolved?.maxHeight ??
+              math.min(TRGeneratedMeasurements.measureXl, viewport.height),
         ),
       ),
       minimumSize: WidgetStatePropertyAll(
-        Size(math.min(minWidth, availableWidth), 0),
+        Size(
+          resolved?.minWidth ?? math.min(minWidth, viewport.width),
+          resolved?.minHeight ?? 0,
+        ),
       ),
       padding: const WidgetStatePropertyAll(EdgeInsets.zero),
       shadowColor: const WidgetStatePropertyAll(Colors.transparent),
@@ -292,6 +294,7 @@ abstract final class TRLayerStyles {
 class TRLayerSurface extends StatelessWidget {
   const TRLayerSurface({
     required this.child,
+    this.constraints,
     this.kind = TRLayerBoundaryKind.menu,
     this.maxWidth =
         TRGeneratedMeasurements.overlayWidthSm + TRGeneratedSpacing.size2xl,
@@ -301,6 +304,7 @@ class TRLayerSurface extends StatelessWidget {
   });
 
   final Widget child;
+  final BoxConstraints? constraints;
   final TRLayerBoundaryKind kind;
   final double maxWidth;
   final double minWidth;
@@ -312,7 +316,9 @@ class TRLayerSurface extends StatelessWidget {
     return TRLayerBoundary(
       kind: kind,
       child: Container(
-        constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
+        constraints:
+            constraints ??
+            BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
         decoration: BoxDecoration(
           color: colors.surface,
           // A layer already separates itself from the page with a shadow, so
@@ -334,6 +340,48 @@ class TRLayerSurface extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Resolves a layer policy against the safe part of the current viewport.
+BoxConstraints trLayerConstraints(
+  BuildContext context,
+  TRLayerSize size, {
+  required Size anchorSize,
+  double viewportInset = TRGeneratedMeasurements.overlayInlineInset / 2,
+}) {
+  final viewport = _trSafeLayerViewportSize(
+    context,
+    viewportInset: viewportInset,
+  );
+  return size.constraintsFor(anchorSize: anchorSize, viewportSize: viewport);
+}
+
+Size _trSafeLayerViewportSize(
+  BuildContext context, {
+  required double viewportInset,
+}) {
+  final media = MediaQuery.of(context);
+  final viewMedia = MediaQueryData.fromView(View.of(context));
+  final padding = EdgeInsets.fromLTRB(
+    math.max(media.padding.left, viewMedia.padding.left),
+    math.max(media.padding.top, viewMedia.padding.top),
+    math.max(media.padding.right, viewMedia.padding.right),
+    math.max(media.padding.bottom, viewMedia.padding.bottom),
+  );
+  final bottomInset = math.max(
+    media.viewInsets.bottom,
+    viewMedia.viewInsets.bottom,
+  );
+  return Size(
+    math.max(0.0, media.size.width - padding.horizontal - viewportInset * 2),
+    math.max(
+      0.0,
+      media.size.height -
+          padding.top -
+          math.max(padding.bottom, bottomInset) -
+          viewportInset * 2,
+    ),
+  );
 }
 
 /// Private controller shared by public anchored-layer controllers.
@@ -383,7 +431,7 @@ class TRAnchoredLayer extends StatefulWidget {
     this.useRootOverlay = true,
     this.dismissOnTapOutside = true,
     this.requestFocus = true,
-    this.matchAnchorWidth = false,
+    this.size = const TRLayerSize(),
     super.key,
   });
 
@@ -401,12 +449,7 @@ class TRAnchoredLayer extends StatefulWidget {
   final bool useRootOverlay;
   final bool dismissOnTapOutside;
   final bool requestFocus;
-
-  /// Sizes the layer to the anchor instead of the surface's own width.
-  ///
-  /// A layer that continues an input, rather than floating beside it, reads as
-  /// part of that control only when the two share an edge.
-  final bool matchAnchorWidth;
+  final TRLayerSize size;
 
   @override
   State<TRAnchoredLayer> createState() => _TRAnchoredLayerState();
@@ -414,7 +457,7 @@ class TRAnchoredLayer extends StatefulWidget {
 
 class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
   late final OverlayPortalController _overlayController;
-  final FocusNode _layerFocusNode = FocusNode(
+  final FocusScopeNode _layerFocusNode = FocusScopeNode(
     debugLabel: 'TRAnchoredLayer surface',
   );
   TRAnchoredLayerController? _internalController;
@@ -521,8 +564,23 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
   @override
   Widget build(BuildContext context) {
     final media = MediaQuery.of(context);
+    final viewMedia = MediaQueryData.fromView(View.of(context));
+    final padding = EdgeInsets.fromLTRB(
+      math.max(media.padding.left, viewMedia.padding.left),
+      math.max(media.padding.top, viewMedia.padding.top),
+      math.max(media.padding.right, viewMedia.padding.right),
+      math.max(media.padding.bottom, viewMedia.padding.bottom),
+    );
+    final bottomInset = math.max(
+      media.viewInsets.bottom,
+      viewMedia.viewInsets.bottom,
+    );
     final textDirection = Directionality.of(context);
     final density = TRUiDensityScope.of(context);
+    final overlayFocusParent = FocusScope.of(
+      Overlay.of(context, rootOverlay: widget.useRootOverlay).context,
+      createDependency: false,
+    );
     final target = TapRegion(
       groupId: _tapRegionGroup,
       onTapOutside: widget.dismissOnTapOutside && _isOpen
@@ -550,11 +608,11 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
             Offset.zero & info.childSize,
           );
           final safeRect = Rect.fromLTRB(
-            media.padding.left + widget.viewportInset,
-            media.padding.top + widget.viewportInset,
-            info.overlaySize.width - media.padding.right - widget.viewportInset,
+            padding.left + widget.viewportInset,
+            padding.top + widget.viewportInset,
+            info.overlaySize.width - padding.right - widget.viewportInset,
             info.overlaySize.height -
-                math.max(media.padding.bottom, media.viewInsets.bottom) -
+                math.max(padding.bottom, bottomInset) -
                 widget.viewportInset,
           );
           Widget layer = TRUiDensityScope(
@@ -562,8 +620,9 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
             child: Builder(builder: widget.layerBuilder),
           );
           if (widget.requestFocus) {
-            layer = Focus(
-              focusNode: _layerFocusNode,
+            layer = FocusScope(
+              node: _layerFocusNode,
+              parentNode: overlayFocusParent,
               onKeyEvent: (_, event) {
                 if (event is KeyDownEvent &&
                     event.logicalKey == LogicalKeyboardKey.escape) {
@@ -582,15 +641,10 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
                 : null,
             child: layer,
           );
-          final anchorWidth = math.min(anchor.width, safeRect.width);
           layer = ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: widget.matchAnchorWidth ? math.max(0, anchorWidth) : 0,
-              maxWidth: math.max(
-                0,
-                widget.matchAnchorWidth ? anchorWidth : safeRect.width,
-              ),
-              maxHeight: math.max(0, safeRect.height),
+            constraints: widget.size.constraintsFor(
+              anchorSize: anchor.size,
+              viewportSize: safeRect.size,
             ),
             child: _TRAnchoredLayerMotion(
               duration: widget.motionDuration,

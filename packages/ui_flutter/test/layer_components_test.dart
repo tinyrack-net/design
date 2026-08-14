@@ -985,8 +985,10 @@ void main() {
     });
 
     testWidgets('does not open when disabled or read-only', (tester) async {
-      final disabledController = MenuController();
-      final readOnlyController = MenuController();
+      final disabledController = TRSelectController();
+      final readOnlyController = TRSelectController();
+      addTearDown(disabledController.dispose);
+      addTearDown(readOnlyController.dispose);
       await tester.pumpWidget(
         _app(
           Column(
@@ -994,12 +996,12 @@ void main() {
               TRSelect<String>(
                 items: items,
                 enabled: false,
-                menuController: disabledController,
+                controller: disabledController,
               ),
               TRSelect<String>(
                 items: items,
                 readOnly: true,
-                menuController: readOnlyController,
+                controller: readOnlyController,
               ),
             ],
           ),
@@ -1073,7 +1075,8 @@ void main() {
     testWidgets('matches trigger sizes and canonical popup geometry', (
       tester,
     ) async {
-      final controller = MenuController();
+      final controller = TRSelectController();
+      addTearDown(controller.dispose);
       await tester.pumpWidget(
         _app(
           Column(
@@ -1089,7 +1092,7 @@ void main() {
                     TRSelectItem(value: 'beta', label: 'Beta'),
                   ],
                   value: 'stable',
-                  menuController: size == TRUiSize.md ? controller : null,
+                  controller: size == TRUiSize.md ? controller : null,
                   uiSize: size,
                   width: 320,
                 ),
@@ -1126,7 +1129,7 @@ void main() {
           const TRUiDensityScope(
             density: TRUiDensity.comfortable,
             child: TRSelect<String>(
-              surface: TRSelectSurface.menu,
+              presentation: TRSelectPresentation.layer(),
               items: [
                 TRSelectItem(
                   value: 'alpha',
@@ -1173,7 +1176,8 @@ void main() {
     testWidgets('flips above when the preferred bottom side has no room', (
       tester,
     ) async {
-      final controller = MenuController();
+      final controller = TRSelectController();
+      addTearDown(controller.dispose);
       await tester.pumpWidget(
         _app(
           Align(
@@ -1184,7 +1188,7 @@ void main() {
                 TRSelectItem(value: 'beta', label: 'Beta'),
               ],
               value: 'alpha',
-              menuController: controller,
+              controller: controller,
               width: 320,
             ),
           ),

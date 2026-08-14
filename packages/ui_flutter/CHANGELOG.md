@@ -1,3 +1,25 @@
+## 0.64.0
+
+- Removes `TRSelectSurface`, `menuController`, and Select-owned responsive
+  inference. Products now pass `TRSelectPresentation.layer` or
+  `TRSelectPresentation.sheet`; the surface-neutral `TRSelectController`
+  exposes `open`, `close`, and `toggle` for either presentation.
+- Adds `TRLayerSize`, `TRLayerWidth`, and `TRLayerHeight` for complete-layer
+  content, fixed, anchor-matching, at-least-anchor, and safe-viewport-clamped
+  geometry. `TRAutocomplete`, `TRCombobox`, `TRInlineSuggestions`, `TRMenu`,
+  `TRMenuSubmenu`, `TRNavigationMenu`, `TRPopover`, `TRPreviewCard`, and Select
+  layers now share this contract.
+- Removes the superseded `TRInlineSuggestions.matchAnchorWidth` and `width`,
+  `TRNavigationMenu.panelWidth`, and `TRPopover` and `TRPreviewCard` layer
+  `width` properties. Use `layerSize` instead.
+- Keeps Select search controls outside the single options viewport, preserves
+  opened layer geometry and sheet height while filtering, and restores trigger
+  focus without leaking overlay focus into the trigger's focus group.
+- Adds `TRDrawerDragBehavior.handleOnly` so a fixed header and dedicated content
+  viewport can keep all content gestures while the visible handle alone owns
+  drawer resizing and dismissal. The default remains
+  `TRDrawerDragBehavior.surface`.
+
 ## 0.63.2
 
 - Keeps navigation-pane semantics reachable when routed content contains a

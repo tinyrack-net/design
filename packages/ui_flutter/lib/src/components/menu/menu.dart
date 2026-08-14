@@ -6,9 +6,18 @@ import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/layer.dart';
 import '../../internal/press_interaction.dart';
+import '../../layer_size.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
+
+const _defaultMenuLayerSize = TRLayerSize(
+  width: TRLayerWidth.content(
+    min: TRGeneratedMeasurements.measureMd,
+    max: TRGeneratedMeasurements.overlayWidthSm + TRGeneratedSpacing.size2xl,
+  ),
+  height: TRLayerHeight.content(max: TRGeneratedMeasurements.measureXl),
+);
 
 // @tinyrack-preview menu
 /// A Material menu anchor with Tinyrack layer styling.
@@ -21,6 +30,7 @@ class TRMenu extends StatefulWidget {
     this.controller,
     this.enabled = true,
     this.focusNode,
+    this.layerSize = _defaultMenuLayerSize,
     this.onClose,
     this.onOpen,
     this.uiSize,
@@ -46,6 +56,7 @@ class TRMenu extends StatefulWidget {
     this.controller,
     this.enabled = true,
     this.focusNode,
+    this.layerSize = _defaultMenuLayerSize,
     this.onClose,
     this.onOpen,
     this.uiSize,
@@ -60,6 +71,7 @@ class TRMenu extends StatefulWidget {
   final MenuController? controller;
   final bool enabled;
   final FocusNode? focusNode;
+  final TRLayerSize layerSize;
   final VoidCallback? onClose;
   final VoidCallback? onOpen;
 
@@ -88,6 +100,8 @@ class TRMenu extends StatefulWidget {
 class _TRMenuState extends State<TRMenu> {
   MenuController? _internalController;
   FocusNode? _internalFocusNode;
+  final GlobalKey _triggerKey = GlobalKey(debugLabel: 'TRMenu trigger');
+  Size _anchorSize = Size.zero;
 
   MenuController get _controller =>
       widget.controller ?? (_internalController ??= MenuController());
@@ -120,8 +134,21 @@ class _TRMenuState extends State<TRMenu> {
     widget.onClose?.call();
   }
 
+  void _measureAnchor() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final context = _triggerKey.currentContext;
+      final renderObject = context?.findRenderObject();
+      if (renderObject is! RenderBox || !renderObject.hasSize) return;
+      final size = renderObject.size;
+      if (size == _anchorSize) return;
+      setState(() => _anchorSize = size);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _measureAnchor();
     final uiSize = TRUiDensityScope.resolveSize(context, widget.uiSize);
     final density = TRUiDensityScope.of(context);
     final controller = _controller;
@@ -210,6 +237,11 @@ class _TRMenuState extends State<TRMenu> {
             density: density,
             child: _TRMenuEntryMotion(
               child: TRLayerSurface(
+                constraints: trLayerConstraints(
+                  context,
+                  widget.layerSize,
+                  anchorSize: _anchorSize,
+                ),
                 child: SingleChildScrollView(
                   primary: false,
                   child: Column(
@@ -224,9 +256,14 @@ class _TRMenuState extends State<TRMenu> {
         ],
         onClose: _handleClose,
         onOpen: _handleOpen,
-        style: TRLayerStyles.menu(context),
+        style: TRLayerStyles.menu(
+          context,
+          size: widget.layerSize,
+          anchorSize: _anchorSize,
+        ),
         useRootOverlay: widget.useRootOverlay,
         builder: (context, menuController, child) => Semantics(
+          key: _triggerKey,
           button: true,
           enabled: widget.enabled,
           expanded: menuController.isOpen,
@@ -471,13 +508,14 @@ class TRMenuRadioItem<T> extends StatelessWidget {
 }
 
 /// A cascading submenu inside a [TRMenu].
-class TRMenuSubmenu extends StatelessWidget {
+class TRMenuSubmenu extends StatefulWidget {
   const TRMenuSubmenu({
     required this.child,
     required this.menuChildren,
     this.alignmentOffset,
     this.controller,
     this.focusNode,
+    this.layerSize = _defaultMenuLayerSize,
     this.leadingIcon,
     this.trailingIcon,
     super.key,
@@ -488,41 +526,75 @@ class TRMenuSubmenu extends StatelessWidget {
   final Offset? alignmentOffset;
   final MenuController? controller;
   final FocusNode? focusNode;
+  final TRLayerSize layerSize;
   final Widget? leadingIcon;
   final Widget? trailingIcon;
 
   @override
+  State<TRMenuSubmenu> createState() => _TRMenuSubmenuState();
+}
+
+class _TRMenuSubmenuState extends State<TRMenuSubmenu> {
+  final GlobalKey _triggerKey = GlobalKey(debugLabel: 'TRMenuSubmenu trigger');
+  Size _anchorSize = Size.zero;
+
+  void _measureAnchor() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final renderObject = _triggerKey.currentContext?.findRenderObject();
+      if (renderObject is! RenderBox || !renderObject.hasSize) return;
+      final size = renderObject.size;
+      if (size == _anchorSize) return;
+      setState(() => _anchorSize = size);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    _measureAnchor();
     final density = TRUiDensityScope.of(context);
-    return TRMaterialPressable(
-      enabled: true,
-      builder: (context, states) => SubmenuButton(
-        alignmentOffset: alignmentOffset,
-        animated: !MediaQuery.disableAnimationsOf(context),
-        controller: controller,
-        focusNode: focusNode,
-        statesController: states,
-        leadingIcon: leadingIcon,
-        menuChildren: [
-          TRUiDensityScope(
-            density: density,
-            child: TRLayerSurface(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: menuChildren,
+    return KeyedSubtree(
+      key: _triggerKey,
+      child: TRMaterialPressable(
+        enabled: true,
+        builder: (context, states) => SubmenuButton(
+          alignmentOffset: widget.alignmentOffset,
+          animated: !MediaQuery.disableAnimationsOf(context),
+          controller: widget.controller,
+          focusNode: widget.focusNode,
+          statesController: states,
+          leadingIcon: widget.leadingIcon,
+          menuChildren: [
+            TRUiDensityScope(
+              density: density,
+              child: TRLayerSurface(
+                constraints: trLayerConstraints(
+                  context,
+                  widget.layerSize,
+                  anchorSize: _anchorSize,
+                ),
+                child: SingleChildScrollView(
+                  primary: false,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: widget.menuChildren,
+                  ),
+                ),
               ),
             ),
+          ],
+          menuStyle: TRLayerStyles.menu(
+            context,
+            alignment: AlignmentDirectional.topEnd,
+            size: widget.layerSize,
+            anchorSize: _anchorSize,
           ),
-        ],
-        menuStyle: TRLayerStyles.menu(
-          context,
-          alignment: AlignmentDirectional.topEnd,
+          style: TRLayerStyles.item(context, showFocusBorder: false),
+          trailingIcon: widget.trailingIcon,
+          useRootOverlay: true,
+          child: widget.child,
         ),
-        style: TRLayerStyles.item(context, showFocusBorder: false),
-        trailingIcon: trailingIcon,
-        useRootOverlay: true,
-        child: child,
       ),
     );
   }

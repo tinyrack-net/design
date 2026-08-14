@@ -154,16 +154,11 @@ void main() {
 
     final row = find.ancestor(
       of: _row('lib/app.dart'),
-      matching: find.byType(MenuItemButton),
+      matching: find.byType(TextButton),
     );
     expect(tester.getSize(row).height, TRControlMetrics.heightOf(TRUiSize.lg));
     expect(
-      tester
-          .widget<MenuItemButton>(row)
-          .style
-          ?.textStyle
-          ?.resolve({})
-          ?.fontSize,
+      tester.widget<TextButton>(row).style?.textStyle?.resolve({})?.fontSize,
       TRControlMetrics.fontSizeOf(TRUiSize.lg),
     );
   });

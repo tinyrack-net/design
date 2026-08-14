@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../layer_size.dart';
 import '../../types.dart';
 
 /// Controls an uncontrolled [TRPopover].
@@ -40,11 +41,13 @@ class TRPopover extends StatelessWidget {
     this.controller,
     this.defaultOpen = false,
     this.description,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.fixed(TRGeneratedMeasurements.overlayWidthSm),
+    ),
     this.onOpenChange,
     this.placement = TRLayerPlacement.bottomStart,
     this.title,
     this.useRootOverlay = true,
-    this.width = TRGeneratedMeasurements.overlayWidthSm,
     super.key,
   }) : open = null;
 
@@ -55,11 +58,13 @@ class TRPopover extends StatelessWidget {
     this.actions,
     this.controller,
     this.description,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.fixed(TRGeneratedMeasurements.overlayWidthSm),
+    ),
     this.onOpenChange,
     this.placement = TRLayerPlacement.bottomStart,
     this.title,
     this.useRootOverlay = true,
-    this.width = TRGeneratedMeasurements.overlayWidthSm,
     super.key,
   }) : defaultOpen = false;
 
@@ -69,12 +74,12 @@ class TRPopover extends StatelessWidget {
   final TRPopoverController? controller;
   final bool defaultOpen;
   final Widget? description;
+  final TRLayerSize layerSize;
   final bool? open;
   final ValueChanged<bool>? onOpenChange;
   final TRLayerPlacement placement;
   final Widget? title;
   final bool useRootOverlay;
-  final double width;
 
   @override
   Widget build(BuildContext context) => TRAnchoredLayer(
@@ -83,13 +88,14 @@ class TRPopover extends StatelessWidget {
     open: open,
     onOpenChange: onOpenChange,
     placement: placement,
+    size: layerSize,
     useRootOverlay: useRootOverlay,
     triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
         _TRPopoverTrigger(open: open, onActivate: toggleLayer, child: trigger),
     layerBuilder: (context) => TRLayerSurface(
       kind: TRLayerBoundaryKind.popover,
-      minWidth: width,
-      maxWidth: width,
+      minWidth: 0,
+      maxWidth: double.infinity,
       padding: const EdgeInsets.all(TRGeneratedSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

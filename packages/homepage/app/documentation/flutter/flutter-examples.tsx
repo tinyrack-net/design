@@ -4029,9 +4029,9 @@ class _MonitoringFormState extends State<MonitoringForm> {
       id: 'select-controlled',
       title: { en: 'Controlled value', ja: 'Controlled 値', ko: 'Controlled 값' },
       description: {
-        en: 'Use the named controlled constructor when the parent owns the value. Leading content identifies the trigger, while item keys identify the same option on dropdown and sheet surfaces. A null value explicitly clears the selection.',
-        ja: '親が値を管理する場合は named controlled constructor を使います。leading コンテンツはトリガーを示し、item の key はドロップダウンとシートで同じ選択肢を識別します。null は選択解除を明示します。',
-        ko: '부모가 값을 소유하면 named controlled constructor를 사용하세요. leading 콘텐츠는 트리거의 용도를 나타내고 item key는 드롭다운과 시트에서 같은 선택지를 식별해요. null 값은 선택 해제를 명확히 나타내요.',
+        en: 'Use the named controlled constructor when the parent owns the value. Leading content identifies the trigger, while item keys identify the same option in layer and sheet presentations. A null value explicitly clears the selection.',
+        ja: '親が値を管理する場合は named controlled constructor を使います。leading コンテンツはトリガーを示し、item の key はレイヤーとシートで同じ選択肢を識別します。null は選択解除を明示します。',
+        ko: '부모가 값을 소유하면 named controlled constructor를 사용하세요. leading 콘텐츠는 트리거의 용도를 나타내고 item key는 레이어와 시트에서 같은 선택지를 식별해요. null 값은 선택 해제를 명확히 나타내요.',
       },
       dart: String.raw`TRSelect<String>.controlled(
   value: channel,
@@ -4097,19 +4097,34 @@ class _MonitoringFormState extends State<MonitoringForm> {
     {
       id: 'select-surface',
       title: {
-        en: 'Dropdown or sheet',
-        ja: 'ドロップダウンとシート',
-        ko: '드롭다운과 시트',
+        en: 'Product-owned presentation',
+        ja: 'プロダクトが選ぶ表示方法',
+        ko: '제품이 정하는 표시 방식',
       },
       description: {
-        en: 'Inside TRUiDensityScope, a select opens as an anchored dropdown in standard density and as a bottom sheet in comfortable density. Without that scope it falls back to the TRBreakpoints.small viewport boundary. The surface is resolved when the select opens, so a resize cannot swap it mid-selection. Pass surface to pin one of the two.',
-        ja: 'TRUiDensityScope 内では、Select は standard density ならアンカーされたドロップダウンとして、comfortable density ならボトムシートとして開きます。Scope がない場合は TRBreakpoints.small のビューポート境界にフォールバックします。サーフェスは開いた時点で決まるため、選択の途中でリサイズしても入れ替わりません。どちらかに固定するときは surface を渡してください。',
-        ko: 'TRUiDensityScope 안에서 Select는 standard density이면 트리거에 붙는 드롭다운으로, comfortable density이면 바텀 시트로 열려요. Scope가 없으면 TRBreakpoints.small 뷰포트 경계를 사용해요. 표면은 Select를 열 때 결정되므로 선택 도중에 크기가 바뀌어도 교체되지 않아요. 둘 중 하나로 고정하려면 surface를 넘기세요.',
+        en: 'Resolve presentation from the product breakpoint instead of asking Select to infer responsiveness. Layer size describes the complete popup, including the fixed search header, and the chosen presentation stays active through a resize until the Select closes.',
+        ja: 'Select にレスポンシブ判定を推測させず、プロダクトのブレークポイントから表示方法を決めます。レイヤーサイズは固定された検索ヘッダーを含むポップアップ全体を表し、選択した表示方法はリサイズされても Select を閉じるまで維持されます。',
+        ko: 'Select가 반응형 조건을 추측하게 하지 말고 제품의 너비 구간에서 표시 방식을 정하세요. 레이어 크기는 고정 검색 헤더를 포함한 팝업 전체를 나타내며, 선택한 표시 방식은 크기가 바뀌어도 Select를 닫을 때까지 유지돼요.',
       },
-      dart: String.raw`TRSelect<String>(
+      dart: String.raw`final presentation =
+    TRAdaptiveWidthClass.fromWidth(MediaQuery.sizeOf(context).width) ==
+        TRAdaptiveWidthClass.compact
+    ? const TRSelectPresentation.sheet(maxExtent: 0.7)
+    : const TRSelectPresentation.layer(
+        layerSize: TRLayerSize(
+          width: TRLayerWidth.atLeastAnchor(
+            max: TRMeasurements.overlayWidthSm,
+          ),
+          height: TRLayerHeight.content(
+            max: TRMeasurements.measureXl,
+          ),
+        ),
+      );
+
+TRSelect<String>(
   items: channels,
   defaultValue: 'stable',
-  surface: TRSelectSurface.menu,
+  presentation: presentation,
 )`,
     },
   ],

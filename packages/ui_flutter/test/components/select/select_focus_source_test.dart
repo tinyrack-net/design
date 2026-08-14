@@ -11,9 +11,7 @@ TinyrackThemeData get _colors =>
 
 /// Turns animations off without discarding the rest of the media data.
 ///
-/// The viewport size is load-bearing now that a select picks its surface from
-/// it, so replacing the whole [MediaQueryData] would silently move these cases
-/// onto the sheet.
+/// Keeps the host media data while disabling motion.
 Widget _app(Widget child) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(
@@ -30,12 +28,12 @@ Widget _select({
   TRFieldAppearance appearance = TRFieldAppearance.solid,
   String? defaultValue,
   String? errorText,
-  TRSelectSurface surface = TRSelectSurface.auto,
+  TRSelectPresentation presentation = const TRSelectPresentation.layer(),
 }) => TRSelect<String>(
   appearance: appearance,
   defaultValue: defaultValue,
   errorText: errorText,
-  surface: surface,
+  presentation: presentation,
   items: const [
     TRSelectItem<String>(value: 'a', label: 'Alpha'),
     TRSelectItem<String>(value: 'b', label: 'Beta'),
@@ -126,15 +124,15 @@ void main() {
     },
   );
 
-  for (final surface in <TRSelectSurface>[
-    TRSelectSurface.menu,
-    TRSelectSurface.sheet,
+  for (final presentation in <TRSelectPresentation>[
+    const TRSelectPresentation.layer(),
+    const TRSelectPresentation.sheet(),
   ]) {
     testWidgets(
-      'a pointer-open ${surface.name} selected option uses fill without a focus border',
+      'a pointer-open $presentation selected option uses fill without a focus border',
       (tester) async {
         await tester.pumpWidget(
-          _app(_select(defaultValue: 'b', surface: surface)),
+          _app(_select(defaultValue: 'b', presentation: presentation)),
         );
 
         await tester.tap(
@@ -247,7 +245,7 @@ void main() {
     await focusWithKeyboard(tester);
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
-    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
 
     expect(_paintedFill(tester), _colors.surface);

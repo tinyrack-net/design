@@ -78,9 +78,10 @@ class _TRSelectOptions<T> extends StatelessWidget {
       enabled: enabled,
       builder: (context, states) => MenuItemButton(
         key: item.key,
-        // Only the dropdown lives inside a menu. The sheet closes itself with
-        // the value it popped, so asking a menu to close would be a no-op.
-        closeOnActivate: focusNodes != null,
+        overflowAxis: Axis.vertical,
+        // Select owns both presentations. Never close an unrelated ancestor
+        // menu when a Select happens to be composed inside one.
+        closeOnActivate: false,
         focusNode: focusNodes?[index],
         leadingIcon: item.leading,
         onPressed: enabled ? () => onSelected(item.value) : null,
@@ -132,7 +133,12 @@ class _TRSelectOptions<T> extends StatelessWidget {
     );
     final onRowKeyEvent = this.onRowKeyEvent;
     if (onRowKeyEvent == null) return button;
-    return Focus(onKeyEvent: (_, event) => onRowKeyEvent(event), child: button);
+    return Focus(
+      canRequestFocus: false,
+      skipTraversal: true,
+      onKeyEvent: (_, event) => onRowKeyEvent(event),
+      child: button,
+    );
   }
 
   ButtonStyle _style(
