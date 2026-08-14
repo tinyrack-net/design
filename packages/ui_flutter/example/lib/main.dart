@@ -3684,7 +3684,7 @@ class _PreviewNavigationMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TRNavigationMenu<String>.controlled(
     value: args['open'] == true ? 'products' : null,
-    panelWidth: 322,
+    layerSize: const TRLayerSize(width: TRLayerWidth.fixed(322)),
     items: const [
       TRNavigationMenuItem(
         value: 'products',
@@ -3721,7 +3721,7 @@ class _PreviewPopover extends StatelessWidget {
     title: const Text('Rack alpha'),
     description: const Text('4 services are healthy.'),
     content: const Text('Latency 18 ms'),
-    width: 165,
+    layerSize: const TRLayerSize(width: TRLayerWidth.fixed(165)),
   );
 }
 
@@ -3748,7 +3748,7 @@ class _PreviewPreviewCard extends StatelessWidget {
         ),
       ],
     ),
-    width: 165,
+    layerSize: const TRLayerSize(width: TRLayerWidth.fixed(165)),
   );
 }
 
@@ -4058,7 +4058,7 @@ class _PreviewSelect extends StatefulWidget {
 }
 
 class _PreviewSelectState extends State<_PreviewSelect> {
-  final MenuController _controller = MenuController();
+  final TRSelectController _controller = TRSelectController();
   String? _value;
 
   @override
@@ -4093,6 +4093,12 @@ class _PreviewSelectState extends State<_PreviewSelect> {
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   String _pick(String en, String ko, String ja) => switch (widget.locale) {
@@ -4130,7 +4136,7 @@ class _PreviewSelectState extends State<_PreviewSelect> {
               (widget.args['errorText']! as String).isNotEmpty
           ? widget.args['errorText']! as String
           : null,
-      menuController: _controller,
+      controller: _controller,
       onClose: () => widget.onStateChanged({'open': false}),
       onOpen: () => widget.onStateChanged({'open': true}),
       onValueChange: (value) {
@@ -4143,10 +4149,9 @@ class _PreviewSelectState extends State<_PreviewSelect> {
       readOnly: widget.args['readOnly'] == true,
       searchable: widget.args['searchable'] == true,
       searchPlaceholder: _pick('Search channels', '채널 검색', 'チャンネルを検索'),
-      // The playground drives `open` through a MenuController, which only the
-      // dropdown answers, so the surface is pinned rather than left to the
-      // preview frame's width.
-      surface: TRSelectSurface.menu,
+      // The playground pins an anchored presentation so its open-state
+      // controls remain deterministic at every preview width.
+      presentation: const TRSelectPresentation.layer(),
       uiSize: widget.size,
       width: 320,
     ),

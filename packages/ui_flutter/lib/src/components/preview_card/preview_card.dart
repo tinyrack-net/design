@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../layer_size.dart';
 import '../../types.dart';
 
 /// Controls an uncontrolled [TRPreviewCard].
@@ -38,11 +39,13 @@ class TRPreviewCard extends StatefulWidget {
     this.closeDelay = TRGeneratedMotion.previewCloseDelay,
     this.controller,
     this.defaultOpen = false,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.fixed(TRGeneratedMeasurements.overlayWidthSm),
+    ),
     this.onOpenChange,
     this.openDelay = TRGeneratedMotion.number,
     this.placement = TRLayerPlacement.bottomStart,
     this.useRootOverlay = true,
-    this.width = TRGeneratedMeasurements.overlayWidthSm,
     super.key,
   }) : open = null;
 
@@ -52,11 +55,13 @@ class TRPreviewCard extends StatefulWidget {
     required this.open,
     this.closeDelay = TRGeneratedMotion.previewCloseDelay,
     this.controller,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.fixed(TRGeneratedMeasurements.overlayWidthSm),
+    ),
     this.onOpenChange,
     this.openDelay = TRGeneratedMotion.number,
     this.placement = TRLayerPlacement.bottomStart,
     this.useRootOverlay = true,
-    this.width = TRGeneratedMeasurements.overlayWidthSm,
     super.key,
   }) : defaultOpen = false;
 
@@ -65,12 +70,12 @@ class TRPreviewCard extends StatefulWidget {
   final Duration closeDelay;
   final TRPreviewCardController? controller;
   final bool defaultOpen;
+  final TRLayerSize layerSize;
   final bool? open;
   final ValueChanged<bool>? onOpenChange;
   final Duration openDelay;
   final TRLayerPlacement placement;
   final bool useRootOverlay;
-  final double width;
 
   @override
   State<TRPreviewCard> createState() => _TRPreviewCardState();
@@ -151,6 +156,7 @@ class _TRPreviewCardState extends State<TRPreviewCard> {
     motionDuration: TRGeneratedMotion.slow,
     motionScale: false,
     requestFocus: false,
+    size: widget.layerSize,
     useRootOverlay: widget.useRootOverlay,
     triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
         MouseRegion(
@@ -165,8 +171,8 @@ class _TRPreviewCardState extends State<TRPreviewCard> {
       onExit: (_) => _request(false),
       child: TRLayerSurface(
         kind: TRLayerBoundaryKind.previewCard,
-        minWidth: widget.width,
-        maxWidth: widget.width,
+        minWidth: 0,
+        maxWidth: double.infinity,
         padding: const EdgeInsets.all(TRGeneratedSpacing.lg),
         child: widget.content,
       ),

@@ -1,11 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../internal/press_interaction.dart';
+import '../../layer_size.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
@@ -272,8 +271,10 @@ class TRInlineSuggestions<T extends Object> extends StatefulWidget {
     this.errorLabel = 'Could not load suggestions',
     this.semanticLabel = 'Suggestions',
     this.placement = TRLayerPlacement.topStart,
-    this.matchAnchorWidth = true,
-    this.width,
+    this.layerSize = const TRLayerSize(
+      width: TRLayerWidth.matchAnchor(),
+      height: TRLayerHeight.content(max: TRGeneratedMeasurements.measureXl),
+    ),
     this.maxVisibleItems = 8,
     this.autoHighlight = true,
     this.acceptOnEnter = true,
@@ -325,12 +326,7 @@ class TRInlineSuggestions<T extends Object> extends StatefulWidget {
 
   /// Where the list sits relative to the field; it flips when space runs out.
   final TRLayerPlacement placement;
-
-  /// Whether the list spans the field's width instead of its own.
-  final bool matchAnchorWidth;
-
-  /// Explicit width; overrides [matchAnchorWidth] when set.
-  final double? width;
+  final TRLayerSize layerSize;
 
   /// Rows shown before the list scrolls, counted rather than measured so the
   /// height follows the reader's text size.
@@ -442,7 +438,7 @@ class _TRInlineSuggestionsState<T extends Object>
           },
           placement: widget.placement,
           useRootOverlay: widget.useRootOverlay,
-          matchAnchorWidth: widget.width == null && widget.matchAnchorWidth,
+          size: widget.layerSize,
           // Focus must stay in the caller's field; the caller forwards keys.
           requestFocus: false,
           triggerBuilder: (context, open, openLayer, closeLayer, toggleLayer) =>
@@ -454,16 +450,13 @@ class _TRInlineSuggestionsState<T extends Object>
   }
 
   Widget _surface(BuildContext context) {
-    final width = widget.width;
-    final surface = TRLayerSurface(
-      kind: TRLayerBoundaryKind.inlineSuggestions,
-      // Left at the shared defaults when no width is named, so the anchor
-      // constraint decides and the surface still has bounds without one.
-      minWidth: width ?? TRGeneratedMeasurements.measureMd,
-      maxWidth:
-          width ??
-          TRGeneratedMeasurements.overlayWidthSm + TRGeneratedSpacing.size2xl,
-      child: ExcludeFocus(child: _rows(context)),
+    final surface = IntrinsicWidth(
+      child: TRLayerSurface(
+        kind: TRLayerBoundaryKind.inlineSuggestions,
+        minWidth: 0,
+        maxWidth: double.infinity,
+        child: ExcludeFocus(child: _rows(context)),
+      ),
     );
     return Semantics(
       container: true,
@@ -485,28 +478,12 @@ class _TRInlineSuggestionsState<T extends Object>
       constraints: BoxConstraints(maxHeight: maxHeight),
       child: TRScrollArea(
         verticalController: _scrollController,
-        // A menu item shrink-wraps its label whatever the surface does, so the
-        // row is handed the width the surface actually resolved to.
-        child: LayoutBuilder(
-          builder: (context, constraints) => _list(
-            context,
-            loading: loading,
-            contentWidth: math.max(
-              0,
-              constraints.maxWidth -
-                  TRControlMetrics.inlinePaddingOf(rowSize) * 2,
-            ),
-          ),
-        ),
+        child: _list(context, loading: loading),
       ),
     );
   }
 
-  Widget _list(
-    BuildContext context, {
-    required bool loading,
-    required double contentWidth,
-  }) {
+  Widget _list(BuildContext context, {required bool loading}) {
     final children = <Widget>[
       for (var index = 0; index < widget.items.length; index += 1)
         _TRInlineSuggestionRow<T>(
@@ -517,7 +494,6 @@ class _TRInlineSuggestionsState<T extends Object>
               ? () => widget.onSelected(widget.items[index])
               : null,
           index: index,
-          contentWidth: contentWidth,
         ),
       // A spinner below stale rows keeps the previous answer readable instead
       // of blanking the list on every keystroke.
@@ -546,7 +522,6 @@ class _TRInlineSuggestionRow<T extends Object> extends StatelessWidget {
     required this.highlighted,
     required this.onPressed,
     required this.index,
-    required this.contentWidth,
     super.key,
   });
 
@@ -554,7 +529,6 @@ class _TRInlineSuggestionRow<T extends Object> extends StatelessWidget {
   final bool highlighted;
   final VoidCallback? onPressed;
   final int index;
-  final double contentWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -576,10 +550,8 @@ class _TRInlineSuggestionRow<T extends Object> extends StatelessWidget {
         name: 'option$index',
         child: TRMaterialPressable(
           enabled: onPressed != null,
-          builder: (context, states) => MenuItemButton(
+          builder: (context, states) => TextButton(
             onPressed: onPressed,
-            requestFocusOnHover: false,
-            leadingIcon: item.leading,
             statesController: states,
             style: TRLayerStyles.option(context, highlighted: highlighted)
                 .copyWith(
@@ -594,54 +566,62 @@ class _TRInlineSuggestionRow<T extends Object> extends StatelessWidget {
                     ),
                   ),
                 ),
-            child: SizedBox(
-              width: contentWidth,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Flexible(child: label),
-                            if (item.tag != null) ...[
-                              const SizedBox(width: TRGeneratedSpacing.xs),
-                              _TRInlineSuggestionTag(label: item.tag!),
-                            ],
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (item.leading case final leading?) ...[
+                  IconTheme.merge(
+                    data: IconThemeData(
+                      size: TRControlMetrics.iconSizeOf(rowSize),
+                    ),
+                    child: leading,
+                  ),
+                  SizedBox(width: TRControlMetrics.gapOf(rowSize)),
+                ],
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(child: label),
+                          if (item.tag != null) ...[
+                            const SizedBox(width: TRGeneratedSpacing.xs),
+                            _TRInlineSuggestionTag(label: item.tag!),
                           ],
-                        ),
-                        if (item.description != null &&
-                            item.description!.isNotEmpty)
-                          Text(
-                            item.description!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TRGeneratedTextStyles.caption.copyWith(
-                              color: colors.textMuted,
-                              fontFamilyFallback:
-                                  TRGeneratedFontFamilies.fallback,
-                            ),
+                        ],
+                      ),
+                      if (item.description != null &&
+                          item.description!.isNotEmpty)
+                        Text(
+                          item.description!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TRGeneratedTextStyles.caption.copyWith(
+                            color: colors.textMuted,
+                            fontFamilyFallback:
+                                TRGeneratedFontFamilies.fallback,
                           ),
-                      ],
+                        ),
+                    ],
+                  ),
+                ),
+                if (item.hint != null) ...[
+                  const SizedBox(width: TRGeneratedSpacing.sm),
+                  Text(
+                    item.hint!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TRGeneratedTextStyles.caption.copyWith(
+                      color: colors.textPlaceholder,
+                      fontFamilyFallback: TRGeneratedFontFamilies.fallback,
                     ),
                   ),
-                  if (item.hint != null) ...[
-                    const SizedBox(width: TRGeneratedSpacing.sm),
-                    Text(
-                      item.hint!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TRGeneratedTextStyles.caption.copyWith(
-                        color: colors.textPlaceholder,
-                        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                      ),
-                    ),
-                  ],
                 ],
-              ),
+              ],
             ),
           ),
         ),

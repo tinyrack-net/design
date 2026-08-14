@@ -3451,9 +3451,9 @@ Widget _selectSurface(BuildContext context, Locale locale) => SizedBox(
   child: TRSelect<String>(
     label: _pick(locale, 'Release channel', '릴리스 채널', 'リリースチャンネル'),
     defaultValue: 'stable',
-    // Pinned so the example reads the same at every preview width; leaving it
-    // at TRSelectSurface.auto is what a product screen wants.
-    surface: TRSelectSurface.menu,
+    // Pinned so the example reads the same at every preview width. Products
+    // resolve layer or sheet presentation from their own responsive policy.
+    presentation: const TRSelectPresentation.layer(),
     items: [
       TRSelectItem(
         value: 'stable',

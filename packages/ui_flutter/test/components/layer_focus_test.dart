@@ -46,6 +46,15 @@ bool _focusIsInsideLayer() {
   return found;
 }
 
+bool _focusHasAncestor(String debugLabel) {
+  FocusNode? node = FocusManager.instance.primaryFocus;
+  while (node != null) {
+    if (node.debugLabel == debugLabel) return true;
+    node = node.parent;
+  }
+  return false;
+}
+
 void main() {
   setUp(TRFocusSource.instance.debugReset);
   tearDown(TRFocusSource.instance.debugReset);
@@ -70,24 +79,27 @@ void main() {
     );
   });
 
-  testWidgets(
-    'an open select with no selection focuses its trigger, not the popup',
-    (tester) async {
-      await tester.pumpWidget(_app(_select()));
+  testWidgets('an open select with no selection focuses its overlay scope', (
+    tester,
+  ) async {
+    await tester.pumpWidget(_app(_select()));
 
-      await tester.tap(find.byType(TextButton), kind: PointerDeviceKind.mouse);
-      await tester.pumpAndSettle();
+    await tester.tap(find.byType(TextButton), kind: PointerDeviceKind.mouse);
+    await tester.pumpAndSettle();
 
-      // Records today's behaviour rather than the intended one. `TRSelect`
-      // focuses the selected row on open and falls back to the trigger when
-      // nothing is selected, while Base UI moves focus into the popup on the
-      // web. Change this expectation if the Flutter focus contract changes.
-      expect(_focusIsInsideLayer(), isFalse);
-      // The popup contributes buttons of its own, so the trigger is the first.
-      final trigger = tester.widget<TextButton>(find.byType(TextButton).first);
-      expect(trigger.focusNode?.hasFocus, isTrue);
-    },
-  );
+    final trigger = tester.widget<TextButton>(find.byType(TextButton).first);
+    expect(trigger.focusNode?.hasFocus, isFalse);
+    expect(
+      FocusManager.instance.primaryFocus?.debugLabel,
+      'TRSelect layer panel',
+    );
+    expect(
+      _focusHasAncestor('TRAnchoredLayer surface'),
+      isTrue,
+      reason:
+          'the panel must belong to the overlay scope, not the trigger tree',
+    );
+  });
 
   testWidgets('an open select with a selection focuses the selected row', (
     tester,

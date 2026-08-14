@@ -13,6 +13,22 @@ import '../../tokens.dart';
 /// Logical edge from which a drawer enters.
 enum TRDrawerPlacement { top, bottom, start, end }
 
+/// Region that owns drag-to-snap and drag-to-dismiss gestures.
+enum TRDrawerDragBehavior {
+  /// The complete drawer surface participates in drawer dragging.
+  ///
+  /// A registered content scroll region coordinates its offset with the
+  /// drawer extent.
+  surface,
+
+  /// Only the visible handle participates in drawer dragging.
+  ///
+  /// Use this when content contains a dedicated scroll viewport whose gestures
+  /// must never resize the drawer. Side drawers have no handle and continue to
+  /// use their complete surface.
+  handleOnly,
+}
+
 /// Controls a [TRDrawerScaffold].
 class TRDrawerController extends ChangeNotifier {
   TRDrawerController({bool open = false}) : _isOpen = open;
@@ -39,6 +55,7 @@ class TRDrawer extends StatefulWidget {
     required this.content,
     this.actions,
     this.description,
+    this.dragBehavior = TRDrawerDragBehavior.surface,
     this.initialSnapIndex = 0,
     this.maxExtent = 1,
     this.modal = true,
@@ -63,6 +80,7 @@ class TRDrawer extends StatefulWidget {
   final Widget content;
   final Widget? actions;
   final Widget? description;
+  final TRDrawerDragBehavior dragBehavior;
   final int initialSnapIndex;
 
   /// Largest fraction of the viewport the drawer may occupy on its opening axis.
@@ -286,6 +304,35 @@ class _TRDrawerState extends State<TRDrawer>
     // the top and bottom sheets keep one.
     final borderWidth = _horizontal ? TRGeneratedBorders.defaultWidth : 0.0;
     final showDragHandle = _horizontal && widget.showDragHandle;
+    Widget? dragHandle;
+    if (showDragHandle) {
+      dragHandle = Align(
+        alignment: Alignment.topCenter,
+        child: ExcludeSemantics(
+          child: Container(
+            key: const ValueKey('tr-drawer-drag-handle'),
+            width: TRGeneratedSpacing.size2xl,
+            height: TRGeneratedSpacing.xs,
+            decoration: BoxDecoration(
+              color: colors.borderStrong,
+              borderRadius: BorderRadius.circular(TRGeneratedRadii.full),
+            ),
+          ),
+        ),
+      );
+      if (widget.dragBehavior == TRDrawerDragBehavior.handleOnly) {
+        dragHandle = GestureDetector(
+          key: const ValueKey('tr-drawer-drag-region'),
+          behavior: HitTestBehavior.opaque,
+          onVerticalDragEnd: _endDrag,
+          onVerticalDragUpdate: _drag,
+          child: SizedBox(
+            height: TRGeneratedSpacing.size2xl,
+            child: dragHandle,
+          ),
+        );
+      }
+    }
     final body = Material(
       color: colors.surface,
       elevation: 0,
@@ -325,23 +372,9 @@ class _TRDrawerState extends State<TRDrawer>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (showDragHandle) ...[
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: ExcludeSemantics(
-                      child: Container(
-                        key: const ValueKey('tr-drawer-drag-handle'),
-                        width: TRGeneratedSpacing.size2xl,
-                        height: TRGeneratedSpacing.xs,
-                        decoration: BoxDecoration(
-                          color: colors.borderStrong,
-                          borderRadius: BorderRadius.circular(
-                            TRGeneratedRadii.full,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: TRGeneratedSpacing.sm),
+                  dragHandle!,
+                  if (widget.dragBehavior == TRDrawerDragBehavior.surface)
+                    const SizedBox(height: TRGeneratedSpacing.sm),
                 ],
                 if (widget.title case final title?)
                   TRLayerPartBoundary(
@@ -421,7 +454,7 @@ class _TRDrawerState extends State<TRDrawer>
       ),
     );
     Widget interactiveBody = _horizontal
-        ? _draggable
+        ? _draggable && widget.dragBehavior == TRDrawerDragBehavior.surface
               ? TRInternalDrawerDragScope(
                   onDragEnd: _endDrag,
                   onDragUpdate: _dragBy,

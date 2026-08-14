@@ -2,6 +2,7 @@
 library;
 
 export 'src/ui_density.dart';
+export 'src/layer_size.dart';
 export 'src/components/accordion/accordion.dart';
 export 'src/components/adaptive_pane/adaptive_pane.dart';
 export 'src/components/alert/alert.dart';

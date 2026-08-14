@@ -396,6 +396,14 @@ const componentData: Record<
           ja: 'ポインターを重ねても入力フォーカスを保ちます。矢印キーでハイライトを移動し、Enter で選択、Escape で閉じ、Tab では選択せず次へ移動します。',
         },
       },
+      {
+        axis: { en: 'Layer size', ko: '레이어 크기', ja: 'レイヤーサイズ' },
+        choices: {
+          en: '`layerSize` sizes the complete suggestion layer. It matches the field width by default and lets content grow up to `TRMeasurements.measureXl` high.',
+          ko: '`layerSize`로 제안 레이어 전체 크기를 정해요. 기본 너비는 필드에 맞추고, 높이는 콘텐츠에 따라 `TRMeasurements.measureXl`까지 커져요.',
+          ja: '`layerSize` で候補レイヤー全体のサイズを指定します。デフォルトではフィールドの幅に合わせ、高さはコンテンツに応じて `TRMeasurements.measureXl` まで広がります。',
+        },
+      },
     ],
     usage:
       "TRAutocomplete<String>(\n  label: 'Region',\n  placeholder: 'Search regions',\n  items: const [\n    TRAutocompleteItem(value: 'seoul', label: 'Seoul'),\n    TRAutocompleteItem(value: 'tokyo', label: 'Tokyo'),\n  ],\n  onSelected: (region) => selectedRegion = region,\n)",
@@ -505,6 +513,15 @@ const componentData: Record<
               en: 'Set the control size and optional fixed field width.',
               ko: '컨트롤 크기와 선택적 고정 필드 너비를 정해요.',
               ja: 'コントロールサイズと任意の固定フィールド幅を指定します。',
+            },
+          },
+          {
+            name: 'layerSize',
+            type: 'TRLayerSize · match anchor / content height ≤ measureXl',
+            purpose: {
+              en: 'Sizes the complete suggestion layer independently from the field width.',
+              ko: '필드 너비와 별도로 제안 레이어 전체 크기를 정해요.',
+              ja: 'フィールド幅とは別に、候補レイヤー全体のサイズを指定します。',
             },
           },
           {
@@ -648,12 +665,12 @@ const componentData: Record<
             },
           },
           {
-            name: 'matchAnchorWidth',
-            type: 'bool · true',
+            name: 'layerSize',
+            type: 'TRLayerSize · match anchor / content height ≤ measureXl',
             purpose: {
-              en: 'Spans the field width instead of the surface default, so the list reads as part of that control.',
-              ko: '기본 표면 너비 대신 필드 너비를 따라가서 목록이 그 컨트롤의 일부처럼 읽혀요.',
-              ja: '既定のサーフェス幅ではなくフィールドの幅に合わせ、リストがそのコントロールの一部として読めるようにします。',
+              en: 'Sizes the complete suggestion layer. The row-count limit may make the scrolling list shorter than a larger fixed or minimum layer height.',
+              ko: '제안 레이어 전체 크기를 정해요. 더 큰 고정 높이나 최소 높이를 지정해도 행 개수 제한 때문에 스크롤 목록은 그보다 짧을 수 있어요.',
+              ja: '候補レイヤー全体のサイズを指定します。より大きい固定高さや最小高さを指定しても、行数の上限によりスクロールリスト自体はそれより短くなる場合があります。',
             },
           },
           {
@@ -813,6 +830,14 @@ const componentData: Record<
         },
       },
       {
+        axis: { en: 'Layer size', ko: '레이어 크기', ja: 'レイヤーサイズ' },
+        choices: {
+          en: '`layerSize` is independent from the field `width`. The complete options layer matches its anchor and grows with content up to `TRMeasurements.measureXl` high by default.',
+          ko: '`layerSize`는 필드 `width`와 별개예요. 기본값은 선택지 레이어 전체 너비를 기준 요소에 맞추고, 높이는 콘텐츠에 따라 `TRMeasurements.measureXl`까지 늘려요.',
+          ja: '`layerSize` はフィールドの `width` とは別です。デフォルトでは候補レイヤー全体の幅をアンカーに合わせ、高さはコンテンツに応じて `TRMeasurements.measureXl` まで広げます。',
+        },
+      },
+      {
         axis: { en: 'Filtering', ko: '필터링', ja: 'フィルタリング' },
         choices: {
           en: '`optionsBuilder` decides the candidates and `filterMode` narrows them: `contains`, `startsWith`, or `none`. A `filter` callback overrides `filterMode`. Use `none` when a remote or asynchronous `optionsBuilder` is already authoritative.',
@@ -961,9 +986,18 @@ const componentData: Record<
             name: 'uiSize, width',
             type: 'TRUiSize · TRUiSize.md, double? · null',
             purpose: {
-              en: 'Set the control size and a fixed field width. The popup matches `width`, or falls back to the small overlay width token.',
-              ko: '컨트롤 크기와 고정 필드 너비를 정해요. 팝업은 `width`를 따르고, 없으면 small 오버레이 너비 토큰을 써요.',
-              ja: 'コントロールサイズと固定のフィールド幅を指定します。ポップアップは `width` に合わせ、未指定の場合は small のオーバーレイ幅トークンを使います。',
+              en: 'Set the control size and an optional fixed field width. Use `layerSize` for the popup.',
+              ko: '컨트롤 크기와 선택적인 고정 필드 너비를 정해요. 팝업 크기는 `layerSize`로 지정하세요.',
+              ja: 'コントロールサイズと任意の固定フィールド幅を指定します。ポップアップのサイズには `layerSize` を使ってください。',
+            },
+          },
+          {
+            name: 'layerSize',
+            type: 'TRLayerSize · match anchor / content height ≤ measureXl',
+            purpose: {
+              en: 'Sizes the complete options layer for single, multiple, and FormField variants.',
+              ko: '단일 선택, 다중 선택, FormField 변형의 선택지 레이어 전체 크기를 정해요.',
+              ja: '単一選択、複数選択、FormField バリアントの候補レイヤー全体のサイズを指定します。',
             },
           },
         ],
@@ -1158,9 +1192,9 @@ const componentData: Record<
       ja: 'コンテンツに合うモーダルシート、またはビューポート比率でスワイプできるドロワーを論理方向の各辺から表示します。',
     },
     contractIntro: {
-      en: 'Top and bottom drawers fit their content by default, up to the full viewport. Upward drags scroll overflow without lifting a content-sized sheet, while downward drags return content to its leading edge before dismissing. Supply one `snapPoints` value for a fixed viewport-relative size or several for drag-to-snap behavior. A continuous drag expands the sheet before scrolling at its largest snap point and reverses that order when collapsing. Set `showDragHandle` to false to hide the handle and disable sheet dragging while preserving content scrolling. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted. Drawer surfaces extend to the viewport edge and preserve the system safe areas they can meet.',
-      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고 최대 뷰포트 전체까지 커져요. 콘텐츠 높이형 시트를 위로 끌면 시트가 들리지 않고 넘치는 콘텐츠만 스크롤하며, 아래로 끌면 콘텐츠를 시작 지점까지 되돌린 뒤 시트를 닫아요. 뷰포트 비율의 고정 크기는 `snapPoints` 값 하나로, 드래그 스냅은 여러 값으로 설정하세요. 한 번의 연속 드래그에서 시트를 최대 스냅 지점까지 먼저 확장한 뒤 콘텐츠를 스크롤하고, 반대 방향에서는 이 순서를 거꾸로 적용해요. `showDragHandle`을 false로 설정하면 핸들과 시트 드래그를 함께 끄면서 콘텐츠 스크롤은 유지해요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요. 드로어 표면은 뷰포트 끝까지 이어지고 닿을 수 있는 시스템 안전영역을 보호해요.',
-      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、最大でビューポート全体まで広がります。コンテンツサイズのシートを上にドラッグすると、シートを持ち上げずに収まらないコンテンツだけをスクロールします。下にドラッグすると、コンテンツを先頭へ戻してからシートを閉じます。ビューポート比率の固定サイズには `snapPoints` を 1 つ、ドラッグスナップには複数指定してください。1 回の連続したドラッグで、シートを最大スナップポイントまで広げてからコンテンツをスクロールし、反対方向ではこの順序を逆にします。`showDragHandle` を false にすると、コンテンツのスクロールを保ったままハンドルとシートのドラッグを無効にします。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。ドロワーのサーフェスはビューポートの端まで広がり、接する可能性があるシステムセーフエリアを保護します。',
+      en: 'Top and bottom drawers fit their content by default, up to the full viewport. Supply one `snapPoints` value for a fixed viewport-relative size or several for drag-to-snap behavior. The default `TRDrawerDragBehavior.surface` coordinates sheet motion with the registered content scroll region across the complete header and content surface. Choose `handleOnly` when the content owns a dedicated viewport: only the visible handle then moves the drawer, and content gestures remain with that viewport. Set `showDragHandle` to false to hide the handle and disable sheet dragging while preserving content scrolling. Start and end drawers have no handle, so they keep complete-surface horizontal dragging. Drawer surfaces extend to the viewport edge and preserve the system safe areas they can meet.',
+      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고 최대 뷰포트 전체까지 커져요. 뷰포트 비율의 고정 크기는 `snapPoints` 값 하나로, 드래그 스냅은 여러 값으로 설정하세요. 기본값인 `TRDrawerDragBehavior.surface`는 헤더와 콘텐츠 전체에서 시트 이동과 등록된 콘텐츠 스크롤 영역을 조율해요. 콘텐츠가 별도의 스크롤 영역을 소유한다면 `handleOnly`를 선택하세요. 이때는 보이는 핸들만 드로어를 움직이고 콘텐츠에서 시작한 제스처는 해당 스크롤 영역에 남아요. `showDragHandle`을 false로 설정하면 콘텐츠 스크롤은 유지하면서 핸들과 시트 드래그를 함께 꺼요. 시작과 끝 드로어에는 핸들이 없으므로 표면 전체의 가로 드래그를 유지해요. 드로어 표면은 뷰포트 끝까지 이어지고 닿을 수 있는 시스템 안전 영역을 보호해요.',
+      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、最大でビューポート全体まで広がります。ビューポート比率の固定サイズには `snapPoints` を 1 つ、ドラッグスナップには複数指定してください。デフォルトの `TRDrawerDragBehavior.surface` は、ヘッダーとコンテンツの全体でシート移動と登録済みコンテンツのスクロール領域を連携させます。コンテンツが専用のスクロール領域を持つ場合は `handleOnly` を選んでください。この場合、表示中のハンドルだけがドロワーを動かし、コンテンツ上で始まったジェスチャーはそのスクロール領域に残ります。`showDragHandle` を false にすると、コンテンツのスクロールを保ったままハンドルとシートのドラッグを無効にします。開始側と終了側のドロワーにはハンドルがないため、サーフェス全体での水平方向ドラッグを維持します。ドロワーのサーフェスはビューポートの端まで広がり、接する可能性があるシステムの安全領域を保護します。',
     },
     contractRows: [
       {
@@ -1181,14 +1215,14 @@ const componentData: Record<
       },
       {
         axis: {
-          en: 'Drag and scroll',
-          ko: '드래그와 스크롤',
-          ja: 'ドラッグとスクロール',
+          en: 'Drag ownership',
+          ko: '드래그 소유권',
+          ja: 'ドラッグの担当範囲',
         },
         choices: {
-          en: 'Coordinates expansion, overflow scrolling, reverse scrolling, and collapse within one continuous gesture across the header and content',
-          ko: '헤더와 콘텐츠에서 시작한 한 번의 연속 제스처로 확장, 내부 스크롤, 역방향 스크롤, 축소를 이어서 처리해요',
-          ja: 'ヘッダーとコンテンツから始めた 1 回の連続したジェスチャーで、展開、内部スクロール、逆方向のスクロール、縮小を連携します',
+          en: '`surface` coordinates expansion, scrolling, and collapse across the whole sheet; `handleOnly` reserves drawer motion for the visible handle and leaves content gestures untouched',
+          ko: '`surface`는 시트 전체에서 확장, 스크롤, 축소를 조율하고, `handleOnly`는 드로어 이동을 보이는 핸들에만 맡겨 콘텐츠 제스처에 관여하지 않아요',
+          ja: '`surface` はシート全体で展開、スクロール、縮小を連携し、`handleOnly` はドロワーの移動を表示中のハンドルだけに限定してコンテンツのジェスチャーに介入しません',
         },
       },
       {
@@ -1202,6 +1236,44 @@ const componentData: Record<
     ],
     usage:
       "showTRDrawer<void>(\n  context: context,\n  builder: (_) => const TRDrawer(\n    maxExtent: 0.7,\n    content: Text('Settings'),\n  ),\n)",
+    apiGroups: [
+      {
+        title: {
+          en: 'Gesture properties',
+          ko: '제스처 속성',
+          ja: 'ジェスチャーのプロパティ',
+        },
+        rows: [
+          {
+            name: 'dragBehavior',
+            type: 'TRDrawerDragBehavior · surface',
+            purpose: {
+              en: 'Chooses whether the complete sheet or only its visible handle owns drag-to-snap and drag-to-dismiss.',
+              ko: '시트 전체와 보이는 핸들 중 어느 영역이 스냅과 닫기 드래그를 소유할지 정해요.',
+              ja: 'シート全体と表示中のハンドルのどちらがスナップおよび閉じるためのドラッグを担当するかを選びます。',
+            },
+          },
+          {
+            name: 'showDragHandle',
+            type: 'bool · true',
+            purpose: {
+              en: 'Shows the top or bottom sheet handle. Turning it off also disables vertical drawer dragging.',
+              ko: '상단 또는 하단 시트 핸들을 표시해요. 끄면 세로 드로어 드래그도 비활성화돼요.',
+              ja: '上端または下端のシートハンドルを表示します。無効にすると、縦方向のドロワードラッグも無効になります。',
+            },
+          },
+          {
+            name: 'scrollContent',
+            type: 'bool · true',
+            purpose: {
+              en: 'Lets the drawer provide the content scroll region. Set it to false when a fixed header and dedicated viewport are supplied as content.',
+              ko: '드로어가 콘텐츠 스크롤 영역을 제공하게 해요. 고정 헤더와 별도 스크롤 영역을 콘텐츠로 넘길 때는 false로 설정하세요.',
+              ja: 'ドロワーがコンテンツのスクロール領域を提供します。固定ヘッダーと専用のスクロール領域をコンテンツとして渡す場合は false にしてください。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'file-tree': {
     title: 'FileTree',
@@ -1726,6 +1798,36 @@ class _RackFormState extends State<RackForm> {
     },
     usage:
       "TRNavigationMenu<String>(\n  items: const [\n    TRNavigationMenuItem(value: 'docs', trigger: Text('Docs'), content: Text('Guides')),\n  ],\n)",
+    contractRows: [
+      {
+        axis: { en: 'Layer size', ko: '레이어 크기', ja: 'レイヤーサイズ' },
+        choices: {
+          en: '`layerSize` sizes each complete navigation panel. The default uses the fixed navigation-panel width token; height follows content until the safe viewport clamps it.',
+          ko: '`layerSize`로 각 탐색 패널 전체 크기를 정해요. 기본값은 고정된 탐색 패널 너비 토큰을 사용하고, 높이는 안전 영역을 뺀 뷰포트에 닿을 때까지 콘텐츠를 따라가요.',
+          ja: '`layerSize` で各ナビゲーションパネル全体のサイズを指定します。デフォルトでは固定のナビゲーションパネル幅トークンを使い、高さは安全領域を除いたビューポートに達するまでコンテンツに合わせます。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'Layer properties',
+          ko: '레이어 속성',
+          ja: 'レイヤーのプロパティ',
+        },
+        rows: [
+          {
+            name: 'layerSize',
+            type: 'TRLayerSize · fixed navigationPanelWidth / content height',
+            purpose: {
+              en: 'Replaces the former panel-only width with one policy for the complete anchored layer.',
+              ko: '이전의 패널 너비 전용 속성 대신 기준 요소에 붙는 레이어 전체에 하나의 크기 정책을 적용해요.',
+              ja: '従来のパネル幅専用プロパティに代わり、アンカー付きレイヤー全体へ 1 つのサイズ方針を適用します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'number-field': {
     title: 'NumberField',
@@ -2043,6 +2145,36 @@ class _RackFormState extends State<RackForm> {
     },
     usage:
       "const TRPopover(\n  trigger: Text('Details'),\n  content: Text('Rack alpha'),\n)",
+    contractRows: [
+      {
+        axis: { en: 'Layer size', ko: '레이어 크기', ja: 'レイヤーサイズ' },
+        choices: {
+          en: '`layerSize` applies to the complete interactive layer. Its default width is fixed at `TRMeasurements.overlayWidthSm`, while height follows content until the safe viewport clamps it.',
+          ko: '`layerSize`는 상호작용 레이어 전체에 적용돼요. 기본 너비는 `TRMeasurements.overlayWidthSm`으로 고정되고, 높이는 안전 영역을 뺀 뷰포트에 닿을 때까지 콘텐츠를 따라가요.',
+          ja: '`layerSize` はインタラクティブなレイヤー全体に適用されます。デフォルトの幅は `TRMeasurements.overlayWidthSm` に固定され、高さは安全領域を除いたビューポートに達するまでコンテンツに合わせます。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'Layer properties',
+          ko: '레이어 속성',
+          ja: 'レイヤーのプロパティ',
+        },
+        rows: [
+          {
+            name: 'layerSize',
+            type: 'TRLayerSize · fixed overlayWidthSm / content height',
+            purpose: {
+              en: 'Sizes the complete layer instead of only its content panel.',
+              ko: '콘텐츠 패널만이 아니라 레이어 전체 크기를 정해요.',
+              ja: 'コンテンツパネルだけでなく、レイヤー全体のサイズを指定します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'preview-card': {
     title: 'PreviewCard',
@@ -2053,6 +2185,36 @@ class _RackFormState extends State<RackForm> {
     },
     usage:
       "const TRPreviewCard(\n  trigger: Text('Rack alpha'),\n  content: Text('Healthy'),\n)",
+    contractRows: [
+      {
+        axis: { en: 'Layer size', ko: '레이어 크기', ja: 'レイヤーサイズ' },
+        choices: {
+          en: '`layerSize` applies to the complete preview layer. Its default width is fixed at `TRMeasurements.overlayWidthSm`, while height follows content until the safe viewport clamps it.',
+          ko: '`layerSize`는 미리보기 레이어 전체에 적용돼요. 기본 너비는 `TRMeasurements.overlayWidthSm`으로 고정되고, 높이는 안전 영역을 뺀 뷰포트에 닿을 때까지 콘텐츠를 따라가요.',
+          ja: '`layerSize` はプレビューレイヤー全体に適用されます。デフォルトの幅は `TRMeasurements.overlayWidthSm` に固定され、高さは安全領域を除いたビューポートに達するまでコンテンツに合わせます。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'Layer properties',
+          ko: '레이어 속성',
+          ja: 'レイヤーのプロパティ',
+        },
+        rows: [
+          {
+            name: 'layerSize',
+            type: 'TRLayerSize · fixed overlayWidthSm / content height',
+            purpose: {
+              en: 'Sizes the complete layer instead of only its content panel.',
+              ko: '콘텐츠 패널만이 아니라 레이어 전체 크기를 정해요.',
+              ja: 'コンテンツパネルだけでなく、レイヤー全体のサイズを指定します。',
+            },
+          },
+        ],
+      },
+    ],
   },
   'scroll-area': {
     title: 'ScrollArea',
@@ -3666,6 +3828,36 @@ class _InstallCommandState extends State<InstallCommand> {
     },
     usage:
       "TRMenu(\n  trigger: const Text('View'),\n  menuChildren: [\n    TRMenuItem(onPressed: duplicate, child: const Text('Duplicate')),\n    TRMenuCheckboxItem(\n      value: showGrid,\n      onChanged: setShowGrid,\n      child: const Text('Show grid'),\n    ),\n  ],\n)",
+    contractRows: [
+      {
+        axis: { en: 'Layer size', ko: '레이어 크기', ja: 'レイヤーサイズ' },
+        choices: {
+          en: '`layerSize` applies to the complete root menu or `TRMenuSubmenu`. By default, content width stays between `TRMeasurements.measureMd` and `TRMeasurements.overlayWidthSm + TRSpacing.twoExtraLarge`, and content height is capped at `TRMeasurements.measureXl`.',
+          ko: '`layerSize`는 최상위 메뉴나 `TRMenuSubmenu` 전체에 적용돼요. 기본값은 콘텐츠 너비를 `TRMeasurements.measureMd`부터 `TRMeasurements.overlayWidthSm + TRSpacing.twoExtraLarge` 사이로 제한하고, 콘텐츠 높이를 `TRMeasurements.measureXl`까지 허용해요.',
+          ja: '`layerSize` はルートメニューまたは `TRMenuSubmenu` 全体に適用されます。デフォルトでは、コンテンツ幅を `TRMeasurements.measureMd` から `TRMeasurements.overlayWidthSm + TRSpacing.twoExtraLarge` の範囲に収め、コンテンツ高さを `TRMeasurements.measureXl` までに制限します。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'Layer properties',
+          ko: '레이어 속성',
+          ja: 'レイヤーのプロパティ',
+        },
+        rows: [
+          {
+            name: 'layerSize',
+            type: 'TRLayerSize · content width / content height',
+            purpose: {
+              en: 'Sizes the complete menu, including its border and padding. It is available on `TRMenu` and `TRMenuSubmenu`.',
+              ko: '테두리와 여백을 포함한 메뉴 전체 크기를 정해요. `TRMenu`와 `TRMenuSubmenu`에서 사용할 수 있어요.',
+              ja: '枠線と余白を含むメニュー全体のサイズを指定します。`TRMenu` と `TRMenuSubmenu` で使用できます。',
+            },
+          },
+        ],
+      },
+    ],
   },
   meter: {
     title: 'Meter',
@@ -4195,18 +4387,154 @@ class _DeploymentRackState extends State<DeploymentRack> {
       {
         axis: { en: 'Composition', ko: '구성', ja: '構成' },
         choices: {
-          en: 'Pass leading content to identify the trigger without changing the typed value. Add a TRSelectItem description for supporting text that stays in the option row; the selected trigger keeps only the label, and default search matches both strings. Give each item a key when tests or state restoration must identify it across dropdown and sheet surfaces.',
-          ko: 'leading 콘텐츠를 넘기면 타입이 있는 값을 바꾸지 않고 트리거의 용도를 나타낼 수 있어요. 선택지에 보조 설명이 필요하면 TRSelectItem description을 추가하세요. 선택된 트리거에는 label만 남고 기본 검색은 두 문자열을 모두 찾아요. 테스트나 상태 복원에서 드롭다운과 시트의 선택지를 일관되게 식별해야 한다면 각 item에 key를 지정하세요.',
-          ja: 'leading コンテンツを渡すと、型付きの値を変えずにトリガーの用途を示せます。選択肢に補足説明が必要な場合は TRSelectItem の description を追加してください。選択後のトリガーには label だけが残り、デフォルト検索は両方の文字列を対象にします。テストや状態復元でドロップダウンとシートの選択肢を一貫して識別する必要がある場合は、各 item に key を指定してください。',
+          en: 'Pass leading content to identify the trigger without changing the typed value. Add a `TRSelectItem` description for supporting text that stays in the option row; the selected trigger keeps only the label, and default search matches both strings. Give each item a key when tests or state restoration must identify it across layer and sheet presentations.',
+          ko: 'leading 콘텐츠를 넘기면 타입이 있는 값을 바꾸지 않고 트리거의 용도를 나타낼 수 있어요. 선택지에 보조 설명이 필요하면 `TRSelectItem`의 description을 추가하세요. 선택된 트리거에는 label만 남고 기본 검색은 두 문자열을 모두 찾아요. 테스트나 상태 복원에서 레이어와 시트의 선택지를 일관되게 식별해야 한다면 각 item에 key를 지정하세요.',
+          ja: 'leading コンテンツを渡すと、型付きの値を変えずにトリガーの用途を示せます。選択肢に補足説明が必要な場合は `TRSelectItem` の description を追加してください。選択後のトリガーには label だけが残り、デフォルト検索は両方の文字列を対象にします。テストや状態復元でレイヤーとシートの選択肢を一貫して識別する必要がある場合は、各 item に key を指定してください。',
         },
       },
       {
         axis: { en: 'Adaptive geometry', ko: '적응형 구조', ja: 'アダプティブな配置' },
         choices: {
-          en: 'Searchable desktop layers can grow wider than narrow triggers and keep the search field fixed above a full-width separator and a scrollable option region. Sheets fit short lists, cap long lists at the viewport, and apply the resolved UI density to option padding, icons, and typography while keeping every option target at least 48 logical pixels tall. Trackpad and wheel input over the fixed search field scrolls the options; a downward drag returns to the drawer only at the start of the list.',
-          ko: '검색 가능한 데스크톱 레이어는 좁은 트리거보다 넓어질 수 있어요. 검색 필드는 전체 폭 구분선 위에 고정되고 선택지 영역만 스크롤해요. 시트는 짧은 목록의 콘텐츠 높이에 맞고 긴 목록은 뷰포트를 넘지 않아요. 선택지의 여백, 아이콘, 타이포그래피는 해석된 UI 밀도를 따르며 각 선택 영역의 높이는 최소 48 논리 픽셀을 유지해요. 고정된 검색 필드 위에서 트랙패드나 휠을 사용해도 선택지가 스크롤되고, 목록 맨 위에서 아래로 당길 때만 시트 드래그로 전환돼요.',
-          ja: '検索可能なデスクトップレイヤーは、狭いトリガーより広く表示できます。検索フィールドは全幅のセパレーターの上に固定され、選択肢の領域だけがスクロールします。シートは短いリストの高さに合わせ、長いリストはビューポート内に制限します。選択肢の余白、アイコン、タイポグラフィには解決済みの UI 密度を適用し、各選択領域の高さは 48 論理ピクセル以上に保ちます。固定された検索フィールド上でトラックパッドやホイールを操作しても選択肢がスクロールし、リストの先頭で下にドラッグした場合だけシートのドラッグに切り替わります。',
+          en: 'Choose `TRSelectPresentation.layer` or `TRSelectPresentation.sheet` from the product layout policy. An anchored layer keeps its full-list intrinsic size, while a sheet keeps its full-list height and continues tracking viewport width; explicit fixed dimensions win. The search field sits outside the single options viewport, and wheel, trackpad, or drag input over it does not scroll the list or move the sheet.',
+          ko: '제품의 레이아웃 정책에 따라 `TRSelectPresentation.layer` 또는 `TRSelectPresentation.sheet`를 선택하세요. 기준 요소에 붙는 레이어는 전체 목록으로 계산한 고유 크기를 유지하고, 시트는 전체 목록 높이를 유지하면서 화면 너비를 계속 따라가요. 명시한 고정 크기가 있으면 그 값이 우선해요. 검색 필드는 하나뿐인 선택지 스크롤 영역 밖에 있고, 그 위에서 휠이나 트랙패드, 드래그를 사용해도 목록이나 시트가 움직이지 않아요.',
+          ja: 'プロダクトのレイアウト方針に応じて `TRSelectPresentation.layer` または `TRSelectPresentation.sheet` を選んでください。アンカー付きレイヤーは全項目から求めた固有サイズを維持し、シートは全項目の高さを保ちながらビューポート幅に追従します。明示した固定サイズがある場合はその値が優先されます。検索フィールドは 1 つだけの選択肢スクロール領域の外側にあり、その上でホイール、トラックパッド、ドラッグを操作してもリストやシートは動きません。',
         },
+      },
+      {
+        axis: { en: 'Layer size', ko: '레이어 크기', ja: 'レイヤーサイズ' },
+        choices: {
+          en: '`TRLayerSize` applies to the complete anchored layer. Width can follow content, use a fixed value, match the anchor, or stay at least as wide as the anchor; height can follow content or use a fixed value. Optional bounds apply before the safe viewport clamps the result.',
+          ko: '`TRLayerSize`는 기준 요소에 붙는 레이어 전체에 적용돼요. 너비는 콘텐츠에 맞추거나 고정값을 사용하고, 기준 요소와 같게 하거나 그보다 작지 않게 정할 수 있어요. 높이는 콘텐츠에 맞추거나 고정값을 사용할 수 있어요. 선택한 범위를 적용한 뒤 안전 영역을 뺀 뷰포트가 최종 크기를 제한해요.',
+          ja: '`TRLayerSize` はアンカー付きレイヤー全体に適用されます。幅はコンテンツに合わせる、固定値を使う、アンカーと同じにする、アンカーより狭くしない、の 4 方式から選べます。高さはコンテンツに合わせるか固定値を使えます。指定した範囲を適用したあと、安全領域を除いたビューポートが最終サイズを制限します。',
+        },
+      },
+    ],
+    apiGroups: [
+      {
+        title: {
+          en: 'Presentation and control',
+          ko: '표시 방식과 제어',
+          ja: '表示方法と制御',
+        },
+        rows: [
+          {
+            name: 'presentation',
+            type: 'TRSelectPresentation · const TRSelectPresentation.layer()',
+            purpose: {
+              en: 'Chooses the caller-owned presentation for the next open. The opened value is retained until close.',
+              ko: '다음에 열 때 사용할 표시 방식을 호출하는 쪽에서 정해요. 열릴 때의 값은 닫힐 때까지 유지돼요.',
+              ja: '次に開くときの表示方法を呼び出し側が指定します。開いた時点の値は閉じるまで維持されます。',
+            },
+          },
+          {
+            name: 'TRSelectPresentation.layer',
+            type: 'layerSize, placement = bottomStart, useRootOverlay = true',
+            purpose: {
+              en: 'Opens the shared panel in a collision-aware layer. The default is at least the anchor and `TRMeasurements.measureMd` wide, lets content grow through `TRMeasurements.overlayWidthSm`, and caps content height at `TRMeasurements.measureXl`.',
+              ko: '공유 패널을 충돌을 피하는 레이어로 열어요. 기본 너비는 기준 요소와 `TRMeasurements.measureMd`보다 작지 않고 콘텐츠에 따라 `TRMeasurements.overlayWidthSm`까지 늘어나며, 콘텐츠 높이는 `TRMeasurements.measureXl`까지 허용해요.',
+              ja: '共有パネルを衝突回避対応のレイヤーとして開きます。デフォルトの幅はアンカーと `TRMeasurements.measureMd` 以上で、コンテンツに応じて `TRMeasurements.overlayWidthSm` まで広がり、コンテンツの高さは `TRMeasurements.measureXl` までに制限されます。',
+            },
+          },
+          {
+            name: 'TRSelectPresentation.sheet',
+            type: 'maxExtent = 1, snapPoints = const [], showDragHandle = true',
+            purpose: {
+              en: 'Opens the same panel in a modal bottom sheet. The options viewport owns content gestures, while only the handle moves the sheet.',
+              ko: '같은 패널을 모달 바텀 시트로 열어요. 콘텐츠 제스처는 선택지 스크롤 영역이 소유하고 보이는 핸들만 시트를 움직여요.',
+              ja: '同じパネルをモーダルボトムシートで開きます。コンテンツのジェスチャーは選択肢のスクロール領域が担当し、表示中のハンドルだけがシートを動かします。',
+            },
+          },
+          {
+            name: 'controller',
+            type: 'TRSelectController? · null',
+            purpose: {
+              en: 'Reads `isOpen` and calls `open`, `close`, or `toggle` without depending on the selected presentation.',
+              ko: '선택한 표시 방식과 관계없이 `isOpen`을 읽고 `open`, `close`, `toggle`을 호출해요.',
+              ja: '選択した表示方法に依存せず、`isOpen` を読み取り、`open`、`close`、`toggle` を呼び出します。',
+            },
+          },
+          {
+            name: 'TRSelectFormField',
+            type: 'FormField<T>',
+            purpose: {
+              en: 'Forwards `presentation` and `controller` while retaining typed validation, saving, and reset behavior.',
+              ko: '타입이 있는 검증, 저장, 초기화 동작을 유지하면서 `presentation`과 `controller`를 전달해요.',
+              ja: '型付きの検証、保存、リセット動作を保ちながら、`presentation` と `controller` を引き渡します。',
+            },
+          },
+        ],
+      },
+      {
+        title: {
+          en: 'Shared layer sizing',
+          ko: '공통 레이어 크기',
+          ja: '共通レイヤーサイズ',
+        },
+        rows: [
+          {
+            name: 'TRLayerSize',
+            type: 'width = TRLayerWidth.content(), height = TRLayerHeight.content()',
+            purpose: {
+              en: 'Combines width and height policies for the complete layer, including border and padding.',
+              ko: '테두리와 여백을 포함한 레이어 전체의 너비·높이 정책을 조합해요.',
+              ja: '枠線と余白を含むレイヤー全体の幅と高さの方針を組み合わせます。',
+            },
+          },
+          {
+            name: 'TRLayerWidth.content',
+            type: '{double? min, double? max}',
+            purpose: {
+              en: 'Lets content choose the width within optional bounds.',
+              ko: '선택적인 최소·최대 범위 안에서 콘텐츠가 너비를 정하게 해요.',
+              ja: '任意の最小・最大範囲内でコンテンツに幅を決めさせます。',
+            },
+          },
+          {
+            name: 'TRLayerWidth.fixed',
+            type: 'double value',
+            purpose: {
+              en: 'Requests an exact width before the safe viewport clamp.',
+              ko: '안전 영역을 뺀 뷰포트로 제한하기 전에 정확한 너비를 요청해요.',
+              ja: '安全領域を除いたビューポートで制限する前の正確な幅を指定します。',
+            },
+          },
+          {
+            name: 'TRLayerWidth.matchAnchor',
+            type: '{double? min, double? max}',
+            purpose: {
+              en: 'Uses the anchor width, clamped to the optional bounds.',
+              ko: '기준 요소 너비를 사용하되 선택한 최소·최대 범위로 제한해요.',
+              ja: 'アンカーの幅を使い、任意の最小・最大範囲に収めます。',
+            },
+          },
+          {
+            name: 'TRLayerWidth.atLeastAnchor',
+            type: '{double? min, double? max}',
+            purpose: {
+              en: 'Lets content grow from at least the anchor width. An anchor wider than `max` still wins unless the safe viewport is smaller.',
+              ko: '콘텐츠가 기준 요소 너비 이상에서 늘어나게 해요. 기준 요소가 `max`보다 넓으면 안전 영역을 뺀 뷰포트가 더 작지 않은 한 기준 요소 너비가 우선해요.',
+              ja: 'コンテンツをアンカー幅以上から広げます。アンカーが `max` より広い場合は、安全領域を除いたビューポートのほうが狭くない限り、アンカー幅が優先されます。',
+            },
+          },
+          {
+            name: 'TRLayerHeight.content',
+            type: '{double? min, double? max}',
+            purpose: {
+              en: 'Lets content choose the height within optional bounds.',
+              ko: '선택적인 최소·최대 범위 안에서 콘텐츠가 높이를 정하게 해요.',
+              ja: '任意の最小・最大範囲内でコンテンツに高さを決めさせます。',
+            },
+          },
+          {
+            name: 'TRLayerHeight.fixed',
+            type: 'double value',
+            purpose: {
+              en: 'Requests an exact height before the safe viewport clamp.',
+              ko: '안전 영역을 뺀 뷰포트로 제한하기 전에 정확한 높이를 요청해요.',
+              ja: '安全領域を除いたビューポートで制限する前の正確な高さを指定します。',
+            },
+          },
+        ],
       },
     ],
   },

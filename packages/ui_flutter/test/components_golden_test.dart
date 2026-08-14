@@ -388,10 +388,8 @@ void main() {
     }
   }
 
-  // The sheet surface needs a viewport a select would actually pick it for, and
-  // that is the view's own metrics rather than the render surface: `MediaQuery`
-  // is built from the view, so `setSurfaceSize` alone would leave the select
-  // reading the default 800 logical pixels and opening a dropdown.
+  // The app owns the responsive decision, so the fixture requests a sheet
+  // explicitly while still using realistic narrow-view safe-area metrics.
   for (final themeCase in <(String, ThemeData)>[
     ('light', TinyrackTheme.light()),
     ('dark', TinyrackTheme.dark()),
@@ -418,6 +416,7 @@ void main() {
                   defaultValue: 'second',
                   label: strings.selectLabel,
                   placeholder: strings.selectPlaceholder,
+                  presentation: const TRSelectPresentation.sheet(),
                   searchable: true,
                   searchPlaceholder: strings.selectSearch,
                   items: [

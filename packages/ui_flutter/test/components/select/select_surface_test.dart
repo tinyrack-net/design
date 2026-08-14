@@ -12,6 +12,9 @@ const _items = [
   TRSelectItem(value: 'gamma', label: 'Gamma'),
 ];
 
+const _layer = TRSelectPresentation.layer();
+const _sheet = TRSelectPresentation.sheet();
+
 Finder get _trigger => find.descendant(
   of: find.byWidgetPredicate((widget) => widget is TRSelect),
   matching: find.byType(TextButton),
@@ -48,7 +51,7 @@ Widget _safeAreaApp(Widget child) => MaterialApp(
 Widget _withDensity(TRUiDensity density, Widget child) =>
     TRUiDensityScope(density: density, child: child);
 
-/// Sizes the viewport, which is what [TRSelectSurface.auto] reads.
+/// Sizes the viewport used by collision and sheet constraints.
 ///
 /// `setSurfaceSize` resizes the render view without touching the view metrics
 /// [MediaQuery] is built from, so the view itself is what has to move.
@@ -141,7 +144,12 @@ void main() {
           ),
         );
         final firstOption = find.widgetWithText(MenuItemButton, 'Alpha');
-        expect(tester.getSize(layer).width, TRMeasurements.measureLg);
+        expect(
+          tester.getSize(layer).width,
+          TRMeasurements.measureLg +
+              TRSpacing.small * 4 +
+              TRControlMetrics.borderWidth * 2,
+        );
         expect(tester.getSize(layer).width, greaterThan(140));
         expect(
           tester.getTopLeft(firstOption).dy -
@@ -207,9 +215,13 @@ void main() {
       expect(find.byKey(const ValueKey('form-select-leading')), findsOneWidget);
     });
 
-    testWidgets('opens a sheet below the small breakpoint', (tester) async {
+    testWidgets('opens an explicitly requested sheet on a narrow viewport', (
+      tester,
+    ) async {
       _sizeViewport(tester, _narrow);
-      await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
+      await tester.pumpWidget(
+        _app(const TRSelect<String>(items: _items, presentation: _sheet)),
+      );
 
       await tester.tap(_trigger);
       await tester.pumpAndSettle();
@@ -222,7 +234,13 @@ void main() {
     ) async {
       _sizeViewport(tester, _narrow);
       await tester.pumpWidget(
-        _safeAreaApp(const TRSelect<String>(items: _items, searchable: true)),
+        _safeAreaApp(
+          const TRSelect<String>(
+            items: _items,
+            searchable: true,
+            presentation: _sheet,
+          ),
+        ),
       );
 
       await tester.tap(_trigger);
@@ -244,7 +262,13 @@ void main() {
     ) async {
       _sizeViewport(tester, _narrow);
       await tester.pumpWidget(
-        _app(const TRSelect<String>(items: _items, searchable: true)),
+        _app(
+          const TRSelect<String>(
+            items: _items,
+            searchable: true,
+            presentation: _sheet,
+          ),
+        ),
       );
 
       await tester.tap(_trigger);
@@ -303,7 +327,9 @@ void main() {
       tester,
     ) async {
       _sizeViewport(tester, _narrow);
-      await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
+      await tester.pumpWidget(
+        _app(const TRSelect<String>(items: _items, presentation: _sheet)),
+      );
 
       await tester.tap(_trigger);
       await tester.pumpAndSettle();
@@ -337,6 +363,7 @@ void main() {
                 TRSelectItem(value: index, label: 'Option $index'),
             ],
             searchable: true,
+            presentation: _sheet,
           ),
         ),
       );
@@ -371,6 +398,7 @@ void main() {
                 TRSelectItem(value: index, label: 'Option $index'),
             ],
             searchable: true,
+            presentation: _sheet,
           ),
         ),
       );
@@ -395,7 +423,7 @@ void main() {
           )
           .position;
 
-      await tester.trackpadFling(search, const Offset(0, -300), 1000);
+      await tester.trackpadFling(optionsScroll, const Offset(0, -300), 1000);
       await tester.pumpAndSettle();
 
       expect(position.pixels, greaterThan(0));
@@ -403,7 +431,7 @@ void main() {
       expect(tester.getRect(search), searchRect);
     });
 
-    testWidgets('sheet scrolls back before handing a downward drag to drawer', (
+    testWidgets('sheet downward drag only scrolls its options viewport', (
       tester,
     ) async {
       _sizeViewport(tester, _narrow);
@@ -415,6 +443,7 @@ void main() {
                 TRSelectItem(value: index, label: 'Option $index'),
             ],
             searchable: true,
+            presentation: _sheet,
           ),
         ),
       );
@@ -423,7 +452,10 @@ void main() {
       await tester.pumpAndSettle();
 
       final drawer = find.byType(TRDrawer);
-      final search = find.byType(TRTextField);
+      final optionsScroll = find.descendant(
+        of: drawer,
+        matching: find.byType(SingleChildScrollView),
+      );
       final drawerRect = tester.getRect(drawer);
       final position = tester
           .state<ScrollableState>(
@@ -439,7 +471,7 @@ void main() {
       position.jumpTo(500);
       final startingPixels = position.pixels;
 
-      await tester.trackpadFling(search, const Offset(0, 100), 400);
+      await tester.trackpadFling(optionsScroll, const Offset(0, 100), 400);
       await tester.pumpAndSettle();
 
       expect(position.pixels, greaterThan(0));
@@ -447,7 +479,7 @@ void main() {
       expect(tester.getRect(drawer), drawerRect);
     });
 
-    testWidgets('sheet hands a downward drag at the top to the drawer', (
+    testWidgets('sheet search blocks a downward drag at the top', (
       tester,
     ) async {
       _sizeViewport(tester, _narrow);
@@ -459,6 +491,7 @@ void main() {
                 TRSelectItem(value: index, label: 'Option $index'),
             ],
             searchable: true,
+            presentation: _sheet,
           ),
         ),
       );
@@ -477,14 +510,12 @@ void main() {
       await gesture.panZoomUpdate(searchCenter, pan: const Offset(0, 240));
       await tester.pump();
 
-      expect(tester.getRect(search).top, greaterThan(startingRect.top));
+      expect(tester.getRect(search), startingRect);
       await gesture.panZoomEnd();
       await tester.pumpAndSettle();
     });
 
-    testWidgets('sheet forwards a wheel over its fixed search to options', (
-      tester,
-    ) async {
+    testWidgets('sheet blocks a wheel over its fixed search', (tester) async {
       _sizeViewport(tester, _narrow);
       await tester.pumpWidget(
         _app(
@@ -494,6 +525,7 @@ void main() {
                 TRSelectItem(value: index, label: 'Option $index'),
             ],
             searchable: true,
+            presentation: _sheet,
           ),
         ),
       );
@@ -523,13 +555,13 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(position.pixels, greaterThan(0));
+      expect(position.pixels, 0);
       expect(tester.getRect(drawer), drawerRect);
     });
 
-    testWidgets('opens a dropdown at the small breakpoint', (tester) async {
-      // The breakpoint is the first width that keeps the dropdown, so the
-      // exact boundary is asserted rather than a comfortably wide viewport.
+    testWidgets('the default presentation is an anchored layer', (
+      tester,
+    ) async {
       _sizeViewport(tester, const Size(TRBreakpoints.small, 800));
       await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
 
@@ -540,7 +572,7 @@ void main() {
       expect(find.widgetWithText(MenuItemButton, 'Gamma'), findsOneWidget);
     });
 
-    testWidgets('opens a sheet for comfortable density on a wide viewport', (
+    testWidgets('a sheet retains comfortable density on a wide viewport', (
       tester,
     ) async {
       _sizeViewport(tester, _wide);
@@ -548,7 +580,11 @@ void main() {
         _app(
           _withDensity(
             TRUiDensity.comfortable,
-            const TRSelect<String>(items: _items, searchable: true),
+            const TRSelect<String>(
+              items: _items,
+              searchable: true,
+              presentation: _sheet,
+            ),
           ),
         ),
       );
@@ -605,14 +641,12 @@ void main() {
       expect(find.widgetWithText(MenuItemButton, 'Gamma'), findsOneWidget);
     });
 
-    testWidgets('honours an explicit menu surface on a narrow viewport', (
+    testWidgets('honours an explicit layer presentation on a narrow viewport', (
       tester,
     ) async {
       _sizeViewport(tester, _narrow);
       await tester.pumpWidget(
-        _app(
-          const TRSelect<String>(items: _items, surface: TRSelectSurface.menu),
-        ),
+        _app(const TRSelect<String>(items: _items, presentation: _layer)),
       );
 
       await tester.tap(_trigger);
@@ -622,14 +656,12 @@ void main() {
       expect(find.widgetWithText(MenuItemButton, 'Gamma'), findsOneWidget);
     });
 
-    testWidgets('honours an explicit sheet surface on a wide viewport', (
+    testWidgets('honours an explicit sheet presentation on a wide viewport', (
       tester,
     ) async {
       _sizeViewport(tester, _wide);
       await tester.pumpWidget(
-        _app(
-          const TRSelect<String>(items: _items, surface: TRSelectSurface.sheet),
-        ),
+        _app(const TRSelect<String>(items: _items, presentation: _sheet)),
       );
 
       await tester.tap(_trigger);
@@ -658,7 +690,9 @@ void main() {
       await tester.tap(find.text('Alpha').last);
       await tester.pumpAndSettle();
       tester.view.physicalSize = _narrow;
-      await tester.pumpWidget(_app(const TRSelect<String>(items: keyedItems)));
+      await tester.pumpWidget(
+        _app(const TRSelect<String>(items: keyedItems, presentation: _sheet)),
+      );
       await tester.tap(_trigger);
       await tester.pumpAndSettle();
 
@@ -700,7 +734,9 @@ void main() {
       await tester.pumpAndSettle();
       tester.view.physicalSize = _narrow;
       await tester.pumpWidget(
-        _app(const TRSelect<String>(items: describedItems)),
+        _app(
+          const TRSelect<String>(items: describedItems, presentation: _sheet),
+        ),
       );
       await tester.tap(_trigger);
       await tester.pumpAndSettle();
@@ -713,7 +749,9 @@ void main() {
       tester,
     ) async {
       _sizeViewport(tester, _narrow);
-      await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
+      await tester.pumpWidget(
+        _app(const TRSelect<String>(items: _items, presentation: _sheet)),
+      );
 
       await tester.tap(_trigger);
       await tester.pumpAndSettle();
@@ -743,6 +781,7 @@ void main() {
               items: _items,
               value: value,
               placeholder: 'Choose one',
+              presentation: _sheet,
               onValueChange: (next) => setState(() => value = next),
             ),
           ),
@@ -772,6 +811,7 @@ void main() {
                 TRSelectItem<String?>(value: 'en', label: 'English'),
               ],
               value: value,
+              presentation: _sheet,
               onValueChange: (next) => setState(() {
                 changes += 1;
                 value = next;
@@ -798,6 +838,7 @@ void main() {
           TRSelect<String>(
             items: _items,
             defaultValue: 'alpha',
+            presentation: _sheet,
             onValueChange: (_) => changes += 1,
           ),
         ),
@@ -823,6 +864,7 @@ void main() {
         _app(
           TRSelect<String>(
             items: _items,
+            presentation: _sheet,
             onOpen: () => opens += 1,
             onClose: () => closes += 1,
           ),
@@ -844,7 +886,9 @@ void main() {
     ) async {
       _sizeViewport(tester, _narrow);
       final handle = tester.ensureSemantics();
-      await tester.pumpWidget(_app(const TRSelect<String>(items: _items)));
+      await tester.pumpWidget(
+        _app(const TRSelect<String>(items: _items, presentation: _sheet)),
+      );
 
       expect(_triggerHasExpandedState(tester), isTrue);
       expect(_triggerIsExpanded(tester), isFalse);
@@ -881,8 +925,16 @@ void main() {
         _app(
           const Column(
             children: [
-              TRSelect<String>(items: _items, enabled: false),
-              TRSelect<String>(items: _items, readOnly: true),
+              TRSelect<String>(
+                items: _items,
+                enabled: false,
+                presentation: _sheet,
+              ),
+              TRSelect<String>(
+                items: _items,
+                readOnly: true,
+                presentation: _sheet,
+              ),
             ],
           ),
         ),
@@ -908,6 +960,7 @@ void main() {
             child: TRSelectFormField<String>(
               items: _items,
               initialValue: 'alpha',
+              presentation: _sheet,
               onSaved: (value) => saved = value,
               validator: (value) => value == 'beta' ? null : 'Choose Beta',
             ),

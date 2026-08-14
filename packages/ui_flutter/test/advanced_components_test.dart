@@ -446,6 +446,56 @@ void main() {
       expect(controller.value, 'alpha');
     });
 
+    testWidgets(
+      'autocomplete input re-tap keeps focus and outside tap dismisses options',
+      (tester) async {
+        final controller = TRAutocompleteController<String>();
+        var focusLosses = 0;
+        void trackFocus() {
+          if (!controller.focusNode.hasFocus) focusLosses += 1;
+        }
+
+        controller.focusNode.addListener(trackFocus);
+        addTearDown(() => controller.focusNode.removeListener(trackFocus));
+        addTearDown(controller.dispose);
+        await tester.pumpWidget(
+          _app(
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(onPressed: () {}, child: const Text('Outside')),
+                TRAutocomplete<String>(
+                  controller: controller,
+                  items: const [
+                    TRAutocompleteItem(value: 'alpha', label: 'Alpha'),
+                    TRAutocompleteItem(value: 'alpine', label: 'Alpine'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+
+        await tester.enterText(find.byType(TextFormField), 'al');
+        await tester.pumpAndSettle();
+        expect(find.text('Alpha'), findsOneWidget);
+
+        await tester.tap(
+          find.byType(TextFormField),
+          kind: PointerDeviceKind.mouse,
+        );
+        await tester.pumpAndSettle();
+        expect(focusLosses, 0);
+        expect(controller.focusNode.hasFocus, isTrue);
+        expect(find.text('Alpha'), findsOneWidget);
+
+        await tester.tap(find.text('Outside'), kind: PointerDeviceKind.mouse);
+        await tester.pumpAndSettle();
+        expect(controller.focusNode.hasFocus, isFalse);
+        expect(find.text('Alpha'), findsNothing);
+      },
+    );
+
     testWidgets('autocomplete highlights and selects options with arrow keys', (
       tester,
     ) async {

@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,6 +32,76 @@ Finder _option(String label) => find.descendant(
 );
 
 void main() {
+  testWidgets(
+    'input re-tap keeps focus and outside tap dismisses combobox options',
+    (tester) async {
+      final controller = TRComboboxController<String>();
+      var focusLosses = 0;
+      void trackFocus() {
+        if (!controller.focusNode.hasFocus) focusLosses += 1;
+      }
+
+      controller.focusNode.addListener(trackFocus);
+      addTearDown(() => controller.focusNode.removeListener(trackFocus));
+      addTearDown(controller.dispose);
+      await tester.pumpWidget(
+        _app(
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(onPressed: () {}, child: const Text('Outside')),
+              TRCombobox<String>(controller: controller, items: _channels),
+            ],
+          ),
+        ),
+      );
+      await _query(tester, 'sta');
+      expect(_option('Stable'), findsOneWidget);
+
+      await tester.tap(
+        find.byType(TextFormField).first,
+        kind: PointerDeviceKind.mouse,
+      );
+      await tester.pumpAndSettle();
+      expect(focusLosses, 0);
+      expect(controller.focusNode.hasFocus, isTrue);
+      expect(_option('Stable'), findsOneWidget);
+
+      await tester.tap(find.text('Outside'), kind: PointerDeviceKind.mouse);
+      await tester.pumpAndSettle();
+      expect(controller.focusNode.hasFocus, isFalse);
+      expect(_option('Stable'), findsNothing);
+    },
+  );
+
+  testWidgets('grid options retain two-column geometry and selection', (
+    tester,
+  ) async {
+    final controller = TRComboboxController<String>();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _app(
+        TRCombobox<String>(
+          controller: controller,
+          items: _channels,
+          layout: TRComboboxLayout.grid,
+        ),
+      ),
+    );
+    await _query(tester, 'a');
+
+    final stableRect = tester.getRect(_option('Stable'));
+    final betaRect = tester.getRect(_option('Beta'));
+    final unstableRect = tester.getRect(_option('Unstable'));
+    expect(betaRect.top, closeTo(stableRect.top, 0.01));
+    expect(betaRect.left, greaterThan(stableRect.left));
+    expect(unstableRect.top, greaterThan(stableRect.bottom));
+
+    await tester.tap(_option('Beta'));
+    await tester.pumpAndSettle();
+    expect(controller.value, 'beta');
+  });
+
   testWidgets('options inherit comfortable density through the overlay', (
     tester,
   ) async {

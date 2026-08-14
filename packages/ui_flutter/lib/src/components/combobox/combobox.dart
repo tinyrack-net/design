@@ -7,7 +7,7 @@ import 'package:lucide_flutter/lucide_flutter.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
 import '../../internal/press_interaction.dart';
-import '../../tokens.dart';
+import '../../layer_size.dart';
 import '../../types.dart';
 import '../../ui_density.dart';
 import '../button/button.dart';
@@ -15,6 +15,11 @@ import '../text_field/text_field.dart';
 
 /// Layout used by a combobox options popup.
 enum TRComboboxLayout { list, grid }
+
+const _defaultComboboxLayerSize = TRLayerSize(
+  width: TRLayerWidth.matchAnchor(),
+  height: TRLayerHeight.content(max: TRGeneratedMeasurements.measureXl),
+);
 
 /// How a combobox narrows its option source against the current query.
 ///
@@ -145,6 +150,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
+    this.layerSize = _defaultComboboxLayerSize,
     this.layout = TRComboboxLayout.list,
     this.onQueryChange,
     this.onValueChange,
@@ -172,6 +178,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
     this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
+    this.layerSize = _defaultComboboxLayerSize,
     this.layout = TRComboboxLayout.list,
     this.onQueryChange,
     this.onValueChange,
@@ -218,6 +225,7 @@ class TRCombobox<T extends Object> extends StatefulWidget {
   final TRComboboxFilterMode filterMode;
   final String? helperText;
   final String? label;
+  final TRLayerSize layerSize;
   final TRComboboxLayout layout;
   final ValueChanged<String>? onQueryChange;
   final ValueChanged<T?>? onValueChange;
@@ -323,6 +331,7 @@ class _TRComboboxState<T extends Object> extends State<TRCombobox<T>> {
     helperText: widget.helperText,
     items: widget.items,
     label: widget.label,
+    layerSize: widget.layerSize,
     layout: widget.layout,
     onClear: widget.clearable ? _clear : null,
     onQueryChange: widget.onQueryChange,
@@ -353,6 +362,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
+    this.layerSize = _defaultComboboxLayerSize,
     this.layout = TRComboboxLayout.list,
     this.onQueryChange,
     this.onValueChange,
@@ -379,6 +389,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
     this.filterMode = TRComboboxFilterMode.contains,
     this.helperText,
     this.label,
+    this.layerSize = _defaultComboboxLayerSize,
     this.layout = TRComboboxLayout.list,
     this.onQueryChange,
     this.onValueChange,
@@ -424,6 +435,7 @@ class TRMultiCombobox<T extends Object> extends StatefulWidget {
   final TRComboboxFilterMode filterMode;
   final String? helperText;
   final String? label;
+  final TRLayerSize layerSize;
   final TRComboboxLayout layout;
   final ValueChanged<String>? onQueryChange;
   final ValueChanged<List<T>>? onValueChange;
@@ -535,6 +547,7 @@ class _TRMultiComboboxState<T extends Object>
         helperText: widget.helperText,
         items: widget.items,
         label: widget.label,
+        layerSize: widget.layerSize,
         layout: widget.layout,
         onClear: widget.clearable ? _clear : null,
         onQueryChange: widget.onQueryChange,
@@ -571,6 +584,7 @@ class _TRComboboxInput<T extends Object> extends StatefulWidget {
     required this.helperText,
     required this.items,
     required this.label,
+    required this.layerSize,
     required this.layout,
     required this.onClear,
     required this.onQueryChange,
@@ -601,6 +615,7 @@ class _TRComboboxInput<T extends Object> extends StatefulWidget {
   final String? helperText;
   final List<TRComboboxItem<T>> items;
   final String? label;
+  final TRLayerSize layerSize;
   final TRComboboxLayout layout;
   final VoidCallback? onClear;
   final ValueChanged<String>? onQueryChange;
@@ -749,9 +764,7 @@ class _TRComboboxInputState<T extends Object>
 
   @override
   Widget build(BuildContext context) {
-    final popupWidth = widget.width ?? TRGeneratedMeasurements.overlayWidthSm;
     final density = TRUiDensityScope.of(context);
-    final rowSize = TRLayerStyles.rowSizeOf(context);
     return SizedBox(
       width: widget.width,
       child: RawAutocomplete<TRComboboxItem<T>>(
@@ -781,56 +794,35 @@ class _TRComboboxInputState<T extends Object>
           _publishHighlight(AutocompleteHighlightedOption.of(context));
           return TRUiDensityScope(
             density: density,
-            child: Align(
-              alignment: AlignmentDirectional.topStart,
-              child: Transform.translate(
-                offset: const Offset(0, TRGeneratedSpacing.sm),
-                child: TRLayerSurface(
+            child: LayoutBuilder(
+              builder: (context, constraints) => TRAnchoredLayer(
+                open: true,
+                onOpenChange: (open) {
+                  if (!open) widget.focusNode.unfocus();
+                },
+                // RawAutocomplete owns dismissal for the real field and its
+                // TextFieldTapRegion. This nested host only replaces the popup
+                // geometry; its zero-height surrogate anchor must not treat a
+                // re-tap on the actual input as an outside interaction.
+                dismissOnTapOutside: false,
+                gap: TRGeneratedSpacing.sm,
+                requestFocus: false,
+                size: widget.layerSize,
+                triggerBuilder:
+                    (context, open, openLayer, closeLayer, toggleLayer) =>
+                        SizedBox(width: constraints.maxWidth),
+                layerBuilder: (context) => TRLayerSurface(
                   kind: TRLayerBoundaryKind.combobox,
-                  minWidth: popupWidth,
-                  maxWidth: popupWidth,
+                  minWidth: 0,
+                  maxWidth: double.infinity,
                   padding: const EdgeInsets.all(TRGeneratedSpacing.xs),
                   // Keyboard focus stays on the query field so arrow keys reach
                   // the highlight shortcuts instead of the option buttons.
                   child: ExcludeFocus(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxHeight: TRGeneratedMeasurements.measureXl,
-                      ),
-                      child: widget.layout == TRComboboxLayout.grid
-                          ? GridView.builder(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    mainAxisExtent: TRControlMetrics.heightOf(
-                                      rowSize,
-                                    ),
-                                    crossAxisSpacing: TRGeneratedSpacing.xs,
-                                    mainAxisSpacing: TRGeneratedSpacing.xs,
-                                  ),
-                              itemCount: options.length,
-                              itemBuilder: (context, index) => _option(
-                                context,
-                                options.elementAt(index),
-                                index,
-                                select,
-                              ),
-                            )
-                          : ListView.separated(
-                              padding: EdgeInsets.zero,
-                              shrinkWrap: true,
-                              itemCount: options.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: TRGeneratedSpacing.xs),
-                              itemBuilder: (context, index) => _option(
-                                context,
-                                options.elementAt(index),
-                                index,
-                                select,
-                              ),
-                            ),
+                    child: _optionsViewport(
+                      context,
+                      options.toList(growable: false),
+                      select,
                     ),
                   ),
                 ),
@@ -839,6 +831,73 @@ class _TRComboboxInputState<T extends Object>
           );
         },
       ),
+    );
+  }
+
+  Widget _optionsViewport(
+    BuildContext context,
+    List<TRComboboxItem<T>> options,
+    AutocompleteOnSelected<TRComboboxItem<T>> select,
+  ) => IntrinsicWidth(
+    // ListView and GridView fill the largest cross-axis constraint, which
+    // prevents TRLayerWidth.content from reflecting the option labels. A
+    // single vertical viewport keeps one scroll position while the intrinsic
+    // column/table supplies a finite content width.
+    child: SingleChildScrollView(
+      primary: false,
+      child: widget.layout == TRComboboxLayout.grid
+          ? _optionsGrid(context, options, select)
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var index = 0; index < options.length; index++) ...[
+                  if (index > 0) const SizedBox(height: TRGeneratedSpacing.xs),
+                  _option(context, options[index], index, select),
+                ],
+              ],
+            ),
+    ),
+  );
+
+  Widget _optionsGrid(
+    BuildContext context,
+    List<TRComboboxItem<T>> options,
+    AutocompleteOnSelected<TRComboboxItem<T>> select,
+  ) {
+    final rows = <TableRow>[];
+    for (var index = 0; index < options.length; index += 2) {
+      if (rows.isNotEmpty) {
+        rows.add(
+          const TableRow(
+            children: [
+              SizedBox(height: TRGeneratedSpacing.xs),
+              SizedBox.shrink(),
+              SizedBox.shrink(),
+            ],
+          ),
+        );
+      }
+      rows.add(
+        TableRow(
+          children: [
+            _option(context, options[index], index, select),
+            const SizedBox(width: TRGeneratedSpacing.xs),
+            index + 1 < options.length
+                ? _option(context, options[index + 1], index + 1, select)
+                : const SizedBox.shrink(),
+          ],
+        ),
+      );
+    }
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      columnWidths: const {
+        0: IntrinsicColumnWidth(flex: 1),
+        1: FixedColumnWidth(TRGeneratedSpacing.xs),
+        2: IntrinsicColumnWidth(flex: 1),
+      },
+      children: rows,
     );
   }
 
@@ -882,28 +941,26 @@ class _TRComboboxInputState<T extends Object>
     TRComboboxItem<T> item,
     int index,
     AutocompleteOnSelected<TRComboboxItem<T>> select,
-  ) => SizedBox(
-    width: double.infinity,
-    child: TRMaterialPressable(
-      enabled: item.enabled,
-      builder: (context, states) => MenuItemButton(
-        leadingIcon: item.leading,
-        onPressed: item.enabled ? () => select(item) : null,
-        requestFocusOnHover: false,
-        statesController: states,
-        style: TRLayerStyles.option(
-          context,
-          highlighted:
-              item.enabled &&
-              _highlightArmed &&
-              AutocompleteHighlightedOption.of(context) == index,
-          selected: widget.selected.contains(item.value),
-        ),
-        trailingIcon: item.trailing,
-        child: TRLayerPartBoundary(
-          name: 'option$index',
-          child: Text(item.label),
-        ),
+  ) => TRMaterialPressable(
+    enabled: item.enabled,
+    builder: (context, states) => MenuItemButton(
+      leadingIcon: item.leading,
+      onPressed: item.enabled ? () => select(item) : null,
+      overflowAxis: Axis.vertical,
+      requestFocusOnHover: false,
+      statesController: states,
+      style: TRLayerStyles.option(
+        context,
+        highlighted:
+            item.enabled &&
+            _highlightArmed &&
+            AutocompleteHighlightedOption.of(context) == index,
+        selected: widget.selected.contains(item.value),
+      ),
+      trailingIcon: item.trailing,
+      child: TRLayerPartBoundary(
+        name: 'option$index',
+        child: Text(item.label, overflow: TextOverflow.ellipsis),
       ),
     ),
   );
@@ -925,6 +982,7 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
     TRComboboxFilterMode filterMode = TRComboboxFilterMode.contains,
     String? helperText,
     String? label,
+    TRLayerSize layerSize = _defaultComboboxLayerSize,
     TRComboboxLayout layout = TRComboboxLayout.list,
     ValueChanged<T?>? onValueChange,
     super.onSaved,
@@ -947,6 +1005,7 @@ class TRComboboxFormField<T extends Object> extends FormField<T> {
            filterMode: filterMode,
            helperText: helperText,
            label: label,
+           layerSize: layerSize,
            layout: layout,
            onValueChange: (value) {
              field.didChange(value);
@@ -974,6 +1033,7 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
     TRComboboxFilterMode filterMode = TRComboboxFilterMode.contains,
     String? helperText,
     String? label,
+    TRLayerSize layerSize = _defaultComboboxLayerSize,
     TRComboboxLayout layout = TRComboboxLayout.list,
     ValueChanged<List<T>>? onValueChange,
     super.onSaved,
@@ -997,6 +1057,7 @@ class TRMultiComboboxFormField<T extends Object> extends FormField<List<T>> {
            filterMode: filterMode,
            helperText: helperText,
            label: label,
+           layerSize: layerSize,
            layout: layout,
            onValueChange: (value) {
              field.didChange(value);

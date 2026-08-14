@@ -4,7 +4,10 @@ library;
 export 'select_widget.dart'
     show
         TRSelect,
+        TRSelectController,
         TRSelectFilter,
         TRSelectFormField,
         TRSelectItem,
-        TRSelectSurface;
+        TRSelectLayerPresentation,
+        TRSelectPresentation,
+        TRSelectSheetPresentation;

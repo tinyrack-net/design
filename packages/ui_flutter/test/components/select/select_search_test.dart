@@ -19,8 +19,7 @@ Finder get _searchField => find.byType(TRTextField);
 
 Finder _option(String label) => find.widgetWithText(MenuItemButton, label);
 
-/// Turns animations off while leaving the viewport size intact, which is what
-/// [TRSelectSurface.auto] reads.
+/// Turns animations off while leaving the viewport size intact.
 Widget _app(Widget child) => MaterialApp(
   theme: TinyrackTheme.light(),
   home: Scaffold(
@@ -329,6 +328,7 @@ void main() {
         TRSelect<String>(
           items: _items,
           searchable: true,
+          presentation: const TRSelectPresentation.sheet(maxExtent: 0.7),
           onValueChange: (next) => value = next,
         ),
       ),
