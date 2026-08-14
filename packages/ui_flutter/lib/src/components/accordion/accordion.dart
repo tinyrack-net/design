@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
+import '../../internal/press_interaction.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -118,7 +119,7 @@ class _TRAccordionItemView extends StatefulWidget {
 }
 
 class _TRAccordionItemViewState extends State<_TRAccordionItemView>
-    with TRFocusSourceMixin {
+    with TRFocusSourceMixin, TRTouchPressStateMixin<_TRAccordionItemView> {
   bool _focused = false;
   bool _spaceDown = false;
   final _focusNode = FocusNode();
@@ -210,80 +211,95 @@ class _TRAccordionItemViewState extends State<_TRAccordionItemView>
                   onKeyEvent: interactive
                       ? (node, event) => _handleSpace(event, widget.onToggle)
                       : null,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: interactive ? widget.onToggle : null,
-                    child: Semantics(
-                      button: true,
-                      enabled: interactive,
-                      expanded: widget.open,
-                      child: AnimatedOpacity(
-                        curve: TRMotion.standard,
-                        duration: motionDuration,
-                        opacity: widget.item.disabled
-                            ? TRGeneratedOpacity.disabled
-                            : 1,
-                        child: CustomPaint(
-                          foregroundPainter: _TRAccordionFocusRingPainter(
-                            color: colors.focus,
-                            visible: showFocusRing,
-                          ),
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              minHeight: TRGeneratedControlMetrics.mdHeight,
-                            ),
-                            child: Padding(
-                              // Borders paint inside; widen the insets they
-                              // overlap like CSS content-box sizing.
-                              padding: const EdgeInsets.symmetric(
-                                horizontal:
-                                    TRGeneratedSpacing.lg +
-                                    TRGeneratedBorders.defaultWidth,
-                                vertical: TRGeneratedSpacing.md,
+                  child: Listener(
+                    onPointerDown: interactive ? beginTouchPress : null,
+                    onPointerUp: interactive ? endTouchPress : null,
+                    onPointerCancel: interactive ? endTouchPress : null,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTapCancel: interactive ? cancelTouchPress : null,
+                      onTap: interactive ? widget.onToggle : null,
+                      child: AnimatedContainer(
+                        curve: trPressedMotionCurve(pressed: touchPressed),
+                        duration: trPressedMotionDuration(
+                          context,
+                          pressed: touchPressed,
+                        ),
+                        color: touchPressed ? colors.surfacePressed : null,
+                        child: Semantics(
+                          button: true,
+                          enabled: interactive,
+                          expanded: widget.open,
+                          child: AnimatedOpacity(
+                            curve: TRMotion.standard,
+                            duration: motionDuration,
+                            opacity: widget.item.disabled
+                                ? TRGeneratedOpacity.disabled
+                                : 1,
+                            child: CustomPaint(
+                              foregroundPainter: _TRAccordionFocusRingPainter(
+                                color: colors.focus,
+                                visible: showFocusRing,
                               ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: DefaultTextStyle.merge(
-                                      style: TextStyle(
-                                        color: colors.text,
-                                        fontFamily:
-                                            TRGeneratedFontFamilies.body,
-                                        fontSize: TRGeneratedTypographySizes.sm,
-                                        fontWeight:
-                                            TRGeneratedFontWeights.medium,
-                                        height: kTextHeightNone,
-                                      ),
-                                      child: widget.item.trigger,
-                                    ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  minHeight: TRGeneratedControlMetrics.mdHeight,
+                                ),
+                                child: Padding(
+                                  // Borders paint inside; widen the insets they
+                                  // overlap like CSS content-box sizing.
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal:
+                                        TRGeneratedSpacing.lg +
+                                        TRGeneratedBorders.defaultWidth,
+                                    vertical: TRGeneratedSpacing.md,
                                   ),
-                                  SizedBox(
-                                    width: TRGeneratedControlMetrics.mdGap,
-                                  ),
-                                  AnimatedRotation(
-                                    curve: TRMotion.standard,
-                                    duration: motionDuration,
-                                    turns: widget.open ? 0.625 : 0.125,
-                                    child: Container(
-                                      height: TRGeneratedSpacing.sm,
-                                      width: TRGeneratedSpacing.sm,
-                                      decoration: BoxDecoration(
-                                        border: Border(
-                                          bottom: BorderSide(
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: DefaultTextStyle.merge(
+                                          style: TextStyle(
                                             color: colors.text,
-                                            width:
-                                                TRGeneratedBorders.strongWidth,
+                                            fontFamily:
+                                                TRGeneratedFontFamilies.body,
+                                            fontSize:
+                                                TRGeneratedTypographySizes.sm,
+                                            fontWeight:
+                                                TRGeneratedFontWeights.medium,
+                                            height: kTextHeightNone,
                                           ),
-                                          right: BorderSide(
-                                            color: colors.text,
-                                            width:
-                                                TRGeneratedBorders.strongWidth,
+                                          child: widget.item.trigger,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: TRGeneratedControlMetrics.mdGap,
+                                      ),
+                                      AnimatedRotation(
+                                        curve: TRMotion.standard,
+                                        duration: motionDuration,
+                                        turns: widget.open ? 0.625 : 0.125,
+                                        child: Container(
+                                          height: TRGeneratedSpacing.sm,
+                                          width: TRGeneratedSpacing.sm,
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              bottom: BorderSide(
+                                                color: colors.text,
+                                                width: TRGeneratedBorders
+                                                    .strongWidth,
+                                              ),
+                                              right: BorderSide(
+                                                color: colors.text,
+                                                width: TRGeneratedBorders
+                                                    .strongWidth,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                           ),

@@ -12,20 +12,33 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 /// one animates, one does not -- so a declared render condition has to name
 /// which of the two it means. These tests pin that they are genuinely distinct
 /// and that each restores on release.
-Widget _app(Widget child) => MaterialApp(
-  theme: TinyrackTheme.light(),
-  home: Scaffold(
-    body: MediaQuery(
-      data: const MediaQueryData(disableAnimations: true),
-      child: Align(alignment: Alignment.topLeft, child: child),
-    ),
-  ),
-);
+Widget _app(Widget child, {bool disableAnimations = true, ThemeData? theme}) =>
+    MaterialApp(
+      theme: theme?.brightness == Brightness.light
+          ? theme
+          : TinyrackTheme.light(),
+      darkTheme: theme?.brightness == Brightness.dark
+          ? theme
+          : TinyrackTheme.dark(),
+      themeMode: theme?.brightness == Brightness.dark
+          ? ThemeMode.dark
+          : ThemeMode.light,
+      home: Scaffold(
+        body: MediaQuery(
+          data: MediaQueryData(disableAnimations: disableAnimations),
+          child: Align(alignment: Alignment.topLeft, child: child),
+        ),
+      ),
+    );
 
 TinyrackThemeData get _colors =>
     TinyrackTheme.light().extension<TinyrackThemeData>()!;
 
-Future<void> _pumpButton(WidgetTester tester, {bool autofocus = false}) async {
+Future<void> _pumpButton(
+  WidgetTester tester, {
+  bool autofocus = false,
+  bool disableAnimations = true,
+}) async {
   await tester.pumpWidget(
     _app(
       TRButton(
@@ -33,9 +46,29 @@ Future<void> _pumpButton(WidgetTester tester, {bool autofocus = false}) async {
         onPressed: () {},
         child: const Text('Deploy'),
       ),
+      disableAnimations: disableAnimations,
     ),
   );
   await tester.pumpAndSettle();
+}
+
+AnimatedContainer _surface(WidgetTester tester) => tester
+    .widgetList<AnimatedContainer>(
+      find.descendant(
+        of: find.byType(TRButton),
+        matching: find.byType(AnimatedContainer),
+      ),
+    )
+    .singleWhere((container) => container.decoration != null);
+
+Color _paintedSurfaceColor(WidgetTester tester) {
+  final decorated = find.descendant(
+    of: find.byWidget(_surface(tester)),
+    matching: find.byType(DecoratedBox),
+  );
+  return (tester.widget<DecoratedBox>(decorated.first).decoration
+          as BoxDecoration)
+      .color!;
 }
 
 double _labelTop(WidgetTester tester) =>
@@ -74,6 +107,97 @@ void main() {
     await gesture.up();
     await tester.pumpAndSettle();
     expect(_labelTop(tester), rest);
+  });
+
+  testWidgets('touch press starts immediately and uses asymmetric motion', (
+    tester,
+  ) async {
+    await _pumpButton(tester, disableAnimations: false);
+    final rest = _labelTop(tester);
+    final colors = _colors;
+
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byType(TRButton)),
+      kind: PointerDeviceKind.touch,
+    );
+    await tester.pump();
+
+    final entering = _surface(tester);
+    expect(
+      (entering.decoration! as BoxDecoration).color,
+      colors.surfaceSelected,
+    );
+    expect(entering.duration, TRGeneratedMotion.immediate);
+    expect(entering.curve, TRGeneratedMotion.easeOut);
+
+    final startColor = _paintedSurfaceColor(tester);
+    await tester.pump(TRGeneratedMotion.immediate ~/ 2);
+    final halfwayColor = _paintedSurfaceColor(tester);
+    expect(halfwayColor, isNot(startColor));
+    expect(halfwayColor, isNot(colors.surfaceSelected));
+
+    await tester.pump(TRGeneratedMotion.immediate ~/ 2);
+    expect(_paintedSurfaceColor(tester), colors.surfaceSelected);
+    expect(
+      _labelTop(tester) - rest,
+      TRGeneratedMeasurements.controlPressDistance,
+    );
+
+    await gesture.up();
+    await tester.pump();
+    final releasing = _surface(tester);
+    expect(releasing.duration, TRGeneratedMotion.fast);
+    expect(releasing.curve, TRGeneratedMotion.standard);
+    await tester.pump(TRGeneratedMotion.fast);
+    expect(_labelTop(tester), rest);
+  });
+
+  testWidgets('reduced motion makes both touch transitions immediate', (
+    tester,
+  ) async {
+    await _pumpButton(tester);
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.byType(TRButton)),
+      kind: PointerDeviceKind.touch,
+    );
+    await tester.pump();
+    expect(_surface(tester).duration, Duration.zero);
+    expect(_paintedSurfaceColor(tester), _colors.surfaceSelected);
+
+    await gesture.up();
+    await tester.pump();
+    expect(_surface(tester).duration, Duration.zero);
+  });
+
+  testWidgets('touch keeps intent pressed colors in light and dark themes', (
+    tester,
+  ) async {
+    for (final (theme, pressedColor) in [
+      (TinyrackTheme.light(), TRGeneratedColors.light.dangerPressed),
+      (TinyrackTheme.dark(), TRGeneratedColors.dark.dangerPressed),
+    ]) {
+      await tester.pumpWidget(
+        _app(
+          TRButton(
+            intent: TRIntent.danger,
+            onPressed: () {},
+            child: const Text('Deploy'),
+          ),
+          disableAnimations: false,
+          theme: theme,
+        ),
+      );
+      await tester.pumpAndSettle();
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(TRButton)),
+        kind: PointerDeviceKind.touch,
+      );
+      await tester.pump();
+      await tester.pump(TRGeneratedMotion.immediate);
+      expect(_paintedSurfaceColor(tester), pressedColor);
+      await gesture.up();
+      await tester.pumpAndSettle();
+    }
   });
 
   testWidgets('a held Space lowers the label by the same distance', (

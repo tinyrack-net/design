@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
@@ -40,89 +41,102 @@ class TRMenubarMenu extends StatelessWidget {
         _TRMenubarScope.maybeOf(context)?.uiSize ??
         TRUiDensityScope.resolveSize(context, null);
     final height = TRControlMetrics.heightOf(size);
-    return SubmenuButton(
-      // The bar insets its triggers, so shift the panel down by that inset to
-      // attach it to the bar's bottom edge instead of the trigger's.
-      alignmentOffset: const Offset(0, TRGeneratedSpacing.xs),
-      controller: controller,
-      focusNode: focusNode,
-      menuChildren: enabled
-          ? [
-              TRUiDensityScope(
-                density: density,
-                child: TRLayerSurface(
-                  kind: TRLayerBoundaryKind.menubar,
-                  child: SingleChildScrollView(
-                    primary: false,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.min,
-                      // Matches the web popup's row gap.
-                      spacing: TRGeneratedRadii.xs,
-                      children: menuChildren,
+    Color background(Set<WidgetState> states) {
+      final colors = context.tinyrackTheme;
+      if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+      if (states.contains(WidgetState.focused) ||
+          states.contains(WidgetState.hovered)) {
+        return colors.surfaceHover;
+      }
+      return Colors.transparent;
+    }
+
+    return TRMaterialPressable(
+      enabled: enabled,
+      builder: (context, states) => SubmenuButton(
+        // The bar insets its triggers, so shift the panel down by that inset to
+        // attach it to the bar's bottom edge instead of the trigger's.
+        alignmentOffset: const Offset(0, TRGeneratedSpacing.xs),
+        controller: controller,
+        focusNode: focusNode,
+        statesController: states,
+        menuChildren: enabled
+            ? [
+                TRUiDensityScope(
+                  density: density,
+                  child: TRLayerSurface(
+                    kind: TRLayerBoundaryKind.menubar,
+                    child: SingleChildScrollView(
+                      primary: false,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        // Matches the web popup's row gap.
+                        spacing: TRGeneratedRadii.xs,
+                        children: menuChildren,
+                      ),
                     ),
                   ),
                 ),
+              ]
+            : const [],
+        menuStyle: TRLayerStyles.menu(context),
+        onClose: enabled ? onClose : null,
+        onOpen: enabled ? onOpen : null,
+        style: ButtonStyle(
+          alignment: Alignment.center,
+          animationDuration: Duration.zero,
+          backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+          backgroundBuilder: (context, states, child) =>
+              trAnimatedPressBackground(
+                context,
+                states,
+                child,
+                color: background(states),
+                borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
               ),
-            ]
-          : const [],
-      menuStyle: TRLayerStyles.menu(context),
-      onClose: enabled ? onClose : null,
-      onOpen: enabled ? onOpen : null,
-      style: ButtonStyle(
-        alignment: Alignment.center,
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          final colors = context.tinyrackTheme;
-          if (states.contains(WidgetState.pressed)) {
-            return colors.surfacePressed;
-          }
-          if (states.contains(WidgetState.focused) ||
-              states.contains(WidgetState.hovered)) {
-            return colors.surfaceHover;
-          }
-          return Colors.transparent;
-        }),
-        fixedSize: WidgetStatePropertyAll(Size.fromHeight(height)),
-        // The web trigger paints surface-hover exactly; Material would blend
-        // its default onSurface overlay on top while focused or hovered, which
-        // lightens the open trigger's tint. Buttons and select suppress the
-        // same overlay.
-        overlayColor: const WidgetStatePropertyAll(Colors.transparent),
-        minimumSize: WidgetStatePropertyAll(Size(0, height)),
-        maximumSize: WidgetStatePropertyAll(Size(double.infinity, height)),
-        padding: WidgetStatePropertyAll(
-          EdgeInsets.symmetric(
-            horizontal: TRControlMetrics.inlinePaddingOf(size),
+          fixedSize: WidgetStatePropertyAll(Size.fromHeight(height)),
+          // The web trigger paints surface-hover exactly; Material would blend
+          // its default onSurface overlay on top while focused or hovered, which
+          // lightens the open trigger's tint. Buttons and select suppress the
+          // same overlay.
+          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+          minimumSize: WidgetStatePropertyAll(Size(0, height)),
+          maximumSize: WidgetStatePropertyAll(Size(double.infinity, height)),
+          padding: WidgetStatePropertyAll(
+            EdgeInsets.symmetric(
+              horizontal: TRControlMetrics.inlinePaddingOf(size),
+            ),
           ),
-        ),
-        shape: WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            // The same corner the standalone menu trigger uses on both
-            // platforms; md here rounded the open trigger's tint differently
-            // from the web, which only showed once the tint had contrast.
-            borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              // The same corner the standalone menu trigger uses on both
+              // platforms; md here rounded the open trigger's tint differently
+              // from the web, which only showed once the tint had contrast.
+              borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+            ),
           ),
-        ),
-        // The menubar trigger keeps WidgetState.focused while its menu is open,
-        // so a focus ring here paints on the open trigger -- which the web does
-        // not do, because focus has moved into the popup. The trigger stays
-        // ringless to match, in line with the suite's no-layer-ring model.
-        side: const WidgetStatePropertyAll(
-          BorderSide(
-            color: Colors.transparent,
-            width: TRGeneratedBorders.defaultWidth,
+          // The menubar trigger keeps WidgetState.focused while its menu is open,
+          // so a focus ring here paints on the open trigger -- which the web does
+          // not do, because focus has moved into the popup. The trigger stays
+          // ringless to match, in line with the suite's no-layer-ring model.
+          side: const WidgetStatePropertyAll(
+            BorderSide(
+              color: Colors.transparent,
+              width: TRGeneratedBorders.defaultWidth,
+            ),
           ),
-        ),
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        textStyle: WidgetStatePropertyAll(
-          TRGeneratedTextStyles.bodySm.copyWith(
-            fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-            fontSize: TRControlMetrics.fontSizeOf(size),
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          textStyle: WidgetStatePropertyAll(
+            TRGeneratedTextStyles.bodySm.copyWith(
+              fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+              fontSize: TRControlMetrics.fontSizeOf(size),
+            ),
           ),
+          visualDensity: VisualDensity.standard,
         ),
-        visualDensity: VisualDensity.standard,
+        child: trigger,
       ),
-      child: trigger,
     );
   }
 }

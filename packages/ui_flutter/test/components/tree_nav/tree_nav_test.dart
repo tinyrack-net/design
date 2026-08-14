@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
+import 'package:tinyrack_ui/src/generated/tokens.g.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 Widget _app(
@@ -495,6 +496,51 @@ void main() {
     await mouse.down(tester.getCenter(find.text('Disabled')));
     await tester.pump();
     expect(_background(tester, 'Disabled'), Colors.transparent);
+  });
+
+  testWidgets('touch press starts before the gesture press deadline', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        TRTreeNav<String>(items: _items(), onValueChange: (_) {}),
+        disableAnimations: false,
+      ),
+    );
+    final theme = Theme.of(
+      tester.element(find.byType(TRTreeNav<String>)),
+    ).extension<TinyrackThemeData>()!;
+
+    final touch = await tester.startGesture(
+      tester.getCenter(find.text('Install')),
+      kind: PointerDeviceKind.touch,
+    );
+    await tester.pump();
+
+    final entering = tester.widget<AnimatedContainer>(
+      find
+          .ancestor(
+            of: find.text('Install'),
+            matching: find.byType(AnimatedContainer),
+          )
+          .first,
+    );
+    expect((entering.decoration! as BoxDecoration).color, theme.surfacePressed);
+    expect(entering.duration, TRGeneratedMotion.immediate);
+    expect(entering.curve, TRGeneratedMotion.easeOut);
+
+    await touch.cancel();
+    await tester.pump();
+    final releasing = tester.widget<AnimatedContainer>(
+      find
+          .ancestor(
+            of: find.text('Install'),
+            matching: find.byType(AnimatedContainer),
+          )
+          .first,
+    );
+    expect(releasing.duration, TRGeneratedMotion.fast);
+    expect(releasing.curve, TRGeneratedMotion.standard);
   });
 
   testWidgets('pointer and keyboard toggle groups and select leaves', (

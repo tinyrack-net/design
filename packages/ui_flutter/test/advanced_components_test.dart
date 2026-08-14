@@ -468,12 +468,16 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pump();
 
-      final highlighted = tester.widget<MenuItemButton>(
-        find.widgetWithText(MenuItemButton, 'Alpine'),
-      );
+      final highlightedFinder = find.widgetWithText(MenuItemButton, 'Alpine');
+      final highlighted = tester.widget<MenuItemButton>(highlightedFinder);
       final colors = TinyrackTheme.light().extension<TinyrackThemeData>()!;
+      final background = highlighted.style!.backgroundBuilder!(
+        tester.element(highlightedFinder),
+        const {},
+        null,
+      );
       expect(
-        highlighted.style?.backgroundColor?.resolve(const {}),
+        ((background as AnimatedContainer).decoration! as BoxDecoration).color,
         colors.surfaceHover,
       );
       expect(

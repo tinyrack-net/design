@@ -29,6 +29,11 @@ Use `standard` for two-way state changes, `easeOut` for content entering the int
 
 <FastFeedbackExample locale="en" />
 
+Flutter touch and stylus targets begin pressed feedback on pointer down. The
+color enters with `immediate` and `easeOut`, then returns with `fast` and
+`standard`. A short tap still activates on release without a minimum display
+time; scrolling or cancellation restores the prior state without activation.
+
 - Buttons, toggles, tabs, and switches use fast feedback for a local state change.
 - Menus, tooltips, popovers, and selection lists establish nearby context.
 - Dialogs and drawers may use slower entry because they change the active task context.

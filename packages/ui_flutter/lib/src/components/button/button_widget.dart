@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
+import '../../internal/press_interaction.dart';
 
 import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
@@ -184,9 +185,6 @@ class TRButton extends StatelessWidget {
       TRIntent.warning => generated.warningBorder,
       TRIntent.danger => generated.dangerBorder,
     };
-    final motionDuration = MediaQuery.disableAnimationsOf(context)
-        ? Duration.zero
-        : TRMotion.fast;
     final style = ButtonStyle(
       animationDuration: Duration.zero,
       backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
@@ -233,7 +231,6 @@ class TRButton extends StatelessWidget {
       disabled: disabled,
       fill: fill,
       focusNode: focusNode,
-      motionDuration: motionDuration,
       onActivate: onPressed,
       opacity: disabled ? TRGeneratedOpacity.disabled : 1,
       builder: (effectiveFocusNode, statesController, effectiveOnPressed) =>

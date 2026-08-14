@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../../types.dart';
 import '../text_field/text_field.dart';
@@ -92,39 +93,52 @@ class TRToolbarButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.tinyrackTheme;
+    Color background(Set<WidgetState> states) {
+      if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+      if (states.contains(WidgetState.focused) ||
+          states.contains(WidgetState.hovered)) {
+        return colors.surfaceHover;
+      }
+      return selected ? colors.surfaceSelected : Colors.transparent;
+    }
+
     final button = SizedBox.square(
       dimension: TRGeneratedControlMetrics.mdHeight,
-      child: TextButton(
-        focusNode: focusNode,
-        onPressed: onPressed,
-        style: ButtonStyle(
-          alignment: Alignment.center,
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed)) {
-              return colors.surfacePressed;
-            }
-            if (states.contains(WidgetState.focused) ||
-                states.contains(WidgetState.hovered)) {
-              return colors.surfaceHover;
-            }
-            return selected ? colors.surfaceSelected : Colors.transparent;
-          }),
-          fixedSize: const WidgetStatePropertyAll(
-            Size.square(TRGeneratedControlMetrics.mdHeight),
-          ),
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+      child: TRMaterialPressable(
+        enabled: onPressed != null,
+        builder: (context, states) => TextButton(
+          focusNode: focusNode,
+          statesController: states,
+          onPressed: onPressed,
+          style: ButtonStyle(
+            alignment: Alignment.center,
+            animationDuration: Duration.zero,
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            backgroundBuilder: (context, states, child) =>
+                trAnimatedPressBackground(
+                  context,
+                  states,
+                  child,
+                  color: background(states),
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                ),
+            fixedSize: const WidgetStatePropertyAll(
+              Size.square(TRGeneratedControlMetrics.mdHeight),
             ),
+            padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+              ),
+            ),
+            side: const WidgetStatePropertyAll(
+              BorderSide(color: Colors.transparent),
+            ),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.standard,
           ),
-          side: const WidgetStatePropertyAll(
-            BorderSide(color: Colors.transparent),
-          ),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: VisualDensity.standard,
+          child: child,
         ),
-        child: child,
       ),
     );
     return tooltip == null ? button : Tooltip(message: tooltip, child: button);
@@ -149,10 +163,14 @@ class TRToolbarLink extends StatelessWidget {
     button: false,
     link: true,
     label: semanticLabel,
-    child: TextButton(
-      onPressed: onTap,
-      style: TRLayerStyles.item(context, uiSize: TRUiSize.sm),
-      child: child,
+    child: TRMaterialPressable(
+      enabled: onTap != null,
+      builder: (context, states) => TextButton(
+        statesController: states,
+        onPressed: onTap,
+        style: TRLayerStyles.item(context, uiSize: TRUiSize.sm),
+        child: child,
+      ),
     ),
   );
 }

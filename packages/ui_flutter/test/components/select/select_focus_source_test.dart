@@ -70,12 +70,18 @@ BorderSide _optionSide(WidgetTester tester, String label) {
 }
 
 Color _optionFill(WidgetTester tester, String label) {
-  final button = tester.widget<MenuItemButton>(
-    find.widgetWithText(MenuItemButton, label),
-  );
-  return button.style!.backgroundColor!.resolve(<WidgetState>{
+  final finder = find.widgetWithText(MenuItemButton, label);
+  final button = tester.widget<MenuItemButton>(finder);
+  final states = <WidgetState>{
     if (button.focusNode?.hasFocus ?? false) WidgetState.focused,
-  })!;
+  };
+  final background = button.style!.backgroundBuilder!(
+    tester.element(finder),
+    states,
+    null,
+  );
+  return ((background as AnimatedContainer).decoration! as BoxDecoration)
+      .color!;
 }
 
 /// Opens the popup and dismisses it again, touching nothing but the mouse.

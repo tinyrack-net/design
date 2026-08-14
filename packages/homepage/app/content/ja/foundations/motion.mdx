@@ -29,6 +29,12 @@ import { FastFeedbackExample, MotionDurationComparison, MotionEasingComparison, 
 
 <FastFeedbackExample locale="ja" />
 
+Flutter のタッチおよびスタイラス対象は、pointer down で pressed
+フィードバックを開始します。色は `immediate` と `easeOut` で入り、
+`fast` と `standard` で元の状態へ戻ります。短いタップも最小表示時間を
+待たず、指を離した時点で実行されます。スクロールまたはキャンセルに
+変わった場合は、実行せずに以前の状態へ戻ります。
+
 - ボタン、トグル、タブ、スイッチは局所的な状態変化に速いフィードバックを使います。
 - メニュー、ツールチップ、ポップオーバー、選択リストは近くの文脈を示します。
 - ダイアログとドロワーはアクティブなタスクの文脈を変えるため、少し長い表示時間を使えます。

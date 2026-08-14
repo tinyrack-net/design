@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../../types.dart';
 import '../text_field/text_field.dart';
@@ -417,41 +418,52 @@ class _TRNumberStepButton extends StatelessWidget {
     final generated = Theme.of(context).brightness == Brightness.light
         ? TRGeneratedColors.light
         : TRGeneratedColors.dark;
+    Color background(Set<WidgetState> states) {
+      if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+      if (states.contains(WidgetState.hovered)) return colors.surfaceHover;
+      return colors.surface;
+    }
+
     return SizedBox(
       width: TRGeneratedLayerMetrics.numberStepWidth,
       height: TRGeneratedControlMetrics.mdHeight,
-      child: TextButton(
-        onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed)) {
-              return colors.surfacePressed;
-            }
-            if (states.contains(WidgetState.hovered)) {
-              return colors.surfaceHover;
-            }
-            return colors.surface;
-          }),
-          foregroundColor: WidgetStatePropertyAll(colors.text),
-          fixedSize: const WidgetStatePropertyAll(
-            Size(
-              TRGeneratedLayerMetrics.numberStepWidth,
-              TRGeneratedControlMetrics.mdHeight,
+      child: TRMaterialPressable(
+        enabled: onPressed != null,
+        builder: (context, states) => TextButton(
+          statesController: states,
+          onPressed: onPressed,
+          style: ButtonStyle(
+            animationDuration: Duration.zero,
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            backgroundBuilder: (context, states, child) =>
+                trAnimatedPressBackground(
+                  context,
+                  states,
+                  child,
+                  color: background(states),
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                ),
+            foregroundColor: WidgetStatePropertyAll(colors.text),
+            fixedSize: const WidgetStatePropertyAll(
+              Size(
+                TRGeneratedLayerMetrics.numberStepWidth,
+                TRGeneratedControlMetrics.mdHeight,
+              ),
             ),
-          ),
-          padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-          shape: WidgetStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+            padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+              ),
             ),
+            side: WidgetStatePropertyAll(
+              BorderSide(color: generated.controlBorder),
+            ),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.standard,
           ),
-          side: WidgetStatePropertyAll(
-            BorderSide(color: generated.controlBorder),
-          ),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          visualDensity: VisualDensity.standard,
+          child: Icon(icon, size: TRGeneratedControlMetrics.mdIconSize),
         ),
-        child: Icon(icon, size: TRGeneratedControlMetrics.mdIconSize),
       ),
     );
   }

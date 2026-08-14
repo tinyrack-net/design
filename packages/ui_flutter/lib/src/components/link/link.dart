@@ -1,10 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import '../../internal/focus_source.dart';
+import '../../internal/press_interaction.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
-import '../../tokens.dart';
 import '../../types.dart';
 
 // @tinyrack-preview link
@@ -31,7 +31,8 @@ class TRLink extends StatefulWidget {
   State<TRLink> createState() => _TRLinkState();
 }
 
-class _TRLinkState extends State<TRLink> with TRFocusSourceMixin {
+class _TRLinkState extends State<TRLink>
+    with TRFocusSourceMixin, TRTouchPressStateMixin<TRLink> {
   FocusNode? _internalFocusNode;
   bool _hovered = false;
   bool _focused = false;
@@ -68,13 +69,15 @@ class _TRLinkState extends State<TRLink> with TRFocusSourceMixin {
     };
     final opacity = disabled
         ? TRGeneratedOpacity.disabled
-        : _hovered
+        : _hovered || touchPressed
         ? TRGeneratedOpacity.hover
         : 1.0;
     final showFocusRing = focusVisible(hasFocus: _focused);
-    final motionDuration = MediaQuery.disableAnimationsOf(context)
-        ? Duration.zero
-        : TRMotion.fast;
+    final motionDuration = trPressedMotionDuration(
+      context,
+      pressed: touchPressed,
+    );
+    final motionCurve = trPressedMotionCurve(pressed: touchPressed);
 
     return CallbackShortcuts(
       bindings: disabled
@@ -96,37 +99,43 @@ class _TRLinkState extends State<TRLink> with TRFocusSourceMixin {
               event.logicalKey == LogicalKeyboardKey.space
               ? KeyEventResult.handled
               : KeyEventResult.ignored,
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: disabled ? null : widget.onTap,
-            child: Semantics(
-              enabled: !disabled,
-              link: true,
-              // The web hover fade applies to the anchor's outline too, so
-              // the focus ring paints inside the faded layer.
-              child: AnimatedOpacity(
-                curve: TRMotion.standard,
-                duration: motionDuration,
-                opacity: opacity,
-                child: CustomPaint(
-                  foregroundPainter: _TRLinkFocusRingPainter(
-                    color: colors.focus,
-                    visible: showFocusRing,
-                  ),
-                  child: AnimatedDefaultTextStyle(
-                    curve: TRMotion.standard,
-                    duration: motionDuration,
-                    style: DefaultTextStyle.of(context).style.merge(
-                      TextStyle(
-                        color: color,
-                        fontWeight: TRGeneratedFontWeights.medium,
-                        decoration: underlineVisible
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                        decorationColor: color,
-                      ),
+          child: Listener(
+            onPointerDown: disabled ? null : beginTouchPress,
+            onPointerUp: disabled ? null : endTouchPress,
+            onPointerCancel: disabled ? null : endTouchPress,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTapCancel: disabled ? null : cancelTouchPress,
+              onTap: disabled ? null : widget.onTap,
+              child: Semantics(
+                enabled: !disabled,
+                link: true,
+                // The web hover fade applies to the anchor's outline too, so
+                // the focus ring paints inside the faded layer.
+                child: AnimatedOpacity(
+                  curve: motionCurve,
+                  duration: motionDuration,
+                  opacity: opacity,
+                  child: CustomPaint(
+                    foregroundPainter: _TRLinkFocusRingPainter(
+                      color: colors.focus,
+                      visible: showFocusRing,
                     ),
-                    child: widget.child,
+                    child: AnimatedDefaultTextStyle(
+                      curve: motionCurve,
+                      duration: motionDuration,
+                      style: DefaultTextStyle.of(context).style.merge(
+                        TextStyle(
+                          color: color,
+                          fontWeight: TRGeneratedFontWeights.medium,
+                          decoration: underlineVisible
+                              ? TextDecoration.underline
+                              : TextDecoration.none,
+                          decorationColor: color,
+                        ),
+                      ),
+                      child: widget.child,
+                    ),
                   ),
                 ),
               ),

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 
 /// A page number, or `null` for a collapsed gap.
@@ -164,59 +165,75 @@ class _TRPaginationButton extends StatelessWidget {
             if (label != 'Previous') const Text('→'),
           ],
         );
-    final button = TextButton(
-      onPressed: enabled && !selected ? onPressed : null,
-      style:
-          TextButton.styleFrom(
-            animationDuration: MediaQuery.disableAnimationsOf(context)
-                ? Duration.zero
-                : TRGeneratedMotion.fast,
-            padding: EdgeInsets.symmetric(
-              horizontal: step ? TRGeneratedSpacing.sm : TRGeneratedSpacing.xs,
-            ),
-            minimumSize: const Size(
-              TRGeneratedControlMetrics.mdHeight +
-                  TRGeneratedBorders.defaultWidth * 2,
-              TRGeneratedControlMetrics.mdHeight +
-                  TRGeneratedBorders.defaultWidth * 2,
-            ),
-            foregroundColor: selected ? colors.onPrimary : colors.text,
-            disabledForegroundColor: selected
-                ? colors.onPrimary
-                : colors.textMuted,
-            backgroundColor: selected ? colors.primary : Colors.transparent,
-            textStyle: const TextStyle(
-              fontFamily: TRGeneratedFontFamilies.body,
-              fontSize: TRGeneratedTypographySizes.sm,
-              fontWeight: TRGeneratedFontWeights.medium,
-            ),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: selected ? colors.primary : colors.border,
+    final interactive = enabled && !selected;
+    final button = TRMaterialPressable(
+      enabled: interactive,
+      builder: (context, states) => TextButton(
+        statesController: states,
+        onPressed: interactive ? onPressed : null,
+        style:
+            TextButton.styleFrom(
+              animationDuration: Duration.zero,
+              padding: EdgeInsets.symmetric(
+                horizontal: step
+                    ? TRGeneratedSpacing.sm
+                    : TRGeneratedSpacing.xs,
               ),
-              borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-            ),
-          ).copyWith(
-            backgroundColor: WidgetStateProperty.resolveWith((states) {
-              if (selected) return colors.primary;
-              return states.contains(WidgetState.hovered)
-                  ? colors.surfaceHover
-                  : Colors.transparent;
-            }),
-            shape: WidgetStateProperty.resolveWith((states) {
-              return RoundedRectangleBorder(
+              minimumSize: const Size(
+                TRGeneratedControlMetrics.mdHeight +
+                    TRGeneratedBorders.defaultWidth * 2,
+                TRGeneratedControlMetrics.mdHeight +
+                    TRGeneratedBorders.defaultWidth * 2,
+              ),
+              foregroundColor: selected ? colors.onPrimary : colors.text,
+              disabledForegroundColor: selected
+                  ? colors.onPrimary
+                  : colors.textMuted,
+              backgroundColor: selected ? colors.primary : Colors.transparent,
+              textStyle: const TextStyle(
+                fontFamily: TRGeneratedFontFamilies.body,
+                fontSize: TRGeneratedTypographySizes.sm,
+                fontWeight: TRGeneratedFontWeights.medium,
+              ),
+              shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  color: selected
-                      ? colors.primary
-                      : states.contains(WidgetState.hovered)
-                      ? colors.borderStrong
-                      : colors.border,
+                  color: selected ? colors.primary : colors.border,
                 ),
                 borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-              );
-            }),
-          ),
-      child: content,
+              ),
+            ).copyWith(
+              backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+              backgroundBuilder: (context, states, child) {
+                final color = selected
+                    ? colors.primary
+                    : states.contains(WidgetState.pressed)
+                    ? colors.surfacePressed
+                    : states.contains(WidgetState.hovered)
+                    ? colors.surfaceHover
+                    : Colors.transparent;
+                return trAnimatedPressBackground(
+                  context,
+                  states,
+                  child,
+                  color: color,
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                );
+              },
+              shape: WidgetStateProperty.resolveWith((states) {
+                return RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: selected
+                        ? colors.primary
+                        : states.contains(WidgetState.hovered)
+                        ? colors.borderStrong
+                        : colors.border,
+                  ),
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                );
+              }),
+            ),
+        child: content,
+      ),
     );
     return Semantics(
       button: !selected,
