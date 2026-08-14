@@ -1,3 +1,12 @@
+## 0.63.1
+
+- Keeps content-sized drawers anchored when dragged upward and broadens sheet
+  dragging from the visible handle to the complete header and content surface.
+- Coordinates snap-point expansion, overflow scrolling, reverse scrolling, and
+  collapse within one continuous vertical gesture.
+- Disables sheet dragging when `showDragHandle` is false while preserving
+  overflow scrolling.
+
 ## 0.63.0
 
 - Replaces the stateful three-pane navigation scaffold with

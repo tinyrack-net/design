@@ -6,12 +6,18 @@ class TRInternalDrawerDragScope extends InheritedWidget {
   const TRInternalDrawerDragScope({
     required this.onDragEnd,
     required this.onDragUpdate,
+    required this.shouldDragBeforeScroll,
     required super.child,
     super.key,
   });
 
   final GestureDragEndCallback onDragEnd;
-  final GestureDragUpdateCallback onDragUpdate;
+
+  /// Applies [primaryDelta] to the drawer and returns the unused delta.
+  final double Function(double primaryDelta) onDragUpdate;
+
+  /// Whether the drawer should consume this delta before the scroll position.
+  final bool Function(double primaryDelta) shouldDragBeforeScroll;
 
   static TRInternalDrawerDragScope? maybeOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<TRInternalDrawerDragScope>();
@@ -19,7 +25,8 @@ class TRInternalDrawerDragScope extends InheritedWidget {
   @override
   bool updateShouldNotify(TRInternalDrawerDragScope oldWidget) =>
       onDragEnd != oldWidget.onDragEnd ||
-      onDragUpdate != oldWidget.onDragUpdate;
+      onDragUpdate != oldWidget.onDragUpdate ||
+      shouldDragBeforeScroll != oldWidget.shouldDragBeforeScroll;
 }
 
 /// Gives one scroll position the complete drag region while keeping its
@@ -41,62 +48,83 @@ class TRInternalDrawerScrollRegion extends StatefulWidget {
 
 class _TRInternalDrawerScrollRegionState
     extends State<TRInternalDrawerScrollRegion> {
-  DragStartDetails? _startDetails;
-  Drag? _scrollDrag;
-  bool _draggingDrawer = false;
+  bool _drawerChanged = false;
+  bool _lastChangedDrawer = false;
 
   bool get _canScroll => widget.controller.hasClients;
 
-  bool get _atStart =>
-      _canScroll &&
-      widget.controller.position.pixels <=
-          widget.controller.position.minScrollExtent;
-
   void _start(DragStartDetails details) {
-    _startDetails = details;
-    _scrollDrag = null;
-    _draggingDrawer = false;
+    _drawerChanged = false;
+    _lastChangedDrawer = false;
   }
 
   void _update(DragUpdateDetails details) {
-    if (_scrollDrag == null && !_draggingDrawer) {
-      final drawer = TRInternalDrawerDragScope.maybeOf(context);
-      if (_atStart && details.delta.dy > 0 && drawer != null) {
-        _draggingDrawer = true;
-      } else if (_canScroll) {
-        _scrollDrag = widget.controller.position.drag(
-          _startDetails!,
-          _disposeScrollDrag,
-        );
-      }
+    final drawer = TRInternalDrawerDragScope.maybeOf(context);
+    var remaining = details.delta.dy;
+    if (drawer != null && drawer.shouldDragBeforeScroll(remaining)) {
+      remaining = _consumeDrawer(drawer, remaining);
     }
-    if (_draggingDrawer) {
-      TRInternalDrawerDragScope.maybeOf(context)?.onDragUpdate(details);
-    } else {
-      _scrollDrag?.update(details);
+    remaining = _consumeScroll(remaining);
+    if (drawer != null && remaining != 0) {
+      _consumeDrawer(drawer, remaining);
     }
   }
 
   void _end(DragEndDetails details) {
-    if (_draggingDrawer) {
-      TRInternalDrawerDragScope.maybeOf(context)?.onDragEnd(details);
-    } else {
-      _scrollDrag?.end(details);
+    final drawer = TRInternalDrawerDragScope.maybeOf(context);
+    if (_drawerChanged && drawer != null) {
+      drawer.onDragEnd(
+        _lastChangedDrawer
+            ? details
+            : DragEndDetails(velocity: Velocity.zero, primaryVelocity: 0),
+      );
+    }
+    if (!_lastChangedDrawer && _canScroll) {
+      final position = widget.controller.position;
+      if (position is ScrollPositionWithSingleContext) {
+        position.goBallistic(-details.velocity.pixelsPerSecond.dy);
+      }
     }
     _reset();
   }
 
   void _cancel() {
-    _scrollDrag?.cancel();
+    final drawer = TRInternalDrawerDragScope.maybeOf(context);
+    if (_drawerChanged && drawer != null) {
+      drawer.onDragEnd(
+        DragEndDetails(velocity: Velocity.zero, primaryVelocity: 0),
+      );
+    }
     _reset();
   }
 
-  void _disposeScrollDrag() => _scrollDrag = null;
+  double _consumeDrawer(TRInternalDrawerDragScope drawer, double primaryDelta) {
+    final remaining = drawer.onDragUpdate(primaryDelta);
+    if (remaining != primaryDelta) {
+      _drawerChanged = true;
+      _lastChangedDrawer = true;
+    }
+    return remaining;
+  }
+
+  double _consumeScroll(double primaryDelta) {
+    if (!_canScroll || primaryDelta == 0) return primaryDelta;
+    final position = widget.controller.position;
+    final current = position.pixels;
+    final target = (current - primaryDelta).clamp(
+      position.minScrollExtent,
+      position.maxScrollExtent,
+    );
+    if (target == current) return primaryDelta;
+    position.jumpTo(target);
+    _lastChangedDrawer = false;
+    final consumed = current - target;
+    return primaryDelta - consumed;
+  }
 
   void _reset() {
-    _startDetails = null;
-    _scrollDrag = null;
-    _draggingDrawer = false;
+    _drawerChanged = false;
+    _lastChangedDrawer = false;
   }
 
   void _handlePointerSignal(PointerSignalEvent event) {

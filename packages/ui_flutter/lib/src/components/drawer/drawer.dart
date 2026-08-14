@@ -80,8 +80,9 @@ class TRDrawer extends StatefulWidget {
 
   /// Whether top and bottom sheets display their drag-to-dismiss handle.
   ///
-  /// Side drawers never display a handle. Hiding the handle on a content-sized
-  /// sheet also disables its drag gesture so its affordance and behavior agree.
+  /// Side drawers never display a handle. Hiding the handle also disables sheet
+  /// dragging while preserving content scrolling, so the affordance and
+  /// behavior agree.
   final bool showDragHandle;
 
   /// Whether the drawer owns scrolling for its complete [content] region.
@@ -94,7 +95,9 @@ class TRDrawer extends StatefulWidget {
   ///
   /// A top or bottom drawer fits its content when this is omitted. Start and
   /// end drawers retain their standard width. Supplying snap points opts into
-  /// viewport-relative sizing and drag-to-snap behavior.
+  /// viewport-relative sizing and drag-to-snap behavior. A drag expands the
+  /// drawer before scrolling overflow content, and reverses that order when
+  /// collapsing.
   final List<double>? snapPoints;
   final Widget? title;
 
@@ -131,8 +134,7 @@ class _TRDrawerState extends State<TRDrawer>
 
   bool get _fitsContent => _horizontal && widget.snapPoints == null;
 
-  bool get _draggable =>
-      !_fitsContent || (_horizontal && widget.showDragHandle);
+  bool get _draggable => !_horizontal || widget.showDragHandle;
 
   @override
   void initState() {
@@ -152,24 +154,52 @@ class _TRDrawerState extends State<TRDrawer>
 
   void _extentChanged() => setState(() {});
 
-  void _drag(DragUpdateDetails details) {
+  void _drag(DragUpdateDetails details) => _dragBy(details.delta.dy);
+
+  void _dragHorizontal(DragUpdateDetails details) => _dragBy(details.delta.dx);
+
+  double _dragBy(double primaryDelta) {
     final media = MediaQuery.sizeOf(context);
     final direction = Directionality.of(context);
     final delta = switch (widget.placement) {
-      TRDrawerPlacement.bottom => -details.delta.dy,
-      TRDrawerPlacement.top => details.delta.dy,
+      TRDrawerPlacement.bottom => -primaryDelta,
+      TRDrawerPlacement.top => primaryDelta,
       TRDrawerPlacement.start =>
-        direction == TextDirection.ltr ? details.delta.dx : -details.delta.dx,
+        direction == TextDirection.ltr ? primaryDelta : -primaryDelta,
       TRDrawerPlacement.end =>
-        direction == TextDirection.ltr ? -details.delta.dx : details.delta.dx,
+        direction == TextDirection.ltr ? -primaryDelta : primaryDelta,
     };
     final available = _horizontal ? media.height : media.width;
+    final previous = _extentController.value;
+    final maximum = _fitsContent
+        ? _resolvedSnapPoints[widget.initialSnapIndex]
+        : widget.maxExtent;
     _extentController
       ..stop()
-      ..value = (_extentController.value + delta / available).clamp(
+      ..value = (previous + delta / available).clamp(
         math.min(0.05, widget.maxExtent),
-        widget.maxExtent,
+        maximum,
       );
+    final consumedLogical = (_extentController.value - previous) * available;
+    final consumedPhysical = switch (widget.placement) {
+      TRDrawerPlacement.bottom => -consumedLogical,
+      TRDrawerPlacement.top => consumedLogical,
+      TRDrawerPlacement.start =>
+        direction == TextDirection.ltr ? consumedLogical : -consumedLogical,
+      TRDrawerPlacement.end =>
+        direction == TextDirection.ltr ? -consumedLogical : consumedLogical,
+    };
+    return primaryDelta - consumedPhysical;
+  }
+
+  bool _dragBeforeScroll(double primaryDelta) {
+    if (_fitsContent) return false;
+    final expanding = switch (widget.placement) {
+      TRDrawerPlacement.bottom => primaryDelta < 0,
+      TRDrawerPlacement.top => primaryDelta > 0,
+      _ => false,
+    };
+    return expanding && _extentController.value < widget.maxExtent;
   }
 
   void _endDrag(DragEndDetails details) {
@@ -295,22 +325,17 @@ class _TRDrawerState extends State<TRDrawer>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (showDragHandle) ...[
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onVerticalDragEnd: _draggable ? _endDrag : null,
-                    onVerticalDragUpdate: _draggable ? _drag : null,
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: ExcludeSemantics(
-                        child: Container(
-                          key: const ValueKey('tr-drawer-drag-handle'),
-                          width: TRGeneratedSpacing.size2xl,
-                          height: TRGeneratedSpacing.xs,
-                          decoration: BoxDecoration(
-                            color: colors.borderStrong,
-                            borderRadius: BorderRadius.circular(
-                              TRGeneratedRadii.full,
-                            ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: ExcludeSemantics(
+                      child: Container(
+                        key: const ValueKey('tr-drawer-drag-handle'),
+                        width: TRGeneratedSpacing.size2xl,
+                        height: TRGeneratedSpacing.xs,
+                        decoration: BoxDecoration(
+                          color: colors.borderStrong,
+                          borderRadius: BorderRadius.circular(
+                            TRGeneratedRadii.full,
                           ),
                         ),
                       ),
@@ -399,14 +424,20 @@ class _TRDrawerState extends State<TRDrawer>
         ? _draggable
               ? TRInternalDrawerDragScope(
                   onDragEnd: _endDrag,
-                  onDragUpdate: _drag,
-                  child: body,
+                  onDragUpdate: _dragBy,
+                  shouldDragBeforeScroll: _dragBeforeScroll,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onVerticalDragEnd: _endDrag,
+                    onVerticalDragUpdate: _drag,
+                    child: body,
+                  ),
                 )
               : body
         : GestureDetector(
             behavior: HitTestBehavior.opaque,
             onHorizontalDragEnd: !_draggable ? null : _endDrag,
-            onHorizontalDragUpdate: !_draggable ? null : _drag,
+            onHorizontalDragUpdate: !_draggable ? null : _dragHorizontal,
             child: body,
           );
     if (_fitsContent && showDragHandle) {
