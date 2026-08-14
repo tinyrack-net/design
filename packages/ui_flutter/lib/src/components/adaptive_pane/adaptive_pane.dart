@@ -124,7 +124,16 @@ class TRAdaptiveNavigationLayout extends StatelessWidget {
                 orientation: TRSeparatorOrientation.vertical,
                 variant: TRSeparatorVariant.muted,
               ),
-              Expanded(child: contentPane),
+              Expanded(
+                child: Semantics(
+                  // A current Material route inserts BlockSemantics. Keep
+                  // that boundary inside routed content so it cannot suppress
+                  // the adjacent navigation pane from the accessibility tree.
+                  container: true,
+                  explicitChildNodes: true,
+                  child: contentPane,
+                ),
+              ),
             ],
           ),
         },
