@@ -1,3 +1,8 @@
+## 0.63.2
+
+- Keeps navigation-pane semantics reachable when routed content contains a
+  nested `Navigator` whose current Material route blocks earlier semantics.
+
 ## 0.63.1
 
 - Keeps content-sized drawers anchored when dragged upward and broadens sheet

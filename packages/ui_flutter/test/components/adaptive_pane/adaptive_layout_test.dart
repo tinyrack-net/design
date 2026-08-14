@@ -100,6 +100,38 @@ void main() {
     await tester.pump();
     expect(find.text('identity:1'), findsOneWidget);
   });
+
+  testWidgets('a nested content Navigator cannot hide navigation semantics', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    tester.view
+      ..devicePixelRatio = 1
+      ..physicalSize = const Size(1200, 600);
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: TinyrackTheme.light(),
+        home: TRAdaptiveNavigationLayout(
+          navigationPane: Semantics(
+            label: 'Loading navigation',
+            child: const SizedBox.expand(),
+          ),
+          contentPane: Navigator(
+            pages: const <Page<void>>[
+              MaterialPage<void>(child: Text('Content')),
+            ],
+            onDidRemovePage: (_) {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.bySemanticsLabel('Loading navigation'), findsOneWidget);
+    semantics.dispose();
+  });
 }
 
 Future<void> _pumpLayout(
