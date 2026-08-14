@@ -53,7 +53,69 @@ Future<void> _openDrawer(
   await tester.pump();
 }
 
+Widget _bottomSheetApp() => MaterialApp(
+  theme: TinyrackTheme.light(),
+  builder: (context, child) => MediaQuery(
+    data: MediaQuery.of(context).copyWith(
+      disableAnimations: true,
+      padding: _safePadding,
+      viewPadding: _safePadding,
+    ),
+    child: child!,
+  ),
+  home: Scaffold(
+    body: Builder(
+      builder: (context) => TextButton(
+        onPressed: () => showTRDrawer<void>(
+          context: context,
+          builder: (_) => const TRDrawer(
+            actions: SizedBox(
+              key: Key('bottom-sheet-actions'),
+              width: 50,
+              height: 50,
+            ),
+            content: SizedBox(
+              key: Key('bottom-sheet-content'),
+              width: 50,
+              height: 50,
+            ),
+          ),
+        ),
+        child: const Text('Open bottom sheet'),
+      ),
+    ),
+  ),
+);
+
 void main() {
+  testWidgets(
+    'content-sized bottom sheet keeps its handle clear of the top inset',
+    (tester) async {
+      await tester.binding.setSurfaceSize(_viewport);
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(_bottomSheetApp());
+      await tester.tap(find.text('Open bottom sheet'));
+      await tester.pump();
+
+      final surface = tester.getRect(find.byType(TRDrawer));
+      final handle = tester.getRect(
+        find.byKey(const ValueKey('tr-drawer-drag-handle')),
+      );
+      final actions = tester.getRect(
+        find.byKey(const Key('bottom-sheet-actions')),
+      );
+
+      expect(
+        handle.top - surface.top,
+        TRSpacing.medium + TRControlMetrics.borderWidth,
+      );
+      expect(
+        actions.bottom,
+        lessThanOrEqualTo(_viewport.height - _safePadding.bottom),
+      );
+    },
+  );
+
   for (final placement in TRDrawerPlacement.values) {
     testWidgets('$placement keeps its surface edge-to-edge and content safe', (
       tester,
@@ -66,7 +128,9 @@ void main() {
 
       expect(surface, Offset.zero & _viewport);
       expect(content.left, greaterThanOrEqualTo(_safePadding.left));
-      expect(content.top, greaterThanOrEqualTo(_safePadding.top));
+      if (placement != TRDrawerPlacement.bottom) {
+        expect(content.top, greaterThanOrEqualTo(_safePadding.top));
+      }
       expect(
         content.right,
         lessThanOrEqualTo(_viewport.width - _safePadding.right),
@@ -76,7 +140,9 @@ void main() {
         lessThanOrEqualTo(_viewport.height - _safePadding.bottom),
       );
       expect(actions.left, greaterThanOrEqualTo(_safePadding.left));
-      expect(actions.top, greaterThanOrEqualTo(_safePadding.top));
+      if (placement != TRDrawerPlacement.bottom) {
+        expect(actions.top, greaterThanOrEqualTo(_safePadding.top));
+      }
       expect(
         actions.right,
         lessThanOrEqualTo(_viewport.width - _safePadding.right),

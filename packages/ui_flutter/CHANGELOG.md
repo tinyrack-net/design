@@ -1,3 +1,9 @@
+## 0.62.2
+
+- Keeps bottom-sheet drag handles at the standard surface padding instead of
+  adding the unrelated top system inset, while preserving bottom and horizontal
+  safe areas.
+
 ## 0.62.1
 
 - Lets Android predictive Back finish the remaining pane transition after the

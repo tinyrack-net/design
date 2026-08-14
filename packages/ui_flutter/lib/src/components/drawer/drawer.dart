@@ -272,6 +272,13 @@ class _TRDrawerState extends State<TRDrawer>
         label: widget.semanticLabel,
         role: widget.modal ? SemanticsRole.dialog : null,
         child: SafeArea(
+          // A bottom sheet already sits below the status-bar edge unless it
+          // grows to fill the viewport. Applying the viewport's top inset to
+          // every content-sized sheet creates a second, unrelated gap above
+          // its drag handle. Keep the attached bottom edge and both horizontal
+          // edges safe; callers that deliberately present a full-screen route
+          // can still inset the route with showTRDrawer(useSafeArea: true).
+          top: widget.placement != TRDrawerPlacement.bottom,
           // The border comes from the Material shape, which paints over the box
           // without reserving room inside it. The web panel is `box-sizing:
           // border-box`, so its content starts one border width further in.
