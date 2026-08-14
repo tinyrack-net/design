@@ -5,6 +5,7 @@ import '../../ui_density.dart';
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
 import '../../internal/layer.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
@@ -128,14 +129,24 @@ class _TRMenuState extends State<TRMenu> {
     final height = TRControlMetrics.heightOf(uiSize);
     final iconLabel = widget.label;
     final square = iconLabel != null;
+    Color triggerBackground(Set<WidgetState> states) {
+      if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+      if (controller.isOpen || states.contains(WidgetState.hovered)) {
+        return colors.surfaceHover;
+      }
+      return Colors.transparent;
+    }
+
     final triggerStyle = ButtonStyle(
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
-        if (controller.isOpen || states.contains(WidgetState.hovered)) {
-          return colors.surfaceHover;
-        }
-        return Colors.transparent;
-      }),
+      animationDuration: Duration.zero,
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+      backgroundBuilder: (context, states, child) => trAnimatedPressBackground(
+        context,
+        states,
+        child,
+        color: triggerBackground(states),
+        borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+      ),
       foregroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
             ? colors.textMuted
@@ -220,23 +231,27 @@ class _TRMenuState extends State<TRMenu> {
           enabled: widget.enabled,
           expanded: menuController.isOpen,
           label: iconLabel,
-          child: TextButton(
-            autofocus: widget.autofocus,
-            focusNode: _focusNode,
-            onPressed: widget.enabled
-                ? () => menuController.isOpen
-                      ? menuController.close()
-                      : menuController.open()
-                : null,
-            style: triggerStyle,
-            child: square
-                ? IconTheme.merge(
-                    data: IconThemeData(
-                      size: TRControlMetrics.iconSizeOf(uiSize),
-                    ),
-                    child: widget.trigger,
-                  )
-                : widget.trigger,
+          child: TRMaterialPressable(
+            enabled: widget.enabled,
+            builder: (context, states) => TextButton(
+              autofocus: widget.autofocus,
+              focusNode: _focusNode,
+              onPressed: widget.enabled
+                  ? () => menuController.isOpen
+                        ? menuController.close()
+                        : menuController.open()
+                  : null,
+              statesController: states,
+              style: triggerStyle,
+              child: square
+                  ? IconTheme.merge(
+                      data: IconThemeData(
+                        size: TRControlMetrics.iconSizeOf(uiSize),
+                      ),
+                      child: widget.trigger,
+                    )
+                  : widget.trigger,
+            ),
           ),
         ),
       ),
@@ -323,16 +338,20 @@ class TRMenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final item = MenuItemButton(
-      autofocus: autofocus,
-      closeOnActivate: closeOnActivate,
-      focusNode: focusNode,
-      leadingIcon: leadingIcon,
-      onPressed: onPressed,
-      shortcut: shortcut,
-      style: TRLayerStyles.item(context, showFocusBorder: false),
-      trailingIcon: trailingIcon,
-      child: child,
+    final item = TRMaterialPressable(
+      enabled: onPressed != null,
+      builder: (context, states) => MenuItemButton(
+        autofocus: autofocus,
+        closeOnActivate: closeOnActivate,
+        focusNode: focusNode,
+        leadingIcon: leadingIcon,
+        onPressed: onPressed,
+        shortcut: shortcut,
+        statesController: states,
+        style: TRLayerStyles.item(context, showFocusBorder: false),
+        trailingIcon: trailingIcon,
+        child: child,
+      ),
     );
     final spacedItem = Theme(
       data: Theme.of(context).copyWith(
@@ -475,32 +494,36 @@ class TRMenuSubmenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final density = TRUiDensityScope.of(context);
-    return SubmenuButton(
-      alignmentOffset: alignmentOffset,
-      animated: !MediaQuery.disableAnimationsOf(context),
-      controller: controller,
-      focusNode: focusNode,
-      leadingIcon: leadingIcon,
-      menuChildren: [
-        TRUiDensityScope(
-          density: density,
-          child: TRLayerSurface(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: menuChildren,
+    return TRMaterialPressable(
+      enabled: true,
+      builder: (context, states) => SubmenuButton(
+        alignmentOffset: alignmentOffset,
+        animated: !MediaQuery.disableAnimationsOf(context),
+        controller: controller,
+        focusNode: focusNode,
+        statesController: states,
+        leadingIcon: leadingIcon,
+        menuChildren: [
+          TRUiDensityScope(
+            density: density,
+            child: TRLayerSurface(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: menuChildren,
+              ),
             ),
           ),
+        ],
+        menuStyle: TRLayerStyles.menu(
+          context,
+          alignment: AlignmentDirectional.topEnd,
         ),
-      ],
-      menuStyle: TRLayerStyles.menu(
-        context,
-        alignment: AlignmentDirectional.topEnd,
+        style: TRLayerStyles.item(context, showFocusBorder: false),
+        trailingIcon: trailingIcon,
+        useRootOverlay: true,
+        child: child,
       ),
-      style: TRLayerStyles.item(context, showFocusBorder: false),
-      trailingIcon: trailingIcon,
-      useRootOverlay: true,
-      child: child,
     );
   }
 }

@@ -29,6 +29,12 @@ import { FastFeedbackExample, MotionDurationComparison, MotionEasingComparison, 
 
 <FastFeedbackExample locale="ko" />
 
+Flutter의 터치와 스타일러스 대상은 pointer down에서 pressed 피드백을
+시작해요. 색상은 `immediate`와 `easeOut`으로 진입하고 `fast`와
+`standard`로 돌아와요. 짧은 탭도 최소 표시 시간을 기다리지 않고 손을
+뗄 때 활성화되며, 스크롤이나 취소로 바뀌면 활성화 없이 이전 상태로
+복귀해요.
+
 - 버튼, 토글, 탭, 스위치는 한 컴포넌트 안의 상태 변화에 빠른 피드백을 사용해요.
 - 메뉴, 툴팁, 팝오버, 선택 목록은 가까운 맥락을 보여 줘요.
 - 대화 상자와 드로어는 활성 작업 맥락을 바꾸므로 더 느린 진입을 사용할 수 있어요.

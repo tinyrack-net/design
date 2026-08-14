@@ -6,7 +6,6 @@ class _TRButtonInteractionFrame extends StatefulWidget {
     required this.color,
     required this.disabled,
     required this.fill,
-    required this.motionDuration,
     required this.onActivate,
     required this.opacity,
     this.autofocus = false,
@@ -24,7 +23,6 @@ class _TRButtonInteractionFrame extends StatefulWidget {
   final bool disabled;
   final Color Function({required bool hovered, required bool pressed}) fill;
   final FocusNode? focusNode;
-  final Duration motionDuration;
   final VoidCallback? onActivate;
   final double opacity;
 
@@ -41,6 +39,7 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame>
   bool _keyboardVisualPressed = false;
   bool _pointerDown = false;
   bool _syncingDisabled = false;
+  final _touchPress = TRTouchPressCoordinator();
 
   FocusNode get _focusNode =>
       widget.focusNode ?? (_internalFocusNode ??= FocusNode());
@@ -65,6 +64,7 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.disabled != widget.disabled) {
       _pointerDown = false;
+      _touchPress.cancel();
       _keyboardVisualPressed = false;
       _syncingDisabled = true;
       _statesController.update(WidgetState.pressed, false);
@@ -103,6 +103,21 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame>
     widget.onActivate?.call();
   }
 
+  void _handlePointerDown(PointerDownEvent event) {
+    _focusNode.requestFocus();
+    if (_touchPress.begin(event)) {
+      _statesController.update(WidgetState.pressed, true);
+    }
+    setState(() => _pointerDown = true);
+  }
+
+  void _handlePointerEnd(PointerEvent event) {
+    if (_touchPress.end(event)) {
+      _statesController.update(WidgetState.pressed, false);
+    }
+    setState(() => _pointerDown = false);
+  }
+
   KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
     if (widget.disabled) return KeyEventResult.ignored;
     if (event.logicalKey == LogicalKeyboardKey.enter && event is KeyDownEvent) {
@@ -128,6 +143,8 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame>
     final pointerPressed = !widget.disabled && statePressed && _pointerDown;
     final keyboardPressed = !widget.disabled && _keyboardVisualPressed;
     final pressed = keyboardPressed || pointerPressed;
+    final motionDuration = trPressedMotionDuration(context, pressed: pressed);
+    final motionCurve = trPressedMotionCurve(pressed: pressed);
     final hovered =
         !widget.disabled &&
         _statesController.value.contains(WidgetState.hovered);
@@ -137,34 +154,29 @@ class _TRButtonInteractionFrameState extends State<_TRButtonInteractionFrame>
       focusNode: _focusNode,
       onKeyEvent: _handleKeyEvent,
       child: Listener(
-        onPointerCancel: (_) => setState(() => _pointerDown = false),
-        onPointerDown: widget.disabled
-            ? null
-            : (_) {
-                _focusNode.requestFocus();
-                setState(() => _pointerDown = true);
-              },
-        onPointerUp: (_) => setState(() => _pointerDown = false),
+        onPointerCancel: widget.disabled ? null : _handlePointerEnd,
+        onPointerDown: widget.disabled ? null : _handlePointerDown,
+        onPointerUp: widget.disabled ? null : _handlePointerEnd,
         child: Transform.translate(
           offset: Offset(
             0,
             keyboardPressed ? TRGeneratedMeasurements.controlPressDistance : 0,
           ),
           child: AnimatedContainer(
-            curve: TRMotion.standard,
-            duration: widget.motionDuration,
+            curve: motionCurve,
+            duration: motionDuration,
             transform: Matrix4.translationValues(
               0,
               pointerPressed ? TRGeneratedMeasurements.controlPressDistance : 0,
               0,
             ),
             child: AnimatedOpacity(
-              curve: TRMotion.standard,
-              duration: widget.motionDuration,
+              curve: motionCurve,
+              duration: motionDuration,
               opacity: widget.opacity,
               child: AnimatedContainer(
-                curve: TRMotion.standard,
-                duration: widget.motionDuration,
+                curve: motionCurve,
+                duration: motionDuration,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
                   color: background,

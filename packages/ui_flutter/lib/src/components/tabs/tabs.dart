@@ -9,6 +9,7 @@ import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/focus_source.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../../types.dart';
 import '../button/button.dart';
@@ -486,7 +487,8 @@ class _TRTabItem extends StatefulWidget {
   State<_TRTabItem> createState() => _TRTabItemState();
 }
 
-class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
+class _TRTabItemState extends State<_TRTabItem>
+    with TRFocusSourceMixin, TRTouchPressStateMixin<_TRTabItem> {
   bool _hovered = false;
   bool _focused = false;
   bool _spaceDown = false;
@@ -542,9 +544,14 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
       TRUiSize.xl => TRUiSize.lg,
     };
     final showFocusRing = focusVisible(hasFocus: _focused);
-    final motionDuration = MediaQuery.disableAnimationsOf(context)
+    final motionDuration = touchPressed
+        ? trPressedMotionDuration(context, pressed: true)
+        : MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : TRGeneratedMotion.fast;
+    final motionCurve = touchPressed
+        ? trPressedMotionCurve(pressed: true)
+        : TRGeneratedMotion.standard;
 
     final label = Row(
       children: <Widget>[
@@ -587,11 +594,15 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
       child: Stack(
         children: <Widget>[
           AnimatedContainer(
-            curve: TRGeneratedMotion.standard,
+            curve: motionCurve,
             duration: motionDuration,
             height: widget.stripHeight,
             decoration: BoxDecoration(
-              color: _hovered && interactive ? colors.surfaceHover : null,
+              color: touchPressed && interactive
+                  ? colors.surfacePressed
+                  : _hovered && interactive
+                  ? colors.surfaceHover
+                  : null,
               border: BorderDirectional(end: BorderSide(color: colors.border)),
             ),
             padding: const EdgeInsets.symmetric(
@@ -651,11 +662,17 @@ class _TRTabItemState extends State<_TRTabItem> with TRFocusSourceMixin {
     // The close control sits deeper in the tree and still wins the arena.
     // The pointer surface stays out of the semantics tree so it cannot absorb
     // the close control's node; the tab reports its own tap action below.
-    final selection = GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      excludeFromSemantics: true,
-      onTap: interactive ? widget.onSelect : null,
-      child: tabContent,
+    final selection = Listener(
+      onPointerDown: interactive ? beginTouchPress : null,
+      onPointerUp: interactive ? endTouchPress : null,
+      onPointerCancel: interactive ? endTouchPress : null,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        excludeFromSemantics: true,
+        onTapCancel: interactive ? cancelTouchPress : null,
+        onTap: interactive ? widget.onSelect : null,
+        child: tabContent,
+      ),
     );
     final tabSurface = widget.dragConfiguration == null || !interactive
         ? selection

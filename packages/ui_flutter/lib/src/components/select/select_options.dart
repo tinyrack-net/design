@@ -73,59 +73,62 @@ class _TRSelectOptions<T> extends StatelessWidget {
 
   Widget _row(BuildContext context, int index) {
     final item = items[index];
-    final button = MenuItemButton(
-      key: item.key,
-      // Only the dropdown lives inside a menu. The sheet closes itself with the
-      // value it popped, so asking a menu to close would be a no-op at best.
-      closeOnActivate: focusNodes != null,
-      focusNode: focusNodes?[index],
-      leadingIcon: item.leading,
-      onPressed: interactive && item.enabled
-          ? () => onSelected(item.value)
-          : null,
-      style: _style(
-        context,
-        selected: item.value == selectedValue,
-        described: item.description != null,
-      ),
-      trailingIcon: item.trailing == null
-          ? null
-          : TRLayerPartBoundary(
-              name: 'item${index}Indicator',
-              child: item.trailing!,
-            ),
-      child: item.description == null
-          ? TRLayerPartBoundary(
-              name: 'item${index}Label',
-              child: Text(item.label),
-            )
-          : ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: TRGeneratedMeasurements.measureLg,
+    final enabled = interactive && item.enabled;
+    final button = TRMaterialPressable(
+      enabled: enabled,
+      builder: (context, states) => MenuItemButton(
+        key: item.key,
+        // Only the dropdown lives inside a menu. The sheet closes itself with
+        // the value it popped, so asking a menu to close would be a no-op.
+        closeOnActivate: focusNodes != null,
+        focusNode: focusNodes?[index],
+        leadingIcon: item.leading,
+        onPressed: enabled ? () => onSelected(item.value) : null,
+        statesController: states,
+        style: _style(
+          context,
+          selected: item.value == selectedValue,
+          described: item.description != null,
+        ),
+        trailingIcon: item.trailing == null
+            ? null
+            : TRLayerPartBoundary(
+                name: 'item${index}Indicator',
+                child: item.trailing!,
               ),
-              child: TRLayerPartBoundary(
+        child: item.description == null
+            ? TRLayerPartBoundary(
                 name: 'item${index}Label',
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(item.label, overflow: TextOverflow.ellipsis),
-                    const SizedBox(height: TRGeneratedSpacing.xs),
-                    Text(
-                      item.description!,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: context.tinyrackTheme.textMuted,
-                        fontFamily: TRGeneratedFontFamilies.body,
-                        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-                        fontSize: TRGeneratedTypographySizes.xs,
-                        height: TRGeneratedTypographyLineHeights.md,
+                child: Text(item.label),
+              )
+            : ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: TRGeneratedMeasurements.measureLg,
+                ),
+                child: TRLayerPartBoundary(
+                  name: 'item${index}Label',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(item.label, overflow: TextOverflow.ellipsis),
+                      const SizedBox(height: TRGeneratedSpacing.xs),
+                      Text(
+                        item.description!,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: context.tinyrackTheme.textMuted,
+                          fontFamily: TRGeneratedFontFamilies.body,
+                          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+                          fontSize: TRGeneratedTypographySizes.xs,
+                          height: TRGeneratedTypographyLineHeights.md,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
+      ),
     );
     final onRowKeyEvent = this.onRowKeyEvent;
     if (onRowKeyEvent == null) return button;
@@ -140,19 +143,26 @@ class _TRSelectOptions<T> extends StatelessWidget {
     final colors = context.tinyrackTheme;
     final resolvedHeight = TRControlMetrics.heightOf(uiSize);
     final rowHeight = math.max(resolvedHeight, minimumRowHeight ?? 0);
+    Color background(Set<WidgetState> states) {
+      if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+      if (states.contains(WidgetState.focused) ||
+          states.contains(WidgetState.hovered)) {
+        return colors.surfaceHover;
+      }
+      return selected ? colors.surfaceSelected : Colors.transparent;
+    }
+
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        // Highlight before selection, matching the web and TRLayerStyles.option:
-        // the check indicator says which row is selected, the background says
-        // which row the keyboard or pointer is on.
-        if (states.contains(WidgetState.focused) ||
-            states.contains(WidgetState.hovered)) {
-          return colors.surfaceHover;
-        }
-        if (selected) return colors.surfaceSelected;
-        return Colors.transparent;
-      }),
+      animationDuration: Duration.zero,
+      backgroundBuilder: (context, states, child) => trAnimatedPressBackground(
+        context,
+        states,
+        child,
+        color: background(states),
+        borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+      ),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       foregroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
             ? colors.textMuted

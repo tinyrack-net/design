@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,10 +45,12 @@ void main() {
     tester,
   ) async {
     late ButtonStyle style;
+    late BuildContext styleContext;
     await tester.pumpWidget(
       _app(
         Builder(
           builder: (context) {
+            styleContext = context;
             style = TRLayerStyles.option(context, highlighted: true);
             return const SizedBox.shrink();
           },
@@ -56,13 +59,70 @@ void main() {
     );
 
     final colors = TinyrackTheme.light().extension<TinyrackThemeData>()!;
-    expect(style.backgroundColor!.resolve({}), colors.surfaceHover);
+    final background = style.backgroundBuilder!(styleContext, {}, null);
+    expect(
+      (background as AnimatedContainer).decoration,
+      BoxDecoration(
+        color: colors.surfaceHover,
+        borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+      ),
+    );
     final side = style.side!.resolve({})!;
     expect(side.color, Colors.transparent);
     expect(side.width, TRGeneratedBorders.defaultWidth);
   });
 
   group('TRMenu', () {
+    testWidgets('menu items start touch feedback immediately', (tester) async {
+      await tester.pumpWidget(
+        _app(
+          TRMenu(
+            trigger: const Text('Actions'),
+            menuChildren: [
+              TRMenuItem(onPressed: () {}, child: const Text('Duplicate')),
+            ],
+          ),
+        ),
+      );
+      await tester.tap(find.text('Actions'));
+      await tester.pumpAndSettle();
+
+      final touch = await tester.startGesture(
+        tester.getCenter(find.text('Duplicate')),
+        kind: PointerDeviceKind.touch,
+      );
+      await tester.pump();
+
+      final surface = tester
+          .widgetList<AnimatedContainer>(
+            find.descendant(
+              of: find.widgetWithText(MenuItemButton, 'Duplicate'),
+              matching: find.byType(AnimatedContainer),
+            ),
+          )
+          .singleWhere((container) => container.decoration != null);
+      final colors = TinyrackTheme.light().extension<TinyrackThemeData>()!;
+      expect(
+        (surface.decoration! as BoxDecoration).color,
+        colors.surfacePressed,
+      );
+      expect(surface.duration, TRGeneratedMotion.immediate);
+      expect(surface.curve, TRGeneratedMotion.easeOut);
+
+      await touch.cancel();
+      await tester.pump();
+      final releasing = tester
+          .widgetList<AnimatedContainer>(
+            find.descendant(
+              of: find.widgetWithText(MenuItemButton, 'Duplicate'),
+              matching: find.byType(AnimatedContainer),
+            ),
+          )
+          .singleWhere((container) => container.decoration != null);
+      expect(releasing.duration, TRGeneratedMotion.fast);
+      expect(releasing.curve, TRGeneratedMotion.standard);
+    });
+
     testWidgets('keeps menu layers bordered without a focused item border', (
       tester,
     ) async {

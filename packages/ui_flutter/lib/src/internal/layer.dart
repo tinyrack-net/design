@@ -10,6 +10,7 @@ import '../tokens.dart';
 import '../types.dart';
 import '../ui_density.dart';
 import 'focus_source.dart';
+import 'press_interaction.dart';
 
 /// Internal render-tree marker used by layer tests and preview diagnostics.
 ///
@@ -160,16 +161,26 @@ abstract final class TRLayerStyles {
     final colors = context.tinyrackTheme;
     final rowSize = uiSize ?? rowSizeOf(context);
     final rowHeight = TRControlMetrics.heightOf(rowSize);
+    Color background(Set<WidgetState> states) {
+      if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+      if (states.contains(WidgetState.focused) ||
+          states.contains(WidgetState.hovered)) {
+        return colors.surfaceHover;
+      }
+      return selected ? colors.surfaceSelected : Colors.transparent;
+    }
+
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
-        if (states.contains(WidgetState.focused) ||
-            states.contains(WidgetState.hovered)) {
-          return colors.surfaceHover;
-        }
-        return selected ? colors.surfaceSelected : Colors.transparent;
-      }),
+      animationDuration: Duration.zero,
+      backgroundBuilder: (context, states, child) => trAnimatedPressBackground(
+        context,
+        states,
+        child,
+        color: background(states),
+        borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+      ),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       foregroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
             ? colors.textMuted
@@ -222,15 +233,25 @@ abstract final class TRLayerStyles {
     final colors = context.tinyrackTheme;
     final rowSize = uiSize ?? rowSizeOf(context);
     final rowHeight = TRControlMetrics.heightOf(rowSize);
+    Color background(Set<WidgetState> states) {
+      if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
+      if (highlighted || states.contains(WidgetState.hovered)) {
+        return colors.surfaceHover;
+      }
+      return selected ? colors.surfaceSelected : Colors.transparent;
+    }
+
     return ButtonStyle(
       alignment: AlignmentDirectional.centerStart,
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.pressed)) return colors.surfacePressed;
-        if (highlighted || states.contains(WidgetState.hovered)) {
-          return colors.surfaceHover;
-        }
-        return selected ? colors.surfaceSelected : Colors.transparent;
-      }),
+      animationDuration: Duration.zero,
+      backgroundBuilder: (context, states, child) => trAnimatedPressBackground(
+        context,
+        states,
+        child,
+        color: background(states),
+        borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+      ),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       foregroundColor: WidgetStateProperty.resolveWith(
         (states) => states.contains(WidgetState.disabled)
             ? colors.textMuted

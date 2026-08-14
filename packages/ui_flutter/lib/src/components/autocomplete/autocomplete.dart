@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../internal/press_interaction.dart';
 import '../../tokens.dart';
 import '../../types.dart';
 import '../../ui_density.dart';
@@ -336,19 +337,23 @@ class _TRAutocompleteOptionsViewState<T extends Object>
                   return SizedBox(
                     key: _optionKeys[index],
                     width: double.infinity,
-                    child: MenuItemButton(
-                      leadingIcon: item.leading,
-                      onPressed: () => widget.onSelected(item),
-                      requestFocusOnHover: false,
-                      style: TRLayerStyles.option(
-                        context,
-                        highlighted: widget.highlightedIndex == index,
-                        uiSize: widget.rowSize,
-                      ),
-                      trailingIcon: item.trailing,
-                      child: TRLayerPartBoundary(
-                        name: 'option$index',
-                        child: Text(item.label),
+                    child: TRMaterialPressable(
+                      enabled: true,
+                      builder: (context, states) => MenuItemButton(
+                        leadingIcon: item.leading,
+                        onPressed: () => widget.onSelected(item),
+                        requestFocusOnHover: false,
+                        statesController: states,
+                        style: TRLayerStyles.option(
+                          context,
+                          highlighted: widget.highlightedIndex == index,
+                          uiSize: widget.rowSize,
+                        ),
+                        trailingIcon: item.trailing,
+                        child: TRLayerPartBoundary(
+                          name: 'option$index',
+                          child: Text(item.label),
+                        ),
                       ),
                     ),
                   );

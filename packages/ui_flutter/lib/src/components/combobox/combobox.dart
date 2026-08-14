@@ -6,6 +6,7 @@ import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../internal/press_interaction.dart';
 import '../../tokens.dart';
 import '../../types.dart';
 import '../../ui_density.dart';
@@ -883,20 +884,27 @@ class _TRComboboxInputState<T extends Object>
     AutocompleteOnSelected<TRComboboxItem<T>> select,
   ) => SizedBox(
     width: double.infinity,
-    child: MenuItemButton(
-      leadingIcon: item.leading,
-      onPressed: item.enabled ? () => select(item) : null,
-      requestFocusOnHover: false,
-      style: TRLayerStyles.option(
-        context,
-        highlighted:
-            item.enabled &&
-            _highlightArmed &&
-            AutocompleteHighlightedOption.of(context) == index,
-        selected: widget.selected.contains(item.value),
+    child: TRMaterialPressable(
+      enabled: item.enabled,
+      builder: (context, states) => MenuItemButton(
+        leadingIcon: item.leading,
+        onPressed: item.enabled ? () => select(item) : null,
+        requestFocusOnHover: false,
+        statesController: states,
+        style: TRLayerStyles.option(
+          context,
+          highlighted:
+              item.enabled &&
+              _highlightArmed &&
+              AutocompleteHighlightedOption.of(context) == index,
+          selected: widget.selected.contains(item.value),
+        ),
+        trailingIcon: item.trailing,
+        child: TRLayerPartBoundary(
+          name: 'option$index',
+          child: Text(item.label),
+        ),
       ),
-      trailingIcon: item.trailing,
-      child: TRLayerPartBoundary(name: 'option$index', child: Text(item.label)),
     ),
   );
 }

@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
@@ -573,70 +574,74 @@ class _TRInlineSuggestionRow<T extends Object> extends StatelessWidget {
       button: true,
       child: TRLayerPartBoundary(
         name: 'option$index',
-        child: MenuItemButton(
-          onPressed: onPressed,
-          requestFocusOnHover: false,
-          leadingIcon: item.leading,
-          style: TRLayerStyles.option(context, highlighted: highlighted)
-              .copyWith(
-                minimumSize: WidgetStatePropertyAll(Size(0, rowHeight)),
-                maximumSize: const WidgetStatePropertyAll(Size.infinite),
-                padding: WidgetStatePropertyAll(
-                  EdgeInsets.symmetric(
-                    horizontal: TRControlMetrics.inlinePaddingOf(rowSize),
-                    vertical: item.description == null
-                        ? 0
-                        : TRControlMetrics.gapOf(rowSize),
-                  ),
-                ),
-              ),
-          child: SizedBox(
-            width: contentWidth,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(child: label),
-                          if (item.tag != null) ...[
-                            const SizedBox(width: TRGeneratedSpacing.xs),
-                            _TRInlineSuggestionTag(label: item.tag!),
-                          ],
-                        ],
-                      ),
-                      if (item.description != null &&
-                          item.description!.isNotEmpty)
-                        Text(
-                          item.description!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TRGeneratedTextStyles.caption.copyWith(
-                            color: colors.textMuted,
-                            fontFamilyFallback:
-                                TRGeneratedFontFamilies.fallback,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                if (item.hint != null) ...[
-                  const SizedBox(width: TRGeneratedSpacing.sm),
-                  Text(
-                    item.hint!,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TRGeneratedTextStyles.caption.copyWith(
-                      color: colors.textPlaceholder,
-                      fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+        child: TRMaterialPressable(
+          enabled: onPressed != null,
+          builder: (context, states) => MenuItemButton(
+            onPressed: onPressed,
+            requestFocusOnHover: false,
+            leadingIcon: item.leading,
+            statesController: states,
+            style: TRLayerStyles.option(context, highlighted: highlighted)
+                .copyWith(
+                  minimumSize: WidgetStatePropertyAll(Size(0, rowHeight)),
+                  maximumSize: const WidgetStatePropertyAll(Size.infinite),
+                  padding: WidgetStatePropertyAll(
+                    EdgeInsets.symmetric(
+                      horizontal: TRControlMetrics.inlinePaddingOf(rowSize),
+                      vertical: item.description == null
+                          ? 0
+                          : TRControlMetrics.gapOf(rowSize),
                     ),
                   ),
+                ),
+            child: SizedBox(
+              width: contentWidth,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(child: label),
+                            if (item.tag != null) ...[
+                              const SizedBox(width: TRGeneratedSpacing.xs),
+                              _TRInlineSuggestionTag(label: item.tag!),
+                            ],
+                          ],
+                        ),
+                        if (item.description != null &&
+                            item.description!.isNotEmpty)
+                          Text(
+                            item.description!,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TRGeneratedTextStyles.caption.copyWith(
+                              color: colors.textMuted,
+                              fontFamilyFallback:
+                                  TRGeneratedFontFamilies.fallback,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (item.hint != null) ...[
+                    const SizedBox(width: TRGeneratedSpacing.sm),
+                    Text(
+                      item.hint!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TRGeneratedTextStyles.caption.copyWith(
+                        color: colors.textPlaceholder,
+                        fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ),

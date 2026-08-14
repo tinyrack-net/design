@@ -25,6 +25,29 @@ void main() {
   tearDown(TRFocusSource.instance.debugReset);
 
   group('pointer', () {
+    testWidgets('a short touch activates once without a press delay', (
+      tester,
+    ) async {
+      var activations = 0;
+      await tester.pumpWidget(
+        _app(
+          TRButton(
+            onPressed: () => activations += 1,
+            child: const Text('Deploy'),
+          ),
+        ),
+      );
+
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(TRButton)),
+        kind: PointerDeviceKind.touch,
+      );
+      await gesture.up();
+      await tester.pump();
+
+      expect(activations, 1);
+    });
+
     testWidgets('a held pointer does not activate', (tester) async {
       var activations = 0;
       await tester.pumpWidget(
@@ -67,6 +90,40 @@ void main() {
       );
       await tester.pump();
       await gesture.cancel();
+      await tester.pumpAndSettle();
+
+      expect(activations, 0);
+    });
+
+    testWidgets('a touch that becomes a scroll does not activate', (
+      tester,
+    ) async {
+      var activations = 0;
+      await tester.pumpWidget(
+        _app(
+          SizedBox(
+            width: 300,
+            height: 200,
+            child: ListView(
+              children: [
+                const SizedBox(height: 80),
+                TRButton(
+                  onPressed: () => activations += 1,
+                  child: const Text('Deploy'),
+                ),
+                const SizedBox(height: 400),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(TRButton)),
+        kind: PointerDeviceKind.touch,
+      );
+      await gesture.moveBy(const Offset(0, -80));
+      await gesture.up();
       await tester.pumpAndSettle();
 
       expect(activations, 0);

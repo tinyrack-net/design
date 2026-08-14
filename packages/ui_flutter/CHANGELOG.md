@@ -1,3 +1,13 @@
+## 0.62.3
+
+- Starts Flutter touch and stylus pressed feedback on pointer down, before the
+  gesture press deadline, across shared tap targets.
+- Uses `immediate` with `easeOut` to enter pressed color and `fast` with
+  `standard` to restore the resting state, while reduced motion remains
+  immediate and tap activation remains undelayed.
+- Cancels pressed feedback and activation when a touch becomes a scroll or the
+  gesture is cancelled.
+
 ## 0.62.2
 
 - Keeps bottom-sheet drag handles at the standard surface padding instead of
@@ -8,7 +18,6 @@
 
 - Lets Android predictive Back finish the remaining pane transition after the
   gesture commits instead of snapping immediately to the previous pane.
-
 ## 0.62.0
 
 - Adds `TRNavigationRow` for standalone destinations with selected, disabled,

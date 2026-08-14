@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../tree_nav/tree_nav.dart';
 
@@ -228,26 +229,55 @@ class _TRFileTreeState extends State<TRFileTree> {
     required bool disabled,
     required VoidCallback onTap,
     required Widget child,
-  }) => SizedBox(
-    height: TRGeneratedFlutterRendering.normalLineSm,
-    child: InkWell(
-      onTap: disabled ? null : onTap,
-      child: DefaultTextStyle(
-        style: TextStyle(
-          color: disabled
-              ? context.tinyrackTheme.textMuted
-              : context.tinyrackTheme.text,
-          fontFamily: TRGeneratedFontFamilies.mono,
-          fontFamilyFallback: TRGeneratedFontFamilies.fallback,
-          fontSize: TRGeneratedTypographySizes.sm,
-          height:
-              TRGeneratedFlutterRendering.normalLineSm /
-              TRGeneratedTypographySizes.sm,
+  }) {
+    final colors = context.tinyrackTheme;
+    return SizedBox(
+      height: TRGeneratedFlutterRendering.normalLineSm,
+      child: TRMaterialPressable(
+        enabled: !disabled,
+        builder: (context, states) => TextButton(
+          statesController: states,
+          onPressed: disabled ? null : onTap,
+          style: ButtonStyle(
+            animationDuration: Duration.zero,
+            backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+            backgroundBuilder: (context, states, child) =>
+                trAnimatedPressBackground(
+                  context,
+                  states,
+                  child,
+                  color: states.contains(WidgetState.pressed)
+                      ? colors.surfacePressed
+                      : states.contains(WidgetState.hovered)
+                      ? colors.surfaceHover
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(TRGeneratedRadii.sm),
+                ),
+            minimumSize: const WidgetStatePropertyAll(Size.zero),
+            maximumSize: const WidgetStatePropertyAll(Size.infinite),
+            padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+            overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.standard,
+          ),
+          child: DefaultTextStyle(
+            style: TextStyle(
+              color: disabled
+                  ? context.tinyrackTheme.textMuted
+                  : context.tinyrackTheme.text,
+              fontFamily: TRGeneratedFontFamilies.mono,
+              fontFamilyFallback: TRGeneratedFontFamilies.fallback,
+              fontSize: TRGeneratedTypographySizes.sm,
+              height:
+                  TRGeneratedFlutterRendering.normalLineSm /
+                  TRGeneratedTypographySizes.sm,
+            ),
+            child: child,
+          ),
         ),
-        child: child,
       ),
-    ),
-  );
+    );
+  }
 }
 
 Set<String> _initialFileTreeExpansion(List<TRFileTreeNode> nodes) {

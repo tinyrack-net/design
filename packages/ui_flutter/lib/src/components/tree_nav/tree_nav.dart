@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 import '../../internal/focus_source.dart';
+import '../../internal/press_interaction.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../theme.dart';
@@ -494,6 +495,7 @@ class _TRNavigationRowSurfaceState extends State<_TRNavigationRowSurface>
   bool _focused = false;
   bool _hovered = false;
   bool _pressed = false;
+  final _touchPress = TRTouchPressCoordinator();
 
   @override
   void initState() {
@@ -526,6 +528,7 @@ class _TRNavigationRowSurfaceState extends State<_TRNavigationRowSurface>
 
   void _handlePointerExit() {
     if (!_hovered && !_pressed) return;
+    _touchPress.cancel();
     setState(() {
       _hovered = false;
       _pressed = false;
@@ -534,7 +537,16 @@ class _TRNavigationRowSurfaceState extends State<_TRNavigationRowSurface>
 
   void _handlePressChanged(bool pressed) {
     if (_pressed == pressed) return;
+    if (!pressed) _touchPress.cancel();
     setState(() => _pressed = pressed);
+  }
+
+  void _handlePointerDown(PointerDownEvent event) {
+    if (_touchPress.begin(event)) _handlePressChanged(true);
+  }
+
+  void _handlePointerEnd(PointerEvent event) {
+    if (_touchPress.end(event)) _handlePressChanged(false);
   }
 
   void _activate() {
@@ -568,9 +580,8 @@ class _TRNavigationRowSurfaceState extends State<_TRNavigationRowSurface>
   Widget build(BuildContext context) {
     final isGroup = widget.kind == _TRNavigationRowKind.group;
     final colors = context.tinyrackTheme;
-    final motionDuration = MediaQuery.disableAnimationsOf(context)
-        ? Duration.zero
-        : TRMotion.fast;
+    final motionDuration = trPressedMotionDuration(context, pressed: _pressed);
+    final motionCurve = trPressedMotionCurve(pressed: _pressed);
     final showFocusRing = focusVisible(hasFocus: _focused);
     final background = widget.enabled && _pressed
         ? colors.surfacePressed
@@ -624,68 +635,79 @@ class _TRNavigationRowSurfaceState extends State<_TRNavigationRowSurface>
           canRequestFocus: widget.enabled,
           skipTraversal: !widget.enabled,
           onKeyEvent: _onKey,
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: widget.enabled ? _activate : null,
-            onTapCancel: widget.enabled
-                ? () => _handlePressChanged(false)
-                : null,
-            onTapDown: widget.enabled ? (_) => _handlePressChanged(true) : null,
-            onTapUp: widget.enabled ? (_) => _handlePressChanged(false) : null,
-            child: AnimatedOpacity(
-              duration: motionDuration,
-              opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
-              child: AnimatedContainer(
+          child: Listener(
+            onPointerCancel: widget.enabled ? _handlePointerEnd : null,
+            onPointerDown: widget.enabled ? _handlePointerDown : null,
+            onPointerUp: widget.enabled ? _handlePointerEnd : null,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: widget.enabled ? _activate : null,
+              onTapCancel: widget.enabled
+                  ? () => _handlePressChanged(false)
+                  : null,
+              onTapDown: widget.enabled
+                  ? (_) => _handlePressChanged(true)
+                  : null,
+              onTapUp: widget.enabled
+                  ? (_) => _handlePressChanged(false)
+                  : null,
+              child: AnimatedOpacity(
+                curve: motionCurve,
                 duration: motionDuration,
-                constraints: BoxConstraints(
-                  minHeight: isGroup
-                      ? _treeNavGroupMinHeight(widget.uiSize)
-                      : _treeNavLeafMinHeight(widget.uiSize),
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: TRGeneratedSpacing.md,
-                  vertical: _treeNavVerticalPadding(widget.uiSize),
-                ),
-                // Keep the ring layer mounted so focus changes do not re-inflate
-                // the row and destroy a trailing control's focus node.
-                foregroundDecoration: BoxDecoration(
-                  border: Border.all(
-                    color: showFocusRing ? colors.focus : Colors.transparent,
-                    width: TRGeneratedBorders.focusWidth,
+                opacity: widget.enabled ? 1 : TRGeneratedOpacity.disabled,
+                child: AnimatedContainer(
+                  curve: motionCurve,
+                  duration: motionDuration,
+                  constraints: BoxConstraints(
+                    minHeight: isGroup
+                        ? _treeNavGroupMinHeight(widget.uiSize)
+                        : _treeNavLeafMinHeight(widget.uiSize),
                   ),
-                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-                ),
-                decoration: BoxDecoration(
-                  color: background,
-                  borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
-                ),
-                child: _treeNavIconTheme(
-                  widget.uiSize,
-                  Row(
-                    children: [
-                      ?widget.leading,
-                      if (widget.leading != null) SizedBox(width: contentGap),
-                      Expanded(
-                        child: isGroup
-                            ? Transform.translate(
-                                offset: const Offset(
-                                  0,
-                                  -TRGeneratedBorders.defaultWidth / 2,
-                                ),
-                                child: content,
-                              )
-                            : content,
-                      ),
-                      if (widget.trailing != null) ...[
-                        SizedBox(width: contentGap),
-                        widget.trailing!,
-                      ],
-                      if (indicator != null) ...[
-                        if (widget.trailing != null)
+                  padding: EdgeInsets.symmetric(
+                    horizontal: TRGeneratedSpacing.md,
+                    vertical: _treeNavVerticalPadding(widget.uiSize),
+                  ),
+                  // Keep the ring layer mounted so focus changes do not re-inflate
+                  // the row and destroy a trailing control's focus node.
+                  foregroundDecoration: BoxDecoration(
+                    border: Border.all(
+                      color: showFocusRing ? colors.focus : Colors.transparent,
+                      width: TRGeneratedBorders.focusWidth,
+                    ),
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                  ),
+                  decoration: BoxDecoration(
+                    color: background,
+                    borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                  ),
+                  child: _treeNavIconTheme(
+                    widget.uiSize,
+                    Row(
+                      children: [
+                        ?widget.leading,
+                        if (widget.leading != null) SizedBox(width: contentGap),
+                        Expanded(
+                          child: isGroup
+                              ? Transform.translate(
+                                  offset: const Offset(
+                                    0,
+                                    -TRGeneratedBorders.defaultWidth / 2,
+                                  ),
+                                  child: content,
+                                )
+                              : content,
+                        ),
+                        if (widget.trailing != null) ...[
                           SizedBox(width: contentGap),
-                        indicator,
+                          widget.trailing!,
+                        ],
+                        if (indicator != null) ...[
+                          if (widget.trailing != null)
+                            SizedBox(width: contentGap),
+                          indicator,
+                        ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
               ),

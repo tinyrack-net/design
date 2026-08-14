@@ -5,6 +5,7 @@ import 'package:lucide_flutter/lucide_flutter.dart';
 
 import '../../generated/tokens.g.dart';
 import '../../internal/layer.dart';
+import '../../internal/press_interaction.dart';
 import '../../theme.dart';
 import '../../types.dart';
 
@@ -251,83 +252,101 @@ class _TRNavigationMenuEntryState<T> extends State<_TRNavigationMenuEntry<T>> {
                     : null,
                 borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
               ),
-              child: TextButton(
-                onPressed: widget.item.enabled
-                    ? () => widget.onChange(open ? null : widget.item.value)
-                    : null,
-                style: ButtonStyle(
-                  alignment: Alignment.center,
-                  backgroundColor: WidgetStateProperty.resolveWith((states) {
-                    final colors = context.tinyrackTheme;
-                    if (open) return colors.surfaceHover;
-                    if (states.contains(WidgetState.pressed)) {
-                      return colors.surfacePressed;
-                    }
-                    if (states.contains(WidgetState.focused) ||
-                        states.contains(WidgetState.hovered)) {
-                      return colors.surfaceHover;
-                    }
-                    return Colors.transparent;
-                  }),
-                  foregroundColor: WidgetStatePropertyAll(
-                    widget.item.enabled
-                        ? context.tinyrackTheme.text
-                        : context.tinyrackTheme.textMuted,
-                  ),
-                  iconColor: WidgetStatePropertyAll(
-                    widget.item.enabled
-                        ? context.tinyrackTheme.text
-                        : context.tinyrackTheme.textMuted,
-                  ),
-                  fixedSize: const WidgetStatePropertyAll(
-                    Size.fromHeight(
-                      TRGeneratedControlMetrics.mdHeight +
-                          TRGeneratedSpacing.xs,
+              child: TRMaterialPressable(
+                enabled: widget.item.enabled,
+                builder: (context, states) => TextButton(
+                  statesController: states,
+                  onPressed: widget.item.enabled
+                      ? () => widget.onChange(open ? null : widget.item.value)
+                      : null,
+                  style: ButtonStyle(
+                    alignment: Alignment.center,
+                    animationDuration: Duration.zero,
+                    backgroundColor: const WidgetStatePropertyAll(
+                      Colors.transparent,
                     ),
-                  ),
-                  minimumSize: const WidgetStatePropertyAll(
-                    Size(
-                      0,
-                      TRGeneratedControlMetrics.mdHeight +
-                          TRGeneratedSpacing.xs,
+                    backgroundBuilder: (context, states, child) {
+                      final colors = context.tinyrackTheme;
+                      final color = open
+                          ? colors.surfaceHover
+                          : states.contains(WidgetState.pressed)
+                          ? colors.surfacePressed
+                          : states.contains(WidgetState.focused) ||
+                                states.contains(WidgetState.hovered)
+                          ? colors.surfaceHover
+                          : Colors.transparent;
+                      return trAnimatedPressBackground(
+                        context,
+                        states,
+                        child,
+                        color: color,
+                        borderRadius: BorderRadius.circular(
+                          TRGeneratedRadii.md,
+                        ),
+                      );
+                    },
+                    foregroundColor: WidgetStatePropertyAll(
+                      widget.item.enabled
+                          ? context.tinyrackTheme.text
+                          : context.tinyrackTheme.textMuted,
                     ),
-                  ),
-                  padding: const WidgetStatePropertyAll(
-                    EdgeInsets.symmetric(
-                      horizontal: TRGeneratedControlMetrics.mdPaddingInline,
+                    iconColor: WidgetStatePropertyAll(
+                      widget.item.enabled
+                          ? context.tinyrackTheme.text
+                          : context.tinyrackTheme.textMuted,
                     ),
-                  ),
-                  shape: WidgetStatePropertyAll(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(TRGeneratedRadii.md),
+                    fixedSize: const WidgetStatePropertyAll(
+                      Size.fromHeight(
+                        TRGeneratedControlMetrics.mdHeight +
+                            TRGeneratedSpacing.xs,
+                      ),
                     ),
-                  ),
-                  side: const WidgetStatePropertyAll(
-                    BorderSide(color: Colors.transparent),
-                  ),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  textStyle: const WidgetStatePropertyAll(
-                    TextStyle(
-                      fontFamily: TRGeneratedFontFamilies.body,
-                      fontSize: TRGeneratedTypographySizes.md,
-                      fontWeight: TRGeneratedFontWeights.medium,
-                      height:
-                          TRGeneratedFlutterRendering.normalLineMd /
-                          TRGeneratedTypographySizes.md,
+                    minimumSize: const WidgetStatePropertyAll(
+                      Size(
+                        0,
+                        TRGeneratedControlMetrics.mdHeight +
+                            TRGeneratedSpacing.xs,
+                      ),
                     ),
-                  ),
-                  visualDensity: VisualDensity.standard,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: TRGeneratedControlMetrics.mdGap,
-                  children: [
-                    widget.item.trigger,
-                    Icon(
-                      open ? LucideIcons.chevronUp : LucideIcons.chevronDown,
-                      size: TRGeneratedControlMetrics.mdIconSize,
+                    padding: const WidgetStatePropertyAll(
+                      EdgeInsets.symmetric(
+                        horizontal: TRGeneratedControlMetrics.mdPaddingInline,
+                      ),
                     ),
-                  ],
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          TRGeneratedRadii.md,
+                        ),
+                      ),
+                    ),
+                    side: const WidgetStatePropertyAll(
+                      BorderSide(color: Colors.transparent),
+                    ),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    textStyle: const WidgetStatePropertyAll(
+                      TextStyle(
+                        fontFamily: TRGeneratedFontFamilies.body,
+                        fontSize: TRGeneratedTypographySizes.md,
+                        fontWeight: TRGeneratedFontWeights.medium,
+                        height:
+                            TRGeneratedFlutterRendering.normalLineMd /
+                            TRGeneratedTypographySizes.md,
+                      ),
+                    ),
+                    visualDensity: VisualDensity.standard,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: TRGeneratedControlMetrics.mdGap,
+                    children: [
+                      widget.item.trigger,
+                      Icon(
+                        open ? LucideIcons.chevronUp : LucideIcons.chevronDown,
+                        size: TRGeneratedControlMetrics.mdIconSize,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
