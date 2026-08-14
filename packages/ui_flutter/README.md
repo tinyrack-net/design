@@ -75,6 +75,14 @@ Top and bottom `TRDrawer` surfaces show a drag-to-dismiss handle by default.
 Set `showDragHandle: false` when a sheet must not advertise or accept that drag
 gesture. Side drawers never show the handle.
 
+A top or bottom drawer without `snapPoints` keeps its intrinsic height. Upward
+drags scroll overflow content without lifting the sheet, while downward drags
+return the content to its leading edge before dismissing the sheet. Supplying
+`snapPoints` opts into viewport-relative expansion: the sheet expands first,
+then scrolls its content at the largest snap point. The reverse drag scrolls
+back to the leading edge before collapsing the sheet. These transitions happen
+within one continuous gesture from the header or content region.
+
 Use `TRSplitView` when two application-owned surfaces need a controlled,
 resizable boundary. The caller owns the ratio and decides when a responsive
 layout should render the split:

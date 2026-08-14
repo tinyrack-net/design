@@ -1158,17 +1158,17 @@ const componentData: Record<
       ja: 'コンテンツに合うモーダルシート、またはビューポート比率でスワイプできるドロワーを論理方向の各辺から表示します。',
     },
     contractIntro: {
-      en: 'Top and bottom drawers fit their content by default, up to the full viewport. They show a drag-to-dismiss handle by default; set `showDragHandle` to false to hide it and disable that content-sized sheet gesture. Set `maxExtent` to a smaller viewport fraction when a product needs a lower cap; overflow scrolls inside the drawer. Supply one `snapPoints` value for a fixed viewport-relative size or several for drag-to-snap behavior, and keep every value at or below `maxExtent`. When a drag ends, the drawer eases to its nearest snap point; reduced-motion environments settle it immediately. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted and never show the handle. Drawer surfaces extend to the viewport edge. Bottom sheets preserve the bottom and horizontal system safe areas without adding the unrelated status-bar inset above their drag handle; top and side drawers continue to protect the safe edges they can meet.',
-      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고 최대 뷰포트 전체까지 커져요. 드래그해서 닫을 수 있는 핸들이 기본으로 표시되며, `showDragHandle`을 false로 설정하면 핸들과 콘텐츠 높이형 시트의 해당 제스처가 함께 꺼져요. 제품에서 더 낮은 상한이 필요하면 `maxExtent`에 뷰포트 비율을 지정하세요. 넘치는 콘텐츠는 드로어 안에서 스크롤해요. 뷰포트 비율의 고정 크기는 `snapPoints` 값 하나로, 드래그 스냅은 여러 값으로 설정하고 모든 값은 `maxExtent` 이하여야 해요. 드래그를 놓으면 가장 가까운 스냅 지점까지 부드럽게 이동하고, 모션 줄이기가 켜진 환경에서는 즉시 이동해요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지하며 핸들은 표시되지 않아요. 드로어 표면은 뷰포트 끝까지 이어져요. 하단 시트는 하단과 좌우 시스템 안전영역을 지키면서 핸들 위에는 관련 없는 상태 표시줄 여백을 더하지 않고, 상단과 측면 드로어는 닿을 수 있는 안전영역을 계속 보호해요.',
-      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、最大でビューポート全体まで広がります。ドラッグして閉じられるハンドルがデフォルトで表示され、`showDragHandle` を false にすると、ハンドルとコンテンツサイズのシートに対するそのジェスチャーが無効になります。製品で上限を低くする場合は、`maxExtent` にビューポート比率を指定してください。収まらないコンテンツはドロワー内でスクロールします。ビューポート比率の固定サイズには `snapPoints` を 1 つ、ドラッグスナップには複数指定し、すべての値を `maxExtent` 以下にします。ドラッグを離すと最も近いスナップポイントまで滑らかに移動し、モーションを減らす設定ではすぐに移動します。開始側と終了側のドロワーで `snapPoints` を省略すると標準のサイドパネルサイズを維持し、ハンドルは表示しません。ドロワーのサーフェスはビューポートの端まで広がります。下端のシートは下端と左右のシステムセーフエリアを維持しながら、ドラッグハンドルの上に無関係なステータスバーの余白を追加しません。上端と側面のドロワーは、接する可能性があるセーフエリアを引き続き保護します。',
+      en: 'Top and bottom drawers fit their content by default, up to the full viewport. Upward drags scroll overflow without lifting a content-sized sheet, while downward drags return content to its leading edge before dismissing. Supply one `snapPoints` value for a fixed viewport-relative size or several for drag-to-snap behavior. A continuous drag expands the sheet before scrolling at its largest snap point and reverses that order when collapsing. Set `showDragHandle` to false to hide the handle and disable sheet dragging while preserving content scrolling. Start and end drawers keep their standard side-panel sizing when `snapPoints` is omitted. Drawer surfaces extend to the viewport edge and preserve the system safe areas they can meet.',
+      ko: '상단과 하단 드로어는 기본적으로 콘텐츠 높이에 맞고 최대 뷰포트 전체까지 커져요. 콘텐츠 높이형 시트를 위로 끌면 시트가 들리지 않고 넘치는 콘텐츠만 스크롤하며, 아래로 끌면 콘텐츠를 시작 지점까지 되돌린 뒤 시트를 닫아요. 뷰포트 비율의 고정 크기는 `snapPoints` 값 하나로, 드래그 스냅은 여러 값으로 설정하세요. 한 번의 연속 드래그에서 시트를 최대 스냅 지점까지 먼저 확장한 뒤 콘텐츠를 스크롤하고, 반대 방향에서는 이 순서를 거꾸로 적용해요. `showDragHandle`을 false로 설정하면 핸들과 시트 드래그를 함께 끄면서 콘텐츠 스크롤은 유지해요. 시작과 끝 드로어에서 `snapPoints`를 생략하면 표준 측면 패널 크기를 유지해요. 드로어 표면은 뷰포트 끝까지 이어지고 닿을 수 있는 시스템 안전영역을 보호해요.',
+      ja: '上端と下端のドロワーはデフォルトでコンテンツの高さに合い、最大でビューポート全体まで広がります。コンテンツサイズのシートを上にドラッグすると、シートを持ち上げずに収まらないコンテンツだけをスクロールします。下にドラッグすると、コンテンツを先頭へ戻してからシートを閉じます。ビューポート比率の固定サイズには `snapPoints` を 1 つ、ドラッグスナップには複数指定してください。1 回の連続したドラッグで、シートを最大スナップポイントまで広げてからコンテンツをスクロールし、反対方向ではこの順序を逆にします。`showDragHandle` を false にすると、コンテンツのスクロールを保ったままハンドルとシートのドラッグを無効にします。開始側と終了側のドロワーで `snapPoints` を省略すると、標準のサイドパネルサイズを維持します。ドロワーのサーフェスはビューポートの端まで広がり、接する可能性があるシステムセーフエリアを保護します。',
     },
     contractRows: [
       {
         axis: { en: 'Drag handle', ko: '드래그 핸들', ja: 'ドラッグハンドル' },
         choices: {
-          en: 'Shown by default for top and bottom sheets; `showDragHandle: false` hides it and disables the content-sized sheet drag gesture',
-          ko: '상단과 하단 시트에는 기본으로 표시해요. `showDragHandle: false`로 숨기면 콘텐츠 높이형 시트의 드래그 제스처도 꺼져요',
-          ja: '上端と下端のシートではデフォルトで表示します。`showDragHandle: false` で非表示にすると、コンテンツサイズのシートに対するドラッグジェスチャーも無効になります',
+          en: 'Shown by default for top and bottom sheets; `showDragHandle: false` hides it and disables sheet dragging while content remains scrollable',
+          ko: '상단과 하단 시트에는 기본으로 표시해요. `showDragHandle: false`로 숨기면 콘텐츠 스크롤은 유지하면서 시트 드래그를 꺼요',
+          ja: '上端と下端のシートではデフォルトで表示します。`showDragHandle: false` で非表示にすると、コンテンツのスクロールを保ったままシートのドラッグを無効にします',
         },
       },
       {
@@ -1177,6 +1177,18 @@ const componentData: Record<
           en: 'Content-sized up to `maxExtent` by default for top and bottom; fixed or draggable viewport-relative sizing through `snapPoints`',
           ko: '상단과 하단은 기본적으로 `maxExtent`까지 콘텐츠에 맞고, `snapPoints`로 뷰포트 비율의 고정 또는 드래그 크기를 정해요',
           ja: '上端と下端はデフォルトで `maxExtent` までコンテンツに合わせ、`snapPoints` でビューポート比率の固定またはドラッグサイズを指定します',
+        },
+      },
+      {
+        axis: {
+          en: 'Drag and scroll',
+          ko: '드래그와 스크롤',
+          ja: 'ドラッグとスクロール',
+        },
+        choices: {
+          en: 'Coordinates expansion, overflow scrolling, reverse scrolling, and collapse within one continuous gesture across the header and content',
+          ko: '헤더와 콘텐츠에서 시작한 한 번의 연속 제스처로 확장, 내부 스크롤, 역방향 스크롤, 축소를 이어서 처리해요',
+          ja: 'ヘッダーとコンテンツから始めた 1 回の連続したジェスチャーで、展開、内部スクロール、逆方向のスクロール、縮小を連携します',
         },
       },
       {
