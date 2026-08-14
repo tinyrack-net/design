@@ -30,6 +30,21 @@ Widget _app(Widget child) => MaterialApp(
   ),
 );
 
+Widget _safeAreaApp(Widget child) => MaterialApp(
+  theme: TinyrackTheme.light(),
+  builder: (context, appChild) => MediaQuery(
+    data: MediaQuery.of(context).copyWith(
+      disableAnimations: true,
+      padding: const EdgeInsets.fromLTRB(12, 24, 8, 34),
+      viewPadding: const EdgeInsets.fromLTRB(12, 24, 8, 34),
+    ),
+    child: appChild!,
+  ),
+  home: Scaffold(
+    body: Align(alignment: Alignment.topLeft, child: child),
+  ),
+);
+
 Widget _withDensity(TRUiDensity density, Widget child) =>
     TRUiDensityScope(density: density, child: child);
 
@@ -200,6 +215,28 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(TRDrawer), findsOneWidget);
+    });
+
+    testWidgets('sheet handle ignores the unrelated top safe-area inset', (
+      tester,
+    ) async {
+      _sizeViewport(tester, _narrow);
+      await tester.pumpWidget(
+        _safeAreaApp(const TRSelect<String>(items: _items, searchable: true)),
+      );
+
+      await tester.tap(_trigger);
+      await tester.pumpAndSettle();
+
+      final drawer = tester.getRect(find.byType(TRDrawer));
+      final handle = tester.getRect(
+        find.byKey(const ValueKey('tr-drawer-drag-handle')),
+      );
+      expect(
+        handle.top - drawer.top,
+        TRSpacing.medium + TRControlMetrics.borderWidth,
+      );
+      expect(find.byType(TRTextField), findsOneWidget);
     });
 
     testWidgets('sheet keeps search fixed while only options scroll', (
