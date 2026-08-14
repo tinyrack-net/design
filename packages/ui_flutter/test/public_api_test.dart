@@ -11,7 +11,9 @@ import 'package:tinyrack_ui/tinyrack_ui.dart';
 /// the list is also checked against what the sources declare.
 const publicTypes = <Type>[
   TRAdaptivePane,
-  TRAdaptivePaneScope,
+  TRAdaptiveLayoutScope,
+  TRAdaptiveListDetailLayout,
+  TRAdaptiveNavigationLayout,
   TRAdaptiveWidthClass,
   TRAccordion,
   TRAccordionItem,
@@ -245,12 +247,7 @@ const publicTypes = <Type>[
   TRVirtualListSnapshot,
   TRVirtualListTriggerExtent,
   TRVirtualListViewportTriggerExtent,
-  TRNavigableThreePaneScaffold,
-  TRPaneDestination,
-  TRPaneNavigationChange,
-  TRPaneNavigationOperation,
   TRPaneRole,
-  TRThreePaneNavigator,
   TRTypography,
   TRUiSize,
   TRWindowFrame,

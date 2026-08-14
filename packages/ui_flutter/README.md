@@ -91,37 +91,35 @@ TRSplitView(
 )
 ```
 
-Use `TRNavigableThreePaneScaffold` for a hierarchical navigation surface that
-must adapt across phones, tablets, and desktop windows. Its width classes use
-the canonical 600, 840, 1200, and 1600 logical-pixel boundaries. Compact
-windows show the active destination, medium and expanded windows keep
-navigation beside the active destination, and large windows can show all three
-roles:
+Compose `TRAdaptiveNavigationLayout` and `TRAdaptiveListDetailLayout` around a
+routed application surface. Their width classes use the canonical 600, 840,
+1200, and 1600 logical-pixel boundaries. Compact windows show only content,
+medium and expanded windows keep navigation beside one content surface, and
+large windows keep navigation and collection fixed beside detail:
 
 ```dart
-final navigator = TRThreePaneNavigator<String>(
-  initialDestination: const TRPaneDestination(
-    role: TRPaneRole.navigation,
-    value: 'navigation',
-  ),
+final contentNavigator = Navigator(
+  key: contentNavigatorKey,
+  pages: contentPages,
+  onDidRemovePage: handleRemovedPage,
 );
 
-TRNavigableThreePaneScaffold<String>(
-  navigator: navigator,
+TRAdaptiveNavigationLayout(
   navigationPane: const WorkspaceNavigation(),
-  primaryPane: const WorkspaceCollection(),
-  secondaryPane: const WorkspaceDetail(),
+  contentPane: TRAdaptiveListDetailLayout(
+    singlePane: contentNavigator,
+    collectionPane: const WorkspaceCollection(),
+    detailPane: contentNavigator,
+  ),
 )
 ```
 
-`TRThreePaneNavigator.lastChange` distinguishes `push`, `replace`, `pop`, and
-`reset`. Push and pop move in opposite logical directions, replace crossfades
-content in the current pane role, and reset settles without entry motion. The
-scaffold handles Android predictive Back when an earlier destination changes
-what the current width class displays. Use
-`popUntilScaffoldValueChange` for a visible Back button so touch, keyboard, and
-system Back share the same rule. On a three-pane desktop layout, every available
-role is already visible and Back continues to the enclosing route.
+Both layouts are state-free. Keep destination history in `Navigator` and
+`Page`, where system Back, Android predictive Back, interrupted transitions,
+and reduced motion use Flutter's Material route lifecycle. Pass the same keyed
+content Navigator as `singlePane` and `detailPane` when its state must survive a
+breakpoint change. Use `TRPageTransitionsBuilder.none()` on a fixed routed
+region that needs Page identity without entry or exit motion.
 
 Compose navigation content with `TRNavigationPane` and
 `TRNavigationSection`; use `TRTreeNav` inside each section so selection,
@@ -131,14 +129,14 @@ padding still wins. Use `TRPaneHeader` to keep pane titles, descriptions,
 leading navigation, actions, and the body divider aligned. When a pane body
 uses a centred readable-width cap, pass the same `contentMaxWidth` to keep the
 header identity and actions on that rail while its divider stays full width.
-Pane contents can
-read the scaffold decision from `TRAdaptivePaneScope` without classifying their
-own local width:
+Pane contents can read the complete viewport decision from
+`TRAdaptiveLayoutScope` without classifying the smaller width left after fixed
+panes are placed:
 
 ```dart
 Builder(
   builder: (context) {
-    final pane = TRAdaptivePaneScope.of(context);
+    final layout = TRAdaptiveLayoutScope.of(context);
     return Column(
       children: [
         TRPaneHeader(
@@ -150,7 +148,11 @@ Builder(
         ),
         Expanded(
           child: ProjectCollection(
-            showSelection: pane.visibleRoles.contains(TRPaneRole.secondary),
+          showSelection: switch (layout.widthClass) {
+            TRAdaptiveWidthClass.large ||
+            TRAdaptiveWidthClass.extraLarge => true,
+            _ => false,
+          },
           ),
         ),
       ],

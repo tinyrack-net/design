@@ -60,19 +60,19 @@ overlay에서도 앵커의 밀도를 유지해요. 메뉴에 명시한 `uiSize`�
 ## 페이지 전환
 
 두 테마 모두 모든 `TargetPlatform`에 `TRPageTransitionsBuilder`를 설치해요.
-그래서 라우팅된 페이지가 Material의 플랫폼별 기본값을 물려받지 않고 Android,
-iOS, macOS, Linux, Windows에서 모두 같은 방식으로 움직여요. 들어오는 페이지는
-dialog·drawer와 같은 오버레이 모션으로 닫힘 배율에서 커지며 서서히 나타나고,
-pop 할 때는 그 애니메이션을 역방향으로 재생해요. 플랫폼이 `disableAnimations`
-를 알리면 전환 없이 페이지를 그대로 반환해요.
+Android는 Flutter의 predictive Back 전환을 사용하고 iOS, macOS, Linux,
+Windows는 Material forward-fade 모션을 사용해요. 플랫폼이
+`disableAnimations`를 알리면 모션 없이 페이지를 그대로 반환해요.
 
-특정 화면에만 다른 모션이 필요하면 직접 빌더를 설치하세요.
+라우팅된 영역에 다른 모션 규약이 필요할 때만 별도 빌더를 설치하세요. Page의
+수명주기와 identity는 유지하면서 고정된 영역을 움직이지 않으려면
+`TRPageTransitionsBuilder.none()`을 사용하세요.
 
 ```dart
 ThemeData theme = TinyrackTheme.light().copyWith(
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.windows: TRPageTransitionsBuilder.none(),
     },
   ),
 );

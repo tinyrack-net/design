@@ -60,20 +60,20 @@ its trigger; nest a standard scope around the anchor to keep that popup compact.
 
 ## Page transitions
 
-Both themes install `TRPageTransitionsBuilder` for every `TargetPlatform`, so a
-routed page animates the same way on Android, iOS, macOS, Linux, and Windows
-instead of inheriting Material's per-platform default. An arriving page fades in
-while it scales up from the shared closed-overlay scale, matching the dialog and
-drawer motion, and a pop plays that animation in reverse. The builder returns the
-page unanimated when the platform reports `disableAnimations`.
+Both themes install `TRPageTransitionsBuilder` for every `TargetPlatform`.
+Android uses Flutter's predictive Back transition, while iOS, macOS, Linux, and
+Windows use Material forward-fade motion. The builder returns the page without
+motion when the platform reports `disableAnimations`.
 
-Install the builder yourself only when a surface needs different motion:
+Install a different builder only when a routed region needs another motion
+contract. Use `TRPageTransitionsBuilder.none()` when Pages must retain their
+route lifecycle and identity while a fixed region stays visually still:
 
 ```dart
 ThemeData theme = TinyrackTheme.light().copyWith(
   pageTransitionsTheme: const PageTransitionsTheme(
     builders: <TargetPlatform, PageTransitionsBuilder>{
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.windows: TRPageTransitionsBuilder.none(),
     },
   ),
 );

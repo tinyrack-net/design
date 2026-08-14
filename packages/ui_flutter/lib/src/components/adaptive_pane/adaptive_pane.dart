@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, setEquals;
-import 'package:flutter/services.dart' show PredictiveBackEvent;
 import 'package:material_ui/material_ui.dart';
 
 import '../../generated/tokens.g.dart';
@@ -28,218 +25,41 @@ enum TRAdaptiveWidthClass {
   }
 }
 
-/// Stable roles in a canonical navigation, primary, and secondary hierarchy.
+/// Stable semantic roles in a navigation, collection, and detail hierarchy.
 enum TRPaneRole { navigation, primary, secondary }
 
-/// The mutation that most recently changed a [TRThreePaneNavigator].
-enum TRPaneNavigationOperation { push, replace, pop, reset }
-
-/// Exposes the adaptive decisions made by a
-/// [TRNavigableThreePaneScaffold] to its pane contents.
-class TRAdaptivePaneScope extends InheritedWidget {
-  TRAdaptivePaneScope({
+/// Exposes the width class resolved from the complete adaptive viewport.
+///
+/// Nested layouts read this scope instead of classifying the smaller space left
+/// after a navigation pane has been placed.
+class TRAdaptiveLayoutScope extends InheritedWidget {
+  const TRAdaptiveLayoutScope({
     required this.widthClass,
-    required Set<TRPaneRole> visibleRoles,
-    required this.activeRole,
     required super.child,
     super.key,
-  }) : visibleRoles = Set<TRPaneRole>.unmodifiable(visibleRoles);
+  });
 
-  /// The width class resolved from the scaffold's logical constraints.
+  /// The width class resolved from the complete layout constraint.
   final TRAdaptiveWidthClass widthClass;
 
-  /// The pane roles currently represented in the scaffold.
-  final Set<TRPaneRole> visibleRoles;
-
-  /// The role of the current destination, even when a wider layout also keeps
-  /// its parent roles visible.
-  final TRPaneRole activeRole;
-
-  /// Returns the nearest adaptive pane scope.
-  static TRAdaptivePaneScope of(BuildContext context) {
+  /// Returns the nearest adaptive layout scope.
+  static TRAdaptiveLayoutScope of(BuildContext context) {
     final scope = maybeOf(context);
     if (scope == null) {
       throw FlutterError(
-        'TRAdaptivePaneScope.of() was called outside a '
-        'TRNavigableThreePaneScaffold.',
+        'TRAdaptiveLayoutScope.of() was called outside an adaptive layout.',
       );
     }
     return scope;
   }
 
-  /// Returns the nearest adaptive pane scope, if one is available.
-  static TRAdaptivePaneScope? maybeOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<TRAdaptivePaneScope>();
+  /// Returns the nearest adaptive layout scope, if one is available.
+  static TRAdaptiveLayoutScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<TRAdaptiveLayoutScope>();
 
   @override
-  bool updateShouldNotify(TRAdaptivePaneScope oldWidget) =>
-      widthClass != oldWidget.widthClass ||
-      activeRole != oldWidget.activeRole ||
-      !setEquals(visibleRoles, oldWidget.visibleRoles);
-}
-
-/// One typed destination in a three-pane navigation history.
-final class TRPaneDestination<T extends Object> {
-  const TRPaneDestination({required this.role, required this.value});
-
-  final TRPaneRole role;
-  final T value;
-}
-
-/// One observable, typed change to a three-pane navigation history.
-final class TRPaneNavigationChange<T extends Object> {
-  const TRPaneNavigationChange({
-    required this.previous,
-    required this.current,
-    required this.operation,
-  });
-
-  /// The destination visible before the change.
-  final TRPaneDestination<T> previous;
-
-  /// The destination visible after the change.
-  final TRPaneDestination<T> current;
-
-  /// The history operation that produced the change.
-  final TRPaneNavigationOperation operation;
-
-  /// Whether this change advances deeper into the pane hierarchy.
-  bool get isForward => operation == TRPaneNavigationOperation.push;
-}
-
-/// Owns the destination history rendered by [TRNavigableThreePaneScaffold].
-class TRThreePaneNavigator<T extends Object> extends ChangeNotifier {
-  TRThreePaneNavigator({required TRPaneDestination<T> initialDestination})
-    : _history = <TRPaneDestination<T>>[initialDestination];
-
-  final List<TRPaneDestination<T>> _history;
-  TRPaneNavigationChange<T>? _lastChange;
-
-  List<TRPaneDestination<T>> get history => List.unmodifiable(_history);
-  TRPaneDestination<T> get currentDestination => _history.last;
-  TRPaneNavigationChange<T>? get lastChange => _lastChange;
-  bool get canPop => _history.length > 1;
-
-  void push(TRPaneDestination<T> destination) {
-    final previous = currentDestination;
-    _history.add(destination);
-    _lastChange = TRPaneNavigationChange<T>(
-      previous: previous,
-      current: destination,
-      operation: TRPaneNavigationOperation.push,
-    );
-    notifyListeners();
-  }
-
-  void replace(TRPaneDestination<T> destination) {
-    final previous = currentDestination;
-    _history[_history.length - 1] = destination;
-    _lastChange = TRPaneNavigationChange<T>(
-      previous: previous,
-      current: destination,
-      operation: TRPaneNavigationOperation.replace,
-    );
-    notifyListeners();
-  }
-
-  bool pop() {
-    if (!canPop) return false;
-    final previous = currentDestination;
-    _history.removeLast();
-    _lastChange = TRPaneNavigationChange<T>(
-      previous: previous,
-      current: currentDestination,
-      operation: TRPaneNavigationOperation.pop,
-    );
-    notifyListeners();
-    return true;
-  }
-
-  void reset(TRPaneDestination<T> destination) {
-    final previous = currentDestination;
-    _history
-      ..clear()
-      ..add(destination);
-    _lastChange = TRPaneNavigationChange<T>(
-      previous: previous,
-      current: destination,
-      operation: TRPaneNavigationOperation.reset,
-    );
-    notifyListeners();
-  }
-
-  /// Whether Back can reach a destination that changes the visible scaffold.
-  bool canPopUntilScaffoldValueChange(
-    TRAdaptiveWidthClass widthClass, {
-    required bool hasSecondaryPane,
-  }) =>
-      destinationBeforeScaffoldValueChange(
-        widthClass,
-        hasSecondaryPane: hasSecondaryPane,
-      ) !=
-      null;
-
-  /// The nearest earlier destination whose visible scaffold value differs.
-  TRPaneDestination<T>? destinationBeforeScaffoldValueChange(
-    TRAdaptiveWidthClass widthClass, {
-    required bool hasSecondaryPane,
-  }) {
-    if (!canPop) return null;
-    final currentValue = _scaffoldValue(
-      currentDestination,
-      widthClass,
-      hasSecondaryPane: hasSecondaryPane,
-    );
-    for (var index = _history.length - 2; index >= 0; index -= 1) {
-      final candidate = _history[index];
-      if (_scaffoldValue(
-            candidate,
-            widthClass,
-            hasSecondaryPane: hasSecondaryPane,
-          ) !=
-          currentValue) {
-        return candidate;
-      }
-    }
-    return null;
-  }
-
-  /// Pops hidden history until the visible scaffold value changes.
-  bool popUntilScaffoldValueChange(
-    TRAdaptiveWidthClass widthClass, {
-    required bool hasSecondaryPane,
-  }) {
-    final target = destinationBeforeScaffoldValueChange(
-      widthClass,
-      hasSecondaryPane: hasSecondaryPane,
-    );
-    if (target == null) return false;
-    final previous = currentDestination;
-    while (!identical(_history.last, target)) {
-      _history.removeLast();
-    }
-    _lastChange = TRPaneNavigationChange<T>(
-      previous: previous,
-      current: target,
-      operation: TRPaneNavigationOperation.pop,
-    );
-    notifyListeners();
-    return true;
-  }
-
-  Object _scaffoldValue(
-    TRPaneDestination<T> destination,
-    TRAdaptiveWidthClass widthClass, {
-    required bool hasSecondaryPane,
-  }) => switch (widthClass) {
-    TRAdaptiveWidthClass.compact => destination.value,
-    TRAdaptiveWidthClass.medium || TRAdaptiveWidthClass.expanded =>
-      destination.role == TRPaneRole.secondary && hasSecondaryPane
-          ? TRPaneRole.secondary
-          : TRPaneRole.primary,
-    TRAdaptiveWidthClass.large ||
-    TRAdaptiveWidthClass.extraLarge => TRAdaptiveWidthClass.large,
-  };
+  bool updateShouldNotify(TRAdaptiveLayoutScope oldWidget) =>
+      widthClass != oldWidget.widthClass;
 }
 
 /// Marker and semantic boundary for one adaptive pane.
@@ -257,371 +77,131 @@ class TRAdaptivePane extends StatelessWidget {
   );
 }
 
-/// A canonical scaffold that shows one, two, or three destinations by width.
-class TRNavigableThreePaneScaffold<T extends Object> extends StatefulWidget {
-  const TRNavigableThreePaneScaffold({
-    required this.navigator,
+/// Places application navigation beside content when the viewport permits it.
+///
+/// This widget owns no destination, history, Back handling, or transition. A
+/// routed application keeps those responsibilities in its [Navigator] and
+/// passes the resulting content as [contentPane].
+class TRAdaptiveNavigationLayout extends StatelessWidget {
+  const TRAdaptiveNavigationLayout({
     required this.navigationPane,
-    required this.primaryPane,
-    this.secondaryPane,
+    required this.contentPane,
     this.navigationPaneWidth = TRGeneratedLayerMetrics.appShellSidebarWidth,
-    this.primaryPaneWidth = TRGeneratedLayerMetrics.appShellSidebarWidth,
     super.key,
   });
 
-  final TRThreePaneNavigator<T> navigator;
+  /// The navigation surface shown at medium widths and wider.
   final Widget navigationPane;
-  final Widget primaryPane;
-  final Widget? secondaryPane;
+
+  /// The routed content surface.
+  final Widget contentPane;
+
+  /// Width reserved for [navigationPane].
   final double navigationPaneWidth;
-  final double primaryPaneWidth;
 
   @override
-  State<TRNavigableThreePaneScaffold<T>> createState() =>
-      _TRNavigableThreePaneScaffoldState<T>();
-}
-
-class _TRNavigableThreePaneScaffoldState<T extends Object>
-    extends State<TRNavigableThreePaneScaffold<T>>
-    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
-  late final AnimationController _predictiveBack = AnimationController(
-    vsync: this,
-    duration: TRMotion.slow,
-  )..addListener(_handlePredictiveProgress);
-  TRAdaptiveWidthClass _widthClass = TRAdaptiveWidthClass.compact;
-  TRPaneDestination<T>? _predictiveFrom;
-  TRPaneDestination<T>? _predictiveTo;
-  bool _predictiveCommitInProgress = false;
-  bool _skipNextTransition = false;
-
-  bool get _hasSecondaryPane => widget.secondaryPane != null;
-
-  bool get _canPopLocally => widget.navigator.canPopUntilScaffoldValueChange(
-    _widthClass,
-    hasSecondaryPane: _hasSecondaryPane,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _predictiveBack
-      ..removeListener(_handlePredictiveProgress)
-      ..dispose();
-    super.dispose();
-  }
-
-  void _handlePredictiveProgress() {
-    if (mounted) setState(() {});
-  }
-
-  @override
-  bool handleStartBackGesture(PredictiveBackEvent backEvent) {
-    if (defaultTargetPlatform != TargetPlatform.android ||
-        ModalRoute.of(context)?.isCurrent != true ||
-        !_canPopLocally) {
-      return false;
-    }
-    _predictiveFrom = widget.navigator.currentDestination;
-    _predictiveTo = widget.navigator.destinationBeforeScaffoldValueChange(
-      _widthClass,
-      hasSecondaryPane: _hasSecondaryPane,
-    );
-    _predictiveBack.value = backEvent.progress;
-    setState(() {});
-    return true;
-  }
-
-  @override
-  void handleUpdateBackGestureProgress(PredictiveBackEvent backEvent) {
-    if (_predictiveFrom == null) return;
-    _predictiveBack.value = backEvent.progress;
-  }
-
-  @override
-  void handleCancelBackGesture() {
-    if (_predictiveFrom == null || _predictiveCommitInProgress) return;
-    _predictiveBack.reverse().whenComplete(_clearPredictiveBack);
-  }
-
-  @override
-  void handleCommitBackGesture() {
-    if (_predictiveFrom == null || _predictiveCommitInProgress) return;
-    _predictiveCommitInProgress = true;
-    _predictiveBack.animateTo(1, curve: TRMotion.easeOut).whenComplete(() {
-      if (!mounted || !_predictiveCommitInProgress) return;
-      _skipNextTransition = true;
-      widget.navigator.popUntilScaffoldValueChange(
-        _widthClass,
-        hasSecondaryPane: _hasSecondaryPane,
-      );
-      _clearPredictiveBack();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _skipNextTransition = false;
-      });
-    });
-  }
-
-  void _clearPredictiveBack() {
-    if (!mounted) return;
-    setState(() {
-      _predictiveFrom = null;
-      _predictiveTo = null;
-      _predictiveCommitInProgress = false;
-      _predictiveBack.value = 0;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-    animation: widget.navigator,
-    builder: (context, _) => LayoutBuilder(
-      builder: (context, constraints) {
-        final widthClass = TRAdaptiveWidthClass.fromWidth(constraints.maxWidth);
-        _widthClass = widthClass;
-        final activeRole = widget.navigator.currentDestination.role;
-        final visibleRoles = _visibleRoles(widthClass, activeRole);
-        final content = switch (widthClass) {
-          TRAdaptiveWidthClass.compact => _singlePane(context),
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final widthClass = TRAdaptiveWidthClass.fromWidth(constraints.maxWidth);
+      return TRAdaptiveLayoutScope(
+        widthClass: widthClass,
+        child: switch (widthClass) {
+          TRAdaptiveWidthClass.compact => contentPane,
           TRAdaptiveWidthClass.medium ||
-          TRAdaptiveWidthClass.expanded => _twoPanes(context),
+          TRAdaptiveWidthClass.expanded ||
           TRAdaptiveWidthClass.large ||
-          TRAdaptiveWidthClass.extraLarge => _threePanes(),
-        };
-        final scoped = TRAdaptivePaneScope(
-          widthClass: widthClass,
-          visibleRoles: visibleRoles,
-          activeRole: activeRole,
-          child: content,
-        );
-        return PopScope<Object?>(
-          canPop: !_canPopLocally,
-          onPopInvokedWithResult: (didPop, _) {
-            if (!didPop) {
-              widget.navigator.popUntilScaffoldValueChange(
-                _widthClass,
-                hasSecondaryPane: _hasSecondaryPane,
-              );
-            }
-          },
-          child: scoped,
-        );
-      },
-    ),
-  );
-
-  Set<TRPaneRole> _visibleRoles(
-    TRAdaptiveWidthClass widthClass,
-    TRPaneRole activeRole,
-  ) => switch (widthClass) {
-    TRAdaptiveWidthClass.compact => <TRPaneRole>{activeRole},
-    TRAdaptiveWidthClass.medium || TRAdaptiveWidthClass.expanded =>
-      activeRole == TRPaneRole.navigation
-          ? const <TRPaneRole>{TRPaneRole.navigation, TRPaneRole.primary}
-          : <TRPaneRole>{TRPaneRole.navigation, activeRole},
-    TRAdaptiveWidthClass.large || TRAdaptiveWidthClass.extraLarge =>
-      widget.secondaryPane == null
-          ? const <TRPaneRole>{TRPaneRole.navigation, TRPaneRole.primary}
-          : const <TRPaneRole>{
-              TRPaneRole.navigation,
-              TRPaneRole.primary,
-              TRPaneRole.secondary,
-            },
-  };
-
-  Widget _singlePane(BuildContext context) => _animatedActivePane(context);
-
-  Widget _twoPanes(BuildContext context) {
-    final active = widget.navigator.currentDestination.role;
-    final activePane = active == TRPaneRole.navigation
-        ? TRAdaptivePane(role: TRPaneRole.primary, child: widget.primaryPane)
-        : _animatedActivePane(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        SizedBox(
-          width: widget.navigationPaneWidth,
-          child: TRAdaptivePane(
-            role: TRPaneRole.navigation,
-            child: widget.navigationPane,
-          ),
-        ),
-        const TRSeparator(
-          orientation: TRSeparatorOrientation.vertical,
-          variant: TRSeparatorVariant.muted,
-        ),
-        Expanded(child: activePane),
-      ],
-    );
-  }
-
-  Widget _threePanes() {
-    final secondary = widget.secondaryPane;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        SizedBox(
-          width: widget.navigationPaneWidth,
-          child: TRAdaptivePane(
-            role: TRPaneRole.navigation,
-            child: widget.navigationPane,
-          ),
-        ),
-        const TRSeparator(
-          orientation: TRSeparatorOrientation.vertical,
-          variant: TRSeparatorVariant.muted,
-        ),
-        if (secondary == null)
-          Expanded(
-            child: TRAdaptivePane(
-              role: TRPaneRole.primary,
-              child: widget.primaryPane,
-            ),
-          )
-        else ...<Widget>[
-          SizedBox(
-            width: widget.primaryPaneWidth,
-            child: TRAdaptivePane(
-              role: TRPaneRole.primary,
-              child: widget.primaryPane,
-            ),
-          ),
-          const TRSeparator(
-            orientation: TRSeparatorOrientation.vertical,
-            variant: TRSeparatorVariant.muted,
-          ),
-          Expanded(
-            child: TRAdaptivePane(role: TRPaneRole.secondary, child: secondary),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _animatedActivePane(BuildContext context) {
-    final destination = widget.navigator.currentDestination;
-    if (_predictiveFrom != null && _predictiveTo != null) {
-      return _predictiveActivePane(context);
-    }
-    final role = destination.role;
-    final child = _paneChild(destination);
-    final pane = TRAdaptivePane(
-      key: ValueKey<T>(destination.value),
-      role: role,
-      child: child,
-    );
-    final operation = widget.navigator.lastChange?.operation;
-    if (MediaQuery.disableAnimationsOf(context)) return pane;
-    final suppressTransition =
-        _skipNextTransition ||
-        operation == null ||
-        operation == TRPaneNavigationOperation.reset;
-    final direction = Directionality.of(context) == TextDirection.ltr
-        ? 1.0
-        : -1.0;
-    return AnimatedSwitcher(
-      duration: suppressTransition ? Duration.zero : TRMotion.slow,
-      reverseDuration: suppressTransition ? Duration.zero : TRMotion.slow,
-      switchInCurve: TRMotion.easeOut,
-      switchOutCurve: TRMotion.standard,
-      layoutBuilder: (currentChild, previousChildren) => Stack(
-        fit: StackFit.passthrough,
-        children: <Widget>[
-          if (previousChildren.isNotEmpty) previousChildren.last,
-          ?currentChild,
-        ],
-      ),
-      transitionBuilder: (transitionChild, animation) {
-        return AnimatedBuilder(
-          animation: widget.navigator,
-          builder: (context, _) {
-            final currentKey = ValueKey<T>(
-              widget.navigator.currentDestination.value,
-            );
-            final current = transitionChild.key == currentKey;
-            final departing = !current;
-            final latestOperation = widget.navigator.lastChange?.operation;
-            final latestForward =
-                latestOperation == TRPaneNavigationOperation.push;
-            final latestBackward =
-                latestOperation == TRPaneNavigationOperation.pop;
-            Widget result = transitionChild;
-            if (latestForward || latestBackward) {
-              final incomingSign = latestForward ? direction : -direction;
-              final sign = current ? incomingSign : -incomingSign;
-              result = SlideTransition(
-                position: Tween<Offset>(
-                  begin: Offset(sign, 0),
-                  end: Offset.zero,
-                ).animate(animation),
-                child: result,
-              );
-            }
-            result = FadeTransition(opacity: animation, child: result);
-            if (departing) {
-              result = IgnorePointer(child: ExcludeSemantics(child: result));
-            }
-            return result;
-          },
-        );
-      },
-      child: pane,
-    );
-  }
-
-  Widget _predictiveActivePane(BuildContext context) {
-    final from = _predictiveFrom!;
-    final to = _predictiveTo!;
-    final progress = _predictiveBack.value;
-    final direction = Directionality.of(context) == TextDirection.ltr
-        ? 1.0
-        : -1.0;
-    return ClipRect(
-      child: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          IgnorePointer(
-            child: ExcludeSemantics(
-              child: FractionalTranslation(
-                translation: Offset(-direction * (1 - progress), 0),
-                child: Opacity(
-                  opacity: progress,
-                  child: _paneForDestination(to),
+          TRAdaptiveWidthClass.extraLarge => Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(
+                width: navigationPaneWidth,
+                child: TRAdaptivePane(
+                  role: TRPaneRole.navigation,
+                  child: navigationPane,
                 ),
               ),
-            ),
-          ),
-          IgnorePointer(
-            child: ExcludeSemantics(
-              child: FractionalTranslation(
-                translation: Offset(direction * progress, 0),
-                child: _paneForDestination(from),
+              const TRSeparator(
+                orientation: TRSeparatorOrientation.vertical,
+                variant: TRSeparatorVariant.muted,
               ),
-            ),
+              Expanded(child: contentPane),
+            ],
           ),
-        ],
-      ),
+        },
+      );
+    },
+  );
+}
+
+/// Places collection and detail panes side by side on large viewports.
+///
+/// Below the large width class, [singlePane] receives the complete content
+/// region. Applications normally pass a keyed nested [Navigator] there and as
+/// [detailPane], allowing Flutter's Page lifecycle to survive a breakpoint
+/// change while only the routed detail surface transitions.
+class TRAdaptiveListDetailLayout extends StatelessWidget {
+  const TRAdaptiveListDetailLayout({
+    required this.singlePane,
+    required this.collectionPane,
+    required this.detailPane,
+    this.collectionPaneWidth = TRGeneratedLayerMetrics.appShellSidebarWidth,
+    super.key,
+  });
+
+  /// Content rendered below the large width class.
+  final Widget singlePane;
+
+  /// The fixed collection surface rendered at large widths and wider.
+  final Widget collectionPane;
+
+  /// The detail surface rendered beside [collectionPane].
+  final Widget detailPane;
+
+  /// Width reserved for [collectionPane].
+  final double collectionPaneWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = TRAdaptiveLayoutScope.maybeOf(context);
+    if (scope != null) return _buildFor(scope.widthClass);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final widthClass = TRAdaptiveWidthClass.fromWidth(constraints.maxWidth);
+        return TRAdaptiveLayoutScope(
+          widthClass: widthClass,
+          child: _buildFor(widthClass),
+        );
+      },
     );
   }
 
-  Widget _paneForDestination(TRPaneDestination<T> destination) =>
-      TRAdaptivePane(
-        key: ValueKey<T>(destination.value),
-        role: destination.role,
-        child: _paneChild(destination),
-      );
-
-  Widget _paneChild(TRPaneDestination<T> destination) =>
-      switch (destination.role) {
-        TRPaneRole.navigation => widget.navigationPane,
-        TRPaneRole.primary => widget.primaryPane,
-        TRPaneRole.secondary => widget.secondaryPane ?? widget.primaryPane,
-      };
+  Widget _buildFor(TRAdaptiveWidthClass widthClass) => switch (widthClass) {
+    TRAdaptiveWidthClass.compact ||
+    TRAdaptiveWidthClass.medium ||
+    TRAdaptiveWidthClass.expanded => TRAdaptivePane(
+      role: TRPaneRole.secondary,
+      child: singlePane,
+    ),
+    TRAdaptiveWidthClass.large || TRAdaptiveWidthClass.extraLarge => Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        SizedBox(
+          width: collectionPaneWidth,
+          child: TRAdaptivePane(
+            role: TRPaneRole.primary,
+            child: collectionPane,
+          ),
+        ),
+        const TRSeparator(
+          orientation: TRSeparatorOrientation.vertical,
+          variant: TRSeparatorVariant.muted,
+        ),
+        Expanded(
+          child: TRAdaptivePane(role: TRPaneRole.secondary, child: detailPane),
+        ),
+      ],
+    ),
+  };
 }
 
 /// Scrollable navigation content with standard pane insets and section rhythm.
