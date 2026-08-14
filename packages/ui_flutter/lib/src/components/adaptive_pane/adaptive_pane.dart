@@ -291,6 +291,7 @@ class _TRNavigableThreePaneScaffoldState<T extends Object>
   TRAdaptiveWidthClass _widthClass = TRAdaptiveWidthClass.compact;
   TRPaneDestination<T>? _predictiveFrom;
   TRPaneDestination<T>? _predictiveTo;
+  bool _predictiveCommitInProgress = false;
   bool _skipNextTransition = false;
 
   bool get _hasSecondaryPane => widget.secondaryPane != null;
@@ -344,21 +345,25 @@ class _TRNavigableThreePaneScaffoldState<T extends Object>
 
   @override
   void handleCancelBackGesture() {
-    if (_predictiveFrom == null) return;
+    if (_predictiveFrom == null || _predictiveCommitInProgress) return;
     _predictiveBack.reverse().whenComplete(_clearPredictiveBack);
   }
 
   @override
   void handleCommitBackGesture() {
-    if (_predictiveFrom == null) return;
-    _skipNextTransition = true;
-    widget.navigator.popUntilScaffoldValueChange(
-      _widthClass,
-      hasSecondaryPane: _hasSecondaryPane,
-    );
-    _clearPredictiveBack();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _skipNextTransition = false;
+    if (_predictiveFrom == null || _predictiveCommitInProgress) return;
+    _predictiveCommitInProgress = true;
+    _predictiveBack.animateTo(1, curve: TRMotion.easeOut).whenComplete(() {
+      if (!mounted || !_predictiveCommitInProgress) return;
+      _skipNextTransition = true;
+      widget.navigator.popUntilScaffoldValueChange(
+        _widthClass,
+        hasSecondaryPane: _hasSecondaryPane,
+      );
+      _clearPredictiveBack();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _skipNextTransition = false;
+      });
     });
   }
 
@@ -367,6 +372,7 @@ class _TRNavigableThreePaneScaffoldState<T extends Object>
     setState(() {
       _predictiveFrom = null;
       _predictiveTo = null;
+      _predictiveCommitInProgress = false;
       _predictiveBack.value = 0;
     });
   }

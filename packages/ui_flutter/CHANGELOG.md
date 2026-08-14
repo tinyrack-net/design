@@ -1,3 +1,8 @@
+## 0.62.1
+
+- Lets Android predictive Back finish the remaining pane transition after the
+  gesture commits instead of snapping immediately to the previous pane.
+
 ## 0.62.0
 
 - Adds `TRNavigationRow` for standalone destinations with selected, disabled,

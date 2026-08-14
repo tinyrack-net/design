@@ -760,7 +760,18 @@ void main() {
 
     await send(start);
     await send(update);
+    final previewNavigationOffset = tester
+        .getTopLeft(find.text('Navigation'))
+        .dx;
     await send(const MethodCall('commitBackGesture'));
+    expect(navigator.currentDestination.value, 'primary');
+    await tester.pump(TRMotion.slow ~/ 4);
+    expect(navigator.currentDestination.value, 'primary');
+    final settlingNavigationOffset = tester
+        .getTopLeft(find.text('Navigation'))
+        .dx;
+    expect(settlingNavigationOffset, greaterThan(previewNavigationOffset));
+    expect(settlingNavigationOffset, lessThan(0));
     await tester.pumpAndSettle();
     expect(navigator.currentDestination.value, 'navigation');
     expect(find.text('Navigation'), findsOneWidget);
