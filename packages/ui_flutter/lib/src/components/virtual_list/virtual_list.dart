@@ -314,10 +314,7 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
   @override
   void initState() {
     super.initState();
-    _coordinator = _TRVirtualListCoordinator()
-      ..trailingPinned =
-          widget.initialPosition._kind ==
-          _TRVirtualListInitialPositionKind.trailing;
+    _coordinator = _TRVirtualListCoordinator();
     widget.controller?._attach(this);
   }
 
@@ -1215,6 +1212,12 @@ class _RenderTRVirtualSliver extends RenderSliverMultiBoxAdaptor {
         _canResolveInitialTarget) {
       _initialResolved = true;
       _activeTarget = _initialTarget;
+      // The effective target can come from an explicit or PageStorage
+      // snapshot, so the widget's fallback initial position is not enough to
+      // decide which edge should follow subsequent size corrections.
+      _coordinator
+        ..leadingPinned = _initialTarget.kind == _InitialTargetKind.leading
+        ..trailingPinned = _initialTarget.kind == _InitialTargetKind.trailing;
       final target = _resolveTargetOffset(
         _initialTarget,
         sliverConstraints.viewportMainAxisExtent,

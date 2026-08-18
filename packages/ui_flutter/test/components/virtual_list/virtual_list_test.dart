@@ -42,6 +42,7 @@ class _VirtualListHarness extends StatefulWidget {
     this.follow = TRVirtualListFollow.none,
     this.initialPosition = const TRVirtualListInitialPosition.leading(),
     this.initialSnapshot,
+    this.defaultEstimate,
     this.leadingEdgeRequest,
     this.nestedScrollableItem,
     this.onVisibleRangeChanged,
@@ -56,6 +57,7 @@ class _VirtualListHarness extends StatefulWidget {
   final TRVirtualListFollow follow;
   final TRVirtualListInitialPosition<String> initialPosition;
   final TRVirtualListSnapshot<String>? initialSnapshot;
+  final double? defaultEstimate;
   final TRVirtualListEdgeRequest? leadingEdgeRequest;
   final String? nestedScrollableItem;
   final ValueChanged<TRVirtualListRange<String>>? onVisibleRangeChanged;
@@ -102,7 +104,7 @@ class _VirtualListHarnessState extends State<_VirtualListHarness> {
     axis: widget.axis,
     itemKey: (item) => item,
     estimatedItemExtent: (item, index) =>
-        estimates[item] ?? heights[item] ?? 40,
+        estimates[item] ?? widget.defaultEstimate ?? heights[item] ?? 40,
     itemBuilder: (context, item, index) {
       buildCount += 1;
       return SizedBox(
@@ -490,6 +492,51 @@ void main() {
     },
   );
 
+  testWidgets(
+    'restoring a snapshot wins over trailing follow while rows are measured',
+    (tester) async {
+      final firstController = TRVirtualListController<String>();
+      addTearDown(firstController.dispose);
+      final items = List<String>.generate(80, (index) => 'item-$index');
+
+      await tester.pumpWidget(
+        _host(
+          _VirtualListHarness(controller: firstController, initialItems: items),
+        ),
+      );
+      await firstController.scrollToKey(
+        'item-30',
+        alignment: TRVirtualListAlignment.leading,
+      );
+      await tester.pump();
+      final snapshot = firstController.takeSnapshot();
+      final secondController = TRVirtualListController<String>();
+      addTearDown(secondController.dispose);
+      final secondKey = GlobalKey<_VirtualListHarnessState>();
+
+      await tester.pumpWidget(
+        _host(
+          _VirtualListHarness(
+            key: secondKey,
+            controller: secondController,
+            initialItems: items.skip(30).toList(),
+            initialSnapshot: snapshot,
+            initialPosition: const TRVirtualListInitialPosition.trailing(),
+            follow: TRVirtualListFollow.trailing,
+            defaultEstimate: 40,
+          ),
+        ),
+      );
+      expect(find.byKey(const ValueKey('row-item-30')), findsOneWidget);
+
+      secondKey.currentState!.resize('item-30', 96);
+      await tester.pump();
+
+      expect(find.byKey(const ValueKey('row-item-30')), findsOneWidget);
+      expect(find.byKey(const ValueKey('row-item-79')), findsNothing);
+    },
+  );
+
   testWidgets('middle insert remove and reorder preserve the visible anchor', (
     tester,
   ) async {
@@ -873,21 +920,27 @@ void main() {
     final snapshot = firstController.takeSnapshot();
     final secondController = TRVirtualListController<String>();
     addTearDown(secondController.dispose);
+    final secondKey = GlobalKey<_VirtualListHarnessState>();
 
     await tester.pumpWidget(
       _host(
         _VirtualListHarness(
-          key: const ValueKey('new-list'),
+          key: secondKey,
           controller: secondController,
           initialItems: List<String>.generate(20, (index) => 'new-$index'),
           initialSnapshot: snapshot,
           initialPosition: const TRVirtualListInitialPosition.trailing(),
+          follow: TRVirtualListFollow.trailing,
         ),
       ),
     );
 
     expect(find.byKey(const ValueKey('row-new-19')), findsOneWidget);
     expect(find.byKey(const ValueKey('row-new-0')), findsNothing);
+
+    secondKey.currentState!.append('new-20');
+    await tester.pump();
+    expect(find.byKey(const ValueKey('row-new-20')), findsOneWidget);
   });
 
   testWidgets('viewport resize keeps a trailing list pinned', (tester) async {
