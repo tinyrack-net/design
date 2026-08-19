@@ -201,6 +201,7 @@ const publicTypes = <Type>[
   TRSpinner,
   TRSpinnerVariant,
   TRStatusVariant,
+  TRSurface,
   TRStepsItem,
   TRStepsRoot,
   TRSwitch,

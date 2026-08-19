@@ -56,6 +56,7 @@ export 'src/components/split_view/split_view.dart';
 export 'src/components/slider/slider.dart';
 export 'src/components/spinner/spinner.dart';
 export 'src/components/steps/steps.dart';
+export 'src/components/surface/surface.dart';
 export 'src/components/switch/switch.dart';
 export 'src/components/table/table.dart';
 export 'src/components/tabs/tabs.dart';

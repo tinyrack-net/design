@@ -1,3 +1,10 @@
+## 0.65.0
+
+- Adds `TRSurface`, an opaque themed background for a page or routed content
+  region. Panes and navigators are transparent, so a route transformed
+  independently of its parent — an Android predictive Back gesture scaling the
+  outgoing page, for example — composited over the route beneath it.
+
 ## 0.64.0
 
 - Removes `TRSelectSurface`, `menuController`, and Select-owned responsive
