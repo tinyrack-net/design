@@ -45,10 +45,20 @@ class TRPaneHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final comfortable = TRUiDensityScope.of(context) == TRUiDensity.comfortable;
-    final verticalInset = comfortable ? TRSpacing.extraLarge : TRSpacing.large;
+    // A resting height rather than an inset that the content adds to. Sized by
+    // its contents, a header carrying an action stood a control taller than a
+    // title-only one, so two panes side by side put their titles and their
+    // rules on different lines. The inset that remains is breathing room for
+    // content that outgrows the resting height, not the thing that sets it.
+    final minHeight = comfortable
+        ? TRMeasurements.headerHeight + TRSpacing.large
+        : TRMeasurements.headerHeight;
     final content = Wrap(
       alignment: WrapAlignment.spaceBetween,
       crossAxisAlignment: WrapCrossAlignment.center,
+      // Centres the runs inside the resting height, so a short identity sits
+      // on the header's middle line rather than against its top inset.
+      runAlignment: WrapAlignment.center,
       spacing: TRSpacing.extraLarge,
       runSpacing: TRSpacing.medium,
       children: <Widget>[
@@ -69,21 +79,24 @@ class TRPaneHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(
-            TRSpacing.extraLarge,
-            verticalInset,
-            TRSpacing.extraLarge,
-            verticalInset,
-          ),
-          child: contentMaxWidth == null
-              ? content
-              : Align(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: contentMaxWidth!),
-                    child: SizedBox(width: double.infinity, child: content),
+        ConstrainedBox(
+          constraints: BoxConstraints(minHeight: minHeight),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(
+              TRSpacing.extraLarge,
+              TRSpacing.small,
+              TRSpacing.extraLarge,
+              TRSpacing.small,
+            ),
+            child: contentMaxWidth == null
+                ? content
+                : Align(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: contentMaxWidth!),
+                      child: SizedBox(width: double.infinity, child: content),
+                    ),
                   ),
-                ),
+          ),
         ),
         if (divider)
           const TRSeparator(

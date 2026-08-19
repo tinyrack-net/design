@@ -1,5 +1,16 @@
 ## 0.65.0
 
+- Adds `TRMeasurements.headerHeight`, the resting height a header bar stands
+  at, so a product aligning its own chrome to one reads the same number the
+  components are built from.
+- `TRPaneHeader` now rests at that height instead of sizing itself from a
+  vertical inset. Sized by its contents, a pane header carrying an action stood
+  a whole control taller than a title-only one, so a collection and the detail
+  beside it put their titles and their rules on different lines. A standard
+  control is exactly the resting height less its inset, so an action now costs
+  the header nothing. The height remains a floor: a description, a wrapped
+  title, or an enlarged text scale still grows the header rather than being
+  clipped, and a comfortable density still stands taller than a standard one.
 - Adds `TRSurface`, an opaque themed background for a page or routed content
   region. Panes and navigators are transparent, so a route transformed
   independently of its parent — an Android predictive Back gesture scaling the
