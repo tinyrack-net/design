@@ -91,6 +91,15 @@ abstract final class TRMeasurements {
   static const overlayWidthMd = TRGeneratedMeasurements.overlayWidthMd;
   static const overlayInlineInset = TRGeneratedMeasurements.overlayInlineInset;
   static const overlayClosedScale = TRGeneratedMeasurements.overlayClosedScale;
+
+  /// Resting height of a header bar.
+  ///
+  /// Shared by the application shell header and the pane header, so a header
+  /// stacked above another and two headers sitting side by side agree without
+  /// either one measuring the other. It is a resting height rather than a
+  /// fixed one: a header whose content cannot fit, such as a wrapped title at
+  /// an enlarged text scale, grows past it instead of clipping.
+  static const headerHeight = TRGeneratedLayerMetrics.appShellHeaderHeight;
 }
 
 /// Platform-resolved geometry of a Tinyrack control at each [TRUiSize].

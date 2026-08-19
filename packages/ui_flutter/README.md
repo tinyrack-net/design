@@ -214,9 +214,14 @@ Compose navigation content with `TRNavigationPane` and
 hover, press, keyboard, and semantics behavior remains shared. Their default
 block rhythm follows `TRUiDensityScope`, while an explicit navigation-pane
 padding still wins. Use `TRPaneHeader` to keep pane titles, descriptions,
-leading navigation, actions, and the body divider aligned. When a pane body
-uses a centred readable-width cap, pass the same `contentMaxWidth` to keep the
-header identity and actions on that rail while its divider stays full width.
+leading navigation, actions, and the body divider aligned. It rests at
+`TRMeasurements.headerHeight`, the same height `TRAppShellHeader` uses, so a
+header stacked above another and two headers sitting side by side line up
+whether or not either carries an action. The height is a floor rather than a
+fixed box: a description, a wrapped title, or an enlarged text scale grows the
+header instead of being clipped. When a pane body uses a centred readable-width
+cap, pass the same `contentMaxWidth` to keep the header identity and actions on
+that rail while its divider stays full width.
 Pane contents can read the complete viewport decision from
 `TRAdaptiveLayoutScope` without classifying the smaller width left after fixed
 panes are placed:
