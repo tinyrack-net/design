@@ -81,6 +81,10 @@ export const flutterPlatformOnlyComponents = {
     reason:
       'Flutter currently owns the resizable pane interaction used by native applications.',
   },
+  surface: {
+    reason:
+      'Flutter native applications give an independently transformed route its own opaque background; the web stacking context needs no equivalent.',
+  },
 } as const satisfies Record<string, PlatformOnlyComponentSupport>;
 
 export function conventionalFlutterComponentName(reactComponent: string) {
