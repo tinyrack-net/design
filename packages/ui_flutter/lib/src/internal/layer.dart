@@ -577,10 +577,21 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
     );
     final textDirection = Directionality.of(context);
     final density = TRUiDensityScope.of(context);
-    final overlayFocusParent = FocusScope.of(
-      Overlay.of(context, rootOverlay: widget.useRootOverlay).context,
-      createDependency: false,
-    );
+    // An overlay child resolves inherited widgets from the portal's position,
+    // so the layer's scope has to be reparented or it would nest inside the
+    // trigger's own focus node and light the trigger up while the layer owns
+    // the keyboard.
+    //
+    // It is reparented to the trigger's enclosing scope rather than the
+    // overlay's. `parentNode` skips every `Focus` between the layer and the
+    // node it names, and `Shortcuts` — including `DefaultTextEditingShortcuts`
+    // — are `Focus` nodes, not scopes. Naming the overlay's scope therefore
+    // dropped the app's text editing shortcuts whenever no scope sat below
+    // them: a query field inside the layer accepted characters over the text
+    // input channel but never saw Backspace, Delete, or Select All. The
+    // trigger's scope is always inside whatever shortcuts the app installs
+    // around it.
+    final layerFocusParent = FocusScope.of(context, createDependency: false);
     final target = TapRegion(
       groupId: _tapRegionGroup,
       onTapOutside: widget.dismissOnTapOutside && _isOpen
@@ -622,7 +633,7 @@ class _TRAnchoredLayerState extends State<TRAnchoredLayer> {
           if (widget.requestFocus) {
             layer = FocusScope(
               node: _layerFocusNode,
-              parentNode: overlayFocusParent,
+              parentNode: layerFocusParent,
               onKeyEvent: (_, event) {
                 if (event is KeyDownEvent &&
                     event.logicalKey == LogicalKeyboardKey.escape) {

@@ -1,3 +1,13 @@
+## 0.65.1
+
+- Keeps an anchored layer's focus scope inside the shortcuts the app installs
+  around its trigger. It was reparented to the enclosing scope of the overlay
+  that hosts it, and `parentNode` skips every `Focus` between the layer and the
+  node it names — including `Shortcuts` and `DefaultTextEditingShortcuts`. A
+  text field inside a layer that opts into the root overlay accepted typed
+  characters but never saw Backspace, Delete, Select All, or any other text
+  editing key, which broke the query field of a searchable `TRSelect`.
+
 ## 0.65.0
 
 - Adds `TRMeasurements.headerHeight`, the resting height a header bar stands
