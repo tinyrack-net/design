@@ -46,6 +46,23 @@ async function waitForRenderedItem(label: string) {
   return findRenderedItem(label) as HTMLElement;
 }
 
+// Waits until the virtualizer has no measurement left to apply.
+//
+// A one-shot anchor hold is consumed by the first layout that changes the total
+// size, whichever layout that is. A measurement still in flight from an earlier
+// append or scroll therefore eats the hold before the mutation the test means to
+// hold through, and the list falls back to trailing follow.
+async function waitForSettledExtent(viewport: HTMLElement) {
+  let previous = Number.NaN;
+  await expect
+    .poll(() => {
+      const settled = viewport.scrollHeight === previous;
+      previous = viewport.scrollHeight;
+      return settled;
+    })
+    .toBe(true);
+}
+
 async function captureSnapshotAroundItem20() {
   const items = makeItems(50);
   let controller: TRVirtualListController<string> | undefined;
@@ -501,6 +518,8 @@ test('follows trailing growth only while pinned and supports a one-shot anchor h
     .poll(() => viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight)
     .toBeCloseTo(0, 0);
   const anchorLabel = 'Item 28';
+  await waitForRenderedItem(anchorLabel);
+  await waitForSettledExtent(viewport);
   const anchorTop = (await waitForRenderedItem(anchorLabel)).getBoundingClientRect()
     .top;
   const scrollHeightBeforeResize = viewport.scrollHeight;
