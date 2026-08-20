@@ -21,7 +21,7 @@ dependencies:
   intl: ^0.20.2
   lucide_flutter: ^1.28.0
   material_ui: ^1.0.0
-  qr: ^3.0.2
+  qr: ">=3.0.2 <5.0.0"
 
 dev_dependencies:
   flutter_lints: ^6.0.0
