@@ -104,6 +104,11 @@ class TRVirtualListEdgeRequest {
   });
 
   /// A cursor or retry-attempt identity. Each value is requested at most once.
+  ///
+  /// A new identity does not on its own produce a request. The edge also has
+  /// to have moved away since the last one went out, so an answer that added
+  /// nothing the reader can see ends the run rather than starting the next
+  /// one. Scrolling counts as movement, so a reader can always ask again.
   final Object requestKey;
   final VoidCallback onRequest;
   final Widget? slot;
@@ -305,6 +310,10 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
   late final _TRVirtualListCoordinator _coordinator;
   final Set<Object> _requestedLeadingKeys = <Object>{};
   final Set<Object> _requestedTrailingKeys = <Object>{};
+  // Distance to each edge when its last request went out, held until the edge
+  // moves further away than that.
+  double? _leadingRequestDistance;
+  double? _trailingRequestDistance;
   TRVirtualListRange<K>? _lastRange;
   TRVirtualListSnapshot<K>? _pageStorageSnapshot;
   PageStorageBucket? _pageStorageBucket;
@@ -587,16 +596,37 @@ class _TRVirtualListState<T, K> extends State<TRVirtualList<T, K>>
         ? widget.leadingEdgeRequest
         : widget.trailingEdgeRequest;
     if (request == null) return;
-    final distance = edge == TRVirtualListEdge.leading
-        ? metrics.extentBefore
-        : metrics.extentAfter;
+    final leading = edge == TRVirtualListEdge.leading;
+    final distance = leading ? metrics.extentBefore : metrics.extentAfter;
+    // An answered request that left the edge exactly where it was bought
+    // nothing the reader can see, and a new identity on top of it would ask
+    // again on the next frame, and the frame after that, for as long as the
+    // consumer has pages. Hold until the edge moves — by an answer that
+    // landed above the reader, or by the reader themselves.
+    final pending = leading
+        ? _leadingRequestDistance
+        : _trailingRequestDistance;
+    if (pending != null) {
+      if (distance <= pending) return;
+      if (leading) {
+        _leadingRequestDistance = null;
+      } else {
+        _trailingRequestDistance = null;
+      }
+    }
     if (distance > request.triggerExtent.resolve(metrics.viewportDimension)) {
       return;
     }
-    final requestedKeys = edge == TRVirtualListEdge.leading
+    final requestedKeys = leading
         ? _requestedLeadingKeys
         : _requestedTrailingKeys;
-    if (requestedKeys.add(request.requestKey)) request.onRequest();
+    if (!requestedKeys.add(request.requestKey)) return;
+    if (leading) {
+      _leadingRequestDistance = distance;
+    } else {
+      _trailingRequestDistance = distance;
+    }
+    request.onRequest();
   }
 
   void _reportRange(
