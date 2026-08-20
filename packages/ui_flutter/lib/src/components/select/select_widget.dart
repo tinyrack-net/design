@@ -33,7 +33,8 @@ sealed class TRSelectPresentation {
 
   /// Presents the panel in a collision-aware layer anchored to the trigger.
   const factory TRSelectPresentation.layer({
-    TRLayerSize layerSize,
+    TRLayerWidth width,
+    TRLayerHeight height,
     TRLayerPlacement placement,
     bool useRootOverlay,
   }) = TRSelectLayerPresentation;
@@ -46,24 +47,37 @@ sealed class TRSelectPresentation {
   }) = TRSelectSheetPresentation;
 }
 
-const _defaultSelectLayerSize = TRLayerSize(
-  width: TRLayerWidth.atLeastAnchor(
-    min: TRGeneratedMeasurements.measureMd,
-    max: TRGeneratedMeasurements.overlayWidthSm,
-  ),
-  height: TRLayerHeight.content(max: TRGeneratedMeasurements.measureXl),
-);
-
+/// Geometry of the layer a [TRSelect] anchors to its trigger.
+///
+/// The two axes default independently on purpose. A caller almost always wants
+/// to state one of them — a fixed popup width, say — and a single
+/// [TRLayerSize] for both would make that caller responsible for restating the
+/// other. Dropping the height that way is silent: the option list simply grows
+/// to the viewport, which is only visible on a long list.
 final class TRSelectLayerPresentation extends TRSelectPresentation {
   const TRSelectLayerPresentation({
-    this.layerSize = _defaultSelectLayerSize,
+    this.width = const TRLayerWidth.atLeastAnchor(
+      min: TRGeneratedMeasurements.measureMd,
+      max: TRGeneratedMeasurements.overlayWidthSm,
+    ),
+    this.height = const TRLayerHeight.content(
+      max: TRGeneratedMeasurements.measureXl,
+    ),
     this.placement = TRLayerPlacement.bottomStart,
     this.useRootOverlay = true,
   }) : super._();
 
-  final TRLayerSize layerSize;
+  /// Width policy for the complete layer bounds.
+  final TRLayerWidth width;
+
+  /// Height policy for the complete layer bounds; the options scroll past it.
+  final TRLayerHeight height;
+
   final TRLayerPlacement placement;
   final bool useRootOverlay;
+
+  /// The two axes as the one policy the layer host resolves.
+  TRLayerSize get layerSize => TRLayerSize(width: width, height: height);
 }
 
 final class TRSelectSheetPresentation extends TRSelectPresentation {

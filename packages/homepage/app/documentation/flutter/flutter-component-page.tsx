@@ -4428,11 +4428,11 @@ class _DeploymentRackState extends State<DeploymentRack> {
           },
           {
             name: 'TRSelectPresentation.layer',
-            type: 'layerSize, placement = bottomStart, useRootOverlay = true',
+            type: 'width, height, placement = bottomStart, useRootOverlay = true',
             purpose: {
-              en: 'Opens the shared panel in a collision-aware layer. The default is at least the anchor and `TRMeasurements.measureMd` wide, lets content grow through `TRMeasurements.overlayWidthSm`, and caps content height at `TRMeasurements.measureXl`.',
-              ko: '공유 패널을 충돌을 피하는 레이어로 열어요. 기본 너비는 기준 요소와 `TRMeasurements.measureMd`보다 작지 않고 콘텐츠에 따라 `TRMeasurements.overlayWidthSm`까지 늘어나며, 콘텐츠 높이는 `TRMeasurements.measureXl`까지 허용해요.',
-              ja: '共有パネルを衝突回避対応のレイヤーとして開きます。デフォルトの幅はアンカーと `TRMeasurements.measureMd` 以上で、コンテンツに応じて `TRMeasurements.overlayWidthSm` まで広がり、コンテンツの高さは `TRMeasurements.measureXl` までに制限されます。',
+              en: 'Opens the shared panel in a collision-aware layer. `width` and `height` default independently, so setting one keeps the other: the default is at least the anchor and `TRMeasurements.measureMd` wide, lets content grow through `TRMeasurements.overlayWidthSm`, and caps content height at `TRMeasurements.measureXl`.',
+              ko: '공유 패널을 충돌을 피하는 레이어로 열어요. `width`와 `height`는 각각 따로 기본값을 가지므로 한쪽을 지정해도 나머지는 그대로예요. 기본 너비는 기준 요소와 `TRMeasurements.measureMd`보다 작지 않고 콘텐츠에 따라 `TRMeasurements.overlayWidthSm`까지 늘어나며, 콘텐츠 높이는 `TRMeasurements.measureXl`까지 허용해요.',
+              ja: '共有パネルを衝突回避対応のレイヤーとして開きます。`width` と `height` はそれぞれ独立した既定値を持つため、片方を指定してももう片方は保たれます。デフォルトの幅はアンカーと `TRMeasurements.measureMd` 以上で、コンテンツに応じて `TRMeasurements.overlayWidthSm` まで広がり、コンテンツの高さは `TRMeasurements.measureXl` までに制限されます。',
             },
           },
           {

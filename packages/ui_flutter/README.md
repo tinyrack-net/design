@@ -70,13 +70,8 @@ final widthClass = TRAdaptiveWidthClass.fromWidth(
 final presentation = widthClass == TRAdaptiveWidthClass.compact
     ? const TRSelectPresentation.sheet(maxExtent: 0.7)
     : const TRSelectPresentation.layer(
-        layerSize: TRLayerSize(
-          width: TRLayerWidth.atLeastAnchor(
-            max: TRMeasurements.overlayWidthSm,
-          ),
-          height: TRLayerHeight.content(
-            max: TRMeasurements.measureXl,
-          ),
+        width: TRLayerWidth.atLeastAnchor(
+          max: TRMeasurements.overlayWidthSm,
         ),
       );
 
@@ -131,9 +126,16 @@ const anchorMinimum = TRLayerSize(
 
 `atLeastAnchor` lets content grow from the anchor width. If the anchor itself
 is wider than `max`, the anchor still wins unless the safe viewport is smaller.
+
+`TRSelectPresentation.layer` takes the two axes as separate `width` and `height`
+arguments rather than one `TRLayerSize`, each defaulting on its own. Stating a
+fixed popup width therefore keeps the height cap, instead of silently letting
+the option list grow to the viewport. Read the pair back as one policy through
+`TRSelectLayerPresentation.layerSize`.
+
 The shared policy is available on these anchored surfaces:
 
-| Component | Default `layerSize` |
+| Component | Default layer size |
 | --- | --- |
 | `TRSelectPresentation.layer` | At least the anchor and `TRMeasurements.measureMd`; content may grow through `TRMeasurements.overlayWidthSm`, while a wider anchor still wins; content height up to `TRMeasurements.measureXl` |
 | `TRAutocomplete`, `TRAutocompleteFormField` | Match the anchor; content height up to `TRMeasurements.measureXl` |

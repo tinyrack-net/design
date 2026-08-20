@@ -100,7 +100,13 @@ class _TRSelectOptions<T> extends StatelessWidget {
         child: item.description == null
             ? TRLayerPartBoundary(
                 name: 'item${index}Label',
-                child: Text(item.label),
+                // The row caps its own height, so a label allowed to wrap
+                // overflows it rather than growing the row.
+                child: Text(
+                  item.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               )
             : ConstrainedBox(
                 constraints: const BoxConstraints(
