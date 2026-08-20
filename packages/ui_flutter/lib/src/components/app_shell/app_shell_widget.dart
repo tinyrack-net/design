@@ -6,6 +6,7 @@ import '../../generated/tokens.g.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
+import '../../ui_density.dart';
 import '../../internal/layer.dart';
 import '../button/button.dart';
 import '../scroll_area/scroll_area.dart';

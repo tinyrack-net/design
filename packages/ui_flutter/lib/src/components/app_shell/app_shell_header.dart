@@ -34,6 +34,23 @@ class TRAppShellHeader extends StatelessWidget {
               : EdgeInsets.zero),
       child: Row(spacing: TRGeneratedSpacing.sm, children: resolvedChildren),
     );
+    // Application chrome rests at the height [TRPaneHeader] stands at, so a
+    // bar and a pane header below it agree on where their rules sit. Sized by
+    // its contents alone the bar was a line of text tall with no actions and a
+    // control tall with them, and a comfortable control is exactly the standard
+    // resting height, so an action filled the bar edge to edge and its tap
+    // target met the content beneath it.
+    //
+    // A resting height rather than a fixed one: the constraint sits on the
+    // content so a title that wraps at an enlarged text scale grows the bar
+    // instead of being clipped, and so [borderBottom] stays outside the height
+    // the bar rests at. Docs chrome keeps the fixed height its own layout
+    // measures against, and an explicit [height] still wins outright.
+    final restingHeight = docsChrome || height != null
+        ? null
+        : TRUiDensityScope.of(context) == TRUiDensity.comfortable
+        ? TRMeasurements.headerHeight + TRSpacing.large
+        : TRMeasurements.headerHeight;
     return Container(
       height:
           height ??
@@ -46,7 +63,12 @@ class TRAppShellHeader extends StatelessWidget {
               ),
             )
           : null,
-      child: content,
+      child: restingHeight == null
+          ? content
+          : ConstrainedBox(
+              constraints: BoxConstraints(minHeight: restingHeight),
+              child: content,
+            ),
     );
   }
 }

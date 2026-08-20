@@ -361,6 +361,16 @@ const componentData: Record<
       ko: '타입이 있는 header, sidebar, main, outline 파트를 반응형 rail 또는 modal drawer 탐색, route progress, 스크롤 복원과 함께 조합해요.',
       ja: '型付きの header、sidebar、main、outline パーツを、レスポンシブな rail または modal drawer ナビゲーション、ルート進行状況、スクロール復元と組み合わせます。',
     },
+    contractRows: [
+      {
+        axis: { en: 'Header height', ko: '헤더 높이', ja: 'ヘッダーの高さ' },
+        choices: {
+          en: 'In application chrome `TRAppShellHeader` rests at `TRMeasurements.headerHeight`, and one `TRSpacing.large` step taller under comfortable density, so it agrees with `TRPaneHeader`. That is a resting height rather than a cap: taller content, such as a title that wraps at an enlarged text scale, grows the bar instead of being clipped. Pass `height` to fix the bar to an exact height.',
+          ko: '애플리케이션 크롬에서 `TRAppShellHeader`는 `TRMeasurements.headerHeight`에 서고, comfortable 밀도에서는 `TRSpacing.large`만큼 더 높아져 `TRPaneHeader`와 높이가 맞아요. 고정 높이가 아니라 기준 높이라서, 큰 텍스트 배율에서 줄바꿈된 제목처럼 내용이 더 크면 잘리지 않고 바가 늘어나요. 높이를 정확히 고정하려면 `height`를 전달하세요.',
+          ja: 'アプリケーションクロムでは `TRAppShellHeader` は `TRMeasurements.headerHeight` に収まり、comfortable 密度では `TRSpacing.large` 分だけ高くなるため、`TRPaneHeader` と高さが揃います。これは上限ではなく基準の高さです。文字サイズを拡大して折り返した見出しなど、内容が大きい場合は切り取られずにバーが伸びます。高さを厳密に固定するには `height` を渡してください。',
+        },
+      },
+    ],
     usage:
       'TRAppShell(\n  breakpoint: TRAppShellBreakpoint.sm,\n  layout: TRAppShellLayout.sidebarFirst,\n  controller: controller,\n  header: TRAppShellHeader(children: [brand, actions]),\n  sidebar: TRAppShellSidebar(child: navigation),\n  main: const TRAppShellMain(child: Workspace()),\n)',
   },
