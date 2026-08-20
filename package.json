@@ -39,7 +39,7 @@
     "*.{ts,tsx,js,jsx,cjs,mjs,css,json}": "node node_modules/@biomejs/biome/bin/biome check --write --error-on-warnings"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.7",
+    "@biomejs/biome": "^2.5.8",
     "@types/node": "24.13.3",
     "ajv": "^8.17.1",
     "husky": "^9.1.7",
