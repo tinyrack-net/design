@@ -144,6 +144,7 @@ class TRSelect<T> extends StatefulWidget {
     this.helperText,
     this.errorText,
     this.appearance = TRFieldAppearance.solid,
+    this.padding = TRFieldPadding.standard,
     this.uiSize,
     this.enabled = true,
     this.readOnly = false,
@@ -177,6 +178,7 @@ class TRSelect<T> extends StatefulWidget {
     this.helperText,
     this.errorText,
     this.appearance = TRFieldAppearance.solid,
+    this.padding = TRFieldPadding.standard,
     this.uiSize,
     this.enabled = true,
     this.readOnly = false,
@@ -215,6 +217,13 @@ class TRSelect<T> extends StatefulWidget {
   /// select. Unlike a bare surface, the trigger still paints its own hover,
   /// focus, open, and invalid emphasis.
   final TRFieldAppearance appearance;
+
+  /// Whether the trigger adds the inline inset its size scale defines.
+  ///
+  /// [TRFieldPadding.none] drops it for a select that stands in for a value in
+  /// a row that already supplies the inset. The trigger keeps its height, so
+  /// the hit target is unchanged.
+  final TRFieldPadding padding;
 
   /// Overrides the size supplied by [TRUiDensityScope].
   final TRUiSize? uiSize;
@@ -838,9 +847,15 @@ class _TRSelectState<T> extends State<TRSelect<T>>
       minimumSize: const WidgetStatePropertyAll(Size.zero),
       maximumSize: const WidgetStatePropertyAll(Size.infinite),
       padding: WidgetStatePropertyAll(
-        EdgeInsets.symmetric(
-          horizontal: horizontalPadding + TRGeneratedBorders.defaultWidth,
-        ),
+        // A trigger placed where its host already supplies the inset adds
+        // none of its own, so its value and chevron reach the same rail as
+        // whatever sits beside it. The height is untouched either way.
+        switch (widget.padding) {
+          TRFieldPadding.standard => EdgeInsets.symmetric(
+            horizontal: horizontalPadding + TRGeneratedBorders.defaultWidth,
+          ),
+          TRFieldPadding.none => EdgeInsets.zero,
+        },
       ),
       shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(

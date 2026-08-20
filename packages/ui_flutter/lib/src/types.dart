@@ -52,6 +52,21 @@ enum TRCardPadding { none, sm, md, lg }
 /// [solid], so switching appearance never shifts layout.
 enum TRFieldAppearance { solid, ghost, plain }
 
+/// The inline inset a field draws its own content at.
+///
+/// [standard] is the inset the field's size scale defines, which a field
+/// standing on its own needs to keep its value clear of its frame.
+///
+/// [none] removes it, for a field placed where the surrounding row or toolbar
+/// already supplies the inset. A field that adds its own on top of that one
+/// stops short of the rail everything beside it lines up on, and the gap grows
+/// with the size scale. The field keeps the height its size scale defines, so
+/// what a finger has to hit does not change with the inset.
+///
+/// This is independent of [TRFieldAppearance]: appearance decides what is
+/// painted, and never the metrics.
+enum TRFieldPadding { standard, none }
+
 /// The semantic color of a progress spinner.
 enum TRSpinnerVariant { current, muted, primary, danger }
 

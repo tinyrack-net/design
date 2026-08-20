@@ -1,3 +1,14 @@
+## 0.67.0
+
+- `TRSelect` takes a `padding` of `TRFieldPadding.standard` or
+  `TRFieldPadding.none`. A select standing in for a value inside a row that
+  already supplies its own inline inset had no way to drop the field inset it
+  adds on top: its value and chevron stopped an inset short of the rail a
+  switch or badge in a neighbouring row lines up on, and the gap grew with the
+  size scale, reaching 21 logical pixels at `TRUiSize.xl`. `TRFieldPadding.none`
+  removes it and keeps the height the size scale defines, so the hit target is
+  unchanged. `TRFieldAppearance` still never changes metrics.
+
 ## 0.66.0
 
 - **Breaking.** `TRSelectPresentation.layer` and `TRSelectLayerPresentation` now

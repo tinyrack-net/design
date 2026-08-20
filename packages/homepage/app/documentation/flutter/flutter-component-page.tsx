@@ -4462,6 +4462,15 @@ class _DeploymentRackState extends State<DeploymentRack> {
               ja: '型付きの検証、保存、リセット動作を保ちながら、`presentation` と `controller` を引き渡します。',
             },
           },
+          {
+            name: 'padding',
+            type: 'TRFieldPadding · TRFieldPadding.standard',
+            purpose: {
+              en: 'Chooses whether the trigger adds the inline inset its size scale defines. Use `TRFieldPadding.none` where a row or toolbar already supplies the inset, so the value and its chevron reach the same rail as the controls beside them. The height, and so the hit target, is unchanged.',
+              ko: '트리거가 크기 단계에 정의된 좌우 여백을 스스로 넣을지 정해요. 행이나 툴바가 이미 여백을 주는 자리에서는 `TRFieldPadding.none`을 써서 값과 화살표가 옆에 놓인 컨트롤과 같은 선에서 끝나게 해요. 높이는 그대로라 누를 수 있는 영역은 달라지지 않아요.',
+              ja: 'トリガーがサイズ段階で定義された左右の余白を自分で加えるかを選びます。行やツールバーが既に余白を与えている場所では `TRFieldPadding.none` を使い、値とシェブロンを隣のコントロールと同じ位置で終わらせます。高さは変わらないため、タップ領域はそのままです。',
+            },
+          },
         ],
       },
       {
