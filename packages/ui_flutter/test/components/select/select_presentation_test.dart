@@ -5,19 +5,15 @@ import 'package:material_ui/material_ui.dart';
 import 'package:tinyrack_ui/tinyrack_ui.dart';
 
 const _layer = TRSelectPresentation.layer(
-  layerSize: TRLayerSize(
-    width: TRLayerWidth.fixed(280),
-    height: TRLayerHeight.fixed(320),
-  ),
+  width: TRLayerWidth.fixed(280),
+  height: TRLayerHeight.fixed(320),
 );
 
 const _sheet = TRSelectPresentation.sheet(maxExtent: 0.7);
 
 const _intrinsicLayer = TRSelectPresentation.layer(
-  layerSize: TRLayerSize(
-    width: TRLayerWidth.fixed(280),
-    height: TRLayerHeight.content(max: 480),
-  ),
+  width: TRLayerWidth.fixed(280),
+  height: TRLayerHeight.content(max: 480),
 );
 
 final _items = <TRSelectItem<int>>[
@@ -326,10 +322,8 @@ void main() {
     'content-sized layer and search rect stay fixed while filtering',
     (tester) async {
       const presentation = TRSelectPresentation.layer(
-        layerSize: TRLayerSize(
-          width: TRLayerWidth.content(min: 80, max: 500),
-          height: TRLayerHeight.content(max: 360),
-        ),
+        width: TRLayerWidth.content(min: 80, max: 500),
+        height: TRLayerHeight.content(max: 360),
       );
       await tester.pumpWidget(
         _app(
@@ -368,10 +362,8 @@ void main() {
             TRSelectItem<int>(value: 0, label: 'Option'),
           ],
           presentation: TRSelectPresentation.layer(
-            layerSize: TRLayerSize(
-              width: TRLayerWidth.matchAnchor(),
-              height: TRLayerHeight.fixed(240),
-            ),
+            width: TRLayerWidth.matchAnchor(),
+            height: TRLayerHeight.fixed(240),
           ),
         ),
       ),
@@ -386,10 +378,8 @@ void main() {
     tester,
   ) async {
     const presentation = TRSelectPresentation.layer(
-      layerSize: TRLayerSize(
-        width: TRLayerWidth.content(min: 80, max: 400),
-        height: TRLayerHeight.fixed(120),
-      ),
+      width: TRLayerWidth.content(min: 80, max: 400),
+      height: TRLayerHeight.fixed(120),
     );
 
     await tester.pumpWidget(
@@ -625,7 +615,7 @@ void main() {
                 width: 176,
                 items: [TRSelectItem(value: 1, label: 'One')],
                 presentation: TRSelectPresentation.layer(
-                  layerSize: TRLayerSize(width: TRLayerWidth.fixed(176)),
+                  width: TRLayerWidth.fixed(176),
                 ),
               ),
             ),

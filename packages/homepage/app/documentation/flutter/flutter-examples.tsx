@@ -4102,22 +4102,17 @@ class _MonitoringFormState extends State<MonitoringForm> {
         ko: '제품이 정하는 표시 방식',
       },
       description: {
-        en: 'Resolve presentation from the product breakpoint instead of asking Select to infer responsiveness. Layer size describes the complete popup, including the fixed search header, and the chosen presentation stays active through a resize until the Select closes.',
-        ja: 'Select にレスポンシブ判定を推測させず、プロダクトのブレークポイントから表示方法を決めます。レイヤーサイズは固定された検索ヘッダーを含むポップアップ全体を表し、選択した表示方法はリサイズされても Select を閉じるまで維持されます。',
-        ko: 'Select가 반응형 조건을 추측하게 하지 말고 제품의 너비 구간에서 표시 방식을 정하세요. 레이어 크기는 고정 검색 헤더를 포함한 팝업 전체를 나타내며, 선택한 표시 방식은 크기가 바뀌어도 Select를 닫을 때까지 유지돼요.',
+        en: 'Resolve presentation from the product breakpoint instead of asking Select to infer responsiveness. `width` and `height` describe the complete popup, including the fixed search header, and default independently, so stating one keeps the other. The chosen presentation stays active through a resize until the Select closes.',
+        ja: 'Select にレスポンシブ判定を推測させず、プロダクトのブレークポイントから表示方法を決めます。`width` と `height` は固定された検索ヘッダーを含むポップアップ全体を表し、それぞれ独立した既定値を持つため、片方を指定してももう片方は保たれます。選択した表示方法はリサイズされても Select を閉じるまで維持されます。',
+        ko: 'Select가 반응형 조건을 추측하게 하지 말고 제품의 너비 구간에서 표시 방식을 정하세요. `width`와 `height`는 고정 검색 헤더를 포함한 팝업 전체를 나타내고 각각 따로 기본값을 가지므로, 한쪽만 지정해도 나머지 한쪽은 그대로 유지돼요. 선택한 표시 방식은 크기가 바뀌어도 Select를 닫을 때까지 유지돼요.',
       },
       dart: String.raw`final presentation =
     TRAdaptiveWidthClass.fromWidth(MediaQuery.sizeOf(context).width) ==
         TRAdaptiveWidthClass.compact
     ? const TRSelectPresentation.sheet(maxExtent: 0.7)
     : const TRSelectPresentation.layer(
-        layerSize: TRLayerSize(
-          width: TRLayerWidth.atLeastAnchor(
-            max: TRMeasurements.overlayWidthSm,
-          ),
-          height: TRLayerHeight.content(
-            max: TRMeasurements.measureXl,
-          ),
+        width: TRLayerWidth.atLeastAnchor(
+          max: TRMeasurements.overlayWidthSm,
         ),
       );
 

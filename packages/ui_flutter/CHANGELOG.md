@@ -1,3 +1,18 @@
+## 0.66.0
+
+- **Breaking.** `TRSelectPresentation.layer` and `TRSelectLayerPresentation` now
+  take `width` and `height` instead of a single `layerSize`. Each axis defaults
+  on its own, so stating one no longer discards the other. A caller that wanted
+  a fixed popup width had to rebuild the whole `TRLayerSize`, which silently
+  dropped the content-height cap of `TRMeasurements.measureXl` and let a long
+  option list grow to the viewport. Replace
+  `layer(layerSize: TRLayerSize(width: w, height: h))` with
+  `layer(width: w, height: h)`, and drop whichever axis you were only restating.
+  `TRSelectLayerPresentation.layerSize` remains as a read-only view of the pair.
+- A `TRSelect` option label ellipsises when the option carries no description.
+  The row hard-caps its own height, so a label long enough to wrap overflowed it
+  instead of growing the row; a described option already truncated the same way.
+
 ## 0.65.1
 
 - Keeps an anchored layer's focus scope inside the shortcuts the app installs
