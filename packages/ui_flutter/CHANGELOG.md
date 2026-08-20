@@ -1,3 +1,17 @@
+## 0.68.0
+
+- `TRAppShellHeader` rests at `TRMeasurements.headerHeight` in application
+  chrome, and one `TRSpacing.large` step taller under comfortable density. That
+  is the height `TRPaneHeader` already stands at, so a bar and a pane header
+  below it agree on where their rules sit. The bar had no resting height at all:
+  sized by its contents it was a line of text tall with no actions and a control
+  tall with them, and a comfortable control is exactly the standard resting
+  height, so an action filled the bar edge to edge and its tap target met the
+  content beneath it. The height is a floor rather than a cap, so a title that
+  wraps at an enlarged text scale still grows the bar, and it is measured inside
+  `borderBottom`. Docs chrome keeps its fixed height, and an explicit `height`
+  still wins outright.
+
 ## 0.67.0
 
 - `TRSelect` takes a `padding` of `TRFieldPadding.standard` or

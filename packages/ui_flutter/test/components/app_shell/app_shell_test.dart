@@ -913,6 +913,106 @@ void main() {
     await tester.pump();
     expect(primary.offset, moreOrLessEquals(saved));
   });
+
+  group('app chrome header resting height', () {
+    const actionKey = Key('header-action');
+
+    Future<void> pumpHeader(
+      WidgetTester tester, {
+      TRUiDensity density = TRUiDensity.standard,
+      double? height,
+      List<Widget> children = const <Widget>[Text('Header')],
+    }) async {
+      await _setViewport(tester, const Size(800, 600));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        _app(
+          TRUiDensityScope(
+            density: density,
+            child: TRAppShell(
+              header: TRAppShellHeader(height: height, children: children),
+              main: const TRAppShellMain(child: Text('Content')),
+            ),
+          ),
+        ),
+      );
+    }
+
+    testWidgets('a standard header stands at the shared header height', (
+      tester,
+    ) async {
+      await pumpHeader(tester);
+
+      expect(
+        tester.getSize(find.byType(TRAppShellHeader)).height,
+        TRMeasurements.headerHeight,
+      );
+    });
+
+    testWidgets('a comfortable header stands one step taller', (tester) async {
+      await pumpHeader(tester, density: TRUiDensity.comfortable);
+
+      // The same step [TRPaneHeader] takes, so an application bar and a pane
+      // header stacked below it agree on where their rules sit.
+      expect(
+        tester.getSize(find.byType(TRAppShellHeader)).height,
+        TRMeasurements.headerHeight + TRSpacing.large,
+      );
+    });
+
+    testWidgets('an explicit height overrides the resting height', (
+      tester,
+    ) async {
+      await pumpHeader(
+        tester,
+        density: TRUiDensity.comfortable,
+        height: TRMeasurements.headerHeight,
+      );
+
+      expect(
+        tester.getSize(find.byType(TRAppShellHeader)).height,
+        TRMeasurements.headerHeight,
+      );
+    });
+
+    testWidgets('content taller than the rest grows the bar', (tester) async {
+      const tall = 96.0;
+      await pumpHeader(
+        tester,
+        children: const <Widget>[SizedBox(height: tall, child: Text('Header'))],
+      );
+
+      // A resting height rather than a fixed one, so a title that wraps at an
+      // enlarged text scale still grows the bar rather than being clipped.
+      expect(tester.getSize(find.byType(TRAppShellHeader)).height, tall);
+    });
+
+    testWidgets('a comfortable header clears a default icon control', (
+      tester,
+    ) async {
+      await pumpHeader(
+        tester,
+        density: TRUiDensity.comfortable,
+        children: <Widget>[
+          TRIconButton(
+            key: actionKey,
+            label: 'Settings',
+            onPressed: () {},
+            icon: const Icon(Icons.settings),
+          ),
+        ],
+      );
+
+      // A comfortable control is exactly the standard resting height, so a bar
+      // that did not take the density step left an action filling it edge to
+      // edge, with its tap target touching the content below.
+      final bar = tester.getRect(find.byType(TRAppShellHeader));
+      final action = tester.getRect(find.byKey(actionKey));
+      expect(action.height, TRControlMetrics.heightOf(TRUiSize.xl));
+      expect(action.top - bar.top, greaterThanOrEqualTo(TRSpacing.small));
+      expect(bar.bottom - action.bottom, greaterThanOrEqualTo(TRSpacing.small));
+    });
+  });
 }
 
 /// Labels reachable from the live semantics tree, not from stale render data.
