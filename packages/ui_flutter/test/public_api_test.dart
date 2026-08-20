@@ -108,6 +108,7 @@ const publicTypes = <Type>[
   TRDropOverlay,
   TRField,
   TRFieldAppearance,
+  TRFieldPadding,
   TRFieldset,
   TRFileTree,
   TRFileTreeDirectory,

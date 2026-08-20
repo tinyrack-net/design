@@ -81,6 +81,24 @@ TRSelect<String>(
 );
 ```
 
+A Select can also stand in for a value inside a row that already supplies its
+own inline inset, such as a settings list or a toolbar. Pair
+`TRFieldAppearance.ghost` with `TRFieldPadding.none` and leave `width` unset:
+the trigger then shrinks to the value it shows and draws that value and its
+chevron against its own edges, so it lines up with a switch or a badge in a
+neighbouring row instead of stopping an inset short of them. It keeps the
+height its size scale defines, so the hit target is unchanged.
+
+```dart
+TRSelect<ThemeMode>.controlled(
+  items: modes,
+  value: mode,
+  appearance: TRFieldAppearance.ghost,
+  padding: TRFieldPadding.none,
+  onValueChange: onModeChanged,
+);
+```
+
 The presentation is captured when the Select opens, so resizing cannot replace
 an active layer with a sheet. Searchable anchored layers capture their full,
 unfiltered intrinsic size, while sheets capture their full-list height and keep
