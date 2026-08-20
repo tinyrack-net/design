@@ -7,6 +7,7 @@ import '../../internal/motion_boundary.dart';
 import '../../theme.dart';
 import '../../tokens.dart';
 import '../../types.dart';
+import '../button/button.dart';
 import '../focus_ring/focus_ring.dart';
 import '../text/text.dart';
 
@@ -320,41 +321,59 @@ class _TRChatToolDisclosureState extends State<TRChatToolDisclosure> {
   }
 }
 
-/// A compact non-interactive status entry in a chat transcript.
+/// A compact status entry in a chat transcript.
+///
+/// A status that reports something the reader can do about it — a step that
+/// failed and can be run again, a load that can be retried — carries
+/// [actionLabel] and [onAction]. Without them the row is inert, which is what
+/// most statuses are.
 class TRChatStatusRow extends StatelessWidget {
   const TRChatStatusRow({
     required this.label,
     required this.status,
     this.icon,
+    this.actionLabel,
+    this.onAction,
     super.key,
-  });
+  }) : assert(
+         (actionLabel == null) == (onAction == null),
+         'An action needs both a label and a callback.',
+       );
 
   final String label;
   final TRChatToolStatus status;
   final IconData? icon;
 
+  /// Name of the action a reader can take, or null when there is none.
+  final String? actionLabel;
+
+  /// Called when the reader takes the action.
+  final VoidCallback? onAction;
+
   @override
-  Widget build(BuildContext context) => Semantics(
-    container: true,
-    label: label,
-    excludeSemantics: true,
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
+  Widget build(BuildContext context) {
+    final action = onAction;
+    // The status text is one accessible name; the action is a control of its
+    // own beside it, so the container wraps only the part it describes.
+    final status = Semantics(
+      container: true,
+      label: label,
+      excludeSemantics: true,
       child: Row(
         children: [
           SizedBox(
             width: TRGeneratedControlMetrics.mdIconSize,
             child: Center(
               child: Icon(
-                icon ?? _statusIcon(status),
+                icon ?? _statusIcon(this.status),
                 size: TRGeneratedControlMetrics.smIconSize,
-                color: _statusColor(context.tinyrackTheme, status),
+                color: _statusColor(context.tinyrackTheme, this.status),
               ),
             ),
           ),
           const SizedBox(width: TRGeneratedSpacing.sm),
           Expanded(
-            child: status == TRChatToolStatus.running
+            child: this.status == TRChatToolStatus.running
                 ? _TRChatRunningText(
                     child: TRText(
                       label,
@@ -365,15 +384,32 @@ class TRChatStatusRow extends StatelessWidget {
                 : TRText(
                     label,
                     variant: TRTextVariant.bodySm,
-                    color: status == TRChatToolStatus.failed
+                    color: this.status == TRChatToolStatus.failed
                         ? TRTextColor.danger
                         : TRTextColor.muted,
                   ),
           ),
         ],
       ),
-    ),
-  );
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: TRGeneratedSpacing.xs),
+      child: action == null
+          ? status
+          : Row(
+              children: [
+                Expanded(child: status),
+                const SizedBox(width: TRGeneratedSpacing.sm),
+                TRButton(
+                  appearance: TRAppearance.ghost,
+                  uiSize: TRUiSize.sm,
+                  onPressed: action,
+                  child: TRText(actionLabel!, variant: TRTextVariant.bodySm),
+                ),
+              ],
+            ),
+    );
+  }
 }
 
 class _TRChatRunningText extends StatefulWidget {

@@ -2517,9 +2517,9 @@ Column(
         ja: 'チャット履歴の構成',
       },
       description: {
-        en: 'Combine authorship, assistant alignment, technical disclosure, and shimmer text for live work without exposing tool detail in the collapsed row.',
-        ko: '작성 주체, 어시스턴트 정렬, 기술 상세 공개, 진행 중인 작업의 빛 흐름 텍스트를 조합하면서 접힌 행에는 도구 세부 정보를 노출하지 않아요.',
-        ja: '発言者、アシスタントの整列、技術詳細の開閉、進行中の作業を示すシマーテキストを組み合わせ、閉じた行にはツールの詳細を表示しません。',
+        en: 'Combine authorship, assistant alignment, technical disclosure, and shimmer text for live work without exposing tool detail in the collapsed row. A status the reader can answer carries its own action.',
+        ko: '작성 주체, 어시스턴트 정렬, 기술 상세 공개, 진행 중인 작업의 빛 흐름 텍스트를 조합하면서 접힌 행에는 도구 세부 정보를 노출하지 않아요. 독자가 응답할 수 있는 상태에는 해당 동작을 함께 두어요.',
+        ja: '発言者、アシスタントの整列、技術詳細の開閉、進行中の作業を示すシマーテキストを組み合わせ、閉じた行にはツールの詳細を表示しません。読み手が応答できる状態には、その操作を添えます。',
       },
       dart: String.raw`Column(
   children: [
@@ -2548,6 +2548,12 @@ Column(
     const TRChatStatusRow(
       label: 'Running',
       status: TRChatToolStatus.running,
+    ),
+    TRChatStatusRow(
+      label: 'Could not load earlier messages',
+      status: TRChatToolStatus.failed,
+      actionLabel: 'Try again',
+      onAction: () {},
     ),
   ],
 )`,

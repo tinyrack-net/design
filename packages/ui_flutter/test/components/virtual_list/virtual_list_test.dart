@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
@@ -839,7 +840,13 @@ void main() {
         ),
       );
       await tester.pump();
-      expect(leadingRequests, 2);
+      expect(
+        leadingRequests,
+        1,
+        reason:
+            'the answer to the last request left the edge where it was, so '
+            'a new identity on top of it has nothing to add',
+      );
 
       await controller.scrollToEdge(TRVirtualListEdge.trailing);
       await tester.pump();
@@ -854,13 +861,19 @@ void main() {
       );
       await tester.pump();
 
-      expect(trailingRequests, 2);
+      expect(trailingRequests, 1);
       expect(
         tester.getBottomLeft(find.byKey(const ValueKey('trailing-slot'))).dy,
         moreOrLessEquals(
           tester.getBottomLeft(find.byKey(const ValueKey('viewport'))).dy,
         ),
       );
+
+      // The reader moving is movement too, so an identity held back at one
+      // edge is asked for as soon as they come back to it.
+      await controller.scrollToEdge(TRVirtualListEdge.leading);
+      await tester.pump();
+      expect(leadingRequests, 2);
     },
   );
 
@@ -1801,6 +1814,48 @@ void main() {
     );
   });
 
+  testWidgets(
+    'a leading edge weighs the page that landed before asking for another',
+    (tester) async {
+      // The leading row is a block the reader holds only part of, so an
+      // answered request extends that row upwards instead of adding another.
+      // The row keeps its place at offset zero, so the reader keeps theirs at
+      // the leading edge — and a request identity that moves on every answer
+      // then asks again, and again, for as long as there is history.
+      final controller = TRVirtualListController<String>();
+      addTearDown(controller.dispose);
+      final requested = <int>[];
+      final extents = <double>[];
+      await tester.pumpWidget(
+        _host(
+          _PagingHarness(
+            controller: controller,
+            onRequest: (cursor) {
+              requested.add(cursor);
+              extents.add(_position(tester).extentBefore);
+            },
+          ),
+        ),
+      );
+      await tester.pump();
+      expect(requested, isEmpty, reason: 'the list opens at its trailing end');
+
+      _position(tester).jumpTo(0);
+      for (var frame = 0; frame < 12; frame += 1) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+
+      expect(
+        requested,
+        hasLength(1),
+        reason:
+            'the page that landed is two viewports of content above the '
+            'reader, so nothing is within the trigger distance any more; '
+            'asked at $extents',
+      );
+    },
+  );
+
   testWidgets('rejects zero item estimates before layout', (tester) async {
     final controller = TRVirtualListController<String>();
     addTearDown(controller.dispose);
@@ -1822,3 +1877,61 @@ void main() {
 
 double _viewportTop(WidgetTester tester) =>
     tester.getTopLeft(find.byKey(const ValueKey('viewport'))).dy;
+
+ScrollPosition _position(WidgetTester tester) =>
+    tester.state<ScrollableState>(find.byType(Scrollable)).position;
+
+/// A list that answers its own leading edge, the way an endless reader does.
+class _PagingHarness extends StatefulWidget {
+  const _PagingHarness({required this.controller, required this.onRequest});
+
+  final TRVirtualListController<String> controller;
+  final ValueChanged<int> onRequest;
+
+  @override
+  State<_PagingHarness> createState() => _PagingHarnessState();
+}
+
+class _PagingHarnessState extends State<_PagingHarness> {
+  static const _rowHeight = 240.0;
+  static const _pageHeight = 480.0;
+
+  var _cursor = 0;
+  // The leading row is a block the reader has only part of. Answering a
+  // request extends that same row upwards rather than adding another, which
+  // is what an older page of one streamed answer does.
+  var _leadingHeight = _rowHeight;
+  final List<String> _items = <String>[
+    for (var index = 0; index < 4; index += 1) 'item-$index',
+  ];
+
+  void _loadOlder() {
+    widget.onRequest(_cursor);
+    // A page arrives from somewhere, so it lands after the frame that asked.
+    scheduleMicrotask(() {
+      if (!mounted) return;
+      setState(() {
+        _cursor -= 1;
+        _leadingHeight += _pageHeight;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => TRVirtualList<String, String>(
+    controller: widget.controller,
+    items: _items,
+    itemKey: (item) => item,
+    estimatedItemExtent: (item, index) => _rowHeight,
+    initialPosition: const TRVirtualListInitialPosition.trailing(),
+    leadingEdgeRequest: TRVirtualListEdgeRequest(
+      requestKey: 'older-$_cursor',
+      onRequest: _loadOlder,
+    ),
+    itemBuilder: (context, item, index) => SizedBox(
+      key: ValueKey('row-$item'),
+      height: index == 0 ? _leadingHeight : _rowHeight,
+      child: TRText(item),
+    ),
+  );
+}

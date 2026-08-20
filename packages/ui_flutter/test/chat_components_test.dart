@@ -233,6 +233,46 @@ void main() {
     expect(find.bySemanticsLabel('Running'), findsOneWidget);
   });
 
+  testWidgets('a status a reader can answer carries its own action', (
+    tester,
+  ) async {
+    var pressed = 0;
+    await tester.pumpWidget(
+      _app(
+        TRChatStatusRow(
+          label: 'Could not load',
+          status: TRChatToolStatus.failed,
+          actionLabel: 'Try again',
+          onAction: () => pressed += 1,
+        ),
+      ),
+    );
+
+    // The status keeps its own accessible name, and the action is reachable
+    // beside it rather than swallowed by the row's semantics container.
+    expect(find.bySemanticsLabel('Could not load'), findsOneWidget);
+    final action = find.widgetWithText(TRButton, 'Try again');
+    expect(action, findsOneWidget);
+    await tester.tap(action);
+    await tester.pump();
+    expect(pressed, 1);
+  });
+
+  testWidgets('a status with nothing to answer shows no action', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        const TRChatStatusRow(
+          label: 'Could not load',
+          status: TRChatToolStatus.failed,
+        ),
+      ),
+    );
+
+    expect(find.byType(TRButton), findsNothing);
+  });
+
   testWidgets('running shimmer advances and starts after an idle mount', (
     tester,
   ) async {

@@ -1,3 +1,21 @@
+## 0.69.0
+
+- A `TRVirtualList` edge asks again only once the answer to its last request
+  moved that edge away. A new `requestKey` on its own no longer produces a
+  request. An endless list whose page extends the row already at the edge —
+  a streamed answer the reader holds half of, a log line that grew — left the
+  edge exactly where it was, so every answer minted the next identity and the
+  list asked again on the following frame, walking the whole history in one
+  gesture while the reader stayed pinned to the edge. Scrolling counts as
+  movement, so a reader can always ask again, and a consumer that re-armed a
+  failed page by bumping a retry identity now drives that retry itself.
+- `TRChatStatusRow` takes an `actionLabel` and `onAction`. A status that
+  reports something the reader can do about it — a step that failed and can be
+  run again, history that would not load — had nowhere to put the control, so
+  a consumer either left the reader stuck or retried behind their back. The
+  status text keeps its own accessible name and the action stands beside it as
+  a control of its own.
+
 ## 0.68.0
 
 - `TRAppShellHeader` rests at `TRMeasurements.headerHeight` in application
