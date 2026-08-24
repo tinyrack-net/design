@@ -113,7 +113,7 @@ describe('Tailwind token documentation catalog', () => {
         ...content.matchAll(/\{ depth: 3, id: ([a-z-]+), label:/g),
       ].map(([, anchor]) => anchor);
       expect(declaredGroupAnchors).toEqual(expectedGroupAnchors);
-      expect(content).toContain('order: 10');
+      expect(content).toContain('order: 11');
     }
   });
 

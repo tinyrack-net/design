@@ -54,6 +54,7 @@ const designProperties = new Set([
   'font-family',
   'font-size',
   'font-weight',
+  'fill',
   'gap',
   'height',
   'inline-size',
@@ -72,6 +73,7 @@ const designProperties = new Set([
   'padding',
   'right',
   'row-gap',
+  'stroke',
   'text-shadow',
   'top',
   'transition',
@@ -95,7 +97,7 @@ const nativeComponents = new Map([
   ['textarea', 'TRTextarea'],
 ]);
 const designUtility =
-  /^(?:-?(?:m[trblxy]?|p[trblxy]?|gap(?:-[xy])?|space-[xy]|w|h|min-w|min-h|max-w|max-h|size|top|right|bottom|left|inset(?:-[xy])?|text|font|leading|tracking|bg|border|rounded|shadow|opacity|z|duration|delay|ease|scale|translate-[xy]|rotate)-)/u;
+  /^(?:-?(?:m[trblxy]?|p[trblxy]?|gap(?:-[xy])?|space-[xy]|w|h|min-w|min-h|max-w|max-h|size|top|right|bottom|left|inset(?:-[xy])?|text|font|leading|tracking|bg|fill|stroke|border|rounded|shadow|opacity|z|duration|delay|ease|scale|translate-[xy]|rotate)-)/u;
 const structuralUtilities = new Set([
   'h-dvh',
   'h-full',
@@ -175,14 +177,104 @@ function push(
   if (!ignored(source, violation.line, violation.ruleId)) violations.push(violation);
 }
 
+const tinyrackVariable = /var\(--tinyrack-([a-z0-9-]+)(?:\s*,[^)]*)?\)/u;
+const localVariable = /var\((--[a-z0-9-]+)(?:\s*,[^)]*)?\)/u;
+
+function invalidSvgRole(property: 'fill' | 'stroke', role: string) {
+  if (property === 'fill') {
+    return /^(?:text(?:-|$)|border(?:-|$)|control(?:-|$)|focus$|on-|illustration-stroke$)/u.test(
+      role,
+    );
+  }
+  return /^(?:surface(?:-|$)|text(?:-|$)|border(?:-|$)|control(?:-|$)|focus$|on-|illustration-fill-|illustration-detail$|illustration-shadow$)/u.test(
+    role,
+  );
+}
+
+function terminalTinyrackRole(value: string, variables: Map<string, string>) {
+  let current = value;
+  const seen = new Set<string>();
+  while (true) {
+    const terminal = tinyrackVariable.exec(current)?.[1];
+    if (terminal !== undefined) return terminal;
+    const local = localVariable.exec(current)?.[1];
+    if (local === undefined || seen.has(local)) return undefined;
+    const next = variables.get(local);
+    if (next === undefined) return undefined;
+    seen.add(local);
+    current = next;
+  }
+}
+
+function svgRoleViolation(
+  property: 'fill' | 'stroke',
+  value: string,
+  variables = new Map<string, string>(),
+) {
+  const role = terminalTinyrackRole(value, variables);
+  return role !== undefined && invalidSvgRole(property, role) ? role : undefined;
+}
+
+function rawSvgColor(value: string, variables = new Map<string, string>()) {
+  const normalized = value.trim();
+  if (
+    /^(?:none|currentColor|inherit|initial|unset|transparent|url\(.+\))$/u.test(
+      normalized,
+    )
+  ) {
+    return undefined;
+  }
+  return terminalTinyrackRole(normalized, variables) === undefined
+    ? normalized
+    : undefined;
+}
+
 function auditCss(source: string, path: string) {
   const violations: TinyrackCheckViolation[] = [];
   const root = postcss.parse(source, { from: path });
+  const variables = new Map<string, string>();
+  root.walkDecls((declaration) => {
+    if (
+      declaration.prop.startsWith('--') &&
+      !declaration.prop.startsWith('--tinyrack-')
+    ) {
+      variables.set(declaration.prop, declaration.value.trim());
+    }
+  });
   root.walkDecls((declaration) => {
     if (declaration.prop.startsWith('--tinyrack-')) return;
     const property = declaration.prop.replace(/^(?:-\w+-)/u, '');
     if (!designProperties.has(property) && !property.startsWith('border-')) return;
     const value = declaration.value.trim();
+    if (property === 'fill' || property === 'stroke') {
+      const role = svgRoleViolation(property, value, variables);
+      if (role !== undefined) {
+        const start = declaration.source?.start ?? { column: 1, line: 1 };
+        push(violations, source, {
+          column: start.column,
+          line: start.line,
+          message: `${property} uses the incompatible --tinyrack-${role} role.`,
+          path,
+          replacement:
+            property === 'fill'
+              ? 'Use an illustration fill, detail, shadow, or meaningful status role.'
+              : 'Use illustrationStroke or a meaningful status role.',
+          ruleId: 'tokens/no-cross-role-svg-color',
+        });
+      }
+      const raw = rawSvgColor(value, variables);
+      if (raw !== undefined) {
+        const start = declaration.source?.start ?? { column: 1, line: 1 };
+        push(violations, source, {
+          column: start.column,
+          line: start.line,
+          message: `${property} uses a raw or unresolved SVG color: ${raw}`,
+          path,
+          replacement: 'Use a Tinyrack illustration or meaningful status token.',
+          ruleId: 'tokens/no-literal',
+        });
+      }
+    }
     const structural =
       /^(?:0|1|auto|none|normal|inherit|initial|unset|100%|100d?v[hw]|100s?v[hw]|100l?v[hw])$/u.test(
         value,
@@ -205,6 +297,28 @@ function auditCss(source: string, path: string) {
       path,
       replacement: 'Use a var(--tinyrack-*) semantic token.',
       ruleId: 'tokens/no-literal',
+    });
+  });
+  root.walkRules((rule) => {
+    const fill = rule.nodes.find(
+      (node) => node.type === 'decl' && node.prop === 'fill',
+    );
+    const opacity = rule.nodes.find(
+      (node) => node.type === 'decl' && node.prop === 'opacity',
+    );
+    if (fill?.type !== 'decl' || opacity?.type !== 'decl') return;
+    const role = terminalTinyrackRole(fill.value, variables);
+    if (!role?.startsWith('illustration-fill-') || opacity.value.trim() === '1') {
+      return;
+    }
+    const start = opacity.source?.start ?? { column: 1, line: 1 };
+    push(violations, source, {
+      column: start.column,
+      line: start.line,
+      message: `Illustration face ${role} is composed with opacity ${opacity.value.trim()}.`,
+      path,
+      replacement: 'Use the opaque illustration face token without opacity.',
+      ruleId: 'tokens/no-cross-role-svg-color',
     });
   });
   root.walkAtRules((rule) => {
@@ -375,6 +489,47 @@ function auditTypeScript(source: string, path: string) {
       visit(expression, true, false);
       return;
     }
+    if (
+      type === 'JSXAttribute' &&
+      ['fill', 'stroke'].includes(String((node['name'] as Node)?.['name'] ?? ''))
+    ) {
+      const property = String((node['name'] as Node)['name']) as 'fill' | 'stroke';
+      const attributeValue = node['value'] as Node | undefined;
+      const expression =
+        attributeValue?.['type'] === 'JSXExpressionContainer'
+          ? (attributeValue['expression'] as Node)
+          : attributeValue;
+      const text = literalValue(expression);
+      if (text !== undefined) {
+        const role = svgRoleViolation(property, text);
+        if (role !== undefined) {
+          const location = nodeLocation(node);
+          push(violations, source, {
+            ...location,
+            message: `${property} uses the incompatible --tinyrack-${role} role.`,
+            path,
+            replacement:
+              property === 'fill'
+                ? 'Use an illustration fill, detail, shadow, or meaningful status role.'
+                : 'Use illustrationStroke or a meaningful status role.',
+            ruleId: 'tokens/no-cross-role-svg-color',
+          });
+        }
+        const raw = rawSvgColor(text);
+        if (raw !== undefined) {
+          designLiteral.lastIndex = 0;
+          const location = nodeLocation(node);
+          push(violations, source, {
+            ...location,
+            message: `${property} uses a raw or unresolved SVG color: ${raw}`,
+            path,
+            replacement: 'Use a Tinyrack illustration or status token.',
+            ruleId: 'tokens/no-literal',
+          });
+        }
+        designLiteral.lastIndex = 0;
+      }
+    }
     if (type === 'JSXAttribute' && (node['name'] as Node)?.['name'] === 'style') {
       const attributeValue = node['value'] as Node | undefined;
       const expression =
@@ -388,6 +543,26 @@ function auditTypeScript(source: string, path: string) {
       const text = literalValue(node);
       if (text !== undefined) {
         for (const token of classTokens(text)) {
+          const svgUtility = /^(fill|stroke)-tinyrack-(.+)$/u.exec(token);
+          const svgProperty = svgUtility?.[1] as 'fill' | 'stroke' | undefined;
+          const svgRole = svgUtility?.[2];
+          if (
+            svgProperty !== undefined &&
+            svgRole !== undefined &&
+            invalidSvgRole(svgProperty, svgRole)
+          ) {
+            const location = nodeLocation(node);
+            push(violations, source, {
+              ...location,
+              message: `${svgProperty} uses the incompatible tinyrack-${svgRole} role.`,
+              path,
+              replacement:
+                svgProperty === 'fill'
+                  ? 'Use an illustration fill, detail, shadow, or meaningful status role.'
+                  : 'Use illustrationStroke or a meaningful status role.',
+              ruleId: 'tokens/no-cross-role-svg-color',
+            });
+          }
           if (
             !designUtility.test(token) ||
             structuralUtilities.has(token) ||
@@ -411,6 +586,23 @@ function auditTypeScript(source: string, path: string) {
       const key = node['key'] as Node;
       const name = String(key?.['name'] ?? key?.['value'] ?? '');
       if (inlineProperties.has(name)) {
+        if (name === 'fill' || name === 'stroke') {
+          const value = literalValue(node['value'] as Node);
+          const role = value === undefined ? undefined : svgRoleViolation(name, value);
+          if (role !== undefined) {
+            const location = nodeLocation(node);
+            push(violations, source, {
+              ...location,
+              message: `${name} uses the incompatible --tinyrack-${role} role.`,
+              path,
+              replacement:
+                name === 'fill'
+                  ? 'Use an illustration fill, detail, shadow, or meaningful status role.'
+                  : 'Use illustrationStroke or a meaningful status role.',
+              ruleId: 'tokens/no-cross-role-svg-color',
+            });
+          }
+        }
         const raw = invalidStyleExpression(node['value'] as Node);
         if (raw !== undefined) {
           const location = nodeLocation(node);

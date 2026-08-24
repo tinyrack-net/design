@@ -37,7 +37,20 @@ const declarations = [
     ),
   ),
 ];
-const unused = declarations.filter((name) => !componentText.includes(name));
+// Illustration roles are a public foundation for product-owned artwork. They are
+// intentionally consumed downstream rather than by the component package itself.
+const externallyConsumedFoundationTokens = new Set([
+  '--tinyrack-illustration-fill-primary',
+  '--tinyrack-illustration-fill-secondary',
+  '--tinyrack-illustration-fill-tertiary',
+  '--tinyrack-illustration-detail',
+  '--tinyrack-illustration-stroke',
+  '--tinyrack-illustration-shadow',
+]);
+const unused = declarations.filter(
+  (name) =>
+    !componentText.includes(name) && !externallyConsumedFoundationTokens.has(name),
+);
 assert.deepEqual(
   unused,
   [],

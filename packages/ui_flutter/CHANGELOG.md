@@ -1,5 +1,9 @@
 ## 0.69.0
 
+- Adds `TinyrackIllustrationThemeData` and
+  `BuildContext.tinyrackIllustrationTheme` with six theme-aware roles for
+  illustration faces, details, strokes, and shadows. The extension is installed
+  by both Tinyrack themes without changing `TinyrackThemeData` construction.
 - A `TRVirtualList` edge asks again only once the answer to its last request
   moved that edge away. A new `requestKey` on its own no longer produces a
   request. An endless list whose page extends the row already at the edge —

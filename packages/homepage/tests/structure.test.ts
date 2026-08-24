@@ -38,7 +38,10 @@ function tailwindThemeCandidates(utility: string) {
   const [, prefix = '', name = ''] = match;
   const suffix = `tinyrack-${name}`;
 
-  if (['bg', 'text', 'border'].includes(prefix) || /^border-[trblsexy]$/.test(prefix)) {
+  if (
+    ['bg', 'fill', 'stroke', 'text', 'border'].includes(prefix) ||
+    /^border-[trblsexy]$/.test(prefix)
+  ) {
     return [`--color-${suffix}`, `--text-${suffix}`, `--border-width-${suffix}`];
   }
   if (prefix === 'font') return [`--font-${suffix}`, `--font-weight-${suffix}`];
@@ -594,7 +597,7 @@ describe('React Router documentation contract', () => {
       expect(existsSync(join(homepageRoot, path))).toBe(true);
       const docs = readText(path);
       const overview = readText(`app/content/${locale}/foundations/index.mdx`);
-      expect(docs).toContain('order: 10');
+      expect(docs).toContain('order: 11');
       expect(docs).toContain(
         "import { TailwindTokenReference } from '../../../documentation/shared/tailwind-token-reference.js';",
       );
@@ -619,14 +622,14 @@ describe('React Router documentation contract', () => {
       expect(staticDocumentRoutes).toContainEqual(
         expect.objectContaining({
           id: `${locale}-foundations-tailwind`,
-          order: 10,
+          order: 11,
           path: `/${locale}/foundations/tailwind`,
         }),
       );
       expect(staticDocumentRoutes).toContainEqual(
         expect.objectContaining({
           id: `${locale}-foundations-breakpoints`,
-          order: 4,
+          order: 5,
           path: `/${locale}/foundations/breakpoints`,
         }),
       );
@@ -642,6 +645,7 @@ describe('React Router documentation contract', () => {
       foundations: [
         { contentKey: '/foundations', stem: 'index' },
         { contentKey: '/foundations/colors', stem: 'colors' },
+        { contentKey: '/foundations/illustration', stem: 'illustration' },
         { contentKey: '/foundations/typography', stem: 'typography' },
         { contentKey: '/foundations/spacing', stem: 'spacing' },
         { contentKey: '/foundations/breakpoints', stem: 'breakpoints' },
@@ -790,22 +794,22 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 450 localized content routes as static route modules', () => {
+  it('defines all 453 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(61);
-    expect(staticDocumentRoutes).toHaveLength(450);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(450);
+    expect(staticDocumentRoutes).toHaveLength(453);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(453);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      450,
+      453,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
-      150,
+      151,
     );
     const expectedSectionCounts = {
       brand: 2,
       components: 61,
       docs: 1,
-      foundations: 11,
+      foundations: 12,
       'flutter-components': 65,
       'flutter-start': 4,
       home: 1,
@@ -1341,7 +1345,7 @@ describe('React Router documentation contract', () => {
       .filter((path) => !/\.(?:mdx|tsx)$/.test(path))
       .map((path) => relative(homepageRoot, path).replaceAll('\\', '/'));
 
-    expect(mdxFiles).toHaveLength(447);
+    expect(mdxFiles).toHaveLength(450);
     expect(tsxPages).toHaveLength(3);
     expect(routeFiles).toEqual(manifestFiles);
     expect(assets).toEqual(['app/content/fixtures/tinyrack-avatar.svg']);
@@ -1402,7 +1406,12 @@ describe('React Router documentation contract', () => {
     ]);
     expect(
       documentationFiles.filter((path) => path.startsWith('foundations/')),
-    ).toEqual(['foundations/motion-demo.css', 'foundations/motion-demo.tsx']);
+    ).toEqual([
+      'foundations/illustration-demo.css',
+      'foundations/illustration-demo.tsx',
+      'foundations/motion-demo.css',
+      'foundations/motion-demo.tsx',
+    ]);
     expect(
       documentationFiles.filter((path) => path.startsWith('integrations/')),
     ).toEqual([

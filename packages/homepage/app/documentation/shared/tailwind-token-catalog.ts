@@ -868,6 +868,36 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-illustration-fill-primary',
+    themeVariable: '--color-tinyrack-illustration-fill-primary',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-illustration-fill-secondary',
+    themeVariable: '--color-tinyrack-illustration-fill-secondary',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-illustration-fill-tertiary',
+    themeVariable: '--color-tinyrack-illustration-fill-tertiary',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-illustration-detail',
+    themeVariable: '--color-tinyrack-illustration-detail',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-illustration-stroke',
+    themeVariable: '--color-tinyrack-illustration-stroke',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-illustration-shadow',
+    themeVariable: '--color-tinyrack-illustration-shadow',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-primary',
     themeVariable: '--color-tinyrack-primary',
   },

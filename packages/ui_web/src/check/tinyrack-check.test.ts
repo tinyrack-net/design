@@ -87,6 +87,34 @@ describe('Tinyrack Web project check', () => {
     });
   });
 
+  it('enforces illustration roles across CSS, aliases, JSX, inline styles, and utilities', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/core.css";
+.good { fill: var(--tinyrack-illustration-fill-primary); stroke: var(--tinyrack-illustration-stroke); }
+.aliased { --face: var(--tinyrack-text-muted); fill: var(--face); }
+.transparent-face { fill: var(--tinyrack-illustration-fill-secondary); opacity: var(--tinyrack-opacity-disabled); }`,
+      'src/app.tsx': `export const Art = () => <svg className="fill-tinyrack-border stroke-tinyrack-illustration-fill-secondary"><path fill="var(--tinyrack-text)" style={{ stroke: 'var(--tinyrack-surface)' }} /><circle fill="white" /></svg>;`,
+    });
+    const violations = (await checkTinyrackProject({ root })).violations;
+    expect(
+      violations.filter(
+        (violation) => violation.ruleId === 'tokens/no-cross-role-svg-color',
+      ),
+    ).toHaveLength(6);
+    expect(
+      violations.filter((violation) => violation.ruleId === 'tokens/no-literal'),
+    ).toHaveLength(1);
+  });
+
+  it('allows illustration roles and meaningful status colors in SVGs', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/core.css";
+.art { --face: var(--tinyrack-illustration-fill-tertiary); fill: var(--face); stroke: var(--tinyrack-success); }`,
+      'src/app.tsx': `export const Art = () => <svg className="fill-tinyrack-illustration-detail stroke-tinyrack-illustration-stroke"><path fill="var(--tinyrack-illustration-shadow)" style={{ stroke: 'var(--tinyrack-success)' }} /></svg>;`,
+    });
+    expect((await checkTinyrackProject({ root })).violations).toEqual([]);
+  });
+
   it('scans nested production files and excludes nested tests', async () => {
     const root = project({
       'app/features/nested/view.tsx': `export const View = () => <div className="p-4" />;`,

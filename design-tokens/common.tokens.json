@@ -523,6 +523,19 @@
           }
         }
       },
+      "200": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8980392156862745, 0.8980392156862745, 0.8980392156862745],
+          "hex": "#e5e5e5"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#e5e5e5"
+          }
+        }
+      },
       "300": {
         "$type": "color",
         "$value": {

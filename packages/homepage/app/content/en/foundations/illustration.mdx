@@ -1,0 +1,76 @@
+---
+title: "Illustration"
+description: "Build theme-aware vector and isometric artwork from stable face, detail, stroke, and shadow roles."
+section: foundations
+order: 2
+---
+import { IllustrationExamples } from '../../../documentation/foundations/illustration-demo.js';
+
+## Choose roles by purpose
+
+Illustration colors describe the job of a shape, not a palette step. Use the same roles in light and dark themes; Tinyrack changes their values while preserving the visual hierarchy.
+
+| Role | Use |
+| --- | --- |
+| `illustrationFillPrimary` | The brightest, light-facing plane or main subject |
+| `illustrationFillSecondary` | Upper planes and supporting shapes |
+| `illustrationFillTertiary` | Side planes and recessed structure |
+| `illustrationDetail` | Panels, inactive indicators, dots, and small hardware |
+| `illustrationStroke` | Silhouettes and boundaries between planes |
+| `illustrationShadow` | Ground shadows and structures that visually recede |
+
+<IllustrationExamples locale="en" />
+
+For isometric artwork, keep one light direction across the scene. With light from the upper left, map the front or light-facing plane to primary, the top to secondary, and the darker side to tertiary. Use opaque face colors rather than opacity over an unrelated surface.
+
+## Web implementation
+
+Import `core.css`, then use CSS variables or the generated Tailwind color utilities.
+
+```tsx
+<svg aria-hidden="true" viewBox="0 0 120 96">
+  <path className="fill-tinyrack-illustration-fill-primary stroke-tinyrack-illustration-stroke" d="…" />
+  <path className="fill-tinyrack-illustration-fill-secondary stroke-tinyrack-illustration-stroke" d="…" />
+  <path className="fill-tinyrack-illustration-fill-tertiary stroke-tinyrack-illustration-stroke" d="…" />
+</svg>
+```
+
+```css
+.server-detail {
+  fill: var(--tinyrack-illustration-detail);
+}
+
+.server-shadow {
+  fill: var(--tinyrack-illustration-shadow);
+}
+```
+
+## Flutter implementation
+
+Read the dedicated extension inside a painter or widget. It is installed by both `TinyrackTheme.light()` and `TinyrackTheme.dark()`.
+
+```dart
+final illustration = context.tinyrackIllustrationTheme;
+
+canvas.drawPath(front, Paint()..color = illustration.fillPrimary);
+canvas.drawPath(top, Paint()..color = illustration.fillSecondary);
+canvas.drawPath(side, Paint()..color = illustration.fillTertiary);
+```
+
+## Meaning, motion, and accessibility
+
+- Keep status colors for meaning. A green LED may use `success`; a decorative green accent may not.
+- Use `illustrationDetail`, `illustrationStroke`, and `illustrationShadow` for their named jobs. Do not borrow text, border, control, or focus roles.
+- Mark decorative SVGs with `aria-hidden="true"`. Give meaningful SVGs `role="img"` and an accessible name.
+- Preserve the final state and remove decorative travel when `prefers-reduced-motion` is active.
+
+`tinyrack-ui-check` reports raw SVG colors, opacity-built faces, and cross-role fill or stroke usage. If a structural coordinate needs a literal, suppress only that line and state the reason.
+
+## Misuse to avoid
+
+- Do not use `border` as a darker face or `textMuted` as a side fill. Similar current values do not make their meanings interchangeable.
+- Do not create dark artwork by inverting light artwork or layering translucent black and white.
+- Do not change the light direction between objects in one scene.
+- Do not use status colors to make a neutral illustration more decorative.
+
+Continue with [Colors and themes](/en/foundations/colors/) for the complete semantic color reference and [Motion](/en/foundations/motion/) for animation timing.

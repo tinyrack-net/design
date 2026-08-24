@@ -74,6 +74,30 @@
         "$type": "color",
         "$value": "{palettes.neutral.600}"
       },
+      "illustrationFillPrimary": {
+        "$type": "color",
+        "$value": "{palettes.neutral.50}"
+      },
+      "illustrationFillSecondary": {
+        "$type": "color",
+        "$value": "{palettes.neutral.300}"
+      },
+      "illustrationFillTertiary": {
+        "$type": "color",
+        "$value": "{palettes.neutral.400}"
+      },
+      "illustrationDetail": {
+        "$type": "color",
+        "$value": "{palettes.neutral.500}"
+      },
+      "illustrationStroke": {
+        "$type": "color",
+        "$value": "{palettes.neutral.500}"
+      },
+      "illustrationShadow": {
+        "$type": "color",
+        "$value": "{palettes.neutral.900}"
+      },
       "primary": {
         "$type": "color",
         "$value": "{palettes.blue.400}"

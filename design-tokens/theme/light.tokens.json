@@ -83,6 +83,39 @@
         "$type": "color",
         "$value": "{palettes.neutral.100}"
       },
+      "illustrationFillPrimary": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
+      },
+      "illustrationFillSecondary": {
+        "$type": "color",
+        "$value": "{palettes.neutral.100}"
+      },
+      "illustrationFillTertiary": {
+        "$type": "color",
+        "$value": "{palettes.neutral.200}"
+      },
+      "illustrationDetail": {
+        "$type": "color",
+        "$value": "{palettes.neutral.400}"
+      },
+      "illustrationStroke": {
+        "$type": "color",
+        "$value": "{palettes.neutral.400}"
+      },
+      "illustrationShadow": {
+        "$type": "color",
+        "$value": "{palettes.neutral.100}"
+      },
       "primary": {
         "$type": "color",
         "$value": "{palettes.blue.700}"
