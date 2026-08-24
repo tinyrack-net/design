@@ -151,6 +151,21 @@ void main() {
     );
   });
 
+  test('light and dark themes expose illustration roles', () {
+    for (final (theme, generated) in <(ThemeData, TRGeneratedColorTheme)>[
+      (TinyrackTheme.light(), TRGeneratedColors.light),
+      (TinyrackTheme.dark(), TRGeneratedColors.dark),
+    ]) {
+      final illustration = theme.extension<TinyrackIllustrationThemeData>()!;
+      expect(illustration.fillPrimary, generated.illustrationFillPrimary);
+      expect(illustration.fillSecondary, generated.illustrationFillSecondary);
+      expect(illustration.fillTertiary, generated.illustrationFillTertiary);
+      expect(illustration.detail, generated.illustrationDetail);
+      expect(illustration.stroke, generated.illustrationStroke);
+      expect(illustration.shadow, generated.illustrationShadow);
+    }
+  });
+
   test('themes map Material color roles onto Tinyrack tokens', () {
     final themes =
         <(ThemeData, TRGeneratedColorTheme, TRGeneratedColorTheme, bool)>[

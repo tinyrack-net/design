@@ -21,6 +21,12 @@ final class TRGeneratedColorTheme {
     required this.borderInverse,
     required this.skeletonFill,
     required this.skeletonHighlight,
+    required this.illustrationFillPrimary,
+    required this.illustrationFillSecondary,
+    required this.illustrationFillTertiary,
+    required this.illustrationDetail,
+    required this.illustrationStroke,
+    required this.illustrationShadow,
     required this.primary,
     required this.primaryHover,
     required this.primaryPressed,
@@ -82,6 +88,12 @@ final class TRGeneratedColorTheme {
   final Color borderInverse;
   final Color skeletonFill;
   final Color skeletonHighlight;
+  final Color illustrationFillPrimary;
+  final Color illustrationFillSecondary;
+  final Color illustrationFillTertiary;
+  final Color illustrationDetail;
+  final Color illustrationStroke;
+  final Color illustrationShadow;
   final Color primary;
   final Color primaryHover;
   final Color primaryPressed;
@@ -145,6 +157,12 @@ abstract final class TRGeneratedColors {
     borderInverse: Color(0xffa3a3a3),
     skeletonFill: Color(0xffd4d4d4),
     skeletonHighlight: Color(0xfff5f5f5),
+    illustrationFillPrimary: Color(0xffffffff),
+    illustrationFillSecondary: Color(0xfff5f5f5),
+    illustrationFillTertiary: Color(0xffe5e5e5),
+    illustrationDetail: Color(0xffa3a3a3),
+    illustrationStroke: Color(0xffa3a3a3),
+    illustrationShadow: Color(0xfff5f5f5),
     primary: Color(0xff1d4ed8),
     primaryHover: Color(0xff1e40af),
     primaryPressed: Color(0xff1e3a8a),
@@ -207,6 +225,12 @@ abstract final class TRGeneratedColors {
     borderInverse: Color(0xff737373),
     skeletonFill: Color(0xff404040),
     skeletonHighlight: Color(0xff525252),
+    illustrationFillPrimary: Color(0xfffafafa),
+    illustrationFillSecondary: Color(0xffd4d4d4),
+    illustrationFillTertiary: Color(0xffa3a3a3),
+    illustrationDetail: Color(0xff737373),
+    illustrationStroke: Color(0xff737373),
+    illustrationShadow: Color(0xff171717),
     primary: Color(0xff60a5fa),
     primaryHover: Color(0xff93c5fd),
     primaryPressed: Color(0xffbfdbfe),

@@ -1,0 +1,76 @@
+---
+title: "イラストレーション"
+description: "面、ディテール、輪郭線、影のロールで、テーマに対応するベクターとアイソメトリックを作ります。"
+section: foundations
+order: 2
+---
+import { IllustrationExamples } from '../../../documentation/foundations/illustration-demo.js';
+
+## 目的に合わせてロールを選ぶ
+
+イラストレーションのカラーは、パレットの段階ではなく図形の役割を表します。ライトテーマとダークテーマで同じロールを使ってください。Tinyrack が視覚的な階層を保ちながら実際の値を切り替えます。
+
+| ロール | 用途 |
+| --- | --- |
+| `illustrationFillPrimary` | 最も明るく光を受ける面、または主要な対象 |
+| `illustrationFillSecondary` | 上面と補助的な図形 |
+| `illustrationFillTertiary` | 側面と奥に下がった構造 |
+| `illustrationDetail` | パネル、非アクティブな表示灯、点、小さな部品 |
+| `illustrationStroke` | シルエットと面同士の境界 |
+| `illustrationShadow` | 接地する影と視覚的に後退する構造 |
+
+<IllustrationExamples locale="ja" />
+
+アイソメトリックでは、シーン全体で光源の方向を統一してください。左上から光が当たる場合、正面または光を受ける面を primary、上面を secondary、暗い側面を tertiary に割り当てます。無関係な背景の上に opacity を重ねず、不透明な面のカラーを使ってください。
+
+## Web での実装
+
+`core.css` を読み込み、CSS 変数または生成済みの Tailwind カラーユーティリティを使います。
+
+```tsx
+<svg aria-hidden="true" viewBox="0 0 120 96">
+  <path className="fill-tinyrack-illustration-fill-primary stroke-tinyrack-illustration-stroke" d="…" />
+  <path className="fill-tinyrack-illustration-fill-secondary stroke-tinyrack-illustration-stroke" d="…" />
+  <path className="fill-tinyrack-illustration-fill-tertiary stroke-tinyrack-illustration-stroke" d="…" />
+</svg>
+```
+
+```css
+.server-detail {
+  fill: var(--tinyrack-illustration-detail);
+}
+
+.server-shadow {
+  fill: var(--tinyrack-illustration-shadow);
+}
+```
+
+## Flutter での実装
+
+painter やウィジェットから専用 extension を参照します。`TinyrackTheme.light()` と `TinyrackTheme.dark()` の両方がこの extension を設定します。
+
+```dart
+final illustration = context.tinyrackIllustrationTheme;
+
+canvas.drawPath(front, Paint()..color = illustration.fillPrimary);
+canvas.drawPath(top, Paint()..color = illustration.fillSecondary);
+canvas.drawPath(side, Paint()..color = illustration.fillTertiary);
+```
+
+## 意味、モーション、アクセシビリティ
+
+- ステータスカラーは意味がある場合だけ使ってください。緑の LED は `success` を使えますが、装飾的な緑のアクセントには使えません。
+- `illustrationDetail`、`illustrationStroke`、`illustrationShadow` を名前どおりの用途に使ってください。text、border、control、focus のロールを流用しないでください。
+- 装飾用 SVG には `aria-hidden="true"` を指定します。意味のある SVG には `role="img"` とアクセシブルな名前を付けてください。
+- `prefers-reduced-motion` が有効な場合は、最終状態を保ちながら装飾的な移動を取り除いてください。
+
+`tinyrack-ui-check` は、生の SVG カラー、opacity で作った面、ロールをまたいだ fill と stroke を報告します。構造上の座標にリテラルが必要な場合は、該当行だけを具体的な理由とともに抑制してください。
+
+## 避ける使い方
+
+- `border` を暗い面に使ったり、`textMuted` を側面の塗りに使ったりしないでください。現在の値が似ていても、意味を置き換えることはできません。
+- ライト用のイラストを反転したり、半透明の黒と白を重ねたりしてダーク用を作らないでください。
+- 1 つのシーン内でオブジェクトごとに光源の方向を変えないでください。
+- ニュートラルなイラストを飾るためにステータスカラーを使わないでください。
+
+セマンティックカラーの全体像は[カラーとテーマ](/ja/foundations/colors/)で、アニメーションの時間は[モーション](/ja/foundations/motion/)で確認してください。

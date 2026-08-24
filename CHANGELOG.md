@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.26.0
 
 ### Fixed
 
@@ -28,6 +28,14 @@
 
 ### Added
 
+- Added six theme-aware illustration color roles for primary, secondary, and
+  tertiary faces, details, strokes, and shadows. They are available from the
+  Web token export, CSS variables, and Tailwind color utilities. The new
+  Illustration foundation documents general vector and isometric composition
+  in English, Korean, and Japanese.
+- `tinyrack-ui-check` now audits CSS, JSX, inline styles, Tailwind utilities,
+  and local CSS variable aliases for SVG fill and stroke roles. Raw colors and
+  text, border, control, focus, or mismatched illustration roles fail the check.
 - Added `TRVirtualList<T, K>` at `@tinyrack/ui/components/virtual-list` for
   stable-key vertical and horizontal virtualization. It includes controller
   navigation and snapshots, dynamic `ResizeObserver` measurement, visible-anchor

@@ -166,6 +166,16 @@
   --color-tinyrack-border-inverse: var(--tinyrack-border-inverse);
   --color-tinyrack-skeleton-fill: var(--tinyrack-skeleton-fill);
   --color-tinyrack-skeleton-highlight: var(--tinyrack-skeleton-highlight);
+  --color-tinyrack-illustration-fill-primary: var(--tinyrack-illustration-fill-primary);
+  --color-tinyrack-illustration-fill-secondary: var(
+    --tinyrack-illustration-fill-secondary
+  );
+  --color-tinyrack-illustration-fill-tertiary: var(
+    --tinyrack-illustration-fill-tertiary
+  );
+  --color-tinyrack-illustration-detail: var(--tinyrack-illustration-detail);
+  --color-tinyrack-illustration-stroke: var(--tinyrack-illustration-stroke);
+  --color-tinyrack-illustration-shadow: var(--tinyrack-illustration-shadow);
   --color-tinyrack-primary: var(--tinyrack-primary);
   --color-tinyrack-primary-hover: var(--tinyrack-primary-hover);
   --color-tinyrack-primary-pressed: var(--tinyrack-primary-pressed);

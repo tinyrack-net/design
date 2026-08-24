@@ -38,6 +38,12 @@ const semanticColorNames = [
   'borderInverse',
   'skeletonFill',
   'skeletonHighlight',
+  'illustrationFillPrimary',
+  'illustrationFillSecondary',
+  'illustrationFillTertiary',
+  'illustrationDetail',
+  'illustrationStroke',
+  'illustrationShadow',
   'primary',
   'primaryHover',
   'primaryPressed',
@@ -126,7 +132,22 @@ describe('tinyrack design tokens', () => {
   it('provides exactly the public light and dark functional colors', () => {
     for (const mode of ['light', 'dark'] as const) {
       expect(Object.keys(tinyrackSemanticColors[mode])).toEqual(semanticColorNames);
-      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(59);
+      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(65);
+    }
+  });
+
+  it('keeps illustration faces ordered from light to dark in both themes', () => {
+    for (const semanticColors of Object.values(tinyrackSemanticColors)) {
+      const luminance = [
+        semanticColors.illustrationFillPrimary,
+        semanticColors.illustrationFillSecondary,
+        semanticColors.illustrationFillTertiary,
+      ].map(relativeLuminance);
+      expect(luminance[0]).toBeGreaterThan(luminance[1] ?? 0);
+      expect(luminance[1]).toBeGreaterThan(luminance[2] ?? 0);
+      expect(
+        relativeLuminance(semanticColors.illustrationFillTertiary),
+      ).toBeGreaterThan(relativeLuminance(semanticColors.border));
     }
   });
 
@@ -141,6 +162,7 @@ describe('tinyrack design tokens', () => {
     expect(Object.keys(tinyrackPalettes.neutral)).toEqual([
       '50',
       '100',
+      '200',
       '300',
       '400',
       '500',

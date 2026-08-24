@@ -37,7 +37,7 @@ describe('static documentation output', () => {
   });
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
-    expect(staticDocumentRoutes).toHaveLength(450);
+    expect(staticDocumentRoutes).toHaveLength(453);
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();
@@ -64,6 +64,7 @@ describe('static documentation output', () => {
     }
     for (const locale of ['en', 'ko', 'ja']) {
       for (const contentKey of [
+        '/foundations/illustration',
         '/foundations/accessibility',
         '/foundations/logo',
         '/foundations/app-icons',

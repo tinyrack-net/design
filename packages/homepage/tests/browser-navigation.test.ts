@@ -229,6 +229,56 @@ describe('built React Router documentation', () => {
     }
   });
 
+  it('renders illustration roles in both themes without mobile overflow', async () => {
+    for (const theme of ['tinyrack-light', 'tinyrack-dark'] as const) {
+      const page = await browser.newPage({ viewport: { height: 844, width: 390 } });
+      try {
+        await setTheme(page, theme);
+        await gotoHydrated(page, `${origin}/en/foundations/illustration`);
+
+        await expectVisible(
+          page.getByRole('img', {
+            name: 'General vector illustration using the six illustration roles',
+          }),
+        );
+        await expectVisible(
+          page.getByRole('img', {
+            name: 'Isometric server with a consistent upper-left light source',
+          }),
+        );
+        const fill = await page
+          .locator(
+            '[data-illustration-foundation] [class~="fill-tinyrack-illustration-fill-primary"]',
+          )
+          .first()
+          .evaluate((element) => getComputedStyle(element).fill);
+        const token = await page.evaluate(() => {
+          const root = getComputedStyle(document.documentElement);
+          const probe = document.createElement('span');
+          probe.style.color = root.getPropertyValue(
+            '--tinyrack-illustration-fill-primary',
+          );
+          document.body.append(probe);
+          const value = getComputedStyle(probe).color;
+          probe.remove();
+          return value;
+        });
+        expect(fill).toBe(token);
+        const documentWidth = await page
+          .locator('[data-illustration-foundation]')
+          .evaluate(() => ({
+            clientWidth: document.documentElement.clientWidth,
+            scrollWidth: document.documentElement.scrollWidth,
+          }));
+        expect(documentWidth.scrollWidth).toBeLessThanOrEqual(
+          documentWidth.clientWidth + 1,
+        );
+      } finally {
+        await page.close();
+      }
+    }
+  });
+
   it('searches documentation with Pagefind and persists theme selection', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     const pagefindRequests: string[] = [];

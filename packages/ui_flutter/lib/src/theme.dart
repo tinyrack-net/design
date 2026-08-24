@@ -254,10 +254,79 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
   }
 }
 
+/// Semantic colors for theme-aware vector and isometric illustrations.
+@immutable
+final class TinyrackIllustrationThemeData
+    extends ThemeExtension<TinyrackIllustrationThemeData> {
+  const TinyrackIllustrationThemeData({
+    required this.fillPrimary,
+    required this.fillSecondary,
+    required this.fillTertiary,
+    required this.detail,
+    required this.stroke,
+    required this.shadow,
+  });
+
+  factory TinyrackIllustrationThemeData._generated(
+    TRGeneratedColorTheme colors,
+  ) => TinyrackIllustrationThemeData(
+    fillPrimary: colors.illustrationFillPrimary,
+    fillSecondary: colors.illustrationFillSecondary,
+    fillTertiary: colors.illustrationFillTertiary,
+    detail: colors.illustrationDetail,
+    stroke: colors.illustrationStroke,
+    shadow: colors.illustrationShadow,
+  );
+
+  final Color fillPrimary;
+  final Color fillSecondary;
+  final Color fillTertiary;
+  final Color detail;
+  final Color stroke;
+  final Color shadow;
+
+  @override
+  TinyrackIllustrationThemeData copyWith({
+    Color? fillPrimary,
+    Color? fillSecondary,
+    Color? fillTertiary,
+    Color? detail,
+    Color? stroke,
+    Color? shadow,
+  }) => TinyrackIllustrationThemeData(
+    fillPrimary: fillPrimary ?? this.fillPrimary,
+    fillSecondary: fillSecondary ?? this.fillSecondary,
+    fillTertiary: fillTertiary ?? this.fillTertiary,
+    detail: detail ?? this.detail,
+    stroke: stroke ?? this.stroke,
+    shadow: shadow ?? this.shadow,
+  );
+
+  @override
+  TinyrackIllustrationThemeData lerp(
+    covariant TinyrackIllustrationThemeData? other,
+    double t,
+  ) {
+    if (other == null) return this;
+    return TinyrackIllustrationThemeData(
+      fillPrimary: Color.lerp(fillPrimary, other.fillPrimary, t)!,
+      fillSecondary: Color.lerp(fillSecondary, other.fillSecondary, t)!,
+      fillTertiary: Color.lerp(fillTertiary, other.fillTertiary, t)!,
+      detail: Color.lerp(detail, other.detail, t)!,
+      stroke: Color.lerp(stroke, other.stroke, t)!,
+      shadow: Color.lerp(shadow, other.shadow, t)!,
+    );
+  }
+}
+
 /// Accesses Tinyrack semantic colors from a build context.
 extension TinyrackThemeContext on BuildContext {
   TinyrackThemeData get tinyrackTheme =>
       Theme.of(this).extension<TinyrackThemeData>()!;
+
+  /// Theme-aware colors for vector and isometric illustrations.
+  TinyrackIllustrationThemeData get tinyrackIllustrationTheme =>
+      Theme.of(this).extension<TinyrackIllustrationThemeData>()!;
 }
 
 /// Creates complete Material 3 themes backed by Tinyrack tokens.
@@ -274,6 +343,7 @@ abstract final class TinyrackTheme {
     // background, so the other mode's accent is the only one legible on it.
     final inverted = isLight ? TRGeneratedColors.dark : TRGeneratedColors.light;
     final colors = TinyrackThemeData._generated(generated);
+    final illustration = TinyrackIllustrationThemeData._generated(generated);
     final textTheme = _textTheme(colors);
     // Every role Material reads must resolve to a token. An omitted role falls
     // back through `onBackground` to `onSurface` or to `surface`, which paints
@@ -333,7 +403,7 @@ abstract final class TinyrackTheme {
       // the legacy divider path a heavier tone than the Material 3 `Divider`.
       // Pin both to the same token `TRSeparator` uses.
       dividerColor: generated.border,
-      extensions: [colors],
+      extensions: [colors, illustration],
       fontFamily: TRGeneratedFontFamilies.body,
       fontFamilyFallback: TRGeneratedFontFamilies.fallback,
       scaffoldBackgroundColor: colors.surface,
