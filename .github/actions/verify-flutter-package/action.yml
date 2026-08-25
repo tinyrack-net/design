@@ -1,10 +1,13 @@
 name: Verify Flutter package
 description: >-
-  Set up Flutter and run the tinyrack_ui format, analyze, test, and publish
-  archive checks. Shared by pull request CI and the pub.dev publish workflow so
-  both gates stay identical.
+  Set up Flutter and run the tinyrack_ui format, analyze, and test checks. Full
+  mode also validates the publish archive and analyzer compatibility consumer.
 
 inputs:
+  mode:
+    description: Run fast PR checks or the complete merge and release checks.
+    required: false
+    default: full
   flutter-version:
     description: Flutter SDK version to install.
     required: false
@@ -17,6 +20,16 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Validate verification mode
+      shell: bash
+      env:
+        VERIFICATION_MODE: ${{ inputs.mode }}
+      run: |
+        if [[ "$VERIFICATION_MODE" != "fast" && "$VERIFICATION_MODE" != "full" ]]; then
+          echo "::error::Unknown Flutter verification mode: $VERIFICATION_MODE"
+          exit 2
+        fi
+
     - name: Set up Flutter
       uses: ./.github/actions/setup-flutter
       with:
@@ -32,7 +45,29 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: dart format --output=none --set-exit-if-changed lib test example/lib
 
+    - name: Analyze and test the package in parallel
+      if: inputs.mode == 'fast'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        analyze_status=0
+        test_status=0
+
+        flutter analyze &
+        analyze_pid=$!
+        flutter test &
+        test_pid=$!
+
+        wait "$analyze_pid" || analyze_status=$?
+        wait "$test_pid" || test_status=$?
+
+        if (( analyze_status != 0 || test_status != 0 )); then
+          echo "::error::Fast Flutter verification failed (analyze=$analyze_status test=$test_status)"
+          exit 1
+        fi
+
     - name: Analyze, test, and validate the package archive in parallel
+      if: inputs.mode == 'full'
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
@@ -55,3 +90,11 @@ runs:
           echo "::error::Flutter verification failed (analyze=$analyze_status test=$test_status publish=$publish_status)"
           exit 1
         fi
+
+    - name: Verify the analyzer 12 consumer
+      if: inputs.mode == 'full'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}/test/analyzer_12_consumer
+      run: |
+        flutter pub get
+        dart run tinyrack_ui:tinyrack_ui_check --root .

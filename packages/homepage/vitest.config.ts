@@ -49,6 +49,19 @@ export default defineConfig({
       },
       {
         test: {
+          name: 'e2e-smoke',
+          environment: 'node',
+          hookTimeout: 30_000,
+          include: [
+            'tests/browser-overlays.test.ts',
+            'tests/build-assets.test.ts',
+            'tests/ssg.test.ts',
+          ],
+          testTimeout: 120_000,
+        },
+      },
+      {
+        test: {
           name: 'e2e-flutter-dev',
           environment: 'node',
           hookTimeout: 180_000,

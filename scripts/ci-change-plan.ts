@@ -23,7 +23,7 @@ const emptyPlan = (): CiChangePlan => ({
   ui: false,
 });
 
-const fullPlan = (): CiChangePlan => ({
+export const fullPlan = (): CiChangePlan => ({
   docs: true,
   docs_contract: true,
   flutter: true,
@@ -161,12 +161,15 @@ function writeOutputs(plan: CiChangePlan) {
 }
 
 function main() {
+  const forceFull = process.argv.includes('--full');
   const base = argument('--base');
   const head = argument('--head') ?? 'HEAD';
   let plan: CiChangePlan;
 
   try {
-    if (base === undefined || /^0+$/.test(base)) {
+    if (forceFull) {
+      plan = fullPlan();
+    } else if (base === undefined || /^0+$/.test(base)) {
       const fallback = spawnSync('git', ['rev-parse', `${head}^`], {
         encoding: 'utf8',
       });
