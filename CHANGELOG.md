@@ -1,5 +1,20 @@
 # Changelog
 
+## @tinyrack/ui 0.26.1 / @tinyrack/docs 0.20.0
+
+### Fixed
+
+- Restored unordered-list bullets in React MDX after Tailwind preflight removes
+  native markers. Ordered lists keep decimal markers and task lists remain
+  markerless.
+
+### Added
+
+- Restored the reusable static-site entrypoints for sites that own their React
+  Router shell: SEO and feed helpers under `@tinyrack/docs/site`, sitemap/feed
+  asset generation under `@tinyrack/docs/vite`, and static 404 finalization
+  under `@tinyrack/docs/react-router`.
+
 ## 0.26.0
 
 ### Fixed

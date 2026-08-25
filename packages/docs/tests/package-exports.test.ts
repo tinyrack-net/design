@@ -19,6 +19,11 @@ const sourceExports = {
     types: './dist/entrypoints/runtime.d.ts',
     import: './dist/entrypoints/runtime.js',
   },
+  './site': {
+    '@tinyrack/source': './src/entrypoints/site.ts',
+    types: './dist/entrypoints/site.d.ts',
+    import: './dist/entrypoints/site.js',
+  },
   './vite': {
     '@tinyrack/source': './src/entrypoints/vite.ts',
     types: './dist/entrypoints/vite.d.ts',
@@ -43,6 +48,10 @@ const publishedExports = {
   './runtime': {
     types: './dist/entrypoints/runtime.d.ts',
     import: './dist/entrypoints/runtime.js',
+  },
+  './site': {
+    types: './dist/entrypoints/site.d.ts',
+    import: './dist/entrypoints/site.js',
   },
   './vite': {
     types: './dist/entrypoints/vite.d.ts',
@@ -148,7 +157,7 @@ describe('@tinyrack/docs entrypoints boundary', () => {
     resolve(import.meta.dirname, '..', relativePath);
   const readSource = (relativePath: string) => readFileSync(abs(relativePath), 'utf8');
 
-  const publicAreas = ['config', 'react-router', 'runtime', 'vite'] as const;
+  const publicAreas = ['config', 'react-router', 'runtime', 'site', 'vite'] as const;
 
   it('routes every public subpath through the entrypoints directory', () => {
     for (const target of [
@@ -186,15 +195,7 @@ describe('@tinyrack/docs entrypoints boundary', () => {
         'isDocsHighlightLanguage',
         'isDocsHighlightTheme',
       ],
-      'src/entrypoints/react-router.ts': [
-        'finalizeStaticSiteBuild',
-        'StaticSiteNotFoundStrategy',
-      ],
-      'src/entrypoints/vite.ts': [
-        'tinyrackSiteAssets',
-        'createSiteAssetSources',
-        'docsManifestModuleId',
-      ],
+      'src/entrypoints/vite.ts': ['docsManifestModuleId'],
     };
 
     for (const [file, symbols] of Object.entries(removedBySymbol)) {
@@ -205,8 +206,13 @@ describe('@tinyrack/docs entrypoints boundary', () => {
     }
   });
 
-  it('no longer exposes the non-documentation-site subpath', () => {
-    expect('./site' in packageJson.exports).toBe(false);
-    expect('./site' in packageJson.publishConfig.exports).toBe(false);
+  it('exposes reusable static-site primitives through stable entrypoints', () => {
+    expect(readSource('src/entrypoints/site.ts')).toContain('createSiteMeta');
+    expect(readSource('src/entrypoints/vite.ts')).toContain('tinyrackSiteAssets');
+    expect(readSource('src/entrypoints/react-router.ts')).toContain(
+      'finalizeStaticSiteBuild',
+    );
+    expect('./site' in packageJson.exports).toBe(true);
+    expect('./site' in packageJson.publishConfig.exports).toBe(true);
   });
 });
