@@ -115,6 +115,12 @@ describe('@tinyrack/ui test commands', () => {
     const rootPackage = JSON.parse(
       readFileSync(resolve(import.meta.dirname, '../../../../package.json'), 'utf8'),
     ) as { scripts: Record<string, string> };
+    const homepagePackage = JSON.parse(
+      readFileSync(
+        resolve(import.meta.dirname, '../../../homepage/package.json'),
+        'utf8',
+      ),
+    ) as { scripts: Record<string, string> };
     const ci = readFileSync(
       resolve(import.meta.dirname, '../../../../.github/workflows/ci.yml'),
       'utf8',
@@ -139,11 +145,12 @@ describe('@tinyrack/ui test commands', () => {
     expect(ci).toContain('name: UI Firefox');
     expect(ci).toContain('name: UI Virtual List WebKit');
     expect(ci).toContain('pnpm --filter @tinyrack/ui test:webkit:virtual-list');
-    expect(ci).toContain(`UI_FIREFOX_RESULT: \${{ needs.ui_firefox.result }}`);
-    expect(ci).toContain(`UI_WEBKIT_RESULT: \${{ needs.ui_webkit.result }}`);
+    expect(ci).toContain('- ui_firefox');
+    expect(ci).toContain('- ui_webkit');
+    expect(ci).toContain(`QUALITY_RESULTS: \${{ toJSON(needs) }}`);
     expect(ci).not.toContain('playwright install --with-deps');
     expect(ci).toContain('pnpm --filter @tinyrack/docs test:prepared');
-    expect(ci).toContain('pnpm --filter @tinyrack/homepage test:prepared');
+    expect(homepagePackage.scripts['test:ci-full']).toBe('pnpm test:prepared');
   });
 
   it('caches Playwright browsers and the pub cache behind shared actions', () => {
@@ -220,7 +227,10 @@ describe('@tinyrack/ui test commands', () => {
     );
     expect(ci).toMatch(/name: ui-docs-runtime\s+path: packages/);
     expect(ci).toMatch(
-      /name: Homepage package[\s\S]*--filter tinyrack-ui-workspace[\s\S]*--filter @tinyrack\/homepage\.\.\.[\s\S]*name: Check workspace quality/,
+      /name: Linux quality checks[\s\S]*--filter tinyrack-ui-workspace[\s\S]*name: Check workspace quality/,
+    );
+    expect(ci).toMatch(
+      /name: Homepage package[\s\S]*--filter @tinyrack\/homepage\.\.\.[\s\S]*name: Test Homepage package/,
     );
     expect(publishUi).toContain(
       'pnpm --filter @tinyrack/ui... install --frozen-lockfile',
