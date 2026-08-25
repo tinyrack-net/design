@@ -1,0 +1,76 @@
+name: Deploy homepage
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-homepage
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Plan homepage deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      homepage: ${{ steps.plan.outputs.homepage }}
+
+    steps:
+      - name: Check out repository history
+        uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Classify affected packages
+        id: plan
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: node scripts/ci-change-plan.ts --base "$BASE_SHA" --head "$HEAD_SHA"
+
+  deploy:
+    name: Build and deploy homepage
+    if: needs.changes.outputs.homepage == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Install Homepage dependencies
+        run: pnpm --filter @tinyrack/homepage... install --frozen-lockfile
+
+      - name: Build Web packages
+        run: |
+          pnpm --filter @tinyrack/ui build
+          pnpm --filter @tinyrack/docs build
+
+      - name: Set up Flutter
+        uses: ./.github/actions/setup-flutter
+
+      - name: Build Flutter preview
+        run: |
+          pnpm run tokens:check
+          pnpm run flutter:preview:build
+
+      - name: Build Homepage
+        run: |
+          pnpm --filter @tinyrack/homepage build
+          pnpm run flutter:preview:budget
+
+      - name: Deploy Homepage to Cloudflare Workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm run docs:deploy

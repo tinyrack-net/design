@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { afterEach, describe, it } from 'node:test';
-import { classifyChangedPaths } from './ci-change-plan.ts';
+import { classifyChangedPaths, fullPlan } from './ci-change-plan.ts';
 
 const temporaryRepositories: string[] = [];
 
@@ -43,13 +43,22 @@ function commitFile(repository: string, path: string, contents: string) {
   return git(repository, 'rev-parse', 'HEAD');
 }
 
-function runCli(repository: string, base: string, head: string) {
+function runCli(
+  repository: string,
+  base: string,
+  head: string,
+  ...arguments_: string[]
+) {
   const script = resolve(import.meta.dirname, 'ci-change-plan.ts');
   return JSON.parse(
-    execFileSync(process.execPath, [script, '--base', base, '--head', head], {
-      cwd: repository,
-      encoding: 'utf8',
-    }),
+    execFileSync(
+      process.execPath,
+      [script, '--base', base, '--head', head, ...arguments_],
+      {
+        cwd: repository,
+        encoding: 'utf8',
+      },
+    ),
   );
 }
 
@@ -153,6 +162,13 @@ describe('CI change classification', () => {
 });
 
 describe('CI change range resolution', () => {
+  it('forces the complete matrix without reading the diff', () => {
+    const repository = createRepository();
+    const head = commitFile(repository, 'README.md', 'documentation only');
+
+    assert.deepEqual(runCli(repository, 'missing-base', head, '--full'), fullPlan());
+  });
+
   it('uses explicit PR and push SHAs, including rename and deletion paths', () => {
     const repository = createRepository();
     const base = commitFile(repository, 'packages/docs/old.ts', 'old docs');

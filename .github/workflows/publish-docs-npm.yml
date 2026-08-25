@@ -47,7 +47,8 @@ jobs:
 
       - name: Test package
         run: |
-          export TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
+          TINYRACK_UI_TARBALL="$(realpath .tmp/prebuilt/*.tgz)"
+          export TINYRACK_UI_TARBALL
           pnpm --filter @tinyrack/docs test
 
       - name: Publish package to npm
