@@ -1,6 +1,6 @@
 {
   "name": "@tinyrack/docs",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "React Router documentation framework for Tinyrack projects.",
   "keywords": [
     "documentation",
@@ -101,6 +101,11 @@
       "types": "./dist/entrypoints/runtime.d.ts",
       "import": "./dist/entrypoints/runtime.js"
     },
+    "./site": {
+      "@tinyrack/source": "./src/entrypoints/site.ts",
+      "types": "./dist/entrypoints/site.d.ts",
+      "import": "./dist/entrypoints/site.js"
+    },
     "./vite": {
       "@tinyrack/source": "./src/entrypoints/vite.ts",
       "types": "./dist/entrypoints/vite.d.ts",
@@ -126,6 +131,10 @@
       "./runtime": {
         "types": "./dist/entrypoints/runtime.d.ts",
         "import": "./dist/entrypoints/runtime.js"
+      },
+      "./site": {
+        "types": "./dist/entrypoints/site.d.ts",
+        "import": "./dist/entrypoints/site.js"
       },
       "./vite": {
         "types": "./dist/entrypoints/vite.d.ts",

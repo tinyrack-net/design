@@ -189,6 +189,22 @@ export const packedUiContract = {
 `,
   );
   write(
+    join(root, 'app/static-site-contract.ts'),
+    `import { finalizeStaticSiteBuild } from '@tinyrack/docs/react-router';
+import { createRss, createSiteMeta, createSitemap } from '@tinyrack/docs/site';
+import { createSiteAssetSources, tinyrackSiteAssets } from '@tinyrack/docs/vite';
+
+export const packedStaticSiteContract = {
+  createRss,
+  createSiteAssetSources,
+  createSiteMeta,
+  createSitemap,
+  finalizeStaticSiteBuild,
+  tinyrackSiteAssets,
+};
+`,
+  );
+  write(
     join(root, 'app/env.d.ts'),
     `/// <reference types="vite/client" />
 

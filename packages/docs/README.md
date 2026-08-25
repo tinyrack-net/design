@@ -16,6 +16,22 @@ pnpm add --save-dev @react-router/dev @tailwindcss/vite tailwindcss vite
 
 Node.js 24 or newer is required.
 
+## Static-site primitives
+
+Sites that provide their own React Router shell can use the package's reusable
+SEO and static-build primitives without adopting the documentation shell:
+
+```ts
+import { finalizeStaticSiteBuild } from '@tinyrack/docs/react-router';
+import { createRss, createSiteMeta, createSitemap } from '@tinyrack/docs/site';
+import { tinyrackSiteAssets } from '@tinyrack/docs/vite';
+```
+
+`tinyrackSiteAssets` emits sitemap, robots, and configured feed assets during
+the Vite client build. `finalizeStaticSiteBuild` turns React Router's SPA
+fallback into `404.html`; the `site` entrypoint provides the corresponding SEO,
+RSS, sitemap, robots, and asset URL helpers.
+
 ## Agent skill
 
 The package includes a version-matched consumer skill. To install or update

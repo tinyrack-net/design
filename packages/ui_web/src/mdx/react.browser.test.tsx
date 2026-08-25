@@ -3,8 +3,7 @@ import '../components/code/code.css';
 import '../components/form/form.css';
 import '../components/link/link.css';
 import '../components/table/table.css';
-import '../core/core.css';
-import './mdx.css';
+import './mdx.browser.css';
 import type { ComponentType, ReactNode } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
@@ -71,6 +70,35 @@ test('React MDX renderer exposes the full CommonMark and GFM component map', () 
   expect(Object.keys(tinyrackMdxComponents).sort()).toEqual(
     ['wrapper', ...markdownComponentKeys, ...gfmComponentKeys].sort(),
   );
+});
+
+test('React MDX renderer restores semantic list markers after Tailwind preflight', async () => {
+  const Wrapper = mdxComponent('wrapper');
+  const List = mdxComponent('ul');
+  const OrderedList = mdxComponent('ol');
+  const ListItem = mdxComponent('li');
+
+  await render(
+    <Wrapper>
+      <List data-list="unordered">
+        <ListItem>Bullet</ListItem>
+      </List>
+      <OrderedList data-list="ordered">
+        <ListItem>Number</ListItem>
+      </OrderedList>
+      <List className="contains-task-list" data-list="task">
+        <ListItem className="task-list-item">Task</ListItem>
+      </List>
+    </Wrapper>,
+  );
+
+  const unordered = document.querySelector<HTMLElement>('[data-list="unordered"]');
+  const ordered = document.querySelector<HTMLElement>('[data-list="ordered"]');
+  const task = document.querySelector<HTMLElement>('[data-list="task"]');
+
+  expect(getComputedStyle(unordered as HTMLElement).listStyleType).toBe('disc');
+  expect(getComputedStyle(ordered as HTMLElement).listStyleType).toBe('decimal');
+  expect(getComputedStyle(task as HTMLElement).listStyleType).toBe('none');
 });
 
 test('React MDX renderer maps inline code, fenced code, and tables to Tinyrack contracts', async () => {
