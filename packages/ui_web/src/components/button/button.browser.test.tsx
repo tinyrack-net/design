@@ -33,6 +33,15 @@ function contrastRatio(foreground: string, background: string) {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+function resolveColor(value: string) {
+  const probe = document.createElement('span');
+  probe.style.color = value;
+  document.body.append(probe);
+  const resolved = getComputedStyle(probe).color;
+  probe.remove();
+  return resolved;
+}
+
 test('renders Base UI behavior through the Tinyrack button contract', async () => {
   const ref = createRef<HTMLButtonElement>();
   const onClick = vi.fn();
@@ -318,29 +327,86 @@ test.each(['tinyrack-light', 'tinyrack-dark'] as const)(
     const expected =
       theme === 'tinyrack-light'
         ? {
-            danger: 'rgb(185, 28, 28)',
+            dangerForeground: 'rgb(185, 28, 28)',
             dangerBorder: 'rgb(220, 38, 38)',
             onPrimary: 'rgb(255, 255, 255)',
             primary: 'rgb(29, 78, 216)',
             textMuted: 'rgb(82, 82, 82)',
           }
         : {
-            danger: 'rgb(248, 113, 113)',
+            dangerForeground: 'rgb(248, 113, 113)',
             dangerBorder: 'rgb(248, 113, 113)',
-            onPrimary: 'rgb(23, 37, 84)',
-            primary: 'rgb(96, 165, 250)',
+            onPrimary: 'rgb(255, 255, 255)',
+            primary: 'rgb(29, 78, 216)',
             textMuted: 'rgb(163, 163, 163)',
           };
 
     expect(solid.backgroundColor).toBe(expected.primary);
-    expect(solid.borderColor).toBe(expected.primary);
+    expect(solid.borderColor).toBe('rgba(0, 0, 0, 0)');
     expect(solid.color).toBe(expected.onPrimary);
     expect(outline.backgroundColor).toBe('rgba(0, 0, 0, 0)');
     expect(outline.borderColor).toBe(expected.dangerBorder);
-    expect(outline.color).toBe(expected.danger);
+    expect(outline.color).toBe(expected.dangerForeground);
     expect(ghost.backgroundColor).toBe('rgba(0, 0, 0, 0)');
     expect(ghost.borderColor).toBe('rgba(0, 0, 0, 0)');
     expect(ghost.color).toBe(expected.textMuted);
+  },
+);
+
+test.each(['tinyrack-light', 'tinyrack-dark'] as const)(
+  'pairs every solid intent fill with its on-color and keeps %s foregrounds separate',
+  async (theme) => {
+    document.documentElement.dataset['theme'] = theme;
+    const intents = ['primary', 'info', 'success', 'warning', 'danger'] as const;
+    const screen = await render(
+      <div>
+        {intents.flatMap((intent) => [
+          <TRButton
+            data-testid={`${intent}-solid`}
+            intent={intent}
+            key={`${intent}-solid`}
+          >
+            {intent} solid
+          </TRButton>,
+          <TRButton
+            appearance="outline"
+            data-testid={`${intent}-outline`}
+            intent={intent}
+            key={`${intent}-outline`}
+          >
+            {intent} outline
+          </TRButton>,
+        ])}
+      </div>,
+    );
+    const root = getComputedStyle(document.documentElement);
+
+    for (const intent of intents) {
+      const solid = screen.getByTestId(`${intent}-solid`);
+      const outline = screen.getByTestId(`${intent}-outline`);
+      const fill = resolveColor(root.getPropertyValue(`--tinyrack-${intent}`).trim());
+      const fillHover = resolveColor(
+        root.getPropertyValue(`--tinyrack-${intent}-hover`).trim(),
+      );
+      const onColor = resolveColor(
+        root.getPropertyValue(`--tinyrack-on-${intent}`).trim(),
+      );
+      const foreground = resolveColor(
+        root.getPropertyValue(`--tinyrack-${intent}-foreground`).trim(),
+      );
+
+      expect(getComputedStyle(solid.element()).backgroundColor).toBe(fill);
+      expect(getComputedStyle(solid.element()).borderColor).toBe('rgba(0, 0, 0, 0)');
+      expect(getComputedStyle(solid.element()).color).toBe(onColor);
+      expect(contrastRatio(onColor, fill)).toBeGreaterThanOrEqual(4.5);
+      expect(getComputedStyle(outline.element()).color).toBe(foreground);
+
+      await solid.hover();
+      await expect
+        .poll(() => getComputedStyle(solid.element()).backgroundColor)
+        .toBe(fillHover);
+      expect(contrastRatio(onColor, fillHover)).toBeGreaterThanOrEqual(4.5);
+    }
   },
 );
 

@@ -30,10 +30,12 @@ final class TRGeneratedColorTheme {
     required this.primary,
     required this.primaryHover,
     required this.primaryPressed,
+    required this.primaryForeground,
     required this.onPrimary,
     required this.info,
     required this.infoHover,
     required this.infoPressed,
+    required this.infoForeground,
     required this.infoSurface,
     required this.infoSurfaceSubtle,
     required this.infoSurfaceHover,
@@ -43,6 +45,7 @@ final class TRGeneratedColorTheme {
     required this.success,
     required this.successHover,
     required this.successPressed,
+    required this.successForeground,
     required this.successSurface,
     required this.successSurfaceSubtle,
     required this.successSurfaceHover,
@@ -52,6 +55,7 @@ final class TRGeneratedColorTheme {
     required this.warning,
     required this.warningHover,
     required this.warningPressed,
+    required this.warningForeground,
     required this.warningSurface,
     required this.warningSurfaceSubtle,
     required this.warningSurfaceHover,
@@ -61,6 +65,7 @@ final class TRGeneratedColorTheme {
     required this.danger,
     required this.dangerHover,
     required this.dangerPressed,
+    required this.dangerForeground,
     required this.dangerSurface,
     required this.dangerSurfaceSubtle,
     required this.dangerSurfaceHover,
@@ -97,10 +102,12 @@ final class TRGeneratedColorTheme {
   final Color primary;
   final Color primaryHover;
   final Color primaryPressed;
+  final Color primaryForeground;
   final Color onPrimary;
   final Color info;
   final Color infoHover;
   final Color infoPressed;
+  final Color infoForeground;
   final Color infoSurface;
   final Color infoSurfaceSubtle;
   final Color infoSurfaceHover;
@@ -110,6 +117,7 @@ final class TRGeneratedColorTheme {
   final Color success;
   final Color successHover;
   final Color successPressed;
+  final Color successForeground;
   final Color successSurface;
   final Color successSurfaceSubtle;
   final Color successSurfaceHover;
@@ -119,6 +127,7 @@ final class TRGeneratedColorTheme {
   final Color warning;
   final Color warningHover;
   final Color warningPressed;
+  final Color warningForeground;
   final Color warningSurface;
   final Color warningSurfaceSubtle;
   final Color warningSurfaceHover;
@@ -128,6 +137,7 @@ final class TRGeneratedColorTheme {
   final Color danger;
   final Color dangerHover;
   final Color dangerPressed;
+  final Color dangerForeground;
   final Color dangerSurface;
   final Color dangerSurfaceSubtle;
   final Color dangerSurfaceHover;
@@ -166,10 +176,12 @@ abstract final class TRGeneratedColors {
     primary: Color(0xff1d4ed8),
     primaryHover: Color(0xff1e40af),
     primaryPressed: Color(0xff1e3a8a),
+    primaryForeground: Color(0xff1d4ed8),
     onPrimary: Color(0xffffffff),
     info: Color(0xff1d4ed8),
     infoHover: Color(0xff1e40af),
     infoPressed: Color(0xff1e3a8a),
+    infoForeground: Color(0xff1d4ed8),
     infoSurface: Color(0xffeff6ff),
     infoSurfaceSubtle: Color(0xffeff6ff),
     infoSurfaceHover: Color(0xffdbeafe),
@@ -179,6 +191,7 @@ abstract final class TRGeneratedColors {
     success: Color(0xff15803d),
     successHover: Color(0xff166534),
     successPressed: Color(0xff14532d),
+    successForeground: Color(0xff15803d),
     successSurface: Color(0xfff0fdf4),
     successSurfaceSubtle: Color(0xfff0fdf4),
     successSurfaceHover: Color(0xffdcfce7),
@@ -188,6 +201,7 @@ abstract final class TRGeneratedColors {
     warning: Color(0xff92400e),
     warningHover: Color(0xff78350f),
     warningPressed: Color(0xff451a03),
+    warningForeground: Color(0xff92400e),
     warningSurface: Color(0xfffffbeb),
     warningSurfaceSubtle: Color(0xfffffbeb),
     warningSurfaceHover: Color(0xfffef3c7),
@@ -197,6 +211,7 @@ abstract final class TRGeneratedColors {
     danger: Color(0xffb91c1c),
     dangerHover: Color(0xff991b1b),
     dangerPressed: Color(0xff7f1d1d),
+    dangerForeground: Color(0xffb91c1c),
     dangerSurface: Color(0xfffef2f2),
     dangerSurfaceSubtle: Color(0xfffef2f2),
     dangerSurfaceHover: Color(0xfffee2e2),
@@ -231,46 +246,51 @@ abstract final class TRGeneratedColors {
     illustrationDetail: Color(0xff737373),
     illustrationStroke: Color(0xff737373),
     illustrationShadow: Color(0xff171717),
-    primary: Color(0xff60a5fa),
-    primaryHover: Color(0xff93c5fd),
-    primaryPressed: Color(0xffbfdbfe),
-    onPrimary: Color(0xff172554),
-    info: Color(0xff93c5fd),
-    infoHover: Color(0xffbfdbfe),
-    infoPressed: Color(0xffdbeafe),
+    primary: Color(0xff1d4ed8),
+    primaryHover: Color(0xff2563eb),
+    primaryPressed: Color(0xff1e40af),
+    primaryForeground: Color(0xff60a5fa),
+    onPrimary: Color(0xffffffff),
+    info: Color(0xff1d4ed8),
+    infoHover: Color(0xff2563eb),
+    infoPressed: Color(0xff1e40af),
+    infoForeground: Color(0xff93c5fd),
     infoSurface: Color(0xff172554),
     infoSurfaceSubtle: Color(0xff262d34),
     infoSurfaceHover: Color(0xff1e3a8a),
     infoSurfacePressed: Color(0xff1e40af),
     infoBorder: Color(0xff60a5fa),
-    onInfo: Color(0xff172554),
-    success: Color(0xff86efac),
-    successHover: Color(0xffbbf7d0),
-    successPressed: Color(0xffdcfce7),
+    onInfo: Color(0xffffffff),
+    success: Color(0xff166534),
+    successHover: Color(0xff15803d),
+    successPressed: Color(0xff14532d),
+    successForeground: Color(0xff86efac),
     successSurface: Color(0xff052e16),
     successSurfaceSubtle: Color(0xff25322a),
     successSurfaceHover: Color(0xff14532d),
     successSurfacePressed: Color(0xff166534),
     successBorder: Color(0xff4ade80),
-    onSuccess: Color(0xff052e16),
-    warning: Color(0xfffcd34d),
-    warningHover: Color(0xfffde68a),
-    warningPressed: Color(0xfffef3c7),
+    onSuccess: Color(0xffffffff),
+    warning: Color(0xff78350f),
+    warningHover: Color(0xff92400e),
+    warningPressed: Color(0xff451a03),
+    warningForeground: Color(0xfffcd34d),
     warningSurface: Color(0xff451a03),
     warningSurfaceSubtle: Color(0xff342e1e),
     warningSurfaceHover: Color(0xff78350f),
     warningSurfacePressed: Color(0xff92400e),
     warningBorder: Color(0xfffbbf24),
-    onWarning: Color(0xff451a03),
-    danger: Color(0xfff87171),
-    dangerHover: Color(0xfffca5a5),
-    dangerPressed: Color(0xfffecaca),
+    onWarning: Color(0xffffffff),
+    danger: Color(0xff991b1b),
+    dangerHover: Color(0xffb91c1c),
+    dangerPressed: Color(0xff7f1d1d),
+    dangerForeground: Color(0xfff87171),
     dangerSurface: Color(0xff450a0a),
     dangerSurfaceSubtle: Color(0xff332222),
     dangerSurfaceHover: Color(0xff7f1d1d),
     dangerSurfacePressed: Color(0xff991b1b),
     dangerBorder: Color(0xfff87171),
-    onDanger: Color(0xff450a0a),
+    onDanger: Color(0xffffffff),
     scrim: Color(0xb8000000),
   );
 }

@@ -95,7 +95,7 @@
   .tr-navigation-menu-link:is([aria-current="page"], [data-active]) {
     background: var(--tinyrack-surface-hover);
     box-shadow: inset 0 calc(var(--tinyrack-border-width-default) * -1) 0
-      var(--tinyrack-primary);
+      var(--tinyrack-primary-foreground);
   }
 
   .tr-navigation-menu-popup {

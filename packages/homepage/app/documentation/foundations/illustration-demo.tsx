@@ -89,7 +89,7 @@ function GeneralIllustration({ locale }: { locale: Locale }) {
           strokeWidth="2"
         />
         <circle className="fill-tinyrack-illustration-detail" cx="132" cy="104" r="8" />
-        <circle className="fill-tinyrack-success" cx="132" cy="132" r="8" />
+        <circle className="fill-tinyrack-success-foreground" cx="132" cy="132" r="8" />
         <path
           className="stroke-tinyrack-illustration-stroke"
           d="M155 104 H198 M155 132 H190"
@@ -142,7 +142,7 @@ function IsometricIllustration({ locale }: { locale: Locale }) {
           strokeLinecap="round"
           strokeWidth="4"
         />
-        <circle className="fill-tinyrack-success" cx="148" cy="165" r="6" />
+        <circle className="fill-tinyrack-success-foreground" cx="148" cy="165" r="6" />
       </svg>
       <figcaption>
         {text.isometric}: {text.front} / {text.top} / {text.side}

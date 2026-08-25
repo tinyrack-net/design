@@ -183,7 +183,7 @@
   /* ---------------------------------------------------------------------- */
 
   .tr-app-shell-progress {
-    --tr-progress-fill: var(--tinyrack-primary);
+    --tr-progress-fill: var(--tinyrack-primary-foreground);
     --tr-progress-height: var(--tinyrack-space-xs);
     position: fixed;
     z-index: var(--tinyrack-layer-toast);

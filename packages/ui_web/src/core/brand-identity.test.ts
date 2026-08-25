@@ -12,10 +12,12 @@ describe('Tinyrack Rack Blue brand identity', () => {
       textMuted: '#a3a3a3',
       border: '#262626',
       focus: '#60a5fa',
-      primary: '#60a5fa',
-      onPrimary: '#172554',
-      danger: '#f87171',
-      onDanger: '#450a0a',
+      primary: '#1d4ed8',
+      primaryForeground: '#60a5fa',
+      onPrimary: '#ffffff',
+      danger: '#991b1b',
+      dangerForeground: '#f87171',
+      onDanger: '#ffffff',
     });
   });
 
@@ -28,6 +30,7 @@ describe('Tinyrack Rack Blue brand identity', () => {
       surfaceSelected: '#dbeafe',
       focus: '#2563eb',
       primary: '#1d4ed8',
+      primaryForeground: '#1d4ed8',
       onPrimary: '#ffffff',
     });
     expect(tinyrackPalettes.red[700]).toBe('#b91c1c');

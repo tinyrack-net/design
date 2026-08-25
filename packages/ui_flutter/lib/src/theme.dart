@@ -26,14 +26,19 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
     required this.dangerBorder,
     required this.focus,
     required this.primary,
+    required this.primaryForeground,
     required this.onPrimary,
     required this.info,
+    required this.infoForeground,
     required this.infoSurface,
     required this.success,
+    required this.successForeground,
     required this.successSurface,
     required this.warning,
+    required this.warningForeground,
     required this.warningSurface,
     required this.danger,
+    required this.dangerForeground,
     required this.dangerSurface,
   });
 
@@ -57,14 +62,19 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       dangerBorder: colors.dangerBorder,
       focus: colors.focus,
       primary: colors.primary,
+      primaryForeground: colors.primaryForeground,
       onPrimary: colors.onPrimary,
       info: colors.info,
+      infoForeground: colors.infoForeground,
       infoSurface: colors.infoSurfaceSubtle,
       success: colors.success,
+      successForeground: colors.successForeground,
       successSurface: colors.successSurfaceSubtle,
       warning: colors.warning,
+      warningForeground: colors.warningForeground,
       warningSurface: colors.warningSurfaceSubtle,
       danger: colors.danger,
+      dangerForeground: colors.dangerForeground,
       dangerSurface: colors.dangerSurfaceSubtle,
     );
   }
@@ -87,24 +97,29 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
   final Color dangerBorder;
   final Color focus;
   final Color primary;
+  final Color primaryForeground;
   final Color onPrimary;
   final Color info;
+  final Color infoForeground;
   final Color infoSurface;
   final Color success;
+  final Color successForeground;
   final Color successSurface;
   final Color warning;
+  final Color warningForeground;
   final Color warningSurface;
   final Color danger;
+  final Color dangerForeground;
   final Color dangerSurface;
 
   /// Returns the foreground color for [intent].
   Color foregroundFor(TRIntent intent) => switch (intent) {
     TRIntent.neutral => text,
-    TRIntent.primary => primary,
-    TRIntent.info => info,
-    TRIntent.success => success,
-    TRIntent.warning => warning,
-    TRIntent.danger => danger,
+    TRIntent.primary => primaryForeground,
+    TRIntent.info => infoForeground,
+    TRIntent.success => successForeground,
+    TRIntent.warning => warningForeground,
+    TRIntent.danger => dangerForeground,
   };
 
   /// Returns the subtle surface color for [intent].
@@ -120,10 +135,10 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
   /// Returns the foreground color for a status [variant].
   Color foregroundForStatus(TRStatusVariant variant) => switch (variant) {
     TRStatusVariant.neutral => text,
-    TRStatusVariant.info => info,
-    TRStatusVariant.success => success,
-    TRStatusVariant.warning => warning,
-    TRStatusVariant.danger => danger,
+    TRStatusVariant.info => infoForeground,
+    TRStatusVariant.success => successForeground,
+    TRStatusVariant.warning => warningForeground,
+    TRStatusVariant.danger => dangerForeground,
   };
 
   /// Returns the status surface color for [variant].
@@ -178,14 +193,19 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
     Color? dangerBorder,
     Color? focus,
     Color? primary,
+    Color? primaryForeground,
     Color? onPrimary,
     Color? info,
+    Color? infoForeground,
     Color? infoSurface,
     Color? success,
+    Color? successForeground,
     Color? successSurface,
     Color? warning,
+    Color? warningForeground,
     Color? warningSurface,
     Color? danger,
+    Color? dangerForeground,
     Color? dangerSurface,
   }) {
     return TinyrackThemeData(
@@ -207,14 +227,19 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       dangerBorder: dangerBorder ?? this.dangerBorder,
       focus: focus ?? this.focus,
       primary: primary ?? this.primary,
+      primaryForeground: primaryForeground ?? this.primaryForeground,
       onPrimary: onPrimary ?? this.onPrimary,
       info: info ?? this.info,
+      infoForeground: infoForeground ?? this.infoForeground,
       infoSurface: infoSurface ?? this.infoSurface,
       success: success ?? this.success,
+      successForeground: successForeground ?? this.successForeground,
       successSurface: successSurface ?? this.successSurface,
       warning: warning ?? this.warning,
+      warningForeground: warningForeground ?? this.warningForeground,
       warningSurface: warningSurface ?? this.warningSurface,
       danger: danger ?? this.danger,
+      dangerForeground: dangerForeground ?? this.dangerForeground,
       dangerSurface: dangerSurface ?? this.dangerSurface,
     );
   }
@@ -241,14 +266,35 @@ final class TinyrackThemeData extends ThemeExtension<TinyrackThemeData> {
       dangerBorder: Color.lerp(dangerBorder, other.dangerBorder, t)!,
       focus: Color.lerp(focus, other.focus, t)!,
       primary: Color.lerp(primary, other.primary, t)!,
+      primaryForeground: Color.lerp(
+        primaryForeground,
+        other.primaryForeground,
+        t,
+      )!,
       onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
       info: Color.lerp(info, other.info, t)!,
+      infoForeground: Color.lerp(infoForeground, other.infoForeground, t)!,
       infoSurface: Color.lerp(infoSurface, other.infoSurface, t)!,
       success: Color.lerp(success, other.success, t)!,
+      successForeground: Color.lerp(
+        successForeground,
+        other.successForeground,
+        t,
+      )!,
       successSurface: Color.lerp(successSurface, other.successSurface, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
+      warningForeground: Color.lerp(
+        warningForeground,
+        other.warningForeground,
+        t,
+      )!,
       warningSurface: Color.lerp(warningSurface, other.warningSurface, t)!,
       danger: Color.lerp(danger, other.danger, t)!,
+      dangerForeground: Color.lerp(
+        dangerForeground,
+        other.dangerForeground,
+        t,
+      )!,
       dangerSurface: Color.lerp(dangerSurface, other.dangerSurface, t)!,
     );
   }
@@ -354,7 +400,7 @@ abstract final class TinyrackTheme {
       onPrimary: generated.onPrimary,
       // Tinyrack has no primary-tinted surface; `info` is the same blue scale.
       primaryContainer: generated.infoSurface,
-      onPrimaryContainer: generated.primary,
+      onPrimaryContainer: generated.primaryForeground,
       secondary: generated.textMuted,
       onSecondary: generated.surface,
       secondaryContainer: generated.surfaceMuted,
@@ -364,7 +410,7 @@ abstract final class TinyrackTheme {
       // `TinyrackThemeData.dangerSurface` aliases the subtle tier, which is too
       // washed out to read as an error container. Take the full-strength token.
       errorContainer: generated.dangerSurface,
-      onErrorContainer: generated.danger,
+      onErrorContainer: generated.dangerForeground,
       surface: generated.surface,
       onSurface: generated.text,
       // Tinyrack has two neutral surfaces, so the five Material elevation tiers
@@ -387,7 +433,7 @@ abstract final class TinyrackTheme {
       scrim: generated.scrim,
       inverseSurface: generated.surfaceInverse,
       onInverseSurface: generated.textInverse,
-      inversePrimary: inverted.primary,
+      inversePrimary: inverted.primaryForeground,
       // Tinyrack is a flat system: no surface carries an elevation tint, so a
       // consumer's plain Material must not pick up the primary-tinted default.
       surfaceTint: Colors.transparent,

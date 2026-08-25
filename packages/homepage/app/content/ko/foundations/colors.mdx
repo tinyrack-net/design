@@ -15,8 +15,8 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 - **표면:** `surface`와 `surfaceMuted`는 중립적인 레이어를 만들어요. `surfaceHover`, `surfaceSelected`, `surfacePressed`는 상호작용을 강조할 때만 Rack Blue를 더해요.
 - **콘텐츠:** 기본·보조 텍스트, 자리표시자, 테두리, 반전 역할은 전경색을 맥락에 연결해요. `text`, `textMuted`, `textPlaceholder`, `border`, `surfaceInverse`처럼 의미에 맞는 토큰을 선택하세요.
-- **동작:** 기본 동작의 평상시, 포인터 올림, 누름, 전경색은 `primary`, `primaryHover`, `primaryPressed`, `onPrimary`로 한 세트를 이뤄요.
-- **상태:** 정보, 성공, 경고, 위험에는 각각 콘텐츠, 표면, 상호작용, 테두리, 전경색 역할이 있어요.
+- **동작:** `primary`, `primaryHover`, `primaryPressed`는 채움형 동작의 면을 만들고 `onPrimary`는 그 위의 콘텐츠를 표시해요. primary 면이 없는 강조에는 `primaryForeground`를 사용하세요.
+- **상태:** 정보, 성공, 경고, 위험에는 각각 채움, `on-*`, 단독 `*Foreground`, 표면, 테두리 역할이 있어요.
 - **일러스트레이션:** 면, 디테일, 외곽선, 그림자 역할은 테마가 바뀌어도 그림의 위계를 유지해요. 구성 방법과 예시는 [일러스트레이션](/ko/foundations/illustration/)에서 확인하세요.
 
 ## 테마 구조
@@ -35,13 +35,14 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 ## 기본 동작 색상 안전하게 재정의
 
-Tinyrack은 기본 동작에 Rack Blue를 사용해요. 제품에 다른 정체성이 필요할 때만 Tinyrack 테마 선택자는 그대로 두고 별도의 제품 강조색 선택자를 추가하세요. 평상시, 포인터 올림, 누름, 전경 대비가 하나의 규약으로 맞물리도록 네 역할을 모두 재정의하세요.
+Tinyrack은 기본 동작에 Rack Blue를 사용해요. 제품에 다른 정체성이 필요할 때만 별도의 제품 강조색 선택자를 추가하세요. 채움 상태, 그 위의 콘텐츠, 단독 전경색을 한 세트로 재정의하세요.
 
 ```css
-[data-accent="product-violet"] {
+[data-theme="tinyrack-dark"][data-accent="product-violet"] {
   --tinyrack-primary: #6d28d9;
-  --tinyrack-primary-hover: #5b21b6;
-  --tinyrack-primary-pressed: #4c1d95;
+  --tinyrack-primary-hover: #7c3aed;
+  --tinyrack-primary-pressed: #5b21b6;
+  --tinyrack-primary-foreground: #a78bfa;
   --tinyrack-on-primary: #ffffff;
 }
 ```
@@ -54,7 +55,7 @@ Tinyrack은 기본 동작에 Rack Blue를 사용해요. 제품에 다른 정체�
 
 - 제품 UI에서 팔레트 값을 직접 사용하지 마세요. 테마에 대응하지 못해요.
 - 상태 색상을 장식에만 쓰거나 경고와 위험 역할을 바꾸어 쓰지 마세요.
-- `primary` 하나만 재정의하지 마세요. 상태 세트가 불완전하면 상호작용 피드백이 일관되지 않아요.
+- `primary` 하나만 재정의하지 마세요. 상태와 전경색 세트가 불완전하면 상호작용 피드백이 일관되지 않아요.
 - `on-*` 색상을 다른 배경 역할 위에 놓지 마세요.
 
 ## 기능 색상 참고
@@ -65,7 +66,7 @@ Tinyrack은 기본 동작에 Rack Blue를 사용해요. 제품에 다른 정체�
 
 ```css
 @import "@tinyrack/ui/core.css";
-.rack-status { color: var(--tinyrack-info); background: var(--tinyrack-info-surface-subtle); border-color: var(--tinyrack-info-border); }
+.rack-status { color: var(--tinyrack-info-foreground); background: var(--tinyrack-info-surface-subtle); border-color: var(--tinyrack-info-border); }
 ```
 
 접두사가 붙은 유틸리티는 [Tailwind 색상 매핑](/ko/foundations/tailwind/#colors)에서 확인하세요.

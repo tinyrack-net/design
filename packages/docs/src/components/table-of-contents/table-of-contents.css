@@ -41,7 +41,7 @@
   }
   .tr-table-of-contents-list a[data-active] {
     background-color: var(--tinyrack-surface-hover);
-    border-inline-start-color: var(--tinyrack-primary);
+    border-inline-start-color: var(--tinyrack-primary-foreground);
     color: var(--tinyrack-text);
     font-weight: var(--tinyrack-weight-bold);
   }

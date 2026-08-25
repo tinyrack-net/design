@@ -34,7 +34,7 @@
   }
 
   .tr-link[data-variant="danger"] {
-    --_tr-link-color: var(--tinyrack-danger);
+    --_tr-link-color: var(--tinyrack-danger-foreground);
   }
 
   .tr-link[data-underline="none"] {

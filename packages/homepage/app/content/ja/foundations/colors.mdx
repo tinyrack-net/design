@@ -15,8 +15,8 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 - **表面:** `surface` と `surfaceMuted` はニュートラルなレイヤーを作ります。`surfaceHover`、`surfaceSelected`、`surfacePressed` は、操作を強調するときだけ Rack Blue を加えます。
 - **内容:** 基本文字、補助文字、プレースホルダー、境界線、反転の各ロールは、前景色を文脈に結び付けます。`text`、`textMuted`、`textPlaceholder`、`border`、`surfaceInverse` など、意味に合うトークンを選んでください。
-- **操作:** 主操作の通常、ホバー、押下、前景色は、`primary`、`primaryHover`、`primaryPressed`、`onPrimary` で 1 つのセットになります。
-- **ステータス:** 情報、成功、警告、危険には、それぞれ内容、表面、操作、境界線、前景色のロールがあります。
+- **操作:** `primary`、`primaryHover`、`primaryPressed` はソリッド操作の面を作り、`onPrimary` はその上の内容を表示します。primary の面を使わない強調には `primaryForeground` を選んでください。
+- **ステータス:** 情報、成功、警告、危険には、それぞれ塗り、`on-*`、単独の `*Foreground`、表面、境界線のロールがあります。
 - **イラストレーション:** 面、ディテール、輪郭線、影のロールは、テーマが変わっても絵の階層を維持します。構成方法と例は[イラストレーション](/ja/foundations/illustration/)で確認してください。
 
 ## テーマ構造
@@ -35,13 +35,14 @@ import { tinyrackPalettes, tinyrackSemanticColors } from '@tinyrack/ui/core';
 
 ## デフォルトの操作色を安全に上書きする
 
-Tinyrack はデフォルトの操作色に Rack Blue を使用します。製品に別のアイデンティティが必要な場合に限り、Tinyrack のテーマセレクターを維持したまま、製品用のアクセントセレクターを追加してください。通常、ホバー、押下、前景のコントラストを一貫したセットとして保つため、4 つのロールをすべて上書きします。
+Tinyrack はデフォルトの操作色に Rack Blue を使用します。製品に別のアイデンティティが必要な場合に限り、製品用のアクセントセレクターを追加してください。塗りの各状態、その上の内容、単独の前景色を 1 つのセットとして上書きします。
 
 ```css
-[data-accent="product-violet"] {
+[data-theme="tinyrack-dark"][data-accent="product-violet"] {
   --tinyrack-primary: #6d28d9;
-  --tinyrack-primary-hover: #5b21b6;
-  --tinyrack-primary-pressed: #4c1d95;
+  --tinyrack-primary-hover: #7c3aed;
+  --tinyrack-primary-pressed: #5b21b6;
+  --tinyrack-primary-foreground: #a78bfa;
   --tinyrack-on-primary: #ffffff;
 }
 ```
@@ -54,7 +55,7 @@ Tinyrack はデフォルトの操作色に Rack Blue を使用します。製品
 
 - プロダクト UI でパレット値を直接使わないでください。テーマに追従しません。
 - ステータス色を装飾だけに使ったり、警告と危険のロールを入れ替えたりしないでください。
-- `primary` だけを上書きしないでください。状態セットが不完全だと操作フィードバックが一貫しません。
+- `primary` だけを上書きしないでください。状態と前景色のセットが不完全だと操作フィードバックが一貫しません。
 - `on-*` 色を別の背景ロール上に置かないでください。
 
 ## セマンティックカラーのリファレンス
@@ -65,7 +66,7 @@ Tinyrack はデフォルトの操作色に Rack Blue を使用します。製品
 
 ```css
 @import "@tinyrack/ui/core.css";
-.rack-status { color: var(--tinyrack-info); background: var(--tinyrack-info-surface-subtle); border-color: var(--tinyrack-info-border); }
+.rack-status { color: var(--tinyrack-info-foreground); background: var(--tinyrack-info-surface-subtle); border-color: var(--tinyrack-info-border); }
 ```
 
 接頭辞付きユーティリティは [Tailwind の色マッピング](/ja/foundations/tailwind/#colors)で確認してください。

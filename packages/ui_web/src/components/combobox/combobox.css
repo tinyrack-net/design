@@ -117,7 +117,7 @@
   }
 
   .tr-combobox-item-indicator {
-    color: var(--tinyrack-primary);
+    color: var(--tinyrack-primary-foreground);
     flex: none;
     margin-inline-start: auto;
   }

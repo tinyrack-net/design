@@ -76,8 +76,8 @@ class _TRSpinnerState extends State<TRSpinner>
     final color = switch (widget.variant) {
       TRSpinnerVariant.current => IconTheme.of(context).color ?? colors.text,
       TRSpinnerVariant.muted => colors.textMuted,
-      TRSpinnerVariant.primary => colors.primary,
-      TRSpinnerVariant.danger => colors.danger,
+      TRSpinnerVariant.primary => colors.primaryForeground,
+      TRSpinnerVariant.danger => colors.dangerForeground,
     };
     final spinner = SizedBox.square(
       dimension: size,

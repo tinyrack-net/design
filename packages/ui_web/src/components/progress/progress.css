@@ -24,19 +24,19 @@
   }
 
   .tr-progress[data-variant="info"] {
-    --_tr-progress-fill: var(--tinyrack-info);
+    --_tr-progress-fill: var(--tinyrack-info-foreground);
   }
 
   .tr-progress[data-variant="success"] {
-    --_tr-progress-fill: var(--tinyrack-success);
+    --_tr-progress-fill: var(--tinyrack-success-foreground);
   }
 
   .tr-progress[data-variant="warning"] {
-    --_tr-progress-fill: var(--tinyrack-warning);
+    --_tr-progress-fill: var(--tinyrack-warning-foreground);
   }
 
   .tr-progress[data-variant="danger"] {
-    --_tr-progress-fill: var(--tinyrack-danger);
+    --_tr-progress-fill: var(--tinyrack-danger-foreground);
   }
 
   .tr-progress-track {

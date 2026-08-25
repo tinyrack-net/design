@@ -63,24 +63,24 @@
   .tr-badge[data-variant="info"] {
     --_tr-badge-background: var(--tinyrack-info-surface);
     --_tr-badge-border: var(--tinyrack-info-border);
-    --_tr-badge-color: var(--tinyrack-info);
+    --_tr-badge-color: var(--tinyrack-info-foreground);
   }
 
   .tr-badge[data-variant="success"] {
     --_tr-badge-background: var(--tinyrack-success-surface);
     --_tr-badge-border: var(--tinyrack-success-border);
-    --_tr-badge-color: var(--tinyrack-success);
+    --_tr-badge-color: var(--tinyrack-success-foreground);
   }
 
   .tr-badge[data-variant="warning"] {
     --_tr-badge-background: var(--tinyrack-warning-surface);
     --_tr-badge-border: var(--tinyrack-warning-border);
-    --_tr-badge-color: var(--tinyrack-warning);
+    --_tr-badge-color: var(--tinyrack-warning-foreground);
   }
 
   .tr-badge[data-variant="danger"] {
     --_tr-badge-background: var(--tinyrack-danger-surface);
     --_tr-badge-border: var(--tinyrack-danger-border);
-    --_tr-badge-color: var(--tinyrack-danger);
+    --_tr-badge-color: var(--tinyrack-danger-foreground);
   }
 }

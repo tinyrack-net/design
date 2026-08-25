@@ -59,7 +59,7 @@ TRFieldChrome resolveFieldChrome({
     if (error) {
       return TRFieldChrome(
         fill: Colors.transparent,
-        borderColor: focused ? colors.danger : colors.dangerBorder,
+        borderColor: focused ? colors.dangerForeground : colors.dangerBorder,
         borderWidth: focused
             ? TRGeneratedBorders.focusWidth
             : TRGeneratedBorders.defaultWidth,
@@ -74,7 +74,7 @@ TRFieldChrome resolveFieldChrome({
   if (error && focused) {
     return TRFieldChrome(
       fill: colors.surface,
-      borderColor: colors.danger,
+      borderColor: colors.dangerForeground,
       borderWidth: TRGeneratedBorders.focusWidth,
     );
   }

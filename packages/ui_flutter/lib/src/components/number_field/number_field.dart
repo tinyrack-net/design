@@ -358,7 +358,9 @@ class _TRNumberFieldState extends State<TRNumberField> {
             height: TRGeneratedTypographyLineHeights.md,
           ),
           style: TextStyle(
-            color: widget.errorText == null ? colors.textMuted : colors.danger,
+            color: widget.errorText == null
+                ? colors.textMuted
+                : colors.dangerForeground,
             fontFamily: TRGeneratedFontFamilies.body,
             fontSize: TRGeneratedTypographySizes.xs,
             height: TRGeneratedTypographyLineHeights.md,

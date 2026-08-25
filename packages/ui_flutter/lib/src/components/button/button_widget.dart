@@ -179,7 +179,7 @@ class TRButton extends StatelessWidget {
 
     final borderColor = switch (intent) {
       TRIntent.neutral => generated.controlBorder,
-      TRIntent.primary => colors.primary,
+      TRIntent.primary => colors.primaryForeground,
       TRIntent.info => generated.infoBorder,
       TRIntent.success => generated.successBorder,
       TRIntent.warning => generated.warningBorder,
@@ -199,14 +199,17 @@ class TRButton extends StatelessWidget {
       textStyle: WidgetStatePropertyAll(
         TRControlMetrics.labelStyleOf(effectiveUiSize),
       ),
-      side: WidgetStatePropertyAll(
-        appearance != TRAppearance.ghost
-            ? BorderSide(
-                color: borderColor,
-                width: TRGeneratedBorders.defaultWidth,
-              )
-            : BorderSide.none,
-      ),
+      side: WidgetStatePropertyAll(switch (appearance) {
+        TRAppearance.solid => BorderSide(
+          color: Colors.transparent,
+          width: TRGeneratedBorders.defaultWidth,
+        ),
+        TRAppearance.outline => BorderSide(
+          color: borderColor,
+          width: TRGeneratedBorders.defaultWidth,
+        ),
+        TRAppearance.ghost => BorderSide.none,
+      }),
       shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(TRGeneratedRadii.md)),

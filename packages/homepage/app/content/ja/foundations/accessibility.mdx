@@ -65,7 +65,7 @@ export function App({ children }: { children: React.ReactNode }) {
 
 ## コントラストと色以外の手掛かり
 
-`--tinyrack-surface` 上の `--tinyrack-text`、`--tinyrack-primary` 上の `--tinyrack-on-primary`、対応するステータスのテキスト・表面・境界ロールを選んでください。サポートするすべてのテーマと状態で、実際に表示された組み合わせを検査します。WCAG を基準に確認する場合は、通常テキストに `4.5:1` 以上、大きなテキストに `3:1` 以上、重要なコントロール境界と状態表示に `3:1` 以上を使ってください。
+`--tinyrack-surface` 上の `--tinyrack-text`、`--tinyrack-primary` 上の `--tinyrack-on-primary`、各ステータスの表面上の `*Foreground` など、対応するロールを選んでください。サポートするすべてのテーマと状態で、実際に表示された組み合わせを検査します。WCAG を基準に確認する場合は、通常テキストに `4.5:1` 以上、大きなテキストに `3:1` 以上、重要なコントロール境界と状態表示に `3:1` 以上を使ってください。
 
 色は意味を補強するもので、色だけで意味を伝えてはいけません。`danger` ロールにはエラーメッセージ、警告色にはアイコンやラベル、選択色には `aria-selected` などのプログラムで判別できる状態を組み合わせます。Tinyrack のセマンティックロールは [カラーとテーマ](/ja/foundations/colors/)を参照してください。
 

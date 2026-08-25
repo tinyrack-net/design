@@ -228,7 +228,7 @@ test('uses semantic hover tokens for available unchecked and checked states', as
   await checked.hover();
   await expect
     .poll(() => getComputedStyle(checked.element() as HTMLElement).borderColor)
-    .toBe('rgb(147, 197, 253)');
+    .toBe('rgb(37, 99, 235)');
 });
 
 // Keep the disabled DOM contract under direct browser coverage.

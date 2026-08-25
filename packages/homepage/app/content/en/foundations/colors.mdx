@@ -15,8 +15,8 @@ Start with meaning, not a color value.
 
 - **Surface:** surface and muted surface establish neutral layers. Hover, selected, and pressed add Rack Blue only when interaction needs emphasis.
 - **Content:** text, muted text, placeholder, border, and inverse roles keep foregrounds tied to their context.
-- **Action:** primary, hover, pressed, and on-primary form one action set.
-- **Status:** info, success, warning, and danger each provide content, surface, interaction, border, and on-color roles.
+- **Action:** `primary`, `primaryHover`, and `primaryPressed` fill solid actions, while `onPrimary` colors their content. Use `primaryForeground` for accents without a primary fill.
+- **Status:** info, success, warning, and danger each provide solid fills, an `on-*` color, a readable `*Foreground`, surfaces, and a border.
 - **Illustration:** face, detail, stroke, and shadow roles preserve an artwork's hierarchy across themes. See [Illustration](/en/foundations/illustration/) for composition guidance and examples.
 
 ## Theme structure
@@ -35,13 +35,14 @@ Dark-theme resting boundaries use Neutral 800 `#262626` for `border`, `controlBo
 
 ## Override the default action safely
 
-Tinyrack uses Rack Blue for its default action. Add a separate product accent selector only when a product needs another identity. Override all four roles so rest, hover, pressed, and foreground contrast remain one contract.
+Tinyrack uses Rack Blue for its default action. Add a separate product accent selector only when a product needs another identity. Override the solid states, their on-color, and the standalone foreground together.
 
 ```css
-[data-accent="product-violet"] {
+[data-theme="tinyrack-dark"][data-accent="product-violet"] {
   --tinyrack-primary: #6d28d9;
-  --tinyrack-primary-hover: #5b21b6;
-  --tinyrack-primary-pressed: #4c1d95;
+  --tinyrack-primary-hover: #7c3aed;
+  --tinyrack-primary-pressed: #5b21b6;
+  --tinyrack-primary-foreground: #a78bfa;
   --tinyrack-on-primary: #ffffff;
 }
 ```
@@ -54,7 +55,7 @@ Tinyrack uses Rack Blue for its default action. Add a separate product accent se
 
 - Do not use palette values directly in product UI; they do not adapt to themes.
 - Do not use status colors only for decoration or interchange warning and danger.
-- Do not override only `primary`; incomplete state sets create inconsistent interaction feedback.
+- Do not override only `primary`; incomplete state and foreground sets create inconsistent interaction feedback.
 - Do not place `on-*` colors on a different background role.
 
 ## Functional reference
@@ -67,7 +68,7 @@ Tinyrack uses Rack Blue for its default action. Add a separate product accent se
 @import "@tinyrack/ui/core.css";
 
 .rack-status {
-  color: var(--tinyrack-info);
+  color: var(--tinyrack-info-foreground);
   background: var(--tinyrack-info-surface-subtle);
   border-color: var(--tinyrack-info-border);
 }

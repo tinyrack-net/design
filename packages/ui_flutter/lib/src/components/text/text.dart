@@ -79,11 +79,11 @@ class TRText extends StatelessWidget {
       TRTextColor.muted => colors.textMuted,
       TRTextColor.placeholder => colors.textPlaceholder,
       TRTextColor.inverse => colors.textInverse,
-      TRTextColor.primary => colors.primary,
-      TRTextColor.info => colors.info,
-      TRTextColor.success => colors.success,
-      TRTextColor.warning => colors.warning,
-      TRTextColor.danger => colors.danger,
+      TRTextColor.primary => colors.primaryForeground,
+      TRTextColor.info => colors.infoForeground,
+      TRTextColor.success => colors.successForeground,
+      TRTextColor.warning => colors.warningForeground,
+      TRTextColor.danger => colors.dangerForeground,
     };
     final resolvedWeight = switch (weight) {
       null => null,

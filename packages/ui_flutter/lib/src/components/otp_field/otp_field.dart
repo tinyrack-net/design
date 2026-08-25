@@ -342,7 +342,7 @@ class _TROtpFieldState extends State<TROtpField> with TRFocusSourceMixin {
               style: TRGeneratedTextStyles.caption.copyWith(
                 color: widget.errorText == null
                     ? colors.textMuted
-                    : colors.danger,
+                    : colors.dangerForeground,
                 fontFamilyFallback: TRGeneratedFontFamilies.fallback,
               ),
             ),

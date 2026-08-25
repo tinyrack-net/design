@@ -62,7 +62,9 @@ class TRField extends StatelessWidget {
               height: TRGeneratedTypographyLineHeights.md,
             ),
             style: TextStyle(
-              color: errorText == null ? colors.textMuted : colors.danger,
+              color: errorText == null
+                  ? colors.textMuted
+                  : colors.dangerForeground,
               fontFamily: TRGeneratedFontFamilies.body,
               fontSize: TRGeneratedTypographySizes.xs,
               height: TRGeneratedTypographyLineHeights.md,

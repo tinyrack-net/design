@@ -35,19 +35,19 @@
   }
 
   .tr-meter[data-variant="info"] {
-    --_tr-meter-indicator: var(--tinyrack-info);
+    --_tr-meter-indicator: var(--tinyrack-info-foreground);
   }
 
   .tr-meter[data-variant="success"] {
-    --_tr-meter-indicator: var(--tinyrack-success);
+    --_tr-meter-indicator: var(--tinyrack-success-foreground);
   }
 
   .tr-meter[data-variant="warning"] {
-    --_tr-meter-indicator: var(--tinyrack-warning);
+    --_tr-meter-indicator: var(--tinyrack-warning-foreground);
   }
 
   .tr-meter[data-variant="danger"] {
-    --_tr-meter-indicator: var(--tinyrack-danger);
+    --_tr-meter-indicator: var(--tinyrack-danger-foreground);
   }
 
   .tr-meter-value {

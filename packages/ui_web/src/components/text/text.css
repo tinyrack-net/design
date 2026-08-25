@@ -110,23 +110,23 @@
   }
 
   .tr-text[data-color="primary"] {
-    color: var(--tinyrack-primary);
+    color: var(--tinyrack-primary-foreground);
   }
 
   .tr-text[data-color="info"] {
-    color: var(--tinyrack-info);
+    color: var(--tinyrack-info-foreground);
   }
 
   .tr-text[data-color="success"] {
-    color: var(--tinyrack-success);
+    color: var(--tinyrack-success-foreground);
   }
 
   .tr-text[data-color="warning"] {
-    color: var(--tinyrack-warning);
+    color: var(--tinyrack-warning-foreground);
   }
 
   .tr-text[data-color="danger"] {
-    color: var(--tinyrack-danger);
+    color: var(--tinyrack-danger-foreground);
   }
 
   .tr-text[data-align="start"] {

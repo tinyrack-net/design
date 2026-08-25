@@ -46,10 +46,10 @@ class _TRMeterState extends State<TRMeter> {
         : TRGeneratedColors.dark;
     final fill = switch (widget.variant) {
       TRStatusVariant.neutral => colors.text,
-      TRStatusVariant.info => colors.info,
-      TRStatusVariant.success => colors.success,
-      TRStatusVariant.warning => colors.warning,
-      TRStatusVariant.danger => colors.danger,
+      TRStatusVariant.info => colors.infoForeground,
+      TRStatusVariant.success => colors.successForeground,
+      TRStatusVariant.warning => colors.warningForeground,
+      TRStatusVariant.danger => colors.dangerForeground,
     };
     final fraction = _fractionOf(widget);
     final motionDuration = MediaQuery.disableAnimationsOf(context)

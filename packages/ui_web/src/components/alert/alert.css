@@ -29,25 +29,25 @@
   .tr-alert[data-variant="info"] {
     --_tr-alert-background: var(--tinyrack-info-surface-subtle);
     --_tr-alert-border: var(--tinyrack-info-border);
-    --_tr-alert-color: var(--tinyrack-info);
+    --_tr-alert-color: var(--tinyrack-info-foreground);
   }
 
   .tr-alert[data-variant="success"] {
     --_tr-alert-background: var(--tinyrack-success-surface-subtle);
     --_tr-alert-border: var(--tinyrack-success-border);
-    --_tr-alert-color: var(--tinyrack-success);
+    --_tr-alert-color: var(--tinyrack-success-foreground);
   }
 
   .tr-alert[data-variant="warning"] {
     --_tr-alert-background: var(--tinyrack-warning-surface-subtle);
     --_tr-alert-border: var(--tinyrack-warning-border);
-    --_tr-alert-color: var(--tinyrack-warning);
+    --_tr-alert-color: var(--tinyrack-warning-foreground);
   }
 
   .tr-alert[data-variant="danger"] {
     --_tr-alert-background: var(--tinyrack-danger-surface-subtle);
     --_tr-alert-border: var(--tinyrack-danger-border);
-    --_tr-alert-color: var(--tinyrack-danger);
+    --_tr-alert-color: var(--tinyrack-danger-foreground);
   }
 
   .tr-alert-title {

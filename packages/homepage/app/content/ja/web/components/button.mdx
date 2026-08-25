@@ -66,7 +66,7 @@ export function DeployAction() {
 <ComponentExampleTabs
   id="button-solid-intents"
   title="ソリッドの目的別表示"
-  description="最も強く強調したい操作にはソリッドボタンを使います。"
+  description="最も強く強調したい操作にはソリッドボタンを使います。各 intent の塗りと対応する `on-*` 色を組み合わせます。"
   preview={(
     <div className="flex flex-wrap gap-2">
       <TRButton data-docs-example-item="" appearance="solid" intent="neutral">通常</TRButton>
@@ -101,7 +101,7 @@ export function SolidButtonIntents() {
 <ComponentExampleTabs
   id="button-outline-intents"
   title="アウトラインの目的別表示"
-  description="目立たせながら強調を抑えたい操作にはアウトラインボタンを使います。"
+  description="目立たせながら強調を抑えたい操作にはアウトラインボタンを使います。文字とアイコンには intent の foreground ロールを使います。"
   preview={(
     <div className="flex flex-wrap gap-2">
       <TRButton data-docs-example-item="" appearance="outline" intent="neutral">通常</TRButton>

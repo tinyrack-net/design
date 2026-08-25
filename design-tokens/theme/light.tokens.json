@@ -128,6 +128,10 @@
         "$type": "color",
         "$value": "{palettes.blue.900}"
       },
+      "primaryForeground": {
+        "$type": "color",
+        "$value": "{palettes.blue.700}"
+      },
       "onPrimary": {
         "$type": "color",
         "$value": {
@@ -152,6 +156,10 @@
       "infoPressed": {
         "$type": "color",
         "$value": "{palettes.blue.900}"
+      },
+      "infoForeground": {
+        "$type": "color",
+        "$value": "{palettes.blue.700}"
       },
       "infoSurface": {
         "$type": "color",
@@ -198,6 +206,10 @@
         "$type": "color",
         "$value": "{palettes.green.900}"
       },
+      "successForeground": {
+        "$type": "color",
+        "$value": "{palettes.green.700}"
+      },
       "successSurface": {
         "$type": "color",
         "$value": "{palettes.green.50}"
@@ -243,6 +255,10 @@
         "$type": "color",
         "$value": "{palettes.amber.950}"
       },
+      "warningForeground": {
+        "$type": "color",
+        "$value": "{palettes.amber.800}"
+      },
       "warningSurface": {
         "$type": "color",
         "$value": "{palettes.amber.50}"
@@ -287,6 +303,10 @@
       "dangerPressed": {
         "$type": "color",
         "$value": "{palettes.red.900}"
+      },
+      "dangerForeground": {
+        "$type": "color",
+        "$value": "{palettes.red.700}"
       },
       "dangerSurface": {
         "$type": "color",

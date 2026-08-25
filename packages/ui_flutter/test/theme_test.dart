@@ -139,7 +139,7 @@ void main() {
     final dark = TinyrackTheme.dark().extension<TinyrackThemeData>()!;
 
     expect(light.surface, isNot(dark.surface));
-    expect(light.foregroundFor(TRIntent.danger), light.danger);
+    expect(light.foregroundFor(TRIntent.danger), light.dangerForeground);
     expect(dark.surfaceFor(TRIntent.info), dark.infoSurface);
     expect(
       TinyrackTheme.light().textTheme.bodyMedium?.fontFamily,
@@ -193,7 +193,7 @@ void main() {
       expect(scheme.surfaceTint, Colors.transparent);
       expect(scheme.inverseSurface, tokens.surfaceInverse);
       expect(scheme.onInverseSurface, tokens.textInverse);
-      expect(scheme.inversePrimary, inverted.primary);
+      expect(scheme.inversePrimary, inverted.primaryForeground);
       expect(scheme.surfaceContainerLowest, tokens.surface);
       expect(scheme.surfaceContainerLow, tokens.surface);
       expect(scheme.surfaceContainer, tokens.surfaceMuted);
@@ -205,11 +205,11 @@ void main() {
         isLight ? tokens.surface : tokens.surfaceMuted,
       );
       expect(scheme.primaryContainer, tokens.infoSurface);
-      expect(scheme.onPrimaryContainer, tokens.primary);
+      expect(scheme.onPrimaryContainer, tokens.primaryForeground);
       expect(scheme.secondaryContainer, tokens.surfaceMuted);
       expect(scheme.onSecondaryContainer, tokens.text);
       expect(scheme.errorContainer, tokens.dangerSurface);
-      expect(scheme.onErrorContainer, tokens.danger);
+      expect(scheme.onErrorContainer, tokens.dangerForeground);
       expect(data.canvasColor, tokens.surface);
       expect(data.scaffoldBackgroundColor, tokens.surface);
       expect(data.dividerColor, tokens.border);
@@ -483,6 +483,82 @@ void main() {
       textMuted,
     );
   });
+
+  testWidgets(
+    'solid and outline intents use distinct fill and foreground roles',
+    (tester) async {
+      for (final (theme, generated) in <(ThemeData, TRGeneratedColorTheme)>[
+        (TinyrackTheme.light(), TRGeneratedColors.light),
+        (TinyrackTheme.dark(), TRGeneratedColors.dark),
+      ]) {
+        final colors = theme.extension<TinyrackThemeData>()!;
+        final roles = <(TRIntent, Color, Color)>[
+          (TRIntent.primary, generated.primary, generated.onPrimary),
+          (TRIntent.info, generated.info, generated.onInfo),
+          (TRIntent.success, generated.success, generated.onSuccess),
+          (TRIntent.warning, generated.warning, generated.onWarning),
+          (TRIntent.danger, generated.danger, generated.onDanger),
+        ];
+
+        for (final (intent, fill, onColor) in roles) {
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: theme,
+              home: Scaffold(
+                body: Row(
+                  children: [
+                    TRButton(
+                      key: const ValueKey('solid'),
+                      intent: intent,
+                      onPressed: () {},
+                      child: const Text('Solid'),
+                    ),
+                    TRButton(
+                      key: const ValueKey('outline'),
+                      appearance: TRAppearance.outline,
+                      intent: intent,
+                      onPressed: () {},
+                      child: const Text('Outline'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+
+          final solidFrame = tester
+              .widgetList<AnimatedContainer>(
+                find.descendant(
+                  of: find.byKey(const ValueKey('solid')),
+                  matching: find.byType(AnimatedContainer),
+                ),
+              )
+              .singleWhere((container) => container.decoration != null);
+          final solid = tester.widget<FilledButton>(
+            find.descendant(
+              of: find.byKey(const ValueKey('solid')),
+              matching: find.byType(FilledButton),
+            ),
+          );
+          final outline = tester.widget<OutlinedButton>(
+            find.descendant(
+              of: find.byKey(const ValueKey('outline')),
+              matching: find.byType(OutlinedButton),
+            ),
+          );
+
+          expect((solidFrame.decoration! as BoxDecoration).color, fill);
+          expect(solid.style?.foregroundColor?.resolve({}), onColor);
+          expect(solid.style?.side?.resolve({})?.color, Colors.transparent);
+          expect(
+            outline.style?.foregroundColor?.resolve({}),
+            colors.foregroundFor(intent),
+          );
+        }
+      }
+    },
+  );
 
   testWidgets('button activates Space on key release', (tester) async {
     final focusNode = FocusNode();

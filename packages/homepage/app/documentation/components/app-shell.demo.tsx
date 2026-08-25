@@ -195,7 +195,7 @@ function WorkspaceContent() {
           </h2>
         </div>
         <span className="flex items-center gap-2 rounded-full border border-tinyrack-border px-3 py-1 text-tinyrack-xs">
-          <span className="size-2 rounded-full bg-tinyrack-success" />
+          <span className="size-2 rounded-full bg-tinyrack-success-foreground" />
           {copy[4]}
         </span>
       </div>

@@ -47,10 +47,12 @@ const semanticColorNames = [
   'primary',
   'primaryHover',
   'primaryPressed',
+  'primaryForeground',
   'onPrimary',
   'info',
   'infoHover',
   'infoPressed',
+  'infoForeground',
   'infoSurface',
   'infoSurfaceSubtle',
   'infoSurfaceHover',
@@ -60,6 +62,7 @@ const semanticColorNames = [
   'success',
   'successHover',
   'successPressed',
+  'successForeground',
   'successSurface',
   'successSurfaceSubtle',
   'successSurfaceHover',
@@ -69,6 +72,7 @@ const semanticColorNames = [
   'warning',
   'warningHover',
   'warningPressed',
+  'warningForeground',
   'warningSurface',
   'warningSurfaceSubtle',
   'warningSurfaceHover',
@@ -78,6 +82,7 @@ const semanticColorNames = [
   'danger',
   'dangerHover',
   'dangerPressed',
+  'dangerForeground',
   'dangerSurface',
   'dangerSurfaceSubtle',
   'dangerSurfaceHover',
@@ -132,7 +137,7 @@ describe('tinyrack design tokens', () => {
   it('provides exactly the public light and dark functional colors', () => {
     for (const mode of ['light', 'dark'] as const) {
       expect(Object.keys(tinyrackSemanticColors[mode])).toEqual(semanticColorNames);
-      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(65);
+      expect(Object.keys(tinyrackSemanticColors[mode])).toHaveLength(70);
     }
   });
 
@@ -251,9 +256,11 @@ describe('tinyrack design tokens', () => {
 
   it('keeps semantic content colors readable on their paired fills', () => {
     for (const semanticColors of Object.values(tinyrackSemanticColors)) {
-      expect(
-        contrastRatio(semanticColors.onPrimary, semanticColors.primary),
-      ).toBeGreaterThanOrEqual(minimumContrastRatio);
+      for (const state of ['', 'Hover', 'Pressed'] as const) {
+        expect(
+          contrastRatio(semanticColors.onPrimary, semanticColors[`primary${state}`]),
+        ).toBeGreaterThanOrEqual(minimumContrastRatio);
+      }
       expect(
         contrastRatio(semanticColors.onDanger, semanticColors.danger),
       ).toBeGreaterThanOrEqual(minimumContrastRatio);
@@ -262,7 +269,7 @@ describe('tinyrack design tokens', () => {
         const colorName = intent.toLowerCase() as Lowercase<typeof intent>;
         expect(
           contrastRatio(
-            semanticColors[colorName],
+            semanticColors[`${colorName}Foreground`],
             semanticColors[`${colorName}SurfaceSubtle`],
           ),
         ).toBeGreaterThanOrEqual(minimumContrastRatio);
@@ -272,6 +279,9 @@ describe('tinyrack design tokens', () => {
           ).toBeGreaterThanOrEqual(minimumContrastRatio);
         }
       }
+      expect(
+        contrastRatio(semanticColors.primaryForeground, semanticColors.surface),
+      ).toBeGreaterThanOrEqual(minimumContrastRatio);
     }
   });
 

@@ -109,8 +109,8 @@ describe('Tinyrack Web project check', () => {
   it('allows illustration roles and meaningful status colors in SVGs', async () => {
     const root = project({
       'src/app.css': `@import "@tinyrack/ui/core.css";
-.art { --face: var(--tinyrack-illustration-fill-tertiary); fill: var(--face); stroke: var(--tinyrack-success); }`,
-      'src/app.tsx': `export const Art = () => <svg className="fill-tinyrack-illustration-detail stroke-tinyrack-illustration-stroke"><path fill="var(--tinyrack-illustration-shadow)" style={{ stroke: 'var(--tinyrack-success)' }} /></svg>;`,
+.art { --face: var(--tinyrack-illustration-fill-tertiary); fill: var(--face); stroke: var(--tinyrack-success-foreground); }`,
+      'src/app.tsx': `export const Art = () => <svg className="fill-tinyrack-illustration-detail stroke-tinyrack-illustration-stroke"><path fill="var(--tinyrack-illustration-shadow)" style={{ stroke: 'var(--tinyrack-success-foreground)' }} /></svg>;`,
     });
     expect((await checkTinyrackProject({ root })).violations).toEqual([]);
   });
