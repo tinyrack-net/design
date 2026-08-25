@@ -62,7 +62,7 @@
   }
 
   .tr-tabs-indicator {
-    background: var(--tr-tabs-indicator-background, var(--tinyrack-primary));
+    background: var(--tr-tabs-indicator-background, var(--tinyrack-primary-foreground));
     block-size: var(--tr-tabs-indicator-size, var(--tinyrack-border-width-strong));
     bottom: 0;
     inline-size: var(--active-tab-width);

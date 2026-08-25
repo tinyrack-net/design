@@ -121,7 +121,7 @@
   .tr-toast-close {
     border: 0;
     background: transparent;
-    color: var(--tinyrack-primary);
+    color: var(--tinyrack-primary-foreground);
     font: inherit;
     cursor: pointer;
   }

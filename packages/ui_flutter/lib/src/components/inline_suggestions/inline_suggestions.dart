@@ -727,7 +727,7 @@ class _TRInlineSuggestionsNotice extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TRGeneratedTextStyles.caption.copyWith(
-                color: danger ? colors.danger : colors.textMuted,
+                color: danger ? colors.dangerForeground : colors.textMuted,
                 fontFamilyFallback: TRGeneratedFontFamilies.fallback,
               ),
             ),

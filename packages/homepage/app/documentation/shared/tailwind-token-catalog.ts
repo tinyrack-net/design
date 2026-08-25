@@ -913,6 +913,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-primary-foreground',
+    themeVariable: '--color-tinyrack-primary-foreground',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-on-primary',
     themeVariable: '--color-tinyrack-on-primary',
   },
@@ -930,6 +935,11 @@ export const tailwindTokenBridge = [
     group: 'color',
     runtimeVariable: '--tinyrack-info-pressed',
     themeVariable: '--color-tinyrack-info-pressed',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-info-foreground',
+    themeVariable: '--color-tinyrack-info-foreground',
   },
   {
     group: 'color',
@@ -978,6 +988,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-success-foreground',
+    themeVariable: '--color-tinyrack-success-foreground',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-success-surface',
     themeVariable: '--color-tinyrack-success-surface',
   },
@@ -1023,6 +1038,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'color',
+    runtimeVariable: '--tinyrack-warning-foreground',
+    themeVariable: '--color-tinyrack-warning-foreground',
+  },
+  {
+    group: 'color',
     runtimeVariable: '--tinyrack-warning-surface',
     themeVariable: '--color-tinyrack-warning-surface',
   },
@@ -1065,6 +1085,11 @@ export const tailwindTokenBridge = [
     group: 'color',
     runtimeVariable: '--tinyrack-danger-pressed',
     themeVariable: '--color-tinyrack-danger-pressed',
+  },
+  {
+    group: 'color',
+    runtimeVariable: '--tinyrack-danger-foreground',
+    themeVariable: '--color-tinyrack-danger-foreground',
   },
   {
     group: 'color',

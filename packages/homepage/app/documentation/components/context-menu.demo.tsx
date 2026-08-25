@@ -296,7 +296,9 @@ export function ContextMenuPreview({
                   {rackAddress} · Seoul
                 </span>
               </span>
-              <span className="text-sm text-tinyrack-success">{text.online}</span>
+              <span className="text-sm text-tinyrack-success-foreground">
+                {text.online}
+              </span>
             </TRContextMenu.Trigger>
             <TRButton
               appearance="outline"

@@ -179,10 +179,12 @@
   --color-tinyrack-primary: var(--tinyrack-primary);
   --color-tinyrack-primary-hover: var(--tinyrack-primary-hover);
   --color-tinyrack-primary-pressed: var(--tinyrack-primary-pressed);
+  --color-tinyrack-primary-foreground: var(--tinyrack-primary-foreground);
   --color-tinyrack-on-primary: var(--tinyrack-on-primary);
   --color-tinyrack-info: var(--tinyrack-info);
   --color-tinyrack-info-hover: var(--tinyrack-info-hover);
   --color-tinyrack-info-pressed: var(--tinyrack-info-pressed);
+  --color-tinyrack-info-foreground: var(--tinyrack-info-foreground);
   --color-tinyrack-info-surface: var(--tinyrack-info-surface);
   --color-tinyrack-info-surface-subtle: var(--tinyrack-info-surface-subtle);
   --color-tinyrack-info-surface-hover: var(--tinyrack-info-surface-hover);
@@ -192,6 +194,7 @@
   --color-tinyrack-success: var(--tinyrack-success);
   --color-tinyrack-success-hover: var(--tinyrack-success-hover);
   --color-tinyrack-success-pressed: var(--tinyrack-success-pressed);
+  --color-tinyrack-success-foreground: var(--tinyrack-success-foreground);
   --color-tinyrack-success-surface: var(--tinyrack-success-surface);
   --color-tinyrack-success-surface-subtle: var(--tinyrack-success-surface-subtle);
   --color-tinyrack-success-surface-hover: var(--tinyrack-success-surface-hover);
@@ -201,6 +204,7 @@
   --color-tinyrack-warning: var(--tinyrack-warning);
   --color-tinyrack-warning-hover: var(--tinyrack-warning-hover);
   --color-tinyrack-warning-pressed: var(--tinyrack-warning-pressed);
+  --color-tinyrack-warning-foreground: var(--tinyrack-warning-foreground);
   --color-tinyrack-warning-surface: var(--tinyrack-warning-surface);
   --color-tinyrack-warning-surface-subtle: var(--tinyrack-warning-surface-subtle);
   --color-tinyrack-warning-surface-hover: var(--tinyrack-warning-surface-hover);
@@ -210,6 +214,7 @@
   --color-tinyrack-danger: var(--tinyrack-danger);
   --color-tinyrack-danger-hover: var(--tinyrack-danger-hover);
   --color-tinyrack-danger-pressed: var(--tinyrack-danger-pressed);
+  --color-tinyrack-danger-foreground: var(--tinyrack-danger-foreground);
   --color-tinyrack-danger-surface: var(--tinyrack-danger-surface);
   --color-tinyrack-danger-surface-subtle: var(--tinyrack-danger-surface-subtle);
   --color-tinyrack-danger-surface-hover: var(--tinyrack-danger-surface-hover);

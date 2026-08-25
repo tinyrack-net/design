@@ -140,7 +140,7 @@
     place-items: center;
     inline-size: var(--tinyrack-space-lg);
     block-size: var(--tinyrack-space-lg);
-    color: var(--tinyrack-primary);
+    color: var(--tinyrack-primary-foreground);
   }
 
   .tr-menu-label {

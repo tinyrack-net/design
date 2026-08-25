@@ -307,7 +307,11 @@ export function CheckboxGroupFormPreview() {
         selectedValues={selectedValues}
       />
       {invalid ? (
-        <p className="m-0 text-sm text-tinyrack-danger" id={errorId} role="alert">
+        <p
+          className="m-0 text-sm text-tinyrack-danger-foreground"
+          id={errorId}
+          role="alert"
+        >
           {errorMessage}
         </p>
       ) : null}

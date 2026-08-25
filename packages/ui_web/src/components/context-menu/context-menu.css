@@ -89,7 +89,7 @@
   }
 
   .tr-context-menu-item[data-variant="danger"] {
-    color: var(--tinyrack-danger);
+    color: var(--tinyrack-danger-foreground);
   }
 
   .tr-context-menu-item[data-variant="danger"]:is(
@@ -98,7 +98,7 @@
     [data-highlighted]
   ) {
     background: var(--tinyrack-danger-surface);
-    color: var(--tinyrack-danger-hover);
+    color: var(--tinyrack-danger-foreground);
   }
 
   .tr-context-menu-group-label {
@@ -114,7 +114,7 @@
     align-items: center;
     background: var(--tr-context-menu-indicator-background, transparent);
     border-radius: var(--tinyrack-radius-full);
-    color: var(--tr-context-menu-indicator-color, var(--tinyrack-primary));
+    color: var(--tr-context-menu-indicator-color, var(--tinyrack-primary-foreground));
     display: inline-flex;
     flex: none;
     inline-size: var(--tinyrack-space-lg);

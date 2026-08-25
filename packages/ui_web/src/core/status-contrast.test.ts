@@ -29,7 +29,7 @@ describe('semantic status contrast', () => {
   it('locks text, surface, border and filled contrast in both themes', () => {
     for (const theme of Object.values(tinyrackSemanticColors)) {
       for (const status of ['info', 'success', 'warning', 'danger'] as const) {
-        const text = theme[status];
+        const text = theme[`${status}Foreground`];
         const surface = theme[`${status}Surface`];
         const border = theme[`${status}Border`];
 
@@ -64,6 +64,18 @@ describe('semantic status contrast', () => {
         contrast(theme.onDanger, theme.danger),
         'danger content',
       ).toBeGreaterThanOrEqual(4.5);
+      for (const foreground of [
+        theme.primaryForeground,
+        theme.infoForeground,
+        theme.successForeground,
+        theme.warningForeground,
+        theme.dangerForeground,
+      ]) {
+        expect(
+          contrast(foreground, theme.surface),
+          'intent foreground',
+        ).toBeGreaterThanOrEqual(4.5);
+      }
       expect(
         contrast(theme.focus, theme.surface),
         'focus on surface',

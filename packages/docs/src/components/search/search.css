@@ -82,7 +82,7 @@
   background: var(--tinyrack-warning-surface);
   border: var(--tinyrack-border-width-default) solid var(--tinyrack-warning-border);
   border-radius: var(--tinyrack-radius-md);
-  color: var(--tinyrack-warning);
+  color: var(--tinyrack-warning-foreground);
   margin-block-end: var(--tinyrack-space-sm);
 }
 

@@ -52,6 +52,6 @@
     content: none;
   }
   .tr-file-tree-directory > details > summary::marker {
-    color: var(--tr-file-tree-marker, var(--tinyrack-primary));
+    color: var(--tr-file-tree-marker, var(--tinyrack-primary-foreground));
   }
 }

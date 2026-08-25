@@ -84,10 +84,10 @@ class _TRProgressState extends State<TRProgress>
     final colors = context.tinyrackTheme;
     final fill = switch (widget.variant) {
       TRStatusVariant.neutral => colors.textMuted,
-      TRStatusVariant.info => colors.info,
-      TRStatusVariant.success => colors.success,
-      TRStatusVariant.warning => colors.warning,
-      TRStatusVariant.danger => colors.danger,
+      TRStatusVariant.info => colors.infoForeground,
+      TRStatusVariant.success => colors.successForeground,
+      TRStatusVariant.warning => colors.warningForeground,
+      TRStatusVariant.danger => colors.dangerForeground,
     };
     final height = switch (uiSize) {
       TRUiSize.sm => TRGeneratedSpacing.size3xs * 2,

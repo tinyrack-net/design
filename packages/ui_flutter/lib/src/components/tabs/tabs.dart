@@ -436,7 +436,7 @@ class _TRTabsState extends State<TRTabs> {
                   child: SizedBox(
                     height: stripHeight,
                     width: TRGeneratedBorders.strongWidth,
-                    child: ColoredBox(color: colors.primary),
+                    child: ColoredBox(color: colors.primaryForeground),
                   ),
                 ),
               ),
@@ -637,7 +637,7 @@ class _TRTabItemState extends State<_TRTabItem>
               child: SizedBox(
                 key: ValueKey<String>('tr-tabs-indicator-${widget.tab.value}'),
                 height: TRGeneratedBorders.strongWidth,
-                child: ColoredBox(color: colors.primary),
+                child: ColoredBox(color: colors.primaryForeground),
               ),
             ),
           if (showFocusRing)

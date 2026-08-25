@@ -65,7 +65,7 @@ class TRDropOverlay extends StatelessWidget {
                           children: <Widget>[
                             Icon(
                               LucideIcons.upload,
-                              color: colors.primary,
+                              color: colors.primaryForeground,
                               size: TRGeneratedSpacing.size2xl,
                             ),
                             const SizedBox(height: TRGeneratedSpacing.sm),

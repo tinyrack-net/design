@@ -127,7 +127,7 @@
   }
 
   .tr-field-error {
-    color: var(--tr-field-error-color, var(--tinyrack-danger));
+    color: var(--tr-field-error-color, var(--tinyrack-danger-foreground));
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -25,7 +25,7 @@
 
 .tr-document-pagination-link:not([data-disabled]):hover {
   background: var(--tinyrack-surface-hover);
-  border-color: var(--tinyrack-primary);
+  border-color: var(--tinyrack-primary-foreground);
   opacity: revert;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .tr-document-pagination-link:not([data-disabled]):hover > strong {
-  color: var(--tinyrack-primary);
+  color: var(--tinyrack-primary-foreground);
 }
 
 .tr-document-pagination-description {

@@ -650,13 +650,13 @@ class _TRMenuIndicator extends StatelessWidget {
         _TRMenuIndicatorKind.empty => null,
         _TRMenuIndicatorKind.check => Icon(
           LucideIcons.check,
-          color: context.tinyrackTheme.primary,
+          color: context.tinyrackTheme.primaryForeground,
           size: TRGeneratedSpacing.lg,
         ),
         _TRMenuIndicatorKind.dot => Center(
           child: DecoratedBox(
             decoration: BoxDecoration(
-              color: context.tinyrackTheme.primary,
+              color: context.tinyrackTheme.primaryForeground,
               shape: BoxShape.circle,
             ),
             child: const SizedBox.square(dimension: TRGeneratedSpacing.sm),

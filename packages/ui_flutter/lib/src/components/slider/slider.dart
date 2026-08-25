@@ -270,7 +270,7 @@ class _TRSliderFrame extends StatelessWidget {
       height: TRGeneratedTypographyLineHeights.md,
     ),
     style: TextStyle(
-      color: context.tinyrackTheme.danger,
+      color: context.tinyrackTheme.dangerForeground,
       fontFamily: TRGeneratedFontFamilies.body,
       fontSize: TRGeneratedTypographySizes.xs,
       height: TRGeneratedTypographyLineHeights.md,
@@ -516,7 +516,9 @@ class _TRScalarSliderControlState extends State<_TRScalarSliderControl>
                     : null,
                 child: CustomPaint(
                   painter: _TRSliderPainter(
-                    active: widget.invalid ? colors.danger : colors.primary,
+                    active: widget.invalid
+                        ? colors.dangerForeground
+                        : colors.primaryForeground,
                     inactive: colors.surfaceMuted,
                     focused: focusVisible(hasFocus: _focused),
                     focus: colors.focus,
@@ -686,7 +688,9 @@ class _TRRangeSliderControlState extends State<_TRRangeSliderControl>
                     : null,
                 child: CustomPaint(
                   painter: _TRSliderPainter(
-                    active: widget.invalid ? colors.danger : colors.primary,
+                    active: widget.invalid
+                        ? colors.dangerForeground
+                        : colors.primaryForeground,
                     inactive: colors.surfaceMuted,
                     focused: focusVisible(hasFocus: _focused),
                     focus: colors.focus,

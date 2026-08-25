@@ -120,7 +120,9 @@ class _TRToggleState extends State<TRToggle> with TRFocusSourceMixin {
         : pressed
         ? generated.surfaceSelected
         : colors.surface;
-    final borderColor = pressed ? colors.primary : generated.controlBorder;
+    final borderColor = pressed
+        ? colors.primaryForeground
+        : generated.controlBorder;
     final height = switch (uiSize) {
       TRUiSize.sm => TRGeneratedControlMetrics.smHeight,
       TRUiSize.md => TRGeneratedControlMetrics.mdHeight,

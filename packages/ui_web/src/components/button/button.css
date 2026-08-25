@@ -90,8 +90,8 @@
     --_tr-btn-variant-fill: var(--tinyrack-primary);
     --_tr-btn-variant-fill-hover: var(--tinyrack-primary-hover);
     --_tr-btn-variant-fill-pressed: var(--tinyrack-primary-pressed);
-    --_tr-btn-variant-border: var(--tinyrack-primary);
-    --_tr-btn-variant-foreground: var(--tinyrack-primary);
+    --_tr-btn-variant-border: var(--tinyrack-primary-foreground);
+    --_tr-btn-variant-foreground: var(--tinyrack-primary-foreground);
     --_tr-btn-variant-text: var(--tinyrack-on-primary);
     --_tr-btn-variant-surface-hover: var(--tinyrack-surface-hover);
     --_tr-btn-variant-surface-pressed: var(--tinyrack-surface-selected);
@@ -102,7 +102,7 @@
     --_tr-btn-variant-fill-hover: var(--tinyrack-info-hover);
     --_tr-btn-variant-fill-pressed: var(--tinyrack-info-pressed);
     --_tr-btn-variant-border: var(--tinyrack-info-border);
-    --_tr-btn-variant-foreground: var(--tinyrack-info);
+    --_tr-btn-variant-foreground: var(--tinyrack-info-foreground);
     --_tr-btn-variant-text: var(--tinyrack-on-info);
     --_tr-btn-variant-surface-hover: var(--tinyrack-info-surface-hover);
     --_tr-btn-variant-surface-pressed: var(--tinyrack-info-surface-pressed);
@@ -113,7 +113,7 @@
     --_tr-btn-variant-fill-hover: var(--tinyrack-success-hover);
     --_tr-btn-variant-fill-pressed: var(--tinyrack-success-pressed);
     --_tr-btn-variant-border: var(--tinyrack-success-border);
-    --_tr-btn-variant-foreground: var(--tinyrack-success);
+    --_tr-btn-variant-foreground: var(--tinyrack-success-foreground);
     --_tr-btn-variant-text: var(--tinyrack-on-success);
     --_tr-btn-variant-surface-hover: var(--tinyrack-success-surface-hover);
     --_tr-btn-variant-surface-pressed: var(--tinyrack-success-surface-pressed);
@@ -124,7 +124,7 @@
     --_tr-btn-variant-fill-hover: var(--tinyrack-warning-hover);
     --_tr-btn-variant-fill-pressed: var(--tinyrack-warning-pressed);
     --_tr-btn-variant-border: var(--tinyrack-warning-border);
-    --_tr-btn-variant-foreground: var(--tinyrack-warning);
+    --_tr-btn-variant-foreground: var(--tinyrack-warning-foreground);
     --_tr-btn-variant-text: var(--tinyrack-on-warning);
     --_tr-btn-variant-surface-hover: var(--tinyrack-warning-surface-hover);
     --_tr-btn-variant-surface-pressed: var(--tinyrack-warning-surface-pressed);
@@ -135,7 +135,7 @@
     --_tr-btn-variant-fill-hover: var(--tinyrack-danger-hover);
     --_tr-btn-variant-fill-pressed: var(--tinyrack-danger-pressed);
     --_tr-btn-variant-border: var(--tinyrack-danger-border);
-    --_tr-btn-variant-foreground: var(--tinyrack-danger);
+    --_tr-btn-variant-foreground: var(--tinyrack-danger-foreground);
     --_tr-btn-variant-text: var(--tinyrack-on-danger);
     --_tr-btn-variant-surface-hover: var(--tinyrack-danger-surface-hover);
     --_tr-btn-variant-surface-pressed: var(--tinyrack-danger-surface-pressed);
@@ -143,7 +143,7 @@
 
   .tr-btn[data-appearance="solid"] {
     background-color: var(--tr-btn-variant-fill, var(--_tr-btn-variant-fill));
-    border-color: var(--tr-btn-variant-border, var(--_tr-btn-variant-border));
+    border-color: transparent;
     color: var(--tr-btn-variant-text, var(--_tr-btn-variant-text));
   }
 

@@ -814,7 +814,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
             : colors.surface,
         solidBorderColor: focused
             ? error
-                  ? colors.danger
+                  ? colors.dangerForeground
                   : colors.focus
             : error
             ? colors.dangerBorder
@@ -1062,7 +1062,7 @@ class _TRSelectState<T> extends State<TRSelect<T>>
             style: TextStyle(
               color: widget.errorText == null
                   ? colors.textMuted
-                  : colors.danger,
+                  : colors.dangerForeground,
               fontFamily: TRGeneratedFontFamilies.body,
               fontFamilyFallback: TRGeneratedFontFamilies.fallback,
               fontSize: TRGeneratedTypographySizes.xs,

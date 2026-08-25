@@ -250,7 +250,7 @@ class _TRAppShellState extends State<TRAppShell> {
                     height: TRGeneratedSpacing.xs,
                     child: LinearProgressIndicator(
                       backgroundColor: Colors.transparent,
-                      color: context.tinyrackTheme.primary,
+                      color: context.tinyrackTheme.primaryForeground,
                     ),
                   ),
                 ),

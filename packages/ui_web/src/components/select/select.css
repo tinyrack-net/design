@@ -116,7 +116,7 @@
     background: var(--tr-select-indicator-background, transparent);
     border-radius: var(--tinyrack-radius-full);
     block-size: var(--tinyrack-space-lg);
-    color: var(--tr-select-indicator-color, var(--tinyrack-primary));
+    color: var(--tr-select-indicator-color, var(--tinyrack-primary-foreground));
     display: inline-grid;
     flex: none;
     inline-size: var(--tinyrack-space-lg);

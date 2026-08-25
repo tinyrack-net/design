@@ -38,11 +38,11 @@
   }
 
   .tr-spinner[data-variant="primary"] {
-    --_tr-spinner-color: var(--tinyrack-primary);
+    --_tr-spinner-color: var(--tinyrack-primary-foreground);
   }
 
   .tr-spinner[data-variant="danger"] {
-    --_tr-spinner-color: var(--tinyrack-danger);
+    --_tr-spinner-color: var(--tinyrack-danger-foreground);
   }
 
   @keyframes tr-spinner-rotate {

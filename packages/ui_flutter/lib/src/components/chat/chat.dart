@@ -73,8 +73,10 @@ class TRChatMessageRow extends StatelessWidget {
                 color: switch (tone) {
                   TRChatMessageTone.defaultTone => context.tinyrackTheme.text,
                   TRChatMessageTone.muted => context.tinyrackTheme.textMuted,
-                  TRChatMessageTone.primary => context.tinyrackTheme.primary,
-                  TRChatMessageTone.danger => context.tinyrackTheme.danger,
+                  TRChatMessageTone.primary =>
+                    context.tinyrackTheme.primaryForeground,
+                  TRChatMessageTone.danger =>
+                    context.tinyrackTheme.dangerForeground,
                 },
               ),
             ),
@@ -487,9 +489,9 @@ class _TRChatRunningTextState extends State<_TRChatRunningText>
 
 Color _statusColor(TinyrackThemeData colors, TRChatToolStatus status) =>
     switch (status) {
-      TRChatToolStatus.running => colors.primary,
-      TRChatToolStatus.succeeded => colors.success,
-      TRChatToolStatus.failed => colors.danger,
+      TRChatToolStatus.running => colors.primaryForeground,
+      TRChatToolStatus.succeeded => colors.successForeground,
+      TRChatToolStatus.failed => colors.dangerForeground,
       TRChatToolStatus.denied => colors.textMuted,
     };
 

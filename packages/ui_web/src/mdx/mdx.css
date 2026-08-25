@@ -182,7 +182,7 @@
 
 .tr-mdx-link,
 .tr-mdx .tr-mdx-link.tr-mdx-link {
-  --tr-link-color: var(--tinyrack-primary);
+  --tr-link-color: var(--tinyrack-primary-foreground);
   --tr-link-font-weight: var(--tinyrack-weight-medium);
   --tr-link-underline-offset: var(--tinyrack-space-xs);
   text-decoration: underline;

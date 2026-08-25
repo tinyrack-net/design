@@ -1493,9 +1493,9 @@ class AccordionStates extends StatelessWidget {
         ko: '인텐트와 표현',
       },
       description: {
-        en: 'Every intent renders in each appearance. Use solid for the primary action, outline for secondary, and ghost for low-emphasis controls.',
-        ja: 'すべてのインテントを各 appearance で表示します。主要な操作には solid、補助的な操作には outline、控えめな操作には ghost を使ってください。',
-        ko: '모든 인텐트를 appearance별로 보여줘요. 주요 동작에는 solid, 보조 동작에는 outline, 강조가 낮은 컨트롤에는 ghost를 사용하세요.',
+        en: 'Every intent renders in each appearance. Solid pairs an intent fill with its on-color; outline and ghost use the standalone foreground role.',
+        ja: 'すべてのインテントを各 appearance で表示します。solid は intent の塗りと on-color を組み合わせ、outline と ghost は単独の foreground ロールを使います。',
+        ko: '모든 인텐트를 appearance별로 보여줘요. solid는 intent 채움과 on-color를 함께 사용하고, outline과 ghost는 단독 foreground 역할을 사용해요.',
       },
       dart: String.raw`Column(
   crossAxisAlignment: CrossAxisAlignment.start,

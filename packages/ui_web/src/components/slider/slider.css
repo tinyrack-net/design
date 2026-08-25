@@ -25,7 +25,10 @@
   }
 
   .tr-slider-indicator {
-    background: var(--tr-slider-indicator-background, var(--tinyrack-primary));
+    background: var(
+      --tr-slider-indicator-background,
+      var(--tinyrack-primary-foreground)
+    );
     border-radius: var(--tinyrack-radius-full);
     inset-block: 0;
     position: absolute;
@@ -33,7 +36,7 @@
 
   .tr-slider-thumb {
     background: var(--tr-slider-thumb-background, var(--tinyrack-surface));
-    border: var(--tinyrack-border-width-strong) solid var(--tinyrack-primary);
+    border: var(--tinyrack-border-width-strong) solid var(--tinyrack-primary-foreground);
     border-radius: var(--tinyrack-radius-full);
     box-shadow: var(--tinyrack-shadow-raised);
     height: var(--tr-slider-thumb-size, var(--tinyrack-space-md));

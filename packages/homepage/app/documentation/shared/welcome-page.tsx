@@ -580,7 +580,7 @@ function ProductWindow({ content }: { content: ProductCopy }) {
             className="mb-tinyrack-xl flex items-center gap-tinyrack-sm max-lg:justify-center max-lg:px-tinyrack-sm"
             data-welcome-environment=""
           >
-            <span className="size-tinyrack-sm flex-none rounded-tinyrack-full bg-tinyrack-success shadow-[0_0_0_var(--tinyrack-space-xs)_color-mix(in_srgb,var(--tinyrack-success)_18%,transparent)] motion-safe:animate-welcome-pulse motion-reduce:animate-none" />
+            <span className="size-tinyrack-sm flex-none rounded-tinyrack-full bg-tinyrack-success-foreground shadow-[0_0_0_var(--tinyrack-space-xs)_color-mix(in_srgb,var(--tinyrack-success-foreground)_18%,transparent)] motion-safe:animate-welcome-pulse motion-reduce:animate-none" />
             <TRAppShell.SidebarLabel className="flex gap-tinyrack-xs whitespace-nowrap">
               <TRText
                 as="strong"
@@ -755,8 +755,8 @@ function ProductWindow({ content }: { content: ProductCopy }) {
                         <span
                           className={
                             index === throughputBars.length - 1
-                              ? 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-primary'
-                              : 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-info'
+                              ? 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-primary-foreground'
+                              : 'min-h-tinyrack-xs rounded-t-tinyrack-xs bg-tinyrack-info-foreground'
                           }
                           data-welcome-throughput-bar=""
                           data-welcome-wave-index={index}

@@ -100,31 +100,48 @@
       },
       "primary": {
         "$type": "color",
-        "$value": "{palettes.blue.400}"
+        "$value": "{palettes.blue.700}"
       },
       "primaryHover": {
         "$type": "color",
-        "$value": "{palettes.blue.300}"
+        "$value": "{palettes.blue.600}"
       },
       "primaryPressed": {
         "$type": "color",
-        "$value": "{palettes.blue.200}"
+        "$value": "{palettes.blue.800}"
+      },
+      "primaryForeground": {
+        "$type": "color",
+        "$value": "{palettes.blue.400}"
       },
       "onPrimary": {
         "$type": "color",
-        "$value": "{palettes.blue.950}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
       },
       "info": {
         "$type": "color",
-        "$value": "{palettes.blue.300}"
+        "$value": "{palettes.blue.700}"
       },
       "infoHover": {
         "$type": "color",
-        "$value": "{palettes.blue.200}"
+        "$value": "{palettes.blue.600}"
       },
       "infoPressed": {
         "$type": "color",
-        "$value": "{palettes.blue.100}"
+        "$value": "{palettes.blue.800}"
+      },
+      "infoForeground": {
+        "$type": "color",
+        "$value": "{palettes.blue.300}"
       },
       "infoSurface": {
         "$type": "color",
@@ -157,19 +174,32 @@
       },
       "onInfo": {
         "$type": "color",
-        "$value": "{palettes.blue.950}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
       },
       "success": {
         "$type": "color",
-        "$value": "{palettes.green.300}"
+        "$value": "{palettes.green.800}"
       },
       "successHover": {
         "$type": "color",
-        "$value": "{palettes.green.200}"
+        "$value": "{palettes.green.700}"
       },
       "successPressed": {
         "$type": "color",
-        "$value": "{palettes.green.100}"
+        "$value": "{palettes.green.900}"
+      },
+      "successForeground": {
+        "$type": "color",
+        "$value": "{palettes.green.300}"
       },
       "successSurface": {
         "$type": "color",
@@ -202,19 +232,32 @@
       },
       "onSuccess": {
         "$type": "color",
-        "$value": "{palettes.green.950}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
       },
       "warning": {
         "$type": "color",
-        "$value": "{palettes.amber.300}"
+        "$value": "{palettes.amber.900}"
       },
       "warningHover": {
         "$type": "color",
-        "$value": "{palettes.amber.200}"
+        "$value": "{palettes.amber.800}"
       },
       "warningPressed": {
         "$type": "color",
-        "$value": "{palettes.amber.100}"
+        "$value": "{palettes.amber.950}"
+      },
+      "warningForeground": {
+        "$type": "color",
+        "$value": "{palettes.amber.300}"
       },
       "warningSurface": {
         "$type": "color",
@@ -247,19 +290,32 @@
       },
       "onWarning": {
         "$type": "color",
-        "$value": "{palettes.amber.950}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
       },
       "danger": {
         "$type": "color",
-        "$value": "{palettes.red.400}"
+        "$value": "{palettes.red.800}"
       },
       "dangerHover": {
         "$type": "color",
-        "$value": "{palettes.red.300}"
+        "$value": "{palettes.red.700}"
       },
       "dangerPressed": {
         "$type": "color",
-        "$value": "{palettes.red.200}"
+        "$value": "{palettes.red.900}"
+      },
+      "dangerForeground": {
+        "$type": "color",
+        "$value": "{palettes.red.400}"
       },
       "dangerSurface": {
         "$type": "color",
@@ -292,7 +348,16 @@
       },
       "onDanger": {
         "$type": "color",
-        "$value": "{palettes.red.950}"
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$extensions": {
+          "net.tinyrack": {
+            "output": "#ffffff"
+          }
+        }
       },
       "scrim": {
         "$type": "color",

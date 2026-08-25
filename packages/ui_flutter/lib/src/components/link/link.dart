@@ -60,7 +60,7 @@ class _TRLinkState extends State<TRLink>
     final color = switch (widget.variant) {
       TRLinkVariant.defaultVariant => colors.text,
       TRLinkVariant.muted => colors.textMuted,
-      TRLinkVariant.danger => colors.danger,
+      TRLinkVariant.danger => colors.dangerForeground,
     };
     final underlineVisible = switch (widget.underline) {
       TRLinkUnderline.always => true,

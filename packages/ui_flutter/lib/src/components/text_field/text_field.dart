@@ -251,7 +251,7 @@ class TRTextField extends StatelessWidget {
                   style: TextStyle(
                     color: errorText == null
                         ? context.tinyrackTheme.textMuted
-                        : context.tinyrackTheme.danger,
+                        : context.tinyrackTheme.dangerForeground,
                     fontFamily: TRGeneratedFontFamilies.body,
                     fontSize: TRGeneratedTypographySizes.xs,
                     height: TRGeneratedTypographyLineHeights.md,

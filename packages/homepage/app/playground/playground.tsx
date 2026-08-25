@@ -232,7 +232,10 @@ function JsonControl({
         value={draft}
       />
       {invalid ? (
-        <span className="text-tinyrack-xs text-tinyrack-danger" role="status">
+        <span
+          className="text-tinyrack-xs text-tinyrack-danger-foreground"
+          role="status"
+        >
           {validationMessage ?? invalidJsonMessage}
         </span>
       ) : null}

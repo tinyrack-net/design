@@ -262,7 +262,7 @@ function FlutterFrame({
       ) : null}
       {runtimeError ? (
         <div
-          className="absolute inset-0 grid place-items-center bg-tinyrack-surface px-6 text-center text-tinyrack-sm text-tinyrack-danger"
+          className="absolute inset-0 grid place-items-center bg-tinyrack-surface px-6 text-center text-tinyrack-sm text-tinyrack-danger-foreground"
           role="alert"
         >
           {errorLabel}

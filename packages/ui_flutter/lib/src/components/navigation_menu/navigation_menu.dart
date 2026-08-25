@@ -252,7 +252,7 @@ class _TRNavigationMenuEntryState<T> extends State<_TRNavigationMenuEntry<T>> {
                 border: open
                     ? Border(
                         bottom: BorderSide(
-                          color: context.tinyrackTheme.primary,
+                          color: context.tinyrackTheme.primaryForeground,
                         ),
                       )
                     : null,
