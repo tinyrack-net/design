@@ -1,3 +1,16 @@
+## 0.70.0
+
+- **Breaking.** `TinyrackThemeData` now separates solid intent fills from
+  foreground-only emphasis with `primaryForeground`, `infoForeground`,
+  `successForeground`, `warningForeground`, and `dangerForeground`.
+  `foregroundFor()` returns these roles for outline and ghost controls, text,
+  icons, links, indicators, and markers; use the intent and `on*` pairs for
+  filled surfaces and their content.
+- Dark-mode solid actions use deeper intent fills with white content across
+  normal, hover, and pressed states. Solid buttons keep a transparent border so
+  they retain the same geometry as outlined controls without drawing an
+  outline, and filled selection states use the primary/on-primary pair.
+
 ## 0.69.0
 
 - Adds `TinyrackIllustrationThemeData` and
