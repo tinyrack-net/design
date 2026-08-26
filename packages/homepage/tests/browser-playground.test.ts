@@ -4,6 +4,7 @@ import {
   createBrowserAuditRuntime,
   expectVisible,
   gotoHydrated,
+  setTheme,
 } from './browser-audit-runtime.ts';
 
 const runtime = createBrowserAuditRuntime();
@@ -20,6 +21,30 @@ describe('built React Router documentation', () => {
   afterAll(async () => {
     await runtime.stop();
   });
+  it.each([
+    ['tinyrack-light', 'rgb(255, 255, 255)'],
+    ['tinyrack-dark', 'rgb(10, 10, 10)'],
+  ] as const)(
+    'uses the base surface for the playground preview in the %s theme',
+    async (theme, expectedBackground) => {
+      const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
+      try {
+        await setTheme(page, theme);
+        await gotoHydrated(page, `${origin}/en/web/components/button`);
+        const playground = page.locator('[data-component-playground]');
+        const preview = playground.locator('[data-playground-preview]');
+        const backgrounds = await Promise.all(
+          [playground, preview].map((locator) =>
+            locator.evaluate((element) => getComputedStyle(element).backgroundColor),
+          ),
+        );
+
+        expect(backgrounds).toEqual([expectedBackground, expectedBackground]);
+      } finally {
+        await page.close();
+      }
+    },
+  );
   it('keeps interaction state inside the Preview while configuration controls still work', async () => {
     const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
     try {

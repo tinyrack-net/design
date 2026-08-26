@@ -426,8 +426,8 @@ export function ComponentPlayground<TArgs extends DemoArgs>({
       <TRScrollArea.Root
         className={
           wideControls
-            ? 'min-h-[22.5rem] min-w-0 bg-tinyrack-surface-muted'
-            : 'min-h-64 min-w-0 bg-tinyrack-surface-muted'
+            ? 'min-h-[22.5rem] min-w-0 bg-tinyrack-surface'
+            : 'min-h-64 min-w-0 bg-tinyrack-surface'
         }
         data-playground-preview=""
         variant="plain"
