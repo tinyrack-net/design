@@ -1,5 +1,26 @@
 # Changelog
 
+## @tinyrack/ui 0.27.0 / @tinyrack/docs 0.21.0
+
+### Breaking
+
+- Intent colors now separate solid fills from foreground-only emphasis. Use
+  `primaryForeground`, `infoForeground`, `successForeground`,
+  `warningForeground`, and `dangerForeground` for outline and ghost controls,
+  text, icons, links, indicators, and markers. The existing intent roles remain
+  the solid fill contract, while `on*` roles remain content painted on those
+  fills.
+
+### Changed
+
+- Dark-mode solid actions use deeper intent fills with white content across
+  normal, hover, and pressed states. Solid buttons keep a transparent border so
+  they preserve control geometry without drawing an outline.
+- Filled selection states use the solid primary/on-primary pair, while status
+  text and unfilled emphasis use the corresponding foreground role. Web UI,
+  documentation chrome, and generated Tailwind tokens now follow the same
+  contract.
+
 ## @tinyrack/ui 0.26.1 / @tinyrack/docs 0.20.0
 
 ### Fixed
