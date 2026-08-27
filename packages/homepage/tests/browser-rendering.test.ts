@@ -514,6 +514,37 @@ describe('built React Router documentation', () => {
       const mobileNext = mobilePagination.getByRole('link', {
         name: 'Next document: LinkButton',
       });
+      const paginationLinkStyle = (link: typeof mobilePrevious) =>
+        link.evaluate((element) => {
+          const heading = element.querySelector('.tr-document-pagination-heading');
+          const title = element.querySelector('strong');
+          const description = element.querySelector(
+            '.tr-document-pagination-description',
+          );
+          if (heading === null || title === null || description === null) {
+            throw new Error('Document pagination link is missing expected text');
+          }
+          const linkStyle = getComputedStyle(element);
+          return {
+            background: linkStyle.backgroundColor,
+            border: linkStyle.borderColor,
+            text: [
+              getComputedStyle(heading).color,
+              getComputedStyle(title).color,
+              getComputedStyle(description).color,
+            ],
+          };
+        });
+      const restingStyle = await paginationLinkStyle(mobilePrevious);
+
+      await mobilePrevious.hover();
+      await settleMotion(mobilePrevious);
+      const hoveredStyle = await paginationLinkStyle(mobilePrevious);
+
+      expect(hoveredStyle.text).toEqual(restingStyle.text);
+      expect(hoveredStyle.background).not.toBe(restingStyle.background);
+      expect(hoveredStyle.border).not.toBe(restingStyle.border);
+
       const mobilePreviousBox = await mobilePrevious.boundingBox();
       const mobileNextBox = await mobileNext.boundingBox();
 
