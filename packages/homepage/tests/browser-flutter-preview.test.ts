@@ -1,6 +1,10 @@
 import type { Browser } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { createBrowserAuditRuntime, gotoHydrated } from './browser-audit-runtime.ts';
+import {
+  createBrowserAuditRuntime,
+  expectBaseSurface,
+  gotoHydrated,
+} from './browser-audit-runtime.ts';
 import {
   browserAuditShardCases,
   isBrowserAuditShardSelected,
@@ -906,6 +910,10 @@ describe('built Flutter Web component preview', () => {
         await gotoHydrated(page, `${origin}/en/flutter/components/${component}`);
         const example_ = page.locator(`#${example}`);
         await example_.scrollIntoViewIfNeeded();
+        await expectBaseSurface(
+          example_.locator('[data-component-example-preview-frame]'),
+          `${component} ${example}`,
+        );
         const preview = example_.locator(`[data-flutter-example="${component}"]`);
         await preview.locator('[data-flutter-example-frame]').waitFor();
         await expect

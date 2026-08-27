@@ -121,6 +121,15 @@ export async function expectVisible(locator: Locator) {
   await locator.waitFor({ state: 'visible' });
 }
 
+export async function expectBaseSurface(locator: Locator, label?: string) {
+  const backgrounds = await locator.evaluate((element) => ({
+    actual: getComputedStyle(element).backgroundColor,
+    expected: getComputedStyle(document.documentElement).backgroundColor,
+  }));
+
+  expect(backgrounds.actual, label).toBe(backgrounds.expected);
+}
+
 export async function expectHidden(locator: Locator) {
   await locator.waitFor({ state: 'hidden' });
 }

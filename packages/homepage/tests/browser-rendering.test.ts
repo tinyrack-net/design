@@ -4,6 +4,7 @@ import type { ComponentDocsManifestEntry } from '../app/documentation/shared/com
 import {
   componentDocsManifest,
   createBrowserAuditRuntime,
+  expectBaseSurface,
   expectHidden,
   expectHorizontallyInsideViewport,
   expectNoLocalOverflow,
@@ -49,6 +50,7 @@ describe('built React Router documentation', () => {
       const violations: string[] = [];
 
       try {
+        await setTheme(page, 'tinyrack-light');
         for (const component of documentedComponents) {
           await gotoHydrated(
             page,
@@ -65,6 +67,11 @@ describe('built React Router documentation', () => {
               );
               continue;
             }
+
+            await expectBaseSurface(
+              example.locator('[data-component-example-preview-frame]'),
+              label,
+            );
 
             const itemCount = await example.locator('[data-docs-example-item]').count();
             if (itemCount < group.minItems || itemCount > group.maxItems) {
