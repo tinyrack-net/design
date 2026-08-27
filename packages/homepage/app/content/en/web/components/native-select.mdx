@@ -1,0 +1,114 @@
+---
+title: "Native Select"
+description: "Uses a real HTML select with Tinyrack field styling and browser- or platform-provided option presentation."
+section: components
+group: forms-inputs
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/native-select.demo.js';
+
+## Contract
+
+| Axis | Behavior |
+| --- | --- |
+| element | renders a real HTML `<select>` and accepts `<option>` and `<optgroup>` children |
+| value | uses native `value`, `defaultValue`, and `onChange` behavior |
+| presentation | uses Tinyrack styling while closed; the browser or platform presents the option list |
+| forms | preserves `name`, `form`, `required`, FormData, validation, and reset behavior |
+| listbox | `multiple` or `size > 1` keeps the browser's inline listbox presentation and removes the decorative chevron |
+
+Choose `TRNativeSelect` when native form behavior and a platform-familiar mobile picker matter more than a customizable popup. Choose `TRSelect` when you need Tinyrack-rendered groups, indicators, scroll controls, positioning, or controlled popup state.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/native-select.css';"], codeImports: ["import { TRNativeSelect } from '@tinyrack/ui/components/native-select';", "import { TRField } from '@tinyrack/ui/components/field';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs
+  id="native-select-basic"
+  title="Deployment rack"
+  preview={<div data-docs-example-item-count="1"><Stories.NativeSelectPreview appearance="solid" disabled={false} label="Deployment rack" required={false} uiSize="md" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRNativeSelect } from '@tinyrack/ui/components/native-select';
+
+export function RackSelect() {
+  return (
+    <TRField.Root>
+      <TRField.Label>Deployment rack</TRField.Label>
+      <TRNativeSelect defaultValue="alpha" name="rack">
+        <option value="">Choose a rack</option>
+        <optgroup label="Production">
+          <option value="alpha">Rack Alpha</option>
+          <option value="beta">Rack Beta</option>
+        </optgroup>
+        <option value="staging">Staging rack</option>
+      </TRNativeSelect>
+    </TRField.Root>
+  );
+}` , styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/native-select.css';" } }]}
+/>
+
+## Examples
+
+<ComponentExampleTabs id="native-select-states" title="Default, disabled, invalid, and ghost" preview={<div data-docs-example-item-count="4"><Stories.NativeSelectStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRField.Root><TRField.Label>Default</TRField.Label><TRNativeSelect defaultValue="alpha"><option value="alpha">Rack Alpha</option></TRNativeSelect></TRField.Root>
+<TRField.Root disabled><TRField.Label>Disabled</TRField.Label><TRNativeSelect defaultValue="alpha"><option value="alpha">Rack Alpha</option></TRNativeSelect></TRField.Root>
+<TRField.Root invalid><TRField.Label>Invalid</TRField.Label><TRNativeSelect defaultValue=""><option value="">Choose a rack</option></TRNativeSelect></TRField.Root>
+<TRField.Root><TRField.Label>Ghost</TRField.Label><TRNativeSelect appearance="ghost" defaultValue="alpha"><option value="alpha">Rack Alpha</option></TRNativeSelect></TRField.Root>` }]} />
+
+<ComponentExampleTabs id="native-select-sizes" title="Small, medium, and large" preview={<div data-docs-example-item-count="3"><Stories.NativeSelectSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  <TRNativeSelect aria-label={uiSize + ' deployment rack'} key={uiSize} uiSize={uiSize}>
+    <option value="alpha">Rack Alpha</option>
+  </TRNativeSelect>
+))}` }]} />
+
+<ComponentExampleTabs id="native-select-listboxes" title="Native listbox modes" description="Use size to expose rows or multiple to let the native control select more than one value." preview={<div data-docs-example-item-count="2"><Stories.NativeSelectListboxComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNativeSelect aria-label="Visible racks" defaultValue="alpha" size={4}>
+  <option value="alpha">Rack Alpha</option>
+  <option value="beta">Rack Beta</option>
+  <option value="staging">Staging rack</option>
+</TRNativeSelect>
+
+<TRNativeSelect aria-label="Multiple racks" defaultValue={['alpha', 'beta']} multiple size={4}>
+  <option value="alpha">Rack Alpha</option>
+  <option value="beta">Rack Beta</option>
+  <option value="staging">Staging rack</option>
+</TRNativeSelect>` }]} />
+
+<ComponentExampleTabs id="native-select-form" title="FormData and native reset" preview={<div data-docs-example-item-count="1"><Stories.NativeSelectFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRNativeSelect } from '@tinyrack/ui/components/native-select';
+
+function RackForm() {
+  return (
+    <form onSubmit={(event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      console.log(data.get('rack'));
+    }}>
+      <label htmlFor="rack">Deployment rack</label>
+      <TRNativeSelect defaultValue="alpha" id="rack" name="rack" required>
+        <option value="alpha">Rack Alpha</option>
+        <option value="staging">Staging rack</option>
+      </TRNativeSelect>
+      <button type="submit">Submit</button>
+      <button type="reset">Reset</button>
+    </form>
+  );
+}` }]} />
+
+## API
+
+`TRNativeSelect` forwards native select attributes, refs, events, classes, and styles to the rendered `<select>`. It does not add a `readOnly` prop because HTML select elements do not support one.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | Sets the closed control metrics. |
+| `appearance` | `"solid" \| "ghost"` | `"solid"` | Chooses resting field chrome. |
+| `multiple` | `boolean` | `false` | Enables the native multiple-selection listbox. |
+| `size` | `number` | browser default | Exposes native rows; values above one use listbox presentation. |
+
+Give the select an accessible name with `TRField.Label`, a native `<label>`, or `aria-label`. Use `onChange={(event) => ...}` and read `event.currentTarget.value`; for multiple selection, read `selectedOptions`. The open option UI is owned by the browser and operating system, so option styling is intentionally not part of the Tinyrack contract.

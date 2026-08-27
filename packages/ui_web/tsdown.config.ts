@@ -34,6 +34,7 @@ const entry = {
   'components/menubar/index': 'src/components/menubar/index.tsx',
   'components/meter/index': 'src/components/meter/index.tsx',
   'components/navigation-menu/index': 'src/components/navigation-menu/index.tsx',
+  'components/native-select/index': 'src/components/native-select/index.tsx',
   'components/number-field/index': 'src/components/number-field/index.tsx',
   'components/otp-field/index': 'src/components/otp-field/index.tsx',
   'components/pagination/index': 'src/components/pagination/index.tsx',
@@ -144,6 +145,10 @@ const copy = [
   {
     from: 'src/components/navigation-menu/navigation-menu.css',
     to: 'dist/components/navigation-menu',
+  },
+  {
+    from: 'src/components/native-select/native-select.css',
+    to: 'dist/components/native-select',
   },
   {
     from: 'src/components/number-field/number-field.css',

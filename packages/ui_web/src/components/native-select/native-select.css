@@ -1,0 +1,139 @@
+@layer components {
+  .tr-native-select {
+    --_tr-native-select-control-font-size: var(--tinyrack-control-font-size-md);
+    --_tr-native-select-control-gap: var(--tinyrack-control-gap-md);
+    --_tr-native-select-control-height: var(--tinyrack-control-height-md);
+    --_tr-native-select-control-padding-inline: var(
+      --tinyrack-control-padding-inline-md
+    );
+    background-color: var(--tr-native-select-background, var(--tinyrack-surface));
+    border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
+    border-radius: var(--tinyrack-radius-md);
+    box-sizing: border-box;
+    color: var(--tr-native-select-color, var(--tinyrack-text));
+    cursor: pointer;
+    display: inline-block;
+    font-family: var(--tinyrack-font-body);
+    font-size: var(--_tr-native-select-control-font-size);
+    line-height: var(--tinyrack-control-line-height-md);
+    min-block-size: var(--_tr-native-select-control-height);
+    min-inline-size: 0;
+    padding-inline: var(--_tr-native-select-control-padding-inline);
+  }
+
+  .tr-native-select[data-ui-size="sm"] {
+    --_tr-native-select-control-font-size: var(--tinyrack-control-font-size-sm);
+    --_tr-native-select-control-gap: var(--tinyrack-control-gap-sm);
+    --_tr-native-select-control-height: var(--tinyrack-control-height-sm);
+    --_tr-native-select-control-padding-inline: var(
+      --tinyrack-control-padding-inline-sm
+    );
+  }
+
+  .tr-native-select[data-ui-size="lg"] {
+    --_tr-native-select-control-font-size: var(--tinyrack-control-font-size-lg);
+    --_tr-native-select-control-gap: var(--tinyrack-control-gap-lg);
+    --_tr-native-select-control-height: var(--tinyrack-control-height-lg);
+    --_tr-native-select-control-padding-inline: var(
+      --tinyrack-control-padding-inline-lg
+    );
+  }
+
+  .tr-native-select[data-presentation="trigger"] {
+    appearance: none;
+    background-image:
+      linear-gradient(
+        var(--tinyrack-icon-rotation-diagonal),
+        transparent 50%,
+        currentcolor 50%
+      ),
+      linear-gradient(
+        calc(
+          var(--tinyrack-icon-rotation-half) -
+          var(--tinyrack-icon-rotation-diagonal)
+        ),
+        currentcolor 50%,
+        transparent 50%
+      );
+    background-position:
+      calc(
+        100% -
+        var(--_tr-native-select-control-padding-inline) -
+        var(--tinyrack-space-xs)
+      )
+      50%,
+      calc(100% - var(--_tr-native-select-control-padding-inline)) 50%;
+    background-repeat: no-repeat;
+    background-size: var(--tinyrack-space-xs) var(--tinyrack-space-xs);
+    padding-inline-end: calc(
+      var(--_tr-native-select-control-padding-inline) +
+      var(--_tr-native-select-control-gap) +
+      var(--tinyrack-space-lg)
+    );
+  }
+
+  :where([dir="rtl"]) .tr-native-select[data-presentation="trigger"] {
+    background-position:
+      calc(var(--_tr-native-select-control-padding-inline) + var(--tinyrack-space-xs))
+      50%,
+      var(--_tr-native-select-control-padding-inline) 50%;
+  }
+
+  .tr-native-select:hover:not(
+    :disabled,
+    [aria-invalid="true"],
+    :invalid,
+    :where(html:not([data-tr-focus-modality="pointer"]) *):focus-visible
+  ) {
+    background-color: var(--tinyrack-surface-hover);
+  }
+
+  :where(html:not([data-tr-focus-modality="pointer"])) .tr-native-select:focus-visible {
+    outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
+    outline-offset: calc(var(--tinyrack-focus-width) * -1);
+  }
+
+  html[data-tr-focus-modality="pointer"] .tr-native-select:focus-visible {
+    outline: none;
+  }
+
+  .tr-native-select:is([aria-invalid="true"], [data-invalid], :invalid) {
+    border-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-native-select:is([aria-invalid="true"], [data-invalid], :invalid):focus-visible {
+    outline-color: var(--tinyrack-danger-border);
+  }
+
+  .tr-native-select:disabled {
+    cursor: not-allowed;
+    opacity: var(--tinyrack-opacity-disabled);
+  }
+
+  .tr-native-select[data-appearance="ghost"] {
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  .tr-native-select[data-appearance="ghost"]:hover:not(
+    :disabled,
+    [aria-invalid="true"],
+    :invalid,
+    :where(html:not([data-tr-focus-modality="pointer"]) *):focus-visible
+  ) {
+    background-color: var(--tinyrack-surface-hover);
+  }
+
+  :where(html:not([data-tr-focus-modality="pointer"]))
+    .tr-native-select[data-appearance="ghost"]:focus-visible {
+    background-color: var(--tinyrack-surface);
+  }
+
+  .tr-native-select[data-appearance="ghost"]:is(
+    [aria-invalid="true"],
+    [data-invalid],
+    :invalid
+  ) {
+    border-color: var(--tinyrack-danger-border);
+  }
+}

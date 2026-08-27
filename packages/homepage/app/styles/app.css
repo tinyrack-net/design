@@ -34,6 +34,7 @@
 @import "@tinyrack/ui/components/menubar.css";
 @import "@tinyrack/ui/components/meter.css";
 @import "@tinyrack/ui/components/navigation-menu.css";
+@import "@tinyrack/ui/components/native-select.css";
 @import "@tinyrack/ui/components/number-field.css";
 @import "@tinyrack/ui/components/otp-field.css";
 @import "@tinyrack/ui/components/pagination.css";
