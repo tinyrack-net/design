@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="tinyauth-launcher-icon-title tinyauth-launcher-icon-description" data-safe-inset="8">
-  <title id="tinyauth-launcher-icon-title">TinyAuth launcher icon</title>
-  <desc id="tinyauth-launcher-icon-description">TinyAuth app icon centered with launcher-safe padding</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="issuary-launcher-icon-title issuary-launcher-icon-description" data-safe-inset="8">
+  <title id="issuary-launcher-icon-title">Issuary launcher icon</title>
+  <desc id="issuary-launcher-icon-description">Issuary app icon centered with launcher-safe padding</desc>
   <g transform="translate(8 8) scale(0.75)">
     <path fill="#0a0a0a" d="M16 0h32a16 16 0 0 1 16 16v32a16 16 0 0 1-16 16H16A16 16 0 0 1 0 48V16A16 16 0 0 1 16 0Z"/>
     <path fill="#fafafa" d="M17 14.667h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Zm0 27.333h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>

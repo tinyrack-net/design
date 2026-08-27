@@ -1,5 +1,15 @@
 # Changelog
 
+## @tinyrack/ui 0.30.0
+
+### Breaking
+
+- Renamed the TinyAuth app icon family under `@tinyrack/ui/brand/apps` to
+  `issuary-*`. Consumers must replace every `tinyauth-*` asset import with the
+  corresponding `issuary-*` path. The artwork and generated pixel output are
+  unchanged; SVG accessible names and the App icons documentation now use the
+  Issuary product name.
+
 ## @tinyrack/ui 0.29.0
 
 ### Added
