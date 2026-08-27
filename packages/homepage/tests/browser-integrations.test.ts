@@ -2,6 +2,7 @@ import type { Browser, Locator, Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   createBrowserAuditRuntime,
+  expectBaseSurface,
   expectNoLocalOverflow,
   expectVisible,
   gotoHydrated,
@@ -124,6 +125,10 @@ describe('built integration guides', () => {
           const directionFrame = directionExample.locator(
             '[data-component-example-preview-frame]',
           );
+          await expectBaseSurface(
+            directionFrame,
+            `${locale} direction ${scenario.theme}`,
+          );
           const directionScope = directionFrame.locator('[data-direction-scope]');
           const slider = directionFrame.getByRole('slider');
 
@@ -156,6 +161,10 @@ describe('built integration guides', () => {
           await gotoHydrated(page, `${origin}/${locale}/web/integrations/mdx`);
           const mdxExample = page.locator(
             '[data-component-example-id="mdx-component-map-demo"]',
+          );
+          await expectBaseSurface(
+            mdxExample.locator('[data-component-example-preview-frame]'),
+            `${locale} MDX ${scenario.theme}`,
           );
           const article = mdxExample.locator('article[data-mdx-component-map-preview]');
           await expectVisible(article);

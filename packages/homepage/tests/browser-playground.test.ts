@@ -2,6 +2,7 @@ import type { Browser } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   createBrowserAuditRuntime,
+  expectBaseSurface,
   expectVisible,
   gotoHydrated,
   setTheme,
@@ -25,7 +26,7 @@ describe('built React Router documentation', () => {
     ['tinyrack-light', 'rgb(255, 255, 255)'],
     ['tinyrack-dark', 'rgb(10, 10, 10)'],
   ] as const)(
-    'uses the base surface for the playground preview in the %s theme',
+    'uses the base surface for playground and example previews in the %s theme',
     async (theme, expectedBackground) => {
       const page = await browser.newPage({ viewport: { height: 900, width: 1280 } });
       try {
@@ -33,6 +34,7 @@ describe('built React Router documentation', () => {
         await gotoHydrated(page, `${origin}/en/web/components/button`);
         const playground = page.locator('[data-component-playground]');
         const preview = playground.locator('[data-playground-preview]');
+        const examplePreviews = page.locator('[data-component-example-preview-frame]');
         const backgrounds = await Promise.all(
           [playground, preview].map((locator) =>
             locator.evaluate((element) => getComputedStyle(element).backgroundColor),
@@ -40,6 +42,10 @@ describe('built React Router documentation', () => {
         );
 
         expect(backgrounds).toEqual([expectedBackground, expectedBackground]);
+        await expect(examplePreviews.count()).resolves.toBeGreaterThan(0);
+        for (const examplePreview of await examplePreviews.all()) {
+          await expectBaseSurface(examplePreview, theme);
+        }
       } finally {
         await page.close();
       }
