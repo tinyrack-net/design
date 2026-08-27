@@ -1,3 +1,11 @@
+## 0.71.0
+
+- Adds normalized component metrics to the Flutter Web preview so shared
+  component contracts can be checked against React in CI.
+- Aligns Button label line height, transparent ghost borders, and pressed
+  translation with the shared token recipe, including widget coverage for the
+  visual interaction states.
+
 ## 0.70.0
 
 - **Breaking.** `TinyrackThemeData` now separates solid intent fills from
