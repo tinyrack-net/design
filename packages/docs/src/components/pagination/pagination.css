@@ -57,10 +57,6 @@
   transition: color var(--tinyrack-duration-fast);
 }
 
-.tr-document-pagination-link:not([data-disabled]):hover > strong {
-  color: var(--tinyrack-primary-foreground);
-}
-
 .tr-document-pagination-description {
   color: var(--tinyrack-text-muted);
   display: -webkit-box;
