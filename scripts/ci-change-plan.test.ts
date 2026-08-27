@@ -14,6 +14,7 @@ const none = {
   flutter: false,
   flutter_preview: false,
   homepage: false,
+  parity: false,
   shared: false,
   ui: false,
 };
@@ -83,6 +84,7 @@ describe('CI change classification', () => {
         docs: true,
         docs_contract: true,
         homepage: true,
+        parity: true,
         ui: true,
       },
     );
@@ -99,6 +101,23 @@ describe('CI change classification', () => {
     assert.deepEqual(
       classifyChangedPaths(['packages/homepage/app/content/en/index.tsx']),
       { ...none, docs_contract: true, homepage: true },
+    );
+  });
+
+  it('selects parity only for strict component and harness changes', () => {
+    assert.equal(
+      classifyChangedPaths(['packages/homepage/tests/cross-platform-parity-runtime.ts'])
+        .parity,
+      true,
+    );
+    assert.equal(
+      classifyChangedPaths(['packages/ui_flutter/lib/src/tokens.dart']).parity,
+      true,
+    );
+    assert.equal(
+      classifyChangedPaths(['packages/ui_web/src/components/accordion/accordion.tsx'])
+        .parity,
+      true,
     );
   });
 
@@ -126,6 +145,7 @@ describe('CI change classification', () => {
         flutter: true,
         flutter_preview: true,
         homepage: true,
+        parity: true,
       },
     );
   });
@@ -153,6 +173,7 @@ describe('CI change classification', () => {
       flutter: true,
       flutter_preview: true,
       homepage: true,
+      parity: true,
       shared: true,
       ui: true,
     };
@@ -207,6 +228,7 @@ describe('CI change range resolution', () => {
       flutter: true,
       flutter_preview: true,
       homepage: true,
+      parity: true,
       shared: true,
       ui: true,
     });

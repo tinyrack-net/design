@@ -45,6 +45,9 @@ describe('CI event lanes', () => {
       job(ci, 'flutter_preview', 'ci_gate'),
       /github\.event_name == 'merge_group'/,
     );
+    const parity = job(ci, 'cross_platform_parity', 'flutter');
+    assert.match(parity, /needs\.changes\.outputs\.parity == 'true'/);
+    assert.match(parity, /test:parity/);
   });
 
   it('keeps the pull-request Flutter build on Linux', () => {
@@ -62,6 +65,7 @@ describe('CI event lanes', () => {
     assert.match(gate, /\.changes\.result == "success"/);
     assert.match(gate, /- quality_linux/);
     assert.match(gate, /- flutter_linux/);
+    assert.match(gate, /- cross_platform_parity/);
   });
 });
 

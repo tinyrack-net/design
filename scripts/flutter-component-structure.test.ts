@@ -4,10 +4,13 @@ import { dirname, join, relative, resolve, sep } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
+  crossPlatformParityFor,
   flutterPlatformOnlyComponents,
   reactComponentAdaptations,
+  reactComponentParity,
   supportedFlutterComponentName,
 } from './cross-platform-component-support.ts';
+import { crossPlatformParityFixtures } from './cross-platform-parity-fixtures.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const componentsRoot = join(root, 'packages/ui_flutter/lib/src/components');
@@ -175,4 +178,64 @@ test('cross-platform support does not require one-to-one component APIs', () => 
   assert.equal(supportedFlutterComponentName('link-button'), 'button');
   assert.ok(flutterComponents.has('inline_suggestions'));
   assert.ok('inline_suggestions' in flutterPlatformOnlyComponents);
+});
+
+test('stronger cross-platform parity levels require executable fixtures', () => {
+  const reactComponents = readdirSync(reactComponentsRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+
+  for (const component of reactComponents) {
+    const support = crossPlatformParityFor(component);
+    assert.ok(
+      ['adapted', 'contract', 'geometry'].includes(support.level),
+      `${component} has an invalid parity level`,
+    );
+    if (support.level === 'adapted') {
+      assert.equal(support.fixture, undefined);
+    } else {
+      assert.ok(support.fixture, `${component} requires a parity fixture`);
+      assert.ok(
+        support.fixture in crossPlatformParityFixtures,
+        `${component} references missing parity fixture ${support.fixture}`,
+      );
+      const fixture = crossPlatformParityFixtures[support.fixture];
+      if (fixture === undefined) {
+        assert.fail(`${component} references missing parity fixture`);
+      }
+      assert.equal(fixture.component, component);
+      assert.equal(fixture.level, support.level);
+      if (support.level === 'geometry') {
+        assert.ok(fixture.geometry);
+        assert.equal(fixture.geometry.tolerance, 0.5);
+        assert.ok(fixture.geometry.compare.includes('parts'));
+      }
+    }
+    assert.ok(support.rationale.trim().length > 0);
+    assert.ok(support.sharedContract.length > 0);
+    assert.ok(Array.isArray(support.excluded));
+  }
+
+  assert.deepEqual(Object.keys(reactComponentParity).sort(), reactComponents);
+  assert.equal(Object.keys(reactComponentParity).length, 61);
+  assert.equal(
+    Object.values(reactComponentParity).filter(({ level }) => level === 'adapted')
+      .length,
+    5,
+  );
+  assert.equal(
+    Object.values(reactComponentParity).filter(({ level }) => level === 'contract')
+      .length,
+    18,
+  );
+  assert.equal(
+    Object.values(reactComponentParity).filter(({ level }) => level === 'geometry')
+      .length,
+    38,
+  );
+  assert.equal(Object.keys(crossPlatformParityFixtures).length, 56);
+  assert.equal(crossPlatformParityFor('button').level, 'geometry');
+  assert.equal(crossPlatformParityFor('alert').level, 'geometry');
+  assert.equal(crossPlatformParityFor('app-shell').level, 'adapted');
+  assert.throws(() => crossPlatformParityFor('missing-component'));
 });

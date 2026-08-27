@@ -5,6 +5,15 @@ export default defineConfig({
     projects: [
       {
         test: {
+          name: 'e2e-parity',
+          environment: 'node',
+          hookTimeout: 180_000,
+          include: ['tests/cross-platform-button-parity.test.ts'],
+          testTimeout: 180_000,
+        },
+      },
+      {
+        test: {
           name: 'unit',
           environment: 'node',
           include: [
@@ -35,6 +44,7 @@ export default defineConfig({
             'tests/browser-rendering.test.ts',
             'tests/closure-00-29.test.ts',
             'tests/code-block-languages.test.ts',
+            'tests/cross-platform-button-parity.test.ts',
             'tests/dev-worktree-port.test.ts',
             'tests/browser-flutter-preview-dev.test.ts',
             'tests/flutter-examples.test.ts',

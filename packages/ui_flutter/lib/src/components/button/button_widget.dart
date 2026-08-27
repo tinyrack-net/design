@@ -208,7 +208,10 @@ class TRButton extends StatelessWidget {
           color: borderColor,
           width: TRGeneratedBorders.defaultWidth,
         ),
-        TRAppearance.ghost => BorderSide.none,
+        TRAppearance.ghost => const BorderSide(
+          color: Colors.transparent,
+          width: TRGeneratedBorders.defaultWidth,
+        ),
       }),
       shape: const WidgetStatePropertyAll(
         RoundedRectangleBorder(

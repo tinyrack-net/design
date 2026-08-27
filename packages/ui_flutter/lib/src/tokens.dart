@@ -179,7 +179,7 @@ abstract final class TRControlMetrics {
     fontFamilyFallback: TRGeneratedFontFamilies.fallback,
     fontSize: fontSizeOf(size),
     fontWeight: TRGeneratedFontWeights.medium,
-    height: TRGeneratedTypographyLineHeights.sm,
+    height: lineHeightOf(size) / fontSizeOf(size),
     letterSpacing: TRGeneratedTypographyTracking.none,
   );
 }

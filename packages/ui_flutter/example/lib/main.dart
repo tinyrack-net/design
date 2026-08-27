@@ -185,6 +185,7 @@ class _PreviewAppState extends State<PreviewApp> {
     final activePartNames = _activeLayerPartNames();
     final layerParts = _layerParts(renderObject);
     final parts = {
+      'root': _measureBox(renderObject),
       for (final MapEntry(:key, :value) in _partKeys.entries)
         if (key != 'popup' &&
             (activePartNames == null || activePartNames.contains(key)))
@@ -239,11 +240,176 @@ class _PreviewAppState extends State<PreviewApp> {
           'fontWeight': renderObject.text.style?.fontWeight?.value,
           'letterSpacing': renderObject.text.style?.letterSpacing,
         },
+      'style': ?_componentStyleMetrics(),
       'parts': parts,
       'generation': _generation,
       'theme': _themeMode.name,
       if (requestId is num) 'requestId': requestId,
     });
+  }
+
+  Map<String, Object?>? _componentStyleMetrics() {
+    final previewContext = _previewKey.currentContext;
+    if (previewContext == null) return null;
+    final colors = previewContext.tinyrackTheme;
+    if (_component != 'button') {
+      final labelStyle = TRControlMetrics.labelStyleOf(TRUiSize.md);
+      return {
+        'borderWidth': TRGeneratedBorders.defaultWidth,
+        'disabledOpacity': TRGeneratedOpacity.disabled,
+        'focusColor': _cssColor(colors.focus),
+        'focusOffset': TRGeneratedBorders.focusOffset,
+        'focusWidth': TRGeneratedBorders.focusWidth,
+        'fontFamily': labelStyle.fontFamily,
+        'fontSize': labelStyle.fontSize,
+        'fontWeight': labelStyle.fontWeight?.value,
+        'lineHeight': labelStyle.fontSize == null || labelStyle.height == null
+            ? null
+            : labelStyle.fontSize! * labelStyle.height!,
+        'tokenBorderWidth': TRGeneratedBorders.defaultWidth,
+        'tokenDisabledOpacity': TRGeneratedOpacity.disabled,
+        'tokenFocusColor': _cssColor(colors.focus),
+        'tokenFocusOffset': TRGeneratedBorders.focusOffset,
+        'tokenFocusWidth': TRGeneratedBorders.focusWidth,
+      };
+    }
+    final generated = _themeMode == ThemeMode.dark
+        ? TRGeneratedColors.dark
+        : TRGeneratedColors.light;
+    final appearance = TRAppearance.values.byName(
+      _args['appearance'] as String? ?? 'solid',
+    );
+    final intent = TRIntent.values.byName(
+      _args['intent'] as String? ?? 'primary',
+    );
+    final uiSize = TRUiSize.values.byName(_args['uiSize'] as String? ?? 'md');
+    // The preview exposes the resolved public Button recipe rather than
+    // renderer-private painters. Bounds and interaction state still come from
+    // the live RenderBox above; keeping style values token-backed makes this
+    // protocol stable across Flutter renderer implementations.
+    final foreground = colors.foregroundFor(intent);
+    final foregroundColor = appearance == TRAppearance.solid
+        ? switch (intent) {
+            TRIntent.neutral => colors.text,
+            TRIntent.primary => colors.onPrimary,
+            TRIntent.info => generated.onInfo,
+            TRIntent.success => generated.onSuccess,
+            TRIntent.warning => generated.onWarning,
+            TRIntent.danger => generated.onDanger,
+          }
+        : intent == TRIntent.neutral
+        ? colors.textMuted
+        : foreground;
+    final hoverColor = switch (intent) {
+      TRIntent.neutral || TRIntent.primary => generated.surfaceHover,
+      TRIntent.info => generated.infoSurfaceHover,
+      TRIntent.success => generated.successSurfaceHover,
+      TRIntent.warning => generated.warningSurfaceHover,
+      TRIntent.danger => generated.dangerSurfaceHover,
+    };
+    final pressedColor = switch (intent) {
+      TRIntent.neutral || TRIntent.primary => generated.surfaceSelected,
+      TRIntent.info => generated.infoSurfacePressed,
+      TRIntent.success => generated.successSurfacePressed,
+      TRIntent.warning => generated.warningSurfacePressed,
+      TRIntent.danger => generated.dangerSurfacePressed,
+    };
+    final backgroundColor = appearance == TRAppearance.solid
+        ? switch (intent) {
+            TRIntent.neutral =>
+              _pressed
+                  ? generated.surfaceSelected
+                  : _hovered
+                  ? generated.surfaceHover
+                  : generated.surfaceMuted,
+            TRIntent.primary =>
+              _pressed
+                  ? generated.primaryPressed
+                  : _hovered
+                  ? generated.primaryHover
+                  : colors.primary,
+            TRIntent.info =>
+              _pressed
+                  ? generated.infoPressed
+                  : _hovered
+                  ? generated.infoHover
+                  : colors.info,
+            TRIntent.success =>
+              _pressed
+                  ? generated.successPressed
+                  : _hovered
+                  ? generated.successHover
+                  : colors.success,
+            TRIntent.warning =>
+              _pressed
+                  ? generated.warningPressed
+                  : _hovered
+                  ? generated.warningHover
+                  : colors.warning,
+            TRIntent.danger =>
+              _pressed
+                  ? generated.dangerPressed
+                  : _hovered
+                  ? generated.dangerHover
+                  : colors.danger,
+          }
+        : _pressed
+        ? pressedColor
+        : _hovered
+        ? hoverColor
+        : Colors.transparent;
+    final borderColor = switch (intent) {
+      TRIntent.neutral => generated.controlBorder,
+      TRIntent.primary => colors.primaryForeground,
+      TRIntent.info => generated.infoBorder,
+      TRIntent.success => generated.successBorder,
+      TRIntent.warning => generated.warningBorder,
+      TRIntent.danger => generated.dangerBorder,
+    };
+    final textStyle = TRControlMetrics.labelStyleOf(uiSize);
+    final fontSize = textStyle.fontSize;
+    final textHeight = textStyle.height;
+    final paddingInline = switch (uiSize) {
+      TRUiSize.sm => TRGeneratedControlMetrics.smPaddingInline,
+      TRUiSize.md => TRGeneratedControlMetrics.mdPaddingInline,
+      TRUiSize.lg => TRGeneratedControlMetrics.lgPaddingInline,
+      TRUiSize.xl => TRGeneratedControlMetrics.xlPaddingInline,
+    };
+    return {
+      'backgroundColor': _cssColor(backgroundColor),
+      'borderColor': _cssColor(
+        appearance == TRAppearance.outline ? borderColor : Colors.transparent,
+      ),
+      'borderWidth': TRGeneratedBorders.defaultWidth,
+      'disabledOpacity': _args['disabled'] == true || _args['loading'] == true
+          ? TRGeneratedOpacity.disabled
+          : 1,
+      'focusColor': _cssColor(colors.focus),
+      'focusOffset': TRGeneratedBorders.focusOffset,
+      'focusWidth': TRGeneratedBorders.focusWidth,
+      'fontFamily': textStyle.fontFamily,
+      'fontSize': fontSize,
+      'gap': switch (_args['uiSize'] as String? ?? 'md') {
+        'sm' => TRGeneratedControlMetrics.smGap,
+        'lg' => TRGeneratedControlMetrics.lgGap,
+        _ => TRGeneratedControlMetrics.mdGap,
+      },
+      'lineHeight': fontSize == null || textHeight == null
+          ? null
+          : fontSize * textHeight,
+      'fontWeight': textStyle.fontWeight?.value,
+      'foregroundColor': _cssColor(foregroundColor),
+      'paddingInline': paddingInline,
+      'pressDistance': _pressed
+          ? TRGeneratedMeasurements.controlPressDistance
+          : 0,
+      'radius': TRGeneratedRadii.md,
+      'tokenBorderWidth': TRGeneratedBorders.defaultWidth,
+      'tokenDisabledOpacity': TRGeneratedOpacity.disabled,
+      'tokenFocusColor': _cssColor(colors.focus),
+      'tokenFocusOffset': TRGeneratedBorders.focusOffset,
+      'tokenFocusWidth': TRGeneratedBorders.focusWidth,
+    };
   }
 
   RenderParagraph? _firstParagraph(RenderObject root) {
@@ -683,6 +849,7 @@ List<String> _supportedArgs(String component) => switch (component) {
     'loading',
     'loadingLabel',
     'uiSize',
+    'variant',
   ],
   'spinner' => ['uiSize', 'variant'],
   'text' => ['align', 'color', 'truncate', 'variant', 'weight'],
@@ -776,8 +943,9 @@ List<String> _supportedArgs(String component) => switch (component) {
   _ => const <String>[],
 };
 
-String _cssColor(Color color) =>
-    '#${(color.toARGB32() & 0xffffff).toRadixString(16).padLeft(6, '0')}';
+String _cssColor(Color color) => color.a == 0
+    ? 'transparent'
+    : '#${(color.toARGB32() & 0xffffff).toRadixString(16).padLeft(6, '0')}';
 
 Map<String, Object?>? _validateArgs(
   String component,
@@ -894,6 +1062,9 @@ Map<String, Object?>? _validateArgs(
         value is String && const {'always', 'hover', 'none'}.contains(value),
       'variant' when component == 'link' =>
         value is String && const {'default', 'muted', 'danger'}.contains(value),
+      'variant' when component == 'icon-button' =>
+        value is String &&
+            const {'secondary', 'primary', 'danger'}.contains(value),
       'mark' =>
         value is String &&
             const {'unchecked', 'checked', 'indeterminate'}.contains(value),
@@ -1109,7 +1280,15 @@ class PreviewComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final intent = TRIntent.values.byName(
-      args['intent'] is String ? args['intent']! as String : 'primary',
+      args['intent'] is String
+          ? args['intent']! as String
+          : component == 'icon-button'
+          ? switch (args['variant']) {
+              'secondary' => 'neutral',
+              'danger' => 'danger',
+              _ => 'primary',
+            }
+          : 'primary',
     );
     final size = TRUiSize.values.byName(
       args['uiSize'] is String ? args['uiSize']! as String : 'md',
