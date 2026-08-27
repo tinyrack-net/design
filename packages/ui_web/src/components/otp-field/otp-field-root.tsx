@@ -6,14 +6,18 @@ import type { TRFieldAppearance } from '../../core/field-appearance.js';
 import type { TRControlUiSize } from '../../core/tokens.js';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
+export type TROTPFieldLayout = 'compact' | 'stretch';
+
 export type TROTPFieldRootProps = ComponentProps<typeof BaseOTPField.Root> & {
   uiSize?: TRControlUiSize;
   appearance?: TRFieldAppearance;
+  layout?: TROTPFieldLayout;
 };
 
 export function TROTPFieldRoot({
   appearance = 'solid',
   className,
+  layout = 'compact',
   uiSize = 'md',
   ...props
 }: TROTPFieldRootProps) {
@@ -22,6 +26,7 @@ export function TROTPFieldRoot({
       {...props}
       className={mergeComponentClassName('tr-otp-field', className)}
       data-appearance={appearance}
+      data-layout={layout}
       data-ui-size={uiSize}
     />
   );

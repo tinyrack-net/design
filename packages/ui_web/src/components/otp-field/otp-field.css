@@ -25,6 +25,10 @@
     --_tr-otp-field-gap: var(--tinyrack-control-gap-md);
   }
 
+  .tr-otp-field[data-layout="stretch"] {
+    width: 100%;
+  }
+
   .tr-otp-field-digit {
     flex: 1 1 var(--tr-otp-field-size, var(--_tr-otp-field-height));
     width: var(--tr-otp-field-size, var(--_tr-otp-field-height));
@@ -41,6 +45,13 @@
     font-size: var(--tr-otp-field-font-size, var(--tinyrack-text-xl));
     line-height: var(--tr-otp-field-line-height, var(--tinyrack-leading-xs));
     text-align: center;
+  }
+
+  .tr-otp-field[data-layout="stretch"] .tr-otp-field-digit {
+    width: auto;
+    max-width: none;
+    height: auto;
+    aspect-ratio: 1;
   }
 
   /* Gated on input modality: `:focus-visible` matches these slots on a plain

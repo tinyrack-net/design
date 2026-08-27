@@ -18,6 +18,7 @@ import * as Stories from '../../../../documentation/components/otp-field.demo.js
 | 입력 | 입력, 전체 코드 붙여넣기, 삭제, 포커스 이동과 하나의 네이티브 폼 값을 지원해요 |
 | 자동 완성 | 첫 슬롯 기본값은 `one-time-code`이고 비밀번호 관리자와 플랫폼 자동 완성을 지원해요 |
 | 길이 | 값을 제한하고 완료와 유효성을 결정하며, 같은 개수의 `Input` 파트를 직접 렌더링해야 해요 |
+| 레이아웃 | `compact`는 토큰 크기의 정사각형 슬롯을 유지하고, `stretch`는 사용 가능한 가로폭을 같은 크기의 정사각형 슬롯으로 채워요 |
 
 ## 설치
 
@@ -102,6 +103,22 @@ export function OTPFieldSizes() {
     </TROTPField.Root>
   </div>
 </div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="otp-field-stretch"
+  title="가로폭을 채우는 정사각형 슬롯"
+  description={'분할 입력을 폼의 전체 가로폭에 맞추려면 layout="stretch"를 선택하세요. 각 슬롯이 같은 너비를 나눠 가지며 정사각형 비율을 유지해요.'}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldStretchPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
+
+<TROTPField.Root aria-label="인증 코드" layout="stretch" length={6} uiSize="lg">
+  <TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+  <TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+</TROTPField.Root>` ,
       styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
     },
   ]}
@@ -195,8 +212,8 @@ function OTPEvents() {
 
 | 파트 | 주요 속성 |
 | --- | --- |
-| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `uiSize`, `ref`, `render` |
+| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `uiSize`, `layout`, `ref`, `render` |
 | `Input` | 네이티브 입력 속성, `className`, `style`, `ref`, Base UI `render` |
 | `Separator` | `orientation`(기본값 `vertical`), `TRSeparator` 속성 및 `ref` |
 
-`Root`는 레이블이 있는 `role="group"`을 렌더링해요. 보이는 레이블을 만들고 `aria-labelledby`로 연결하세요. 슬롯 ID는 루트 `id`에서 파생되며 첫 슬롯에는 기본적으로 `one-time-code` 자동 완성이 적용돼요. 값 이벤트의 `details.reason`으로 입력, 삭제, 붙여넣기 또는 키보드 변경 원인을 구분할 수 있어요. 비활성 필드는 폼 데이터에서 제외되고 읽기 전용 필드는 값을 제출해요.
+`Root`는 레이블이 있는 `role="group"`을 렌더링해요. 보이는 레이블을 만들고 `aria-labelledby`로 연결하세요. 슬롯 ID는 루트 `id`에서 파생되며 첫 슬롯에는 기본적으로 `one-time-code` 자동 완성이 적용돼요. 기본 `compact` 레이아웃에서는 `uiSize?: 'md' | 'lg'`(기본값 `md`)로 모든 슬롯과 구분선의 높이를 함께 조절해요. `stretch` 레이아웃에서는 루트의 사용 가능한 가로폭으로 각 정사각형 슬롯의 크기를 정해요. 값 이벤트의 `details.reason`으로 입력, 삭제, 붙여넣기 또는 키보드 변경 원인을 구분할 수 있어요. 비활성 필드는 폼 데이터에서 제외되고 읽기 전용 필드는 값을 제출해요.

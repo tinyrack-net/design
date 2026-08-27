@@ -63,6 +63,7 @@ test('preserves namespace, refs, native attributes, and slot semantics', async (
   );
 
   expect(rootRef.current).toHaveClass('tr-otp-field', 'consumer-otp');
+  expect(rootRef.current?.dataset['layout']).toBe('compact');
   expect(rootRef.current?.getAttribute('aria-label')).toBe('Verification code');
   expect(rootRef.current?.getAttribute('aria-describedby')).toBe('code-help');
   expect(inputRef.current).toHaveClass('tr-otp-field-digit');
@@ -329,6 +330,45 @@ test('forwards uiSize to the root and rescales segment height', async () => {
   expect(rootRef.current?.getAttribute('data-ui-size')).toBe('md');
   const segments = document.querySelectorAll<HTMLInputElement>('.tr-otp-field-digit');
   expect(segments[0]?.getBoundingClientRect().height).toBe(32);
+});
+
+test('stretches square slots evenly across the available inline size', async () => {
+  await render(
+    <div data-testid="otp-container" style={{ width: '360px' }}>
+      <TROTPField.Root aria-label="Stretch code" layout="stretch" length={6}>
+        <TROTPField.Input />
+        <TROTPField.Input />
+        <TROTPField.Input />
+        <TROTPField.Input />
+        <TROTPField.Input />
+        <TROTPField.Input />
+      </TROTPField.Root>
+    </div>,
+  );
+
+  const container = document.querySelector<HTMLElement>(
+    '[data-testid="otp-container"]',
+  );
+  const root = document.querySelector<HTMLElement>('.tr-otp-field');
+  const slots = Array.from(
+    document.querySelectorAll<HTMLInputElement>('.tr-otp-field-digit'),
+  );
+  if (!container || !root || slots.length === 0) {
+    throw new Error('stretch OTP field did not render');
+  }
+
+  expect(root.dataset['layout']).toBe('stretch');
+  expect(root.getBoundingClientRect().width).toBe(
+    container.getBoundingClientRect().width,
+  );
+  const slotRects = slots.map((slot) => slot.getBoundingClientRect());
+  expect(
+    Math.max(...slotRects.map((rect) => rect.width)) -
+      Math.min(...slotRects.map((rect) => rect.width)),
+  ).toBeLessThan(1);
+  for (const rect of slotRects) {
+    expect(rect.height).toBeCloseTo(rect.width);
+  }
 });
 
 test('ghost OTP slots stay flat until they are invalid', async () => {

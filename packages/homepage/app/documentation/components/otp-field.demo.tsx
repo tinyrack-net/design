@@ -73,6 +73,7 @@ const otpCopy = {
 
 type StoryArgs = {
   disabled: boolean;
+  layout?: 'compact' | 'stretch';
   length: number;
   readOnly: boolean;
   uiSize?: 'md' | 'lg';
@@ -103,6 +104,7 @@ export function OTPFieldPreview({
   defaultValue,
   disabled,
   label = 'Verification code',
+  layout = 'compact',
   length,
   onValueChange,
   readOnly,
@@ -123,6 +125,7 @@ export function OTPFieldPreview({
         {...stateProps}
         aria-labelledby={labelId}
         disabled={disabled}
+        layout={layout}
         length={length}
         name="verification-code"
         onValueChange={onValueChange}
@@ -238,6 +241,21 @@ export function OTPFieldSizeComparison() {
   );
 }
 
+export function OTPFieldStretchPreview() {
+  return (
+    <OTPFieldPreview
+      defaultValue=""
+      disabled={false}
+      label="Verification code"
+      layout="stretch"
+      length={6}
+      readOnly={false}
+      required={false}
+      uiSize="lg"
+    />
+  );
+}
+
 export function OTPFieldValidationPreview() {
   const copy = otpCopy[useDemoLocale()];
   const [attempted, setAttempted] = useState(false);
@@ -282,12 +300,14 @@ const meta = {
   parameters: { layout: 'centered' },
   args: {
     disabled: false,
+    layout: 'compact',
     length: 4,
     readOnly: false,
     uiSize: 'md',
   },
   argTypes: {
     disabled: { control: 'boolean' },
+    layout: { control: 'radio', options: ['compact', 'stretch'] },
     length: { control: { type: 'range', min: 3, max: 8, step: 1 } },
     readOnly: { control: 'boolean' },
     uiSize: { control: 'radio', options: ['md', 'lg'] },
