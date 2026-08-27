@@ -1,5 +1,12 @@
 # Changelog
 
+## @tinyrack/ui 0.27.1
+
+### Fixed
+
+- Select item indicators now constrain nested SVG icons to the design-system
+  size, preventing default 24px icons from overflowing their 16px slots.
+
 ## @tinyrack/ui 0.27.0 / @tinyrack/docs 0.21.0
 
 ### Breaking
