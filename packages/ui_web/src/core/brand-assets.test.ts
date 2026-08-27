@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import packageJson from '../../package.json' with { type: 'json' };
 
 const brandRoot = resolve(import.meta.dirname, '../brand');
-const products = ['tinest', 'dotweave', 'proxer', 'tinyauth'] as const;
+const products = ['tinest', 'dotweave', 'proxer', 'issuary'] as const;
 const productSizes = [16, 32, 48, 128, 512] as const;
 const launcherSizes = [512, 1024] as const;
 /** Each entry is a raster height in pixels; square artwork rasterizes to a

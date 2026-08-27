@@ -5,7 +5,7 @@ import sharp, { type Metadata } from 'sharp';
 
 const brandRoot = join(process.cwd(), 'src/brand');
 const assetRoot = join(brandRoot, 'apps');
-const products = ['tinest', 'dotweave', 'proxer', 'tinyauth'] as const;
+const products = ['tinest', 'dotweave', 'proxer', 'issuary'] as const;
 const productSizes = [16, 32, 48, 128, 512] as const;
 const launcherSizes = [512, 1024] as const;
 
@@ -80,10 +80,10 @@ const iconFamilies: readonly IconFamily[] = [
   },
   {
     glyphBounds: [12, 14.666667, 52, 52],
-    label: 'TinyAuth',
-    name: 'tinyauth',
+    label: 'Issuary',
+    name: 'issuary',
     root: assetRoot,
-    sourceName: 'tinyauth-app-icon',
+    sourceName: 'issuary-app-icon',
     sourceSize: 64,
   },
 ] as const;

@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" role="img" aria-labelledby="tinyauth-adaptive-foreground-title tinyauth-adaptive-foreground-description" data-safe-zone="27 27 54 54">
-  <title id="tinyauth-adaptive-foreground-title">TinyAuth adaptive icon foreground</title>
-  <desc id="tinyauth-adaptive-foreground-description">TinyAuth glyph centered inside the Android adaptive icon safe zone</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" role="img" aria-labelledby="issuary-adaptive-foreground-title issuary-adaptive-foreground-description" data-safe-zone="27 27 54 54">
+  <title id="issuary-adaptive-foreground-title">Issuary adaptive icon foreground</title>
+  <desc id="issuary-adaptive-foreground-description">Issuary glyph centered inside the Android adaptive icon safe zone</desc>
   <g transform="translate(54 54) scale(1.325) translate(-32 -33.333334)">
     <path fill="#fafafa" d="M17 14.667h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Zm0 27.333h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>
     <path fill="#38bdf8" d="M17 28h30a5 5 0 0 1 5 5v0a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5v0a5 5 0 0 1 5-5Z"/>

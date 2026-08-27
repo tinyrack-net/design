@@ -109,7 +109,7 @@ export function Settings() {
 
 ## Brand assets
 
-Tinyrack logo artwork and the Tinyrack, Tinest, Dotweave, Proxer, and TinyAuth
+Tinyrack logo artwork and the Tinyrack, Tinest, Dotweave, Proxer, and Issuary
 app icons ship as static SVG and PNG files. Import them through the package so
 the build tool copies and fingerprints the selected asset.
 

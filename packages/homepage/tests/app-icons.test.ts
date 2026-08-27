@@ -5,14 +5,14 @@ import { describe, expect, it } from 'vitest';
 
 const homepageRoot = process.cwd();
 const assetRoot = join(homepageRoot, 'public/brand/apps');
-const products = ['tinest', 'dotweave', 'proxer', 'tinyauth'] as const;
+const products = ['tinest', 'dotweave', 'proxer', 'issuary'] as const;
 const sizes = [16, 32, 48, 128, 512] as const;
 const launcherSizes = [512, 1024] as const;
 const approvedColors = {
   tinest: new Set(['#0a0a0a', '#a78bfa', '#fafafa']),
   dotweave: new Set(['#0a0a0a', '#2dd4bf', '#fafafa']),
   proxer: new Set(['#0a0a0a', '#2563eb', '#fafafa']),
-  tinyauth: new Set(['#0a0a0a', '#38bdf8', '#fafafa']),
+  issuary: new Set(['#0a0a0a', '#38bdf8', '#fafafa']),
 } as const;
 
 function numbers(value: string | undefined) {
@@ -126,7 +126,7 @@ describe('Tinyrack app icon system', () => {
         "from '@tinyrack/ui/brand/apps/proxer-app-icon.svg'",
       );
       expect(docs, locale).toContain(
-        "from '@tinyrack/ui/brand/apps/tinyauth-app-icon-512.png'",
+        "from '@tinyrack/ui/brand/apps/issuary-app-icon-512.png'",
       );
       for (const product of products) {
         const svg = `${product}-app-icon.svg`;

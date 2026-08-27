@@ -22,7 +22,7 @@ const suppliedUiArchive = process.env['TINYRACK_UI_TARBALL'];
 const uiBrandRoot = resolve(docsRoot, '../ui_web/src/brand');
 const launcherBrandAssets = [
   { name: 'tinyrack', prefix: '' },
-  ...['tinest', 'dotweave', 'proxer', 'tinyauth'].map((name) => ({
+  ...['tinest', 'dotweave', 'proxer', 'issuary'].map((name) => ({
     name,
     prefix: 'apps/',
   })),
@@ -60,12 +60,12 @@ const uiBrandAssets = [
   'apps/proxer-app-icon-128.png',
   'apps/proxer-app-icon-512.png',
   'apps/proxer-app-icon.svg',
-  'apps/tinyauth-app-icon-16.png',
-  'apps/tinyauth-app-icon-32.png',
-  'apps/tinyauth-app-icon-48.png',
-  'apps/tinyauth-app-icon-128.png',
-  'apps/tinyauth-app-icon-512.png',
-  'apps/tinyauth-app-icon.svg',
+  'apps/issuary-app-icon-16.png',
+  'apps/issuary-app-icon-32.png',
+  'apps/issuary-app-icon-48.png',
+  'apps/issuary-app-icon-128.png',
+  'apps/issuary-app-icon-512.png',
+  'apps/issuary-app-icon.svg',
   ...launcherBrandAssets,
 ] as const;
 
