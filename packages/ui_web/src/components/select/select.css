@@ -124,6 +124,12 @@
     line-height: 1;
   }
 
+  .tr-select-item-indicator > svg {
+    block-size: var(--tinyrack-space-lg);
+    display: block;
+    inline-size: var(--tinyrack-space-lg);
+  }
+
   .tr-select-backdrop {
     background: var(--tr-select-backdrop, var(--tinyrack-scrim));
     inset: 0;

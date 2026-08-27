@@ -186,7 +186,9 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
             <TRSelect.List>
               <TRSelect.Item value="alpha">
                 <TRSelect.ItemText>Alpha</TRSelect.ItemText>
-                <TRSelect.ItemIndicator>✓</TRSelect.ItemIndicator>
+                <TRSelect.ItemIndicator>
+                  <svg aria-hidden="true" height="24" viewBox="0 0 24 24" width="24" />
+                </TRSelect.ItemIndicator>
               </TRSelect.Item>
               <TRSelect.Item value="beta">
                 <TRSelect.ItemText>Beta</TRSelect.ItemText>
@@ -233,6 +235,9 @@ test('renders the portalled popup as a trigger-aligned Tinyrack layer', async ()
   const indicatorStyle = getComputedStyle(indicator as HTMLElement);
   expect(indicatorStyle.backgroundColor).toBe('rgba(0, 0, 0, 0)');
   expect(indicatorStyle.color).not.toBe(indicatorStyle.backgroundColor);
+  const indicatorIcon = indicator?.querySelector('svg');
+  expect(indicatorIcon?.getBoundingClientRect().width).toBe(16);
+  expect(indicatorIcon?.getBoundingClientRect().height).toBe(16);
 
   const selectedItemStyle = getComputedStyle(selectedItem as HTMLElement);
   expect(selectedItemStyle.paddingBlockStart).toBe('4px');
