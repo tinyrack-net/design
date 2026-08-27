@@ -1064,6 +1064,27 @@ export const componentDocsManifest = [
     title: 'ScrollArea',
   },
   {
+    capabilities: ['responsive', 'keyboard', 'validation', 'stateful'],
+    file: 'app/content/en/web/components/native-select.mdx',
+    id: 'native-select',
+    controls: ['appearance', 'disabled', 'label', 'required', 'uiSize'],
+    exampleGroups: [
+      exampleGroup('native-select-basic', 'usage', 'basic', 1),
+      exampleGroup('native-select-states', 'examples', 'series', 4),
+      exampleGroup('native-select-sizes', 'examples', 'series', 3),
+      exampleGroup('native-select-listboxes', 'examples', 'recipe', 2),
+      exampleGroup('native-select-form', 'examples', 'recipe', 1),
+    ],
+    requiredExamples: [
+      'native-select-basic',
+      'native-select-states',
+      'native-select-sizes',
+      'native-select-listboxes',
+      'native-select-form',
+    ],
+    title: 'Native Select',
+  },
+  {
     capabilities: ['responsive', 'keyboard', 'overflow', 'stateful'],
     file: 'app/content/en/web/components/virtual-list.mdx',
     id: 'virtual-list',

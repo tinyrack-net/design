@@ -1,0 +1,114 @@
+---
+title: "Native Select"
+description: "Tinyrack のフィールド外観を保ちながら、ブラウザーやプラットフォームの選択 UI を使う実際の HTML select です。"
+section: components
+group: forms-inputs
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/native-select.demo.js';
+
+## 主なプロパティ
+
+| プロパティ | 動作 |
+| --- | --- |
+| 要素 | 実際の HTML `<select>` をレンダリングし、`<option>` と `<optgroup>` を子要素として受け取ります。 |
+| 値 | ネイティブの `value`、`defaultValue`、`onChange` の動作を使います。 |
+| 表示 | 閉じた状態には Tinyrack のスタイルを適用し、選択肢はブラウザーやプラットフォームが表示します。 |
+| フォーム | `name`、`form`、`required`、FormData、検証、リセットの動作を維持します。 |
+| リストボックス | `multiple` または `size > 1` ではブラウザーのインラインリストボックスを維持し、装飾用の chevron を外します。 |
+
+ネイティブフォームの動作と、モバイルで使い慣れたプラットフォームの選択 UI を優先する場合は `TRNativeSelect` を選んでください。Tinyrack が描画するグループ、選択表示、スクロール操作、配置、ポップアップ状態が必要な場合は `TRSelect` を使ってください。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/native-select.css';"], codeImports: ["import { TRNativeSelect } from '@tinyrack/ui/components/native-select';", "import { TRField } from '@tinyrack/ui/components/field';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs
+  id="native-select-basic"
+  title="デプロイ先ラック"
+  preview={<div data-docs-example-item-count="1"><Stories.NativeSelectPreview appearance="solid" disabled={false} label="デプロイ先ラック" required={false} uiSize="md" /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRField } from '@tinyrack/ui/components/field';
+import { TRNativeSelect } from '@tinyrack/ui/components/native-select';
+
+export function RackSelect() {
+  return (
+    <TRField.Root>
+      <TRField.Label>デプロイ先ラック</TRField.Label>
+      <TRNativeSelect defaultValue="alpha" name="rack">
+        <option value="">ラックを選択</option>
+        <optgroup label="本番環境">
+          <option value="alpha">ラック Alpha</option>
+          <option value="beta">ラック Beta</option>
+        </optgroup>
+        <option value="staging">ステージングラック</option>
+      </TRNativeSelect>
+    </TRField.Root>
+  );
+}` , styles: { code: "@import '@tinyrack/ui/components/field.css';\n@import '@tinyrack/ui/components/native-select.css';" } }]}
+/>
+
+## 例
+
+<ComponentExampleTabs id="native-select-states" title="デフォルト、無効、無効な値、ゴースト" preview={<div data-docs-example-item-count="4"><Stories.NativeSelectStateComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRField.Root><TRField.Label>デフォルト</TRField.Label><TRNativeSelect defaultValue="alpha"><option value="alpha">ラック Alpha</option></TRNativeSelect></TRField.Root>
+<TRField.Root disabled><TRField.Label>無効</TRField.Label><TRNativeSelect defaultValue="alpha"><option value="alpha">ラック Alpha</option></TRNativeSelect></TRField.Root>
+<TRField.Root invalid><TRField.Label>無効な値</TRField.Label><TRNativeSelect defaultValue=""><option value="">ラックを選択</option></TRNativeSelect></TRField.Root>
+<TRField.Root><TRField.Label>ゴースト</TRField.Label><TRNativeSelect appearance="ghost" defaultValue="alpha"><option value="alpha">ラック Alpha</option></TRNativeSelect></TRField.Root>` }]} />
+
+<ComponentExampleTabs id="native-select-sizes" title="Small、medium、large" preview={<div data-docs-example-item-count="3"><Stories.NativeSelectSizeComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`{(['sm', 'md', 'lg'] as const).map((uiSize) => (
+  <TRNativeSelect aria-label={uiSize + ' デプロイ先ラック'} key={uiSize} uiSize={uiSize}>
+    <option value="alpha">ラック Alpha</option>
+  </TRNativeSelect>
+))}` }]} />
+
+<ComponentExampleTabs id="native-select-listboxes" title="ネイティブリストボックスモード" description="size で複数の行を表示するか、multiple で複数の値を選択します。" preview={<div data-docs-example-item-count="2"><Stories.NativeSelectListboxComparison /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRNativeSelect aria-label="表示するラック" defaultValue="alpha" size={4}>
+  <option value="alpha">ラック Alpha</option>
+  <option value="beta">ラック Beta</option>
+  <option value="staging">ステージングラック</option>
+</TRNativeSelect>
+
+<TRNativeSelect aria-label="複数のラック" defaultValue={['alpha', 'beta']} multiple size={4}>
+  <option value="alpha">ラック Alpha</option>
+  <option value="beta">ラック Beta</option>
+  <option value="staging">ステージングラック</option>
+</TRNativeSelect>` }]} />
+
+<ComponentExampleTabs id="native-select-form" title="FormData とネイティブリセット" preview={<div data-docs-example-item-count="1"><Stories.NativeSelectFormPreview /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRNativeSelect } from '@tinyrack/ui/components/native-select';
+
+function RackForm() {
+  return (
+    <form onSubmit={(event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      console.log(data.get('rack'));
+    }}>
+      <label htmlFor="rack">デプロイ先ラック</label>
+      <TRNativeSelect defaultValue="alpha" id="rack" name="rack" required>
+        <option value="alpha">ラック Alpha</option>
+        <option value="staging">ステージングラック</option>
+      </TRNativeSelect>
+      <button type="submit">送信</button>
+      <button type="reset">リセット</button>
+    </form>
+  );
+}` }]} />
+
+## API
+
+`TRNativeSelect` はネイティブ select の属性、ref、イベント、クラス、スタイルを、レンダリングされた `<select>` に渡します。HTML select は読み取り専用状態をサポートしないため、`readOnly` prop は追加しません。
+
+| Prop | 型 | デフォルト | 説明 |
+| --- | --- | --- | --- |
+| `uiSize` | `"sm" \| "md" \| "lg"` | `"md"` | 閉じたコントロールのサイズを設定します。 |
+| `appearance` | `"solid" \| "ghost"` | `"solid"` | 通常時のフィールド外観を選びます。 |
+| `multiple` | `boolean` | `false` | ネイティブの複数選択リストボックスを有効にします。 |
+| `size` | `number` | ブラウザーのデフォルト | ネイティブの行を表示し、1 より大きい値ではリストボックスになります。 |
+
+`TRField.Label`、ネイティブの `<label>`、`aria-label` のいずれかでアクセシブルな名前を付けてください。`onChange={(event) => ...}` では `event.currentTarget.value` を読み、複数選択では `selectedOptions` を読みます。開いた選択 UI はブラウザーとオペレーティングシステムが管理するため、選択肢のスタイルは Tinyrack の仕様に含まれません。
