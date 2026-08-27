@@ -1483,6 +1483,7 @@ describe('React Router documentation contract', () => {
       'test:ci-full',
       'test:e2e',
       'test:flutter-dev',
+      'test:parity',
       'test:prepared',
       'test:unit',
     ]);
