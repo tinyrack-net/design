@@ -1,5 +1,18 @@
 # Changelog
 
+## @tinyrack/ui 0.28.0 / @tinyrack/docs 0.22.0
+
+### Added
+
+- Added an explicit React–Flutter parity catalog for all shared components,
+  executable contract and geometry fixtures, normalized runtime observations,
+  and a dedicated CI gate for cross-platform component changes.
+
+### Changed
+
+- Button parity now verifies shared size, intent, appearance, theme, focus,
+  pointer, disabled, and loading behavior against the Flutter Web preview.
+
 ## @tinyrack/ui 0.27.1
 
 ### Fixed
