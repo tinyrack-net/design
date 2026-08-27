@@ -55,23 +55,23 @@
     "@mdx-js/react": "3.1.1",
     "@mdx-js/rollup": "3.1.1",
     "@react-router/dev": "8.3.0",
-    "@shikijs/langs": "4.4.2",
-    "@shikijs/themes": "4.4.2",
+    "@shikijs/langs": "4.4.3",
+    "@shikijs/themes": "4.4.3",
     "@tinyrack/ui": "workspace:^",
-    "lucide-react": "1.28.0",
+    "lucide-react": "1.33.0",
     "pagefind": "1.5.2",
     "remark-directive": "4.0.0",
     "remark-frontmatter": "5.0.0",
     "remark-gfm": "4.0.1",
     "sharp": "0.35.3",
-    "shiki": "4.4.2",
+    "shiki": "4.4.3",
     "yaml": "2.9.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.4",
+    "@types/react-dom": "19.2.5",
     "playwright": "1.62.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -79,8 +79,8 @@
     "tailwindcss": "^4.3.3",
     "tsdown": "^0.22.14",
     "typescript": "7.0.2",
-    "vite": "^8.2.0",
-    "vitest": "4.1.10"
+    "vite": "^8.2.2",
+    "vitest": "4.1.11"
   },
   "sideEffects": [
     "**/*.css"
