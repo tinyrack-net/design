@@ -193,6 +193,10 @@ void main() {
         expect(actual.fontWeight, published.fontWeight);
         expect(actual.letterSpacing, published.letterSpacing);
         expect(actual.height, published.height);
+        expect(
+          published.fontSize! * published.height!,
+          TRControlMetrics.lineHeightOf(size),
+        );
 
         final painter = TextPainter(
           text: TextSpan(text: 'Label', style: published),

@@ -23,6 +23,7 @@ jobs:
       docs_contract: ${{ steps.plan.outputs.docs_contract }}
       flutter: ${{ steps.plan.outputs.flutter }}
       flutter_preview: ${{ steps.plan.outputs.flutter_preview }}
+      parity: ${{ steps.plan.outputs.parity }}
       homepage: ${{ steps.plan.outputs.homepage }}
       shared: ${{ steps.plan.outputs.shared }}
       ui: ${{ steps.plan.outputs.ui }}
@@ -514,6 +515,40 @@ jobs:
           label: Homepage package
           phase: finish
 
+  cross_platform_parity:
+    name: React-Flutter component parity
+    if: >-
+      needs.changes.outputs.parity == 'true' ||
+      needs.changes.outputs.shared == 'true'
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7.0.1
+
+      - name: Set up JavaScript runtime
+        uses: ./.github/actions/setup-js
+
+      - name: Set up Flutter
+        uses: ./.github/actions/setup-flutter
+
+      - name: Install parity dependencies
+        run: pnpm --filter @tinyrack/homepage... install --frozen-lockfile
+
+      - name: Build Flutter preview
+        run: pnpm run flutter:preview:build
+
+      - name: Set up Chromium
+        uses: ./.github/actions/setup-playwright
+        with:
+          filter: "@tinyrack/homepage"
+          browsers: chromium
+
+      - name: Test strict component parity
+        run: pnpm --filter @tinyrack/homepage test:parity
+
   flutter:
     name: Flutter package
     if: >-
@@ -718,6 +753,7 @@ jobs:
       - docs_contract
       - docs
       - homepage
+      - cross_platform_parity
       - flutter
       - flutter_platforms
       - flutter_linux

@@ -109,6 +109,31 @@ void main() {
     expect(_labelTop(tester), rest);
   });
 
+  testWidgets('ghost keeps the shared transparent border geometry', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _app(
+        TRButton(
+          appearance: TRAppearance.ghost,
+          onPressed: () {},
+          child: const Text('Deploy'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final button = tester.widget<TextButton>(
+      find.descendant(
+        of: find.byType(TRButton),
+        matching: find.byType(TextButton),
+      ),
+    );
+    final side = button.style?.side?.resolve(const <WidgetState>{});
+    expect(side?.color, Colors.transparent);
+    expect(side?.width, TRGeneratedBorders.defaultWidth);
+  });
+
   testWidgets('touch press starts immediately and uses asymmetric motion', (
     tester,
   ) async {

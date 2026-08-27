@@ -13,6 +13,7 @@
     "test:ci-fast": "pnpm test:unit && vitest run --project e2e-smoke",
     "test:ci-full": "pnpm test:prepared",
     "test:prepared": "pnpm test:unit && vitest run --project e2e && vitest run --project e2e-overlays",
+    "test:parity": "vitest run --project e2e-parity",
     "test:unit": "vitest run --project unit",
     "test:e2e": "pnpm build && vitest run --project e2e && vitest run --project e2e-overlays",
     "test:flutter-dev": "vitest run --project e2e-flutter-dev",

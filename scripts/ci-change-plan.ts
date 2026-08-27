@@ -9,6 +9,7 @@ export type CiChangePlan = {
   flutter: boolean;
   flutter_preview: boolean;
   homepage: boolean;
+  parity: boolean;
   shared: boolean;
   ui: boolean;
 };
@@ -19,6 +20,7 @@ const emptyPlan = (): CiChangePlan => ({
   flutter: false,
   flutter_preview: false,
   homepage: false,
+  parity: false,
   shared: false,
   ui: false,
 });
@@ -29,6 +31,7 @@ export const fullPlan = (): CiChangePlan => ({
   flutter: true,
   flutter_preview: true,
   homepage: true,
+  parity: true,
   shared: true,
   ui: true,
 });
@@ -100,6 +103,9 @@ export function classifyChangedPaths(paths: readonly string[]): CiChangePlan {
 
     if (path.startsWith('packages/ui_web/')) {
       enableUi(plan);
+      if (path.startsWith('packages/ui_web/src/components/')) {
+        plan.parity = true;
+      }
       continue;
     }
 
@@ -110,6 +116,17 @@ export function classifyChangedPaths(paths: readonly string[]): CiChangePlan {
 
     if (path.startsWith('packages/homepage/')) {
       enableHomepage(plan);
+      if (
+        path === 'packages/homepage/package.json' ||
+        path === 'packages/homepage/vitest.config.ts' ||
+        path.startsWith(
+          'packages/homepage/tests/cross-platform-button-parity.test.ts',
+        ) ||
+        path.startsWith('packages/homepage/tests/cross-platform-parity-runtime.ts') ||
+        path.startsWith('packages/homepage/tests/fixtures/cross-platform-parity/')
+      ) {
+        plan.parity = true;
+      }
       if (
         path.startsWith('packages/homepage/app/documentation/flutter/') ||
         path.startsWith('packages/homepage/scripts/flutter-preview') ||
@@ -123,6 +140,13 @@ export function classifyChangedPaths(paths: readonly string[]): CiChangePlan {
 
     if (path.startsWith('packages/ui_flutter/')) {
       enableFlutter(plan);
+      if (
+        path.startsWith('packages/ui_flutter/lib/src/components/') ||
+        path === 'packages/ui_flutter/lib/src/tokens.dart' ||
+        path === 'packages/ui_flutter/example/lib/main.dart'
+      ) {
+        plan.parity = true;
+      }
       continue;
     }
 
