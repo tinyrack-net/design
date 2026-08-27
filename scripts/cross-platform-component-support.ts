@@ -56,6 +56,11 @@ export const reactComponentAdaptations = {
     flutter: 'button',
     reason: 'Flutter navigation actions use the button surface.',
   },
+  'native-select': {
+    flutter: 'select',
+    reason:
+      'Flutter uses its select component without promising an HTML-style system picker.',
+  },
   'radio-group': {
     flutter: 'radio',
     reason: 'Flutter composes radio groups from the radio component.',
@@ -344,6 +349,15 @@ export const reactComponentParity = {
         'open lifecycle',
       ],
     },
+  ),
+  'native-select': adapted(
+    'HTML select form behavior and browser or operating-system picker presentation do not have a direct Flutter equivalent.',
+    ['single selection', 'availability states', 'shared closed-control tokens'],
+    [
+      'HTML form serialization',
+      'browser or operating-system picker presentation',
+      'native option and optgroup elements',
+    ],
   ),
   'number-field': geometry(
     'number-field',
