@@ -1,5 +1,13 @@
 # Changelog
 
+## @tinyrack/ui 0.29.0
+
+### Added
+
+- `TROTPField.Root` now accepts `layout="stretch"` to distribute equal-width
+  square slots across the available inline size. The default `compact` layout
+  preserves the existing token-sized slots.
+
 ## @tinyrack/ui 0.28.0 / @tinyrack/docs 0.22.0
 
 ### Added

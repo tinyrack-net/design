@@ -18,6 +18,7 @@ import * as Stories from '../../../../documentation/components/otp-field.demo.js
 | input | 入力、コード全体の貼り付け、削除、フォーカス移動、1 つのネイティブフォーム値をサポート |
 | autocomplete | 最初のスロットは既定で `one-time-code` となり、パスワードマネージャーとプラットフォームの自動入力に対応 |
 | length | 値を制限し、完了と妥当性を決定する。同じ数の `Input` パーツを明示的にレンダリングする必要がある |
+| layout | `compact` はトークンサイズの正方形スロットを維持し、`stretch` は利用可能な横幅を均等な正方形スロットで埋めます |
 
 ## インストール
 
@@ -102,6 +103,22 @@ export function OTPFieldSizes() {
     </TROTPField.Root>
   </div>
 </div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="otp-field-stretch"
+  title="横幅いっぱいの正方形スロット"
+  description={'分割入力をフォームの横幅に揃えるには layout="stretch" を選択してください。各スロットが同じ幅を取り、正方形の比率を維持します。'}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldStretchPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
+
+<TROTPField.Root aria-label="確認コード" layout="stretch" length={6} uiSize="lg">
+  <TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+  <TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+</TROTPField.Root>` ,
       styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
     },
   ]}
@@ -195,8 +212,8 @@ function OTPEvents() {
 
 | パーツ | 主な props |
 | --- | --- |
-| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `uiSize`, `ref`, `render` |
+| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `uiSize`, `layout`, `ref`, `render` |
 | `Input` | ネイティブ input props、`className`、`style`、`ref`、Base UI の `render` |
 | `Separator` | `orientation`（既定値は `vertical`）、`TRSeparator` props、`ref` |
 
-`Root` はラベル付きの `role="group"` をレンダリングします。表示ラベルを用意し、`aria-labelledby` で関連付けてください。スロット ID はルートの `id` から派生し、最初のスロットには既定で `one-time-code` 自動入力が適用されます。`uiSize?: 'md' | 'lg'`(既定値 `md`) ですべてのスロットとセパレーターの高さを一括で調整できます。値イベントの `details.reason` で入力、削除、貼り付け、キーボード変更を区別できます。無効なフィールドはフォームデータから除外され、読み取り専用フィールドは値を送信します。
+`Root` はラベル付きの `role="group"` をレンダリングします。表示ラベルを用意し、`aria-labelledby` で関連付けてください。スロット ID はルートの `id` から派生し、最初のスロットには既定で `one-time-code` 自動入力が適用されます。既定の `compact` レイアウトでは、`uiSize?: 'md' | 'lg'`（既定値 `md`）ですべてのスロットとセパレーターの高さを一括で調整できます。`stretch` レイアウトでは、ルートで利用できる横幅から各正方形スロットのサイズを決定します。値イベントの `details.reason` で入力、削除、貼り付け、キーボード変更を区別できます。無効なフィールドはフォームデータから除外され、読み取り専用フィールドは値を送信します。

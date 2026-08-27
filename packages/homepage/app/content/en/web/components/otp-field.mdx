@@ -18,6 +18,7 @@ import * as Stories from '../../../../documentation/components/otp-field.demo.js
 | input | supports typing, full-code paste, deletion, focus navigation, and one native form value |
 | autocomplete | defaults to `one-time-code` on the first slot for password-manager and platform autofill |
 | length | clamps the value and determines completion and validity; render exactly that many `Input` parts |
+| layout | `compact` keeps token-sized square slots; `stretch` fills the available inline size with equal square slots |
 
 ## Install
 
@@ -102,6 +103,22 @@ export function OTPFieldSizes() {
     </TROTPField.Root>
   </div>
 </div>` ,
+      styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
+    },
+  ]}
+/>
+
+<ComponentExampleTabs
+  id="otp-field-stretch"
+  title="Full-width square slots"
+  description={'Choose layout="stretch" when the segmented field should align with the full width of a form. Each slot receives an equal share and keeps a square aspect ratio.'}
+  preview={<div data-docs-example-item-count="1"><Stories.OTPFieldStretchPreview /></div>}
+  sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TROTPField } from '@tinyrack/ui/components/otp-field';
+
+<TROTPField.Root aria-label="Verification code" layout="stretch" length={6} uiSize="lg">
+  <TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+  <TROTPField.Input /><TROTPField.Input /><TROTPField.Input />
+</TROTPField.Root>` ,
       styles: { code: "@import '@tinyrack/ui/components/otp-field.css';" },
     },
   ]}
@@ -195,8 +212,8 @@ Use the `TROTPField.Root`, `TROTPField.Input`, and `TROTPField.Separator` namesp
 
 | Part | Key props |
 | --- | --- |
-| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `uiSize`, `ref`, `render` |
+| `Root` | `length`, `value`, `defaultValue`, `onValueChange`, `onValueComplete`, `onValueInvalid`, `validationType`, `normalizeValue`, `autoComplete`, `inputMode`, `mask`, `name`, `form`, `required`, `disabled`, `readOnly`, `autoSubmit`, `uiSize`, `layout`, `ref`, `render` |
 | `Input` | Native input props, `className`, `style`, `ref`, and Base UI `render` |
 | `Separator` | `orientation` (defaults to `vertical`) plus `TRSeparator` props and `ref` |
 
-`Root` renders a labeled `role="group"`; give it a visible label with `aria-labelledby`. Slot IDs derive from the root `id`, and the first slot receives `one-time-code` autocomplete by default. `uiSize?: 'md' | 'lg'` (default `md`) rescales every slot and the separator together. `onValueChange`, `onValueComplete`, and `onValueInvalid` receive event details whose `reason` identifies typing, clearing, paste, or keyboard changes. Disabled fields are omitted from form data, while read-only fields keep their submitted value.
+`Root` renders a labeled `role="group"`; give it a visible label with `aria-labelledby`. Slot IDs derive from the root `id`, and the first slot receives `one-time-code` autocomplete by default. In the default `compact` layout, `uiSize?: 'md' | 'lg'` (default `md`) rescales every slot and the separator together. The `stretch` layout derives each square slot from the root's available inline size. `onValueChange`, `onValueComplete`, and `onValueInvalid` receive event details whose `reason` identifies typing, clearing, paste, or keyboard changes. Disabled fields are omitted from form data, while read-only fields keep their submitted value.
