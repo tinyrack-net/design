@@ -18,9 +18,13 @@ import { ComponentInstall } from '../../../../documentation/shared/component-ins
 
 ## Usage
 
-<ComponentExampleTabs id="provider-mark-basic" title="Identity providers" preview={<div className="flex gap-3"><TRProviderMark data-docs-example-item="" provider="google" /><TRProviderMark data-docs-example-item="" provider="github" /><TRProviderMark data-docs-example-item="" provider="apple" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+<ComponentExampleTabs id="provider-mark-basic" title="Identity providers" preview={<div className="flex gap-3" data-docs-example-item=""><TRProviderMark provider="google" /><TRProviderMark provider="github" /><TRProviderMark provider="apple" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
 
 <TRProviderMark provider="google" />` , styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/provider-mark.css';" } }]} />
+
+## Examples
+
+Use the mark inside an action whose visible label supplies the provider name. Add `aria-label` only when the mark itself must be announced.
 
 ## API
 

@@ -18,9 +18,13 @@ import { ComponentInstall } from '../../../../documentation/shared/component-ins
 
 ## 사용법
 
-<ComponentExampleTabs id="provider-mark-basic" title="인증 제공자" preview={<div className="flex gap-3"><TRProviderMark data-docs-example-item="" provider="google" /><TRProviderMark data-docs-example-item="" provider="github" /><TRProviderMark data-docs-example-item="" provider="apple" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+<ComponentExampleTabs id="provider-mark-basic" title="인증 제공자" preview={<div className="flex gap-3" data-docs-example-item=""><TRProviderMark provider="google" /><TRProviderMark provider="github" /><TRProviderMark provider="apple" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
 
 <TRProviderMark provider="google" />` , styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/provider-mark.css';" } }]} />
+
+## 예시
+
+인증 제공자 이름을 표시하는 작업 안에서 표식을 사용하세요. 표식 자체를 읽어야 할 때만 `aria-label`을 추가하세요.
 
 ## API
 

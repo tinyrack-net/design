@@ -18,7 +18,7 @@ export const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
 
 | Axis | Values | Default |
 | --- | --- | --- |
-| `uiSize` | `md`, `lg` | `md` |
+| `uiSize` | `sm`, `md`, `lg`, `xl`, `2xl` | `md` |
 | `shape` | `circle`, `square` | `circle` |
 | parts | `Root`, `Image`, `Fallback` | compound API |
 
@@ -76,9 +76,7 @@ const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   description="Choose the size that matches adjacent controls and identity density."
   preview={(
     <div className="flex items-center gap-3">
-      <TRAvatar.Root data-docs-example-item="" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
       <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
-      <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
       <TRAvatar.Root data-docs-example-item="" uiSize="xl"><TRAvatar.Fallback>XL</TRAvatar.Fallback></TRAvatar.Root>
       <TRAvatar.Root data-docs-example-item="" uiSize="2xl"><TRAvatar.Fallback>2X</TRAvatar.Fallback></TRAvatar.Root>
     </div>

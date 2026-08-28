@@ -542,6 +542,16 @@ export const componentDocsManifest = [
   },
   {
     capabilities: ['responsive'],
+    file: 'app/content/en/web/components/provider-mark.mdx',
+    hasPlayground: false,
+    id: 'provider-mark',
+    controls: [],
+    exampleGroups: [exampleGroup('provider-mark-basic', 'usage', 'basic', 1)],
+    requiredExamples: ['provider-mark-basic'],
+    title: 'Provider Mark',
+  },
+  {
+    capabilities: ['responsive'],
     file: 'app/content/en/web/components/skeleton.mdx',
     id: 'skeleton',
     controls: ['animate', 'circleSize', 'height', 'shape', 'width'],
