@@ -1,5 +1,24 @@
 # Changelog
 
+## @tinyrack/ui 0.31.0
+
+### Breaking
+
+- `tinyrack-ui-check` now enforces Tinyrack text and form components, rejects
+  raw HTML and Typography prose utilities, verifies that `tinyrack-*`
+  utilities exist, checks component-token and mixed literal values, and
+  requires `core.css` before component styles. Existing consumers must replace
+  native typographic and form elements or add a reasoned next-line exception.
+
+### Added
+
+- Added `xl` and `2xl` Avatar sizes, the `TRTable.Root layout="wide"` recipe,
+  accessible segmented `TRSteps.Progress`, and `TRProviderMark` for Google,
+  GitHub, and Apple identity-provider artwork.
+- Added the `2xs` spacing and wide-table measurement tokens. IBM Plex body and
+  heading tokens now include the official variable, Latin, Korean, and
+  Japanese family names without system-font fallbacks.
+
 ## @tinyrack/ui 0.30.0
 
 ### Breaking

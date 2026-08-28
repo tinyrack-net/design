@@ -14,8 +14,9 @@ import * as Stories from '../../../../documentation/components/steps.demo.js';
 | --- | --- | --- |
 | `Root` | semantic ordered list | the complete procedure |
 | `Item` | semantic list item with a numbered marker | one task, including rich content |
+| `Progress` | accessible segmented progressbar | the current position in a finite workflow |
 
-`TRSteps` is intentionally presentational. It does not manage progress or selection, so authored headings, paragraphs, links, code blocks, and other components remain untouched inside each item.
+`Root` and `Item` remain presentational. `Progress` accepts one-based `current` and `total` values, clamps invalid ranges, and exposes the result through progressbar semantics.
 
 ## Install
 
@@ -44,11 +45,11 @@ import * as Stories from '../../../../documentation/components/steps.demo.js';
   sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]}
 />
 
-Use `TRSteps` for authored procedures, not interactive progress indicators. If the user must move between states or complete a form, compose a dedicated progress or navigation component instead.
+Use `TRSteps.Progress` to report progress beside a workflow's own controls. It displays state but does not navigate or submit the workflow.
 
 ### State boundaries
 
-Steps has no `current`, `completed`, or `disabled` state props and applies no state styling. Put status in the item content so it is available to every reader. You may set `aria-current` to `"step"` on an `Item` when another control manages a wider workflow, but a Steps item itself is not interactive or disableable.
+`Root` and `Item` have no `current`, `completed`, or `disabled` state. Put authored status in item content, and set `aria-current` to `"step"` when another control owns the workflow. `Progress` owns only its numeric current state and requires an accessible label that includes the workflow context.
 
 The layout wraps long content on narrow screens and accepts ordinary block children. No Playground is shown because Steps has no meaningful visual scalar prop to control.
 
@@ -58,6 +59,7 @@ The layout wraps long content on narrow screens and accepts ordinary block child
 | --- | --- | --- |
 | `TRSteps.Root`, `TRStepsRoot` | `ol` | `TRStepsRootProps`, including native ordered-list props and a React 19 ref |
 | `TRSteps.Item`, `TRStepsItem` | `li` | `TRStepsItemProps`, including native list-item props and a React 19 ref |
+| `TRSteps.Progress`, `TRStepsProgress` | `div[role="progressbar"]` | `TRStepsProgressProps`, including `current`, `total`, an accessible label, native div props, and a React 19 ref |
 
 ### Style tokens
 

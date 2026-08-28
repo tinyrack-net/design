@@ -297,6 +297,7 @@ abstract final class TRGeneratedColors {
 
 abstract final class TRGeneratedSpacing {
   static const double size3xs = 1.0;
+  static const double size2xs = 2.0;
   static const double xs = 4.0;
   static const double sm = 8.0;
   static const double md = 12.0;

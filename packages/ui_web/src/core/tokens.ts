@@ -72,6 +72,7 @@ export const tinyrackMeasurements = {
   'measure-md': '12rem',
   'measure-lg': '16rem',
   'measure-xl': '24rem',
+  'table-wide-min-width': '64rem',
   'control-press-distance': '0.0625rem',
   'overlay-width-sm': '20rem',
   'overlay-width-md': '32rem',
@@ -340,6 +341,7 @@ export const tinyrackShadows = {
 
 export const tinyrackSpacing = {
   '3xs': '0.0625rem',
+  '2xs': '0.125rem',
   xs: '0.25rem',
   sm: '0.5rem',
   md: '0.75rem',
@@ -359,8 +361,9 @@ export const tinyrackSpinnerMetrics = {
 
 export const tinyrackTypography = {
   fontStack: {
-    body: '"IBM Plex Sans"',
-    heading: '"IBM Plex Sans"',
+    body: '"IBM Plex Sans Variable", "IBM Plex Sans", "IBM Plex Sans KR", "IBM Plex Sans JP"',
+    heading:
+      '"IBM Plex Sans Variable", "IBM Plex Sans", "IBM Plex Sans KR", "IBM Plex Sans JP"',
     mono: '"IBM Plex Mono", monospace',
   },
   fontSize: {

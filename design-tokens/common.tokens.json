@@ -1364,19 +1364,29 @@
     "fontStack": {
       "body": {
         "$type": "fontFamily",
-        "$value": "IBM Plex Sans",
+        "$value": [
+          "IBM Plex Sans Variable",
+          "IBM Plex Sans",
+          "IBM Plex Sans KR",
+          "IBM Plex Sans JP"
+        ],
         "$extensions": {
           "net.tinyrack": {
-            "output": "\"IBM Plex Sans\""
+            "output": "\"IBM Plex Sans Variable\", \"IBM Plex Sans\", \"IBM Plex Sans KR\", \"IBM Plex Sans JP\""
           }
         }
       },
       "heading": {
         "$type": "fontFamily",
-        "$value": "IBM Plex Sans",
+        "$value": [
+          "IBM Plex Sans Variable",
+          "IBM Plex Sans",
+          "IBM Plex Sans KR",
+          "IBM Plex Sans JP"
+        ],
         "$extensions": {
           "net.tinyrack": {
-            "output": "\"IBM Plex Sans\""
+            "output": "\"IBM Plex Sans Variable\", \"IBM Plex Sans\", \"IBM Plex Sans KR\", \"IBM Plex Sans JP\""
           }
         }
       },
@@ -2048,6 +2058,18 @@
         }
       }
     },
+    "2xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0.125,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "0.125rem"
+        }
+      }
+    },
     "xs": {
       "$type": "dimension",
       "$value": {
@@ -2225,6 +2247,18 @@
       "$extensions": {
         "net.tinyrack": {
           "output": "24rem"
+        }
+      }
+    },
+    "table-wide-min-width": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "rem"
+      },
+      "$extensions": {
+        "net.tinyrack": {
+          "output": "64rem"
         }
       }
     },

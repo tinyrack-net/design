@@ -339,14 +339,14 @@ describe('tinyrack design tokens', () => {
   });
 
   it('keeps IBM Plex for prose and IBM Plex Mono for the mono role', () => {
-    // Prose roles stay on a single family with no fallback, so the typeface is
-    // never silently substituted. The mono role is the one exception: `code`,
-    // TRCode, TRCodeBlock, and TRFileTree are unreadable when their columns do
-    // not align, so it names a real monospace face and keeps the generic
-    // `monospace` as a last resort before the webfont loads.
+    // Prose roles enumerate only the official variable, Latin, Korean, and
+    // Japanese IBM Plex Sans family names. The mono role keeps the generic
+    // `monospace` fallback because aligned code remains readable while its
+    // dedicated face loads.
     expect(tinyrackTypography.fontStack).toEqual({
-      body: '"IBM Plex Sans"',
-      heading: '"IBM Plex Sans"',
+      body: '"IBM Plex Sans Variable", "IBM Plex Sans", "IBM Plex Sans KR", "IBM Plex Sans JP"',
+      heading:
+        '"IBM Plex Sans Variable", "IBM Plex Sans", "IBM Plex Sans KR", "IBM Plex Sans JP"',
       mono: '"IBM Plex Mono", monospace',
     });
     expect(tinyrackTypography).not.toHaveProperty('fontFamily');

@@ -246,9 +246,14 @@ describe('Button React-Flutter parity', () => {
       ]) {
         expectNear(flutter.style[property], react?.style[property], geometryTolerance);
       }
-      expect(
-        String(flutter.style['fontFamily']).split('/').at(-1)?.replaceAll(' ', ''),
-      ).toBe(String(react?.style['fontFamily']).split('/').at(-1)?.replaceAll(' ', ''));
+      const flutterFont = String(flutter.style['fontFamily'])
+        .split('/')
+        .at(-1)
+        ?.replaceAll(' ', '');
+      const reactFontStack = String(react?.style['fontFamily'])
+        .split(',')
+        .map((family) => family.split('/').at(-1)?.replaceAll(/[ "']/gu, ''));
+      expect(reactFontStack).toContain(flutterFont);
     }
   });
 

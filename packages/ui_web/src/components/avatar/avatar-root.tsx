@@ -5,7 +5,7 @@ import type { ComponentProps } from 'react';
 import { mergeComponentClassName } from '../../internal/component-class-name.js';
 
 export type TRAvatarShape = 'circle' | 'square';
-export type TRAvatarUiSize = 'md' | 'lg';
+export type TRAvatarUiSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type TRAvatarRootProps = ComponentProps<typeof BaseAvatar.Root> & {
   shape?: TRAvatarShape;
   uiSize?: TRAvatarUiSize;

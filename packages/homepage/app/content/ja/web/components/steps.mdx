@@ -14,8 +14,9 @@ import * as Stories from '../../../../documentation/components/steps.demo.js';
 | --- | --- | --- |
 | `Root` | セマンティックな順序付きリスト | 手順全体 |
 | `Item` | 番号 marker 付きリスト項目 | rich children を含む1つのステップ |
+| `Progress` | アクセシブルな segmented progressbar | 手順が決まったフローの現在位置 |
 
-`TRSteps` は表示専用です。進捗や選択を管理せず、heading、paragraph、link、code block などの React children をそのまま保持します。
+`Root` と `Item` は表示専用です。`Progress` は 1 から始まる `current` と `total` を受け取り、範囲を安全に補正して progressbar セマンティクスで通知します。
 
 ## インストール
 
@@ -30,11 +31,11 @@ import * as Stories from '../../../../documentation/components/steps.demo.js';
 
 <ComponentExampleTabs id="steps-rich-content" title="完全なセットアップガイド" description="同じ番号付きリスト内に見出し、説明、コードを組み合わせられます。" previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.StepsGuidePreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]} />
 
-`TRSteps` は記述された手順に使用し、interactive progress indicator には使用しません。ユーザーが状態間を移動する必要がある場合は、専用の progress または navigation component を構成してください。
+`TRSteps.Progress` は、フローを操作するコントロールの横で進捗を示すために使用してください。ステップ移動や送信処理は行いません。
 
 ### 状態の境界
 
-Steps には `current`、`completed`、`disabled` state prop や state style はありません。すべての読者が状態を理解できるように `Item` content に記載してください。別の control が広い workflow を管理する場合は `Item` の `aria-current` を `"step"` に設定できますが、Steps item 自体は interactive にも disableable にもなりません。
+`Root` と `Item` には `current`、`completed`、`disabled` の状態がありません。別のコントロールがフローを管理する場合は `Item` の `aria-current` を `"step"` に設定してください。`Progress` は数値の進捗だけを扱い、フローの文脈を含むアクセシブルな label が必要です。
 
 狭い画面では長い content が折り返されます。制御する意味のある visual scalar prop がないため、Playground は表示しません。
 
@@ -44,6 +45,7 @@ Steps には `current`、`completed`、`disabled` state prop や state style は
 | --- | --- | --- |
 | `TRSteps.Root`, `TRStepsRoot` | `ol` | native ordered-list props と React 19 ref を含む `TRStepsRootProps` |
 | `TRSteps.Item`, `TRStepsItem` | `li` | native list-item props と React 19 ref を含む `TRStepsItemProps` |
+| `TRSteps.Progress`, `TRStepsProgress` | `div[role="progressbar"]` | `current`、`total`、アクセシブルな label、native div props、React 19 ref を含む `TRStepsProgressProps` |
 
 ### スタイルトークン
 

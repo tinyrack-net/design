@@ -58,6 +58,7 @@
   --font-weight-tinyrack-bold: var(--tinyrack-weight-bold);
   --font-weight-tinyrack-strong: var(--tinyrack-weight-strong);
   --spacing-tinyrack-3xs: var(--tinyrack-space-3xs);
+  --spacing-tinyrack-2xs: var(--tinyrack-space-2xs);
   --spacing-tinyrack-xs: var(--tinyrack-space-xs);
   --spacing-tinyrack-sm: var(--tinyrack-space-sm);
   --spacing-tinyrack-md: var(--tinyrack-space-md);
@@ -90,6 +91,7 @@
   --container-tinyrack-measure-lg: var(--tinyrack-measure-lg);
   --spacing-tinyrack-measure-xl: var(--tinyrack-measure-xl);
   --container-tinyrack-measure-xl: var(--tinyrack-measure-xl);
+  --spacing-tinyrack-table-wide-min-width: var(--tinyrack-table-wide-min-width);
   --spacing-tinyrack-control-press-distance: var(--tinyrack-control-press-distance);
   --spacing-tinyrack-overlay-width-sm: var(--tinyrack-overlay-width-sm);
   --container-tinyrack-overlay-sm: var(--tinyrack-overlay-width-sm);

@@ -14,8 +14,9 @@ import * as Stories from '../../../../documentation/components/steps.demo.js';
 | --- | --- | --- |
 | `Root` | 의미 있는 순서 있는 목록 | 전체 절차 |
 | `Item` | 번호 marker가 있는 목록 항목 | rich children을 포함한 한 단계 |
+| `Progress` | 접근 가능한 segmented progressbar | 단계가 정해진 흐름의 현재 위치 |
 
-`TRSteps`는 표현 전용이에요. 진행이나 선택을 관리하지 않으며 제목, 문단, 링크, 코드 블록 같은 React 자식을 그대로 유지해요.
+`Root`와 `Item`은 표현 전용이에요. `Progress`는 1부터 시작하는 `current`와 `total`을 받아 범위를 안전하게 조정하고 progressbar 시맨틱으로 알려 줘요.
 
 ## 설치
 
@@ -30,11 +31,11 @@ import * as Stories from '../../../../documentation/components/steps.demo.js';
 
 <ComponentExampleTabs id="steps-rich-content" title="전체 설정 가이드" description="같은 번호 목록 안에 제목, 설명, 코드를 함께 구성할 수 있어요." previewLayout="stretch" preview={<div data-docs-example-item-count="1"><Stories.StepsGuidePreview /></div>} sources={[{ label: 'React', language: 'tsx', code: Stories.stepsRichContentSource }]} />
 
-`TRSteps`는 문서에 적어 두는 절차에 쓰고, interactive progress indicator로는 쓰지 마세요. 상태 사이를 오가야 한다면 별도의 progress 또는 navigation component를 구성하세요.
+`TRSteps.Progress`는 흐름을 조작하는 컨트롤 옆에서 진행 상태를 알릴 때 사용하세요. 단계 이동이나 제출 동작은 포함하지 않아요.
 
 ### 상태 경계
 
-Steps에는 `current`, `completed`, `disabled` 같은 상태 prop이나 상태 스타일이 없어요. 누구나 상태를 알 수 있도록 `Item` 콘텐츠에 상태를 직접 적으세요. 더 큰 작업 흐름을 다른 컨트롤이 관리한다면 `Item`의 `aria-current`를 `"step"`으로 설정할 수 있지만, Steps 항목 자체는 상호작용하거나 비활성화할 수 없어요.
+`Root`와 `Item`에는 `current`, `completed`, `disabled` 상태가 없어요. 다른 컨트롤이 작업 흐름을 관리한다면 `Item`의 `aria-current`를 `"step"`으로 설정하세요. `Progress`는 숫자 진행 상태만 관리하며 흐름의 맥락을 담은 접근 가능한 label이 필요해요.
 
 좁은 화면에서는 긴 콘텐츠가 줄바꿈돼요. 조절할 만한 시각적 수치 prop이 없어서 플레이그라운드는 제공하지 않아요.
 
@@ -44,6 +45,7 @@ Steps에는 `current`, `completed`, `disabled` 같은 상태 prop이나 상태 �
 | --- | --- | --- |
 | `TRSteps.Root`, `TRStepsRoot` | `ol` | native ordered-list props와 React 19 ref를 포함하는 `TRStepsRootProps` |
 | `TRSteps.Item`, `TRStepsItem` | `li` | native list-item props와 React 19 ref를 포함하는 `TRStepsItemProps` |
+| `TRSteps.Progress`, `TRStepsProgress` | `div[role="progressbar"]` | `current`, `total`, 접근 가능한 label, native div props와 React 19 ref를 포함하는 `TRStepsProgressProps` |
 
 ### Style token
 

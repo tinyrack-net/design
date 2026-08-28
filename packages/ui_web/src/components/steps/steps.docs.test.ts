@@ -28,8 +28,10 @@ describe('steps documentation', () => {
       expect(docs).toContain('`Item`');
       expect(docs).toContain('`TRStepsRoot`');
       expect(docs).toContain('`TRStepsItem`');
+      expect(docs).toContain('`TRStepsProgress`');
       expect(docs).toContain('`TRStepsRootProps`');
       expect(docs).toContain('`TRStepsItemProps`');
+      expect(docs).toContain('`TRStepsProgressProps`');
       expect(docs).toContain('`aria-current`');
       expect(docs).toContain('`current`');
       expect(docs).toContain('`completed`');

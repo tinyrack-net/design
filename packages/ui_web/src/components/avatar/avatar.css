@@ -39,6 +39,16 @@
     --_tr-avatar-font-size: var(--tinyrack-text-sm);
   }
 
+  .tr-avatar[data-ui-size="xl"] {
+    --_tr-avatar-size: var(--tinyrack-space-3xl);
+    --_tr-avatar-font-size: var(--tinyrack-text-xl);
+  }
+
+  .tr-avatar[data-ui-size="2xl"] {
+    --_tr-avatar-size: var(--tinyrack-measure-xs);
+    --_tr-avatar-font-size: var(--tinyrack-text-2xl);
+  }
+
   .tr-avatar[data-shape="circle"] {
     --_tr-avatar-radius: var(--tinyrack-radius-full);
   }

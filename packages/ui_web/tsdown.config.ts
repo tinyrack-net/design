@@ -41,6 +41,7 @@ const entry = {
   'components/popover/index': 'src/components/popover/index.tsx',
   'components/preview-card/index': 'src/components/preview-card/index.tsx',
   'components/progress/index': 'src/components/progress/index.tsx',
+  'components/provider-mark/index': 'src/components/provider-mark/index.tsx',
   'components/radio/index': 'src/components/radio/index.tsx',
   'components/radio-group/index': 'src/components/radio-group/index.tsx',
   'components/scroll-area/index': 'src/components/scroll-area/index.tsx',
@@ -165,6 +166,10 @@ const copy = [
     to: 'dist/components/preview-card',
   },
   { from: 'src/components/progress/progress.css', to: 'dist/components/progress' },
+  {
+    from: 'src/components/provider-mark/provider-mark.css',
+    to: 'dist/components/provider-mark',
+  },
   { from: 'src/components/radio/radio.css', to: 'dist/components/radio' },
   {
     from: 'src/components/radio-group/radio-group.css',

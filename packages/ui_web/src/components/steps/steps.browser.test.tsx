@@ -6,7 +6,7 @@ import { renderToString } from 'react-dom/server.browser';
 import { expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { TRSteps, TRStepsItem, TRStepsRoot } from './index.js';
+import { TRSteps, TRStepsItem, TRStepsProgress, TRStepsRoot } from './index.js';
 
 const actEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT?: boolean;
@@ -41,6 +41,24 @@ test('renders a semantic ordered list and preserves rich children', async () => 
   expect(getComputedStyle(rootRef.current as HTMLElement).display).toBe('grid');
   expect(TRSteps.Root).toBe(TRStepsRoot);
   expect(TRSteps.Item).toBe(TRStepsItem);
+  expect(TRSteps.Progress).toBe(TRStepsProgress);
+});
+
+test('renders an accessible segmented progress indicator', async () => {
+  await render(
+    <TRSteps.Progress
+      aria-label="Step 2 of 3"
+      current={2}
+      data-testid="progress"
+      total={3}
+    />,
+  );
+  const progress = page.getByTestId('progress').element();
+  expect(progress).toHaveAttribute('role', 'progressbar');
+  expect(progress).toHaveAttribute('aria-valuenow', '2');
+  expect(progress).toHaveAttribute('aria-valuemax', '3');
+  expect(progress.querySelectorAll('.tr-steps-progress-segment')).toHaveLength(3);
+  expect(progress.querySelectorAll('[data-complete]')).toHaveLength(2);
 });
 
 test('allows consumers to override the default role and visual tokens', async () => {

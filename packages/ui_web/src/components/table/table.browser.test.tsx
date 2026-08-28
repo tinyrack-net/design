@@ -22,7 +22,7 @@ test('assembles a semantic table and forwards the table ref', async () => {
   const ref = createRef<HTMLTableElement>();
   expect(TRTable.Root).toBe(TRTableRoot);
   await render(
-    <TRTable.Root ref={ref} density="compact" striped>
+    <TRTable.Root ref={ref} density="compact" layout="wide" striped>
       <TRTable.Caption>Services</TRTable.Caption>
       <TRTable.Header>
         <TRTable.Row>
@@ -42,6 +42,8 @@ test('assembles a semantic table and forwards the table ref', async () => {
     </TRTable.Root>,
   );
   expect(ref.current?.dataset['density']).toBe('compact');
+  expect(ref.current?.dataset['layout']).toBe('wide');
+  expect(getComputedStyle(ref.current as HTMLElement).minWidth).toBe('1024px');
   expect(ref.current?.closest('.tr-table-container')).not.toBeNull();
   expect(ref.current?.querySelector('caption')?.textContent).toBe('Services');
 });
