@@ -61,6 +61,11 @@ export const reactComponentAdaptations = {
     reason:
       'Flutter uses its select component without promising an HTML-style system picker.',
   },
+  'provider-mark': {
+    flutter: 'avatar',
+    reason:
+      'Flutter supplies reviewed provider artwork to its image-backed avatar surface.',
+  },
   'radio-group': {
     flutter: 'radio',
     reason: 'Flutter composes radio groups from the radio component.',
@@ -425,6 +430,11 @@ export const reactComponentParity = {
     excluded: ['animation frame sampling'],
     sharedContract: ['determinate and indeterminate', 'variants', 'sizes', ...visual],
   }),
+  'provider-mark': adapted(
+    'Web encapsulates inline provider SVGs while Flutter supplies the same reviewed artwork as an image.',
+    ['official provider artwork', 'accessible provider identity', 'token-owned size'],
+    ['SVG path representation', 'Flutter image decoding'],
+  ),
   radio: geometry('radio', 'Indicator dimensions and selected treatment are shared.', {
     excluded: ['native form serialization'],
     sharedContract: ['selected state', 'availability states', 'sizes', ...visual],
