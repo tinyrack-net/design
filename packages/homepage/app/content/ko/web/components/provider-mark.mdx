@@ -1,0 +1,27 @@
+---
+title: "Provider Mark"
+description: "검토된 Google, GitHub, Apple 인증 제공자 표식이에요."
+section: components
+group: data-content
+---
+import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+
+## 핵심 속성
+
+`TRProviderMark`는 `provider="google" | "github" | "apple"`로 선택한 공식 표식을 렌더링해요. `aria-label`을 전달하지 않으면 장식용으로 처리돼요. 일반적으로 바깥쪽 버튼이나 링크가 접근 가능한 이름을 제공해야 해요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/provider-mark.css';"], codeImports: ["import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';"] }]} />
+
+## 사용법
+
+<ComponentExampleTabs id="provider-mark-basic" title="인증 제공자" preview={<div className="flex gap-3"><TRProviderMark data-docs-example-item="" provider="google" /><TRProviderMark data-docs-example-item="" provider="github" /><TRProviderMark data-docs-example-item="" provider="apple" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+
+<TRProviderMark provider="google" />` , styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/provider-mark.css';" } }]} />
+
+## API
+
+`TRProviderMarkProps`는 native SVG prop과 필수 `provider` union을 제공해요. `--tr-provider-mark-size`의 기본값은 `--tinyrack-space-xl`이고, `--tr-provider-mark-color`는 단색 GitHub와 Apple 표식의 색을 정해요. 검토된 Google 다색 표식은 바뀌지 않아요.

@@ -1,0 +1,27 @@
+---
+title: "Provider Mark"
+description: "レビュー済みの Google、GitHub、Apple 認証プロバイダーマークです。"
+section: components
+group: data-content
+---
+import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+
+## 主なプロパティ
+
+`TRProviderMark` は `provider="google" | "github" | "apple"` で選択した公式マークをレンダリングします。`aria-label` を渡さない場合は装飾として扱われます。通常は外側のボタンやリンクでアクセシブルな名前を指定してください。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/provider-mark.css';"], codeImports: ["import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';"] }]} />
+
+## 使用方法
+
+<ComponentExampleTabs id="provider-mark-basic" title="認証プロバイダー" preview={<div className="flex gap-3"><TRProviderMark data-docs-example-item="" provider="google" /><TRProviderMark data-docs-example-item="" provider="github" /><TRProviderMark data-docs-example-item="" provider="apple" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+
+<TRProviderMark provider="google" />` , styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/provider-mark.css';" } }]} />
+
+## API
+
+`TRProviderMarkProps` は native SVG props と必須の `provider` union を提供します。`--tr-provider-mark-size` の既定値は `--tinyrack-space-xl` で、`--tr-provider-mark-color` は単色の GitHub と Apple マークの色を設定します。レビュー済みの Google マルチカラーマークは変更されません。

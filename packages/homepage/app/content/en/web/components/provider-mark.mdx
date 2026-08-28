@@ -1,0 +1,27 @@
+---
+title: "Provider Mark"
+description: "Reviewed Google, GitHub, and Apple identity-provider artwork."
+section: components
+group: data-content
+---
+import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+
+## Contract
+
+`TRProviderMark` renders the official mark selected by `provider="google" | "github" | "apple"`. The mark is decorative unless you pass an `aria-label`; surrounding buttons and links should normally provide the accessible name.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/provider-mark.css';"], codeImports: ["import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';"] }]} />
+
+## Usage
+
+<ComponentExampleTabs id="provider-mark-basic" title="Identity providers" preview={<div className="flex gap-3"><TRProviderMark data-docs-example-item="" provider="google" /><TRProviderMark data-docs-example-item="" provider="github" /><TRProviderMark data-docs-example-item="" provider="apple" /></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRProviderMark } from '@tinyrack/ui/components/provider-mark';
+
+<TRProviderMark provider="google" />` , styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/provider-mark.css';" } }]} />
+
+## API
+
+`TRProviderMarkProps` extends native SVG props and adds the required `provider` union. `--tr-provider-mark-size` defaults to `--tinyrack-space-xl`, and `--tr-provider-mark-color` controls the monochrome GitHub and Apple marks. Google's reviewed multicolor artwork is unchanged.

@@ -2,6 +2,18 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { parse } from '@babel/parser';
 import postcss from 'postcss';
+import {
+  tinyrackControlMetrics,
+  tinyrackLayers,
+  tinyrackMeasurements,
+  tinyrackMotion,
+  tinyrackOpacity,
+  tinyrackRadii,
+  tinyrackSemanticColors,
+  tinyrackShadows,
+  tinyrackSpacing,
+  tinyrackTypography,
+} from '../core/tokens.js';
 
 export type TinyrackCheckFormat = 'github' | 'json' | 'pretty';
 
@@ -38,7 +50,7 @@ const packageVersion = JSON.parse(
   readFileSync(new URL('../../package.json', import.meta.url), 'utf8'),
 )['version'] as string;
 const designLiteral =
-  /(?:#[\da-f]{3,8}\b|\b(?:rgb|hsl|oklch|lab|color)\s*\(|(?<![-\w.])(?:\d*\.\d+|\d+)(?:px|rem|em|ch|ex|%|vh|vw|dvh|svh|lvh|vmin|vmax|ms|s|deg|rad|turn)\b)/giu;
+  /(?:#[\da-f]{3,8}\b|\b(?:rgb|hsl|oklch|lab|color)\s*\(|(?<![-\w.])(?:\d*\.\d+|\d+)(?:px|rem|em|ch|ex|%|vh|vw|dvh|svh|lvh|vmin|vmax|ms|s|deg|rad|turn)(?![-\w]))/giu;
 const designProperties = new Set([
   'background',
   'background-color',
@@ -76,11 +88,16 @@ const designProperties = new Set([
   'stroke',
   'text-shadow',
   'top',
+  'transform',
   'transition',
   'transition-delay',
   'transition-duration',
   'width',
   'z-index',
+  'translate',
+  'animation',
+  'animation-delay',
+  'animation-duration',
 ]);
 const inlineProperties = new Set(
   [...designProperties].map((property) =>
@@ -95,7 +112,78 @@ const nativeComponents = new Map([
   ['progress', 'TRProgress'],
   ['select', 'TRSelect'],
   ['textarea', 'TRTextarea'],
+  ['form', 'TRForm'],
+  ['fieldset', 'TRFieldset.Root'],
+  ['legend', 'TRFieldset.Legend'],
+  ['p', 'TRText'],
+  ['h1', 'TRText'],
+  ['h2', 'TRText'],
+  ['h3', 'TRText'],
+  ['h4', 'TRText'],
+  ['h5', 'TRText'],
+  ['h6', 'TRText'],
+  ['code', 'TRCode'],
 ]);
+
+function flattenKeys(value: unknown, found = new Set<string>()) {
+  if (value === null || typeof value !== 'object') return found;
+  for (const [key, child] of Object.entries(value)) {
+    if (child !== null && typeof child === 'object') flattenKeys(child, found);
+    else found.add(key.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`));
+  }
+  return found;
+}
+
+const spacingTokenNames = new Set([
+  ...Object.keys(tinyrackSpacing),
+  ...Object.keys(tinyrackMeasurements),
+  ...Object.entries(tinyrackControlMetrics).flatMap(([size, metrics]) =>
+    Object.keys(metrics).map(
+      (name) =>
+        `control-${name.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`)}-${size}`,
+    ),
+  ),
+]);
+const colorTokenNames = flattenKeys(tinyrackSemanticColors);
+const textTokenNames = new Set(Object.keys(tinyrackTypography.fontSize));
+const fontWeightTokenNames = new Set(Object.keys(tinyrackTypography.fontWeight));
+const durationTokenNames = new Set(Object.keys(tinyrackMotion.duration));
+const easingTokenNames = new Set(
+  Object.keys(tinyrackMotion.easing).map((name) =>
+    name.replace(/[A-Z]/gu, (letter) => `-${letter.toLowerCase()}`),
+  ),
+);
+
+function validTinyrackUtility(token: string) {
+  const match = /^([a-z-]+)-tinyrack-(.+)$/u.exec(token);
+  if (match === null) return true;
+  const [, utility = '', name = ''] = match;
+  if (
+    /^(?:m[trblxy]?|p[trblxy]?|gap(?:-[xy])?|space-[xy]|w|h|min-w|min-h|max-w|max-h|size|top|right|bottom|left|inset(?:-[xy])?)$/u.test(
+      utility,
+    )
+  ) {
+    return spacingTokenNames.has(name);
+  }
+  if (
+    /^(?:text|bg|border|fill|stroke|outline|decoration|caret|accent)$/u.test(utility)
+  ) {
+    return (
+      colorTokenNames.has(name) || (utility === 'text' && textTokenNames.has(name))
+    );
+  }
+  if (utility === 'font') {
+    return fontWeightTokenNames.has(name) || ['body', 'heading', 'mono'].includes(name);
+  }
+  if (utility === 'rounded') return Object.hasOwn(tinyrackRadii, name);
+  if (utility === 'shadow') return Object.hasOwn(tinyrackShadows, name);
+  if (utility === 'opacity') return Object.hasOwn(tinyrackOpacity, name);
+  if (utility === 'z') return Object.hasOwn(tinyrackLayers, name);
+  if (utility === 'duration' || utility === 'delay')
+    return durationTokenNames.has(name);
+  if (utility === 'ease') return easingTokenNames.has(name);
+  return true;
+}
 const designUtility =
   /^(?:-?(?:m[trblxy]?|p[trblxy]?|gap(?:-[xy])?|space-[xy]|w|h|min-w|min-h|max-w|max-h|size|top|right|bottom|left|inset(?:-[xy])?|text|font|leading|tracking|bg|fill|stroke|border|rounded|shadow|opacity|z|duration|delay|ease|scale|translate-[xy]|rotate)-)/u;
 const structuralUtilities = new Set([
@@ -229,9 +317,46 @@ function rawSvgColor(value: string, variables = new Map<string, string>()) {
     : undefined;
 }
 
+function containsUnbackedLiteral(value: string) {
+  const withoutTokens = value
+    .replace(/var\(--tinyrack-[a-z0-9-]+(?:\s*,[^)]*)?\)/gu, '')
+    .replace(
+      /(?:^|[\s(,+*/-])(?:0|1|100%|100d?v[hw]|100s?v[hw]|100l?v[hw])(?=$|[\s),+*/-])/gu,
+      '',
+    );
+  const found = designLiteral.test(withoutTokens);
+  designLiteral.lastIndex = 0;
+  return (
+    found || /(?:^|[\s(,+*/-])(?:\d*\.\d+|\d+)(?=$|[\s),+*/-])/u.test(withoutTokens)
+  );
+}
+
 function auditCss(source: string, path: string) {
   const violations: TinyrackCheckViolation[] = [];
   const root = postcss.parse(source, { from: path });
+  const imports: Array<{ params: string; column: number; line: number }> = [];
+  root.walkAtRules('import', (rule) => {
+    const start = rule.source?.start ?? { column: 1, line: 1 };
+    imports.push({ params: rule.params, ...start });
+  });
+  const coreIndex = imports.findIndex((item) =>
+    item.params.includes('@tinyrack/ui/core.css'),
+  );
+  const earlyComponent = imports.find(
+    (item, index) =>
+      item.params.includes('@tinyrack/ui/components/') &&
+      (coreIndex === -1 || index < coreIndex),
+  );
+  if (earlyComponent !== undefined) {
+    push(violations, source, {
+      column: earlyComponent.column,
+      line: earlyComponent.line,
+      message: 'Tinyrack component CSS is imported before core.css.',
+      path,
+      replacement: 'Import @tinyrack/ui/core.css before every component stylesheet.',
+      ruleId: 'setup/core-css-order',
+    });
+  }
   const variables = new Map<string, string>();
   root.walkDecls((declaration) => {
     if (
@@ -244,7 +369,14 @@ function auditCss(source: string, path: string) {
   root.walkDecls((declaration) => {
     if (declaration.prop.startsWith('--tinyrack-')) return;
     const property = declaration.prop.replace(/^(?:-\w+-)/u, '');
-    if (!designProperties.has(property) && !property.startsWith('border-')) return;
+    const componentToken = declaration.prop.startsWith('--tr-');
+    if (
+      !componentToken &&
+      !designProperties.has(property) &&
+      !property.startsWith('border-')
+    ) {
+      return;
+    }
     const value = declaration.value.trim();
     if (property === 'fill' || property === 'stroke') {
       const role = svgRoleViolation(property, value, variables);
@@ -279,16 +411,9 @@ function auditCss(source: string, path: string) {
       /^(?:0|1|auto|none|normal|inherit|initial|unset|100%|100d?v[hw]|100s?v[hw]|100l?v[hw])$/u.test(
         value,
       );
-    const tokenBacked = /var\(--tinyrack-[a-z0-9-]+(?:\s*,[^)]*)?\)/u.test(value);
-    if (
-      structural ||
-      tokenBacked ||
-      (!designLiteral.test(value) && !/^-?(?:\d*\.\d+|\d+)$/u.test(value))
-    ) {
-      designLiteral.lastIndex = 0;
+    if (structural || !containsUnbackedLiteral(value)) {
       return;
     }
-    designLiteral.lastIndex = 0;
     const start = declaration.source?.start ?? { column: 1, line: 1 };
     push(violations, source, {
       column: start.column,
@@ -391,7 +516,7 @@ function auditTypeScript(source: string, path: string) {
     const raw = literalValue(node);
     if (raw !== undefined) {
       const structural = ['0', '1', '100%', 'auto', 'none'].includes(raw);
-      return structural || raw.includes('var(--tinyrack-') ? undefined : raw;
+      return structural || !containsUnbackedLiteral(raw) ? undefined : raw;
     }
     if (node?.['type'] === 'Identifier') {
       const name = String(node['name']);
@@ -480,6 +605,30 @@ function auditTypeScript(source: string, path: string) {
         }
       }
     }
+    if (type === 'JSXElement') {
+      const opening = node['openingElement'] as Node | undefined;
+      const name = opening?.['name'] as Node | undefined;
+      if (
+        name?.['type'] === 'JSXIdentifier' &&
+        ['div', 'span'].includes(String(name['name']))
+      ) {
+        const hasText = ((node['children'] as Node[] | undefined) ?? []).some(
+          (child) =>
+            (child['type'] === 'JSXText' && String(child['value']).trim() !== '') ||
+            child['type'] === 'JSXExpressionContainer',
+        );
+        if (hasText) {
+          const location = nodeLocation(opening ?? node);
+          push(violations, source, {
+            ...location,
+            message: `<${String(name['name'])}> renders text without TRText.`,
+            path,
+            replacement: 'Use TRText and its polymorphic as prop.',
+            ruleId: 'components/no-native-text',
+          });
+        }
+      }
+    }
     if (type === 'JSXAttribute' && (node['name'] as Node)?.['name'] === 'className') {
       const attributeValue = node['value'] as Node | undefined;
       const expression =
@@ -488,6 +637,19 @@ function auditTypeScript(source: string, path: string) {
           : attributeValue;
       visit(expression, true, false);
       return;
+    }
+    if (
+      type === 'JSXAttribute' &&
+      (node['name'] as Node)?.['name'] === 'dangerouslySetInnerHTML'
+    ) {
+      const location = nodeLocation(node);
+      push(violations, source, {
+        ...location,
+        message: 'dangerouslySetInnerHTML bypasses Tinyrack component semantics.',
+        path,
+        replacement: 'Parse trusted content into Tinyrack components.',
+        ruleId: 'components/no-raw-html',
+      });
     }
     if (
       type === 'JSXAttribute' &&
@@ -543,6 +705,16 @@ function auditTypeScript(source: string, path: string) {
       const text = literalValue(node);
       if (text !== undefined) {
         for (const token of classTokens(text)) {
+          if (token === 'prose' || token.startsWith('prose-')) {
+            const location = nodeLocation(node);
+            push(violations, source, {
+              ...location,
+              message: `Non-Tinyrack prose utility: ${token}`,
+              path,
+              replacement: 'Render content with Tinyrack text components.',
+              ruleId: 'components/no-prose-utility',
+            });
+          }
           const svgUtility = /^(fill|stroke)-tinyrack-(.+)$/u.exec(token);
           const svgProperty = svgUtility?.[1] as 'fill' | 'stroke' | undefined;
           const svgRole = svgUtility?.[2];
@@ -567,11 +739,21 @@ function auditTypeScript(source: string, path: string) {
             !designUtility.test(token) ||
             structuralUtilities.has(token) ||
             structuralUtility.test(token) ||
-            /(?:^|-)tinyrack(?:-|$)/u.test(token) ||
             token.includes('var(--tinyrack-')
           )
             continue;
           const location = nodeLocation(node);
+          if (/(?:^|-)tinyrack(?:-|$)/u.test(token)) {
+            if (validTinyrackUtility(token)) continue;
+            push(violations, source, {
+              ...location,
+              message: `Unknown Tinyrack Tailwind utility: ${token}`,
+              path,
+              replacement: 'Use a utility generated by @tinyrack/ui/core.css.',
+              ruleId: 'tokens/no-unknown-utility',
+            });
+            continue;
+          }
           push(violations, source, {
             ...location,
             message: `Tailwind design utility is not Tinyrack-backed: ${token}`,
@@ -585,7 +767,7 @@ function auditTypeScript(source: string, path: string) {
     if (inStyle && type === 'ObjectProperty') {
       const key = node['key'] as Node;
       const name = String(key?.['name'] ?? key?.['value'] ?? '');
-      if (inlineProperties.has(name)) {
+      if (inlineProperties.has(name) || name.startsWith('--tr-')) {
         if (name === 'fill' || name === 'stroke') {
           const value = literalValue(node['value'] as Node);
           const role = value === undefined ? undefined : svgRoleViolation(name, value);
@@ -615,6 +797,10 @@ function auditTypeScript(source: string, path: string) {
           });
         }
       }
+    }
+    if (inStyle && type === 'Identifier') {
+      const initializer = variables.get(String(node['name']));
+      if (initializer !== undefined) visit(initializer, false, true);
     }
     for (const child of Object.values(node)) {
       if (Array.isArray(child))

@@ -76,17 +76,21 @@ const unavailableAvatar = 'data:image/png;base64,aW52YWxpZA==';
   description="周囲のコントロールと情報密度に合うサイズを選びます。"
   preview={(
     <div className="flex items-center gap-3">
-      <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
       <TRAvatar.Root data-docs-example-item="" uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
       <TRAvatar.Root data-docs-example-item="" uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="xl"><TRAvatar.Fallback>XL</TRAvatar.Fallback></TRAvatar.Root>
+      <TRAvatar.Root data-docs-example-item="" uiSize="2xl"><TRAvatar.Fallback>2X</TRAvatar.Fallback></TRAvatar.Root>
     </div>
   )}
   sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRAvatar } from '@tinyrack/ui/components/avatar';
 
 <div className="flex items-center gap-3">
-  <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="sm"><TRAvatar.Fallback>SM</TRAvatar.Fallback></TRAvatar.Root>
   <TRAvatar.Root uiSize="md"><TRAvatar.Fallback>MD</TRAvatar.Fallback></TRAvatar.Root>
   <TRAvatar.Root uiSize="lg"><TRAvatar.Fallback>LG</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="xl"><TRAvatar.Fallback>XL</TRAvatar.Fallback></TRAvatar.Root>
+  <TRAvatar.Root uiSize="2xl"><TRAvatar.Fallback>2X</TRAvatar.Fallback></TRAvatar.Root>
 </div>` ,
       styles: { code: "@import '@tinyrack/ui/components/avatar.css';" },
     },

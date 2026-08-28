@@ -1,0 +1,9 @@
+@layer components {
+  .tr-provider-mark {
+    block-size: var(--tr-provider-mark-size, var(--tinyrack-space-xl));
+    color: var(--tr-provider-mark-color, currentColor);
+    display: block;
+    fill: currentColor;
+    inline-size: var(--tr-provider-mark-size, var(--tinyrack-space-xl));
+  }
+}

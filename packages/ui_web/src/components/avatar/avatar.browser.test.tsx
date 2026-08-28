@@ -68,6 +68,21 @@ test('reports image load success and exposes the alternative text', async () => 
   expect(document.querySelector('.tr-avatar-fallback')).toBeNull();
 });
 
+test('provides token-backed extended avatar sizes', async () => {
+  await render(
+    <div>
+      <TRAvatar.Root data-testid="avatar-xl" uiSize="xl">
+        <TRAvatar.Fallback delay={0}>XL</TRAvatar.Fallback>
+      </TRAvatar.Root>
+      <TRAvatar.Root data-testid="avatar-2xl" uiSize="2xl">
+        <TRAvatar.Fallback delay={0}>2X</TRAvatar.Fallback>
+      </TRAvatar.Root>
+    </div>,
+  );
+  expect(getComputedStyle(page.getByTestId('avatar-xl').element()).width).toBe('48px');
+  expect(getComputedStyle(page.getByTestId('avatar-2xl').element()).width).toBe('64px');
+});
+
 test('preserves image styling with the Base UI render contract', async () => {
   await render(
     <TRAvatar.Root>

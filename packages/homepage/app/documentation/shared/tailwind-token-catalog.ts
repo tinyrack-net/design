@@ -378,6 +378,11 @@ export const tailwindTokenBridge = [
   },
   {
     group: 'spacing',
+    runtimeVariable: '--tinyrack-space-2xs',
+    themeVariable: '--spacing-tinyrack-2xs',
+  },
+  {
+    group: 'spacing',
     runtimeVariable: '--tinyrack-space-xs',
     themeVariable: '--spacing-tinyrack-xs',
   },
@@ -505,6 +510,11 @@ export const tailwindTokenBridge = [
     group: 'container',
     runtimeVariable: '--tinyrack-measure-xl',
     themeVariable: '--container-tinyrack-measure-xl',
+  },
+  {
+    group: 'spacing',
+    runtimeVariable: '--tinyrack-table-wide-min-width',
+    themeVariable: '--spacing-tinyrack-table-wide-min-width',
   },
   {
     group: 'spacing',

@@ -50,4 +50,29 @@
   .tr-steps-item > :last-child {
     margin-block-end: 0;
   }
+
+  .tr-steps-progress {
+    display: flex;
+    gap: var(--tr-steps-progress-gap, var(--tinyrack-space-xs));
+    inline-size: 100%;
+  }
+
+  .tr-steps-progress-segment {
+    background-color: var(--tinyrack-surface-hover);
+    block-size: var(--tr-steps-progress-size, var(--tinyrack-space-xs));
+    border-radius: var(--tinyrack-radius-full);
+    flex: 1;
+    transition: background-color var(--tinyrack-duration-normal)
+      var(--tinyrack-ease-standard);
+  }
+
+  .tr-steps-progress-segment[data-complete] {
+    background-color: var(--tinyrack-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-steps-progress-segment {
+      transition: none;
+    }
+  }
 }

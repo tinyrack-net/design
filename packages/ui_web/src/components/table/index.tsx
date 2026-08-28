@@ -24,7 +24,7 @@ export type { TRTableCellProps } from './table-cell.js';
 export type { TRTableFooterProps } from './table-footer.js';
 export type { TRTableHeadProps } from './table-head.js';
 export type { TRTableHeaderProps } from './table-header.js';
-export type { TRTableDensity, TRTableRootProps } from './table-root.js';
+export type { TRTableDensity, TRTableLayout, TRTableRootProps } from './table-root.js';
 export type { TRTableRowProps } from './table-row.js';
 export {
   TRTableBody,

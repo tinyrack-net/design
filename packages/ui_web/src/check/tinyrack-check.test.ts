@@ -46,6 +46,34 @@ describe('Tinyrack Web project check', () => {
     expect(rules).toContain('imports/no-private-tinyrack');
   });
 
+  it('enforces strict Tinyrack text, form, rich HTML, and known-token contracts', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/core.css";\n.card { --tr-card-size: 2rem; transform: translateY(calc(var(--tinyrack-space-sm) + 2px)); }`,
+      'src/app.tsx': `const sizes = { large: { '--tr-avatar-size': '4rem' } }; export const App = () => <form><p>Copy</p><code>id</code><span>Label</span><div className="prose z-tinyrack-raised" dangerouslySetInnerHTML={{ __html: '<b>unsafe</b>' }} /><div style={sizes.large} /></form>;`,
+    });
+    const rules = (await checkTinyrackProject({ root })).violations.map(
+      (violation) => violation.ruleId,
+    );
+    expect(rules).toContain('components/no-native-equivalent');
+    expect(rules).toContain('components/no-native-text');
+    expect(rules).toContain('components/no-prose-utility');
+    expect(rules).toContain('components/no-raw-html');
+    expect(rules).toContain('tokens/no-literal');
+    expect(rules).toContain('tokens/no-unknown-utility');
+  });
+
+  it('requires core CSS before component CSS', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/components/text.css";\n@import "@tinyrack/ui/core.css";`,
+      'src/app.tsx': `import { TRText } from '@tinyrack/ui/components/text'; export const App = () => <TRText>Copy</TRText>;`,
+    });
+    expect(
+      (await checkTinyrackProject({ root })).violations.map(
+        (violation) => violation.ruleId,
+      ),
+    ).toContain('setup/core-css-order');
+  });
+
   it('follows local style constants without treating business fields as styles', async () => {
     const root = project({
       'src/app.css': `@import "@tinyrack/ui/core.css";`,
