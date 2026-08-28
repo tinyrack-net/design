@@ -794,13 +794,13 @@ describe('React Router documentation contract', () => {
     }
   });
 
-  it('defines all 456 localized content routes as static route modules', () => {
+  it('defines all 459 localized content routes as static route modules', () => {
     const routes = readText('app/routes.ts');
     expect(componentDocsManifest).toHaveLength(62);
-    expect(staticDocumentRoutes).toHaveLength(456);
-    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(456);
+    expect(staticDocumentRoutes).toHaveLength(459);
+    expect(new Set(staticDocumentRoutes.map((entry) => entry.path)).size).toBe(459);
     expect(new Set(staticDocumentRoutes.map((entry) => entry.sourceFile)).size).toBe(
-      456,
+      459,
     );
     expect(new Set(staticDocumentRoutes.map((entry) => entry.contentKey)).size).toBe(
       152,
