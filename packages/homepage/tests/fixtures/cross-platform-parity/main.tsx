@@ -121,7 +121,7 @@ function measure(component: string, activations: number) {
       focusColor: colorHex(style.outlineColor),
       focusOffset: pixels(style.outlineOffset),
       focusWidth: pixels(style.outlineWidth),
-      fontFamily: style.fontFamily.split(',')[0]?.replaceAll('"', '') ?? null,
+      fontFamily: style.fontFamily,
       fontSize: pixels(style.fontSize),
       fontWeight: Number(style.fontWeight),
       foregroundColor: colorHex(style.color),
