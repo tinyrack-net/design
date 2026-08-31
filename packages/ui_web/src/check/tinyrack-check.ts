@@ -582,10 +582,7 @@ function auditTypeScript(source: string, path: string) {
     const opening = node['openingElement'] as Node | undefined;
     const name = jsxName(opening?.['name'] as Node | undefined);
     if (name !== undefined && translationComponentBindings.has(name)) return true;
-    if (name !== undefined && !/^[a-z]/u.test(name)) return false;
-    return ((node['children'] as Node[] | undefined) ?? []).some((child) =>
-      jsxNodeRendersText(child),
-    );
+    return false;
   };
   const invalidStyleExpression = (
     node: Node | undefined,

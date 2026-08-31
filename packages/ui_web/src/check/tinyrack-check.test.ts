@@ -80,6 +80,20 @@ export const App = ({ ready }: { ready: boolean }) => <><span><Translation i18nK
     ).toHaveLength(2);
   });
 
+  it('reports the nearest native text owner without flagging layout ancestors', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/core.css";`,
+      'src/app.tsx': `import { Trans } from 'react-i18next'; export const App = () => <div><section><span><Trans i18nKey="copy" /></span></section></div>;`,
+    });
+    const violations = (await checkTinyrackProject({ root })).violations;
+    expect(violations).toHaveLength(1);
+    expect(violations[0]).toMatchObject({
+      line: 1,
+      message: '<span> renders text without TRText.',
+      ruleId: 'components/no-native-text',
+    });
+  });
+
   it('rejects TRText as a structural layout element', async () => {
     const root = project({
       'src/app.css': `@import "@tinyrack/ui/core.css";\n@import "@tinyrack/ui/components/text.css";`,
