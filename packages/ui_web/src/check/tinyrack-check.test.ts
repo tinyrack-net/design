@@ -62,6 +62,52 @@ describe('Tinyrack Web project check', () => {
     expect(rules).toContain('tokens/no-unknown-utility');
   });
 
+  it('finds nested, translated, conditional, and native field text', async () => {
+    const root = project({
+      'src/app.tsx': `import { Trans as Translation } from 'react-i18next';
+export const App = ({ ready }: { ready: boolean }) => <><span><Translation i18nKey="copy" /></span><div>{ready ? <>Ready</> : null}</div><label htmlFor="name">Name</label><strong>Important</strong></>;`,
+    });
+    const violations = (await checkTinyrackProject({ root })).violations;
+    expect(
+      violations.filter(
+        (violation) => violation.ruleId === 'components/no-native-text',
+      ),
+    ).toHaveLength(2);
+    expect(
+      violations.filter(
+        (violation) => violation.ruleId === 'components/no-native-equivalent',
+      ),
+    ).toHaveLength(2);
+  });
+
+  it('rejects TRText as a structural layout element', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/core.css";\n@import "@tinyrack/ui/components/text.css";`,
+      'src/app.tsx': `import { TRText as Text } from '@tinyrack/ui/components/text'; export const App = () => <Text as="main"><Text>Copy</Text></Text>;`,
+    });
+    expect(
+      (await checkTinyrackProject({ root })).violations.map(
+        (violation) => violation.ruleId,
+      ),
+    ).toEqual(['components/no-structural-text']);
+  });
+
+  it('accepts text owned by Tinyrack compound component parts', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/core.css";
+@import "@tinyrack/ui/components/button.css";
+@import "@tinyrack/ui/components/field.css";
+@import "@tinyrack/ui/components/menu.css";
+@import "@tinyrack/ui/components/select.css";
+@import "@tinyrack/ui/components/tabs.css";
+@import "@tinyrack/ui/components/text.css";
+@import "@tinyrack/ui/components/toast.css";
+@import "@tinyrack/ui/components/tooltip.css";`,
+      'src/app.tsx': `import { TRButton } from '@tinyrack/ui/components/button'; import { TRField } from '@tinyrack/ui/components/field'; import { TRMenu } from '@tinyrack/ui/components/menu'; import { TRSelect } from '@tinyrack/ui/components/select'; import { TRTabs } from '@tinyrack/ui/components/tabs'; import { TRText } from '@tinyrack/ui/components/text'; import { TRToast } from '@tinyrack/ui/components/toast'; import { TRTooltip } from '@tinyrack/ui/components/tooltip'; export const App = () => <><TRText as="p">Body <TRText as="strong" weight="strong">strong</TRText></TRText><TRButton>Save</TRButton><TRTabs.Tab value="one">Tab</TRTabs.Tab><TRMenu.Item>Menu</TRMenu.Item><TRSelect.ItemText>Option</TRSelect.ItemText><TRField.Label>Name</TRField.Label><TRToast.Title>Saved</TRToast.Title><TRTooltip.Popup>Help</TRTooltip.Popup></>;`,
+    });
+    expect((await checkTinyrackProject({ root })).violations).toEqual([]);
+  });
+
   it('requires core CSS before component CSS', async () => {
     const root = project({
       'src/app.css': `@import "@tinyrack/ui/components/text.css";\n@import "@tinyrack/ui/core.css";`,

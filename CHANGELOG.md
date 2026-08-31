@@ -1,5 +1,15 @@
 # Changelog
 
+## @tinyrack/ui 0.32.0
+
+### Breaking
+
+- `tinyrack-ui-check` now follows translated, fragmented, and conditional text
+  rendered by native containers, requires `TRField.Label` for native labels and
+  `TRText` for inline emphasis, and rejects `TRText` configured as a structural
+  layout element. Text owned by Tinyrack control and compound-component parts
+  remains valid without a nested `TRText` wrapper.
+
 ## @tinyrack/ui 0.31.0
 
 ### Breaking
