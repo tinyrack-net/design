@@ -65,14 +65,14 @@ describe('Tinyrack Web project check', () => {
   it('finds nested, translated, conditional, and native field text', async () => {
     const root = project({
       'src/app.tsx': `import { Trans as Translation } from 'react-i18next';
-export const App = ({ ready }: { ready: boolean }) => <><span><Translation i18nKey="copy" /></span><div>{ready ? <>Ready</> : null}</div><label htmlFor="name">Name</label><strong>Important</strong></>;`,
+export const App = ({ ready, t }: { ready: boolean; t: (key: string) => string }) => <><span><Translation i18nKey="copy" /></span><div>{ready ? <>Ready</> : null}</div><div>{t('copy')}</div><label htmlFor="name">Name</label><strong>Important</strong></>;`,
     });
     const violations = (await checkTinyrackProject({ root })).violations;
     expect(
       violations.filter(
         (violation) => violation.ruleId === 'components/no-native-text',
       ),
-    ).toHaveLength(2);
+    ).toHaveLength(3);
     expect(
       violations.filter(
         (violation) => violation.ruleId === 'components/no-native-equivalent',

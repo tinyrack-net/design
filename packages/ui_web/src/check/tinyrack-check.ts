@@ -538,16 +538,15 @@ function auditTypeScript(source: string, path: string) {
   const expressionRendersText = (node: Node | undefined): boolean => {
     if (node === undefined || node['type'] === 'JSXEmptyExpression') return false;
     if (
-      [
-        'StringLiteral',
-        'NumericLiteral',
-        'TemplateLiteral',
-        'Identifier',
-        'MemberExpression',
-        'CallExpression',
-      ].includes(String(node['type']))
+      ['StringLiteral', 'NumericLiteral', 'TemplateLiteral'].includes(
+        String(node['type']),
+      )
     ) {
       return true;
+    }
+    if (node['type'] === 'CallExpression') {
+      const callee = node['callee'] as Node | undefined;
+      return callee?.['type'] === 'Identifier' && String(callee['name']) === 't';
     }
     if (node['type'] === 'ConditionalExpression') {
       return (
