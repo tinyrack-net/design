@@ -115,6 +115,7 @@ const nativeComponents = new Map([
   ['form', 'TRForm'],
   ['fieldset', 'TRFieldset.Root'],
   ['legend', 'TRFieldset.Legend'],
+  ['label', 'TRField.Label'],
   ['p', 'TRText'],
   ['h1', 'TRText'],
   ['h2', 'TRText'],
@@ -122,7 +123,19 @@ const nativeComponents = new Map([
   ['h4', 'TRText'],
   ['h5', 'TRText'],
   ['h6', 'TRText'],
+  ['strong', 'TRText'],
+  ['em', 'TRText'],
   ['code', 'TRCode'],
+]);
+const structuralTextElements = new Set([
+  'aside',
+  'div',
+  'footer',
+  'form',
+  'header',
+  'main',
+  'nav',
+  'section',
 ]);
 
 function flattenKeys(value: unknown, found = new Set<string>()) {
@@ -501,6 +514,8 @@ function classTokens(value: string) {
 function auditTypeScript(source: string, path: string) {
   const violations: TinyrackCheckViolation[] = [];
   const imports: string[] = [];
+  const textComponentBindings = new Set(['TRText']);
+  const translationComponentBindings = new Set(['Trans']);
   const tokenBindings = new Set<string>();
   const tokenNamespaces = new Set<string>();
   const variables = new Map<string, Node>();
@@ -509,6 +524,65 @@ function auditTypeScript(source: string, path: string) {
     plugins: ['jsx', 'typescript'],
     sourceType: 'module',
   }) as unknown as Node;
+  const jsxName = (node: Node | undefined): string | undefined => {
+    if (node?.['type'] === 'JSXIdentifier') return String(node['name']);
+    if (node?.['type'] === 'JSXMemberExpression') {
+      const object = jsxName(node['object'] as Node | undefined);
+      const property = jsxName(node['property'] as Node | undefined);
+      return object === undefined || property === undefined
+        ? undefined
+        : `${object}.${property}`;
+    }
+    return undefined;
+  };
+  const expressionRendersText = (node: Node | undefined): boolean => {
+    if (node === undefined || node['type'] === 'JSXEmptyExpression') return false;
+    if (
+      ['StringLiteral', 'NumericLiteral', 'TemplateLiteral'].includes(
+        String(node['type']),
+      )
+    ) {
+      return true;
+    }
+    if (node['type'] === 'CallExpression') {
+      const callee = node['callee'] as Node | undefined;
+      return callee?.['type'] === 'Identifier' && String(callee['name']) === 't';
+    }
+    if (node['type'] === 'ConditionalExpression') {
+      return (
+        expressionRendersText(node['consequent'] as Node | undefined) ||
+        expressionRendersText(node['alternate'] as Node | undefined)
+      );
+    }
+    if (node['type'] === 'LogicalExpression') {
+      return expressionRendersText(node['right'] as Node | undefined);
+    }
+    if (node['type'] === 'ArrayExpression') {
+      return ((node['elements'] as Node[] | undefined) ?? []).some((element) =>
+        expressionRendersText(element),
+      );
+    }
+    if (node['type'] === 'JSXElement' || node['type'] === 'JSXFragment') {
+      return jsxNodeRendersText(node);
+    }
+    return false;
+  };
+  const jsxNodeRendersText = (node: Node): boolean => {
+    if (node['type'] === 'JSXText') return String(node['value']).trim() !== '';
+    if (node['type'] === 'JSXExpressionContainer') {
+      return expressionRendersText(node['expression'] as Node | undefined);
+    }
+    if (node['type'] === 'JSXFragment') {
+      return ((node['children'] as Node[] | undefined) ?? []).some((child) =>
+        jsxNodeRendersText(child),
+      );
+    }
+    if (node['type'] !== 'JSXElement') return false;
+    const opening = node['openingElement'] as Node | undefined;
+    const name = jsxName(opening?.['name'] as Node | undefined);
+    if (name !== undefined && translationComponentBindings.has(name)) return true;
+    return false;
+  };
   const invalidStyleExpression = (
     node: Node | undefined,
     seen = new Set<string>(),
@@ -552,6 +626,26 @@ function auditTypeScript(source: string, path: string) {
     if (type === 'ImportDeclaration') {
       const imported = String((node['source'] as Node)?.['value'] ?? '');
       imports.push(imported);
+      if (imported === '@tinyrack/ui/components/text' || imported === 'react-i18next') {
+        for (const specifier of (node['specifiers'] as Node[] | undefined) ?? []) {
+          if (specifier['type'] !== 'ImportSpecifier') continue;
+          const importedName = String(
+            (specifier['imported'] as Node | undefined)?.['name'] ?? '',
+          );
+          const localName = String(
+            (specifier['local'] as Node | undefined)?.['name'] ?? '',
+          );
+          if (
+            imported === '@tinyrack/ui/components/text' &&
+            importedName === 'TRText'
+          ) {
+            textComponentBindings.add(localName);
+          }
+          if (imported === 'react-i18next' && importedName === 'Trans') {
+            translationComponentBindings.add(localName);
+          }
+        }
+      }
       if (imported === '@tinyrack/ui/core') {
         for (const specifier of (node['specifiers'] as Node[] | undefined) ?? []) {
           const local = specifier['local'] as Node | undefined;
@@ -603,6 +697,25 @@ function auditTypeScript(source: string, path: string) {
             ruleId: 'components/no-native-equivalent',
           });
         }
+        if (textComponentBindings.has(String(name['name']))) {
+          const asAttribute = ((node['attributes'] as Node[] | undefined) ?? []).find(
+            (attribute) =>
+              attribute['type'] === 'JSXAttribute' &&
+              (attribute['name'] as Node | undefined)?.['name'] === 'as',
+          );
+          const asValue = literalValue(asAttribute?.['value'] as Node | undefined);
+          if (asValue !== undefined && structuralTextElements.has(asValue)) {
+            const location = nodeLocation(node);
+            push(violations, source, {
+              ...location,
+              message: `TRText renders the structural <${asValue}> element.`,
+              path,
+              replacement:
+                'Use a semantic layout element and keep TRText at the textual leaf.',
+              ruleId: 'components/no-structural-text',
+            });
+          }
+        }
       }
     }
     if (type === 'JSXElement') {
@@ -612,10 +725,8 @@ function auditTypeScript(source: string, path: string) {
         name?.['type'] === 'JSXIdentifier' &&
         ['div', 'span'].includes(String(name['name']))
       ) {
-        const hasText = ((node['children'] as Node[] | undefined) ?? []).some(
-          (child) =>
-            (child['type'] === 'JSXText' && String(child['value']).trim() !== '') ||
-            child['type'] === 'JSXExpressionContainer',
+        const hasText = ((node['children'] as Node[] | undefined) ?? []).some((child) =>
+          jsxNodeRendersText(child),
         );
         if (hasText) {
           const location = nodeLocation(opening ?? node);
