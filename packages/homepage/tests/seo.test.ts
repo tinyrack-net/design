@@ -11,8 +11,8 @@ const manifest = loadDocsManifest(config, { root: homepageRoot });
 
 describe('automatic homepage SEO', () => {
   it('derives unique metadata from every frontmatter document', () => {
-    expect(manifest.pages).toHaveLength(459);
-    expect(new Set(manifest.pages.map((entry) => entry.contentKey)).size).toBe(153);
+    expect(manifest.pages).toHaveLength(462);
+    expect(new Set(manifest.pages.map((entry) => entry.contentKey)).size).toBe(154);
     expect(new Set(manifest.pages.map((entry) => entry.description)).size).toBe(
       manifest.pages.length,
     );

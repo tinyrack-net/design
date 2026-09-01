@@ -6,6 +6,7 @@ group: data-content
 ---
 import { ComponentPlayground } from '../../../../playground/playground.js';
 import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
 import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
 import * as Stories from '../../../../documentation/components/rich-text.demo.js';
@@ -29,17 +30,18 @@ import * as Stories from '../../../../documentation/components/rich-text.demo.js
 
 ## Usage
 
-<ComponentExampleTabs id="rich-text-basic" title="Document content" preview={<TRRichText data-docs-example-item=""><h2>Account policy</h2><p>Review the <a href="/terms">current terms</a> before continuing.</p><ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul></TRRichText>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRRichText } from '@tinyrack/ui/components/rich-text';
+<ComponentExampleTabs id="rich-text-basic" title="Document content" preview={<TRRichText data-docs-example-item=""><h2>Account policy</h2><p>Review the <TRLink href="/terms">current terms</TRLink> before continuing.</p><ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul></TRRichText>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
 
 <TRRichText>
   <h2>Account policy</h2>
-  <p>Review the <a href="/terms">current terms</a> before continuing.</p>
+  <p>Review the <TRLink href="/terms">current terms</TRLink> before continuing.</p>
   <ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul>
 </TRRichText>`, styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/rich-text.css';" } }]} />
 
 ## Examples
 
-<ComponentExampleTabs id="rich-text-variants" title="Document and notice" preview={<div className="grid gap-tinyrack-xl" data-docs-example-item=""><TRRichText><h3>Session policy</h3><p>Sessions expire after the configured duration.</p></TRRichText><TRRichText variant="notice"><p>Continuing means you accept the current terms.</p></TRRichText></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRichText>
+<ComponentExampleTabs id="rich-text-variants" title="Document and notice" preview={<div className="grid gap-tinyrack-xl"><TRRichText data-docs-example-item=""><h3>Session policy</h3><p>Sessions expire after the configured duration.</p></TRRichText><TRRichText data-docs-example-item="" variant="notice"><p>Continuing means you accept the current terms.</p></TRRichText></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRichText>
   <h3>Session policy</h3>
   <p>Sessions expire after the configured duration.</p>
 </TRRichText>

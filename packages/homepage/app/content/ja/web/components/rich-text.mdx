@@ -6,6 +6,7 @@ group: data-content
 ---
 import { ComponentPlayground } from '../../../../playground/playground.js';
 import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
 import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
 import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
 import * as Stories from '../../../../documentation/components/rich-text.demo.js';
@@ -29,17 +30,18 @@ import * as Stories from '../../../../documentation/components/rich-text.demo.js
 
 ## 使用方法
 
-<ComponentExampleTabs id="rich-text-basic" title="文書コンテンツ" preview={<TRRichText data-docs-example-item=""><h2>アカウントポリシー</h2><p>続行する前に<a href="/terms">現在の規約</a>を確認してください。</p><ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul></TRRichText>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRRichText } from '@tinyrack/ui/components/rich-text';
+<ComponentExampleTabs id="rich-text-basic" title="文書コンテンツ" preview={<TRRichText data-docs-example-item=""><h2>アカウントポリシー</h2><p>続行する前に<TRLink href="/terms">現在の規約</TRLink>を確認してください。</p><ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul></TRRichText>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
 
 <TRRichText>
   <h2>アカウントポリシー</h2>
-  <p>続行する前に<a href="/terms">現在の規約</a>を確認してください。</p>
+  <p>続行する前に<TRLink href="/terms">現在の規約</TRLink>を確認してください。</p>
   <ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul>
 </TRRichText>`, styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/rich-text.css';" } }]} />
 
 ## 例
 
-<ComponentExampleTabs id="rich-text-variants" title="文書と通知" preview={<div className="grid gap-tinyrack-xl" data-docs-example-item=""><TRRichText><h3>セッションポリシー</h3><p>設定した時間が経過するとセッションが期限切れになります。</p></TRRichText><TRRichText variant="notice"><p>続行すると、現在の規約に同意したものとみなされます。</p></TRRichText></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRichText>
+<ComponentExampleTabs id="rich-text-variants" title="文書と通知" preview={<div className="grid gap-tinyrack-xl"><TRRichText data-docs-example-item=""><h3>セッションポリシー</h3><p>設定した時間が経過するとセッションが期限切れになります。</p></TRRichText><TRRichText data-docs-example-item="" variant="notice"><p>続行すると、現在の規約に同意したものとみなされます。</p></TRRichText></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRichText>
   <h3>セッションポリシー</h3>
   <p>設定した時間が経過するとセッションが期限切れになります。</p>
 </TRRichText>

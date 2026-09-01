@@ -1,3 +1,4 @@
+import { TRLink } from '@tinyrack/ui/components/link';
 import { TRRichText, type TRRichTextVariant } from '@tinyrack/ui/components/rich-text';
 import type {
   DemoMeta as Meta,
@@ -48,7 +49,7 @@ const meta = {
         <h2>{content.heading}</h2>
         <p>
           {content.prefix}
-          <a href="/terms">{content.link}</a>
+          <TRLink href="/terms">{content.link}</TRLink>
           {content.suffix}
         </p>
         <ul>
