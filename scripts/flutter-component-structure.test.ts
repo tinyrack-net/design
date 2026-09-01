@@ -217,11 +217,11 @@ test('stronger cross-platform parity levels require executable fixtures', () => 
   }
 
   assert.deepEqual(Object.keys(reactComponentParity).sort(), reactComponents);
-  assert.equal(Object.keys(reactComponentParity).length, 63);
+  assert.equal(Object.keys(reactComponentParity).length, 64);
   assert.equal(
     Object.values(reactComponentParity).filter(({ level }) => level === 'adapted')
       .length,
-    7,
+    8,
   );
   assert.equal(
     Object.values(reactComponentParity).filter(({ level }) => level === 'contract')

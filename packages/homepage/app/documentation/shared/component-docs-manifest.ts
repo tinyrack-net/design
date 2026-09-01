@@ -1053,6 +1053,18 @@ export const componentDocsManifest = [
     title: 'Radio Group',
   },
   {
+    capabilities: ['responsive'],
+    file: 'app/content/en/web/components/rich-text.mdx',
+    id: 'rich-text',
+    controls: ['variant'],
+    exampleGroups: [
+      exampleGroup('rich-text-basic', 'usage', 'basic', 1),
+      exampleGroup('rich-text-variants', 'examples', 'recipe', 2),
+    ],
+    requiredExamples: ['rich-text-basic', 'rich-text-variants'],
+    title: 'Rich Text',
+  },
+  {
     capabilities: ['responsive', 'keyboard', 'overflow'],
     file: 'app/content/en/web/components/scroll-area.mdx',
     id: 'scroll-area',

@@ -1,0 +1,164 @@
+@layer components {
+  .tr-rich-text {
+    --_tr-rich-text-color: var(--tinyrack-text);
+    --_tr-rich-text-font-size: var(--tinyrack-text-md);
+    --_tr-rich-text-line-height: var(--tinyrack-leading-md);
+    --_tr-rich-text-block-gap: var(--tinyrack-space-md);
+    --_tr-rich-text-heading-gap: var(--tinyrack-space-lg);
+    color: var(--tr-rich-text-color, var(--_tr-rich-text-color));
+    font-family: var(--tr-rich-text-font-family, var(--tinyrack-font-body));
+    font-size: var(--tr-rich-text-font-size, var(--_tr-rich-text-font-size));
+    line-height: var(--tr-rich-text-line-height, var(--_tr-rich-text-line-height));
+  }
+
+  .tr-rich-text[data-variant="notice"] {
+    --_tr-rich-text-color: var(--tinyrack-text-muted);
+    --_tr-rich-text-font-size: var(--tinyrack-text-xs);
+    --_tr-rich-text-line-height: var(--tinyrack-leading-sm);
+    --_tr-rich-text-block-gap: var(--tinyrack-space-xs);
+    --_tr-rich-text-heading-gap: var(--tinyrack-space-sm);
+  }
+
+  .tr-rich-text :where(h1, h2, h3, h4, h5, h6, p, ul, ol) {
+    margin: 0 0 var(--tr-rich-text-block-gap, var(--_tr-rich-text-block-gap));
+  }
+
+  .tr-rich-text :where(h1, h2, h3, h4, h5, h6) {
+    margin-block-start: var(
+      --tr-rich-text-heading-gap,
+      var(--_tr-rich-text-heading-gap)
+    );
+    color: var(--tr-rich-text-heading-color, var(--tinyrack-text));
+    font-family: var(--tr-rich-text-heading-font-family, var(--tinyrack-font-heading));
+    font-weight: var(
+      --tr-rich-text-heading-font-weight,
+      var(--tinyrack-weight-heading)
+    );
+    letter-spacing: var(--tinyrack-tracking-none);
+    line-height: var(--tinyrack-leading-sm);
+  }
+
+  .tr-rich-text > :first-child {
+    margin-block-start: 0;
+  }
+
+  .tr-rich-text > :last-child {
+    margin-block-end: 0;
+  }
+
+  .tr-rich-text h1 {
+    font-size: var(--tr-rich-text-h1-font-size, var(--tinyrack-text-3xl));
+  }
+
+  .tr-rich-text h2 {
+    font-size: var(--tr-rich-text-h2-font-size, var(--tinyrack-text-2xl));
+  }
+
+  .tr-rich-text h3 {
+    font-size: var(--tr-rich-text-h3-font-size, var(--tinyrack-text-lg));
+  }
+
+  .tr-rich-text h4 {
+    font-size: var(--tr-rich-text-h4-font-size, var(--tinyrack-text-md));
+  }
+
+  .tr-rich-text h5 {
+    font-size: var(--tr-rich-text-h5-font-size, var(--tinyrack-text-sm));
+  }
+
+  .tr-rich-text h6 {
+    font-size: var(--tr-rich-text-h6-font-size, var(--tinyrack-text-xs));
+  }
+
+  .tr-rich-text :where(ul, ol) {
+    padding-inline-start: var(--tr-rich-text-list-padding, var(--tinyrack-space-lg));
+  }
+
+  .tr-rich-text ul {
+    list-style: disc;
+  }
+
+  .tr-rich-text ol {
+    list-style: decimal;
+  }
+
+  .tr-rich-text li + li {
+    margin-block-start: var(--tr-rich-text-list-gap, var(--tinyrack-space-xs));
+  }
+
+  .tr-rich-text strong {
+    color: var(--tr-rich-text-strong-color, var(--tinyrack-text));
+    font-weight: var(--tr-rich-text-strong-font-weight, var(--tinyrack-weight-bold));
+  }
+
+  .tr-rich-text[data-variant="notice"] :where(h1, h2, h3, h4, h5, h6) {
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .tr-rich-text[data-variant="notice"] strong {
+    color: inherit;
+  }
+
+  .tr-rich-text em {
+    font-style: italic;
+  }
+
+  .tr-rich-text code {
+    --_tr-rich-text-code-padding-y: var(--tinyrack-space-3xs);
+    padding: var(--tr-rich-text-code-padding-y, var(--_tr-rich-text-code-padding-y))
+      var(--tr-rich-text-code-padding-x, var(--tinyrack-space-xs));
+    border: var(--tr-rich-text-code-border-width, var(--tinyrack-border-width-default))
+      solid var(--tr-rich-text-code-border, var(--tinyrack-border));
+    border-radius: var(--tr-rich-text-code-radius, var(--tinyrack-radius-sm));
+    background-color: var(
+      --tr-rich-text-code-background,
+      var(--tinyrack-surface-muted)
+    );
+    box-decoration-break: slice;
+    color: var(--tr-rich-text-code-color, var(--tinyrack-text));
+    font-family: var(--tr-rich-text-code-font-family, var(--tinyrack-font-mono));
+    line-height: var(--tinyrack-leading-sm);
+    overflow-wrap: anywhere;
+    -webkit-box-decoration-break: slice;
+    white-space: break-spaces;
+  }
+
+  .tr-rich-text a {
+    --_tr-rich-text-link-color: var(--tinyrack-primary-foreground);
+    color: var(--tr-rich-text-link-color, var(--_tr-rich-text-link-color));
+    font-weight: var(--tr-rich-text-link-font-weight, var(--tinyrack-weight-medium));
+    text-decoration-color: currentcolor;
+    text-decoration-line: underline;
+    text-decoration-thickness: var(
+      --tr-rich-text-link-decoration-thickness,
+      var(--tinyrack-text-decoration-thickness)
+    );
+    text-underline-offset: var(
+      --tr-rich-text-link-underline-offset,
+      var(--tinyrack-text-underline-offset)
+    );
+    transition:
+      color var(--tr-rich-text-link-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard),
+      opacity var(--tr-rich-text-link-duration, var(--tinyrack-duration-fast))
+      var(--tinyrack-ease-standard);
+  }
+
+  .tr-rich-text a:hover {
+    opacity: var(--tr-rich-text-link-hover-opacity, var(--tinyrack-opacity-hover));
+  }
+
+  .tr-rich-text a:focus-visible {
+    border-radius: var(--tr-rich-text-link-focus-radius, var(--tinyrack-radius-xs));
+    outline: var(--tr-rich-text-link-focus-width, var(--tinyrack-focus-width)) solid
+      var(--tr-rich-text-link-focus-color, var(--tinyrack-focus));
+    outline-offset: var(--tr-rich-text-link-focus-offset, var(--tinyrack-focus-offset));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tr-rich-text a {
+      transition: none;
+    }
+  }
+}
