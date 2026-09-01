@@ -44,6 +44,7 @@ const entry = {
   'components/provider-mark/index': 'src/components/provider-mark/index.tsx',
   'components/radio/index': 'src/components/radio/index.tsx',
   'components/radio-group/index': 'src/components/radio-group/index.tsx',
+  'components/rich-text/index': 'src/components/rich-text/index.tsx',
   'components/scroll-area/index': 'src/components/scroll-area/index.tsx',
   'components/select/index': 'src/components/select/index.tsx',
   'components/separator/index': 'src/components/separator/index.tsx',
@@ -175,6 +176,7 @@ const copy = [
     from: 'src/components/radio-group/radio-group.css',
     to: 'dist/components/radio-group',
   },
+  { from: 'src/components/rich-text/rich-text.css', to: 'dist/components/rich-text' },
   {
     from: 'src/components/scroll-area/scroll-area.css',
     to: 'dist/components/scroll-area',

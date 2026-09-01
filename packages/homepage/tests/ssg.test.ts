@@ -37,7 +37,14 @@ describe('static documentation output', () => {
   });
 
   it('pre-renders every known content route with metadata and a route chunk', () => {
-    expect(staticDocumentRoutes).toHaveLength(459);
+    expect(staticDocumentRoutes).toHaveLength(462);
+    expect(staticDocumentRoutes.map(({ path }) => path)).toEqual(
+      expect.arrayContaining([
+        '/en/web/components/rich-text',
+        '/ko/web/components/rich-text',
+        '/ja/web/components/rich-text',
+      ]),
+    );
     for (const route of staticDocumentRoutes) {
       const path = htmlPathFor(route.path);
       expect(path, route.path).toBeDefined();

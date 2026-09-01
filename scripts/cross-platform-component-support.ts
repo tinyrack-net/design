@@ -70,6 +70,11 @@ export const reactComponentAdaptations = {
     flutter: 'radio',
     reason: 'Flutter composes radio groups from the radio component.',
   },
+  'rich-text': {
+    flutter: 'text',
+    reason:
+      'Flutter composes rich document typography from its text and text-span primitives.',
+  },
   'toggle-group': {
     flutter: 'toggle',
     reason: 'Flutter composes toggle groups from the toggle component.',
@@ -454,6 +459,15 @@ export const reactComponentParity = {
         'arrow-key navigation',
       ],
     },
+  ),
+  'rich-text': adapted(
+    'Rich document trees use HTML semantics on Web and text-span composition on Flutter.',
+    ['semantic typography roles', 'document and notice density', 'shared text tokens'],
+    [
+      'HTML element semantics',
+      'Flutter text-span construction',
+      'external HTML parsing',
+    ],
   ),
   'scroll-area': adapted(
     'Scroll physics, scrollbar ownership, and accessibility are renderer-native.',

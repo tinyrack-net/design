@@ -1,5 +1,13 @@
 # Changelog
 
+## @tinyrack/ui 0.33.0
+
+### Added
+
+- Added `TRRichText`, a token-backed document and notice typography boundary for
+  semantic React content. `tinyrack-ui-check` accepts native prose elements
+  inside this boundary while continuing to reject raw HTML injection.
+
 ## @tinyrack/ui 0.32.0
 
 ### Breaking

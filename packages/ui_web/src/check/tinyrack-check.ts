@@ -514,6 +514,7 @@ function classTokens(value: string) {
 function auditTypeScript(source: string, path: string) {
   const violations: TinyrackCheckViolation[] = [];
   const imports: string[] = [];
+  const richTextComponentBindings = new Set(['TRRichText']);
   const textComponentBindings = new Set(['TRText']);
   const translationComponentBindings = new Set(['Trans']);
   const tokenBindings = new Set<string>();
@@ -619,14 +620,23 @@ function auditTypeScript(source: string, path: string) {
     }
     return undefined;
   };
-  const visit = (value: unknown, inClassName = false, inStyle = false) => {
+  const visit = (
+    value: unknown,
+    inClassName = false,
+    inStyle = false,
+    inRichText = false,
+  ) => {
     if (value === null || typeof value !== 'object') return;
     const node = value as Node;
     const type = node['type'];
     if (type === 'ImportDeclaration') {
       const imported = String((node['source'] as Node)?.['value'] ?? '');
       imports.push(imported);
-      if (imported === '@tinyrack/ui/components/text' || imported === 'react-i18next') {
+      if (
+        imported === '@tinyrack/ui/components/rich-text' ||
+        imported === '@tinyrack/ui/components/text' ||
+        imported === 'react-i18next'
+      ) {
         for (const specifier of (node['specifiers'] as Node[] | undefined) ?? []) {
           if (specifier['type'] !== 'ImportSpecifier') continue;
           const importedName = String(
@@ -635,6 +645,12 @@ function auditTypeScript(source: string, path: string) {
           const localName = String(
             (specifier['local'] as Node | undefined)?.['name'] ?? '',
           );
+          if (
+            imported === '@tinyrack/ui/components/rich-text' &&
+            importedName === 'TRRichText'
+          ) {
+            richTextComponentBindings.add(localName);
+          }
           if (
             imported === '@tinyrack/ui/components/text' &&
             importedName === 'TRText'
@@ -687,7 +703,7 @@ function auditTypeScript(source: string, path: string) {
       const name = node['name'] as Node;
       if (name?.['type'] === 'JSXIdentifier') {
         const replacement = nativeComponents.get(String(name['name']));
-        if (replacement !== undefined) {
+        if (replacement !== undefined && !inRichText) {
           const location = nodeLocation(node);
           push(violations, source, {
             ...location,
@@ -723,7 +739,8 @@ function auditTypeScript(source: string, path: string) {
       const name = opening?.['name'] as Node | undefined;
       if (
         name?.['type'] === 'JSXIdentifier' &&
-        ['div', 'span'].includes(String(name['name']))
+        ['div', 'span'].includes(String(name['name'])) &&
+        !inRichText
       ) {
         const hasText = ((node['children'] as Node[] | undefined) ?? []).some((child) =>
           jsxNodeRendersText(child),
@@ -746,7 +763,7 @@ function auditTypeScript(source: string, path: string) {
         attributeValue?.['type'] === 'JSXExpressionContainer'
           ? (attributeValue['expression'] as Node)
           : attributeValue;
-      visit(expression, true, false);
+      visit(expression, true, false, inRichText);
       return;
     }
     if (
@@ -809,7 +826,7 @@ function auditTypeScript(source: string, path: string) {
         attributeValue?.['type'] === 'JSXExpressionContainer'
           ? (attributeValue['expression'] as Node)
           : attributeValue;
-      visit(expression, false, true);
+      visit(expression, false, true, inRichText);
       return;
     }
     if (inClassName) {
@@ -911,14 +928,23 @@ function auditTypeScript(source: string, path: string) {
     }
     if (inStyle && type === 'Identifier') {
       const initializer = variables.get(String(node['name']));
-      if (initializer !== undefined) visit(initializer, false, true);
+      if (initializer !== undefined) visit(initializer, false, true, inRichText);
     }
+    const childInRichText =
+      inRichText ||
+      (type === 'JSXElement' &&
+        richTextComponentBindings.has(
+          jsxName(
+            (node['openingElement'] as Node | undefined)?.['name'] as Node | undefined,
+          ) ?? '',
+        ));
     for (const child of Object.values(node)) {
       if (Array.isArray(child))
         child.forEach((item) => {
-          visit(item, inClassName, inStyle);
+          visit(item, inClassName, inStyle, childInRichText);
         });
-      else if (child !== node['loc']) visit(child, inClassName, inStyle);
+      else if (child !== node['loc'])
+        visit(child, inClassName, inStyle, childInRichText);
     }
   };
   visit(tree);

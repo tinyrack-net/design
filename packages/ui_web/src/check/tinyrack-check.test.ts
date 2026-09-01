@@ -122,6 +122,18 @@ export const App = ({ ready, t }: { ready: boolean; t: (key: string) => string }
     expect((await checkTinyrackProject({ root })).violations).toEqual([]);
   });
 
+  it('accepts semantic prose inside TRRichText while still rejecting raw HTML', async () => {
+    const root = project({
+      'src/app.css': `@import "@tinyrack/ui/core.css";\n@import "@tinyrack/ui/components/rich-text.css";`,
+      'src/app.tsx': `import { TRRichText as Prose } from '@tinyrack/ui/components/rich-text'; export const App = () => <><Prose><h2>Policy</h2><p>Read the <strong>current</strong> <a href="/terms">terms</a>.</p><ul><li>Required</li></ul></Prose><Prose dangerouslySetInnerHTML={{ __html: '<p>unsafe</p>' }} /></>;`,
+    });
+    expect(
+      (await checkTinyrackProject({ root })).violations.map(
+        (violation) => violation.ruleId,
+      ),
+    ).toEqual(['components/no-raw-html']);
+  });
+
   it('requires core CSS before component CSS', async () => {
     const root = project({
       'src/app.css': `@import "@tinyrack/ui/components/text.css";\n@import "@tinyrack/ui/core.css";`,

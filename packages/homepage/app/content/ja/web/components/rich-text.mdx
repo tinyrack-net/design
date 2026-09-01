@@ -1,0 +1,55 @@
+---
+title: "Rich Text"
+description: "セマンティックな React 文書と通知コンテンツにトークンベースのタイポグラフィを適用します。"
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/rich-text.demo.js';
+
+## 主なプロパティ
+
+| プロパティ | 値 | 既定値 |
+| --- | --- | --- |
+| `variant` | `document`, `notice` | `document` |
+| コンテンツ | セマンティックな React children | — |
+
+`TRRichText` はセマンティックな見出し、段落、リスト、リンク、インラインコード、強調のタイポグラフィと間隔を管理します。raw HTML の受け取りやサニタイズは行いません。外部コンテンツをサニタイズして解析し、React ノードとして渡してください。
+
+## インストール
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/rich-text.css';"], codeImports: ["import { TRRichText } from '@tinyrack/ui/components/rich-text';"] }]} />
+
+## プレイグラウンド
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 使用方法
+
+<ComponentExampleTabs id="rich-text-basic" title="文書コンテンツ" preview={<TRRichText data-docs-example-item=""><h2>アカウントポリシー</h2><p>続行する前に<TRLink href="/terms">現在の規約</TRLink>を確認してください。</p><ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul></TRRichText>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
+
+<TRRichText>
+  <h2>アカウントポリシー</h2>
+  <p>続行する前に<TRLink href="/terms">現在の規約</TRLink>を確認してください。</p>
+  <ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul>
+</TRRichText>`, styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/rich-text.css';" } }]} />
+
+## 例
+
+<ComponentExampleTabs id="rich-text-variants" title="文書と通知" preview={<div className="grid gap-tinyrack-xl"><TRRichText data-docs-example-item=""><h3>セッションポリシー</h3><p>設定した時間が経過するとセッションが期限切れになります。</p></TRRichText><TRRichText data-docs-example-item="" variant="notice"><p>続行すると、現在の規約に同意したものとみなされます。</p></TRRichText></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRichText>
+  <h3>セッションポリシー</h3>
+  <p>設定した時間が経過するとセッションが期限切れになります。</p>
+</TRRichText>
+
+<TRRichText variant="notice">
+  <p>続行すると、現在の規約に同意したものとみなされます。</p>
+</TRRichText>` }]} />
+
+## API
+
+`TRRichTextProps` は `dangerouslySetInnerHTML` を除く native `div` props を拡張し、React 19 の `ref` を転送して `variant` を追加します。コンポーネントは `data-variant` を持つ `div` をレンダリングします。長いコンテンツには `document`、コンパクトで muted な通知には `notice` を使用してください。外部 HTML はコンシューマー側の信頼境界であるため、React children に変換する前に必ずサニタイズしてください。

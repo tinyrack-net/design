@@ -1,0 +1,55 @@
+---
+title: "Rich Text"
+description: "시맨틱 React 문서와 안내 콘텐츠에 토큰 기반 타이포그래피를 적용해요."
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/rich-text.demo.js';
+
+## 핵심 속성
+
+| 속성 | 값 | 기본값 |
+| --- | --- | --- |
+| `variant` | `document`, `notice` | `document` |
+| 콘텐츠 | 시맨틱 React children | — |
+
+`TRRichText`는 시맨틱 제목, 문단, 목록, 링크, 인라인 코드, 강조의 타이포그래피와 간격을 관리해요. 원시 HTML을 받거나 정제하지 않아요. 외부 콘텐츠는 정제하고 파싱한 뒤 React 노드로 전달하세요.
+
+## 설치
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/rich-text.css';"], codeImports: ["import { TRRichText } from '@tinyrack/ui/components/rich-text';"] }]} />
+
+## 플레이그라운드
+
+<ComponentPlayground definition={Stories.playground} />
+
+## 사용법
+
+<ComponentExampleTabs id="rich-text-basic" title="문서 콘텐츠" preview={<TRRichText data-docs-example-item=""><h2>계정 정책</h2><p>계속하기 전에 <TRLink href="/terms">현재 약관</TRLink>을 확인하세요.</p><ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul></TRRichText>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
+
+<TRRichText>
+  <h2>계정 정책</h2>
+  <p>계속하기 전에 <TRLink href="/terms">현재 약관</TRLink>을 확인하세요.</p>
+  <ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul>
+</TRRichText>`, styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/rich-text.css';" } }]} />
+
+## 예시
+
+<ComponentExampleTabs id="rich-text-variants" title="문서와 안내" preview={<div className="grid gap-tinyrack-xl"><TRRichText data-docs-example-item=""><h3>세션 정책</h3><p>설정한 시간이 지나면 세션이 만료돼요.</p></TRRichText><TRRichText data-docs-example-item="" variant="notice"><p>계속하면 현재 약관에 동의하는 것으로 간주돼요.</p></TRRichText></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRichText>
+  <h3>세션 정책</h3>
+  <p>설정한 시간이 지나면 세션이 만료돼요.</p>
+</TRRichText>
+
+<TRRichText variant="notice">
+  <p>계속하면 현재 약관에 동의하는 것으로 간주돼요.</p>
+</TRRichText>` }]} />
+
+## API
+
+`TRRichTextProps`는 `dangerouslySetInnerHTML`을 제외한 native `div` prop을 확장하고 React 19 `ref`를 전달하며 `variant`를 추가해요. 컴포넌트는 `data-variant`가 있는 `div`를 렌더링해요. 긴 콘텐츠에는 `document`, 조밀한 muted 안내에는 `notice`를 사용하세요. 외부 HTML은 소비자의 신뢰 경계이므로 React children으로 변환하기 전에 반드시 정제해야 해요.

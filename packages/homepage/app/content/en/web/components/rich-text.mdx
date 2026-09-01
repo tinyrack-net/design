@@ -1,0 +1,55 @@
+---
+title: "Rich Text"
+description: "Token-backed typography for semantic React document and notice content."
+section: components
+group: data-content
+---
+import { ComponentPlayground } from '../../../../playground/playground.js';
+import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
+import { ComponentExampleTabs } from '../../../../documentation/shared/component-example-tabs.js';
+import { ComponentInstall } from '../../../../documentation/shared/component-install.js';
+import * as Stories from '../../../../documentation/components/rich-text.demo.js';
+
+## Contract
+
+| Axis | Values | Default |
+| --- | --- | --- |
+| `variant` | `document`, `notice` | `document` |
+| content | semantic React children | — |
+
+`TRRichText` owns the typography and spacing of semantic headings, paragraphs, lists, links, inline code, and emphasis. It does not accept or sanitize raw HTML. Parse and sanitize external content before passing React nodes as children.
+
+## Install
+
+<ComponentInstall surfaces={[{ label: 'React', install: 'pnpm add @tinyrack/ui', styleImports: ["@import '@tinyrack/ui/components/rich-text.css';"], codeImports: ["import { TRRichText } from '@tinyrack/ui/components/rich-text';"] }]} />
+
+## Playground
+
+<ComponentPlayground definition={Stories.playground} />
+
+## Usage
+
+<ComponentExampleTabs id="rich-text-basic" title="Document content" preview={<TRRichText data-docs-example-item=""><h2>Account policy</h2><p>Review the <TRLink href="/terms">current terms</TRLink> before continuing.</p><ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul></TRRichText>} sources={[{ label: 'React', language: 'tsx', code: String.raw`import { TRRichText } from '@tinyrack/ui/components/rich-text';
+import { TRLink } from '@tinyrack/ui/components/link';
+
+<TRRichText>
+  <h2>Account policy</h2>
+  <p>Review the <TRLink href="/terms">current terms</TRLink> before continuing.</p>
+  <ul><li>OAuth 2.0</li><li>OpenID Connect</li></ul>
+</TRRichText>`, styles: { code: "@import '@tinyrack/ui/core.css';\n@import '@tinyrack/ui/components/rich-text.css';" } }]} />
+
+## Examples
+
+<ComponentExampleTabs id="rich-text-variants" title="Document and notice" preview={<div className="grid gap-tinyrack-xl"><TRRichText data-docs-example-item=""><h3>Session policy</h3><p>Sessions expire after the configured duration.</p></TRRichText><TRRichText data-docs-example-item="" variant="notice"><p>Continuing means you accept the current terms.</p></TRRichText></div>} sources={[{ label: 'React', language: 'tsx', code: String.raw`<TRRichText>
+  <h3>Session policy</h3>
+  <p>Sessions expire after the configured duration.</p>
+</TRRichText>
+
+<TRRichText variant="notice">
+  <p>Continuing means you accept the current terms.</p>
+</TRRichText>` }]} />
+
+## API
+
+`TRRichTextProps` extends native `div` props except `dangerouslySetInnerHTML`, forwards React 19 `ref`, and adds `variant`. The component renders a `div` with `data-variant`. Use `document` for long-form content and `notice` for compact muted guidance. External HTML remains a consumer trust boundary and must be sanitized before it is converted to React children.
