@@ -155,7 +155,9 @@ test('statically suppresses native scrollbars when runtime styles are disabled',
   for (const sheet of runtimeSheets) sheet.disabled = true;
   try {
     expect(getComputedStyle(viewport).scrollbarWidth).toBe('none');
-    expect(getComputedStyle(viewport, '::-webkit-scrollbar').display).toBe('none');
+    if (CSS.supports('selector(::-webkit-scrollbar)')) {
+      expect(getComputedStyle(viewport, '::-webkit-scrollbar').display).toBe('none');
+    }
     expect(viewport.clientWidth).toBe(320);
     expect(viewport.clientHeight).toBe(120);
   } finally {

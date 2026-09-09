@@ -531,7 +531,7 @@ test('renders and updates the complete multiple chip and grid anatomy', async ()
   await expect
     .poll(() => document.querySelectorAll('.tr-combobox-chip').length)
     .toBe(0);
-  await userEvent.click(page.getByRole('button', { name: 'Services' }).element());
+  await userEvent.click(page.getByRole('button', { name: 'Show services' }).element());
   await expect.poll(() => document.querySelectorAll('.tr-combobox-row').length).toBe(2);
 });
 

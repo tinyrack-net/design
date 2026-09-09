@@ -227,6 +227,7 @@ test('supports ghost and dark appearances with the same stable border box', asyn
   const solid = page.getByRole('combobox', { name: 'Solid rack' }).element();
   const ghost = page.getByRole('combobox', { name: 'Ghost rack' }).element();
   const dark = page.getByRole('combobox', { name: 'Dark rack' }).element();
+  await userEvent.unhover(solid);
   expect(getComputedStyle(solid).backgroundColor).toBe('rgb(255, 255, 255)');
   expect(getComputedStyle(ghost).backgroundColor).toBe('rgba(0, 0, 0, 0)');
   expect(getComputedStyle(ghost).borderTopWidth).toBe(

@@ -12,9 +12,9 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.20.2
-  lucide_flutter: ^1.28.0
-  material_ui: ^1.0.0
+  intl: ^0.20.3
+  lucide_flutter: ^1.42.0
+  material_ui: ^1.2.0
   tinyrack_ui:
     path: ..
   web: ^1.1.1
