@@ -37,7 +37,10 @@ class TRQrCode extends StatelessWidget {
       TRUiSize.xl => TRGeneratedMeasurements.measureXl,
     };
     final image = QrImage(
-      QrCode.fromData(data: data, errorCorrectLevel: QrErrorCorrectLevel.M),
+      QrCode(
+        payload: QrPayload.fromString(data),
+        errorCorrectLevel: QrErrorCorrectLevel.medium,
+      ),
     );
     return Semantics(
       image: true,

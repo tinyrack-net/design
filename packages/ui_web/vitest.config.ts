@@ -84,16 +84,17 @@ export default async function config({ mode }: ConfigEnv) {
             name: 'browser',
             setupFiles: ['./vitest.setup.ts'],
             include: ['src/**/*.browser.test.tsx'],
+            fileParallelism: !(componentFirefox || componentWebkit),
+            maxWorkers: 6,
+            // No explicit port. Probing for a free one meant binding it,
+            // reading the number, closing, and rebinding later, which leaves
+            // a window for anything else to take it. Vite binds once and
+            // increments until it succeeds, so there is no window at all.
+            api: { host: '127.0.0.1' },
             browser: {
               enabled: true,
               provider: playwright(),
               headless: true,
-              fileParallelism: !(componentFirefox || componentWebkit),
-              // No explicit port. Probing for a free one meant binding it,
-              // reading the number, closing, and rebinding later, which leaves
-              // a window for anything else to take it. Vite binds once and
-              // increments until it succeeds, so there is no window at all.
-              api: { host: '127.0.0.1' },
               instances: componentFirefox
                 ? [{ browser: 'firefox' }]
                 : componentWebkit

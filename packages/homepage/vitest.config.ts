@@ -36,6 +36,7 @@ export default defineConfig({
           name: 'e2e',
           environment: 'node',
           hookTimeout: 30_000,
+          maxWorkers: 2,
           include: ['tests/**/*.test.ts'],
           exclude: [
             'tests/app-icons.test.ts',
@@ -84,6 +85,7 @@ export default defineConfig({
           name: 'e2e-overlays',
           environment: 'node',
           hookTimeout: 30_000,
+          maxWorkers: 2,
           include: ['tests/browser-overlays.test.ts'],
           testTimeout: 120_000,
         },

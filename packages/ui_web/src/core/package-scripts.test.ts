@@ -108,7 +108,7 @@ describe('@tinyrack/ui test commands', () => {
     expect(vitestConfig).toContain(
       'fileParallelism: !(componentFirefox || componentWebkit)',
     );
-    expect(vitestConfig).not.toContain('maxWorkers');
+    expect(vitestConfig).toContain('maxWorkers: 6');
   });
 
   it('keeps prepared package tests parallel and preserves Firefox failures', () => {

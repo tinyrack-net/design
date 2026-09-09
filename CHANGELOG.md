@@ -1,5 +1,14 @@
 # Changelog
 
+## @tinyrack/ui 0.34.0 / @tinyrack/docs 0.23.0
+
+### Changed
+
+- Updated runtime, build, test, and type dependencies to their latest compatible
+  releases, including React Router 8.3, Vite 8.2, Vitest 5, and Base UI 1.8.
+- Preserved component accessibility and package verification contracts across
+  the upgraded toolchain.
+
 ## @tinyrack/ui 0.33.0
 
 ### Added

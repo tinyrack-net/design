@@ -1,3 +1,9 @@
+## 0.72.0
+
+- Updates package dependencies to their latest compatible releases, including
+  `intl` 0.20.3, `lucide_flutter` 1.42, `material_ui` 1.2, and `qr` 4.
+- Adopts the `qr` 4 payload API without changing `TRQrCode` behavior.
+
 ## 0.71.0
 
 - Adds normalized component metrics to the Flutter Web preview so shared
