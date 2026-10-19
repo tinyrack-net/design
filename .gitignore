@@ -12,6 +12,7 @@ audits/
 .hermes/
 .playwright/
 .vitest-attachments/
+**/.vitest/
 **/test-results/
 **/.astro/
 **/__screenshots__/

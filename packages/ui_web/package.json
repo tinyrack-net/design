@@ -182,9 +182,9 @@
   },
   "dependencies": {
     "@babel/parser": "8.0.7",
-    "@base-ui/react": "1.8.0",
+    "@base-ui/react": "1.9.0",
     "@tanstack/react-virtual": "3.14.21",
-    "lucide-react": "1.43.0",
+    "lucide-react": "1.59.0",
     "postcss": "8.5.30"
   }
 }

@@ -8,4 +8,5 @@ export type TRAccordionTriggerProps = ComponentProps<typeof BaseAccordion.Trigge
 export const TRAccordionTrigger = createComponentPart(
   BaseAccordion.Trigger,
   'tr-accordion-trigger tr-collapsible-summary',
+  { focusableWhenDisabled: true },
 );

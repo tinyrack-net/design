@@ -20,7 +20,7 @@ function FilteredItemsProbe() {
 
 test('preserves object item inference and public helper types', async () => {
   const items = [{ id: 'alpha', label: 'Rack Alpha' }] as const;
-  const actions: TRAutocompleteRootActions = { unmount() {} };
+  const actions: TRAutocompleteRootActions = { close() {}, unmount() {} };
   const options: TRAutocompleteFilterOptions = { sensitivity: 'base' };
   const filter: TRAutocompleteFilter = TRAutocomplete.useFilter(options);
   const onValueChange = vi.fn(
