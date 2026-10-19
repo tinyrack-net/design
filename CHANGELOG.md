@@ -6,7 +6,9 @@
 
 - Updated runtime, build, test, and type dependencies to their latest releases,
   including React 19.3, React Router 8.4, Vite 8.3, Vitest 5.0.5, Base UI 1.9,
-  lucide-react 1.59, and Playwright 1.64.
+  and lucide-react 1.59. Playwright stays on 1.63 because 1.64 ships Firefox
+  157, whose headless focus handling makes keyboard-driven browser tests lose
+  focus intermittently.
 - Disabled Accordion and Collapsible triggers keep their documented behavior on
   Base UI 1.9. They stay in the tab order with `aria-disabled="true"` rather
   than taking the native `disabled` attribute Base UI now applies to disabled
