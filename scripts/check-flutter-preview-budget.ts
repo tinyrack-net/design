@@ -12,8 +12,10 @@ const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
 // add 17,554 bytes with the same toolchain. Immediate touch state coordination
 // across the public tap-target catalog raises the Linux preview to 3,536,655
 // bytes before common state-machine deduplication. qr 4 raises the compiled
-// preview to 3,541,396 bytes. Retain a narrow margin above that measured catalog.
-const maximumMainBytes = 3_543_000;
+// preview to 3,541,396 bytes on Flutter 3.47.0, and Flutter 3.47.7, the pinned
+// SDK, compiles the same catalog to 3,565,997 bytes. Retain a narrow margin
+// above that measured catalog.
+const maximumMainBytes = 3_568_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;
 const expectedFlutterFonts = [

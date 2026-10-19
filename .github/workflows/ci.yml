@@ -134,7 +134,7 @@ jobs:
           pnpm --config.ignore-scripts=true --dir packages/ui_web pack --pack-destination "$GITHUB_WORKSPACE/.tmp/prebuilt"
 
       - name: Upload Homepage runtime inputs
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ui-docs-runtime
           path: |
@@ -145,7 +145,7 @@ jobs:
           retention-days: 1
 
       - name: Upload Docs smoke inputs
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: docs-smoke-input
           path: |
@@ -194,7 +194,7 @@ jobs:
         run: pnpm run flutter:preview:build
 
       - name: Upload Flutter preview runtime
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: flutter-preview-runtime
           path: packages/ui_flutter/example/build/web
@@ -430,7 +430,7 @@ jobs:
         run: pnpm --filter @tinyrack/docs... install --frozen-lockfile
 
       - name: Download Docs smoke inputs
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: docs-smoke-input
           path: .
@@ -481,13 +481,13 @@ jobs:
           install --frozen-lockfile
 
       - name: Download Web package runtime
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: ui-docs-runtime
           path: packages
 
       - name: Download Flutter preview runtime
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@v8.0.2
         with:
           name: flutter-preview-runtime
           path: packages/ui_flutter/example/build/web
@@ -621,7 +621,7 @@ jobs:
 
       - name: Set up Java
         if: matrix.target == 'android'
-        uses: actions/setup-java@v5.7.0
+        uses: actions/setup-java@v6.1.0
         with:
           distribution: temurin
           java-version: "17"
