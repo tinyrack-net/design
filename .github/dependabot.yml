@@ -30,6 +30,13 @@ updates:
       - dependency-name: "@types/node"
         update-types:
           - version-update:semver-major
+      # Playwright 1.64 ships Firefox 157, whose headless focus handling makes
+      # keyboard-driven browser tests lose focus intermittently. Hold the
+      # Firefox suite on 1.63 until the upstream behavior is fixed.
+      - dependency-name: "playwright"
+        update-types:
+          - version-update:semver-major
+          - version-update:semver-minor
 
   - package-ecosystem: pub
     directory: /packages/ui_flutter

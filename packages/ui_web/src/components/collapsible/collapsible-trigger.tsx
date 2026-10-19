@@ -8,4 +8,5 @@ export type TRCollapsibleTriggerProps = ComponentProps<typeof BaseCollapsible.Tr
 export const TRCollapsibleTrigger = createComponentPart(
   BaseCollapsible.Trigger,
   'tr-collapsible-summary',
+  { focusableWhenDisabled: true },
 );
