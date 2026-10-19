@@ -4,18 +4,13 @@ packages:
 linkWorkspacePackages: true
 
 overrides:
-  '@types/node': 26.5.0
-  sharp: 0.35.4
+  '@types/node': 26.6.5
+  sharp: 0.35.5
 
 allowBuilds:
   esbuild: true
   sharp: true
   workerd: true
-
-minimumReleaseAgeExclude:
-  - miniflare@5.20260907.0-alpha
-  - wrangler@4.129.1
-  - '@types/node@26.5.0'
 
 onlyBuiltDependencies:
   - esbuild
