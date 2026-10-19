@@ -1,5 +1,18 @@
 # Changelog
 
+## @tinyrack/ui 0.35.0 / @tinyrack/docs 0.24.0
+
+### Changed
+
+- Updated runtime, build, test, and type dependencies to their latest releases,
+  including React 19.3, React Router 8.4, Vite 8.3, Vitest 5.0.5, Base UI 1.9,
+  lucide-react 1.59, and Playwright 1.64.
+- Disabled Accordion and Collapsible triggers keep their documented behavior on
+  Base UI 1.9. They stay in the tab order with `aria-disabled="true"` rather
+  than taking the native `disabled` attribute Base UI now applies to disabled
+  native buttons.
+- Toolchain pins move to Node 24.22.0, pnpm 11.28.6, and Flutter 3.47.7.
+
 ## @tinyrack/ui 0.34.0 / @tinyrack/docs 0.23.0
 
 ### Changed

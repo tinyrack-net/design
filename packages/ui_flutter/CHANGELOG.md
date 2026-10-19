@@ -1,3 +1,9 @@
+## 0.73.0
+
+- Updates package dependencies to their latest compatible releases, including
+  `material_ui` 1.7, `lucide_flutter` 1.47, and `cupertino_ui` 1.1.3. The
+  example app adopts `cupertino_icons` 2.0.
+
 ## 0.72.0
 
 - Updates package dependencies to their latest compatible releases, including
