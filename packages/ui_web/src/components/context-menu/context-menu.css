@@ -121,6 +121,13 @@
     justify-content: center;
   }
 
+  /* keepMounted keeps an unchecked indicator in the layout so labels stay
+     aligned; only the checked item may show its mark. */
+  .tr-context-menu-checkbox-item-indicator[data-unchecked],
+  .tr-context-menu-radio-item-indicator[data-unchecked] {
+    visibility: hidden;
+  }
+
   .tr-layer-backdrop.tr-context-menu-backdrop {
     background: var(--tr-context-menu-backdrop, transparent);
     inset: 0;

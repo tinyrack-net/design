@@ -408,6 +408,40 @@ test('participates in required validation, submission, and native form reset', a
   expect(new FormData(form).get('service')).toBe('Alpha');
 });
 
+test('keeps mounted item indicators but hides them on unselected options', async () => {
+  await render(
+    <TRCombobox.Root defaultOpen defaultValue="Beta" items={['Alpha', 'Beta']}>
+      <TRCombobox.InputGroup>
+        <TRCombobox.Input aria-label="Service" />
+      </TRCombobox.InputGroup>
+      <TRCombobox.Portal>
+        <TRCombobox.Positioner>
+          <TRCombobox.Popup>
+            <TRCombobox.List>
+              {(item: string) => (
+                <TRCombobox.Item key={item} value={item}>
+                  {item}
+                  <TRCombobox.ItemIndicator keepMounted>✓</TRCombobox.ItemIndicator>
+                </TRCombobox.Item>
+              )}
+            </TRCombobox.List>
+          </TRCombobox.Popup>
+        </TRCombobox.Positioner>
+      </TRCombobox.Portal>
+    </TRCombobox.Root>,
+  );
+
+  const indicator = (name: string) =>
+    page
+      .getByRole('option', { name })
+      .element()
+      .querySelector<HTMLElement>('.tr-combobox-item-indicator') as HTMLElement;
+
+  await expect.poll(() => indicator('Alpha')).toBeTruthy();
+  expect(getComputedStyle(indicator('Beta')).visibility).toBe('visible');
+  expect(getComputedStyle(indicator('Alpha')).visibility).toBe('hidden');
+});
+
 test('gives the highlighted option a visible focus indicator', async () => {
   document.documentElement.dataset['theme'] = 'tinyrack-light';
   await render(<ServiceCombobox />);

@@ -290,6 +290,29 @@ test('visually distinguishes disabled items and keeps them closed', async () => 
   expect(disabledItem?.querySelector('.tr-accordion-content')).toBeNull();
 });
 
+test('draws a visible chevron on every accordion trigger', async () => {
+  await render(
+    <TRAccordion.Root>
+      <TRAccordion.Item value="network">
+        <TRAccordion.Header>
+          <TRAccordion.Trigger>Network</TRAccordion.Trigger>
+        </TRAccordion.Header>
+        <TRAccordion.Panel>Online</TRAccordion.Panel>
+      </TRAccordion.Item>
+    </TRAccordion.Root>,
+  );
+
+  const trigger = document.querySelector<HTMLButtonElement>('.tr-accordion-trigger');
+  const chevron = getComputedStyle(trigger as HTMLElement, '::after');
+
+  // The chevron is sized from collapsible variables; the accordion must define them
+  // itself instead of relying on a `.tr-collapsible` ancestor.
+  expect(Number.parseFloat(chevron.width)).toBeGreaterThan(0);
+  expect(Number.parseFloat(chevron.height)).toBeGreaterThan(0);
+  expect(Number.parseFloat(chevron.borderInlineEndWidth)).toBeGreaterThan(0);
+  expect(Number.parseFloat(chevron.borderBlockEndWidth)).toBeGreaterThan(0);
+});
+
 test('rotates the chevron with the accordion state', async () => {
   await render(
     <TRAccordion.Root>

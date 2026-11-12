@@ -417,6 +417,41 @@ test('synchronizes controlled open/value state and native form data', async () =
   await expect.poll(() => document.activeElement).toBe(trigger.element());
 });
 
+test('keeps mounted item indicators aligned but hides them on unselected items', async () => {
+  await render(
+    <TRSelect.Root defaultOpen defaultValue="beta">
+      <TRSelect.Trigger aria-label="Rack">
+        <TRSelect.Value />
+      </TRSelect.Trigger>
+      <TRSelect.Portal>
+        <TRSelect.Positioner>
+          <TRSelect.Popup>
+            <TRSelect.List>
+              {['alpha', 'beta'].map((value) => (
+                <TRSelect.Item key={value} value={value}>
+                  <TRSelect.ItemIndicator keepMounted>✓</TRSelect.ItemIndicator>
+                  <TRSelect.ItemText>{value}</TRSelect.ItemText>
+                </TRSelect.Item>
+              ))}
+            </TRSelect.List>
+          </TRSelect.Popup>
+        </TRSelect.Positioner>
+      </TRSelect.Portal>
+    </TRSelect.Root>,
+  );
+
+  const indicator = (name: string) =>
+    page
+      .getByRole('option', { name })
+      .element()
+      .querySelector<HTMLElement>('.tr-select-item-indicator') as HTMLElement;
+
+  await expect.poll(() => indicator('alpha')).toBeTruthy();
+  expect(indicator('alpha').getBoundingClientRect().width).toBeGreaterThan(0);
+  expect(getComputedStyle(indicator('beta')).visibility).toBe('visible');
+  expect(getComputedStyle(indicator('alpha')).visibility).toBe('hidden');
+});
+
 test('prevents disabled items and read-only roots from changing', async () => {
   await render(
     <div>

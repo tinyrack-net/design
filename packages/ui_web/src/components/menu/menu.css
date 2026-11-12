@@ -143,6 +143,12 @@
     color: var(--tinyrack-primary-foreground);
   }
 
+  /* keepMounted keeps an unchecked indicator in the layout so labels stay
+     aligned; only the checked item may show its mark. */
+  .tr-menu-item-indicator[data-unchecked] {
+    visibility: hidden;
+  }
+
   .tr-menu-label {
     box-sizing: border-box;
     display: block;

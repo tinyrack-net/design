@@ -108,6 +108,61 @@ test('supports the ContextMenu key and preserves consumer keyboard cancellation'
   expect(onKeyDown).toHaveBeenCalledTimes(2);
 });
 
+test('keeps mounted indicators aligned but hides them on unchecked items', async () => {
+  await render(
+    <TRContextMenu.Root defaultOpen>
+      <TRContextMenu.Trigger>Target</TRContextMenu.Trigger>
+      <TRContextMenu.Portal>
+        <TRContextMenu.Positioner>
+          <TRContextMenu.Popup>
+            <TRContextMenu.CheckboxItem checked={false}>
+              <TRContextMenu.CheckboxItemIndicator keepMounted>
+                ✓
+              </TRContextMenu.CheckboxItemIndicator>
+              Labels
+            </TRContextMenu.CheckboxItem>
+            <TRContextMenu.RadioGroup value="compact">
+              <TRContextMenu.RadioItem value="comfortable">
+                <TRContextMenu.RadioItemIndicator keepMounted>
+                  ●
+                </TRContextMenu.RadioItemIndicator>
+                Comfortable
+              </TRContextMenu.RadioItem>
+              <TRContextMenu.RadioItem value="compact">
+                <TRContextMenu.RadioItemIndicator keepMounted>
+                  ●
+                </TRContextMenu.RadioItemIndicator>
+                Compact
+              </TRContextMenu.RadioItem>
+            </TRContextMenu.RadioGroup>
+          </TRContextMenu.Popup>
+        </TRContextMenu.Positioner>
+      </TRContextMenu.Portal>
+    </TRContextMenu.Root>,
+  );
+
+  const indicator = (role: 'menuitemcheckbox' | 'menuitemradio', name: string) =>
+    page
+      .getByRole(role, { name })
+      .element()
+      .querySelector<HTMLElement>(
+        '.tr-context-menu-checkbox-item-indicator, .tr-context-menu-radio-item-indicator',
+      ) as HTMLElement;
+
+  expect(
+    indicator('menuitemradio', 'Comfortable').getBoundingClientRect().width,
+  ).toBeGreaterThan(0);
+  expect(getComputedStyle(indicator('menuitemradio', 'Compact')).visibility).toBe(
+    'visible',
+  );
+  expect(getComputedStyle(indicator('menuitemradio', 'Comfortable')).visibility).toBe(
+    'hidden',
+  );
+  expect(getComputedStyle(indicator('menuitemcheckbox', 'Labels')).visibility).toBe(
+    'hidden',
+  );
+});
+
 test('preserves positioner overrides, nested positioning, and capture cancellation', async () => {
   const style = vi.fn(() => ({ opacity: 1 }));
   const anchor = {

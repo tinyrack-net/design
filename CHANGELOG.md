@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Accordion triggers draw their chevron again. The trigger reuses the
+  Collapsible summary styles, but the chevron size and stroke variables were
+  only defined on `.tr-collapsible`, so an Accordion rendered a zero-size
+  chevron.
+- Menu, ContextMenu, Select, and Combobox item indicators rendered with
+  `keepMounted` now hide on unchecked or unselected items. They keep their space
+  so labels stay aligned, but no longer show a check next to every option.
+
 ## @tinyrack/ui 0.35.0 / @tinyrack/docs 0.24.0
 
 ### Changed
