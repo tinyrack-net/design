@@ -122,6 +122,13 @@
     margin-inline-start: auto;
   }
 
+  /* keepMounted keeps an indicator in unselected rows so their layout matches;
+     only a selected row may show its mark. */
+  .tr-combobox-option:not([aria-selected="true"], [data-selected])
+  .tr-combobox-item-indicator {
+    visibility: hidden;
+  }
+
   .tr-combobox-label {
     color: var(--tinyrack-text);
     display: block;

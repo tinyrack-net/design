@@ -195,6 +195,57 @@ test('updates checkbox and radio items without closing the menu', async () => {
   );
 });
 
+test('keeps mounted indicators aligned but hides them on unchecked items', async () => {
+  await render(
+    <TRMenu.Root defaultOpen>
+      <TRMenu.Trigger>Display</TRMenu.Trigger>
+      <TRMenu.Portal>
+        <TRMenu.Positioner>
+          <TRMenu.Popup>
+            <TRMenu.CheckboxItem checked={false}>
+              <TRMenu.CheckboxItemIndicator keepMounted>✓</TRMenu.CheckboxItemIndicator>
+              Compact
+            </TRMenu.CheckboxItem>
+            <TRMenu.RadioGroup value="light">
+              <TRMenu.RadioItem value="light">
+                <TRMenu.RadioItemIndicator keepMounted>●</TRMenu.RadioItemIndicator>
+                Light
+              </TRMenu.RadioItem>
+              <TRMenu.RadioItem value="dark">
+                <TRMenu.RadioItemIndicator keepMounted>●</TRMenu.RadioItemIndicator>
+                Dark
+              </TRMenu.RadioItem>
+            </TRMenu.RadioGroup>
+          </TRMenu.Popup>
+        </TRMenu.Positioner>
+      </TRMenu.Portal>
+    </TRMenu.Root>,
+  );
+
+  const indicator = (name: string) =>
+    page
+      .getByRole(name === 'Compact' ? 'menuitemcheckbox' : 'menuitemradio', { name })
+      .element()
+      .querySelector<HTMLElement>('.tr-menu-item-indicator') as HTMLElement;
+
+  // keepMounted reserves the indicator column so labels stay aligned...
+  for (const name of ['Compact', 'Light', 'Dark']) {
+    expect(indicator(name).getBoundingClientRect().width).toBeGreaterThan(0);
+  }
+  // ...but only the checked item may show its mark.
+  expect(getComputedStyle(indicator('Light')).visibility).toBe('visible');
+  expect(getComputedStyle(indicator('Dark')).visibility).toBe('hidden');
+  expect(getComputedStyle(indicator('Compact')).visibility).toBe('hidden');
+
+  const label = (name: string) =>
+    page.getByRole('menuitemradio', { name }).element().getBoundingClientRect();
+  expect(
+    indicator('Light').getBoundingClientRect().left ===
+      indicator('Dark').getBoundingClientRect().left &&
+      label('Light').left === label('Dark').left,
+  ).toBe(true);
+});
+
 test('dismisses with Escape and keeps the positioned popup in viewport bounds', async () => {
   const screen = await render(<ActionsMenu />);
   const trigger = screen.getByRole('button', { name: 'Actions' });

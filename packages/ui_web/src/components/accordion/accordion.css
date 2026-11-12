@@ -2,6 +2,11 @@
 
 @layer components {
   .tr-accordion {
+    /* The trigger reuses .tr-collapsible-summary, whose chevron is sized by these
+       collapsible variables. The accordion is not a .tr-collapsible, so it must
+       define them itself or the chevron collapses to zero size. */
+    --_tr-collapsible-chevron-size: var(--tinyrack-space-sm);
+    --_tr-collapsible-chevron-stroke: var(--tinyrack-border-width-strong);
     overflow: clip;
     width: 100%;
     border: var(--tinyrack-border-width-default) solid var(--tinyrack-control-border);
