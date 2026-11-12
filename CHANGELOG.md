@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## @tinyrack/ui 0.35.1
 
 ### Fixed
 
