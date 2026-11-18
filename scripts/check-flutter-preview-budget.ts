@@ -16,8 +16,11 @@ const flutterFontRoot = resolve(root, 'packages/ui_flutter/assets/fonts');
 // SDK, compiles the same catalog to 3,565,997 bytes. The example app resolves
 // its pub dependencies at build time; lucide_flutter 1.66, material_ui 1.11, and
 // cupertino_ui 1.1.6 compile the unchanged catalog to 3,571,261 bytes on the
-// same SDK. Retain a narrow margin above that measured catalog.
-const maximumMainBytes = 3_574_000;
+// same SDK. Flutter 3.50.0, the pinned SDK, compiles the unchanged origin/main
+// catalog to 3,646,994 bytes, and lucide_flutter 1.74 with material_ui 1.11.1
+// keeps the catalog at that size. Retain a narrow margin above that measured
+// catalog.
+const maximumMainBytes = 3_650_000;
 const maximumPreviewBytes = 65_000_000;
 const maximumFlutterFontBytes = 16_500_000;
 const expectedFlutterFonts = [
