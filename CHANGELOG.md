@@ -1,5 +1,16 @@
 # Changelog
 
+## @tinyrack/ui 0.36.0 / @tinyrack/docs 0.25.0
+
+### Changed
+
+- Updated runtime, build, test, and type dependencies to their latest releases,
+  including React Router 8.5, Vite 8.3.8, Vitest 5.1, Tailwind CSS 4.3.5,
+  shiki 4.6, pagefind 1.6, lucide-react 1.74, and Biome 2.6.
+- Playwright moves to 1.65. Its Firefox build no longer loses keyboard focus in
+  the browser suite, so the 1.63 hold is lifted.
+- Toolchain pins move to Node 24.22.3, pnpm 11.28.12, and Flutter 3.50.0.
+
 ## @tinyrack/ui 0.35.1
 
 ### Fixed

@@ -58,7 +58,7 @@
      mouse click, and the border tint is emphasis just as much as the ring, so
      both drop together for pointer focus. */
   :where(html:not([data-tr-focus-modality="pointer"]))
-  .tr-otp-field-digit:focus-visible {
+    .tr-otp-field-digit:focus-visible {
     border-color: var(--tr-otp-field-focus-color, var(--tinyrack-focus));
     outline: var(--tr-otp-field-focus-width, var(--tinyrack-focus-width)) solid
       var(--tr-otp-field-focus-color, var(--tinyrack-focus));

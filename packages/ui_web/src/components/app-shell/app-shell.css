@@ -453,6 +453,7 @@
    * chain inside the sidebar working; `auto` would let the inner scroll area
    * grow to content height and be clipped instead of scrolled.
    */
+  /* biome-ignore lint/style/noDescendingSpecificity: the more specific splash rule only sets display, which this sticky sizing rule never touches. */
   .tr-app-shell[data-page-scroll="document"] > .tr-app-shell-sidebar {
     align-self: start;
     block-size: calc(
@@ -466,7 +467,7 @@
 
   /* sidebar-first spans the header row, so nothing sits above the sidebar. */
   .tr-app-shell[data-page-scroll="document"][data-layout="sidebar-first"]
-  > .tr-app-shell-sidebar {
+    > .tr-app-shell-sidebar {
     block-size: 100dvh;
     inset-block-start: 0;
   }
