@@ -322,8 +322,10 @@ test('does not open from a touch pointer sequence', async () => {
 
 test('honors provider open delay before showing hover content', async () => {
   vi.useFakeTimers();
+  // Vitest browser actions advance fake timers for as long as they take in real
+  // time, so the delay stays far above any hover duration a slow runner needs.
   await render(
-    <TRTooltip.Provider closeDelay={0} delay={100}>
+    <TRTooltip.Provider closeDelay={0} delay={10_000}>
       <TRTooltip.Root>
         <TRTooltip.Trigger>Delayed rack details</TRTooltip.Trigger>
         <TRTooltip.Portal>
@@ -336,11 +338,14 @@ test('honors provider open delay before showing hover content', async () => {
   );
 
   const trigger = document.querySelector<HTMLElement>('.tr-tooltip');
+  const hoverStartedAt = Date.now();
   await userEvent.hover(trigger as HTMLElement);
   expect(
     document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open') ?? false,
   ).toBe(false);
-  await vi.advanceTimersByTimeAsync(99);
+  const hoverElapsed = Date.now() - hoverStartedAt;
+  expect(hoverElapsed).toBeLessThan(10_000);
+  await vi.advanceTimersByTimeAsync(9_999 - hoverElapsed);
   expect(
     document.querySelector('.tr-tooltip-content')?.hasAttribute('data-open') ?? false,
   ).toBe(false);
