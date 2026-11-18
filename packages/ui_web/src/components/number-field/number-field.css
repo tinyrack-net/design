@@ -91,7 +91,7 @@
      matches it on a plain mouse click. The steppers below are buttons, which
      the browser already excludes, so they keep the ungated rule. */
   :where(html:not([data-tr-focus-modality="pointer"]))
-  .tr-number-field-input:focus-visible {
+    .tr-number-field-input:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
@@ -128,7 +128,11 @@
      last because these descendant selectors have to outrank the state rules
      above them. */
   .tr-number-field[data-appearance="ghost"]
-  :is(.tr-number-field-input, .tr-number-field-increment, .tr-number-field-decrement) {
+    :is(
+      .tr-number-field-input,
+      .tr-number-field-increment,
+      .tr-number-field-decrement
+    ) {
     background: transparent;
     border-color: transparent;
   }

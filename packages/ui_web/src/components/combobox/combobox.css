@@ -125,7 +125,7 @@
   /* keepMounted keeps an indicator in unselected rows so their layout matches;
      only a selected row may show its mark. */
   .tr-combobox-option:not([aria-selected="true"], [data-selected])
-  .tr-combobox-item-indicator {
+    .tr-combobox-item-indicator {
     visibility: hidden;
   }
 

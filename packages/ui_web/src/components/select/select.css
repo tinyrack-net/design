@@ -197,7 +197,7 @@
   /* Match Input: pointer focus stays quiet, while keyboard focus paints an
      inset ring without changing the trigger's outer size. */
   :where(html:not([data-tr-focus-modality="pointer"]))
-  .tr-select-trigger:focus-visible {
+    .tr-select-trigger:focus-visible {
     outline: var(--tinyrack-focus-width) solid var(--tinyrack-focus);
     outline-offset: calc(var(--tinyrack-focus-width) * -1);
   }
