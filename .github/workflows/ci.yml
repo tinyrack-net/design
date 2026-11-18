@@ -259,7 +259,7 @@ jobs:
   ui_firefox:
     name: UI Firefox
     if: >-
-      github.event_name == 'merge_group' &&
+      (github.event_name == 'merge_group' || github.event_name == 'pull_request') &&
       (needs.changes.outputs.ui == 'true' ||
        needs.changes.outputs.shared == 'true')
     needs: changes
@@ -314,7 +314,7 @@ jobs:
   ui_webkit:
     name: UI Virtual List WebKit
     if: >-
-      github.event_name == 'merge_group' &&
+      (github.event_name == 'merge_group' || github.event_name == 'pull_request') &&
       (needs.changes.outputs.ui == 'true' ||
        needs.changes.outputs.shared == 'true')
     needs: changes
@@ -583,7 +583,7 @@ jobs:
   flutter_platforms:
     name: Flutter example (${{ matrix.target }})
     if: >-
-      github.event_name == 'merge_group' &&
+      (github.event_name == 'merge_group' || github.event_name == 'pull_request') &&
       (needs.changes.outputs.flutter == 'true' ||
        needs.changes.outputs.shared == 'true')
     needs: changes
@@ -697,7 +697,7 @@ jobs:
   flutter_preview:
     name: Flutter preview development
     if: >-
-      github.event_name == 'merge_group' &&
+      (github.event_name == 'merge_group' || github.event_name == 'pull_request') &&
       (needs.changes.outputs.flutter_preview == 'true' ||
        needs.changes.outputs.shared == 'true')
     needs: changes
