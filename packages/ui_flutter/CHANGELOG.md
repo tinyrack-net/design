@@ -1,3 +1,9 @@
+## 0.74.0
+
+- Updates package dependencies to their latest compatible releases, including
+  `lucide_flutter` 1.74, `material_ui` 1.11, `qr` 4.0.1, and `cupertino_ui`
+  1.1.7. `lucide_flutter` stays in step with lucide-react 1.74.
+
 ## 0.73.0
 
 - Updates package dependencies to their latest compatible releases, including
