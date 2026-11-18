@@ -83,7 +83,8 @@ test('opens an alert task, dismisses with Escape, and restores focus', async () 
   expect(actionStyle.display).toBe('flex');
   expect(actionStyle.flexDirection).toBe('row');
   expect(actionStyle.flexWrap).toBe('wrap');
-  expect(actionStyle.justifyContent).toBe('flex-end');
+  // Chromium 159 serializes the computed `flex-end` keyword as `flow-end`.
+  expect(actionStyle.justifyContent.replace(/^flow-/, 'flex-')).toBe('flex-end');
   expect(actionButtons).toHaveLength(2);
   expect(actionButtons?.[0]?.getBoundingClientRect().top).toBe(
     actionButtons?.[1]?.getBoundingClientRect().top,

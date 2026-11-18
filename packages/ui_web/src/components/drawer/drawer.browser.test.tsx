@@ -285,6 +285,12 @@ test('animates the popup and backdrop when opening and closing', async () => {
   await expect.poll(() => popup?.isConnected).toBe(false);
 });
 
+// Chromium 159 serializes the computed `flex-start` and `flex-end` keywords as
+// `flow-start` and `flow-end`; both resolve to the same flex-container edge.
+function flexAlignmentKeyword(value: string) {
+  return value.replace(/^flow-/, 'flex-');
+}
+
 test.each([
   ['down', 'flex-end', 'center', '0px', '0px'],
   ['up', 'flex-start', 'center', '0px', '0px'],
@@ -307,10 +313,12 @@ test.each([
     const viewport = document.querySelector<HTMLElement>('.tr-drawer-viewport');
     const popup = document.querySelector<HTMLElement>('.tr-drawer-popup');
     await expect.poll(() => popup?.hasAttribute('data-open')).toBe(true);
-    expect(getComputedStyle(viewport as HTMLElement).alignItems).toBe(alignItems);
-    expect(getComputedStyle(viewport as HTMLElement).justifyContent).toBe(
-      justifyContent,
-    );
+    expect(
+      flexAlignmentKeyword(getComputedStyle(viewport as HTMLElement).alignItems),
+    ).toBe(alignItems);
+    expect(
+      flexAlignmentKeyword(getComputedStyle(viewport as HTMLElement).justifyContent),
+    ).toBe(justifyContent);
 
     const style = getComputedStyle(popup as HTMLElement);
     const attachedRadii =
